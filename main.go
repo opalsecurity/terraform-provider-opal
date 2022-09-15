@@ -11,5 +11,6 @@ func main() {
 		ProviderFunc: func() *schema.Provider {
 			return opal.NewProvider()
 		},
+		ProviderAddr: "registry.terraform.io/opalsecurity/opal",
 	})
 }
