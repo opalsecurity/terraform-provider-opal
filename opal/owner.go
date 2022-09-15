@@ -11,7 +11,10 @@ import (
 
 func resourceOwner() *schema.Resource {
 	return &schema.Resource{
-		ReadContext: resourceOwnerRead,
+		CreateContext: resourceOwnerCreate,
+		ReadContext:   resourceOwnerRead,
+		UpdateContext: resourceOwnerUpdate,
+		DeleteContext: resourceOwnerDelete,
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Description: "The ID of the owner.",
@@ -76,6 +79,34 @@ func resourceOwner() *schema.Resource {
 	}
 }
 
+func resourceOwnerCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	client := m.(*opal.APIClient)
+
+	name := d.Get("name").(string)
+	rawUsers := d.Get("user").([]interface{})
+	userIds := make([]string, 0, len(rawUsers))
+	for _, rawUser := range rawUsers {
+		user := rawUser.(map[string]interface{})
+		userIds = append(userIds, user["id"].(string))
+	}
+
+	createInfo := opal.NewCreateOwnerInfo(name, userIds)
+	if descI, ok := d.GetOk("description"); ok {
+		createInfo.SetDescription(descI.(string))
+	}
+	if accessRequestEscalationPeriodI, ok := d.GetOk("access_request_escalation_periodiption"); ok {
+		createInfo.SetAccessRequestEscalationPeriod(int32(accessRequestEscalationPeriodI.(int)))
+	}
+
+	owner, _, err := client.OwnersApi.CreateOwner(ctx).CreateOwnerInfo(*createInfo).Execute()
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	d.SetId(owner.OwnerId)
+	return resourceOwnerRead(ctx, d, m)
+}
+
 func resourceOwnerRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	client := m.(*opal.APIClient)
 
@@ -125,4 +156,12 @@ func flattenOwnerUsers(userList *opal.UserList) []interface{} {
 	}
 
 	return users
+}
+
+func resourceOwnerUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	return nil
+}
+
+func resourceOwnerDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	return nil
 }
