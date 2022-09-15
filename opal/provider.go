@@ -28,7 +28,9 @@ func NewProvider() *schema.Provider {
 				DefaultFunc: schema.EnvDefaultFunc("OPAL_BASE_URL", "https://api.opal.dev/v1"),
 			},
 		},
-		ResourcesMap:         map[string]*schema.Resource{},
+		ResourcesMap: map[string]*schema.Resource{
+			"opal_owner": resourceOwner(),
+		},
 		DataSourcesMap:       map[string]*schema.Resource{},
 		ConfigureContextFunc: configure,
 	}
