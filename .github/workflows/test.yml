@@ -1,0 +1,34 @@
+name: Terraform Provider Tests
+
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  acceptance:
+    environment: Test
+    name: Acceptance Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '1.18'
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: '1.2.*'
+          terraform_wrapper: false
+      - run: make testacc
+        env:
+          OPAL_TEST_TOKEN: ${{ secrets.OPAL_TEST_TOKEN }}
+          OPAL_TEST_KNOWN_USER_ID_1: ${{ secrets.OPAL_TEST_KNOWN_USER_ID_1 }}
+          OPAL_TEST_KNOWN_USER_ID_2: ${{ secrets.OPAL_TEST_KNOWN_USER_ID_2 }}
+          OPAL_TEST_BASE_URL: ${{ secrets.OPAL_TEST_BASE_URL }}
+      - run: make sweep
+        env:
+          OPAL_TEST_TOKEN: ${{ secrets.OPAL_TEST_TOKEN }}
+          OPAL_TEST_KNOWN_USER_ID_1: ${{ secrets.OPAL_TEST_KNOWN_USER_ID_1 }}
+          OPAL_TEST_KNOWN_USER_ID_2: ${{ secrets.OPAL_TEST_KNOWN_USER_ID_2 }}
+          OPAL_TEST_BASE_URL: ${{ secrets.OPAL_TEST_BASE_URL }}
