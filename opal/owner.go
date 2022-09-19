@@ -106,6 +106,10 @@ func resourceOwnerCreate(ctx context.Context, d *schema.ResourceData, m interfac
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	tflog.Debug(ctx, "Created opal owner", map[string]any{
+		"name": name,
+		"id":   owner.OwnerId,
+	})
 
 	d.SetId(owner.OwnerId)
 	return resourceOwnerRead(ctx, d, m)
