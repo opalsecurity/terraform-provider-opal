@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/hashicorp/go-multierror"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/opalsecurity/opal-go"
@@ -159,7 +160,44 @@ func flattenOwnerUsers(userList *opal.UserList) []interface{} {
 }
 
 func resourceOwnerUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	return nil
+	client := m.(*opal.APIClient)
+
+	updateInfo := opal.NewUpdateOwnerInfo(d.Id())
+	updateInfo.SetName(d.Get("name").(string))
+	if descI, ok := d.GetOk("description"); ok {
+		updateInfo.SetDescription(descI.(string))
+	}
+	if accessRequestEscalationPeriodI, ok := d.GetOk("access_request_escalation_periodiption"); ok {
+		updateInfo.SetAccessRequestEscalationPeriod(int32(accessRequestEscalationPeriodI.(int)))
+	}
+
+	owner, _, err := client.OwnersApi.UpdateOwners(ctx).UpdateOwnerInfoList(*opal.NewUpdateOwnerInfoList([]opal.UpdateOwnerInfo{*updateInfo})).Execute()
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	d.SetId(owner.Owners[0].OwnerId)
+
+	// We use HasChange here to prevent an extra API call if unchanged.
+	if d.HasChange("user") {
+		rawUsers := d.Get("user").([]interface{})
+		userIds := make([]string, 0, len(rawUsers))
+		for _, rawUser := range rawUsers {
+			user := rawUser.(map[string]interface{})
+			userIds = append(userIds, user["id"].(string))
+		}
+
+		tflog.Debug(ctx, "Updating owner users", map[string]any{
+			"id":    d.Id(),
+			"users": userIds,
+		})
+		_, _, err := client.OwnersApi.SetOwnerUsers(ctx, d.Id()).UserIDList(*opal.NewUserIDList(userIds)).Execute()
+		if err != nil {
+			return diag.FromErr(err)
+		}
+	}
+
+	return resourceOwnerRead(ctx, d, m)
 }
 
 func resourceOwnerDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
