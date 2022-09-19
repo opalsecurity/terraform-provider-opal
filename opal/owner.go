@@ -12,6 +12,7 @@ import (
 
 func resourceOwner() *schema.Resource {
 	return &schema.Resource{
+		Description:   "An Opal Owner resource.",
 		CreateContext: resourceOwnerCreate,
 		ReadContext:   resourceOwnerRead,
 		UpdateContext: resourceOwnerUpdate,

@@ -3,12 +3,12 @@
 page_title: "opal_owner Resource - terraform-provider-opal"
 subcategory: ""
 description: |-
-  
+  An Opal Owner resource.
 ---
 
 # opal_owner (Resource)
 
-
+An Opal Owner resource.
 
 
 
