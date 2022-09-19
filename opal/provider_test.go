@@ -1,10 +1,15 @@
 package opal
 
 import (
+	"errors"
+	"fmt"
+	"net/url"
 	"os"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/opalsecurity/opal-go"
 )
 
 var testAccProviders map[string]*schema.Provider
@@ -41,4 +46,31 @@ func testAccPreCheck(t *testing.T) {
 	if os.Getenv("OPAL_TEST_BASE_URL") == "" {
 		t.Fatal("OPAL_TEST_BASE_URL must be set for acceptance tests")
 	}
+}
+
+func TestMain(m *testing.M) {
+	resource.TestMain(m)
+}
+
+func sweeperClient() (*opal.APIClient, error) {
+	conf := opal.NewConfiguration()
+
+	token := os.Getenv("OPAL_TEST_TOKEN")
+	if token == "" {
+		return nil, errors.New("OPAL_TEST_TOKEN must be set")
+	}
+	conf.DefaultHeader["Authorization"] = fmt.Sprintf("Bearer %s", token)
+
+	baseUrl := os.Getenv("OPAL_TEST_BASE_URL")
+	if baseUrl == "" {
+		return nil, errors.New("OPAL_TEST_BASE_URL must be set")
+	}
+	u, err := url.Parse(baseUrl)
+	if err != nil {
+		return nil, err
+	}
+	conf.Host = u.Host
+	conf.Scheme = u.Scheme
+
+	return opal.NewAPIClient(conf), nil
 }

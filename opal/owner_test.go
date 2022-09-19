@@ -18,7 +18,7 @@ var knownUserID1 = os.Getenv("OPAL_TEST_KNOWN_USER_ID_1")
 var knownUserID2 = os.Getenv("OPAL_TEST_KNOWN_USER_ID_2")
 
 func TestAccExampleOwner_CRUD(t *testing.T) {
-	baseName := "owner_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
+	baseName := "tf_acc_test_owner_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
 	resourceName := "opal_owner." + baseName
 
 	resource.Test(t, resource.TestCase{
@@ -36,17 +36,17 @@ func TestAccExampleOwner_CRUD(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccOwnerResource(baseName, resourceName, `description = "some desc"
+				Config: testAccOwnerResource(baseName, baseName+"_changed", `description = "some desc"
 					access_request_escalation_period = 30`),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "name", resourceName),                     // Verify that changing the name works.
+					resource.TestCheckResourceAttr(resourceName, "name", baseName+"_changed"),              // Verify that changing the name works.
 					resource.TestCheckResourceAttr(resourceName, "description", "some desc"),               // Verify that changing the description works.
 					resource.TestCheckResourceAttr(resourceName, "user.0.id", knownUserID1),                // Verify that the existing user wasn't changed.
 					resource.TestCheckResourceAttr(resourceName, "access_request_escalation_period", "30"), // Verify that changing the escalation period works.
 				),
 			},
 			{
-				Config: testAccOwnerResource(baseName, resourceName, fmt.Sprintf(`user { id = "%s" }`, knownUserID2)),
+				Config: testAccOwnerResource(baseName, baseName+"_changed", fmt.Sprintf(`user { id = "%s" }`, knownUserID2)),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "description", ""),                       // Verify that unsetting the name works.
 					resource.TestCheckResourceAttr(resourceName, "user.0.id", knownUserID1),               // Verify that the existing user wasn't changed.
