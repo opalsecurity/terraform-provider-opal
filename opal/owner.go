@@ -201,5 +201,12 @@ func resourceOwnerUpdate(ctx context.Context, d *schema.ResourceData, m interfac
 }
 
 func resourceOwnerDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	client := m.(*opal.APIClient)
+
+	_, err := client.OwnersApi.DeleteOwner(ctx, d.Id()).Execute()
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
 	return nil
 }
