@@ -1,4 +1,5 @@
 # Terraform Opal Provider
+[![Terraform Provider Tests](https://github.com/opalsecurity/terraform-provider-opal/actions/workflows/test.yml/badge.svg)](https://github.com/opalsecurity/terraform-provider-opal/actions/workflows/test.yml)
 
 ## Development
 
