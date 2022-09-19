@@ -26,8 +26,16 @@ func testAccPreCheck(t *testing.T) {
 		t.Fatal("OPAL_TEST_TOKEN must be set for acceptance tests")
 	}
 
-	if os.Getenv("OPAL_TEST_KNOWN_USER_ID") == "" {
-		t.Fatal("OPAL_TEST_KNOWN_USER_ID must be set for acceptance tests. You should get this value from any user in the test organization.")
+	if os.Getenv("OPAL_TEST_KNOWN_USER_ID_1") == "" {
+		t.Fatal("OPAL_TEST_KNOWN_USER_ID_1 must be set for acceptance tests. You should get this value from any user in the test organization.")
+	}
+
+	if os.Getenv("OPAL_TEST_KNOWN_USER_ID_2") == "" {
+		t.Fatal("OPAL_TEST_KNOWN_USER_ID_2 must be set for acceptance tests. You should get this value from any user in the test organization.")
+	}
+
+	if os.Getenv("OPAL_TEST_KNOWN_USER_ID_1") == os.Getenv("OPAL_TEST_KNOWN_USER_ID_2") {
+		t.Fatal("OPAL_TEST_KNOWN_USER_ID_1 should not be the same as OPAL_TEST_KNOWN_USER_ID_2")
 	}
 
 	if os.Getenv("OPAL_TEST_BASE_URL") == "" {

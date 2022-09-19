@@ -14,9 +14,10 @@ import (
 	"github.com/opalsecurity/opal-go"
 )
 
-var knownUserID = os.Getenv("OPAL_TEST_KNOWN_USER_ID")
+var knownUserID1 = os.Getenv("OPAL_TEST_KNOWN_USER_ID_1")
+var knownUserID2 = os.Getenv("OPAL_TEST_KNOWN_USER_ID_2")
 
-func TestAccExampleOwner_basic(t *testing.T) {
+func TestAccExampleOwner_CRUD(t *testing.T) {
 	baseName := "owner_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
 	resourceName := "opal_owner." + baseName
 
@@ -26,26 +27,48 @@ func TestAccExampleOwner_basic(t *testing.T) {
 		CheckDestroy: testAccCheckOwnerDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccOwnerResource(baseName),
+				Config: testAccOwnerResource(baseName, baseName, ""),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "name", baseName),
-					resource.TestCheckResourceAttr(resourceName, "user.0.id", knownUserID),
-					resource.TestCheckResourceAttr(resourceName, "access_request_escalation_period", "0"),
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),                        // Verify that the name was set.
+					resource.TestCheckResourceAttr(resourceName, "user.0.id", knownUserID1),               // Verify that the user was set.
+					resource.TestCheckResourceAttr(resourceName, "description", ""),                       // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "access_request_escalation_period", "0"), // Verify that optional works.
+				),
+			},
+			{
+				Config: testAccOwnerResource(baseName, resourceName, `description = "some desc"
+					access_request_escalation_period = 30`),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", resourceName),                     // Verify that changing the name works.
+					resource.TestCheckResourceAttr(resourceName, "description", "some desc"),               // Verify that changing the description works.
+					resource.TestCheckResourceAttr(resourceName, "user.0.id", knownUserID1),                // Verify that the existing user wasn't changed.
+					resource.TestCheckResourceAttr(resourceName, "access_request_escalation_period", "30"), // Verify that changing the escalation period works.
+				),
+			},
+			{
+				Config: testAccOwnerResource(baseName, resourceName, fmt.Sprintf(`user { id = "%s" }`, knownUserID2)),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "description", ""),                       // Verify that unsetting the name works.
+					resource.TestCheckResourceAttr(resourceName, "user.0.id", knownUserID1),               // Verify that the existing user wasn't changed.
+					resource.TestCheckResourceAttr(resourceName, "user.1.id", knownUserID2),               // Verify that adding a user works.
+					resource.TestCheckResourceAttr(resourceName, "access_request_escalation_period", "0"), // Verify that unsetting the escalation period works.
 				),
 			},
 		},
 	})
 }
 
-func testAccOwnerResource(name string) string {
+func testAccOwnerResource(tfName, name, additional string) string {
 	return fmt.Sprintf(`
 resource "opal_owner" "%s" {
 	name = "%s"
 	user {
 		id = "%s"
 	}
+
+	%s
 }
-`, name, name, knownUserID)
+`, tfName, name, knownUserID1, additional)
 }
 
 func testAccCheckOwnerDestroy(s *terraform.State) error {

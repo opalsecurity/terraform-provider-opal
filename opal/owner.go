@@ -98,7 +98,7 @@ func resourceOwnerCreate(ctx context.Context, d *schema.ResourceData, m interfac
 	if descI, ok := d.GetOk("description"); ok {
 		createInfo.SetDescription(descI.(string))
 	}
-	if accessRequestEscalationPeriodI, ok := d.GetOk("access_request_escalation_periodiption"); ok {
+	if accessRequestEscalationPeriodI, ok := d.GetOk("access_request_escalation_period"); ok {
 		createInfo.SetAccessRequestEscalationPeriod(int32(accessRequestEscalationPeriodI.(int)))
 	}
 
@@ -171,11 +171,12 @@ func resourceOwnerUpdate(ctx context.Context, d *schema.ResourceData, m interfac
 
 	updateInfo := opal.NewUpdateOwnerInfo(d.Id())
 	updateInfo.SetName(d.Get("name").(string))
-	if descI, ok := d.GetOk("description"); ok {
-		updateInfo.SetDescription(descI.(string))
+	if d.HasChange("description") {
+		updateInfo.SetDescription(d.Get("description").(string))
 	}
-	if accessRequestEscalationPeriodI, ok := d.GetOk("access_request_escalation_periodiption"); ok {
-		updateInfo.SetAccessRequestEscalationPeriod(int32(accessRequestEscalationPeriodI.(int)))
+
+	if d.HasChange("access_request_escalation_period") {
+		updateInfo.SetAccessRequestEscalationPeriod(int32(d.Get("access_request_escalation_period").(int)))
 	}
 
 	owner, _, err := client.OwnersApi.UpdateOwners(ctx).UpdateOwnerInfoList(*opal.NewUpdateOwnerInfoList([]opal.UpdateOwnerInfo{*updateInfo})).Execute()
