@@ -16,6 +16,9 @@ func resourceOwner() *schema.Resource {
 		ReadContext:   resourceOwnerRead,
 		UpdateContext: resourceOwnerUpdate,
 		DeleteContext: resourceOwnerDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Description: "The ID of the owner.",
