@@ -86,6 +86,47 @@ require_mfa_to_approve = true
 	})
 }
 
+// TestAccResource_Visibility tests that setting visibility works.
+func TestAccResource_Visibility(t *testing.T) {
+	baseName := "tf_acc_test_resource_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
+	resourceName := "opal_resource." + baseName
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckResourceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccResourceResource(baseName, baseName, ""),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "visibility.0.level", "GLOBAL"),
+				),
+			},
+			// XXX: Test that adding a visibility group works after we support group resources.
+		},
+	})
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckResourceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccResourceResource(baseName, baseName, `visibility { level = "LIMITED" }`),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "visibility.0.level", "LIMITED"),
+				),
+			},
+			{
+				Config: testAccResourceResource(baseName, baseName, ``),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "visibility.0.level", "GLOBAL"),
+				),
+			},
+		},
+	})
+}
+
 // TestAccResource_SetOnCreate tests that setting attributes on creation
 // works.
 func TestAccResource_SetOnCreate(t *testing.T) {
