@@ -85,9 +85,10 @@ func resourceResource() *schema.Resource {
 				Optional:    true,
 			},
 			"metadata": {
-				Description: "The JSON metadata about the remote resource. Include only for items linked to remote systems. See [the guide](https://docs.opal.dev/reference/how-opal).",
-				Type:        schema.TypeString,
-				Optional:    true,
+				Description:  "The JSON metadata about the remote resource. Include only for items linked to remote systems. See [the guide](https://docs.opal.dev/reference/how-opal).",
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateMetadata,
 			},
 			"visibility_group": {
 				Description: "The groups that can see this resource.",
