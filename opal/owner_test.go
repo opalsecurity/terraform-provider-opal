@@ -17,6 +17,30 @@ import (
 var knownUserID1 = os.Getenv("OPAL_TEST_KNOWN_USER_ID_1")
 var knownUserID2 = os.Getenv("OPAL_TEST_KNOWN_USER_ID_2")
 
+func TestAccOwner_Import(t *testing.T) {
+	baseName := "tf_acc_test_owner_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
+	resourceName := "opal_owner." + baseName
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckOwnerDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccOwnerResource(baseName, baseName, ""),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName), // Verify that the name was set.
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func TestAccOwner_CRUD(t *testing.T) {
 	baseName := "tf_acc_test_owner_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
 	resourceName := "opal_owner." + baseName
