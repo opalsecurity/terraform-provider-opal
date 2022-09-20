@@ -27,6 +27,9 @@ jobs:
           OPAL_TEST_KNOWN_USER_ID_1: ${{ secrets.OPAL_TEST_KNOWN_USER_ID_1 }}
           OPAL_TEST_KNOWN_USER_ID_2: ${{ secrets.OPAL_TEST_KNOWN_USER_ID_2 }}
           OPAL_TEST_BASE_URL: ${{ secrets.OPAL_TEST_BASE_URL }}
+          OPAL_TEST_KNOWN_CUSTOM_APP_ID: ${{ secrets.OPAL_TEST_KNOWN_CUSTOM_APP_ID }}
+          OPAL_TEST_KNOWN_CUSTOM_APP_ADMIN_OWNER_ID: ${{ secrets.OPAL_TEST_KNOWN_CUSTOM_APP_ADMIN_OWNER_ID }}
+          OPAL_TEST_KNOWN_REQUEST_TEMPLATE_ID: ${{ secrets.OPAL_TEST_KNOWN_REQUEST_TEMPLATE_ID }}
       - name: Clean up test organization
         run: make sweep
         env:
@@ -34,6 +37,9 @@ jobs:
           OPAL_TEST_KNOWN_USER_ID_1: ${{ secrets.OPAL_TEST_KNOWN_USER_ID_1 }}
           OPAL_TEST_KNOWN_USER_ID_2: ${{ secrets.OPAL_TEST_KNOWN_USER_ID_2 }}
           OPAL_TEST_BASE_URL: ${{ secrets.OPAL_TEST_BASE_URL }}
+          OPAL_TEST_KNOWN_CUSTOM_APP_ID: ${{ secrets.OPAL_TEST_KNOWN_CUSTOM_APP_ID }}
+          OPAL_TEST_KNOWN_CUSTOM_APP_ADMIN_OWNER_ID: ${{ secrets.OPAL_TEST_KNOWN_CUSTOM_APP_ADMIN_OWNER_ID }}
+          OPAL_TEST_KNOWN_REQUEST_TEMPLATE_ID: ${{ secrets.OPAL_TEST_KNOWN_REQUEST_TEMPLATE_ID }}
       - name: Generate docs
         run: go generate
       - name: Check for doc changes
