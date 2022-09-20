@@ -37,7 +37,7 @@ func resourceOwner() *schema.Resource {
 				Optional:    true,
 			},
 			"access_request_escalation_period": {
-				Description: "The amount of time (in minutes) before the next reviewer is notified. Use 0 to remove escalation policy.",
+				Description: "The amount of time (in minutes) before the next reviewer is notified. By default, there is no escalation policy.",
 				Type:        schema.TypeInt,
 				Optional:    true,
 			},
@@ -80,6 +80,7 @@ func resourceOwner() *schema.Resource {
 					},
 				},
 			},
+			// XXX: Linked reviewer message channel.
 		},
 	}
 }

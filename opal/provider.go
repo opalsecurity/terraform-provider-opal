@@ -10,6 +10,12 @@ import (
 	"github.com/opalsecurity/opal-go"
 )
 
+func init() {
+	// Terraform docs say to set this value but I don't see any change
+	// in output from tfplugindocs. It's possible this value is used somewhere else.
+	schema.DescriptionKind = schema.StringMarkdown
+}
+
 // NewProvider returns a *schema.Provider.
 func NewProvider() *schema.Provider {
 	return &schema.Provider{
@@ -29,7 +35,8 @@ func NewProvider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"opal_owner": resourceOwner(),
+			"opal_owner":    resourceOwner(),
+			"opal_resource": resourceResource(),
 		},
 		DataSourcesMap:       map[string]*schema.Resource{},
 		ConfigureContextFunc: configure,

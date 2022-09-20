@@ -22,7 +22,7 @@ An Opal Owner resource.
 
 ### Optional
 
-- `access_request_escalation_period` (Number) The amount of time (in minutes) before the next reviewer is notified. Use 0 to remove escalation policy.
+- `access_request_escalation_period` (Number) The amount of time (in minutes) before the next reviewer is notified. By default, there is no escalation policy.
 - `description` (String) A description of the owner.
 
 ### Read-Only
