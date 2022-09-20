@@ -161,3 +161,53 @@ func testAccCheckResourceDestroy(s *terraform.State) error {
 
 	return nil
 }
+
+// TestAccResource_SetOnCreate_WithOwner tests that setting an admin_owner_id works.
+func TestAccResource_SetOnCreate_WithOwner(t *testing.T) {
+	resourceBaseName := "tf_acc_test_resource_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
+	ownerBaseName := "tf_acc_test_owner_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
+	resourceResourceName := "opal_resource." + resourceBaseName
+	ownerResourceName := "opal_owner." + ownerBaseName
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: combineCheck(testAccCheckResourceDestroy, testAccCheckOwnerDestroy),
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(`
+resource "opal_owner" "%s" {
+	name = "%s"
+
+	user {
+		id = "%s"
+	}
+}
+
+resource "opal_resource" "%s" {
+	name = "%s"
+	resource_type = "CUSTOM"
+	app_id = "%s"
+	admin_owner_id = "${opal_owner.%s.id}"
+}
+`, ownerBaseName, ownerBaseName, knownUserID1, resourceBaseName, resourceBaseName, knownCustomAppID, ownerBaseName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceResourceName, "name", resourceBaseName),
+					resource.TestCheckResourceAttrPair(resourceResourceName, "admin_owner_id", ownerResourceName, "id"),
+					resource.TestCheckResourceAttrPair(resourceResourceName, "reviewer.0.id", ownerResourceName, "id"),
+				),
+			},
+		},
+	})
+}
+
+func combineCheck(fns ...resource.TestCheckFunc) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		for _, fn := range fns {
+			if err := fn(s); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+}
