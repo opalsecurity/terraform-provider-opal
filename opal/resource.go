@@ -48,7 +48,7 @@ func resourceResource() *schema.Resource {
 			"description": {
 				Description: "The description of the resource.",
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 			},
 			"resource_type": {
 				Description:  "The type of the resource, i.e. AWS_EC2_INSTANCE.",
@@ -57,7 +57,7 @@ func resourceResource() *schema.Resource {
 				Required:     true,
 			},
 			"app_id": {
-				Description: "The ID of the app integration that provides the resource as a UUID.",
+				Description: "The ID of the app integration that provides the resource. You can get this value from the URL of the app in the Opal web app.",
 				Type:        schema.TypeString,
 				Required:    true,
 			},
@@ -65,6 +65,7 @@ func resourceResource() *schema.Resource {
 				Description: "The admin owner ID for this resource. By default, this is set to the application admin owner.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 			},
 			"require_manager_approval": {
 				Description: "Require the requester's manager's approval for requests to this resource.",
@@ -93,7 +94,7 @@ func resourceResource() *schema.Resource {
 			},
 			"request_template_id": {
 				Description: "The ID of a request template for this resource. You can get this ID from the URL in the Opal web app.",
-				Type:        schema.TypeBool,
+				Type:        schema.TypeString,
 				Optional:    true,
 			},
 			"metadata": {
@@ -160,8 +161,15 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 	appID := d.Get("app_id").(string)
 
 	createInfo := opal.NewCreateResourceInfo(name, resourceType, appID)
-	// createInfo.SetMetadata()
-	// createInfo.SetDescription()
+	if descI, ok := d.GetOk("description"); ok {
+		createInfo.SetDescription(descI.(string))
+	}
+	if metadataI, ok := d.GetOk("metadata"); ok {
+		createInfo.SetMetadata(metadataI.(string))
+	}
+	if metadataI, ok := d.GetOk("metadata"); ok {
+		createInfo.SetMetadata(metadataI.(string))
+	}
 
 	resource, _, err := client.ResourcesApi.CreateResource(ctx).CreateResourceInfo(*createInfo).Execute()
 	if err != nil {
@@ -173,11 +181,38 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 		"id":   resource.AdminOwnerId,
 	})
 
-	// Because resource creation does not let us set an owner immediately (the owner is),
-	// we need to update the resource after creation.
-	if ownerIDI, ok := d.GetOk("admin_owner_id"); ok {
+	// Because resource creation does not let us set some properties immediately,
+	// we may have to update them in a follow up request.
+	adminOwnerIDI, adminOwnerIDOk := d.GetOk("admin_owner_id")
+	requireManagerApprovalI, requireManagerApprovalOk := d.GetOk("require_manager_approval")
+	autoApprovalI, autoApprovalOk := d.GetOk("auto_approval")
+	requireMfaToApproveI, requireMfaToApproveOk := d.GetOk("require_mfa_to_approve")
+	requireSupportTicketI, requireSupportTicketOk := d.GetOk("require_support_ticket")
+	maxDurationI, maxDurationOk := d.GetOk("max_duration")
+	requestTemplateIDI, requestTemplateIDOk := d.GetOk("request_template_id")
+	if adminOwnerIDOk || requireManagerApprovalOk || autoApprovalOk || requireMfaToApproveOk || requireSupportTicketOk || maxDurationOk || requestTemplateIDOk {
 		updateInfo := opal.NewUpdateResourceInfo(resource.ResourceId)
-		updateInfo.SetAdminOwnerId(ownerIDI.(string))
+		if adminOwnerIDOk {
+			updateInfo.SetAdminOwnerId(adminOwnerIDI.(string))
+		}
+		if requireManagerApprovalOk {
+			updateInfo.SetRequireManagerApproval(requireManagerApprovalI.(bool))
+		}
+		if autoApprovalOk {
+			updateInfo.SetAutoApproval(autoApprovalI.(bool))
+		}
+		if requireMfaToApproveOk {
+			updateInfo.SetRequireMfaToApprove(requireMfaToApproveI.(bool))
+		}
+		if requireSupportTicketOk {
+			updateInfo.SetRequireSupportTicket(requireSupportTicketI.(bool))
+		}
+		if maxDurationOk {
+			updateInfo.SetMaxDuration(int32(maxDurationI.(int)))
+		}
+		if requestTemplateIDOk {
+			updateInfo.SetRequestTemplateId(requestTemplateIDI.(string))
+		}
 		if _, _, err := client.ResourcesApi.UpdateResources(ctx).UpdateResourceInfoList(*opal.NewUpdateResourceInfoList([]opal.UpdateResourceInfo{*updateInfo})).Execute(); err != nil {
 			return diag.FromErr(err)
 		}
@@ -238,7 +273,7 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 		d.Set("require_manager_approval", resource.RequireManagerApproval),
 		d.Set("auto_approval", resource.AutoApproval),
 		d.Set("require_mfa_to_approve", resource.RequireMfaToApprove),
-		d.Set("require_suppot_ticket", resource.RequireSupportTicket),
+		d.Set("require_support_ticket", resource.RequireSupportTicket),
 		d.Set("max_duration", resource.MaxDuration),
 		d.Set("request_template_id", resource.RequestTemplateId),
 		// XXX: We don't get the metadata back. Will terraform state be okay?

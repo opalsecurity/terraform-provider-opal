@@ -17,3 +17,10 @@ resource "opal_owner" "test_owner" {
     id = "f865f6a5-5be8-46a0-bc57-b9cadaf4d1e5"
   }
 }
+
+resource "opal_resource" "test_resource" {
+  name = "hi resource"
+  resource_type = "CUSTOM"
+  app_id = "03c06479-6ffa-45e1-9f65-cd470ff128b3"
+  admin_owner_id = "${opal_owner.test_owner.id}"
+}
