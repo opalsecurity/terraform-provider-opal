@@ -47,6 +47,14 @@ func testAccPreCheck(t *testing.T) {
 		t.Fatal("OPAL_TEST_KNOWN_CUSTOM_APP_ID must be set for acceptance tests. You should get this value from a custom app integration in the test organization.")
 	}
 
+	if os.Getenv("OPAL_TEST_KNOWN_CUSTOM_APP_ADMIN_OWNER_ID") == "" {
+		t.Fatal("OPAL_TEST_KNOWN_CUSTOM_APP_ADMIN_OWNER_ID must be set for acceptance tests. You should get this value from a custom app integration in the test organization.")
+	}
+
+	if os.Getenv("OPAL_TEST_KNOWN_REQUEST_TEMPLATE_ID") == "" {
+		t.Fatal("OPAL_TEST_KNOWN_REQUEST_TEMPLATE_ID must be set for acceptance tests. You should get this value from a custom app integration in the test organization.")
+	}
+
 	if os.Getenv("OPAL_TEST_BASE_URL") == "" {
 		t.Fatal("OPAL_TEST_BASE_URL must be set for acceptance tests")
 	}

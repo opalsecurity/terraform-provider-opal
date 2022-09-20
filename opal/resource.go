@@ -2,6 +2,8 @@ package opal
 
 import (
 	"context"
+	"errors"
+	"log"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -91,7 +93,7 @@ func resourceResource() *schema.Resource {
 			},
 			"max_duration": {
 				Description: "The maximum duration for which this resource can be requested (in minutes). By default, the max duration is indefinite access.",
-				Type:        schema.TypeBool,
+				Type:        schema.TypeInt,
 				Optional:    true,
 			},
 			"request_template_id": {
@@ -99,6 +101,7 @@ func resourceResource() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 			},
+			// XXX: remote resource id
 			"metadata": {
 				Description:  "The JSON metadata about the remote resource. Include only for items linked to remote systems. See [the guide](https://docs.opal.dev/reference/how-opal).",
 				Type:         schema.TypeString,
@@ -172,18 +175,16 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 	if metadataI, ok := d.GetOk("metadata"); ok {
 		createInfo.SetMetadata(metadataI.(string))
 	}
-	if metadataI, ok := d.GetOk("metadata"); ok {
-		createInfo.SetMetadata(metadataI.(string))
-	}
 
 	resource, _, err := client.ResourcesApi.CreateResource(ctx).CreateResourceInfo(*createInfo).Execute()
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	d.SetId(resource.ResourceId)
 
 	tflog.Debug(ctx, "Created opal resource", map[string]any{
 		"name": name,
-		"id":   resource.AdminOwnerId,
+		"id":   d.Id(),
 	})
 
 	// Because resource creation does not let us set some properties immediately,
@@ -218,6 +219,12 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 		if requestTemplateIDOk {
 			updateInfo.SetRequestTemplateId(requestTemplateIDI.(string))
 		}
+
+		tflog.Debug(ctx, "Immediately updating opal resource", map[string]any{
+			"name":       name,
+			"updateInfo": updateInfo,
+		})
+
 		if _, _, err := client.ResourcesApi.UpdateResources(ctx).UpdateResourceInfoList(*opal.NewUpdateResourceInfoList([]opal.UpdateResourceInfo{*updateInfo})).Execute(); err != nil {
 			return diag.FromErr(err)
 		}
@@ -247,7 +254,6 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 	// XXX: Update audit channel...
 	// XXX: Update mfa required for connnect...
 
-	d.SetId(resource.ResourceId)
 	return resourceResourceRead(ctx, d, m)
 }
 
@@ -280,8 +286,18 @@ func resourceResourceUpdateReviewers(ctx context.Context, d *schema.ResourceData
 		reviewer := rawReviewer.(map[string]any)
 		reviewerIds = append(reviewerIds, reviewer["id"].(string))
 	}
+	tflog.Debug(ctx, "Setting resource reviewers", map[string]any{
+		"id":          d.Id(),
+		"reviewerIds": reviewerIds,
+	})
 
 	if _, _, err := client.ResourcesApi.SetResourceReviewers(ctx, d.Id()).ReviewerIDList(*opal.NewReviewerIDList(reviewerIds)).Execute(); err != nil {
+		var gErr *opal.GenericOpenAPIError
+		if errors.As(err, &gErr) {
+			log.Println("error string", string(gErr.Body()))
+		} else {
+			log.Println("not", err)
+		}
 		return diag.FromErr(err)
 	}
 	return nil

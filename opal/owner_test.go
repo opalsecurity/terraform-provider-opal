@@ -17,7 +17,7 @@ import (
 var knownUserID1 = os.Getenv("OPAL_TEST_KNOWN_USER_ID_1")
 var knownUserID2 = os.Getenv("OPAL_TEST_KNOWN_USER_ID_2")
 
-func TestAccExampleOwner_CRUD(t *testing.T) {
+func TestAccOwner_CRUD(t *testing.T) {
 	baseName := "tf_acc_test_owner_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
 	resourceName := "opal_owner." + baseName
 
