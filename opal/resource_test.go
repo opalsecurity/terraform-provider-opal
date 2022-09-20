@@ -137,7 +137,6 @@ auto_approval = true
 	})
 }
 
-// XXX: Test combination plan with owner and resource.
 // XXX: Test metadata / Remote ID
 
 func testAccResourceResource(tfName, name, additional string) string {
@@ -186,22 +185,7 @@ func TestAccResource_SetOnCreate_WithOwner(t *testing.T) {
 		CheckDestroy: combineCheck(testAccCheckResourceDestroy, testAccCheckOwnerDestroy),
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(`
-resource "opal_owner" "%s" {
-	name = "%s"
-
-	user {
-		id = "%s"
-	}
-}
-
-resource "opal_resource" "%s" {
-	name = "%s"
-	resource_type = "CUSTOM"
-	app_id = "%s"
-	admin_owner_id = "${opal_owner.%s.id}"
-}
-`, ownerBaseName, ownerBaseName, knownUserID1, resourceBaseName, resourceBaseName, knownCustomAppID, ownerBaseName),
+				Config: testAccResourceResourceWithOwner(ownerBaseName, resourceBaseName, fmt.Sprintf(`admin_owner_id = "${%s.id}"`, ownerResourceName)),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceResourceName, "name", resourceBaseName),
 					resource.TestCheckResourceAttrPair(resourceResourceName, "admin_owner_id", ownerResourceName, "id"),
@@ -210,7 +194,31 @@ resource "opal_resource" "%s" {
 			},
 			{
 				// Change the owner and verify that the owner is changed.
-				Config: fmt.Sprintf(`
+				Config: testAccResourceResourceWithOwner(ownerBaseName, resourceBaseName, fmt.Sprintf(`admin_owner_id = "%s"`, knownCustomAppAdminOwnerID)),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceResourceName, "name", resourceBaseName),
+					resource.TestCheckResourceAttr(resourceResourceName, "admin_owner_id", knownCustomAppAdminOwnerID),
+					resource.TestCheckResourceAttrPair(resourceResourceName, "reviewer.0.id", ownerResourceName, "id"),
+				),
+			},
+			{
+				// Change the reviewer as well and verify it's changed.
+				Config: testAccResourceResourceWithOwner(ownerBaseName, resourceBaseName, fmt.Sprintf(`admin_owner_id = "%s"
+reviewer {
+	id = "%s"
+}`, knownCustomAppAdminOwnerID, knownCustomAppAdminOwnerID)),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceResourceName, "name", resourceBaseName),
+					resource.TestCheckResourceAttr(resourceResourceName, "admin_owner_id", knownCustomAppAdminOwnerID),
+					resource.TestCheckResourceAttr(resourceResourceName, "reviewer.0.id", knownCustomAppAdminOwnerID),
+				),
+			},
+		},
+	})
+}
+
+func testAccResourceResourceWithOwner(ownerName, resourceName, additional string) string {
+	return fmt.Sprintf(`
 resource "opal_owner" "%s" {
 	name = "%s"
 
@@ -223,21 +231,9 @@ resource "opal_resource" "%s" {
 	name = "%s"
 	resource_type = "CUSTOM"
 	app_id = "%s"
-	admin_owner_id = "%s"
-
-	reviewer {
-		id = "%s"
-	}
+	%s
 }
-`, ownerBaseName, ownerBaseName, knownUserID1, resourceBaseName, resourceBaseName, knownCustomAppID, knownCustomAppAdminOwnerID, knownCustomAppAdminOwnerID),
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceResourceName, "name", resourceBaseName),
-					resource.TestCheckResourceAttr(resourceResourceName, "admin_owner_id", knownCustomAppAdminOwnerID),
-					resource.TestCheckResourceAttr(resourceResourceName, "reviewer.0.id", knownCustomAppAdminOwnerID),
-				),
-			},
-		},
-	})
+`, ownerName, ownerName, knownUserID1, resourceName, resourceName, knownCustomAppID, additional)
 }
 
 func combineCheck(fns ...resource.TestCheckFunc) resource.TestCheckFunc {
