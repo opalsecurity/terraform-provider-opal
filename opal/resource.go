@@ -234,6 +234,9 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 	} else if adminOwnerIDOk {
 		// If the admin owner was set during creation, we should also set
 		// the required reviewer to be the same so that it is consistent.
+		//
+		// Otherwise, if it's unset, the Opal API will automatically set it to
+		// the app owner.
 		if diag := resourceResourceUpdateReviewers(ctx, d, client, []any{map[string]any{"id": adminOwnerIDI}}); diag != nil {
 			return diag
 		}
@@ -269,7 +272,6 @@ func resourceResourceUpdateVisibility(ctx context.Context, d *schema.ResourceDat
 }
 
 func resourceResourceUpdateReviewers(ctx context.Context, d *schema.ResourceData, client *opal.APIClient, reviewersI any) diag.Diagnostics {
-	// XXX: Support unsetting?
 	rawReviewers := reviewersI.([]any)
 	reviewerIds := make([]string, 0, len(rawReviewers))
 	for _, rawReviewer := range rawReviewers {
@@ -381,7 +383,14 @@ func resourceResourceUpdate(ctx context.Context, d *schema.ResourceData, m any) 
 	}
 
 	if d.HasChange("reviewer") {
-		if diag := resourceResourceUpdateReviewers(ctx, d, client, d.Get("reviewer")); diag != nil {
+		// If all reviewer blocks were unset, let's use the admin owner id. If we don't do this,
+		// the resource will be configured to an invalid state that the Opal API will still accept,
+		// but the resource will be unrequestable.
+		reviewers := any([]any{map[string]any{"id": d.State().Attributes["admin_owner_id"]}})
+		if reviewersBlock, ok := d.GetOk("reviewer"); ok {
+			reviewers = reviewersBlock
+		}
+		if diag := resourceResourceUpdateReviewers(ctx, d, client, reviewers); diag != nil {
 			return diag
 		}
 	}
