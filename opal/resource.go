@@ -110,6 +110,7 @@ func resourceResource() *schema.Resource {
 				Description: "The visibility of this resource.",
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -140,6 +141,7 @@ func resourceResource() *schema.Resource {
 				Description: "A required reviewer for this resource. If none are specified, then the admin owner will be used.",
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
@@ -322,18 +324,23 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 			"id": groupID,
 		})
 	}
-	d.Set("visibility", map[string]any{
+	d.Set("visibility", []any{map[string]any{
 		"level": visibility.Visibility,
 		"group": visibilityGroups,
-	})
+	}})
 
 	reviewerIDs, _, err := client.ResourcesApi.GetResourceReviewers(ctx, resource.ResourceId).Execute()
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
 	reviewers := make([]any, 0, len(reviewerIDs))
 	for _, reviewerID := range reviewerIDs {
 		reviewers = append(reviewers, map[string]any{
 			"id": reviewerID,
 		})
 	}
+	d.Set("reviewer", reviewers)
 
 	// XXX: Read out message channels, mfa required to connect.
 
