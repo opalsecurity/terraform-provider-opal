@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -62,6 +63,8 @@ func TestAccResource_CRUD(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "require_support_ticket", "false"),            // Verify that optional works.
 					resource.TestCheckResourceAttr(resourceName, "require_mfa_to_approve", "false"),            // Verify that optional works.
 					resource.TestCheckResourceAttr(resourceName, "auto_approval", "false"),                     // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "visibility", "GLOBAL"),                       // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "reviewer.0.id", knownCustomAppAdminOwnerID),  // Verify that optional works.
 				),
 			},
 			{
@@ -97,31 +100,20 @@ func TestAccResource_Visibility(t *testing.T) {
 		CheckDestroy: testAccCheckResourceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceResource(baseName, baseName, ""),
+				Config: testAccResourceResource(baseName, baseName, `visibility = "LIMITED"`),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "visibility.0.level", "GLOBAL"),
-				),
-			},
-			// XXX: Test that adding a visibility group works after we support group resources.
-		},
-	})
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckResourceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccResourceResource(baseName, baseName, `visibility { level = "LIMITED" }`),
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "visibility.0.level", "LIMITED"),
+					resource.TestCheckResourceAttr(resourceName, "visibility", "LIMITED"),
 				),
 			},
 			{
-				Config: testAccResourceResource(baseName, baseName, ``),
+				Config: testAccResourceResource(baseName, baseName, `visibility = "GLOBAL"`),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "visibility.0.level", "GLOBAL"),
+					resource.TestCheckResourceAttr(resourceName, "visibility", "GLOBAL"),
 				),
+			},
+			{
+				Config:      testAccResourceResource(baseName, baseName, `visibility_group { id = "whatever" }`),
+				ExpectError: regexp.MustCompile("cannot be specified"),
 			},
 		},
 	})

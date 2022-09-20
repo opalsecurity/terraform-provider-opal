@@ -17,23 +17,24 @@ An Opal Resource resource.
 
 ### Required
 
-- `app_id` (String) The ID of the app integration that provides the resource as a UUID.
-- `description` (String) The description of the resource.
+- `app_id` (String) The ID of the app integration that provides the resource. You can get this value from the URL of the app in the Opal web app.
 - `name` (String) The name of the resource.
-- `owner_id` (String) The owner ID for this resource.
 - `resource_type` (String) The type of the resource, i.e. AWS_EC2_INSTANCE.
 
 ### Optional
 
+- `admin_owner_id` (String) The admin owner ID for this resource. By default, this is set to the application admin owner.
 - `auto_approval` (Boolean) Automatically approve all requests for this resource without review.
-- `max_duration` (Boolean) The maximum duration for which this resource can be requested (in minutes). By default, the max duration is indefinite access.
+- `description` (String) The description of the resource.
+- `max_duration` (Number) The maximum duration for which this resource can be requested (in minutes). By default, the max duration is indefinite access.
 - `metadata` (String) The JSON metadata about the remote resource. Include only for items linked to remote systems. See [the guide](https://docs.opal.dev/reference/how-opal).
-- `request_template_id` (Boolean) The ID of a request template for this resource. You can get this ID from the URL in the Opal web app.
+- `request_template_id` (String) The ID of a request template for this resource. You can get this ID from the URL in the Opal web app.
 - `require_manager_approval` (Boolean) Require the requester's manager's approval for requests to this resource.
 - `require_mfa_to_approve` (Boolean) Require that reviewers MFA to approve requests for this resource.
 - `require_support_ticket` (Boolean) Require that requesters attach a support ticket to requests for this resource.
-- `reviewer` (Block List) A required reviewer for this resource. (see [below for nested schema](#nestedblock--reviewer))
-- `visibility_group` (Block List) The groups that can see this resource. (see [below for nested schema](#nestedblock--visibility_group))
+- `reviewer` (Block List) A required reviewer for this resource. If none are specified, then the admin owner will be used. (see [below for nested schema](#nestedblock--reviewer))
+- `visibility` (String) The visiblity level of the resource, i.e. LIMITED or GLOBAL.
+- `visibility_group` (Block List) The groups that can see this resource when visiblity is limited. If not specified, only users with direct access can see this resource when visibility is set to LIMITED. (see [below for nested schema](#nestedblock--visibility_group))
 
 ### Read-Only
 

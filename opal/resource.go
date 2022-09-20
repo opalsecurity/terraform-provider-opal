@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/opalsecurity/opal-go"
@@ -36,6 +37,14 @@ func resourceResource() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
+		CustomizeDiff: customdiff.All(
+			func(ctx context.Context, diff *schema.ResourceDiff, v interface{}) error {
+				if diff.Get("visibility").(string) == "GLOBAL" && len(diff.Get("visibility_group").([]any)) > 0 {
+					return errors.New("`visibility_group` cannot be specified when `visibility` is set to GLOBAL")
+				}
+				return nil
+			},
+		),
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Description: "The ID of the resource.",
@@ -110,32 +119,22 @@ func resourceResource() *schema.Resource {
 				ValidateFunc: validateMetadata,
 			},
 			"visibility": {
-				Description: "The visibility of this resource.",
+				Description:  "The visiblity level of the resource, i.e. LIMITED or GLOBAL.",
+				Type:         schema.TypeString,
+				ValidateFunc: validation.StringInSlice(allowedResourceVisibilityTypes, false),
+				Optional:     true,
+				Default:      "GLOBAL",
+			},
+			"visibility_group": {
+				Description: "The groups that can see this resource when visiblity is limited. If not specified, only users with direct access can see this resource when visibility is set to LIMITED.",
 				Type:        schema.TypeList,
 				Optional:    true,
-				Computed:    true,
-				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"group": {
-							Description: "The groups that can see this resource when visiblity is limited. If not specified, only users with direct access can see this resource when visiblity is limited.",
-							Type:        schema.TypeList,
-							Optional:    true,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"id": {
-										Description: "The ID of the group that can see this resource.",
-										Type:        schema.TypeString,
-										Required:    true,
-									},
-								},
-							},
-						},
-						"level": {
-							Description:  "The visiblity level of the resource, i.e. LIMITED or GLOBAL.",
-							Type:         schema.TypeString,
-							ValidateFunc: validation.StringInSlice(allowedResourceVisibilityTypes, false),
-							Required:     true,
+						"id": {
+							Description: "The ID of the group that can see this resource.",
+							Type:        schema.TypeString,
+							Required:    true,
 						},
 					},
 				},
@@ -230,8 +229,8 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 		}
 	}
 
-	if visibilityInfoI, ok := d.GetOk("visibility"); ok {
-		if diag := resourceResourceUpdateVisibility(ctx, d, client, visibilityInfoI); diag != nil {
+	if _, ok := d.GetOk("visibility"); ok {
+		if diag := resourceResourceUpdateVisibility(ctx, d, client); diag != nil {
 			return diag
 		}
 	}
@@ -257,14 +256,14 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 	return resourceResourceRead(ctx, d, m)
 }
 
-func resourceResourceUpdateVisibility(ctx context.Context, d *schema.ResourceData, client *opal.APIClient, visibilityInfoI any) diag.Diagnostics {
-	infoList := visibilityInfoI.([]any)
+func resourceResourceUpdateVisibility(ctx context.Context, d *schema.ResourceData, client *opal.APIClient) diag.Diagnostics {
 	visibilityInfo := *opal.NewVisibilityInfo(opal.VisibilityTypeEnum(opal.VISIBILITYTYPEENUM_GLOBAL))
-	if len(infoList) > 0 {
-		// We can only have one visibility block (enforced by MaxItems), so indexing into 0 is expected.
-		info := (infoList[0]).(map[string]any)
-		visibilityInfo.SetVisibility(opal.VisibilityTypeEnum(info["level"].(string)))
-		rawGroups := info["group"].([]any)
+	if visibilityI, ok := d.GetOk("visibility"); ok {
+		visibilityInfo.SetVisibility(opal.VisibilityTypeEnum(visibilityI.(string)))
+	}
+
+	if visibilityGroupI, ok := d.GetOk("visiblity_group"); ok {
+		rawGroups := visibilityGroupI.([]any)
 		groupIds := make([]string, 0, len(rawGroups))
 		for _, rawGroup := range rawGroups {
 			group := rawGroup.(map[string]any)
@@ -340,10 +339,12 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 			"id": groupID,
 		})
 	}
-	d.Set("visibility", []any{map[string]any{
-		"level": visibility.Visibility,
-		"group": visibilityGroups,
-	}})
+	d.Set("visibility", visibility.Visibility)
+	flattenedGroups := make([]any, 0, len(visibility.VisibilityGroupIds))
+	for _, groupID := range visibility.VisibilityGroupIds {
+		flattenedGroups = append(flattenedGroups, map[string]any{"id": groupID})
+	}
+	d.Set("visibility_group", flattenedGroups)
 
 	reviewerIDs, _, err := client.ResourcesApi.GetResourceReviewers(ctx, resource.ResourceId).Execute()
 	if err != nil {
@@ -399,8 +400,8 @@ func resourceResourceUpdate(ctx context.Context, d *schema.ResourceData, m any) 
 		return diagFromErr(ctx, err)
 	}
 
-	if d.HasChange("visibility") {
-		if diag := resourceResourceUpdateVisibility(ctx, d, client, d.Get("visibility")); diag != nil {
+	if d.HasChange("visibility") || d.HasChange("visibility_group") {
+		if diag := resourceResourceUpdateVisibility(ctx, d, client); diag != nil {
 			return diag
 		}
 	}
