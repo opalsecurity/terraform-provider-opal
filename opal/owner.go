@@ -106,9 +106,9 @@ func resourceOwnerCreate(ctx context.Context, d *schema.ResourceData, m interfac
 
 	owner, _, err := client.OwnersApi.CreateOwner(ctx).CreateOwnerInfo(*createInfo).Execute()
 	if err != nil {
-		return diag.FromErr(err)
+		return diagFromErr(ctx, err)
 	}
-	tflog.Debug(ctx, "Created opal owner", map[string]any{
+	tflog.Debug(ctx, "Created owner", map[string]any{
 		"name": name,
 		"id":   owner.OwnerId,
 	})
@@ -123,7 +123,7 @@ func resourceOwnerRead(ctx context.Context, d *schema.ResourceData, m interface{
 	id := d.Get("id").(string)
 	owner, _, err := client.OwnersApi.GetOwner(ctx, id).Execute()
 	if err != nil {
-		return diag.FromErr(err)
+		return diagFromErr(ctx, err)
 	}
 
 	d.SetId(owner.OwnerId)
@@ -132,16 +132,16 @@ func resourceOwnerRead(ctx context.Context, d *schema.ResourceData, m interface{
 		d.Set("description", owner.Description),
 		d.Set("access_request_escalation_period", owner.AccessRequestEscalationPeriod),
 	); err.ErrorOrNil() != nil {
-		return diag.FromErr(err)
+		return diagFromErr(ctx, err)
 	}
 
 	users, _, err := client.OwnersApi.GetOwnerUsers(ctx, id).Execute()
 	if err != nil {
-		return diag.FromErr(err)
+		return diagFromErr(ctx, err)
 	}
 
 	if err := d.Set("user", flattenOwnerUsers(users)); err != nil {
-		return diag.FromErr(err)
+		return diagFromErr(ctx, err)
 	}
 
 	return nil
@@ -183,7 +183,7 @@ func resourceOwnerUpdate(ctx context.Context, d *schema.ResourceData, m interfac
 
 	owner, _, err := client.OwnersApi.UpdateOwners(ctx).UpdateOwnerInfoList(*opal.NewUpdateOwnerInfoList([]opal.UpdateOwnerInfo{*updateInfo})).Execute()
 	if err != nil {
-		return diag.FromErr(err)
+		return diagFromErr(ctx, err)
 	}
 
 	d.SetId(owner.Owners[0].OwnerId)
@@ -203,7 +203,7 @@ func resourceOwnerUpdate(ctx context.Context, d *schema.ResourceData, m interfac
 		})
 		_, _, err := client.OwnersApi.SetOwnerUsers(ctx, d.Id()).UserIDList(*opal.NewUserIDList(userIds)).Execute()
 		if err != nil {
-			return diag.FromErr(err)
+			return diagFromErr(ctx, err)
 		}
 	}
 
@@ -215,7 +215,7 @@ func resourceOwnerDelete(ctx context.Context, d *schema.ResourceData, m interfac
 
 	_, err := client.OwnersApi.DeleteOwner(ctx, d.Id()).Execute()
 	if err != nil {
-		return diag.FromErr(err)
+		return diagFromErr(ctx, err)
 	}
 
 	return nil

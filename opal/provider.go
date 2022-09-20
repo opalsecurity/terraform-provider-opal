@@ -2,9 +2,12 @@ package opal
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"net/url"
 
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/opalsecurity/opal-go"
@@ -60,11 +63,31 @@ func configure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.D
 	if ok {
 		u, err := url.Parse(baseUrlT.(string))
 		if err != nil {
-			return nil, diag.FromErr(err)
+			return nil, diagFromErr(ctx, err)
 		}
 		conf.Host = u.Host
 		conf.Scheme = u.Scheme
 	}
 
 	return opal.NewAPIClient(conf), nil
+}
+
+// diagFromErr is a small wrapper around diagFromErr that attempts
+// to pull more data out of Opal API errors.
+func diagFromErr(ctx context.Context, err error) diag.Diagnostics {
+	var gErr *opal.GenericOpenAPIError
+	if errors.As(err, &gErr) {
+		body := make(map[string]any)
+		if unmarshalErr := json.Unmarshal(gErr.Body(), &body); unmarshalErr != nil {
+			tflog.Error(ctx, "Could not unmarshal response body into json", map[string]any{
+				"body": string(gErr.Body()),
+			})
+			return diag.FromErr(err)
+		}
+
+		if body["Message"] != nil {
+			return diagFromErr(ctx, fmt.Errorf("opal api error: %s: %s", err.Error(), body["Message"]))
+		}
+	}
+	return diag.FromErr(err)
 }

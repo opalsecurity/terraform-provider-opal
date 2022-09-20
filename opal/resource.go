@@ -178,7 +178,7 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 
 	resource, _, err := client.ResourcesApi.CreateResource(ctx).CreateResourceInfo(*createInfo).Execute()
 	if err != nil {
-		return diag.FromErr(err)
+		return diagFromErr(ctx, err)
 	}
 	d.SetId(resource.ResourceId)
 
@@ -226,7 +226,7 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 		})
 
 		if _, _, err := client.ResourcesApi.UpdateResources(ctx).UpdateResourceInfoList(*opal.NewUpdateResourceInfoList([]opal.UpdateResourceInfo{*updateInfo})).Execute(); err != nil {
-			return diag.FromErr(err)
+			return diagFromErr(ctx, err)
 		}
 	}
 
@@ -274,7 +274,7 @@ func resourceResourceUpdateVisibility(ctx context.Context, d *schema.ResourceDat
 	}
 
 	if _, _, err := client.ResourcesApi.SetResourceVisibility(ctx, d.Id()).VisibilityInfo(visibilityInfo).Execute(); err != nil {
-		return diag.FromErr(err)
+		return diagFromErr(ctx, err)
 	}
 	return nil
 }
@@ -298,7 +298,7 @@ func resourceResourceUpdateReviewers(ctx context.Context, d *schema.ResourceData
 		} else {
 			log.Println("not", err)
 		}
-		return diag.FromErr(err)
+		return diagFromErr(ctx, err)
 	}
 	return nil
 }
@@ -308,7 +308,7 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 
 	resource, _, err := client.ResourcesApi.GetResource(ctx, d.Id()).Execute()
 	if err != nil {
-		return diag.FromErr(err)
+		return diagFromErr(ctx, err)
 	}
 
 	d.SetId(resource.ResourceId)
@@ -326,12 +326,12 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 		d.Set("request_template_id", resource.RequestTemplateId),
 		// XXX: We don't get the metadata back. Will terraform state be okay?
 	); err.ErrorOrNil() != nil {
-		return diag.FromErr(err)
+		return diagFromErr(ctx, err)
 	}
 
 	visibility, _, err := client.ResourcesApi.GetResourceVisibility(ctx, resource.ResourceId).Execute()
 	if err != nil {
-		return diag.FromErr(err)
+		return diagFromErr(ctx, err)
 	}
 
 	visibilityGroups := make([]any, 0, len(visibility.VisibilityGroupIds))
@@ -347,7 +347,7 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 
 	reviewerIDs, _, err := client.ResourcesApi.GetResourceReviewers(ctx, resource.ResourceId).Execute()
 	if err != nil {
-		return diag.FromErr(err)
+		return diagFromErr(ctx, err)
 	}
 
 	reviewers := make([]any, 0, len(reviewerIDs))
@@ -396,7 +396,7 @@ func resourceResourceUpdate(ctx context.Context, d *schema.ResourceData, m any) 
 	}
 	resources, _, err := client.ResourcesApi.UpdateResources(ctx).UpdateResourceInfoList(*opal.NewUpdateResourceInfoList([]opal.UpdateResourceInfo{*updateInfo})).Execute()
 	if err != nil {
-		return diag.FromErr(err)
+		return diagFromErr(ctx, err)
 	}
 
 	if d.HasChange("visibility") {
@@ -424,9 +424,12 @@ func resourceResourceUpdate(ctx context.Context, d *schema.ResourceData, m any) 
 
 func resourceResourceDelete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*opal.APIClient)
+	tflog.Debug(ctx, "Deleting resource", map[string]any{
+		"id": d.Id(),
+	})
 
 	if _, err := client.ResourcesApi.DeleteResource(ctx, d.Id()).Execute(); err != nil {
-		return diag.FromErr(err)
+		return diagFromErr(ctx, err)
 	}
 
 	return nil
