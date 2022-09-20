@@ -54,11 +54,13 @@ func resourceResource() *schema.Resource {
 				Description:  "The type of the resource, i.e. AWS_EC2_INSTANCE.",
 				Type:         schema.TypeString,
 				ValidateFunc: validation.StringInSlice(allowedResourceTypes, false),
+				ForceNew:     true,
 				Required:     true,
 			},
 			"app_id": {
 				Description: "The ID of the app integration that provides the resource. You can get this value from the URL of the app in the Opal web app.",
 				Type:        schema.TypeString,
+				ForceNew:    true,
 				Required:    true,
 			},
 			"admin_owner_id": {
@@ -101,6 +103,7 @@ func resourceResource() *schema.Resource {
 				Description:  "The JSON metadata about the remote resource. Include only for items linked to remote systems. See [the guide](https://docs.opal.dev/reference/how-opal).",
 				Type:         schema.TypeString,
 				Optional:     true,
+				ForceNew:     true,
 				ValidateFunc: validateMetadata,
 			},
 			"visibility": {
@@ -111,9 +114,9 @@ func resourceResource() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"group": {
-							Description: "The groups that can see this resource.",
+							Description: "The groups that can see this resource when visiblity is limited. If not specified, only users with direct access can see this resource when visiblity is limited.",
 							Type:        schema.TypeList,
-							Required:    true,
+							Optional:    true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"id": {
@@ -134,7 +137,7 @@ func resourceResource() *schema.Resource {
 				},
 			},
 			"reviewer": {
-				Description: "A required reviewer for this resource.",
+				Description: "A required reviewer for this resource. If none are specified, then the admin owner will be used.",
 				Type:        schema.TypeList,
 				Optional:    true,
 				Elem: &schema.Resource{
@@ -219,32 +222,20 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 	}
 
 	if visibilityInfoI, ok := d.GetOk("visibility"); ok {
-		info := (visibilityInfoI.([]any)[0]).(map[string]any)
-		visibilityInfo := *opal.NewVisibilityInfo(opal.VisibilityTypeEnum(info["level"].(string)))
-
-		rawGroups := d.Get("group").([]any)
-		groupIds := make([]string, 0, len(rawGroups))
-		for _, rawGroup := range rawGroups {
-			group := rawGroup.(map[string]any)
-			groupIds = append(groupIds, group["id"].(string))
-		}
-		visibilityInfo.SetVisibilityGroupIds(groupIds)
-
-		if _, _, err := client.ResourcesApi.SetResourceVisibility(ctx, d.Id()).VisibilityInfo(visibilityInfo).Execute(); err != nil {
-			return diag.FromErr(err)
+		if diag := resourceResourceUpdateVisibility(ctx, d, client, visibilityInfoI); diag != nil {
+			return diag
 		}
 	}
 
 	if reviewersI, ok := d.GetOk("reviewer"); ok {
-		rawReviewers := reviewersI.([]any)
-		reviewerIds := make([]string, 0, len(rawReviewers))
-		for _, rawReviewer := range rawReviewers {
-			group := rawReviewer.(map[string]any)
-			reviewerIds = append(reviewerIds, group["id"].(string))
+		if diag := resourceResourceUpdateReviewers(ctx, d, client, reviewersI); diag != nil {
+			return diag
 		}
-
-		if _, _, err := client.ResourcesApi.SetResourceReviewers(ctx, d.Id()).ReviewerIDList(*opal.NewReviewerIDList(reviewerIds)).Execute(); err != nil {
-			return diag.FromErr(err)
+	} else if adminOwnerIDOk {
+		// If the admin owner was set during creation, we should also set
+		// the required reviewer to be the same so that it is consistent.
+		if diag := resourceResourceUpdateReviewers(ctx, d, client, []any{map[string]any{"id": adminOwnerIDI}}); diag != nil {
+			return diag
 		}
 	}
 
@@ -253,6 +244,43 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 
 	d.SetId(resource.ResourceId)
 	return resourceResourceRead(ctx, d, m)
+}
+
+func resourceResourceUpdateVisibility(ctx context.Context, d *schema.ResourceData, client *opal.APIClient, visibilityInfoI any) diag.Diagnostics {
+	infoList := visibilityInfoI.([]any)
+	visibilityInfo := *opal.NewVisibilityInfo(opal.VisibilityTypeEnum(opal.VISIBILITYTYPEENUM_GLOBAL))
+	if len(infoList) > 0 {
+		// We can only have one visibility block (enforced by MaxItems), so indexing into 0 is expected.
+		info := (infoList[0]).(map[string]any)
+		visibilityInfo.SetVisibility(opal.VisibilityTypeEnum(info["level"].(string)))
+		rawGroups := info["group"].([]any)
+		groupIds := make([]string, 0, len(rawGroups))
+		for _, rawGroup := range rawGroups {
+			group := rawGroup.(map[string]any)
+			groupIds = append(groupIds, group["id"].(string))
+		}
+		visibilityInfo.SetVisibilityGroupIds(groupIds)
+	}
+
+	if _, _, err := client.ResourcesApi.SetResourceVisibility(ctx, d.Id()).VisibilityInfo(visibilityInfo).Execute(); err != nil {
+		return diag.FromErr(err)
+	}
+	return nil
+}
+
+func resourceResourceUpdateReviewers(ctx context.Context, d *schema.ResourceData, client *opal.APIClient, reviewersI any) diag.Diagnostics {
+	// XXX: Support unsetting?
+	rawReviewers := reviewersI.([]any)
+	reviewerIds := make([]string, 0, len(rawReviewers))
+	for _, rawReviewer := range rawReviewers {
+		reviewer := rawReviewer.(map[string]any)
+		reviewerIds = append(reviewerIds, reviewer["id"].(string))
+	}
+
+	if _, _, err := client.ResourcesApi.SetResourceReviewers(ctx, d.Id()).ReviewerIDList(*opal.NewReviewerIDList(reviewerIds)).Execute(); err != nil {
+		return diag.FromErr(err)
+	}
+	return nil
 }
 
 func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
@@ -311,6 +339,54 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 }
 
 func resourceResourceUpdate(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+	client := m.(*opal.APIClient)
+
+	// Note that metadata, app_id, and resource_type force a recreation, so we do not need to
+	// worry about those values here.
+	updateInfo := opal.NewUpdateResourceInfo(d.Id())
+	updateInfo.SetName(d.Get("name").(string))
+	if d.HasChange("description") {
+		updateInfo.SetDescription(d.Get("description").(string))
+	}
+	if d.HasChange("admin_owner_id") {
+		updateInfo.SetAdminOwnerId(d.Get("admin_owner_id").(string))
+	}
+	if d.HasChange("require_manager_approval") {
+		updateInfo.SetRequireManagerApproval(d.Get("require_manager_approval").(bool))
+	}
+	if d.HasChange("auto_approval") {
+		updateInfo.SetAutoApproval(d.Get("auto_approval").(bool))
+	}
+	if d.HasChange("require_mfa_to_approve") {
+		updateInfo.SetRequireMfaToApprove(d.Get("require_mfa_to_approve").(bool))
+	}
+	if d.HasChange("require_support_ticket") {
+		updateInfo.SetRequireSupportTicket(d.Get("require_support_ticket").(bool))
+	}
+	if d.HasChange("max_duration") {
+		updateInfo.SetMaxDuration(int32(d.Get("max_duration").(int)))
+	}
+	if d.HasChange("request_template_id") {
+		updateInfo.SetRequestTemplateId(d.Get("request_template_id").(string))
+	}
+	resources, _, err := client.ResourcesApi.UpdateResources(ctx).UpdateResourceInfoList(*opal.NewUpdateResourceInfoList([]opal.UpdateResourceInfo{*updateInfo})).Execute()
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	if d.HasChange("visibility") {
+		if diag := resourceResourceUpdateVisibility(ctx, d, client, d.Get("visibility")); diag != nil {
+			return diag
+		}
+	}
+
+	if d.HasChange("reviewer") {
+		if diag := resourceResourceUpdateReviewers(ctx, d, client, d.Get("reviewer")); diag != nil {
+			return diag
+		}
+	}
+
+	d.SetId(resources.Resources[0].ResourceId)
 	return resourceResourceRead(ctx, d, m)
 }
 
