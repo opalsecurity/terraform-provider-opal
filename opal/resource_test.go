@@ -65,10 +65,21 @@ func TestAccResource_CRUD(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccResourceResource(baseName, baseName+"_changed", `description = "test desc"`),
+				Config: testAccResourceResource(baseName, baseName+"_changed", `
+description = "test desc"
+max_duration = 60
+require_manager_approval = true
+require_support_ticket = true
+require_mfa_to_approve = true
+`),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "name", baseName+"_changed"), // Verify that updating the name works.
-					resource.TestCheckResourceAttr(resourceName, "description", "test desc"),  // Verify that updating the description works.
+					resource.TestCheckResourceAttr(resourceName, "name", baseName+"_changed"),        // Verify that updating the name works.
+					resource.TestCheckResourceAttr(resourceName, "description", "test desc"),         // Verify that updating the description works.
+					resource.TestCheckResourceAttr(resourceName, "max_duration", "60"),               // Verify that updating works.
+					resource.TestCheckResourceAttr(resourceName, "require_manager_approval", "true"), // Verify that updating works.
+					resource.TestCheckResourceAttr(resourceName, "require_support_ticket", "true"),   // Verify that updating works.
+					resource.TestCheckResourceAttr(resourceName, "require_mfa_to_approve", "true"),   // Verify that updating works.
+
 				),
 			},
 		},
@@ -195,6 +206,34 @@ resource "opal_resource" "%s" {
 					resource.TestCheckResourceAttr(resourceResourceName, "name", resourceBaseName),
 					resource.TestCheckResourceAttrPair(resourceResourceName, "admin_owner_id", ownerResourceName, "id"),
 					resource.TestCheckResourceAttrPair(resourceResourceName, "reviewer.0.id", ownerResourceName, "id"),
+				),
+			},
+			{
+				// Change the owner and verify that the owner is changed.
+				Config: fmt.Sprintf(`
+resource "opal_owner" "%s" {
+	name = "%s"
+
+	user {
+		id = "%s"
+	}
+}
+
+resource "opal_resource" "%s" {
+	name = "%s"
+	resource_type = "CUSTOM"
+	app_id = "%s"
+	admin_owner_id = "%s"
+
+	reviewer {
+		id = "%s"
+	}
+}
+`, ownerBaseName, ownerBaseName, knownUserID1, resourceBaseName, resourceBaseName, knownCustomAppID, knownCustomAppAdminOwnerID, knownCustomAppAdminOwnerID),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceResourceName, "name", resourceBaseName),
+					resource.TestCheckResourceAttr(resourceResourceName, "admin_owner_id", knownCustomAppAdminOwnerID),
+					resource.TestCheckResourceAttr(resourceResourceName, "reviewer.0.id", knownCustomAppAdminOwnerID),
 				),
 			},
 		},
