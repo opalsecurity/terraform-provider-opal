@@ -170,7 +170,36 @@ auto_approval = true
 	})
 }
 
-// XXX: Test metadata / Remote ID
+var knownGithubAppID = os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_ID")
+var knownGithubAppMetadata = os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_METADATA")
+var knownGithubAppRemoteResourceID = os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_REMOTE_RESOURCE_ID")
+
+// TestAccResource_Remote tests creating a resource with a remote system.
+func TestAccResource_Remote(t *testing.T) {
+	baseName := "tf_acc_test_resource_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
+	resourceName := "opal_resource." + baseName
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckResourceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(`resource "opal_resource" "%s" {
+	name = "%s"
+	app_id = "%s"
+	resource_type = "GIT_HUB_REPO"
+	metadata = jsonencode(%s)
+	remote_resource_id = "%s"
+}
+`, baseName, baseName, knownGithubAppID, knownGithubAppMetadata, knownGithubAppRemoteResourceID),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),
+				),
+			},
+		},
+	})
+}
 
 func testAccResourceResource(tfName, name, additional string) string {
 	return fmt.Sprintf(`

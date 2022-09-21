@@ -27,7 +27,8 @@ An Opal Resource resource.
 - `auto_approval` (Boolean) Automatically approve all requests for this resource without review.
 - `description` (String) The description of the resource.
 - `max_duration` (Number) The maximum duration for which this resource can be requested (in minutes). By default, the max duration is indefinite access.
-- `metadata` (String) The JSON metadata about the remote resource. Include only for items linked to remote systems. See [the guide](https://docs.opal.dev/reference/how-opal).
+- `metadata` (String) The JSON metadata about the remote resource. Include only for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/how-opal) for details on how to specify this field.
+- `remote_resource_id` (String) The ID of the resource on the remote system. Include only for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/how-opal) for details on how to specify this field.
 - `request_template_id` (String) The ID of a request template for this resource. You can get this ID from the URL in the Opal web app.
 - `require_manager_approval` (Boolean) Require the requester's manager's approval for requests to this resource.
 - `require_mfa_to_approve` (Boolean) Require that reviewers MFA to approve requests for this resource.

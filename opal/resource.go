@@ -44,6 +44,7 @@ func resourceResource() *schema.Resource {
 				}
 				return nil
 			},
+			// XXX: We could enforce that remote_resource_id/metadata must be passed for resource types that need it.
 		),
 		Schema: map[string]*schema.Schema{
 			"id": {
@@ -110,9 +111,14 @@ func resourceResource() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 			},
-			// XXX: remote resource id
+			"remote_resource_id": {
+				Description: "The ID of the resource on the remote system. Include only for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/how-opal) for details on how to specify this field.",
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+			},
 			"metadata": {
-				Description:  "The JSON metadata about the remote resource. Include only for items linked to remote systems. See [the guide](https://docs.opal.dev/reference/how-opal).",
+				Description:  "The JSON metadata about the remote resource. Include only for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/how-opal) for details on how to specify this field.",
 				Type:         schema.TypeString,
 				Optional:     true,
 				ForceNew:     true,
@@ -173,6 +179,9 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 	}
 	if metadataI, ok := d.GetOk("metadata"); ok {
 		createInfo.SetMetadata(metadataI.(string))
+	}
+	if remoteResourceIDI, ok := d.GetOk("remote_resource_id"); ok {
+		createInfo.SetRemoteResourceId(remoteResourceIDI.(string))
 	}
 
 	resource, _, err := client.ResourcesApi.CreateResource(ctx).CreateResourceInfo(*createInfo).Execute()
