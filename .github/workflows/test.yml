@@ -46,11 +46,17 @@ jobs:
           OPAL_TEST_KNOWN_GITHUB_APP_ID: ${{ secrets.OPAL_TEST_KNOWN_GITHUB_APP_ID }}
           OPAL_TEST_KNOWN_GITHUB_APP_METADATA: ${{ secrets.OPAL_TEST_KNOWN_GITHUB_APP_METADATA }}
           OPAL_TEST_KNOWN_GITHUB_APP_REMOTE_RESOURCE_ID: ${{ secrets.OPAL_TEST_KNOWN_GITHUB_APP_REMOTE_RESOURCE_ID }}
-      - name: Generate docs
-        run: go generate
       - name: Check for doc changes
-        id: check-changes
-        uses: mskri/check-uncommitted-changes-action@v1.0.1
-      - name: Fail if docs changed
-        if: steps.check-changes.outputs.outcome == failure()
-        run: echo "There are uncommitted changes"
+        id: changes
+        run: |
+          make docs
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "The following files need to be regenerated:"
+            git status
+            git status --porcelain | grep '^??' | sed 's/\?//g'
+            git diff
+            exit 1
+          fi
+
+          exit 0;
+
