@@ -34,8 +34,8 @@ An Opal Group resource.
 - `require_mfa_to_approve` (Boolean) Require that reviewers MFA to approve requests for this group.
 - `require_support_ticket` (Boolean) Require that requesters attach a support ticket to requests for this group.
 - `reviewer` (Block List) A required reviewer for this group. If none are specified, then the admin owner will be used. (see [below for nested schema](#nestedblock--reviewer))
-- `visibility` (String) The visiblity level of the group, i.e. LIMITED or GLOBAL.
-- `visibility_group` (Block List) The groups that can see this group when visiblity is limited. If not specified, only users with direct access can see this resource when visibility is set to LIMITED. (see [below for nested schema](#nestedblock--visibility_group))
+- `visibility` (String) The visibility level of the group, i.e. LIMITED or GLOBAL.
+- `visibility_group` (Block List) The groups that can see this group when visibility is limited. If not specified, only users with direct access can see this resource when visibility is set to LIMITED. (see [below for nested schema](#nestedblock--visibility_group))
 
 ### Read-Only
 

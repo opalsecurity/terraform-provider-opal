@@ -91,8 +91,10 @@ require_mfa_to_approve = true
 
 // TestAccResource_Visibility tests that setting visibility works.
 func TestAccResource_Visibility(t *testing.T) {
-	baseName := "tf_acc_test_resource_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
-	resourceName := "opal_resource." + baseName
+	resourceBaseName := "tf_acc_test_resource_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
+	resourceResourceName := "opal_resource." + resourceBaseName
+	groupBaseName := "tf_acc_test_group_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
+	groupResourceName := "opal_group." + groupBaseName
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -100,23 +102,51 @@ func TestAccResource_Visibility(t *testing.T) {
 		CheckDestroy: testAccCheckResourceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceResource(baseName, baseName, `visibility = "LIMITED"`),
+				Config: testAccResourceResourceWithGroup(resourceBaseName, groupBaseName, `visibility = "LIMITED"`),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "visibility", "LIMITED"),
+					resource.TestCheckResourceAttr(resourceResourceName, "visibility", "LIMITED"),
 				),
 			},
 			{
-				Config: testAccResourceResource(baseName, baseName, `visibility = "GLOBAL"`),
+				Config: testAccResourceResourceWithGroup(resourceBaseName, groupBaseName, `visibility = "GLOBAL"`),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "visibility", "GLOBAL"),
+					resource.TestCheckResourceAttr(resourceResourceName, "visibility", "GLOBAL"),
 				),
 			},
 			{
-				Config:      testAccResourceResource(baseName, baseName, `visibility_group { id = "whatever" }`),
+				Config: testAccResourceResourceWithGroup(resourceBaseName, groupBaseName, fmt.Sprintf(`
+visibility = "LIMITED"
+visibility_group { id = "${%s.id}" }
+`, groupResourceName)),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceResourceName, "visibility", "LIMITED"),
+					resource.TestCheckResourceAttrPair(resourceResourceName, "visibility_group.0.id", groupResourceName, "id"),
+				),
+			},
+			{
+				Config:      testAccResourceResourceWithGroup(resourceBaseName, groupBaseName, `visibility_group { id = "whatever" }`),
 				ExpectError: regexp.MustCompile("cannot be specified"),
 			},
 		},
 	})
+}
+
+func testAccResourceResourceWithGroup(resourceName, groupName, additional string) string {
+	return fmt.Sprintf(`
+resource "opal_resource" "%s" {
+	name = "%s"
+	app_id = "%s"
+	resource_type = "CUSTOM"
+
+	%s
+}
+
+resource "opal_group" "%s" {
+	name = "%s"
+	app_id = "%s"
+	group_type = "OPAL_GROUP"
+}
+`, resourceName, resourceName, knownCustomAppID, additional, groupName, groupName, knownOpalAppID)
 }
 
 // TestAccResource_SetOnCreate tests that setting attributes on creation

@@ -125,14 +125,14 @@ func resourceResource() *schema.Resource {
 				ValidateFunc: validateResourceMetadata,
 			},
 			"visibility": {
-				Description:  "The visiblity level of the resource, i.e. LIMITED or GLOBAL.",
+				Description:  "The visibility level of the resource, i.e. LIMITED or GLOBAL.",
 				Type:         schema.TypeString,
 				ValidateFunc: validation.StringInSlice(allowedVisibilityTypes, false),
 				Optional:     true,
 				Default:      "GLOBAL",
 			},
 			"visibility_group": {
-				Description: "The groups that can see this resource when visiblity is limited. If not specified, only users with direct access can see this resource when visibility is set to LIMITED.",
+				Description: "The groups that can see this resource when visibility is limited. If not specified, only users with direct access can see this resource when visibility is set to LIMITED.",
 				Type:        schema.TypeList,
 				Optional:    true,
 				Elem: &schema.Resource{
@@ -271,7 +271,7 @@ func resourceResourceUpdateVisibility(ctx context.Context, d *schema.ResourceDat
 		visibilityInfo.SetVisibility(opal.VisibilityTypeEnum(visibilityI.(string)))
 	}
 
-	if visibilityGroupI, ok := d.GetOk("visiblity_group"); ok {
+	if visibilityGroupI, ok := d.GetOk("visibility_group"); ok {
 		rawGroups := visibilityGroupI.([]any)
 		groupIds := make([]string, 0, len(rawGroups))
 		for _, rawGroup := range rawGroups {
