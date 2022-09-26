@@ -3,6 +3,22 @@
 
 This project is under **active development** and is not yet ready for use.
 
+## Installation
+```hcl
+terraform {
+  required_providers {
+    opal = {
+      source = "opalsecurity/opal"
+      version = "0.0.1"
+    }
+  }
+}
+
+provider "opal" {
+  # Configuration options
+}
+```
+
 ## Development
 
 Go `>= 1.18` and terraform `>= 0.14` is required for development. It's recommended that you use a [`dev_overrides` block](https://www.terraform.io/cli/config/config-file) while developing:
