@@ -60,7 +60,7 @@ func resourceGroup() *schema.Resource {
 				Required:     true,
 			},
 			"app_id": {
-				Description: "The ID of the app integration that provides the group. You can get this value from the URL of the app in the Opal web app.",
+				Description: "The ID of the app integration that provides the group. You can get this value from the URL of the app in the Opal web app. For an Opal group, use the ID from the Opal app in the apps view.",
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,

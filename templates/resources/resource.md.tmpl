@@ -1,0 +1,27 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{.Name}} ({{.Type}})
+
+{{ .Description | trimspace }}
+
+## Remote Resources
+Remote resources can be managed using the `metadata` and `remote_resource_id` attributes. See [this guide](https://docs.opal.dev/reference/how-opal)
+for details on how to specify these resources.
+
+## Example Usage
+
+{{ tffile "examples/resources/resource.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+
+# Limitations
+- Currently, Opal App IDs cannot be read from the terraform provider. You will need to get App IDs from the Opal web app URLs.
+- [Linked audit channels](https://docs.opal.dev/docs/5526194-slack#linked-reviewer-and-audit-channels) cannot be managed from the terraform provider.
+- The `require_mfa_to_connect` attribute is not yet supported.
+
+Please [file a ticket](https://github.com/opalsecurity/terraform-provider-opal/issues) to discuss use cases that are not yet supported in the provider.
