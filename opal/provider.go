@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"net/url"
 
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -62,12 +61,9 @@ func configure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.D
 
 	baseUrlT, ok := d.GetOk("base_url")
 	if ok {
-		u, err := url.Parse(baseUrlT.(string))
-		if err != nil {
-			return nil, diagFromErr(ctx, err)
-		}
-		conf.Host = u.Host
-		conf.Scheme = u.Scheme
+		conf.Servers = opal.ServerConfigurations{{
+			URL: baseUrlT.(string),
+		}}
 	}
 
 	return opal.NewAPIClient(conf), nil

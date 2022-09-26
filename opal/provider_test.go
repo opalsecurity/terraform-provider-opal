@@ -3,7 +3,6 @@ package opal
 import (
 	"errors"
 	"fmt"
-	"net/url"
 	"os"
 	"testing"
 
@@ -101,12 +100,9 @@ func sweeperClient() (*opal.APIClient, error) {
 	if baseUrl == "" {
 		return nil, errors.New("OPAL_TEST_BASE_URL must be set")
 	}
-	u, err := url.Parse(baseUrl)
-	if err != nil {
-		return nil, err
-	}
-	conf.Host = u.Host
-	conf.Scheme = u.Scheme
+	conf.Servers = opal.ServerConfigurations{{
+		URL: baseUrl,
+	}}
 
 	return opal.NewAPIClient(conf), nil
 }
