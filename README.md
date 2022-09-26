@@ -14,7 +14,7 @@ provider_installation {
 
 You can also source your local `OPAL_AUTH_TOKEN` while developing by using [direnv](https://direnv.net) (installable via homebrew) and creating a `.envrc.local` file:
 ```bash
-# Get an auth token from https://opal.dev/settings#api or your Opal installation.
+# Get an auth token from https://app.opal.dev/settings#api or your Opal installation.
 export OPAL_AUTH_TOKEN=YOUR_TOKEN_HERE
 ```
 
