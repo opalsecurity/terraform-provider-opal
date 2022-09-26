@@ -7,5 +7,9 @@ export OPAL_TEST_KNOWN_CUSTOM_APP_ID=App ID for a custom app in the test org
 export OPAL_TEST_KNOWN_CUSTOM_APP_ADMIN_OWNER_ID=Owner ID for the owner of OPAL_TEST_KNOWN_CUSTOM_APP_ID
 export OPAL_TEST_KNOWN_REQUEST_TEMPLATE_ID=Request Template ID in the test org
 export OPAL_TEST_KNOWN_GITHUB_APP_ID=App ID for a github app connection set up in the test org
-export OPAL_TEST_KNOWN_GITHUB_APP_METADATA='{"git_hub_repo"={"org_name"="example-org", "repo_name"="example-repo"}}'
-export OPAL_TEST_KNOWN_GITHUB_APP_REMOTE_RESOURCE_ID=example-org/example-repo
+export OPAL_TEST_KNOWN_GITHUB_APP_RESOURCE_METADATA='{"git_hub_repo"={"org_name"="example-org", "repo_name"="example-repo"}}'
+export OPAL_TEST_KNOWN_GITHUB_APP_RESOURCE_REMOTE_ID=example-org/example-repo
+export OPAL_TEST_KNOWN_GITHUB_APP_GROUP_METADATA='{"git_hub_team"={"org_name"="example-org", "repo_name"="example-team"}}'
+export OPAL_TEST_KNOWN_GITHUB_APP_GROUP_REMOTE_ID=example-org/example-team
+export OPAL_TEST_KNOWN_OPAL_APP_ID=App ID for the Opal root connection.
+export OPAL_TEST_KNOWN_OPAL_APP_ADMIN_OWNER_ID=Owner ID for the root owner.

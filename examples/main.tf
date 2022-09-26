@@ -24,3 +24,9 @@ resource "opal_resource" "test_resource" {
   app_id = "03c06479-6ffa-45e1-9f65-cd470ff128b3"
   admin_owner_id = "${opal_owner.test_owner.id}"
 }
+
+resource "opal_group" "test_group" {
+  name = "hello group"
+  group_type = "OPAL_GROUP"
+  app_id = "dbe38d2d-9ce4-4d13-95a4-945716a257b4"
+}

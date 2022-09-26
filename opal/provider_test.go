@@ -31,6 +31,30 @@ func testAccPreCheck(t *testing.T) {
 		t.Fatal("OPAL_TEST_TOKEN must be set for acceptance tests")
 	}
 
+	if v := os.Getenv("OPAL_TEST_KNOWN_OPAL_APP_ID"); v == "" {
+		t.Fatal("OPAL_TEST_KNOWN_OPAL_APP_ID must be set for acceptance tests. You should get this value from the Opal product connection in the test organization.")
+	}
+
+	if v := os.Getenv("OPAL_TEST_KNOWN_OPAL_APP_ADMIN_OWNER_ID"); v == "" {
+		t.Fatal("OPAL_TEST_KNOWN_OPAL_APP_ADMIN_OWNER_ID must be set for acceptance tests. You should get this value from the owner of the Opal product connection in the test organization.")
+	}
+
+	if v := os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_RESOURCE_REMOTE_ID"); v == "" {
+		t.Fatal("OPAL_TEST_KNOWN_GITHUB_APP_RESOURCE_REMOTE_ID must be set for acceptance tests. This value is in the form known-org/known-repo and must match what's in the test github org.")
+	}
+
+	if v := os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_RESOURCE_METADATA"); v == "" {
+		t.Fatal(`OPAL_TEST_KNOWN_GITHUB_APP_RESOURCE_METADATA must be set for acceptance tests. This value is in the form {"git_hub_repo"={"org_name"="example-org", "repo_name"="example-repo"}} and must match what's in the test github org.`)
+	}
+
+	if v := os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_GROUP_REMOTE_ID"); v == "" {
+		t.Fatal("OPAL_TEST_KNOWN_GITHUB_APP_GROUP_REMOTE_ID must be set for acceptance tests. This value is in the form known-org/known-team and must match what's in the test github org.")
+	}
+
+	if v := os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_GROUP_METADATA"); v == "" {
+		t.Fatal(`OPAL_TEST_KNOWN_GITHUB_APP_GROUP_METADATA must be set for acceptance tests. This value is in the form {"git_hub_team"={"org_name"="example-org", "team_slug"="example-team"}} and must match what's in the test github org.`)
+	}
+
 	if os.Getenv("OPAL_TEST_KNOWN_USER_ID_1") == "" {
 		t.Fatal("OPAL_TEST_KNOWN_USER_ID_1 must be set for acceptance tests. You should get this value from any user in the test organization.")
 	}
