@@ -39,3 +39,10 @@ $ terraform apply
 ```
 
 If you don't see the above warning when running terraform commands, something is misconfigured.
+
+### Writing Documentation
+
+The `docs/` folder is entirely generated. Make changes to `templates/` or the go source files instead. `docs/`content is generated from:
+
+- The source code, i.e. `Description` and `Name` fields in the resource schema
+- The `templates/` folder, which serves as the basis for `docs/`. See [tfplugindocs](https://github.com/hashicorp/terraform-plugin-docs#templates) for more on the templating fields.
