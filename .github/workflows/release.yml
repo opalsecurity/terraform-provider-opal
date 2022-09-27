@@ -17,7 +17,10 @@ on:
 permissions:
   contents: write
 jobs:
+  acceptance:
+    uses: ./.github/workflows/test.yml
   goreleaser:
+    needs: acceptance
     environment: Release
     runs-on: ubuntu-latest
     steps:
