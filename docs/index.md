@@ -14,7 +14,7 @@ The Opal provider provides resources for managing Opal owners, resources, and gr
 terraform {
   required_providers {
     opal = {
-      version = "0.0.1"
+      version = "0.0.2"
       source = "registry.terraform.io/opalsecurity/opal"
     }
   }
