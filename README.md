@@ -4,6 +4,9 @@
 This project is under **active development** and is not yet ready for use.
 
 ## Installation
+
+See the [docs](https://registry.terraform.io/providers/opalsecurity/opal/latest/docs) for detailed examples.
+
 ```hcl
 terraform {
   required_providers {
