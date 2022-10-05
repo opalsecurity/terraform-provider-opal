@@ -324,6 +324,7 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 		d.Set("require_support_ticket", group.RequireSupportTicket),
 		d.Set("max_duration", group.MaxDuration),
 		d.Set("request_template_id", group.RequestTemplateId),
+		d.Set("remote_group_id", group.RemoteId),
 		// XXX: We don't get the metadata back. Will terraform state be okay?
 	); err.ErrorOrNil() != nil {
 		return diagFromErr(ctx, err)

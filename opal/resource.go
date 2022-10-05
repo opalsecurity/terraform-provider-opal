@@ -332,6 +332,7 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 		d.Set("require_support_ticket", resource.RequireSupportTicket),
 		d.Set("max_duration", resource.MaxDuration),
 		d.Set("request_template_id", resource.RequestTemplateId),
+		d.Set("remote_resource_id", resource.RemoteResourceId),
 		// XXX: We don't get the metadata back. Will terraform state be okay?
 	); err.ErrorOrNil() != nil {
 		return diagFromErr(ctx, err)
