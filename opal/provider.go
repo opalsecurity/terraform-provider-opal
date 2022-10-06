@@ -41,7 +41,9 @@ func NewProvider() *schema.Provider {
 			"opal_resource": resourceResource(),
 			"opal_group":    resourceGroup(),
 		},
-		DataSourcesMap:       map[string]*schema.Resource{},
+		DataSourcesMap: map[string]*schema.Resource{
+			"opal_user": dataSourceUser(),
+		},
 		ConfigureContextFunc: configure,
 	}
 }

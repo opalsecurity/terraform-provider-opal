@@ -1,4 +1,5 @@
-
 bin/
+# Used for development tf files
+dev/
 .envrc.local
 .idea
