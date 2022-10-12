@@ -111,18 +111,12 @@ func resourceResource() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 			},
-			"remote_resource_id": {
-				Description: "The ID of the resource on the remote system. Include only for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/how-opal) for details on how to specify this field.",
-				Type:        schema.TypeString,
-				ForceNew:    true,
+			"remote_info": {
+				Description: "Remote info that is required for the creation of remote resources.",
+				Type:        schema.TypeList,
 				Optional:    true,
-			},
-			"metadata": {
-				Description:  "The JSON metadata about the remote resource. Include only for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/how-opal) for details on how to specify this field.",
-				Type:         schema.TypeString,
-				Optional:     true,
-				ForceNew:     true,
-				ValidateFunc: validateResourceMetadata,
+				MaxItems:    1,
+				Elem:        resourceRemoteInfoElem(),
 			},
 			"visibility": {
 				Description:  "The visibility level of the resource, i.e. LIMITED or GLOBAL.",
@@ -177,11 +171,13 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 	if descI, ok := d.GetOk("description"); ok {
 		createInfo.SetDescription(descI.(string))
 	}
-	if metadataI, ok := d.GetOk("metadata"); ok {
-		createInfo.SetMetadata(metadataI.(string))
-	}
-	if remoteResourceIDI, ok := d.GetOk("remote_resource_id"); ok {
-		createInfo.SetRemoteResourceId(remoteResourceIDI.(string))
+
+	if remoteInfoI, ok := d.GetOk("remote_info"); ok {
+		remoteInfo, err := parseResourceRemoteInfo(remoteInfoI)
+		if err != nil {
+			return diagFromErr(ctx, err)
+		}
+		createInfo.SetRemoteInfo(*remoteInfo)
 	}
 
 	resource, _, err := client.ResourcesApi.CreateResource(ctx).CreateResourceInfo(*createInfo).Execute()
@@ -332,7 +328,6 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 		d.Set("require_support_ticket", resource.RequireSupportTicket),
 		d.Set("max_duration", resource.MaxDuration),
 		d.Set("request_template_id", resource.RequestTemplateId),
-		d.Set("remote_resource_id", resource.RemoteResourceId),
 		// XXX: We don't get the metadata back. Will terraform state be okay?
 	); err.ErrorOrNil() != nil {
 		return diagFromErr(ctx, err)
