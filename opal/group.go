@@ -375,35 +375,51 @@ func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, m any) dia
 
 	// Note that metadata, app_id, and"group_type force a recreation, so we do not need to
 	// worry about those values here.
+	hasBasicUpdate := false
 	updateInfo := opal.NewUpdateGroupInfo(d.Id())
-	updateInfo.SetName(d.Get("name").(string))
+	if d.HasChange("name") {
+		hasBasicUpdate = true
+		updateInfo.SetName(d.Get("name").(string))
+	}
 	if d.HasChange("description") {
+		hasBasicUpdate = true
 		updateInfo.SetDescription(d.Get("description").(string))
 	}
 	if d.HasChange("admin_owner_id") {
+		hasBasicUpdate = true
 		updateInfo.SetAdminOwnerId(d.Get("admin_owner_id").(string))
 	}
 	if d.HasChange("require_manager_approval") {
+		hasBasicUpdate = true
 		updateInfo.SetRequireManagerApproval(d.Get("require_manager_approval").(bool))
 	}
 	if d.HasChange("auto_approval") {
+		hasBasicUpdate = true
 		updateInfo.SetAutoApproval(d.Get("auto_approval").(bool))
 	}
 	if d.HasChange("require_mfa_to_approve") {
+		hasBasicUpdate = true
 		updateInfo.SetRequireMfaToApprove(d.Get("require_mfa_to_approve").(bool))
 	}
 	if d.HasChange("require_support_ticket") {
+		hasBasicUpdate = true
 		updateInfo.SetRequireSupportTicket(d.Get("require_support_ticket").(bool))
 	}
 	if d.HasChange("max_duration") {
+		hasBasicUpdate = true
 		updateInfo.SetMaxDuration(int32(d.Get("max_duration").(int)))
 	}
 	if d.HasChange("request_template_id") {
+		hasBasicUpdate = true
 		updateInfo.SetRequestTemplateId(d.Get("request_template_id").(string))
 	}
-	groups, _, err := client.GroupsApi.UpdateGroups(ctx).UpdateGroupInfoList(*opal.NewUpdateGroupInfoList([]opal.UpdateGroupInfo{*updateInfo})).Execute()
-	if err != nil {
-		return diagFromErr(ctx, err)
+
+	if hasBasicUpdate {
+		_, _, err := client.GroupsApi.UpdateGroups(ctx).UpdateGroupInfoList(*opal.NewUpdateGroupInfoList([]opal.UpdateGroupInfo{*updateInfo})).Execute()
+		if err != nil {
+			return diagFromErr(ctx, err)
+		}
+
 	}
 
 	if d.HasChange("visibility") || d.HasChange("visibility_group") {
@@ -425,7 +441,6 @@ func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, m any) dia
 		}
 	}
 
-	d.SetId(groups.Groups[0].GroupId)
 	return resourceGroupRead(ctx, d, m)
 }
 
