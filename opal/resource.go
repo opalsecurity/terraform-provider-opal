@@ -100,6 +100,12 @@ func resourceResource() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 			},
+			"require_mfa_to_connect": {
+				Description: "Require that users MFA to connect to this resource. Only applicable for resources where a session can be started from Opal (i.e. AWS RDS database)",
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+			},
 			"require_support_ticket": {
 				Description: "Require that requesters attach a support ticket to requests for this resource.",
 				Type:        schema.TypeBool,
@@ -165,7 +171,6 @@ func resourceResource() *schema.Resource {
 				},
 			},
 			// XXX: Audit message channel...
-			// XXX: Require mfa to connect to this resource.
 		},
 	}
 }
@@ -207,10 +212,11 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 	requireManagerApprovalI, requireManagerApprovalOk := d.GetOk("require_manager_approval")
 	autoApprovalI, autoApprovalOk := d.GetOk("auto_approval")
 	requireMfaToApproveI, requireMfaToApproveOk := d.GetOk("require_mfa_to_approve")
+	requireMfaToConnectI, requireMfaToConnectOk := d.GetOk("require_mfa_to_connect")
 	requireSupportTicketI, requireSupportTicketOk := d.GetOk("require_support_ticket")
 	maxDurationI, maxDurationOk := d.GetOk("max_duration")
 	requestTemplateIDI, requestTemplateIDOk := d.GetOk("request_template_id")
-	if adminOwnerIDOk || requireManagerApprovalOk || autoApprovalOk || requireMfaToApproveOk || requireSupportTicketOk || maxDurationOk || requestTemplateIDOk {
+	if adminOwnerIDOk || requireManagerApprovalOk || autoApprovalOk || requireMfaToApproveOk || requireMfaToConnectOk || requireSupportTicketOk || maxDurationOk || requestTemplateIDOk {
 		updateInfo := opal.NewUpdateResourceInfo(resource.ResourceId)
 		if adminOwnerIDOk {
 			updateInfo.SetAdminOwnerId(adminOwnerIDI.(string))
@@ -223,6 +229,9 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 		}
 		if requireMfaToApproveOk {
 			updateInfo.SetRequireMfaToApprove(requireMfaToApproveI.(bool))
+		}
+		if requireMfaToConnectOk {
+			updateInfo.SetRequireMfaToConnect(requireMfaToConnectI.(bool))
 		}
 		if requireSupportTicketOk {
 			updateInfo.SetRequireSupportTicket(requireSupportTicketI.(bool))
@@ -384,35 +393,54 @@ func resourceResourceUpdate(ctx context.Context, d *schema.ResourceData, m any) 
 
 	// Note that metadata, app_id, and resource_type force a recreation, so we do not need to
 	// worry about those values here.
+	hasBasicChange := false
 	updateInfo := opal.NewUpdateResourceInfo(d.Id())
-	updateInfo.SetName(d.Get("name").(string))
+	if d.HasChange("name") {
+		hasBasicChange = true
+		updateInfo.SetName(d.Get("name").(string))
+	}
 	if d.HasChange("description") {
+		hasBasicChange = true
 		updateInfo.SetDescription(d.Get("description").(string))
 	}
 	if d.HasChange("admin_owner_id") {
+		hasBasicChange = true
 		updateInfo.SetAdminOwnerId(d.Get("admin_owner_id").(string))
 	}
 	if d.HasChange("require_manager_approval") {
+		hasBasicChange = true
 		updateInfo.SetRequireManagerApproval(d.Get("require_manager_approval").(bool))
 	}
 	if d.HasChange("auto_approval") {
+		hasBasicChange = true
 		updateInfo.SetAutoApproval(d.Get("auto_approval").(bool))
 	}
 	if d.HasChange("require_mfa_to_approve") {
+		hasBasicChange = true
 		updateInfo.SetRequireMfaToApprove(d.Get("require_mfa_to_approve").(bool))
 	}
+	if d.HasChange("require_mfa_to_connect") {
+		hasBasicChange = true
+		updateInfo.SetRequireMfaToConnect(d.Get("require_mfa_to_connect").(bool))
+	}
 	if d.HasChange("require_support_ticket") {
+		hasBasicChange = true
 		updateInfo.SetRequireSupportTicket(d.Get("require_support_ticket").(bool))
 	}
 	if d.HasChange("max_duration") {
+		hasBasicChange = true
 		updateInfo.SetMaxDuration(int32(d.Get("max_duration").(int)))
 	}
 	if d.HasChange("request_template_id") {
+		hasBasicChange = true
 		updateInfo.SetRequestTemplateId(d.Get("request_template_id").(string))
 	}
-	resources, _, err := client.ResourcesApi.UpdateResources(ctx).UpdateResourceInfoList(*opal.NewUpdateResourceInfoList([]opal.UpdateResourceInfo{*updateInfo})).Execute()
-	if err != nil {
-		return diagFromErr(ctx, err)
+
+	if hasBasicChange {
+		_, _, err := client.ResourcesApi.UpdateResources(ctx).UpdateResourceInfoList(*opal.NewUpdateResourceInfoList([]opal.UpdateResourceInfo{*updateInfo})).Execute()
+		if err != nil {
+			return diagFromErr(ctx, err)
+		}
 	}
 
 	if d.HasChange("visibility") || d.HasChange("visibility_group") {
@@ -434,7 +462,6 @@ func resourceResourceUpdate(ctx context.Context, d *schema.ResourceData, m any) 
 		}
 	}
 
-	d.SetId(resources.Resources[0].ResourceId)
 	return resourceResourceRead(ctx, d, m)
 }
 
