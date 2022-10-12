@@ -61,6 +61,7 @@ func resourceResource() *schema.Resource {
 				Description: "The description of the resource.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 			},
 			"resource_type": {
 				Description:  "The type of the resource, i.e. AWS_EC2_INSTANCE.",
@@ -85,36 +86,43 @@ func resourceResource() *schema.Resource {
 				Description: "Require the requester's manager's approval for requests to this resource.",
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 			},
 			"auto_approval": {
 				Description: "Automatically approve all requests for this resource without review.",
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 			},
 			"require_mfa_to_approve": {
 				Description: "Require that reviewers MFA to approve requests for this resource.",
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 			},
 			"require_support_ticket": {
 				Description: "Require that requesters attach a support ticket to requests for this resource.",
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 			},
 			"max_duration": {
 				Description: "The maximum duration for which this resource can be requested (in minutes). By default, the max duration is indefinite access.",
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 			},
 			"request_template_id": {
 				Description: "The ID of a request template for this resource. You can get this ID from the URL in the Opal web app.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 			},
 			"remote_info": {
 				Description: "Remote info that is required for the creation of remote resources.",
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Elem:        resourceRemoteInfoElem(),
 			},
@@ -123,12 +131,13 @@ func resourceResource() *schema.Resource {
 				Type:         schema.TypeString,
 				ValidateFunc: validation.StringInSlice(allowedVisibilityTypes, false),
 				Optional:     true,
-				Default:      "GLOBAL",
+				Computed:     true,
 			},
 			"visibility_group": {
-				Description: "The groups that can see this resource when visibility is limited. If not specified, only users with direct access can see this resource when visibility is set to LIMITED.",
+				Description: "The groups that can see this resource when visibility is limited. If not specified, only admins and users with direct access can see this resource when visibility is set to LIMITED.",
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {

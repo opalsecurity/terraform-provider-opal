@@ -51,6 +51,7 @@ func resourceGroup() *schema.Resource {
 				Description: "The description of the group.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 			},
 			"group_type": {
 				Description:  "The type of the group, i.e. GIT_HUB_TEAM.",
@@ -75,42 +76,50 @@ func resourceGroup() *schema.Resource {
 				Description: "Require the requester's manager's approval for requests to this group.",
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 			},
 			"auto_approval": {
 				Description: "Automatically approve all requests for this group without review.",
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 			},
 			"require_mfa_to_approve": {
 				Description: "Require that reviewers MFA to approve requests for this group.",
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 			},
 			"require_support_ticket": {
 				Description: "Require that requesters attach a support ticket to requests for this group.",
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 			},
 			"max_duration": {
 				Description: "The maximum duration for which this group can be requested (in minutes). By default, the max duration is indefinite access.",
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 			},
 			"request_template_id": {
 				Description: "The ID of a request template for this group. You can get this ID from the URL in the Opal web app.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 			},
 			"remote_group_id": {
 				Description: "The ID of the group on the remote system. Include only for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/how-opal) for details on how to specify this field.",
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Optional:    true,
+				Computed:    true,
 			},
 			"metadata": {
 				Description:  "The JSON metadata about the remote group. Include only for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/how-opal) for details on how to specify this field.",
 				Type:         schema.TypeString,
 				Optional:     true,
+				Computed:     true,
 				ForceNew:     true,
 				ValidateFunc: validateGroupMetadata,
 			},
@@ -119,12 +128,13 @@ func resourceGroup() *schema.Resource {
 				Type:         schema.TypeString,
 				ValidateFunc: validation.StringInSlice(allowedVisibilityTypes, false),
 				Optional:     true,
-				Default:      "GLOBAL",
+				Computed:     true,
 			},
 			"visibility_group": {
 				Description: "The groups that can see this group when visibility is limited. If not specified, only users with direct access can see this resource when visibility is set to LIMITED.",
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
