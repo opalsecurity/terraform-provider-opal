@@ -46,12 +46,12 @@ func testAccPreCheck(t *testing.T) {
 		t.Fatal(`OPAL_TEST_KNOWN_GITHUB_APP_REPO_NAME must be set for acceptance tests. This value is the name of the repo you linked and must match what's in the test github org.`)
 	}
 
-	if v := os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_GROUP_REMOTE_ID"); v == "" {
-		t.Fatal("OPAL_TEST_KNOWN_GITHUB_APP_GROUP_REMOTE_ID must be set for acceptance tests. This value is in the form known-org/known-team and must match what's in the test github org.")
+	if v := os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_TEAM_ID"); v == "" {
+		t.Fatal("OPAL_TEST_KNOWN_GITHUB_APP_TEAM_ID must be set for acceptance tests. This value is the id of a test team and must match what's in the test github org.")
 	}
 
-	if v := os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_GROUP_METADATA"); v == "" {
-		t.Fatal(`OPAL_TEST_KNOWN_GITHUB_APP_GROUP_METADATA must be set for acceptance tests. This value is in the form {"git_hub_team"={"org_name"="example-org", "team_slug"="example-team"}} and must match what's in the test github org.`)
+	if v := os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_TEAM_SLUG"); v == "" {
+		t.Fatal(`OPAL_TEST_KNOWN_GITHUB_APP_TEAM_SLUG must be set for acceptance tests. This value is the name of the team you linked and must match what's in the test github org.`)
 	}
 
 	if os.Getenv("OPAL_TEST_KNOWN_USER_ID_1") == "" {

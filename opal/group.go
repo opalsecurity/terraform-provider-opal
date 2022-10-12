@@ -108,20 +108,14 @@ func resourceGroup() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 			},
-			"remote_group_id": {
-				Description: "The ID of the group on the remote system. Include only for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/how-opal) for details on how to specify this field.",
-				Type:        schema.TypeString,
-				ForceNew:    true,
+			"remote_info": {
+				Description: "Remote info that is required for the creation of remote groups.",
+				Type:        schema.TypeList,
 				Optional:    true,
 				Computed:    true,
-			},
-			"metadata": {
-				Description:  "The JSON metadata about the remote group. Include only for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/how-opal) for details on how to specify this field.",
-				Type:         schema.TypeString,
-				Optional:     true,
-				Computed:     true,
-				ForceNew:     true,
-				ValidateFunc: validateGroupMetadata,
+				ForceNew:    true,
+				MaxItems:    1,
+				Elem:        groupRemoteInfoElem(),
 			},
 			"visibility": {
 				Description:  "The visibility level of the group, i.e. LIMITED or GLOBAL.",
@@ -176,11 +170,12 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 	if descI, ok := d.GetOk("description"); ok {
 		createInfo.SetDescription(descI.(string))
 	}
-	if metadataI, ok := d.GetOk("metadata"); ok {
-		createInfo.SetMetadata(metadataI.(string))
-	}
-	if remoteGroupIDI, ok := d.GetOk("remote_group_id"); ok {
-		createInfo.SetRemoteGroupId(remoteGroupIDI.(string))
+	if remoteInfoI, ok := d.GetOk("remote_info"); ok {
+		remoteInfo, err := parseGroupRemoteInfo(remoteInfoI)
+		if err != nil {
+			return diagFromErr(ctx, err)
+		}
+		createInfo.SetRemoteInfo(*remoteInfo)
 	}
 
 	group, _, err := client.GroupsApi.CreateGroup(ctx).CreateGroupInfo(*createInfo).Execute()
@@ -334,7 +329,6 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 		d.Set("require_support_ticket", group.RequireSupportTicket),
 		d.Set("max_duration", group.MaxDuration),
 		d.Set("request_template_id", group.RequestTemplateId),
-		d.Set("remote_group_id", group.RemoteId),
 		// XXX: We don't get the metadata back. Will terraform state be okay?
 	); err.ErrorOrNil() != nil {
 		return diagFromErr(ctx, err)

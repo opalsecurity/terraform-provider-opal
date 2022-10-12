@@ -199,8 +199,8 @@ auto_approval = true
 	})
 }
 
-var knownGithubAppGroupMetadata = os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_GROUP_METADATA")
-var knownGithubAppGroupRemoteID = os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_GROUP_REMOTE_ID")
+var knownGithubTeamName = os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_TEAM_SLUG")
+var knownGithubTeamID = os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_TEAM_ID")
 
 // TestAccGroup_Remote tests creating a resource with a remote system.
 func TestAccGroup_Remote(t *testing.T) {
@@ -217,10 +217,16 @@ func TestAccGroup_Remote(t *testing.T) {
 	name = "%s"
 	app_id = "%s"
 	group_type = "GIT_HUB_TEAM"
+	remote_info {
+		github_team {
+			team_id = "%s"
+			team_slug = "%s"
+		}
+	}
 	metadata = jsonencode(%s)
 	remote_group_id = "%s"
 }
-`, baseName, baseName, knownGithubAppID, knownGithubAppGroupMetadata, knownGithubAppGroupRemoteID),
+`, baseName, baseName, knownGithubAppID, knownGithubTeamID, knownGithubTeamName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
 				),
