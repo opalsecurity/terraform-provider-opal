@@ -123,6 +123,7 @@ func resourceResource() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Computed:    true,
+				ForceNew:    true,
 				MaxItems:    1,
 				Elem:        resourceRemoteInfoElem(),
 			},
