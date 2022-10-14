@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/customdiff"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/opalsecurity/opal-go"
@@ -37,15 +36,6 @@ func resourceResource() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
-		CustomizeDiff: customdiff.All(
-			func(ctx context.Context, diff *schema.ResourceDiff, v interface{}) error {
-				if diff.Get("visibility").(string) == "GLOBAL" && len(diff.Get("visibility_group").([]any)) > 0 {
-					return errors.New("`visibility_group` cannot be specified when `visibility` is set to GLOBAL")
-				}
-				return nil
-			},
-			// XXX: We could enforce that remote_resource_id/metadata must be passed for resource types that need it.
-		),
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Description: "The ID of the resource.",

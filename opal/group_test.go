@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"regexp"
 	"strings"
 	"testing"
 
@@ -121,10 +120,6 @@ visibility_group { id = "${%s.id}" }
 					resource.TestCheckResourceAttr(limitedGroupResourceName, "visibility", "LIMITED"),
 					resource.TestCheckResourceAttrPair(limitedGroupResourceName, "visibility_group.0.id", groupResourceName, "id"),
 				),
-			},
-			{
-				Config:      testAccResourceGroupWithGroup(limitedGroupBaseName, groupBaseName, `visibility_group { id = "whatever" }`),
-				ExpectError: regexp.MustCompile("cannot be specified"),
 			},
 		},
 	})
