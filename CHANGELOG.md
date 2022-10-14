@@ -8,3 +8,6 @@
 - Adds data sources for opal apps and users
 - Adds a more structured `remote_info` attribute to the resource and group resources in favor of `metadata` and `remote_id`
 - Adds support for `require_mfa_to_connect`
+
+## v0.0.4
+- Fixes a bug for owner user parsing
