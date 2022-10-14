@@ -20,7 +20,7 @@ resource "opal_group" "okta_group_example" {
 
   remote_info {
     okta_group {
-      # Note: This can also be referenced from your Okta terraform files
+      # Note: This can also reference your Okta terraform files
       group_id = "00gd7wmwj7hfT3wTH8d6"
     }
   }

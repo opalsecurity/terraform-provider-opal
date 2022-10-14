@@ -36,7 +36,7 @@ resource "opal_resource" "aws_iam_role_example" {
 
   remote_info {
     aws_iam_role {
-      # Note: This can also be referenced from your AWS terraform files
+      # Note: This can also reference your AWS terraform files
       arn = "arn:aws:iam::2582003"
     }
   }
