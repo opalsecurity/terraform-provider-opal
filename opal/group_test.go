@@ -223,8 +223,6 @@ func TestAccGroup_Remote(t *testing.T) {
 			team_slug = "%s"
 		}
 	}
-	metadata = jsonencode(%s)
-	remote_group_id = "%s"
 }
 `, baseName, baseName, knownGithubAppID, knownGithubTeamID, knownGithubTeamName),
 				Check: resource.ComposeTestCheckFunc(
