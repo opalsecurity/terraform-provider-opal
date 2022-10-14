@@ -54,31 +54,6 @@ func resourceOwner() *schema.Resource {
 							Description: "The ID of the user.",
 							Required:    true,
 						},
-						"email": {
-							Type:        schema.TypeString,
-							Description: "The email of the user.",
-							Computed:    true,
-						},
-						"full_name": {
-							Type:        schema.TypeString,
-							Description: "The full name of the user.",
-							Computed:    true,
-						},
-						"last_name": {
-							Type:        schema.TypeString,
-							Description: "The last name of the user.",
-							Computed:    true,
-						},
-						"first_name": {
-							Type:        schema.TypeString,
-							Description: "The first name of the user.",
-							Computed:    true,
-						},
-						"position": {
-							Type:        schema.TypeString,
-							Description: "The position of the user.",
-							Computed:    true,
-						},
 					},
 				},
 			},

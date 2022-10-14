@@ -10,22 +10,37 @@ description: |-
 An Opal Group resource.
 
 ## Remote Groups
-Remote groups can be managed using the `metadata` and `remote_group_id` attributes. See [this guide](https://docs.opal.dev/reference/how-opal)
-for details on how to specify these groups.
+Remote groups can be managed using the `remote_info` attribute.
 
 ## Example Usage
 
 ```terraform
-resource "opal_group" "oncall" {
-  name = "On-Call Rotation"
-
+resource "opal_group" "opal_group_example" {
+  name = "Opal group"
+  description = "Opal group created via terraform"
   group_type = "OPAL_GROUP"
-
-  # App IDs can be pulled from the URL in the Opal web app,
-  # e.g. https://app.opal.dev/apps/dbe38d2d-9ce4-4d13-95a4-945716a257b4#overview
-  app_id = "dbe38d2d-9ce4-4d13-95a4-945716a257b4"
-
+  app_id = data.opal_app.opal.id
   require_mfa_to_approve = true
+  admin_owner_id = data.opal_owner.security.id
+  auto_approval = false
+
+  reviewer {
+    id = data.opal_owner.security.id
+  }
+}
+
+resource "opal_group" "okta_group_example" {
+  name = "Okta group"
+  description = "Okta group created via terraform"
+  group_type = "OKTA_GROUP"
+  app_id = data.opal_app.okta.id
+
+  remote_info {
+    okta_group {
+      # Note: This can also be referenced from your Okta terraform files
+      group_id = "00gd7wmwj7hfT3wTH8d6"
+    }
+  }
 }
 ```
 
@@ -44,8 +59,7 @@ resource "opal_group" "oncall" {
 - `auto_approval` (Boolean) Automatically approve all requests for this group without review.
 - `description` (String) The description of the group.
 - `max_duration` (Number) The maximum duration for which this group can be requested (in minutes). By default, the max duration is indefinite access.
-- `metadata` (String) The JSON metadata about the remote group. Include only for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/how-opal) for details on how to specify this field.
-- `remote_group_id` (String) The ID of the group on the remote system. Include only for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/how-opal) for details on how to specify this field.
+- `remote_info` (Block List, Max: 1) Remote info that is required for the creation of remote groups. (see [below for nested schema](#nestedblock--remote_info))
 - `request_template_id` (String) The ID of a request template for this group. You can get this ID from the URL in the Opal web app.
 - `require_manager_approval` (Boolean) Require the requester's manager's approval for requests to this group.
 - `require_mfa_to_approve` (Boolean) Require that reviewers MFA to approve requests for this group.
@@ -57,6 +71,68 @@ resource "opal_group" "oncall" {
 ### Read-Only
 
 - `id` (String) The ID of the group.
+
+<a id="nestedblock--remote_info"></a>
+### Nested Schema for `remote_info`
+
+Optional:
+
+- `active_directory_group` (Block List, Max: 1) The remote_info for an Active Directory group. (see [below for nested schema](#nestedblock--remote_info--active_directory_group))
+- `duo_group` (Block List, Max: 1) The remote_info for an Duo Security group. (see [below for nested schema](#nestedblock--remote_info--duo_group))
+- `github_team` (Block List, Max: 1) The remote_info for a GitHub team. (see [below for nested schema](#nestedblock--remote_info--github_team))
+- `google_group` (Block List, Max: 1) The remote_info for a Google group. (see [below for nested schema](#nestedblock--remote_info--google_group))
+- `ldap_group` (Block List, Max: 1) The remote_info for a LDAP group. (see [below for nested schema](#nestedblock--remote_info--ldap_group))
+- `okta_group` (Block List, Max: 1) The remote_info for an Okta group. (see [below for nested schema](#nestedblock--remote_info--okta_group))
+
+<a id="nestedblock--remote_info--active_directory_group"></a>
+### Nested Schema for `remote_info.active_directory_group`
+
+Required:
+
+- `group_id` (String) The id of the Active Directory group.
+
+
+<a id="nestedblock--remote_info--duo_group"></a>
+### Nested Schema for `remote_info.duo_group`
+
+Required:
+
+- `group_id` (String) The id of the Duo Security group.
+
+
+<a id="nestedblock--remote_info--github_team"></a>
+### Nested Schema for `remote_info.github_team`
+
+Required:
+
+- `team_id` (String) The id of the GitHub team.
+- `team_slug` (String) The slug of the GitHub team.
+
+
+<a id="nestedblock--remote_info--google_group"></a>
+### Nested Schema for `remote_info.google_group`
+
+Required:
+
+- `group_id` (String) The id of the Google group.
+
+
+<a id="nestedblock--remote_info--ldap_group"></a>
+### Nested Schema for `remote_info.ldap_group`
+
+Required:
+
+- `group_id` (String) The id of the LDAP group.
+
+
+<a id="nestedblock--remote_info--okta_group"></a>
+### Nested Schema for `remote_info.okta_group`
+
+Required:
+
+- `group_id` (String) The id of the Okta group.
+
+
 
 <a id="nestedblock--reviewer"></a>
 ### Nested Schema for `reviewer`
@@ -72,8 +148,5 @@ Required:
 Required:
 
 - `id` (String) The ID of the group that can see this group.
-
-# Limitations
-- Currently, Opal App IDs cannot be read from the terraform provider. You will need to get App IDs from the Opal web app URLs.
 
 Please [file a ticket](https://github.com/opalsecurity/terraform-provider-opal/issues) to discuss use cases that are not yet supported in the provider.

@@ -16,13 +16,11 @@ resource "opal_owner" "security" {
   name = "Security Team"
 
   user {
-    # User IDs can be pulled from the URL in the Opal web app,
-    # e.g. https://app.opal.dev/users/f865f6a5-5be8-46a0-bc57-b9cadaf4d1e5#overview
-    id = "f865f6a5-5be8-46a0-bc57-b9cadaf4d1e5"
+    id = data.opal_user.alice.id
   }
 
   user {
-    id = "b8059a7a-0e0c-46f2-a430-2666dce89620"
+    id = data.opal_user.bob.id
   }
 }
 ```
@@ -33,7 +31,7 @@ resource "opal_owner" "security" {
 ### Required
 
 - `name` (String) The name of the owner.
-- `user` (Block List, Min: 1) The users for this owner. (see [below for nested schema](#nestedblock--user))
+- `user` (Block List, Min: 1) The users for this owner. If an escalation period is set, the order of the users will determine the escalation order. (see [below for nested schema](#nestedblock--user))
 
 ### Optional
 
@@ -50,18 +48,5 @@ resource "opal_owner" "security" {
 Required:
 
 - `id` (String) The ID of the user.
-
-Read-Only:
-
-- `email` (String) The email of the user.
-- `first_name` (String) The first name of the user.
-- `full_name` (String) The full name of the user.
-- `last_name` (String) The last name of the user.
-- `position` (String) The position of the user.
-
-# Limitations
-- Currently, Opal users can not be managed or read from the terraform provider. You will need
-to get User IDs from the Opal web app URLs.
-- [Linked audit and reviewer channels](https://docs.opal.dev/docs/5526194-slack#linked-reviewer-and-audit-channels) cannot be managed from the terraform provider.
 
 Please [file a ticket](https://github.com/opalsecurity/terraform-provider-opal/issues) to discuss use cases that are not yet supported in the provider.

@@ -9,13 +9,13 @@ description: |-
 
 {{ .Description | trimspace }}
 
-## Remote Groups
-Remote groups can be managed using the `remote_info` attribute.
-
 ## Example Usage
 
-{{ tffile "examples/resources/group.tf" }}
+{{ tffile "examples/data-sources/app.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
+
+# Limitations
+- Currently, Opal App IDs cannot be read from the terraform provider. You will need to get App IDs from the Opal web app URLs or via the API (https://docs.opal.dev/reference/getapps).
 
 Please [file a ticket](https://github.com/opalsecurity/terraform-provider-opal/issues) to discuss use cases that are not yet supported in the provider.

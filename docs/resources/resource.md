@@ -10,24 +10,35 @@ description: |-
 An Opal Resource resource.
 
 ## Remote Resources
-Remote resources can be managed using the `metadata` and `remote_resource_id` attributes. See [this guide](https://docs.opal.dev/reference/how-opal)
-for details on how to specify these resources.
+Remote resources can be managed using the `remote_info` attribute.
 
 ## Example Usage
 
 ```terraform
 resource "opal_resource" "sensitive_resource" {
   name = "Sensitive Resource"
-  description = "A sensitive resource that should be accessed for on-call only."
-
+  description = "A sensitive resource."
   resource_type = "CUSTOM"
-
-  # App IDs can be pulled from the URL in the Opal web app,
-  # e.g. https://app.opal.dev/apps/03c06479-6ffa-45e1-9f65-cd470ff128b3#overview
-  app_id = "03c06479-6ffa-45e1-9f65-cd470ff128b3"
+  app_id = data.opal_app.my_custom_app.id
+  auto_approval = false
+  require_mfa_to_approve = true
 
   reviewer {
-    id = "${opal_owner.security.id}"
+    id = opal_owner.security.id
+  }
+}
+
+resource "opal_resource" "aws_iam_role_example" {
+  name = "AWS IAM role"
+  description = "AWS IAM role created via terraform"
+  resource_type = "AWS_IAM_ROLE"
+  app_id = data.opal_app.aws.id
+
+  remote_info {
+    aws_iam_role {
+      # Note: This can also be referenced from your AWS terraform files
+      arn = "arn:aws:iam::2582003"
+    }
   }
 }
 ```
@@ -47,19 +58,102 @@ resource "opal_resource" "sensitive_resource" {
 - `auto_approval` (Boolean) Automatically approve all requests for this resource without review.
 - `description` (String) The description of the resource.
 - `max_duration` (Number) The maximum duration for which this resource can be requested (in minutes). By default, the max duration is indefinite access.
-- `metadata` (String) The JSON metadata about the remote resource. Include only for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/how-opal) for details on how to specify this field.
-- `remote_resource_id` (String) The ID of the resource on the remote system. Include only for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/how-opal) for details on how to specify this field.
+- `remote_info` (Block List, Max: 1) Remote info that is required for the creation of remote resources. (see [below for nested schema](#nestedblock--remote_info))
 - `request_template_id` (String) The ID of a request template for this resource. You can get this ID from the URL in the Opal web app.
 - `require_manager_approval` (Boolean) Require the requester's manager's approval for requests to this resource.
 - `require_mfa_to_approve` (Boolean) Require that reviewers MFA to approve requests for this resource.
+- `require_mfa_to_connect` (Boolean) Require that users MFA to connect to this resource. Only applicable for resources where a session can be started from Opal (i.e. AWS RDS database)
 - `require_support_ticket` (Boolean) Require that requesters attach a support ticket to requests for this resource.
 - `reviewer` (Block List) A required reviewer for this resource. If none are specified, then the admin owner will be used. (see [below for nested schema](#nestedblock--reviewer))
 - `visibility` (String) The visibility level of the resource, i.e. LIMITED or GLOBAL.
-- `visibility_group` (Block List) The groups that can see this resource when visibility is limited. If not specified, only users with direct access can see this resource when visibility is set to LIMITED. (see [below for nested schema](#nestedblock--visibility_group))
+- `visibility_group` (Block List) The groups that can see this resource when visibility is limited. If not specified, only admins and users with direct access can see this resource when visibility is set to LIMITED. (see [below for nested schema](#nestedblock--visibility_group))
 
 ### Read-Only
 
 - `id` (String) The ID of the resource.
+
+<a id="nestedblock--remote_info"></a>
+### Nested Schema for `remote_info`
+
+Optional:
+
+- `aws_ec2_instance` (Block List, Max: 1) The remote_info for an AWS EC2 instance. (see [below for nested schema](#nestedblock--remote_info--aws_ec2_instance))
+- `aws_eks_cluster` (Block List, Max: 1) The remote_info for an AWS EKS cluster. (see [below for nested schema](#nestedblock--remote_info--aws_eks_cluster))
+- `aws_iam_role` (Block List, Max: 1) The remote_info for an AWS IAM role. (see [below for nested schema](#nestedblock--remote_info--aws_iam_role))
+- `aws_rds_instance` (Block List, Max: 1) The remote_info for an AWS RDS instance. (see [below for nested schema](#nestedblock--remote_info--aws_rds_instance))
+- `github_repo` (Block List, Max: 1) The remote_info for a Github repo. (see [below for nested schema](#nestedblock--remote_info--github_repo))
+- `okta_app` (Block List, Max: 1) The remote_info for an Okta app. (see [below for nested schema](#nestedblock--remote_info--okta_app))
+- `okta_custom_role` (Block List, Max: 1) The remote_info for an Okta custom role. (see [below for nested schema](#nestedblock--remote_info--okta_custom_role))
+- `okta_standard_role` (Block List, Max: 1) The remote_info for an Okta standard role. (see [below for nested schema](#nestedblock--remote_info--okta_standard_role))
+
+<a id="nestedblock--remote_info--aws_ec2_instance"></a>
+### Nested Schema for `remote_info.aws_ec2_instance`
+
+Required:
+
+- `instance_id` (String) The instanceId of the EC2 instance.
+- `region` (String) The region of the EC2 instance.
+
+
+<a id="nestedblock--remote_info--aws_eks_cluster"></a>
+### Nested Schema for `remote_info.aws_eks_cluster`
+
+Required:
+
+- `arn` (String) The ARN of the EKS cluster.
+
+
+<a id="nestedblock--remote_info--aws_iam_role"></a>
+### Nested Schema for `remote_info.aws_iam_role`
+
+Required:
+
+- `arn` (String) The ARN of the IAM role.
+
+
+<a id="nestedblock--remote_info--aws_rds_instance"></a>
+### Nested Schema for `remote_info.aws_rds_instance`
+
+Required:
+
+- `instance_id` (String) The instanceId of the RDS instance.
+- `region` (String) The region of the RDS instance.
+- `resource_id` (String) The resourceId of the RDS instance.
+
+
+<a id="nestedblock--remote_info--github_repo"></a>
+### Nested Schema for `remote_info.github_repo`
+
+Required:
+
+- `repo_id` (String) The id of the repository.
+- `repo_name` (String) The name of the repository.
+
+
+<a id="nestedblock--remote_info--okta_app"></a>
+### Nested Schema for `remote_info.okta_app`
+
+Required:
+
+- `app_id` (String) The id of the app.
+
+
+<a id="nestedblock--remote_info--okta_custom_role"></a>
+### Nested Schema for `remote_info.okta_custom_role`
+
+Required:
+
+- `role_id` (String) The id of the role.
+
+
+<a id="nestedblock--remote_info--okta_standard_role"></a>
+### Nested Schema for `remote_info.okta_standard_role`
+
+Required:
+
+- `role_type` (String) The type of the role.
+
+
 
 <a id="nestedblock--reviewer"></a>
 ### Nested Schema for `reviewer`
@@ -75,10 +169,5 @@ Required:
 Required:
 
 - `id` (String) The ID of the group that can see this resource.
-
-# Limitations
-- Currently, Opal App IDs cannot be read from the terraform provider. You will need to get App IDs from the Opal web app URLs.
-- [Linked audit channels](https://docs.opal.dev/docs/5526194-slack#linked-reviewer-and-audit-channels) cannot be managed from the terraform provider.
-- The `require_mfa_to_connect` attribute is not yet supported.
 
 Please [file a ticket](https://github.com/opalsecurity/terraform-provider-opal/issues) to discuss use cases that are not yet supported in the provider.
