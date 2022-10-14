@@ -133,12 +133,7 @@ func flattenOwnerUsers(userList *opal.UserList) []interface{} {
 
 	for _, u := range userList.Users {
 		users = append(users, map[string]interface{}{
-			"id":         u.UserId,
-			"email":      u.Email,
-			"full_name":  u.FullName,
-			"first_name": u.FirstName,
-			"last_name":  u.LastName,
-			"position":   u.Position,
+			"id": u.UserId,
 		})
 	}
 
