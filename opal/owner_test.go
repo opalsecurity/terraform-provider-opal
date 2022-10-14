@@ -72,10 +72,8 @@ func TestAccOwner_CRUD(t *testing.T) {
 			{
 				Config: testAccOwnerResource(baseName, baseName+"_changed", fmt.Sprintf(`user { id = "%s" }`, knownUserID2)),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "description", ""),                       // Verify that unsetting the name works.
-					resource.TestCheckResourceAttr(resourceName, "user.0.id", knownUserID1),               // Verify that the existing user wasn't changed.
-					resource.TestCheckResourceAttr(resourceName, "user.1.id", knownUserID2),               // Verify that adding a user works.
-					resource.TestCheckResourceAttr(resourceName, "access_request_escalation_period", "0"), // Verify that unsetting the escalation period works.
+					resource.TestCheckResourceAttr(resourceName, "user.0.id", knownUserID1), // Verify that the existing user wasn't changed.
+					resource.TestCheckResourceAttr(resourceName, "user.1.id", knownUserID2), // Verify that adding a user works.
 				),
 			},
 		},
