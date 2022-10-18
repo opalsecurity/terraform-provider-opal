@@ -7,7 +7,7 @@ require (
 	github.com/hashicorp/terraform-plugin-docs v0.13.0
 	github.com/hashicorp/terraform-plugin-log v0.7.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.22.0
-	github.com/opalsecurity/opal-go v1.0.6
+	github.com/opalsecurity/opal-go v1.0.8
 )
 
 require (
