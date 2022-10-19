@@ -37,9 +37,10 @@ func NewProvider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"opal_owner":    resourceOwner(),
-			"opal_resource": resourceResource(),
-			"opal_group":    resourceGroup(),
+			"opal_owner":           resourceOwner(),
+			"opal_resource":        resourceResource(),
+			"opal_group":           resourceGroup(),
+			"opal_message_channel": resourceMessageChannel(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"opal_app":  dataSourceApp(),
