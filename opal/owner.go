@@ -35,13 +35,11 @@ func resourceOwner() *schema.Resource {
 				Description: "A description of the owner.",
 				Type:        schema.TypeString,
 				Optional:    true,
-				Computed:    true,
 			},
 			"access_request_escalation_period": {
 				Description: "The amount of time (in minutes) before the next reviewer is notified. By default, there is no escalation policy.",
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Computed:    true,
 			},
 			"user": {
 				Description: "The users for this owner. If an escalation period is set, the order of the users will determine the escalation order.",
@@ -57,8 +55,6 @@ func resourceOwner() *schema.Resource {
 					},
 				},
 			},
-			// NOTE: We don't use Computed: true here as that would prevent the ability to unset the reviewer
-			//       channel from terraform
 			"reviewer_message_channel_id": {
 				Description: "The id of the message_channel that incoming reviews should be posted to.",
 				Type:        schema.TypeString,
