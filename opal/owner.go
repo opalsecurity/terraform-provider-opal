@@ -57,7 +57,13 @@ func resourceOwner() *schema.Resource {
 					},
 				},
 			},
-			// XXX: Linked reviewer message channel.
+			// NOTE: We don't use Computed: true here as that would prevent the ability to unset the reviewer
+			//       channel from terraform
+			"reviewer_message_channel_id": {
+				Description: "The id of the message_channel that incoming reviews should be posted to.",
+				Type:        schema.TypeString,
+				Optional:    true,
+			},
 		},
 	}
 }
@@ -76,6 +82,9 @@ func resourceOwnerCreate(ctx context.Context, d *schema.ResourceData, m interfac
 	createInfo := opal.NewCreateOwnerInfo(name, userIds)
 	if descI, ok := d.GetOk("description"); ok {
 		createInfo.SetDescription(descI.(string))
+	}
+	if reviewerMessageChannelIDI, ok := d.GetOk("reviewer_message_channel_id"); ok {
+		createInfo.SetReviewerMessageChannelId(reviewerMessageChannelIDI.(string))
 	}
 	if accessRequestEscalationPeriodI, ok := d.GetOk("access_request_escalation_period"); ok {
 		createInfo.SetAccessRequestEscalationPeriod(int32(accessRequestEscalationPeriodI.(int)))
@@ -110,6 +119,12 @@ func resourceOwnerRead(ctx context.Context, d *schema.ResourceData, m interface{
 		d.Set("access_request_escalation_period", owner.AccessRequestEscalationPeriod),
 	); err.ErrorOrNil() != nil {
 		return diagFromErr(ctx, err)
+	}
+
+	if owner.ReviewerMessageChannelId.IsSet() {
+		if err := d.Set("reviewer_message_channel_id", owner.ReviewerMessageChannelId.Get()); err != nil {
+			return diagFromErr(ctx, err)
+		}
 	}
 
 	users, _, err := client.OwnersApi.GetOwnerUsers(ctx, id).Execute()
@@ -151,6 +166,10 @@ func resourceOwnerUpdate(ctx context.Context, d *schema.ResourceData, m interfac
 
 	if d.HasChange("access_request_escalation_period") {
 		updateInfo.SetAccessRequestEscalationPeriod(int32(d.Get("access_request_escalation_period").(int)))
+	}
+
+	if d.HasChange("reviewer_message_channel_id") {
+		updateInfo.SetReviewerMessageChannelId(d.Get("reviewer_message_channel_id").(string))
 	}
 
 	owner, _, err := client.OwnersApi.UpdateOwners(ctx).UpdateOwnerInfoList(*opal.NewUpdateOwnerInfoList([]opal.UpdateOwnerInfo{*updateInfo})).Execute()
