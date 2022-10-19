@@ -133,6 +133,10 @@ resource "opal_resource" "%s" {
 	app_id = "%s"
 	resource_type = "CUSTOM"
 	admin_owner_id = "%s"
+	
+	reviewer {
+		id  = "%s"
+	}
 
 	%s
 }
@@ -142,8 +146,12 @@ resource "opal_group" "%s" {
 	app_id = "%s"
 	group_type = "OPAL_GROUP"
 	admin_owner_id = "%s"
+	
+	reviewer {
+		id  = "%s"
+	}
 }
-`, resourceName, resourceName, knownCustomAppID, knownCustomAppAdminOwnerID, additional, groupName, groupName, knownOpalAppID, knownOpalAppAdminOwnerID)
+`, resourceName, resourceName, knownCustomAppID, knownCustomAppAdminOwnerID, knownCustomAppAdminOwnerID, additional, groupName, groupName, knownOpalAppID, knownOpalAppAdminOwnerID, knownOpalAppAdminOwnerID)
 }
 
 // TestAccResource_SetOnCreate tests that setting attributes on creation
@@ -216,6 +224,9 @@ func TestAccResource_Remote(t *testing.T) {
 	name = "%s"
 	app_id = "%s"
 	admin_owner_id = "%s"
+	reviewer {
+		id = "%s"
+	}
 	resource_type = "GIT_HUB_REPO"
 	remote_info {
 		github_repo {
@@ -224,7 +235,7 @@ func TestAccResource_Remote(t *testing.T) {
 		}
     }
 }
-`, baseName, baseName, knownGithubAppID, knownOpalAppAdminOwnerID, knownGithubRepoID, knownGithubRepoName),
+`, baseName, baseName, knownGithubAppID, knownOpalAppAdminOwnerID, knownOpalAppAdminOwnerID, knownGithubRepoID, knownGithubRepoName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
 				),
@@ -241,9 +252,13 @@ resource "opal_resource" "%s" {
 	resource_type = "CUSTOM"
 	admin_owner_id = "%s"
 
+	reviewer {
+		id = "%s"
+	}
+
 	%s
 }
-`, tfName, name, knownCustomAppID, knownCustomAppAdminOwnerID, additional)
+`, tfName, name, knownCustomAppID, knownCustomAppAdminOwnerID, knownCustomAppAdminOwnerID, additional)
 }
 
 func testAccCheckResourceDestroy(s *terraform.State) error {
@@ -284,7 +299,7 @@ func TestAccResource_SetOnCreate_WithOwner(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceResourceName, "name", resourceBaseName),
 					resource.TestCheckResourceAttrPair(resourceResourceName, "admin_owner_id", ownerResourceName, "id"),
-					resource.TestCheckResourceAttrPair(resourceResourceName, "reviewer.0.id", ownerResourceName, "id"),
+					resource.TestCheckResourceAttr(resourceResourceName, "reviewer.0.id", knownOpalAppAdminOwnerID),
 				),
 			},
 			{
@@ -293,7 +308,7 @@ func TestAccResource_SetOnCreate_WithOwner(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceResourceName, "name", resourceBaseName),
 					resource.TestCheckResourceAttr(resourceResourceName, "admin_owner_id", knownCustomAppAdminOwnerID),
-					resource.TestCheckResourceAttrPair(resourceResourceName, "reviewer.0.id", ownerResourceName, "id"),
+					resource.TestCheckResourceAttr(resourceResourceName, "reviewer.0.id", knownOpalAppAdminOwnerID),
 				),
 			},
 			{
@@ -305,7 +320,8 @@ reviewer {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceResourceName, "name", resourceBaseName),
 					resource.TestCheckResourceAttr(resourceResourceName, "admin_owner_id", knownCustomAppAdminOwnerID),
-					resource.TestCheckResourceAttr(resourceResourceName, "reviewer.0.id", knownCustomAppAdminOwnerID),
+					resource.TestCheckResourceAttr(resourceResourceName, "reviewer.0.id", knownOpalAppAdminOwnerID),
+					resource.TestCheckResourceAttr(resourceResourceName, "reviewer.1.id", knownCustomAppAdminOwnerID),
 				),
 			},
 		},
@@ -327,9 +343,13 @@ resource "opal_resource" "%s" {
 	resource_type = "CUSTOM"
 	app_id = "%s"
 
+	reviewer {
+		id = "%s"
+	}
+
 	%s
 }
-`, ownerName, ownerName, knownUserID1, resourceName, resourceName, knownCustomAppID, additional)
+`, ownerName, ownerName, knownUserID1, resourceName, resourceName, knownCustomAppID, knownOpalAppAdminOwnerID, additional)
 }
 
 func combineCheck(fns ...resource.TestCheckFunc) resource.TestCheckFunc {

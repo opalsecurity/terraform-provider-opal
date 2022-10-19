@@ -123,7 +123,6 @@ func resourceGroup() *schema.Resource {
 				Description: "A required reviewer for this group. If none are specified, then the admin owner will be used.",
 				Type:        schema.TypeList,
 				Optional:    true,
-				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
