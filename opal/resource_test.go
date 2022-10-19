@@ -132,6 +132,7 @@ resource "opal_resource" "%s" {
 	name = "%s"
 	app_id = "%s"
 	resource_type = "CUSTOM"
+	admin_owner_id = "%s"
 
 	%s
 }
@@ -140,8 +141,9 @@ resource "opal_group" "%s" {
 	name = "%s"
 	app_id = "%s"
 	group_type = "OPAL_GROUP"
+	admin_owner_id = "%s"
 }
-`, resourceName, resourceName, knownCustomAppID, additional, groupName, groupName, knownOpalAppID)
+`, resourceName, resourceName, knownCustomAppID, knownCustomAppAdminOwnerID, additional, groupName, groupName, knownOpalAppID, knownOpalAppAdminOwnerID)
 }
 
 // TestAccResource_SetOnCreate tests that setting attributes on creation
@@ -213,6 +215,7 @@ func TestAccResource_Remote(t *testing.T) {
 				Config: fmt.Sprintf(`resource "opal_resource" "%s" {
 	name = "%s"
 	app_id = "%s"
+	admin_owner_id = "%s"
 	resource_type = "GIT_HUB_REPO"
 	remote_info {
 		github_repo {
@@ -221,7 +224,7 @@ func TestAccResource_Remote(t *testing.T) {
 		}
     }
 }
-`, baseName, baseName, knownGithubAppID, knownGithubRepoID, knownGithubRepoName),
+`, baseName, baseName, knownGithubAppID, knownOpalAppAdminOwnerID, knownGithubRepoID, knownGithubRepoName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
 				),
@@ -236,10 +239,11 @@ resource "opal_resource" "%s" {
 	name = "%s"
 	app_id = "%s"
 	resource_type = "CUSTOM"
+	admin_owner_id = "%s"
 
 	%s
 }
-`, tfName, name, knownCustomAppID, additional)
+`, tfName, name, knownCustomAppID, knownCustomAppAdminOwnerID, additional)
 }
 
 func testAccCheckResourceDestroy(s *terraform.State) error {
@@ -322,6 +326,7 @@ resource "opal_resource" "%s" {
 	name = "%s"
 	resource_type = "CUSTOM"
 	app_id = "%s"
+
 	%s
 }
 `, ownerName, ownerName, knownUserID1, resourceName, resourceName, knownCustomAppID, additional)
