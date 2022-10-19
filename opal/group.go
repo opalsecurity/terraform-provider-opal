@@ -120,7 +120,7 @@ func resourceGroup() *schema.Resource {
 				},
 			},
 			"reviewer": {
-				Description: "A required reviewer for this group. If none are specified, then the admin owner will be used.",
+				Description: "A required reviewer for this group. If none are specified.",
 				Type:        schema.TypeList,
 				Optional:    true,
 				Elem: &schema.Resource{
@@ -133,7 +133,20 @@ func resourceGroup() *schema.Resource {
 					},
 				},
 			},
-			// XXX: Audit message channel...
+			"audit_message_channel": {
+				Description: "An audit message channel for this group.",
+				Type:        schema.TypeList,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"id": {
+							Description: "The ID of the message channel for this group.",
+							Type:        schema.TypeString,
+							Required:    true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -232,7 +245,11 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 		}
 	}
 
-	// XXX: Update audit channel...
+	if _, ok := d.GetOk("audit_message_channel"); ok {
+		if diag := resourceGroupUpdateAuditMessageChannels(ctx, d, client); diag != nil {
+			return diag
+		}
+	}
 
 	return resourceGroupRead(ctx, d, m)
 }
@@ -256,6 +273,24 @@ func resourceGroupUpdateVisibility(ctx context.Context, d *schema.ResourceData, 
 	if _, _, err := client.GroupsApi.SetGroupVisibility(ctx, d.Id()).VisibilityInfo(visibilityInfo).Execute(); err != nil {
 		return diagFromErr(ctx, err)
 	}
+	return nil
+}
+
+func resourceGroupUpdateAuditMessageChannels(ctx context.Context, d *schema.ResourceData, client *opal.APIClient) diag.Diagnostics {
+	var channelIDs []string
+	if auditMessageChannelsI, ok := d.GetOk("audit_message_channel"); ok {
+		rawChannels := auditMessageChannelsI.([]any)
+		for _, rawChannel := range rawChannels {
+			channel := rawChannel.(map[string]any)
+			channelIDs = append(channelIDs, channel["id"].(string))
+		}
+	}
+
+	channelList := *opal.NewMessageChannelIDList(channelIDs)
+	if _, _, err := client.GroupsApi.SetGroupMessageChannels(ctx, d.Id()).MessageChannelIDList(channelList).Execute(); err != nil {
+		return diagFromErr(ctx, err)
+	}
+
 	return nil
 }
 
@@ -403,6 +438,12 @@ func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, m any) dia
 
 	if d.HasChange("visibility") || d.HasChange("visibility_group") {
 		if diag := resourceGroupUpdateVisibility(ctx, d, client); diag != nil {
+			return diag
+		}
+	}
+
+	if d.HasChange("audit_message_channel") {
+		if diag := resourceGroupUpdateAuditMessageChannels(ctx, d, client); diag != nil {
 			return diag
 		}
 	}
