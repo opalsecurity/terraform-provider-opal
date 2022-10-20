@@ -353,18 +353,22 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 		return diagFromErr(ctx, err)
 	}
 
-	visibilityGroups := make([]any, 0, len(visibility.VisibilityGroupIds))
-	for _, groupID := range visibility.VisibilityGroupIds {
-		visibilityGroups = append(visibilityGroups, map[string]any{
-			"id": groupID,
-		})
-	}
 	d.Set("visibility", visibility.Visibility)
 	flattenedGroups := make([]any, 0, len(visibility.VisibilityGroupIds))
 	for _, groupID := range visibility.VisibilityGroupIds {
 		flattenedGroups = append(flattenedGroups, map[string]any{"id": groupID})
 	}
 	d.Set("visibility_group", flattenedGroups)
+
+	auditChannelsResponse, _, err := client.GroupsApi.GetGroupMessageChannels(ctx, group.GroupId).Execute()
+
+	auditChannels := make([]any, 0, len(auditChannelsResponse.Channels))
+	for _, channel := range auditChannelsResponse.Channels {
+		auditChannels = append(auditChannels, map[string]any{
+			"id": channel.MessageChannelId,
+		})
+	}
+	d.Set("audit_message_channel", auditChannels)
 
 	reviewerIDs, _, err := client.GroupsApi.GetGroupReviewers(ctx, group.GroupId).Execute()
 	if err != nil {
