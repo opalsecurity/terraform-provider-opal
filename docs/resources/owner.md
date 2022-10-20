@@ -37,6 +37,7 @@ resource "opal_owner" "security" {
 
 - `access_request_escalation_period` (Number) The amount of time (in minutes) before the next reviewer is notified. By default, there is no escalation policy.
 - `description` (String) A description of the owner.
+- `reviewer_message_channel_id` (String) The id of the message_channel that incoming reviews should be posted to.
 
 ### Read-Only
 

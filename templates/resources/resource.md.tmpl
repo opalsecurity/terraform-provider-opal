@@ -9,12 +9,14 @@ description: |-
 
 {{ .Description | trimspace }}
 
-## Remote Resources
-Remote resources can be managed using the `remote_info` attribute.
-
 ## Example Usage
 
 {{ tffile "examples/resources/resource.tf" }}
+
+## Remote Resources
+Remote resources can be managed using the `remote_info` attribute. See the examples below:
+
+{{ tffile "examples/resources/remote_resource.tf" }}
 
 {{ .SchemaMarkdown | trimspace }}
 

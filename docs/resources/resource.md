@@ -9,9 +9,6 @@ description: |-
 
 An Opal Resource resource.
 
-## Remote Resources
-Remote resources can be managed using the `remote_info` attribute.
-
 ## Example Usage
 
 ```terraform
@@ -20,24 +17,57 @@ resource "opal_resource" "sensitive_resource" {
   description = "A sensitive resource."
   resource_type = "CUSTOM"
   app_id = data.opal_app.my_custom_app.id
-  auto_approval = false
+  admin_owner_id = data.opal_owner.security.id
   require_mfa_to_approve = true
+  auto_approval = false
+  require_manager_approval = true
 
   reviewer {
     id = opal_owner.security.id
   }
 }
+```
 
+## Remote Resources
+Remote resources can be managed using the `remote_info` attribute. See the examples below:
+
+```terraform
 resource "opal_resource" "aws_iam_role_example" {
   name = "AWS IAM role"
   description = "AWS IAM role created via terraform"
   resource_type = "AWS_IAM_ROLE"
   app_id = data.opal_app.aws.id
+  admin_owner_id = data.opal_owner.security.id
 
   remote_info {
     aws_iam_role {
-      # Note: This can also reference your AWS terraform files
+      # Note: This can reference your AWS terraform files
       arn = "arn:aws:iam::2582003"
+    }
+  }
+}
+
+resource "opal_resource" "okta_app_example" {
+  name = "Okta app"
+  // ...
+
+  remote_info {
+    okta_app {
+      # Note: This can reference your Okta terraform files
+      app_id = "0oa2aa0fcje6E2kXC5d7"
+    }
+  }
+}
+
+resource "opal_resource" "github_repo_example" {
+  name = "GitHub repo"
+  // ...
+
+  remote_info {
+    github_repo {
+      # Note: This can reference your GitHub terraform files
+      repo_id = "234432289"
+      repo_name = "my-repo"
     }
   }
 }
@@ -48,13 +78,13 @@ resource "opal_resource" "aws_iam_role_example" {
 
 ### Required
 
+- `admin_owner_id` (String) The admin owner ID for this resource. By default, this is set to the application admin owner.
 - `app_id` (String) The ID of the app integration that provides the resource. You can get this value from the URL of the app in the Opal web app.
 - `name` (String) The name of the resource.
 - `resource_type` (String) The type of the resource, i.e. AWS_EC2_INSTANCE.
 
 ### Optional
 
-- `admin_owner_id` (String) The admin owner ID for this resource. By default, this is set to the application admin owner.
 - `auto_approval` (Boolean) Automatically approve all requests for this resource without review.
 - `description` (String) The description of the resource.
 - `max_duration` (Number) The maximum duration for which this resource can be requested (in minutes). By default, the max duration is indefinite access.
