@@ -28,7 +28,7 @@ Now `terraformer-opal` should  be available to you. Before we can start importin
 ## Installing Opal Terraform provider
 
 1. In the directory from which you want to import your Opal infrastructure, add a `versions.tf` file with the following content:
-```
+```hcl
 terraform {
   required_providers {
     google = {
@@ -53,8 +53,8 @@ In order to run the import commands, the following environment variables are req
 ### Importing everything
 
 In order to import everything, you can run the following command (Note: In some shells you might have to escape the `*` by replacing it with `\*`):
-```
-terraformer-opal import opal --resources=* --path-pattern {output}/{provider} --no-sort
+```bash
+$ terraformer-opal import opal --resources=* --path-pattern {output}/{provider} --no-sort
 ```
 
 *NOTE:*
@@ -63,8 +63,8 @@ terraformer-opal import opal --resources=* --path-pattern {output}/{provider} --
 
 ### Importing a specific resource by ID
 
-```
-terraformer-opal import opal --resources=resource --filter=resource=7900e913-81c2-4c3d-8d1e-1d37952ebcbf --path-pattern {output}/{provider} --no-sort
+```bash
+$ terraformer-opal import opal --resources=resource --filter=resource=7900e913-81c2-4c3d-8d1e-1d37952ebcbf --path-pattern {output}/{provider} --no-sort
 ```
 
 *NOTE:*
@@ -79,8 +79,27 @@ To use the script, do the following:
 3. The printed output is the `terraformer-opal` command that will import the specified resources, groups, and owners into Terraform.
 4. Double-check that the command looks good and run it to complete the import.
 
+### Inspect the imported terraform files
+
+You should now see a `generated/` subdirectory with generated files. If you are using
+terraform version `>= 0.13`, you will need to run a state migration:
+```bash
+$ cd generated/opal/
+$ terraform state replace-provider -auto-approve "registry.terraform.io/-/opal" "opalsecurity/opal"
+```
+
+You can now initialize and use your new generated resources:
+```bash
+$ terraform init
+$ terraform plan # No changes. Your infrastructure matches the configuration.
+```
+
 # Help guide
 
 > When running `terraformer-opal`, I get `open /Users/XXX/.terraform.d/plugins/darwin_arm64: no such file or directory`.
 
-You did not correctly install the Opal Terraform provider or are not running the command from the directory in which you installed the provider.
+You did not correctly install the Opal Terraform provider or are not running the command from the directory in which you installed the provider. See [this](## Installing Opal Terraform provider).
+
+> When running `terraform init`, I get `Error: Invalid legacy provider address`
+
+You need to run a state migration. See [this](### Inspect the imported terraform files).
