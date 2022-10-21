@@ -17,11 +17,16 @@ Note: We're currently waiting on Opal support being merged into the official [Te
 
 ## Installing  Terraformer
 
-1. Clone the Opal fork of Terraformer: `git clone  https://github.com/opalsecurity/terraformer.git`
-2. Go into the cloned repo: `cd terraformer/`
-3. Build the Opal Terraformer tool: `go run ./build/main.go opal`
-4. The above command build a binary called `terraformer-opal`. To expose this in your path, run `cp terraformer-opal /usr/local/bin/`
-5. Refresh your shell: `source ~/.zshrc` (or equivalent for other shell)
+```bash
+# clone the Opal fork of Terraformer
+$ git clone  https://github.com/opalsecurity/terraformer.git && cd /terraformer
+# build terraformer-opal binary
+$ go run ./build/main.go opal
+# optional: expose the terraformer-opal command in your path
+$ cp terraformer-opal /usr/local/bin/
+# refresh your shell (use equivalent command for non-zsh shell)
+$ source ~/.zshrc
+```
 
 Now `terraformer-opal` should  be available to you. Before we can start importing infrastructure, we need to install the Opal Terraform provider.
 
@@ -47,8 +52,14 @@ Now we're ready to start importing Opal infrastructure.
 ### Environment variables
 
 In order to run the import commands, the following environment variables are required:
-1. A read-only Opal Admin token: `export OPAL_OAUTH_TOKEN=XXX`
-2. [Only needed for on-prem customers] The base url of your Opal instance: `export OPAL_BASE_URL=https://my.opal.corp.dev/v1`
+
+1. A read-only Opal Admin token. You can generate it the admin settings of the Opal web UI
+2. [Only needed for on-prem customers] The base url of your Opal instance
+
+```bash
+$ export OPAL_OAUTH_TOKEN=XXX
+$ export OPAL_BASE_URL=https://my.opal.corp.dev/v1
+```
 
 ### Importing everything
 
@@ -81,7 +92,7 @@ To use the script, do the following:
 
 ### Inspect the imported terraform files
 
-You should now see a `generated/` subdirectory with generated files. If you are using
+You should now see a `generated/opal/` subdirectory with generated files. If you are using
 terraform version `>= 0.13`, you will need to run a state migration:
 ```bash
 $ cd generated/opal/
@@ -96,14 +107,14 @@ $ terraform plan # No changes. Your infrastructure matches the configuration.
 
 # Help guide
 
-> All my imported terraform names have `tfer--` in them.
+1. _All my imported terraform names have `tfer--` in them._
 
-This is automatically done by the terraformer tool. You can read more about it [here](https://github.com/GoogleCloudPlatform/terraformer/pull/220). If you want to get rid of them, you can open the `generated/opal` directory in your favorite editor and ReplaceAll("tfer--", "").
+This is automatically done by the terraformer tool. You can read more about it [here](https://github.com/GoogleCloudPlatform/terraformer/pull/220). If you want to get rid of them, you can open the `generated/opal` directory in your favorite editor and `ReplaceAll("tfer--", "")`.
 
-> When running `terraformer-opal`, I get `open /Users/XXX/.terraform.d/plugins/darwin_arm64: no such file or directory`.
+2. _When running `terraformer-opal`, I get `open /Users/XXX/.terraform.d/plugins/darwin_arm64: no such file or directory`._
 
-You did not correctly install the Opal Terraform provider or are not running the command from the directory in which you installed the provider. See [this](## Installing Opal Terraform provider).
+You did not correctly install the Opal Terraform provider or are not running the command from the directory in which you installed the provider. See [this](##Installing Opal Terraform provider).
 
-> When running `terraform init`, I get `Error: Invalid legacy provider address`
+3. _When running `terraform init`, I get `Error: Invalid legacy provider address`_
 
-You need to run a state migration. See [this](### Inspect the imported terraform files).
+You need to run a state migration. See [this](###Inspect the imported terraform files).
