@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
+	"path"
 
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -30,10 +32,10 @@ func NewProvider() *schema.Provider {
 				Sensitive:   true,
 			},
 			"base_url": {
-				Description: "The base Opal API url in the format `https://[hostname]/v1`. The default value is `https://api.opal.dev/v1`. The value must be provided when working with on-prem",
+				Description: "The base Opal API url in the format `https://[hostname]`. The default value is `https://api.opal.dev`. The value must be provided when working with on-prem",
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("OPAL_BASE_URL", "https://api.opal.dev/v1"),
+				DefaultFunc: schema.EnvDefaultFunc("OPAL_BASE_URL", "https://api.opal.dev"),
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
@@ -65,8 +67,16 @@ func configure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.D
 
 	baseUrlT, ok := d.GetOk("base_url")
 	if ok {
+		u, err := url.Parse(baseUrlT.(string))
+		if err != nil {
+			return nil, diag.Diagnostics{{
+				Severity: diag.Error,
+				Summary:  "Unable to parse provided base_url",
+			}}
+		}
+		u.Path = path.Join(u.Path, "/v1")
 		conf.Servers = opal.ServerConfigurations{{
-			URL: baseUrlT.(string),
+			URL: u.String(),
 		}}
 	}
 

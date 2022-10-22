@@ -85,4 +85,4 @@ resource "opal_group" "oncall" {
 
 ### Optional
 
-- `base_url` (String) The base Opal API url in the format `https://[hostname]/v1`. The default value is `https://api.opal.dev/v1`. The value must be provided when working with on-prem
+- `base_url` (String) The base Opal API url in the format `https://[hostname]`. The default value is `https://api.opal.dev`. The value must be provided when working with on-prem

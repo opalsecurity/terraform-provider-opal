@@ -57,8 +57,8 @@ In order to run the import commands, the following environment variables are req
 2. [Only needed for on-prem customers] The base url of your Opal instance
 
 ```bash
-$ export OPAL_OAUTH_TOKEN=XXX
-$ export OPAL_BASE_URL=https://my.opal.corp.dev/v1
+$ export OPAL_AUTH_TOKEN=XXX
+$ export OPAL_BASE_URL=https://my.opal.corp.dev
 ```
 
 ### Importing everything
