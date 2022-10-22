@@ -19,7 +19,7 @@ Note: We're currently waiting on Opal support being merged into the official [Te
 
 ```bash
 # clone the Opal fork of Terraformer
-$ git clone  https://github.com/opalsecurity/terraformer.git && cd /terraformer
+$ git clone  https://github.com/opalsecurity/terraformer.git && cd terraformer
 # build terraformer-opal binary
 $ go run ./build/main.go opal
 # optional: expose the terraformer-opal command in your path
@@ -36,7 +36,7 @@ Now `terraformer-opal` should  be available to you. Before we can start importin
 ```hcl
 terraform {
   required_providers {
-    google = {
+    opal = {
       source = "opalsecurity/opal"
     }
   }
@@ -54,23 +54,25 @@ Now we're ready to start importing Opal infrastructure.
 In order to run the import commands, the following environment variables are required:
 
 1. A read-only Opal Admin token. You can generate it the admin settings of the Opal web UI
-2. [Only needed for on-prem customers] The base url of your Opal instance
+2. The base url of your Opal instance
 
 ```bash
 $ export OPAL_AUTH_TOKEN=XXX
+# NOTE: OPAL_BASE_URL is only needed if you have an on-prem installation
 $ export OPAL_BASE_URL=https://my.opal.corp.dev
 ```
 
 ### Importing everything
 
-In order to import everything, you can run the following command (Note: In some shells you might have to escape the `*` by replacing it with `\*`):
+In order to import everything, you can run the following command:
 ```bash
-$ terraformer-opal import opal --resources=* --path-pattern {output}/{provider} --no-sort
+$ terraformer-opal import opal --resources="*" --path-pattern {output}/{provider} --no-sort
 ```
 
 *NOTE:*
 - `--no-sort` is needed for importing owners. The order of the users determines the escalation order if an escalation policy is set.
 - Feel free to use any `path-pattern` that you'd like.
+- Make sure to follow the steps in "Inspect the imported terraform files" below to use your terraform files.
 
 ### Importing a specific resource by ID
 
@@ -80,6 +82,7 @@ $ terraformer-opal import opal --resources=resource --filter=resource=7900e913-8
 
 *NOTE:*
 - running this for multiple resources will override previous imports. See below for how to import multiple resources by ID.
+- Make sure to follow the steps in "Inspect the imported terraform files" below to use your terraform files.
 
 ### Importing multiple resources by ID
 The syntax to import multiple resources by their IDs is a bit cumbersome. To help generate an import command, you can use the following [python3 script](https://gist.github.com/jan-opal/44c796111763d1e5f11715741425e987).
@@ -89,6 +92,7 @@ To use the script, do the following:
 2. Run the script `python3 generate_import_command.py`.
 3. The printed output is the `terraformer-opal` command that will import the specified resources, groups, and owners into Terraform.
 4. Double-check that the command looks good and run it to complete the import.
+5. Make sure to follow the steps in "Inspect the imported terraform files" below to use your terraform files.
 
 ### Inspect the imported terraform files
 
@@ -113,8 +117,8 @@ This is automatically done by the terraformer tool. You can read more about it [
 
 2. _When running `terraformer-opal`, I get `open /Users/XXX/.terraform.d/plugins/darwin_arm64: no such file or directory`._
 
-You did not correctly install the Opal Terraform provider or are not running the command from the directory in which you installed the provider. See [this](##Installing Opal Terraform provider).
+You did not correctly install the Opal Terraform provider or are not running the command from the directory in which you installed the provider. See the "Installing Opal Terraform provider" section.
 
 3. _When running `terraform init`, I get `Error: Invalid legacy provider address`_
 
-You need to run a state migration. See [this](###Inspect the imported terraform files).
+You need to run a state migration. See the "Inspect the imported terraform files" section.
