@@ -66,7 +66,7 @@ func resourceResource() *schema.Resource {
 				Required:    true,
 			},
 			"admin_owner_id": {
-				Description: "The admin owner ID for this resource. By default, this is set to the application admin owner.",
+				Description: "The admin owner ID for this resource.",
 				Type:        schema.TypeString,
 				Required:    true,
 			},
