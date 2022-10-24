@@ -78,7 +78,7 @@ resource "opal_resource" "github_repo_example" {
 
 ### Required
 
-- `admin_owner_id` (String) The admin owner ID for this resource. By default, this is set to the application admin owner.
+- `admin_owner_id` (String) The admin owner ID for this resource.
 - `app_id` (String) The ID of the app integration that provides the resource. You can get this value from the URL of the app in the Opal web app.
 - `name` (String) The name of the resource.
 - `resource_type` (String) The type of the resource, i.e. AWS_EC2_INSTANCE.
@@ -94,7 +94,7 @@ resource "opal_resource" "github_repo_example" {
 - `require_mfa_to_approve` (Boolean) Require that reviewers MFA to approve requests for this resource.
 - `require_mfa_to_connect` (Boolean) Require that users MFA to connect to this resource. Only applicable for resources where a session can be started from Opal (i.e. AWS RDS database)
 - `require_support_ticket` (Boolean) Require that requesters attach a support ticket to requests for this resource.
-- `reviewer` (Block List) A required reviewer for this resource. If none are specified, then the admin owner will be used. (see [below for nested schema](#nestedblock--reviewer))
+- `reviewer` (Block Set) A required reviewer for this resource. If none are specified, then the admin owner will be used. (see [below for nested schema](#nestedblock--reviewer))
 - `visibility` (String) The visibility level of the resource, i.e. LIMITED or GLOBAL.
 - `visibility_group` (Block List) The groups that can see this resource when visibility is limited. If not specified, only admins and users with direct access can see this resource when visibility is set to LIMITED. (see [below for nested schema](#nestedblock--visibility_group))
 
