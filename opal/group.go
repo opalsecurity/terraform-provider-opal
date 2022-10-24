@@ -361,6 +361,9 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 	d.Set("visibility_group", flattenedGroups)
 
 	auditChannelsResponse, _, err := client.GroupsApi.GetGroupMessageChannels(ctx, group.GroupId).Execute()
+	if err != nil {
+		return diagFromErr(ctx, err)
+	}
 
 	auditChannels := make([]any, 0, len(auditChannelsResponse.Channels))
 	for _, channel := range auditChannelsResponse.Channels {
