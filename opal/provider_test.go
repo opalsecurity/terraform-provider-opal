@@ -3,7 +3,9 @@ package opal
 import (
 	"errors"
 	"fmt"
+	"net/url"
 	"os"
+	"path"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -100,8 +102,13 @@ func sweeperClient() (*opal.APIClient, error) {
 	if baseUrl == "" {
 		return nil, errors.New("OPAL_TEST_BASE_URL must be set")
 	}
+	u, err := url.Parse(baseUrl)
+	if err != nil {
+		return nil, fmt.Errorf("cannot parse base url: %s", baseUrl)
+	}
+	u.Path = path.Join(u.Path, "/v1")
 	conf.Servers = opal.ServerConfigurations{{
-		URL: baseUrl,
+		URL: u.String(),
 	}}
 
 	return opal.NewAPIClient(conf), nil
