@@ -39,7 +39,7 @@ func testAccPreCheck(t *testing.T) {
 	}
 
 	if v := os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_REPO_ID"); v == "" {
-		t.Fatal("OPAL_TEST_KNOWN_GITHUB_APP_RESOURCE_REMOTE_ID must be set for acceptance tests. This value is the id of a test repo and must match what's in the test github org.")
+		t.Fatal("OPAL_TEST_KNOWN_GITHUB_APP_REPO_ID must be set for acceptance tests. This value is the id of a test repo and must match what's in the test github org.")
 	}
 
 	if v := os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_REPO_NAME"); v == "" {
