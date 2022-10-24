@@ -78,7 +78,7 @@ resource "opal_resource" "github_repo_example" {
 
 ### Required
 
-- `admin_owner_id` (String) The admin owner ID for this resource. By default, this is set to the application admin owner.
+- `admin_owner_id` (String) The admin owner ID for this resource.
 - `app_id` (String) The ID of the app integration that provides the resource. You can get this value from the URL of the app in the Opal web app.
 - `name` (String) The name of the resource.
 - `resource_type` (String) The type of the resource, i.e. AWS_EC2_INSTANCE.
