@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"log"
+	"reflect"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -135,9 +136,10 @@ func resourceResource() *schema.Resource {
 				},
 			},
 			"reviewer": {
-				Description: "A required reviewer for this resource. If none are specified, then the admin owner will be used.",
-				Type:        schema.TypeList,
-				Optional:    true,
+				Description:      "A required reviewer for this resource. If none are specified, then the admin owner will be used.",
+				Type:             schema.TypeSet,
+				Optional:         true,
+				DiffSuppressFunc: ignoreReviewerDefaultValue,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
@@ -281,7 +283,16 @@ func resourceResourceUpdateVisibility(ctx context.Context, d *schema.ResourceDat
 }
 
 func resourceResourceUpdateReviewers(ctx context.Context, d *schema.ResourceData, client *opal.APIClient, reviewersI any) diag.Diagnostics {
-	rawReviewers := reviewersI.([]any)
+	// reviewersI could be a schema.Set from terraform or our own constructed slice.
+	var rawReviewers []any
+	switch reviewersI := reviewersI.(type) {
+	case []any:
+		rawReviewers = reviewersI
+	case *schema.Set:
+		rawReviewers = reviewersI.List()
+	default:
+		return diag.Errorf("bad type passed: %v", reflect.TypeOf(reviewersI))
+	}
 	reviewerIds := make([]string, 0, len(rawReviewers))
 	for _, rawReviewer := range rawReviewers {
 		reviewer := rawReviewer.(map[string]any)

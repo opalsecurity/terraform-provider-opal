@@ -28,7 +28,7 @@ func TestAccResource_Import(t *testing.T) {
 		CheckDestroy: testAccCheckResourceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceResource(baseName, baseName, ""),
+				Config: testAccResourceResourceWithReviewer(baseName, baseName, ""),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName), // Verify that the name was set.
 				),
@@ -52,7 +52,7 @@ func TestAccResource_CRUD(t *testing.T) {
 		CheckDestroy: testAccCheckResourceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceResource(baseName, baseName, ""),
+				Config: testAccResourceResourceWithReviewer(baseName, baseName, ""),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),                             // Verify that the name was set.
 					resource.TestCheckResourceAttr(resourceName, "description", ""),                            // Verify that optional works.
@@ -67,7 +67,7 @@ func TestAccResource_CRUD(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccResourceResource(baseName, baseName+"_changed", `
+				Config: testAccResourceResourceWithReviewer(baseName, baseName+"_changed", `
 description = "test desc"
 max_duration = 60
 require_manager_approval = true
@@ -154,6 +154,78 @@ resource "opal_group" "%s" {
 `, resourceName, resourceName, knownCustomAppID, knownCustomAppAdminOwnerID, knownCustomAppAdminOwnerID, additional, groupName, groupName, knownOpalAppID, knownOpalAppAdminOwnerID, knownOpalAppAdminOwnerID)
 }
 
+func TestAccResource_Reviewer(t *testing.T) {
+	baseName := "tf_acc_resource_test_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
+	resourceName := "opal_resource." + baseName
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckResourceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccResourceResource(baseName, baseName, ""),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),
+					// The reviewer isn't saved since it is not marked as Computed.
+					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "0"),
+				),
+			},
+			{
+				Config: testAccResourceResource(baseName, baseName, fmt.Sprintf(`reviewer { id = "%s" }`, knownOpalAppAdminOwnerID)),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),
+					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "1"),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer.*", map[string]string{"id": knownOpalAppAdminOwnerID}),
+				),
+			},
+			{
+				Config: testAccResourceResource(baseName, baseName, fmt.Sprintf(`reviewer { id = "%s" }
+reviewer { id = "%s" }`, knownOpalAppAdminOwnerID, knownCustomAppAdminOwnerID)),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),
+					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "2"),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer.*", map[string]string{"id": knownOpalAppAdminOwnerID}),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer.*", map[string]string{"id": knownCustomAppAdminOwnerID}),
+				),
+			},
+			{
+				Config: testAccResourceResource(baseName, baseName, fmt.Sprintf(`reviewer { id = "%s" }`, knownOpalAppAdminOwnerID)),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),
+					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "1"),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer.*", map[string]string{"id": knownOpalAppAdminOwnerID}),
+				),
+			},
+			{
+				Config: testAccResourceResource(baseName, baseName, ""),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),
+					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "0"),
+				),
+			},
+			{
+				Config: testAccResourceResource(baseName, baseName, fmt.Sprintf(`reviewer { id = "%s" }`, knownCustomAppAdminOwnerID)),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),
+					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "1"),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer.*", map[string]string{"id": knownCustomAppAdminOwnerID}),
+				),
+			},
+			{
+				Config: testAccResourceResource(baseName, baseName, ""),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),
+					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "1"),
+					// This is a bit weird. If we delete the reviewer list and the only reviewer is the app owner, then
+					// we don't make the diff and the reviewer stays in the state. This is fine but a bit inconsistent.
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer.*", map[string]string{"id": knownCustomAppAdminOwnerID}),
+				),
+			},
+		},
+	})
+}
+
 // TestAccResource_SetOnCreate tests that setting attributes on creation
 // works.
 func TestAccResource_SetOnCreate(t *testing.T) {
@@ -166,7 +238,7 @@ func TestAccResource_SetOnCreate(t *testing.T) {
 		CheckDestroy: testAccCheckResourceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceResource(baseName, baseName, fmt.Sprintf(`
+				Config: testAccResourceResourceWithReviewer(baseName, baseName, fmt.Sprintf(`
 description = "test desc"
 require_manager_approval = true
 require_support_ticket = true
@@ -194,7 +266,7 @@ func TestAccResource_SetOnCreate_AutoApproval(t *testing.T) {
 		CheckDestroy: testAccCheckResourceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceResource(baseName, baseName, `
+				Config: testAccResourceResourceWithReviewer(baseName, baseName, `
 auto_approval = true
 `),
 				Check: resource.ComposeTestCheckFunc(
@@ -252,13 +324,19 @@ resource "opal_resource" "%s" {
 	resource_type = "CUSTOM"
 	admin_owner_id = "%s"
 
+	%s
+}
+`, tfName, name, knownCustomAppID, knownCustomAppAdminOwnerID, additional)
+}
+
+func testAccResourceResourceWithReviewer(tfName, name, additional string) string {
+	return testAccResourceResource(tfName, name, fmt.Sprintf(`
 	reviewer {
 		id = "%s"
 	}
 
 	%s
-}
-`, tfName, name, knownCustomAppID, knownCustomAppAdminOwnerID, knownCustomAppAdminOwnerID, additional)
+`, knownCustomAppAdminOwnerID, additional))
 }
 
 func testAccCheckResourceDestroy(s *terraform.State) error {
