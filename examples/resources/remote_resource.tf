@@ -3,7 +3,7 @@ resource "opal_resource" "aws_iam_role_example" {
   description = "AWS IAM role created via terraform"
   resource_type = "AWS_IAM_ROLE"
   app_id = data.opal_app.aws.id
-  admin_owner_id = data.opal_owner.security.id
+  admin_owner_id = opal_owner.security.id
 
   remote_info {
     aws_iam_role {
