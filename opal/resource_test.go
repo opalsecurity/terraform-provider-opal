@@ -278,7 +278,6 @@ auto_approval = true
 }
 
 var knownGithubAppID = os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_ID")
-var knownGithubRepoID = os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_REPO_ID")
 var knownGithubRepoName = os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_REPO_NAME")
 
 // TestAccResource_Remote tests creating a resource with a remote system.
@@ -302,12 +301,11 @@ func TestAccResource_Remote(t *testing.T) {
 	resource_type = "GIT_HUB_REPO"
 	remote_info {
 		github_repo {
-			repo_id = "%s"
 			repo_name = "%s"
 		}
     }
 }
-`, baseName, baseName, knownGithubAppID, knownOpalAppAdminOwnerID, knownOpalAppAdminOwnerID, knownGithubRepoID, knownGithubRepoName),
+`, baseName, baseName, knownGithubAppID, knownOpalAppAdminOwnerID, knownOpalAppAdminOwnerID, knownGithubRepoName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
 				),

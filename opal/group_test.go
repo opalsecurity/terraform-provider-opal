@@ -277,7 +277,6 @@ auto_approval = true
 }
 
 var knownGithubTeamName = os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_TEAM_SLUG")
-var knownGithubTeamID = os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_TEAM_ID")
 
 // TestAccGroup_Remote tests creating a resource with a remote system.
 func TestAccGroup_Remote(t *testing.T) {
@@ -300,12 +299,11 @@ func TestAccGroup_Remote(t *testing.T) {
 	group_type = "GIT_HUB_TEAM"
 	remote_info {
 		github_team {
-			team_id = "%s"
 			team_slug = "%s"
 		}
 	}
 }
-`, baseName, baseName, knownGithubAppID, knownOpalAppAdminOwnerID, knownOpalAppAdminOwnerID, knownGithubTeamID, knownGithubTeamName),
+`, baseName, baseName, knownGithubAppID, knownOpalAppAdminOwnerID, knownOpalAppAdminOwnerID, knownGithubTeamName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
 				),
