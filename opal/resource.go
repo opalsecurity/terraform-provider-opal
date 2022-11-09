@@ -243,12 +243,9 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 		if diag := resourceResourceUpdateReviewers(ctx, d, client, reviewersI); diag != nil {
 			return diag
 		}
-	} else if adminOwnerIDOk {
-		// If the admin owner was set during creation, we should also set
-		// the required reviewer to be the same so that it is consistent.
-		//
-		// Otherwise, if it's unset, the Opal API will automatically set it to
-		// the app owner.
+	} else if !autoApprovalOk || !(autoApprovalI.(bool)) {
+		// We should set the required reviewer to be the the admin owner (same behavior as the API) as
+		// long as we don't have auto approval.
 		if diag := resourceResourceUpdateReviewers(ctx, d, client, []any{map[string]any{"id": adminOwnerIDI}}); diag != nil {
 			return diag
 		}
