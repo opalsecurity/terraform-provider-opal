@@ -266,7 +266,7 @@ func TestAccResource_SetOnCreate_AutoApproval(t *testing.T) {
 		CheckDestroy: testAccCheckResourceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceResourceWithReviewer(baseName, baseName, `
+				Config: testAccResourceResource(baseName, baseName, `
 auto_approval = true
 `),
 				Check: resource.ComposeTestCheckFunc(
