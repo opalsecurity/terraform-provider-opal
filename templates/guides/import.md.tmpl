@@ -9,26 +9,11 @@ The current implementation of Terraform import can only import resources into th
 While it's totally possible to use `terraform import` in combination with writing manual configuration to import your infrastructure, we recommend using Terraformer (a tool that will import state + configuration).
 
 # Terraformer
-Note: We're currently waiting on Opal support being merged into the official [Terraformer](https://github.com/GoogleCloudPlatform/terraformer) repo. In the meantime, the setup to make imports work is slightly more tedious.
+Note: We're currently waiting on Opal support being merged into the official [Terraformer](https://github.com/GoogleCloudPlatform/terraformer) repo.
 
-## Pre-requisites
-- you have [golang](https://go.dev/doc/install) installed
-- you have [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) installed
+In the meantime, we have pre-built binaries [available for download](https://github.com/opalsecurity/terraformer/releases/tag/v0.0.1). For Apple Silicon macs, use the arm64 build.
 
-## Installing  Terraformer
-
-```bash
-# clone the Opal fork of Terraformer
-$ git clone  https://github.com/opalsecurity/terraformer.git && cd terraformer
-# build terraformer-opal binary
-$ go run ./build/main.go opal
-# optional: expose the terraformer-opal command in your path
-$ cp terraformer-opal /usr/local/bin/
-# refresh your shell (use equivalent command for non-zsh shell)
-$ source ~/.zshrc
-```
-
-Now `terraformer-opal` should  be available to you. Before we can start importing infrastructure, we need to install the Opal Terraform provider.
+After download, `terraformer` (i.e. `~/Downloads/terraformer-all-darwin-arm64`) should be available to you. Before we can start importing infrastructure, we also need to install the Opal Terraform provider.
 
 ## Installing Opal Terraform provider
 
@@ -66,7 +51,7 @@ $ export OPAL_BASE_URL=https://my.opal.corp.dev
 
 In order to import everything, you can run the following command:
 ```bash
-$ terraformer-opal import opal --resources="*" --path-pattern {output}/{provider} --no-sort
+$ terraformer import opal --resources="*" --path-pattern {output}/{provider} --no-sort
 ```
 
 *NOTE:*
@@ -77,7 +62,7 @@ $ terraformer-opal import opal --resources="*" --path-pattern {output}/{provider
 ### Importing a specific resource by ID
 
 ```bash
-$ terraformer-opal import opal --resources=resource --filter=resource=7900e913-81c2-4c3d-8d1e-1d37952ebcbf --path-pattern {output}/{provider} --no-sort
+$ terraformer import opal --resources=resource --filter=resource=7900e913-81c2-4c3d-8d1e-1d37952ebcbf --path-pattern {output}/{provider} --no-sort
 ```
 
 *NOTE:*
@@ -90,7 +75,7 @@ The syntax to import multiple resources by their IDs is a bit cumbersome. To hel
 To use the script, do the following:
 1. Fill out the resource, group, and owner ids that you want to import. You can find them in the URL bar of the Opal web interface.
 2. Run the script `python3 generate_import_command.py`.
-3. The printed output is the `terraformer-opal` command that will import the specified resources, groups, and owners into Terraform.
+3. The printed output is the `terraformer` command that will import the specified resources, groups, and owners into Terraform.
 4. Double-check that the command looks good and run it to complete the import.
 5. Make sure to follow the steps in "Inspect the imported terraform files" below to use your terraform files.
 
@@ -115,10 +100,33 @@ $ terraform plan # No changes. Your infrastructure matches the configuration.
 
 This is automatically done by the terraformer tool. You can read more about it [here](https://github.com/GoogleCloudPlatform/terraformer/pull/220). If you want to get rid of them, you can open the `generated/opal` directory in your favorite editor and `ReplaceAll("tfer--", "")`.
 
-2. _When running `terraformer-opal`, I get `open /Users/XXX/.terraform.d/plugins/darwin_arm64: no such file or directory`._
+2. _When running `terraformer`, I get `open /Users/XXX/.terraform.d/plugins/darwin_arm64: no such file or directory`._
 
 You did not correctly install the Opal Terraform provider or are not running the command from the directory in which you installed the provider. See the "Installing Opal Terraform provider" section.
 
 3. _When running `terraform init`, I get `Error: Invalid legacy provider address`_
 
 You need to run a state migration. See the "Inspect the imported terraform files" section.
+
+# Building terraformer from source
+Instead of using our pre-built binaries, you can build from source yourself.
+
+## Pre-requisites
+- you have [golang](https://go.dev/doc/install) installed
+- you have [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) installed
+
+## Build
+
+```bash
+# clone the Opal fork of Terraformer
+$ git clone https://github.com/opalsecurity/terraformer.git && cd terraformer
+
+# build terraformer-opal binary
+$ go run ./build/main.go opal
+
+# optional: expose the terraformer-opal command in your path
+$ cp terraformer-opal /usr/local/bin/
+
+# refresh your shell (use equivalent command for non-zsh shell)
+$ source ~/.zshrc
+```
