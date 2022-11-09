@@ -7,11 +7,10 @@ import (
 )
 
 // NOTE: Unfortunately, terraform go-sdk does not support nested object types natively. The only work-around
-//
-//	is to have a schema.ListType with MaxItems=1 as a layer of indirection in between each level of nesting.
-//	This makes the implementation ugly, but it's thankfully mostly hidden from the client. If nested objects
-//	are ever natively supported it in the SDK, we should be able to update our code without a need for
-//	change in the HCL of clients.
+// is to have a schema.ListType with MaxItems=1 as a layer of indirection in between each level of nesting.
+// This makes the implementation ugly, but it's thankfully mostly hidden from the client. If nested objects
+// are ever natively supported it in the SDK, we should be able to update our code without a need for
+// change in the HCL of clients.
 func resourceRemoteInfoElem() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
