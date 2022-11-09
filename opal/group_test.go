@@ -265,7 +265,7 @@ func TestAccGroup_SetOnCreate_AutoApproval(t *testing.T) {
 		CheckDestroy: testAccCheckGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGroupResourceWithReviewer(baseName, baseName, `
+				Config: testAccGroupResource(baseName, baseName, `
 auto_approval = true
 `),
 				Check: resource.ComposeTestCheckFunc(
