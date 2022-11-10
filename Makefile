@@ -4,7 +4,7 @@ build:
 	go build -o bin/terraform-provider-opal
 
 testacc:
-	TF_ACC=1 go test ./... -v $(TESTARGS) -timeout 2m
+	TF_ACC=1 go test ./... -v $(TESTARGS) -timeout 3m
 .PHONY: testacc
 
 sweep:
