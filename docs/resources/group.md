@@ -135,7 +135,6 @@ Required:
 
 Required:
 
-- `team_id` (String) The id of the GitHub team.
 - `team_slug` (String) The slug of the GitHub team.
 
 

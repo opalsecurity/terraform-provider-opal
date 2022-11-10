@@ -66,7 +66,6 @@ resource "opal_resource" "github_repo_example" {
   remote_info {
     github_repo {
       # Note: This can reference your GitHub terraform files
-      repo_id = "234432289"
       repo_name = "my-repo"
     }
   }
@@ -156,7 +155,6 @@ Required:
 
 Required:
 
-- `repo_id` (String) The id of the repository.
 - `repo_name` (String) The name of the repository.
 
 

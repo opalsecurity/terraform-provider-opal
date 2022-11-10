@@ -40,16 +40,8 @@ func testAccPreCheck(t *testing.T) {
 		t.Fatal("OPAL_TEST_KNOWN_OPAL_APP_ADMIN_OWNER_ID must be set for acceptance tests. You should get this value from the owner of the Opal product connection in the test organization.")
 	}
 
-	if v := os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_REPO_ID"); v == "" {
-		t.Fatal("OPAL_TEST_KNOWN_GITHUB_APP_REPO_ID must be set for acceptance tests. This value is the id of a test repo and must match what's in the test github org.")
-	}
-
 	if v := os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_REPO_NAME"); v == "" {
 		t.Fatal(`OPAL_TEST_KNOWN_GITHUB_APP_REPO_NAME must be set for acceptance tests. This value is the name of the repo you linked and must match what's in the test github org.`)
-	}
-
-	if v := os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_TEAM_ID"); v == "" {
-		t.Fatal("OPAL_TEST_KNOWN_GITHUB_APP_TEAM_ID must be set for acceptance tests. This value is the id of a test team and must match what's in the test github org.")
 	}
 
 	if v := os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_TEAM_SLUG"); v == "" {

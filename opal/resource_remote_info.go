@@ -7,10 +7,10 @@ import (
 )
 
 // NOTE: Unfortunately, terraform go-sdk does not support nested object types natively. The only work-around
-//       is to have a schema.ListType with MaxItems=1 as a layer of indirection in between each level of nesting.
-//       This makes the implementation ugly, but it's thankfully mostly hidden from the client. If nested objects
-//       are ever natively supported it in the SDK, we should be able to update our code without a need for
-//       change in the HCL of clients.
+// is to have a schema.ListType with MaxItems=1 as a layer of indirection in between each level of nesting.
+// This makes the implementation ugly, but it's thankfully mostly hidden from the client. If nested objects
+// are ever natively supported it in the SDK, we should be able to update our code without a need for
+// change in the HCL of clients.
 func resourceRemoteInfoElem() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
@@ -103,12 +103,6 @@ func resourceRemoteInfoElem() *schema.Resource {
 				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"repo_id": {
-							Description: "The id of the repository.",
-							Type:        schema.TypeString,
-							Required:    true,
-							ForceNew:    true,
-						},
 						"repo_name": {
 							Description: "The name of the repository.",
 							Type:        schema.TypeString,
@@ -236,7 +230,6 @@ func parseResourceRemoteInfo(remoteInfoI interface{}) (*opal.ResourceRemoteInfo,
 			githubRepo := githubRepoIList[0].(map[string]any)
 			return &opal.ResourceRemoteInfo{
 				GithubRepo: &opal.ResourceRemoteInfoGithubRepo{
-					RepoId:   githubRepo["repo_id"].(string),
 					RepoName: githubRepo["repo_name"].(string),
 				},
 			}, nil
