@@ -31,13 +31,13 @@ resource "opal_owner" "security" {
 ### Required
 
 - `name` (String) The name of the owner.
-- `user` (Block List, Min: 1) The users for this owner. If an escalation period is set, the order of the users will determine the escalation order. (see [below for nested schema](#nestedblock--user))
 
 ### Optional
 
 - `access_request_escalation_period` (Number) The amount of time (in minutes) before the next reviewer is notified. By default, there is no escalation policy.
 - `description` (String) A description of the owner.
 - `reviewer_message_channel_id` (String) The id of the message_channel that incoming reviews should be posted to.
+- `user` (Block List) The users for this owner. If an escalation period is set, the order of the users will determine the escalation order. (see [below for nested schema](#nestedblock--user))
 
 ### Read-Only
 
