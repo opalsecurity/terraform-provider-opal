@@ -44,7 +44,7 @@ func resourceOwner() *schema.Resource {
 			"user": {
 				Description: "The users for this owner. If an escalation period is set, the order of the users will determine the escalation order.",
 				Type:        schema.TypeList,
-				Required:    true,
+				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
