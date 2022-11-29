@@ -76,8 +76,25 @@ func TestAccOwner_CRUD(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "user.1.id", knownUserID2), // Verify that adding a user works.
 				),
 			},
+			{
+				Config: testAccOwnerResourceNoUser(baseName, baseName+"_changed", ""),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckNoResourceAttr(resourceName, "user.0.id"),
+					resource.TestCheckNoResourceAttr(resourceName, "user.1.id"),
+				),
+			},
 		},
 	})
+}
+
+func testAccOwnerResourceNoUser(tfName, name, additional string) string {
+	return fmt.Sprintf(`
+resource "opal_owner" "%s" {
+	name = "%s"
+
+	%s
+}
+`, tfName, name, additional)
 }
 
 func testAccOwnerResource(tfName, name, additional string) string {
