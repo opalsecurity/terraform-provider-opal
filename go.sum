@@ -286,6 +286,8 @@ github.com/opalsecurity/opal-go v1.0.9 h1:NlP3K15cpEYwtwHMnpp9TbzaLILUtcTm+OQax0
 github.com/opalsecurity/opal-go v1.0.9/go.mod h1:bzD4vZIbH+lKhsX8NJ5ISNU2Xgm2qzjj6O9G2ycj58c=
 github.com/opalsecurity/opal-go v1.0.11 h1:LC0/luUtNozHlUQnggc9i2+MwKqHU6ClE1PQ4HekEZ4=
 github.com/opalsecurity/opal-go v1.0.11/go.mod h1:bzD4vZIbH+lKhsX8NJ5ISNU2Xgm2qzjj6O9G2ycj58c=
+github.com/opalsecurity/opal-go v1.0.12 h1:ADpOuabaZ+pgxHdNt+qa9nN+ytRoxy3JkTak3Pt2RNI=
+github.com/opalsecurity/opal-go v1.0.12/go.mod h1:G7QQIi36kI3kiTl/Dp8AvLDNoui9jqFOSUthcZ0aof4=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
