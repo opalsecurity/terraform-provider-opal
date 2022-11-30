@@ -149,6 +149,25 @@ func resourceGroup() *schema.Resource {
 					},
 				},
 			},
+			"resource": {
+				Description: "A resource that members of the group get access to.",
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"id": {
+							Description: "The ID of the resource.",
+							Type:        schema.TypeString,
+							Required:    true,
+						},
+						"access_level_remote_id": {
+							Description: "The access level remote id of the resource that this group gives access to.",
+							Type:        schema.TypeString,
+							Optional:    true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -243,6 +262,11 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 			return diag
 		}
 	}
+	if _, ok := d.GetOk("resource"); ok {
+		if diag := resourceGroupUpdateResources(ctx, d, client); diag != nil {
+			return diag
+		}
+	}
 
 	if _, ok := d.GetOk("audit_message_channel"); ok {
 		if diag := resourceGroupUpdateAuditMessageChannels(ctx, d, client); diag != nil {
@@ -290,6 +314,47 @@ func resourceGroupUpdateAuditMessageChannels(ctx context.Context, d *schema.Reso
 		return diagFromErr(ctx, err)
 	}
 
+	return nil
+}
+
+func resourceGroupUpdateResources(ctx context.Context, d *schema.ResourceData, client *opal.APIClient) diag.Diagnostics {
+	var rawResources []any
+	if resourceI, ok := d.GetOk("resource"); ok {
+		rawResources = resourceI.(*schema.Set).List()
+	}
+
+	resourcesWithAccessLevel := make([]opal.ResourceWithAccessLevel, 0, len(rawResources))
+	for _, rawResource := range rawResources {
+		resource := rawResource.(map[string]any)
+		var accessLevelRemoteIDPtr *string
+		accessLevelRemoteID := resource["access_level_remote_id"].(string)
+		if accessLevelRemoteID != "" {
+			accessLevelRemoteIDPtr = &accessLevelRemoteID
+		}
+
+		resourcesWithAccessLevel = append(resourcesWithAccessLevel, opal.ResourceWithAccessLevel{
+			ResourceId:          resource["id"].(string),
+			AccessLevelRemoteId: accessLevelRemoteIDPtr,
+		})
+	}
+	tflog.Debug(ctx, "Setting group resources", map[string]any{
+		"id":        d.Id(),
+		"resources": resourcesWithAccessLevel,
+	})
+
+	updateInfo := opal.UpdateGroupResourcesInfo{
+		Resources: resourcesWithAccessLevel,
+	}
+
+	if _, err := client.GroupsApi.SetGroupResources(ctx, d.Id()).UpdateGroupResourcesInfo(updateInfo).Execute(); err != nil {
+		var gErr *opal.GenericOpenAPIError
+		if errors.As(err, &gErr) {
+			log.Println("error string", string(gErr.Body()))
+		} else {
+			log.Println("not", err)
+		}
+		return diagFromErr(ctx, err)
+	}
 	return nil
 }
 
@@ -472,6 +537,12 @@ func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, m any) dia
 			reviewers = reviewersBlock
 		}
 		if diag := resourceGroupUpdateReviewers(ctx, d, client, reviewers); diag != nil {
+			return diag
+		}
+	}
+
+	if d.HasChange("resource") {
+		if diag := resourceGroupUpdateResources(ctx, d, client); diag != nil {
 			return diag
 		}
 	}

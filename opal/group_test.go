@@ -16,6 +16,7 @@ import (
 
 var knownOpalAppID = os.Getenv("OPAL_TEST_KNOWN_OPAL_APP_ID")
 var knownOpalAppAdminOwnerID = os.Getenv("OPAL_TEST_KNOWN_OPAL_APP_ADMIN_OWNER_ID")
+var knownGithubRepoResourceID = os.Getenv("OPAL_TEST_KNOWN_GITHUB_TEST_REPO_2_RESOURCE_ID")
 
 func TestAccGroup_Import(t *testing.T) {
 	baseName := "tf_acc_group_test_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
@@ -225,6 +226,41 @@ reviewer { id = "%s" }`, knownOpalAppAdminOwnerID, knownCustomAppAdminOwnerID)),
 	})
 }
 
+func TestAccGroup_Resource(t *testing.T) {
+	baseName := "tf_acc_group_test_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
+	resourceName := "opal_group." + baseName
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckGroupDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccGroupResource(baseName, baseName, ""),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),
+					resource.TestCheckResourceAttr(resourceName, "resource.#", "0"),
+				),
+			},
+			{
+				Config: testAccGroupResource(baseName, baseName, testAccGroupResourceWithAccessLevel(knownGithubRepoResourceID, "pull")),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),
+					resource.TestCheckResourceAttr(resourceName, "resource.#", "1"),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "resource.*", map[string]string{"id": knownGithubRepoResourceID}),
+				),
+			},
+			{
+				Config: testAccGroupResource(baseName, baseName, ""),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),
+					resource.TestCheckResourceAttr(resourceName, "resource.#", "0"),
+				),
+			},
+		},
+	})
+}
+
 // TestAccGroup_SetOnCreate tests that setting attributes on creation
 // works.
 func TestAccGroup_SetOnCreate(t *testing.T) {
@@ -310,6 +346,16 @@ func TestAccGroup_Remote(t *testing.T) {
 			},
 		},
 	})
+}
+
+func testAccGroupResourceWithAccessLevel(resourceID, accessLevelRemoteID string) string {
+	return fmt.Sprintf(`
+resource {
+	id = "%s"
+	access_level_remote_id = "%s"
+}
+`, resourceID, accessLevelRemoteID)
+
 }
 
 func testAccGroupResource(tfName, name, additional string) string {
