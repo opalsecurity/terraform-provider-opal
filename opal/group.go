@@ -2,9 +2,7 @@ package opal
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"log"
 	"reflect"
 
 	"github.com/hashicorp/go-multierror"
@@ -347,12 +345,6 @@ func resourceGroupUpdateResources(ctx context.Context, d *schema.ResourceData, c
 	}
 
 	if _, err := client.GroupsApi.SetGroupResources(ctx, d.Id()).UpdateGroupResourcesInfo(updateInfo).Execute(); err != nil {
-		var gErr *opal.GenericOpenAPIError
-		if errors.As(err, &gErr) {
-			log.Println("error string", string(gErr.Body()))
-		} else {
-			log.Println("not", err)
-		}
 		return diagFromErr(ctx, err)
 	}
 	return nil
@@ -380,12 +372,6 @@ func resourceGroupUpdateReviewers(ctx context.Context, d *schema.ResourceData, c
 	})
 
 	if _, _, err := client.GroupsApi.SetGroupReviewers(ctx, d.Id()).ReviewerIDList(*opal.NewReviewerIDList(reviewerIds)).Execute(); err != nil {
-		var gErr *opal.GenericOpenAPIError
-		if errors.As(err, &gErr) {
-			log.Println("error string", string(gErr.Body()))
-		} else {
-			log.Println("not", err)
-		}
 		return diagFromErr(ctx, err)
 	}
 	return nil
