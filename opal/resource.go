@@ -2,8 +2,6 @@ package opal
 
 import (
 	"context"
-	"errors"
-	"log"
 	"reflect"
 
 	"github.com/hashicorp/go-multierror"
@@ -301,12 +299,6 @@ func resourceResourceUpdateReviewers(ctx context.Context, d *schema.ResourceData
 	})
 
 	if _, _, err := client.ResourcesApi.SetResourceReviewers(ctx, d.Id()).ReviewerIDList(*opal.NewReviewerIDList(reviewerIds)).Execute(); err != nil {
-		var gErr *opal.GenericOpenAPIError
-		if errors.As(err, &gErr) {
-			log.Println("error string", string(gErr.Body()))
-		} else {
-			log.Println("not", err)
-		}
 		return diagFromErr(ctx, err)
 	}
 	return nil

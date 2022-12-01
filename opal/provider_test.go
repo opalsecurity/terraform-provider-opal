@@ -48,6 +48,10 @@ func testAccPreCheck(t *testing.T) {
 		t.Fatal(`OPAL_TEST_KNOWN_GITHUB_APP_TEAM_SLUG must be set for acceptance tests. This value is the name of the team you linked and must match what's in the test github org.`)
 	}
 
+	if v := os.Getenv("OPAL_TEST_KNOWN_GITHUB_TEST_REPO_2_RESOURCE_ID"); v == "" {
+		t.Fatal(`OPAL_TEST_KNOWN_GITHUB_TEST_REPO_2_RESOURCE_ID must be set for acceptance tests. This value is the Opal id of the test-repo-2 GitHub repo.`)
+	}
+
 	if os.Getenv("OPAL_TEST_KNOWN_USER_ID_1") == "" {
 		t.Fatal("OPAL_TEST_KNOWN_USER_ID_1 must be set for acceptance tests. You should get this value from any user in the test organization.")
 	}

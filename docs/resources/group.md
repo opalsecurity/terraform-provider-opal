@@ -86,6 +86,7 @@ resource "opal_group" "google_group_example" {
 - `require_manager_approval` (Boolean) Require the requester's manager's approval for requests to this group.
 - `require_mfa_to_approve` (Boolean) Require that reviewers MFA to approve requests for this group.
 - `require_support_ticket` (Boolean) Require that requesters attach a support ticket to requests for this group.
+- `resource` (Block Set) A resource that members of the group get access to. (see [below for nested schema](#nestedblock--resource))
 - `reviewer` (Block Set) A required reviewer for this group. If none are specified, then the admin owner will be used. (see [below for nested schema](#nestedblock--reviewer))
 - `visibility` (String) The visibility level of the group, i.e. LIMITED or GLOBAL.
 - `visibility_group` (Block List) The groups that can see this group when visibility is limited. If not specified, only users with direct access can see this resource when visibility is set to LIMITED. (see [below for nested schema](#nestedblock--visibility_group))
@@ -161,6 +162,18 @@ Required:
 
 - `group_id` (String) The id of the Okta group.
 
+
+
+<a id="nestedblock--resource"></a>
+### Nested Schema for `resource`
+
+Required:
+
+- `id` (String) The ID of the resource.
+
+Optional:
+
+- `access_level_remote_id` (String) The access level remote id of the resource that this group gives access to.
 
 
 <a id="nestedblock--reviewer"></a>
