@@ -11,7 +11,7 @@ While it's totally possible to use `terraform import` in combination with writin
 # Terraformer
 Note: We're currently waiting on Opal support being merged into the official [Terraformer](https://github.com/GoogleCloudPlatform/terraformer) repo.
 
-In the meantime, we have pre-built binaries [available for download](https://github.com/opalsecurity/terraformer/releases/tag/v0.0.1). For Apple Silicon macs, use the arm64 build.
+In the meantime, we have pre-built binaries [available for download](https://github.com/opalsecurity/terraformer/releases/latest). For Apple Silicon macs, use the arm64 build.
 
 After download, `terraformer` (i.e. `~/Downloads/terraformer-all-darwin-arm64`) should be available to you. Before we can start importing infrastructure, we also need to install the Opal Terraform provider.
 
