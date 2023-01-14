@@ -60,6 +60,11 @@ func resourceOwner() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 			},
+			"source_group_id": {
+				Description: "The id of the group that owner users will be synced with. If set, adding or removing users will fail.",
+				Type:        schema.TypeString,
+				Optional:    true,
+			},
 		},
 	}
 }
@@ -84,6 +89,9 @@ func resourceOwnerCreate(ctx context.Context, d *schema.ResourceData, m interfac
 	}
 	if accessRequestEscalationPeriodI, ok := d.GetOk("access_request_escalation_period"); ok {
 		createInfo.SetAccessRequestEscalationPeriod(int32(accessRequestEscalationPeriodI.(int)))
+	}
+	if sourceGroupIDI, ok := d.GetOk("source_group_id"); ok {
+		createInfo.SetSourceGroupId(sourceGroupIDI.(string))
 	}
 
 	owner, _, err := client.OwnersApi.CreateOwner(ctx).CreateOwnerInfo(*createInfo).Execute()
@@ -119,6 +127,12 @@ func resourceOwnerRead(ctx context.Context, d *schema.ResourceData, m interface{
 
 	if owner.ReviewerMessageChannelId.IsSet() {
 		if err := d.Set("reviewer_message_channel_id", owner.ReviewerMessageChannelId.Get()); err != nil {
+			return diagFromErr(ctx, err)
+		}
+	}
+
+	if owner.SourceGroupId.IsSet() {
+		if err := d.Set("source_group_id", owner.SourceGroupId.Get()); err != nil {
 			return diagFromErr(ctx, err)
 		}
 	}
@@ -166,6 +180,10 @@ func resourceOwnerUpdate(ctx context.Context, d *schema.ResourceData, m interfac
 
 	if d.HasChange("reviewer_message_channel_id") {
 		updateInfo.SetReviewerMessageChannelId(d.Get("reviewer_message_channel_id").(string))
+	}
+
+	if d.HasChange("source_group_id") {
+		updateInfo.SetSourceGroupId(d.Get("source_group_id").(string))
 	}
 
 	owner, _, err := client.OwnersApi.UpdateOwners(ctx).UpdateOwnerInfoList(*opal.NewUpdateOwnerInfoList([]opal.UpdateOwnerInfo{*updateInfo})).Execute()
