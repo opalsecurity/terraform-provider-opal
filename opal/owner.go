@@ -131,11 +131,19 @@ func resourceOwnerRead(ctx context.Context, d *schema.ResourceData, m interface{
 		}
 	}
 
+	ownerHasSourceGroup := false
 	if owner.SourceGroupId.IsSet() {
+		// NOTE: IsSet() is misleading, if the source_group_id value is nil,
+		// IsSet will still return true, we need to check whether there's an
+		// actual source group id in the value to ensure we need to import the
+		// users as well or not
+		ownerHasSourceGroup = owner.SourceGroupId.Get() != nil
 		if err := d.Set("source_group_id", owner.SourceGroupId.Get()); err != nil {
 			return diagFromErr(ctx, err)
 		}
-	} else {
+	}
+
+	if !ownerHasSourceGroup {
 		users, _, err := client.OwnersApi.GetOwnerUsers(ctx, id).Execute()
 		if err != nil {
 			return diagFromErr(ctx, err)
