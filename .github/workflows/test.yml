@@ -40,6 +40,7 @@ jobs:
           OPAL_TEST_KNOWN_OPAL_APP_ID: ${{ secrets.OPAL_TEST_KNOWN_OPAL_APP_ID }}
           OPAL_TEST_KNOWN_OPAL_APP_ADMIN_OWNER_ID: ${{ secrets.OPAL_TEST_KNOWN_OPAL_APP_ADMIN_OWNER_ID }}
           OPAL_TEST_KNOWN_GITHUB_TEST_REPO_2_RESOURCE_ID: ${{ secrets.OPAL_TEST_KNOWN_GITHUB_TEST_REPO_2_RESOURCE_ID }}
+          OPAL_TEST_KNOWN_OPAL_GROUP_ID: ${{ secrets.OPAL_TEST_KNOWN_OPAL_GROUP_ID }}
       - name: Clean up test organization
         run: make sweep
         env:
@@ -56,6 +57,7 @@ jobs:
           OPAL_TEST_KNOWN_OPAL_APP_ID: ${{ secrets.OPAL_TEST_KNOWN_OPAL_APP_ID }}
           OPAL_TEST_KNOWN_OPAL_APP_ADMIN_OWNER_ID: ${{ secrets.OPAL_TEST_KNOWN_OPAL_APP_ADMIN_OWNER_ID }}
           OPAL_TEST_KNOWN_GITHUB_TEST_REPO_2_RESOURCE_ID: ${{ secrets.OPAL_TEST_KNOWN_GITHUB_TEST_REPO_2_RESOURCE_ID }}
+          OPAL_TEST_KNOWN_OPAL_GROUP_ID: ${{ secrets.OPAL_TEST_KNOWN_OPAL_GROUP_ID }}
       - name: Check for doc changes
         id: changes
         run: |
