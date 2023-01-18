@@ -135,15 +135,15 @@ func resourceOwnerRead(ctx context.Context, d *schema.ResourceData, m interface{
 		if err := d.Set("source_group_id", owner.SourceGroupId.Get()); err != nil {
 			return diagFromErr(ctx, err)
 		}
-	}
+	} else {
+		users, _, err := client.OwnersApi.GetOwnerUsers(ctx, id).Execute()
+		if err != nil {
+			return diagFromErr(ctx, err)
+		}
 
-	users, _, err := client.OwnersApi.GetOwnerUsers(ctx, id).Execute()
-	if err != nil {
-		return diagFromErr(ctx, err)
-	}
-
-	if err := d.Set("user", flattenOwnerUsers(users)); err != nil {
-		return diagFromErr(ctx, err)
+		if err := d.Set("user", flattenOwnerUsers(users)); err != nil {
+			return diagFromErr(ctx, err)
+		}
 	}
 
 	return nil
@@ -182,8 +182,10 @@ func resourceOwnerUpdate(ctx context.Context, d *schema.ResourceData, m interfac
 		updateInfo.SetReviewerMessageChannelId(d.Get("reviewer_message_channel_id").(string))
 	}
 
+	hasChangedSourceGroupID := false
 	if d.HasChange("source_group_id") {
 		updateInfo.SetSourceGroupId(d.Get("source_group_id").(string))
+		hasChangedSourceGroupID = true
 	}
 
 	owner, _, err := client.OwnersApi.UpdateOwners(ctx).UpdateOwnerInfoList(*opal.NewUpdateOwnerInfoList([]opal.UpdateOwnerInfo{*updateInfo})).Execute()
@@ -194,7 +196,7 @@ func resourceOwnerUpdate(ctx context.Context, d *schema.ResourceData, m interfac
 	d.SetId(owner.Owners[0].OwnerId)
 
 	// We use HasChange here to prevent an extra API call if unchanged.
-	if d.HasChange("user") {
+	if d.HasChange("user") || hasChangedSourceGroupID {
 		rawUsers := d.Get("user").([]interface{})
 		userIds := make([]string, 0, len(rawUsers))
 		for _, rawUser := range rawUsers {
