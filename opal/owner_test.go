@@ -16,6 +16,7 @@ import (
 
 var knownUserID1 = os.Getenv("OPAL_TEST_KNOWN_USER_ID_1")
 var knownUserID2 = os.Getenv("OPAL_TEST_KNOWN_USER_ID_2")
+var knownGroupID = os.Getenv("OPAL_TEST_KNOWN_OPAL_GROUP_ID")
 
 func TestAccOwner_Import(t *testing.T) {
 	baseName := "tf_acc_test_owner_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
@@ -81,6 +82,42 @@ func TestAccOwner_CRUD(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckNoResourceAttr(resourceName, "user.0.id"),
 					resource.TestCheckNoResourceAttr(resourceName, "user.1.id"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccOwner_SourceGroup(t *testing.T) {
+	baseName := "tf_acc_test_owner_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
+	resourceName := "opal_owner." + baseName
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckOwnerDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccOwnerResourceNoUser(baseName, baseName, fmt.Sprintf(`source_group_id = "%s"`, knownGroupID)),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),                // Verify that the name was set.
+					resource.TestCheckResourceAttr(resourceName, "source_group_id", knownGroupID), // Verify that the source_group_id was set.
+					resource.TestCheckNoResourceAttr(resourceName, "user.0.id"),                   // Verify no users are set
+				),
+			},
+			{
+				Config: testAccOwnerResourceNoUser(baseName, baseName, fmt.Sprintf(`source_group_id = "%s"
+					user { id = "%s" }`, knownGroupID, knownUserID1)),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "source_group_id", knownGroupID), // Verify that the source_group_id was set.
+					resource.TestCheckResourceAttr(resourceName, "user.0.id", knownUserID1),       // Verify that adding a user stores it properly
+				),
+			},
+			{
+				Config: testAccOwnerResourceNoUser(baseName, baseName, fmt.Sprintf(`user { id = "%s" }`, knownUserID1)),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "source_group_id", ""),       // Verify that the source_group_id was properly unset.
+					resource.TestCheckResourceAttr(resourceName, "user.0.id", knownUserID1), // Verify that adding a user stores it properly
 				),
 			},
 		},

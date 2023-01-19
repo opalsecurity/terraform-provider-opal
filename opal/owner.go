@@ -60,6 +60,11 @@ func resourceOwner() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 			},
+			"source_group_id": {
+				Description: "The id of the group that owner users will be synced with. If set, adding or removing users will fail.",
+				Type:        schema.TypeString,
+				Optional:    true,
+			},
 		},
 	}
 }
@@ -84,6 +89,9 @@ func resourceOwnerCreate(ctx context.Context, d *schema.ResourceData, m interfac
 	}
 	if accessRequestEscalationPeriodI, ok := d.GetOk("access_request_escalation_period"); ok {
 		createInfo.SetAccessRequestEscalationPeriod(int32(accessRequestEscalationPeriodI.(int)))
+	}
+	if sourceGroupIDI, ok := d.GetOk("source_group_id"); ok {
+		createInfo.SetSourceGroupId(sourceGroupIDI.(string))
 	}
 
 	owner, _, err := client.OwnersApi.CreateOwner(ctx).CreateOwnerInfo(*createInfo).Execute()
@@ -123,13 +131,27 @@ func resourceOwnerRead(ctx context.Context, d *schema.ResourceData, m interface{
 		}
 	}
 
-	users, _, err := client.OwnersApi.GetOwnerUsers(ctx, id).Execute()
-	if err != nil {
-		return diagFromErr(ctx, err)
+	ownerHasSourceGroup := false
+	if owner.SourceGroupId.IsSet() {
+		// NOTE: IsSet() is misleading, if the source_group_id value is nil,
+		// IsSet will still return true, we need to check whether there's an
+		// actual source group id in the value to ensure we need to import the
+		// users as well or not
+		ownerHasSourceGroup = owner.SourceGroupId.Get() != nil
+		if err := d.Set("source_group_id", owner.SourceGroupId.Get()); err != nil {
+			return diagFromErr(ctx, err)
+		}
 	}
 
-	if err := d.Set("user", flattenOwnerUsers(users)); err != nil {
-		return diagFromErr(ctx, err)
+	if !ownerHasSourceGroup {
+		users, _, err := client.OwnersApi.GetOwnerUsers(ctx, id).Execute()
+		if err != nil {
+			return diagFromErr(ctx, err)
+		}
+
+		if err := d.Set("user", flattenOwnerUsers(users)); err != nil {
+			return diagFromErr(ctx, err)
+		}
 	}
 
 	return nil
@@ -168,6 +190,12 @@ func resourceOwnerUpdate(ctx context.Context, d *schema.ResourceData, m interfac
 		updateInfo.SetReviewerMessageChannelId(d.Get("reviewer_message_channel_id").(string))
 	}
 
+	hasChangedSourceGroupID := false
+	if d.HasChange("source_group_id") {
+		updateInfo.SetSourceGroupId(d.Get("source_group_id").(string))
+		hasChangedSourceGroupID = true
+	}
+
 	owner, _, err := client.OwnersApi.UpdateOwners(ctx).UpdateOwnerInfoList(*opal.NewUpdateOwnerInfoList([]opal.UpdateOwnerInfo{*updateInfo})).Execute()
 	if err != nil {
 		return diagFromErr(ctx, err)
@@ -176,7 +204,7 @@ func resourceOwnerUpdate(ctx context.Context, d *schema.ResourceData, m interfac
 	d.SetId(owner.Owners[0].OwnerId)
 
 	// We use HasChange here to prevent an extra API call if unchanged.
-	if d.HasChange("user") {
+	if d.HasChange("user") || hasChangedSourceGroupID {
 		rawUsers := d.Get("user").([]interface{})
 		userIds := make([]string, 0, len(rawUsers))
 		for _, rawUser := range rawUsers {
