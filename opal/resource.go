@@ -89,6 +89,11 @@ func resourceResource() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 			},
+			"require_mfa_to_request": {
+				Description: "Require that users MFA to request this resource.",
+				Type:        schema.TypeBool,
+				Optional:    true,
+			},
 			"require_support_ticket": {
 				Description: "Require that requesters attach a support ticket to requests for this resource.",
 				Type:        schema.TypeBool,
@@ -96,6 +101,11 @@ func resourceResource() *schema.Resource {
 			},
 			"max_duration": {
 				Description: "The maximum duration for which this resource can be requested (in minutes). By default, the max duration is indefinite access.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+			},
+			"recommended_duration": {
+				Description: "The recommended duration for which the resource should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite and 0 to unset.",
 				Type:        schema.TypeInt,
 				Optional:    true,
 			},
@@ -148,6 +158,12 @@ func resourceResource() *schema.Resource {
 					},
 				},
 			},
+			"is_requestable": {
+				Description: "Allow users to create an access request for this resource. By default, any resource is requestable.",
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+			},
 			// XXX: Audit message channel...
 		},
 	}
@@ -191,10 +207,13 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 	autoApprovalI, autoApprovalOk := d.GetOk("auto_approval")
 	requireMfaToApproveI, requireMfaToApproveOk := d.GetOk("require_mfa_to_approve")
 	requireMfaToConnectI, requireMfaToConnectOk := d.GetOk("require_mfa_to_connect")
+	requireMfaToRequestI, requireMfaToRequestOk := d.GetOk("require_mfa_to_request")
 	requireSupportTicketI, requireSupportTicketOk := d.GetOk("require_support_ticket")
+	isRequestableI, isRequestableOk := d.GetOk("require_support_ticket")
 	maxDurationI, maxDurationOk := d.GetOk("max_duration")
+	recommendedDurationI, recommendedDurationOk := d.GetOk("recommended_duration")
 	requestTemplateIDI, requestTemplateIDOk := d.GetOk("request_template_id")
-	if adminOwnerIDOk || requireManagerApprovalOk || autoApprovalOk || requireMfaToApproveOk || requireMfaToConnectOk || requireSupportTicketOk || maxDurationOk || requestTemplateIDOk {
+	if adminOwnerIDOk || requireManagerApprovalOk || autoApprovalOk || requireMfaToApproveOk || requireMfaToConnectOk || requireMfaToRequestOk || requireSupportTicketOk || isRequestableOk || maxDurationOk || recommendedDurationOk || requestTemplateIDOk {
 		updateInfo := opal.NewUpdateResourceInfo(resource.ResourceId)
 		if adminOwnerIDOk {
 			updateInfo.SetAdminOwnerId(adminOwnerIDI.(string))
@@ -211,14 +230,23 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 		if requireMfaToConnectOk {
 			updateInfo.SetRequireMfaToConnect(requireMfaToConnectI.(bool))
 		}
+		if requireMfaToRequestOk {
+			updateInfo.SetRequireMfaToRequest(requireMfaToRequestI.(bool))
+		}
 		if requireSupportTicketOk {
 			updateInfo.SetRequireSupportTicket(requireSupportTicketI.(bool))
 		}
 		if maxDurationOk {
 			updateInfo.SetMaxDuration(int32(maxDurationI.(int)))
 		}
+		if recommendedDurationOk {
+			updateInfo.SetRecommendedDuration(int32(recommendedDurationI.(int)))
+		}
 		if requestTemplateIDOk {
 			updateInfo.SetRequestTemplateId(requestTemplateIDI.(string))
+		}
+		if isRequestableOk {
+			updateInfo.SetIsRequestable(isRequestableI.(bool))
 		}
 
 		tflog.Debug(ctx, "Immediately updating opal resource", map[string]any{
@@ -322,9 +350,13 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 		d.Set("require_manager_approval", resource.RequireManagerApproval),
 		d.Set("auto_approval", resource.AutoApproval),
 		d.Set("require_mfa_to_approve", resource.RequireMfaToApprove),
+		d.Set("require_mfa_to_connect", resource.RequireMfaToConnect),
+		d.Set("require_mfa_to_request", resource.RequireMfaToRequest),
 		d.Set("require_support_ticket", resource.RequireSupportTicket),
 		d.Set("max_duration", resource.MaxDuration),
+		d.Set("recommended_duration", resource.RecommendedDuration),
 		d.Set("request_template_id", resource.RequestTemplateId),
+		d.Set("is_requestable", resource.IsRequestable),
 		// XXX: We don't get the metadata back. Will terraform state be okay?
 	); err.ErrorOrNil() != nil {
 		return diagFromErr(ctx, err)
@@ -401,6 +433,10 @@ func resourceResourceUpdate(ctx context.Context, d *schema.ResourceData, m any) 
 		hasBasicChange = true
 		updateInfo.SetRequireMfaToConnect(d.Get("require_mfa_to_connect").(bool))
 	}
+	if d.HasChange("require_mfa_to_request") {
+		hasBasicChange = true
+		updateInfo.SetRequireMfaToRequest(d.Get("require_mfa_to_request").(bool))
+	}
 	if d.HasChange("require_support_ticket") {
 		hasBasicChange = true
 		updateInfo.SetRequireSupportTicket(d.Get("require_support_ticket").(bool))
@@ -409,9 +445,17 @@ func resourceResourceUpdate(ctx context.Context, d *schema.ResourceData, m any) 
 		hasBasicChange = true
 		updateInfo.SetMaxDuration(int32(d.Get("max_duration").(int)))
 	}
+	if d.HasChange("recommended_duration") {
+		hasBasicChange = true
+		updateInfo.SetRecommendedDuration(int32(d.Get("recommended_duration").(int)))
+	}
 	if d.HasChange("request_template_id") {
 		hasBasicChange = true
 		updateInfo.SetRequestTemplateId(d.Get("request_template_id").(string))
+	}
+	if d.HasChange("is_requestable") {
+		hasBasicChange = true
+		updateInfo.SetIsRequestable(d.Get("is_requestable").(bool))
 	}
 
 	if hasBasicChange {

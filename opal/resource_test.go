@@ -61,6 +61,9 @@ func TestAccResource_CRUD(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "require_manager_approval", "false"),          // Verify that optional works.
 					resource.TestCheckResourceAttr(resourceName, "require_support_ticket", "false"),            // Verify that optional works.
 					resource.TestCheckResourceAttr(resourceName, "require_mfa_to_approve", "false"),            // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "require_mfa_to_request", "false"),            // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "require_mfa_to_connect", "false"),            // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "is_requestable", "true"),                     // Verify that optional works.
 					resource.TestCheckResourceAttr(resourceName, "auto_approval", "false"),                     // Verify that optional works.
 					resource.TestCheckResourceAttr(resourceName, "visibility", "GLOBAL"),                       // Verify that optional works.
 					resource.TestCheckResourceAttr(resourceName, "reviewer.0.id", knownCustomAppAdminOwnerID),  // Verify that optional works.
@@ -73,6 +76,7 @@ max_duration = 60
 require_manager_approval = true
 require_support_ticket = true
 require_mfa_to_approve = true
+is_requestable = false
 `),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName+"_changed"),        // Verify that updating the name works.
@@ -81,7 +85,7 @@ require_mfa_to_approve = true
 					resource.TestCheckResourceAttr(resourceName, "require_manager_approval", "true"), // Verify that updating works.
 					resource.TestCheckResourceAttr(resourceName, "require_support_ticket", "true"),   // Verify that updating works.
 					resource.TestCheckResourceAttr(resourceName, "require_mfa_to_approve", "true"),   // Verify that updating works.
-
+					resource.TestCheckResourceAttr(resourceName, "is_requestable", "false"),          // Verify that updating works.
 				),
 			},
 		},
