@@ -105,7 +105,7 @@ func resourceResource() *schema.Resource {
 				Optional:    true,
 			},
 			"recommended_duration": {
-				Description: "The recommended duration for which the resource should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite and 0 to unset.",
+				Description: "The recommended duration for which the resource should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.",
 				Type:        schema.TypeInt,
 				Optional:    true,
 			},

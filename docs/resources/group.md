@@ -80,11 +80,14 @@ resource "opal_group" "google_group_example" {
 - `audit_message_channel` (Block List) An audit message channel for this group. (see [below for nested schema](#nestedblock--audit_message_channel))
 - `auto_approval` (Boolean) Automatically approve all requests for this group without review.
 - `description` (String) The description of the group.
+- `is_requestable` (Boolean) Allow users to create an access request for this group. By default, any group is requestable.
 - `max_duration` (Number) The maximum duration for which this group can be requested (in minutes). By default, the max duration is indefinite access.
+- `recommended_duration` (Number) The recommended duration for which the group should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.
 - `remote_info` (Block List, Max: 1) Remote info that is required for the creation of remote groups. (see [below for nested schema](#nestedblock--remote_info))
 - `request_template_id` (String) The ID of a request template for this group. You can get this ID from the URL in the Opal web app.
 - `require_manager_approval` (Boolean) Require the requester's manager's approval for requests to this group.
 - `require_mfa_to_approve` (Boolean) Require that reviewers MFA to approve requests for this group.
+- `require_mfa_to_request` (Boolean) Require that users MFA to request this group.
 - `require_support_ticket` (Boolean) Require that requesters attach a support ticket to requests for this group.
 - `resource` (Block Set) A resource that members of the group get access to. (see [below for nested schema](#nestedblock--resource))
 - `reviewer` (Block Set) A required reviewer for this group. If none are specified, then the admin owner will be used. (see [below for nested schema](#nestedblock--reviewer))
