@@ -86,12 +86,15 @@ resource "opal_resource" "github_repo_example" {
 
 - `auto_approval` (Boolean) Automatically approve all requests for this resource without review.
 - `description` (String) The description of the resource.
+- `is_requestable` (Boolean) Allow users to create an access request for this resource. By default, any resource is requestable.
 - `max_duration` (Number) The maximum duration for which this resource can be requested (in minutes). By default, the max duration is indefinite access.
+- `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.
 - `remote_info` (Block List, Max: 1) Remote info that is required for the creation of remote resources. (see [below for nested schema](#nestedblock--remote_info))
 - `request_template_id` (String) The ID of a request template for this resource. You can get this ID from the URL in the Opal web app.
 - `require_manager_approval` (Boolean) Require the requester's manager's approval for requests to this resource.
 - `require_mfa_to_approve` (Boolean) Require that reviewers MFA to approve requests for this resource.
 - `require_mfa_to_connect` (Boolean) Require that users MFA to connect to this resource. Only applicable for resources where a session can be started from Opal (i.e. AWS RDS database)
+- `require_mfa_to_request` (Boolean) Require that users MFA to request this resource.
 - `require_support_ticket` (Boolean) Require that requesters attach a support ticket to requests for this resource.
 - `reviewer` (Block Set) A required reviewer for this resource. If none are specified, then the admin owner will be used. (see [below for nested schema](#nestedblock--reviewer))
 - `visibility` (String) The visibility level of the resource, i.e. LIMITED or GLOBAL.

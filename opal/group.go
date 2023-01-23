@@ -74,6 +74,11 @@ func resourceGroup() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 			},
+			"require_mfa_to_request": {
+				Description: "Require that users MFA to request this group.",
+				Type:        schema.TypeBool,
+				Optional:    true,
+			},
 			"require_support_ticket": {
 				Description: "Require that requesters attach a support ticket to requests for this group.",
 				Type:        schema.TypeBool,
@@ -81,6 +86,11 @@ func resourceGroup() *schema.Resource {
 			},
 			"max_duration": {
 				Description: "The maximum duration for which this group can be requested (in minutes). By default, the max duration is indefinite access.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+			},
+			"recommended_duration": {
+				Description: "The recommended duration for which the group should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.",
 				Type:        schema.TypeInt,
 				Optional:    true,
 			},
@@ -166,6 +176,12 @@ func resourceGroup() *schema.Resource {
 					},
 				},
 			},
+			"is_requestable": {
+				Description: "Allow users to create an access request for this group. By default, any group is requestable.",
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+			},
 		},
 	}
 }
@@ -206,10 +222,13 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 	requireManagerApprovalI, requireManagerApprovalOk := d.GetOk("require_manager_approval")
 	autoApprovalI, autoApprovalOk := d.GetOk("auto_approval")
 	requireMfaToApproveI, requireMfaToApproveOk := d.GetOk("require_mfa_to_approve")
+	requireMfaToRequestI, requireMfaToRequestOk := d.GetOk("require_mfa_to_request")
 	requireSupportTicketI, requireSupportTicketOk := d.GetOk("require_support_ticket")
 	maxDurationI, maxDurationOk := d.GetOk("max_duration")
+	recommendedDurationI, recommendedDurationOk := d.GetOk("recommended_duration")
 	requestTemplateIDI, requestTemplateIDOk := d.GetOk("request_template_id")
-	if adminOwnerIDOk || requireManagerApprovalOk || autoApprovalOk || requireMfaToApproveOk || requireSupportTicketOk || maxDurationOk || requestTemplateIDOk {
+	isRequestableI, isRequestableOk := d.GetOk("is_requestable")
+	if adminOwnerIDOk || requireManagerApprovalOk || autoApprovalOk || requireMfaToApproveOk || requireMfaToRequestOk || requireSupportTicketOk || maxDurationOk || requestTemplateIDOk || isRequestableOk {
 		updateInfo := opal.NewUpdateGroupInfo(group.GroupId)
 		if adminOwnerIDOk {
 			updateInfo.SetAdminOwnerId(adminOwnerIDI.(string))
@@ -223,14 +242,23 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 		if requireMfaToApproveOk {
 			updateInfo.SetRequireMfaToApprove(requireMfaToApproveI.(bool))
 		}
+		if requireMfaToRequestOk {
+			updateInfo.SetRequireMfaToRequest(requireMfaToRequestI.(bool))
+		}
 		if requireSupportTicketOk {
 			updateInfo.SetRequireSupportTicket(requireSupportTicketI.(bool))
 		}
 		if maxDurationOk {
 			updateInfo.SetMaxDuration(int32(maxDurationI.(int)))
 		}
+		if recommendedDurationOk {
+			updateInfo.SetRecommendedDuration(int32(recommendedDurationI.(int)))
+		}
 		if requestTemplateIDOk {
 			updateInfo.SetRequestTemplateId(requestTemplateIDI.(string))
+		}
+		if isRequestableOk {
+			updateInfo.SetIsRequestable(isRequestableI.(bool))
 		}
 
 		tflog.Debug(ctx, "Immediately updating opal group", map[string]any{
@@ -399,9 +427,12 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 		d.Set("require_manager_approval", group.RequireManagerApproval),
 		d.Set("auto_approval", group.AutoApproval),
 		d.Set("require_mfa_to_approve", group.RequireMfaToApprove),
+		d.Set("require_mfa_to_request", group.RequireMfaToRequest),
 		d.Set("require_support_ticket", group.RequireSupportTicket),
 		d.Set("max_duration", group.MaxDuration),
+		d.Set("recommended_duration", group.RecommendedDuration),
 		d.Set("request_template_id", group.RequestTemplateId),
+		d.Set("is_requestable", group.IsRequestable),
 		// XXX: We don't get the metadata back. Will terraform state be okay?
 	); err.ErrorOrNil() != nil {
 		return diagFromErr(ctx, err)
@@ -481,6 +512,10 @@ func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, m any) dia
 		hasBasicUpdate = true
 		updateInfo.SetRequireMfaToApprove(d.Get("require_mfa_to_approve").(bool))
 	}
+	if d.HasChange("require_mfa_to_request") {
+		hasBasicUpdate = true
+		updateInfo.SetRequireMfaToRequest(d.Get("require_mfa_to_request").(bool))
+	}
 	if d.HasChange("require_support_ticket") {
 		hasBasicUpdate = true
 		updateInfo.SetRequireSupportTicket(d.Get("require_support_ticket").(bool))
@@ -489,9 +524,17 @@ func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, m any) dia
 		hasBasicUpdate = true
 		updateInfo.SetMaxDuration(int32(d.Get("max_duration").(int)))
 	}
+	if d.HasChange("recommended_duration") {
+		hasBasicUpdate = true
+		updateInfo.SetRecommendedDuration(int32(d.Get("recommended_duration").(int)))
+	}
 	if d.HasChange("request_template_id") {
 		hasBasicUpdate = true
 		updateInfo.SetRequestTemplateId(d.Get("request_template_id").(string))
+	}
+	if d.HasChange("is_requestable") {
+		hasBasicUpdate = true
+		updateInfo.SetIsRequestable(d.Get("is_requestable").(bool))
 	}
 
 	if hasBasicUpdate {
