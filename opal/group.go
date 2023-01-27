@@ -3,6 +3,8 @@ package opal
 import (
 	"context"
 	"fmt"
+	"github.com/opalsecurity/opal-go"
+	"github.com/pkg/errors"
 	"reflect"
 
 	"github.com/hashicorp/go-multierror"
@@ -10,7 +12,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.com/opalsecurity/opal-go"
 )
 
 var allowedGroupTypes = enumSliceToStringSlice(opal.AllowedGroupTypeEnumEnumValues)
@@ -379,20 +380,9 @@ func resourceGroupUpdateResources(ctx context.Context, d *schema.ResourceData, c
 }
 
 func resourceGroupUpdateReviewers(ctx context.Context, d *schema.ResourceData, client *opal.APIClient, reviewersI any) diag.Diagnostics {
-	// reviewersI could be a schema.Set from terraform or our own constructed slice.
-	var rawReviewers []any
-	switch reviewersI := reviewersI.(type) {
-	case []any:
-		rawReviewers = reviewersI
-	case *schema.Set:
-		rawReviewers = reviewersI.List()
-	default:
-		return diag.Errorf("bad type passed: %v", reflect.TypeOf(reviewersI))
-	}
-	reviewerIds := make([]string, 0, len(rawReviewers))
-	for _, rawReviewer := range rawReviewers {
-		reviewer := rawReviewer.(map[string]any)
-		reviewerIds = append(reviewerIds, reviewer["id"].(string))
+	reviewerIds, err := extractReviewerIDs(reviewersI)
+	if err != nil {
+		return diag.FromErr(err)
 	}
 	tflog.Debug(ctx, "Setting group reviewers", map[string]any{
 		"id":          d.Id(),
@@ -403,6 +393,25 @@ func resourceGroupUpdateReviewers(ctx context.Context, d *schema.ResourceData, c
 		return diagFromErr(ctx, err)
 	}
 	return nil
+}
+
+func extractReviewerIDs(reviewersI any) ([]string, error) {
+	var rawReviewers []any
+	switch reviewersI := reviewersI.(type) {
+	case []any:
+		rawReviewers = reviewersI
+	case *schema.Set:
+		rawReviewers = reviewersI.List()
+	default:
+		return nil, errors.Errorf("bad type passed: %v", reflect.TypeOf(reviewersI))
+	}
+	reviewerIds := make([]string, 0, len(rawReviewers))
+	for _, rawReviewer := range rawReviewers {
+		reviewer := rawReviewer.(map[string]any)
+		reviewerIds = append(reviewerIds, reviewer["id"].(string))
+	}
+
+	return reviewerIds, nil
 }
 
 func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
