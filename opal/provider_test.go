@@ -79,6 +79,10 @@ func testAccPreCheck(t *testing.T) {
 	if os.Getenv("OPAL_TEST_BASE_URL") == "" {
 		t.Fatal("OPAL_TEST_BASE_URL must be set for acceptance tests")
 	}
+
+	if os.Getenv("OPAL_TEST_KNOWN_OPAL_GROUP_ID") == "" {
+		t.Fatal("OPAL_TEST_KNOWN_OPAL_GROUP_ID must be set for acceptance tests. You should get this value from an Opal group in the test organization.")
+	}
 }
 
 func TestMain(m *testing.M) {
