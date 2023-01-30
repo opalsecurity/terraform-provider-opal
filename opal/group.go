@@ -15,6 +15,7 @@ import (
 )
 
 var allowedGroupTypes = enumSliceToStringSlice(opal.AllowedGroupTypeEnumEnumValues)
+var allowedReviewerStageOperators = []string{"AND", "OR"}
 
 func resourceGroup() *schema.Resource {
 	return &schema.Resource{
@@ -140,6 +141,42 @@ func resourceGroup() *schema.Resource {
 							Description: "The ID of the owner that must review requests to this group.",
 							Type:        schema.TypeString,
 							Required:    true,
+						},
+					},
+				},
+			},
+			"reviewer_stage": {
+				Description: "A reviewer stage for this group. If none are specified, then the admin owner will be used",
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"operator": {
+							Description:  "The operator of the stage.",
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      "AND",
+							ValidateFunc: validation.StringInSlice(allowedReviewerStageOperators, false),
+						},
+						"require_manager_approval": {
+							Description: "Whether this reviewer stage should require manager approval.",
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+						},
+						"reviewer": {
+							Description: "A reviewer for this stage.",
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"id": {
+										Description: "The ID of the owner.",
+										Type:        schema.TypeString,
+										Required:    true,
+									},
+								},
+							},
 						},
 					},
 				},
@@ -278,7 +315,11 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 		}
 	}
 
-	if reviewersI, ok := d.GetOk("reviewer"); ok {
+	if reviewerStagesI, ok := d.GetOk("reviewer_stage"); ok {
+		if diag := resourceGroupUpdateReviewerStages(ctx, d, client, reviewerStagesI); diag != nil {
+			return diag
+		}
+	} else if reviewersI, ok := d.GetOk("reviewer"); ok {
 		if diag := resourceGroupUpdateReviewers(ctx, d, client, reviewersI); diag != nil {
 			return diag
 		}
@@ -374,6 +415,43 @@ func resourceGroupUpdateResources(ctx context.Context, d *schema.ResourceData, c
 	}
 
 	if _, err := client.GroupsApi.SetGroupResources(ctx, d.Id()).UpdateGroupResourcesInfo(updateInfo).Execute(); err != nil {
+		return diagFromErr(ctx, err)
+	}
+	return nil
+}
+
+func resourceGroupUpdateReviewerStages(ctx context.Context, d *schema.ResourceData, client *opal.APIClient, reviewerStagesI any) diag.Diagnostics {
+	// reviewerStagesI could be a schema.Set from terraform or our own constructed slice.
+	var rawReviewerStages []any
+	switch reviewerStagesI := reviewerStagesI.(type) {
+	case []any:
+		rawReviewerStages = reviewerStagesI
+	case *schema.Set:
+		rawReviewerStages = reviewerStagesI.List()
+	default:
+		return diag.Errorf("bad type passed: %v", reflect.TypeOf(reviewerStagesI))
+	}
+	reviewerStages := make([]opal.ReviewerStage, 0, len(rawReviewerStages))
+	for _, rawReviewerStage := range rawReviewerStages {
+		reviewerStage := rawReviewerStage.(map[string]any)
+		requireManagerApproval := reviewerStage["require_manager_approval"].(bool)
+		operator := reviewerStage["operator"].(string)
+		reviewersI := reviewerStage["reviewer"].(any)
+		reviewerIds, err := extractReviewerIDs(reviewersI)
+		if err != nil {
+			return diagFromErr(ctx, err)
+		}
+
+		reviewerStages = append(reviewerStages, *opal.NewReviewerStage(requireManagerApproval, operator, reviewerIds))
+		tflog.Debug(ctx, "Setting group reviewer stage", map[string]any{
+			"id":                     d.Id(),
+			"requireManagerApproval": requireManagerApproval,
+			"operator":               operator,
+			"reviewerIds":            reviewerIds,
+		})
+	}
+
+	if _, _, err := client.GroupsApi.SetGroupReviewerStages(ctx, d.Id()).ReviewerStageList(*opal.NewReviewerStageList(reviewerStages)).Execute(); err != nil {
 		return diagFromErr(ctx, err)
 	}
 	return nil
