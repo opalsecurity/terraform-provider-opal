@@ -61,11 +61,6 @@ func resourceGroup() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 			},
-			"require_manager_approval": {
-				Description: "Require the requester's manager's approval for requests to this group.",
-				Type:        schema.TypeBool,
-				Optional:    true,
-			},
 			"auto_approval": {
 				Description: "Automatically approve all requests for this group without review.",
 				Type:        schema.TypeBool,
@@ -257,7 +252,6 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 	// Because group creation does not let us set some properties immediately,
 	// we may have to update them in a follow up request.
 	adminOwnerIDI, adminOwnerIDOk := d.GetOk("admin_owner_id")
-	requireManagerApprovalI, requireManagerApprovalOk := d.GetOkExists("require_manager_approval")
 	autoApprovalI, autoApprovalOk := d.GetOkExists("auto_approval")
 	requireMfaToApproveI, requireMfaToApproveOk := d.GetOkExists("require_mfa_to_approve")
 	requireMfaToRequestI, requireMfaToRequestOk := d.GetOkExists("require_mfa_to_request")
@@ -266,13 +260,10 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 	recommendedDurationI, recommendedDurationOk := d.GetOk("recommended_duration")
 	requestTemplateIDI, requestTemplateIDOk := d.GetOk("request_template_id")
 	isRequestableI, isRequestableOk := d.GetOkExists("is_requestable")
-	if adminOwnerIDOk || requireManagerApprovalOk || autoApprovalOk || requireMfaToApproveOk || requireMfaToRequestOk || requireSupportTicketOk || maxDurationOk || requestTemplateIDOk || isRequestableOk {
+	if adminOwnerIDOk || autoApprovalOk || requireMfaToApproveOk || requireMfaToRequestOk || requireSupportTicketOk || maxDurationOk || requestTemplateIDOk || isRequestableOk {
 		updateInfo := opal.NewUpdateGroupInfo(group.GroupId)
 		if adminOwnerIDOk {
 			updateInfo.SetAdminOwnerId(adminOwnerIDI.(string))
-		}
-		if requireManagerApprovalOk {
-			updateInfo.SetRequireManagerApproval(requireManagerApprovalI.(bool))
 		}
 		if autoApprovalOk {
 			updateInfo.SetAutoApproval(autoApprovalI.(bool))
@@ -511,7 +502,6 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 		d.Set("group_type", group.GroupType),
 		d.Set("app_id", group.AppId),
 		d.Set("admin_owner_id", group.AdminOwnerId),
-		d.Set("require_manager_approval", group.RequireManagerApproval),
 		d.Set("auto_approval", group.AutoApproval),
 		d.Set("require_mfa_to_approve", group.RequireMfaToApprove),
 		d.Set("require_mfa_to_request", group.RequireMfaToRequest),
@@ -605,10 +595,6 @@ func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, m any) dia
 	if d.HasChange("admin_owner_id") {
 		hasBasicUpdate = true
 		updateInfo.SetAdminOwnerId(d.Get("admin_owner_id").(string))
-	}
-	if d.HasChange("require_manager_approval") {
-		hasBasicUpdate = true
-		updateInfo.SetRequireManagerApproval(d.Get("require_manager_approval").(bool))
 	}
 	if d.HasChange("auto_approval") {
 		hasBasicUpdate = true
