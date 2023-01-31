@@ -207,6 +207,10 @@ func resourceGroup() *schema.Resource {
 func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*opal.APIClient)
 
+	if err := validateReviewerConfigDuringCreate(d); err != nil {
+		return diagFromErr(ctx, err)
+	}
+
 	name := d.Get("name").(string)
 	groupType := opal.GroupTypeEnum(d.Get("group_type").(string))
 	appID := d.Get("app_id").(string)
