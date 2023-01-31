@@ -238,6 +238,19 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 		"id":   d.Id(),
 	})
 
+	// In the case that auto_approval is true or is_requestable is false, we still want to
+	// update the reviewer stages to be empty to avoid the immediate diff from the deafult
+	// reviewer configuration.
+	// NOTE: This call should come before updating is_requestable and auto_approval as it otherwise
+	// overrides those values
+	var reviewerStages any = make([]any, 0)
+	if reviewerStagesI, ok := d.GetOk("reviewer_stage"); ok {
+		reviewerStages = reviewerStagesI
+	}
+	if diag := resourceGroupUpdateReviewerStages(ctx, d, client, reviewerStages); diag != nil {
+		return diag
+	}
+
 	// Because group creation does not let us set some properties immediately,
 	// we may have to update them in a follow up request.
 	adminOwnerIDI, adminOwnerIDOk := d.GetOk("admin_owner_id")
@@ -291,12 +304,6 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 
 	if _, ok := d.GetOk("visibility"); ok {
 		if diag := resourceGroupUpdateVisibility(ctx, d, client); diag != nil {
-			return diag
-		}
-	}
-
-	if reviewerStagesI, ok := d.GetOk("reviewer_stage"); ok {
-		if diag := resourceGroupUpdateReviewerStages(ctx, d, client, reviewerStagesI); diag != nil {
 			return diag
 		}
 	}
