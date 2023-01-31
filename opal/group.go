@@ -125,21 +125,6 @@ func resourceGroup() *schema.Resource {
 					},
 				},
 			},
-			"reviewer": {
-				Description:      "A required reviewer for this group. If none are specified, then the admin owner will be used.",
-				Type:             schema.TypeSet,
-				Optional:         true,
-				DiffSuppressFunc: ignoreReviewerDefaultValue,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"id": {
-							Description: "The ID of the owner that must review requests to this group.",
-							Type:        schema.TypeString,
-							Required:    true,
-						},
-					},
-				},
-			},
 			"reviewer_stage": {
 				Description: "A reviewer stage for this group. If none are specified, then the admin owner will be used",
 				Type:        schema.TypeSet,
@@ -310,17 +295,8 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 		if diag := resourceGroupUpdateReviewerStages(ctx, d, client, reviewerStagesI); diag != nil {
 			return diag
 		}
-	} else if reviewersI, ok := d.GetOk("reviewer"); ok {
-		if diag := resourceGroupUpdateReviewers(ctx, d, client, reviewersI); diag != nil {
-			return diag
-		}
-	} else if !autoApprovalOk || !(autoApprovalI.(bool)) {
-		// We should set the required reviewer to be the the admin owner (same behavior as the API) as
-		// long as we don't have auto approval.
-		if diag := resourceGroupUpdateReviewers(ctx, d, client, []any{map[string]any{"id": adminOwnerIDI}}); diag != nil {
-			return diag
-		}
 	}
+
 	if _, ok := d.GetOk("resource"); ok {
 		if diag := resourceGroupUpdateResources(ctx, d, client); diag != nil {
 			return diag
@@ -448,22 +424,6 @@ func resourceGroupUpdateReviewerStages(ctx context.Context, d *schema.ResourceDa
 	return nil
 }
 
-func resourceGroupUpdateReviewers(ctx context.Context, d *schema.ResourceData, client *opal.APIClient, reviewersI any) diag.Diagnostics {
-	reviewerIds, err := extractReviewerIDs(reviewersI)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-	tflog.Debug(ctx, "Setting group reviewers", map[string]any{
-		"id":          d.Id(),
-		"reviewerIds": reviewerIds,
-	})
-
-	if _, _, err := client.GroupsApi.SetGroupReviewers(ctx, d.Id()).ReviewerIDList(*opal.NewReviewerIDList(reviewerIds)).Execute(); err != nil {
-		return diagFromErr(ctx, err)
-	}
-	return nil
-}
-
 func extractReviewerIDs(reviewersI any) ([]string, error) {
 	var rawReviewers []any
 	switch reviewersI := reviewersI.(type) {
@@ -539,25 +499,12 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 	}
 	d.Set("audit_message_channel", auditChannels)
 
-	reviewerIDs, _, err := client.GroupsApi.GetGroupReviewers(ctx, group.GroupId).Execute()
-	if err != nil {
-		return diagFromErr(ctx, err)
-	}
-
-	reviewers := make([]any, 0, len(reviewerIDs))
-	for _, reviewerID := range reviewerIDs {
-		reviewers = append(reviewers, map[string]any{
-			"id": reviewerID,
-		})
-	}
-	d.Set("reviewer", reviewers)
-
 	reviewerStages, _, err := client.GroupsApi.GetGroupReviewerStages(ctx, group.GroupId).Execute()
 	if err != nil {
 		return diagFromErr(ctx, err)
 	}
 
-	reviewerStagesI := make([]any, 0, len(reviewerIDs))
+	reviewerStagesI := make([]any, 0, len(reviewerStages))
 	for _, reviewerStage := range reviewerStages {
 		reviewersI := make([]any, 0, len(reviewerStage.OwnerIds))
 		for _, reviewerID := range reviewerStage.OwnerIds {
@@ -655,17 +602,6 @@ func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, m any) dia
 			reviewerStages = reviewersStagesBlock
 		}
 		if diag := resourceGroupUpdateReviewerStages(ctx, d, client, reviewerStages); diag != nil {
-			return diag
-		}
-	} else if d.HasChange("reviewer") {
-		// If all reviewer blocks were unset, let's use the admin owner id. If we don't do this,
-		// the group will be configured to an invalid state that the Opal API will still accept,
-		// but the group will be unrequestable.
-		reviewers := any([]any{map[string]any{"id": d.State().Attributes["admin_owner_id"]}})
-		if reviewersBlock, ok := d.GetOk("reviewer"); ok {
-			reviewers = reviewersBlock
-		}
-		if diag := resourceGroupUpdateReviewers(ctx, d, client, reviewers); diag != nil {
 			return diag
 		}
 	}
