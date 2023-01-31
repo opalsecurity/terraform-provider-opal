@@ -520,7 +520,6 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 		d.Set("recommended_duration", group.RecommendedDuration),
 		d.Set("request_template_id", group.RequestTemplateId),
 		d.Set("is_requestable", group.IsRequestable),
-		// XXX: We don't get the metadata back. Will terraform state be okay?
 	); err.ErrorOrNil() != nil {
 		return diagFromErr(ctx, err)
 	}
@@ -563,7 +562,27 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 	}
 	d.Set("reviewer", reviewers)
 
-	// XXX: Read out message channels.
+	reviewerStages, _, err := client.GroupsApi.GetGroupReviewerStages(ctx, group.GroupId).Execute()
+	if err != nil {
+		return diagFromErr(ctx, err)
+	}
+
+	reviewerStagesI := make([]any, 0, len(reviewerIDs))
+	for _, reviewerStage := range reviewerStages {
+		reviewersI := make([]any, 0, len(reviewerStage.OwnerIds))
+		for _, reviewerID := range reviewerStage.OwnerIds {
+			reviewersI = append(reviewersI, map[string]any{
+				"id": reviewerID,
+			})
+		}
+
+		reviewerStagesI = append(reviewerStagesI, map[string]any{
+			"reviewer":                 reviewersI,
+			"operator":                 reviewerStage.Operator,
+			"require_manager_approval": reviewerStage.RequireManagerApproval,
+		})
+	}
+	d.Set("reviewer_stage", reviewerStagesI)
 
 	return nil
 }
@@ -644,7 +663,15 @@ func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, m any) dia
 		}
 	}
 
-	if d.HasChange("reviewer") {
+	if d.HasChange("reviewer_stage") {
+		reviewerStages := any([]any{})
+		if reviewersStagesBlock, ok := d.GetOk("reviewer_stage"); ok {
+			reviewerStages = reviewersStagesBlock
+		}
+		if diag := resourceGroupUpdateReviewerStages(ctx, d, client, reviewerStages); diag != nil {
+			return diag
+		}
+	} else if d.HasChange("reviewer") {
 		// If all reviewer blocks were unset, let's use the admin owner id. If we don't do this,
 		// the group will be configured to an invalid state that the Opal API will still accept,
 		// but the group will be unrequestable.
