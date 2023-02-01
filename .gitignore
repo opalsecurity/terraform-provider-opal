@@ -2,4 +2,5 @@ bin/
 # Used for development tf files
 dev/
 .envrc.local
+.envrc.prod
 .idea
