@@ -182,6 +182,20 @@ func resourceGroup() *schema.Resource {
 				Optional:    true,
 				Default:     true,
 			},
+			"on_call_schedule": {
+				Description: "An on call schedule for this group.",
+				Type:        schema.TypeList,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"id": {
+							Description: "The UUID of the on call schedule for this group.",
+							Type:        schema.TypeString,
+							Required:    true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -300,6 +314,12 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 		}
 	}
 
+	if _, ok := d.GetOk("on_call_schedule"); ok {
+		if diag := resourceGroupUpdateOnCallSchedules(ctx, d, client); diag != nil {
+			return diag
+		}
+	}
+
 	return resourceGroupRead(ctx, d, m)
 }
 
@@ -337,6 +357,24 @@ func resourceGroupUpdateAuditMessageChannels(ctx context.Context, d *schema.Reso
 
 	channelList := *opal.NewMessageChannelIDList(channelIDs)
 	if _, _, err := client.GroupsApi.SetGroupMessageChannels(ctx, d.Id()).MessageChannelIDList(channelList).Execute(); err != nil {
+		return diagFromErr(ctx, err)
+	}
+
+	return nil
+}
+
+func resourceGroupUpdateOnCallSchedules(ctx context.Context, d *schema.ResourceData, client *opal.APIClient) diag.Diagnostics {
+	var onCallScheduleIDs []string
+	if onCallSchedulesI, ok := d.GetOk("on_call_schedule"); ok {
+		rawOnCallSchedules := onCallSchedulesI.([]any)
+		for _, rawOnCallSchedule := range rawOnCallSchedules {
+			onCallSchedule := rawOnCallSchedule.(map[string]any)
+			onCallScheduleIDs = append(onCallScheduleIDs, onCallSchedule["id"].(string))
+		}
+	}
+
+	onCallScheduleList := *opal.NewOnCallScheduleIDList(onCallScheduleIDs)
+	if _, _, err := client.GroupsApi.SetGroupOnCallSchedules(ctx, d.Id()).OnCallScheduleIDList(onCallScheduleList).Execute(); err != nil {
 		return diagFromErr(ctx, err)
 	}
 
@@ -463,6 +501,18 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 	}
 	d.Set("audit_message_channel", auditChannels)
 
+	onCallSchedulesResponse, _, err := client.GroupsApi.GetGroupOnCallSchedules(ctx, group.GroupId).Execute()
+	if err != nil {
+		return diagFromErr(ctx, err)
+	}
+	onCallSchedules := make([]any, 0, len(onCallSchedulesResponse.OnCallSchedules))
+	for _, onCallSchedule := range onCallSchedulesResponse.OnCallSchedules {
+		onCallSchedules = append(onCallSchedules, map[string]any{
+			"id": onCallSchedule.OnCallScheduleId,
+		})
+	}
+	d.Set("on_call_schedule", onCallSchedules)
+
 	reviewerIDs, _, err := client.GroupsApi.GetGroupReviewers(ctx, group.GroupId).Execute()
 	if err != nil {
 		return diagFromErr(ctx, err)
@@ -553,6 +603,12 @@ func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, m any) dia
 
 	if d.HasChange("audit_message_channel") {
 		if diag := resourceGroupUpdateAuditMessageChannels(ctx, d, client); diag != nil {
+			return diag
+		}
+	}
+
+	if d.HasChange("on_call_schedule") {
+		if diag := resourceGroupUpdateOnCallSchedules(ctx, d, client); diag != nil {
 			return diag
 		}
 	}
