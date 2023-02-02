@@ -69,11 +69,6 @@ func resourceResource() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 			},
-			"require_manager_approval": {
-				Description: "Require the requester's manager's approval for requests to this resource.",
-				Type:        schema.TypeBool,
-				Optional:    true,
-			},
 			"auto_approval": {
 				Description: "Automatically approve all requests for this resource without review.",
 				Type:        schema.TypeBool,
@@ -143,17 +138,38 @@ func resourceResource() *schema.Resource {
 					},
 				},
 			},
-			"reviewer": {
-				Description:      "A required reviewer for this resource. If none are specified, then the admin owner will be used.",
-				Type:             schema.TypeSet,
-				Optional:         true,
-				DiffSuppressFunc: ignoreReviewerDefaultValue,
+			"reviewer_stage": {
+				Description: "A reviewer stage for this resource. If none are specified, then the admin owner will be used",
+				Type:        schema.TypeSet,
+				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"id": {
-							Description: "The ID of the owner that must review requests to this resource.",
-							Type:        schema.TypeString,
-							Required:    true,
+						"operator": {
+							Description:  "The operator of the stage.",
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      "AND",
+							ValidateFunc: validation.StringInSlice(allowedReviewerStageOperators, false),
+						},
+						"require_manager_approval": {
+							Description: "Whether this reviewer stage should require manager approval.",
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+						},
+						"reviewer": {
+							Description: "A reviewer for this stage.",
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"id": {
+										Description: "The ID of the owner.",
+										Type:        schema.TypeString,
+										Required:    true,
+									},
+								},
+							},
 						},
 					},
 				},
@@ -171,6 +187,10 @@ func resourceResource() *schema.Resource {
 
 func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*opal.APIClient)
+
+	if err := validateReviewerConfigDuringCreate(d); err != nil {
+		return diagFromErr(ctx, err)
+	}
 
 	name := d.Get("name").(string)
 	resourceType := opal.ResourceTypeEnum(d.Get("resource_type").(string))
@@ -200,10 +220,22 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 		"id":   d.Id(),
 	})
 
+	// In the case that auto_approval is true or is_requestable is false, we still want to
+	// update the reviewer stages to be empty to avoid the immediate diff from the deafult
+	// reviewer configuration.
+	// NOTE: This call should come before updating is_requestable and auto_approval as it otherwise
+	// overrides those values
+	var reviewerStages any = make([]any, 0)
+	if reviewerStagesI, ok := d.GetOk("reviewer_stage"); ok {
+		reviewerStages = reviewerStagesI
+	}
+	if diag := resourceResourceUpdateReviewerStages(ctx, d, client, reviewerStages); diag != nil {
+		return diag
+	}
+
 	// Because resource creation does not let us set some properties immediately,
 	// we may have to update them in a follow up request.
 	adminOwnerIDI, adminOwnerIDOk := d.GetOk("admin_owner_id")
-	requireManagerApprovalI, requireManagerApprovalOk := d.GetOkExists("require_manager_approval")
 	autoApprovalI, autoApprovalOk := d.GetOkExists("auto_approval")
 	requireMfaToApproveI, requireMfaToApproveOk := d.GetOkExists("require_mfa_to_approve")
 	requireMfaToConnectI, requireMfaToConnectOk := d.GetOkExists("require_mfa_to_connect")
@@ -213,13 +245,10 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 	maxDurationI, maxDurationOk := d.GetOk("max_duration")
 	recommendedDurationI, recommendedDurationOk := d.GetOk("recommended_duration")
 	requestTemplateIDI, requestTemplateIDOk := d.GetOk("request_template_id")
-	if adminOwnerIDOk || requireManagerApprovalOk || autoApprovalOk || requireMfaToApproveOk || requireMfaToConnectOk || requireMfaToRequestOk || requireSupportTicketOk || isRequestableOk || maxDurationOk || recommendedDurationOk || requestTemplateIDOk {
+	if adminOwnerIDOk || autoApprovalOk || requireMfaToApproveOk || requireMfaToConnectOk || requireMfaToRequestOk || requireSupportTicketOk || isRequestableOk || maxDurationOk || recommendedDurationOk || requestTemplateIDOk {
 		updateInfo := opal.NewUpdateResourceInfo(resource.ResourceId)
 		if adminOwnerIDOk {
 			updateInfo.SetAdminOwnerId(adminOwnerIDI.(string))
-		}
-		if requireManagerApprovalOk {
-			updateInfo.SetRequireManagerApproval(requireManagerApprovalI.(bool))
 		}
 		if autoApprovalOk {
 			updateInfo.SetAutoApproval(autoApprovalI.(bool))
@@ -265,21 +294,6 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 		}
 	}
 
-	if reviewersI, ok := d.GetOk("reviewer"); ok {
-		if diag := resourceResourceUpdateReviewers(ctx, d, client, reviewersI); diag != nil {
-			return diag
-		}
-	} else if !autoApprovalOk || !(autoApprovalI.(bool)) {
-		// We should set the required reviewer to be the the admin owner (same behavior as the API) as
-		// long as we don't have auto approval.
-		if diag := resourceResourceUpdateReviewers(ctx, d, client, []any{map[string]any{"id": adminOwnerIDI}}); diag != nil {
-			return diag
-		}
-	}
-
-	// XXX: Update audit channel...
-	// XXX: Update mfa required for connnect...
-
 	return resourceResourceRead(ctx, d, m)
 }
 
@@ -305,28 +319,38 @@ func resourceResourceUpdateVisibility(ctx context.Context, d *schema.ResourceDat
 	return nil
 }
 
-func resourceResourceUpdateReviewers(ctx context.Context, d *schema.ResourceData, client *opal.APIClient, reviewersI any) diag.Diagnostics {
-	// reviewersI could be a schema.Set from terraform or our own constructed slice.
-	var rawReviewers []any
-	switch reviewersI := reviewersI.(type) {
+func resourceResourceUpdateReviewerStages(ctx context.Context, d *schema.ResourceData, client *opal.APIClient, reviewerStagesI any) diag.Diagnostics {
+	// reviewerStagesI could be a schema.Set from terraform or our own constructed slice.
+	var rawReviewerStages []any
+	switch reviewerStagesI := reviewerStagesI.(type) {
 	case []any:
-		rawReviewers = reviewersI
+		rawReviewerStages = reviewerStagesI
 	case *schema.Set:
-		rawReviewers = reviewersI.List()
+		rawReviewerStages = reviewerStagesI.List()
 	default:
-		return diag.Errorf("bad type passed: %v", reflect.TypeOf(reviewersI))
+		return diag.Errorf("bad type passed: %v", reflect.TypeOf(reviewerStagesI))
 	}
-	reviewerIds := make([]string, 0, len(rawReviewers))
-	for _, rawReviewer := range rawReviewers {
-		reviewer := rawReviewer.(map[string]any)
-		reviewerIds = append(reviewerIds, reviewer["id"].(string))
-	}
-	tflog.Debug(ctx, "Setting resource reviewers", map[string]any{
-		"id":          d.Id(),
-		"reviewerIds": reviewerIds,
-	})
+	reviewerStages := make([]opal.ReviewerStage, 0, len(rawReviewerStages))
+	for _, rawReviewerStage := range rawReviewerStages {
+		reviewerStage := rawReviewerStage.(map[string]any)
+		requireManagerApproval := reviewerStage["require_manager_approval"].(bool)
+		operator := reviewerStage["operator"].(string)
+		reviewersI := reviewerStage["reviewer"].(any)
+		reviewerIds, err := extractReviewerIDs(reviewersI)
+		if err != nil {
+			return diagFromErr(ctx, err)
+		}
 
-	if _, _, err := client.ResourcesApi.SetResourceReviewers(ctx, d.Id()).ReviewerIDList(*opal.NewReviewerIDList(reviewerIds)).Execute(); err != nil {
+		reviewerStages = append(reviewerStages, *opal.NewReviewerStage(requireManagerApproval, operator, reviewerIds))
+		tflog.Debug(ctx, "Setting resource reviewer stage", map[string]any{
+			"id":                     d.Id(),
+			"requireManagerApproval": requireManagerApproval,
+			"operator":               operator,
+			"reviewerIds":            reviewerIds,
+		})
+	}
+
+	if _, _, err := client.ResourcesApi.SetResourceReviewerStages(ctx, d.Id()).ReviewerStageList(*opal.NewReviewerStageList(reviewerStages)).Execute(); err != nil {
 		return diagFromErr(ctx, err)
 	}
 	return nil
@@ -347,7 +371,6 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 		d.Set("resource_type", resource.ResourceType),
 		d.Set("app_id", resource.AppId),
 		d.Set("admin_owner_id", resource.AdminOwnerId),
-		d.Set("require_manager_approval", resource.RequireManagerApproval),
 		d.Set("auto_approval", resource.AutoApproval),
 		d.Set("require_mfa_to_approve", resource.RequireMfaToApprove),
 		d.Set("require_mfa_to_connect", resource.RequireMfaToConnect),
@@ -380,20 +403,27 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 	}
 	d.Set("visibility_group", flattenedGroups)
 
-	reviewerIDs, _, err := client.ResourcesApi.GetResourceReviewers(ctx, resource.ResourceId).Execute()
+	reviewerStages, _, err := client.ResourcesApi.GetResourceReviewerStages(ctx, resource.ResourceId).Execute()
 	if err != nil {
 		return diagFromErr(ctx, err)
 	}
 
-	reviewers := make([]any, 0, len(reviewerIDs))
-	for _, reviewerID := range reviewerIDs {
-		reviewers = append(reviewers, map[string]any{
-			"id": reviewerID,
+	reviewerStagesI := make([]any, 0, len(reviewerStages))
+	for _, reviewerStage := range reviewerStages {
+		reviewersI := make([]any, 0, len(reviewerStage.OwnerIds))
+		for _, reviewerID := range reviewerStage.OwnerIds {
+			reviewersI = append(reviewersI, map[string]any{
+				"id": reviewerID,
+			})
+		}
+
+		reviewerStagesI = append(reviewerStagesI, map[string]any{
+			"reviewer":                 reviewersI,
+			"operator":                 reviewerStage.Operator,
+			"require_manager_approval": reviewerStage.RequireManagerApproval,
 		})
 	}
-	d.Set("reviewer", reviewers)
-
-	// XXX: Read out message channels, mfa required to connect.
+	d.Set("reviewer_stage", reviewerStagesI)
 
 	return nil
 }
@@ -416,10 +446,6 @@ func resourceResourceUpdate(ctx context.Context, d *schema.ResourceData, m any) 
 	if d.HasChange("admin_owner_id") {
 		hasBasicChange = true
 		updateInfo.SetAdminOwnerId(d.Get("admin_owner_id").(string))
-	}
-	if d.HasChange("require_manager_approval") {
-		hasBasicChange = true
-		updateInfo.SetRequireManagerApproval(d.Get("require_manager_approval").(bool))
 	}
 	if d.HasChange("auto_approval") {
 		hasBasicChange = true
@@ -471,15 +497,12 @@ func resourceResourceUpdate(ctx context.Context, d *schema.ResourceData, m any) 
 		}
 	}
 
-	if d.HasChange("reviewer") {
-		// If all reviewer blocks were unset, let's use the admin owner id. If we don't do this,
-		// the resource will be configured to an invalid state that the Opal API will still accept,
-		// but the resource will be unrequestable.
-		reviewers := any([]any{map[string]any{"id": d.State().Attributes["admin_owner_id"]}})
-		if reviewersBlock, ok := d.GetOk("reviewer"); ok {
-			reviewers = reviewersBlock
+	if d.HasChange("reviewer_stage") {
+		reviewerStages := any([]any{})
+		if reviewersStagesBlock, ok := d.GetOk("reviewer_stage"); ok {
+			reviewerStages = reviewersStagesBlock
 		}
-		if diag := resourceResourceUpdateReviewers(ctx, d, client, reviewers); diag != nil {
+		if diag := resourceResourceUpdateReviewerStages(ctx, d, client, reviewerStages); diag != nil {
 			return diag
 		}
 	}
