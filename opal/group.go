@@ -127,7 +127,7 @@ func resourceGroup() *schema.Resource {
 			},
 			"reviewer_stage": {
 				Description: "A reviewer stage for this group. If none are specified, then the admin owner will be used",
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -399,16 +399,7 @@ func resourceGroupUpdateResources(ctx context.Context, d *schema.ResourceData, c
 }
 
 func resourceGroupUpdateReviewerStages(ctx context.Context, d *schema.ResourceData, client *opal.APIClient, reviewerStagesI any) diag.Diagnostics {
-	// reviewerStagesI could be a schema.Set from terraform or our own constructed slice.
-	var rawReviewerStages []any
-	switch reviewerStagesI := reviewerStagesI.(type) {
-	case []any:
-		rawReviewerStages = reviewerStagesI
-	case *schema.Set:
-		rawReviewerStages = reviewerStagesI.List()
-	default:
-		return diag.Errorf("bad type passed: %v", reflect.TypeOf(reviewerStagesI))
-	}
+	rawReviewerStages := reviewerStagesI.([]any)
 	reviewerStages := make([]opal.ReviewerStage, 0, len(rawReviewerStages))
 	for _, rawReviewerStage := range rawReviewerStages {
 		reviewerStage := rawReviewerStage.(map[string]any)

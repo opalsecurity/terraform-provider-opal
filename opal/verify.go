@@ -14,7 +14,7 @@ import (
 // creation
 func validateReviewerConfigDuringCreate(d *schema.ResourceData) error {
 	if reviewerStagesI, ok := d.GetOk("reviewer_stage"); ok {
-		if reviewerStagesI.(*schema.Set).Len() > 0 {
+		if len(reviewerStagesI.([]any)) > 0 {
 			return nil
 		}
 	}
