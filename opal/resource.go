@@ -137,13 +137,13 @@ func resourceResource() *schema.Resource {
 				},
 			},
 			"reviewer_stage": {
-				Description: "A reviewer stage for this resource. If none are specified, then the admin owner will be used",
+				Description: "A reviewer stage for this resource. You are allowed to provide up to 3.",
 				Type:        schema.TypeList,
 				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"operator": {
-							Description:  "The operator of the stage.",
+							Description:  "The operator of the stage. Operator is either \"AND\" or \"OR\".",
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      "AND",
@@ -219,7 +219,7 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 	})
 
 	// In the case that auto_approval is true or is_requestable is false, we still want to
-	// update the reviewer stages to be empty to avoid the immediate diff from the deafult
+	// update the reviewer stages to be empty to avoid the immediate diff from the default
 	// reviewer configuration.
 	// NOTE: This call should come before updating is_requestable and auto_approval as it otherwise
 	// overrides those values

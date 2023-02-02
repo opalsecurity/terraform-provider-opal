@@ -149,7 +149,7 @@ resource "opal_group" "google_group_example" {
 - `require_mfa_to_request` (Boolean) Require that users MFA to request this group.
 - `require_support_ticket` (Boolean) Require that requesters attach a support ticket to requests for this group.
 - `resource` (Block Set) A resource that members of the group get access to. (see [below for nested schema](#nestedblock--resource))
-- `reviewer_stage` (Block List) A reviewer stage for this group. If none are specified, then the admin owner will be used (see [below for nested schema](#nestedblock--reviewer_stage))
+- `reviewer_stage` (Block List) A reviewer stage for this group. You are allowed to provide up to 3. (see [below for nested schema](#nestedblock--reviewer_stage))
 - `visibility` (String) The visibility level of the group, i.e. LIMITED or GLOBAL.
 - `visibility_group` (Block List) The groups that can see this group when visibility is limited. If not specified, only users with direct access can see this resource when visibility is set to LIMITED. (see [below for nested schema](#nestedblock--visibility_group))
 
@@ -243,7 +243,7 @@ Optional:
 
 Optional:
 
-- `operator` (String) The operator of the stage.
+- `operator` (String) The operator of the stage. Operator is either "AND" or "OR".
 - `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval.
 - `reviewer` (Block Set) A reviewer for this stage. (see [below for nested schema](#nestedblock--reviewer_stage--reviewer))
 
