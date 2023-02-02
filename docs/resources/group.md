@@ -82,6 +82,7 @@ resource "opal_group" "google_group_example" {
 - `description` (String) The description of the group.
 - `is_requestable` (Boolean) Allow users to create an access request for this group. By default, any group is requestable.
 - `max_duration` (Number) The maximum duration for which this group can be requested (in minutes). By default, the max duration is indefinite access.
+- `on_call_schedule` (Block List) An on call schedule for this group. (see [below for nested schema](#nestedblock--on_call_schedule))
 - `recommended_duration` (Number) The recommended duration for which the group should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.
 - `remote_info` (Block List, Max: 1) Remote info that is required for the creation of remote groups. (see [below for nested schema](#nestedblock--remote_info))
 - `request_template_id` (String) The ID of a request template for this group. You can get this ID from the URL in the Opal web app.
@@ -104,6 +105,14 @@ resource "opal_group" "google_group_example" {
 Required:
 
 - `id` (String) The ID of the message channel for this group.
+
+
+<a id="nestedblock--on_call_schedule"></a>
+### Nested Schema for `on_call_schedule`
+
+Required:
+
+- `id` (String) The UUID of the on call schedule for this group.
 
 
 <a id="nestedblock--remote_info"></a>
