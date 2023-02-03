@@ -348,7 +348,7 @@ func resourceGroupUpdateVisibility(ctx context.Context, d *schema.ResourceData, 
 func resourceGroupUpdateAuditMessageChannels(ctx context.Context, d *schema.ResourceData, client *opal.APIClient) diag.Diagnostics {
 	var channelIDs []string
 	if auditMessageChannelsI, ok := d.GetOk("audit_message_channel"); ok {
-		rawChannels := auditMessageChannelsI.([]any)
+		rawChannels := auditMessageChannelsI.(*schema.Set).List()
 		for _, rawChannel := range rawChannels {
 			channel := rawChannel.(map[string]any)
 			channelIDs = append(channelIDs, channel["id"].(string))
@@ -366,7 +366,7 @@ func resourceGroupUpdateAuditMessageChannels(ctx context.Context, d *schema.Reso
 func resourceGroupUpdateOnCallSchedules(ctx context.Context, d *schema.ResourceData, client *opal.APIClient) diag.Diagnostics {
 	var onCallScheduleIDs []string
 	if onCallSchedulesI, ok := d.GetOk("on_call_schedule"); ok {
-		rawOnCallSchedules := onCallSchedulesI.([]any)
+		rawOnCallSchedules := onCallSchedulesI.(*schema.Set).List()
 		for _, rawOnCallSchedule := range rawOnCallSchedules {
 			onCallSchedule := rawOnCallSchedule.(map[string]any)
 			onCallScheduleIDs = append(onCallScheduleIDs, onCallSchedule["id"].(string))
