@@ -145,7 +145,7 @@ func resourceGroup() *schema.Resource {
 			},
 			"audit_message_channel": {
 				Description: "An audit message channel for this group.",
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -184,7 +184,7 @@ func resourceGroup() *schema.Resource {
 			},
 			"on_call_schedule": {
 				Description: "An on call schedule for this group.",
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
