@@ -3,11 +3,12 @@ package opal
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/opalsecurity/opal-go"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/opalsecurity/opal-go"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -16,6 +17,7 @@ import (
 var knownOpalAppID = os.Getenv("OPAL_TEST_KNOWN_OPAL_APP_ID")
 var knownOpalAppAdminOwnerID = os.Getenv("OPAL_TEST_KNOWN_OPAL_APP_ADMIN_OWNER_ID")
 var knownGithubRepoResourceID = os.Getenv("OPAL_TEST_KNOWN_GITHUB_TEST_REPO_2_RESOURCE_ID")
+var knownOnCallScheduleID = os.Getenv("OPAL_TEST_KNOWN_ON_CALL_SCHEDULE_ID")
 
 func TestAccGroup_Import(t *testing.T) {
 	baseName := "tf_acc_group_test_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
@@ -361,6 +363,25 @@ func TestAccGroup_Remote(t *testing.T) {
 
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
+				),
+			},
+		},
+	})
+}
+
+func TestAccGroup_OnCallSchedule(t *testing.T) {
+	baseName := "tf_acc_group_test_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
+	resourceName := "opal_group." + baseName
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckGroupDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccGroupResourceWithReviewer(baseName, baseName, fmt.Sprintf(`on_call_schedule { id = "%s" }`, knownOnCallScheduleID)),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "on_call_schedule.#", "1"),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "on_call_schedule.*", map[string]string{"id": knownOnCallScheduleID}),
 				),
 			},
 		},

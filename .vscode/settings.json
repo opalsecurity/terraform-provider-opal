@@ -1,6 +1,7 @@
 {
+  "go.testEnvFile": "${workspaceFolder}/.envrc.local.vscode",
   "go.testEnvVars": {
-    "TF_ACC": 1,
-    "TF_LOG": "DEBUG",
+    "TF_ACC": "1",
+    "TF_LOG": "DEBUG"
   }
 }

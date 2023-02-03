@@ -8,6 +8,22 @@ BREAKING CHANGES:
 
 NEW FEATURES:
 - adds support for multi-stage approvals
+- adds support for `on_call_schedules` in group resources. Example: 
+
+```terraform
+resource "opal_on_call_schedule" "security_oncall_rotation" {
+  third_party_provider = "PAGER_DUTY"
+  remote_id = "PNXHVAA"
+}
+
+# Example group usage
+resource "opal_group" "security" {
+  // ...
+
+  on_call_schedule {
+    id = opal_on_call_schedule.security_oncall_rotation.id
+  }
+```
 
 ## v0.0.4
 - Fixes a bug for owner user parsing
