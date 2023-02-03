@@ -1,9 +1,14 @@
 # Changelog
 
-## v1.0.1
+## v1.0.0
+
+BREAKING CHANGES:
+- the `require_manager_approval` attribute was removed in favor of `reviewer_stage`
+- the `reviewer` attribute was removed in favor of `reviewer_stage`
 
 NEW FEATURES:
-- Add support for `on_call_schedules` in group resources. Example: 
+- adds support for multi-stage approvals
+- adds support for `on_call_schedules` in group resources. Example: 
 
 ```terraform
 resource "opal_on_call_schedule" "security_oncall_rotation" {
@@ -16,18 +21,9 @@ resource "opal_group" "security" {
   // ...
 
   on_call_schedule {
-    id = "opal_on_call_schedule.security_oncall_rotation.id
+    id = opal_on_call_schedule.security_oncall_rotation.id
   }
 ```
-
-## v1.0.0
-
-BREAKING CHANGES:
-- the `require_manager_approval` attribute was removed in favor of `reviewer_stage`
-- the `reviewer` attribute was removed in favor of `reviewer_stage`
-
-NEW FEATURES:
-- adds support for multi-stage approvals
 
 ## v0.0.4
 - Fixes a bug for owner user parsing
