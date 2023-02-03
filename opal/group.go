@@ -3,6 +3,8 @@ package opal
 import (
 	"context"
 	"fmt"
+	"github.com/opalsecurity/opal-go"
+	"github.com/pkg/errors"
 	"reflect"
 
 	"github.com/hashicorp/go-multierror"
@@ -10,10 +12,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
-	"github.com/opalsecurity/opal-go"
 )
 
 var allowedGroupTypes = enumSliceToStringSlice(opal.AllowedGroupTypeEnumEnumValues)
+var allowedReviewerStageOperators = []string{"AND", "OR"}
 
 func resourceGroup() *schema.Resource {
 	return &schema.Resource{
@@ -58,11 +60,6 @@ func resourceGroup() *schema.Resource {
 				Description: "The admin owner ID for this group. By default, this is set to the application admin owner.",
 				Type:        schema.TypeString,
 				Required:    true,
-			},
-			"require_manager_approval": {
-				Description: "Require the requester's manager's approval for requests to this group.",
-				Type:        schema.TypeBool,
-				Optional:    true,
 			},
 			"auto_approval": {
 				Description: "Automatically approve all requests for this group without review.",
@@ -128,17 +125,38 @@ func resourceGroup() *schema.Resource {
 					},
 				},
 			},
-			"reviewer": {
-				Description:      "A required reviewer for this group. If none are specified, then the admin owner will be used.",
-				Type:             schema.TypeSet,
-				Optional:         true,
-				DiffSuppressFunc: ignoreReviewerDefaultValue,
+			"reviewer_stage": {
+				Description: "A reviewer stage for this group. You are allowed to provide up to 3.",
+				Type:        schema.TypeList,
+				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"id": {
-							Description: "The ID of the owner that must review requests to this group.",
-							Type:        schema.TypeString,
-							Required:    true,
+						"operator": {
+							Description:  "The operator of the stage. Operator is either \"AND\" or \"OR\".",
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      "AND",
+							ValidateFunc: validation.StringInSlice(allowedReviewerStageOperators, false),
+						},
+						"require_manager_approval": {
+							Description: "Whether this reviewer stage should require manager approval.",
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+						},
+						"reviewer": {
+							Description: "A reviewer for this stage.",
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"id": {
+										Description: "The ID of the owner.",
+										Type:        schema.TypeString,
+										Required:    true,
+									},
+								},
+							},
 						},
 					},
 				},
@@ -203,6 +221,10 @@ func resourceGroup() *schema.Resource {
 func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*opal.APIClient)
 
+	if err := validateReviewerConfigDuringCreate(d); err != nil {
+		return diagFromErr(ctx, err)
+	}
+
 	name := d.Get("name").(string)
 	groupType := opal.GroupTypeEnum(d.Get("group_type").(string))
 	appID := d.Get("app_id").(string)
@@ -230,10 +252,22 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 		"id":   d.Id(),
 	})
 
+	// In the case that auto_approval is true or is_requestable is false, we still want to
+	// update the reviewer stages to be empty to avoid the immediate diff from the default
+	// reviewer configuration.
+	// NOTE: This call should come before updating is_requestable and auto_approval as it otherwise
+	// overrides those values
+	var reviewerStages any = make([]any, 0)
+	if reviewerStagesI, ok := d.GetOk("reviewer_stage"); ok {
+		reviewerStages = reviewerStagesI
+	}
+	if diag := resourceGroupUpdateReviewerStages(ctx, d, client, reviewerStages); diag != nil {
+		return diag
+	}
+
 	// Because group creation does not let us set some properties immediately,
 	// we may have to update them in a follow up request.
 	adminOwnerIDI, adminOwnerIDOk := d.GetOk("admin_owner_id")
-	requireManagerApprovalI, requireManagerApprovalOk := d.GetOkExists("require_manager_approval")
 	autoApprovalI, autoApprovalOk := d.GetOkExists("auto_approval")
 	requireMfaToApproveI, requireMfaToApproveOk := d.GetOkExists("require_mfa_to_approve")
 	requireMfaToRequestI, requireMfaToRequestOk := d.GetOkExists("require_mfa_to_request")
@@ -242,13 +276,10 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 	recommendedDurationI, recommendedDurationOk := d.GetOk("recommended_duration")
 	requestTemplateIDI, requestTemplateIDOk := d.GetOk("request_template_id")
 	isRequestableI, isRequestableOk := d.GetOkExists("is_requestable")
-	if adminOwnerIDOk || requireManagerApprovalOk || autoApprovalOk || requireMfaToApproveOk || requireMfaToRequestOk || requireSupportTicketOk || maxDurationOk || requestTemplateIDOk || isRequestableOk {
+	if adminOwnerIDOk || autoApprovalOk || requireMfaToApproveOk || requireMfaToRequestOk || requireSupportTicketOk || maxDurationOk || requestTemplateIDOk || isRequestableOk {
 		updateInfo := opal.NewUpdateGroupInfo(group.GroupId)
 		if adminOwnerIDOk {
 			updateInfo.SetAdminOwnerId(adminOwnerIDI.(string))
-		}
-		if requireManagerApprovalOk {
-			updateInfo.SetRequireManagerApproval(requireManagerApprovalI.(bool))
 		}
 		if autoApprovalOk {
 			updateInfo.SetAutoApproval(autoApprovalI.(bool))
@@ -291,17 +322,6 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 		}
 	}
 
-	if reviewersI, ok := d.GetOk("reviewer"); ok {
-		if diag := resourceGroupUpdateReviewers(ctx, d, client, reviewersI); diag != nil {
-			return diag
-		}
-	} else if !autoApprovalOk || !(autoApprovalI.(bool)) {
-		// We should set the required reviewer to be the the admin owner (same behavior as the API) as
-		// long as we don't have auto approval.
-		if diag := resourceGroupUpdateReviewers(ctx, d, client, []any{map[string]any{"id": adminOwnerIDI}}); diag != nil {
-			return diag
-		}
-	}
 	if _, ok := d.GetOk("resource"); ok {
 		if diag := resourceGroupUpdateResources(ctx, d, client); diag != nil {
 			return diag
@@ -416,8 +436,35 @@ func resourceGroupUpdateResources(ctx context.Context, d *schema.ResourceData, c
 	return nil
 }
 
-func resourceGroupUpdateReviewers(ctx context.Context, d *schema.ResourceData, client *opal.APIClient, reviewersI any) diag.Diagnostics {
-	// reviewersI could be a schema.Set from terraform or our own constructed slice.
+func resourceGroupUpdateReviewerStages(ctx context.Context, d *schema.ResourceData, client *opal.APIClient, reviewerStagesI any) diag.Diagnostics {
+	rawReviewerStages := reviewerStagesI.([]any)
+	reviewerStages := make([]opal.ReviewerStage, 0, len(rawReviewerStages))
+	for _, rawReviewerStage := range rawReviewerStages {
+		reviewerStage := rawReviewerStage.(map[string]any)
+		requireManagerApproval := reviewerStage["require_manager_approval"].(bool)
+		operator := reviewerStage["operator"].(string)
+		reviewersI := reviewerStage["reviewer"].(any)
+		reviewerIds, err := extractReviewerIDs(reviewersI)
+		if err != nil {
+			return diagFromErr(ctx, err)
+		}
+
+		reviewerStages = append(reviewerStages, *opal.NewReviewerStage(requireManagerApproval, operator, reviewerIds))
+		tflog.Debug(ctx, "Setting group reviewer stage", map[string]any{
+			"id":                     d.Id(),
+			"requireManagerApproval": requireManagerApproval,
+			"operator":               operator,
+			"reviewerIds":            reviewerIds,
+		})
+	}
+
+	if _, _, err := client.GroupsApi.SetGroupReviewerStages(ctx, d.Id()).ReviewerStageList(*opal.NewReviewerStageList(reviewerStages)).Execute(); err != nil {
+		return diagFromErr(ctx, err)
+	}
+	return nil
+}
+
+func extractReviewerIDs(reviewersI any) ([]string, error) {
 	var rawReviewers []any
 	switch reviewersI := reviewersI.(type) {
 	case []any:
@@ -425,22 +472,15 @@ func resourceGroupUpdateReviewers(ctx context.Context, d *schema.ResourceData, c
 	case *schema.Set:
 		rawReviewers = reviewersI.List()
 	default:
-		return diag.Errorf("bad type passed: %v", reflect.TypeOf(reviewersI))
+		return nil, errors.Errorf("bad type passed: %v", reflect.TypeOf(reviewersI))
 	}
 	reviewerIds := make([]string, 0, len(rawReviewers))
 	for _, rawReviewer := range rawReviewers {
 		reviewer := rawReviewer.(map[string]any)
 		reviewerIds = append(reviewerIds, reviewer["id"].(string))
 	}
-	tflog.Debug(ctx, "Setting group reviewers", map[string]any{
-		"id":          d.Id(),
-		"reviewerIds": reviewerIds,
-	})
 
-	if _, _, err := client.GroupsApi.SetGroupReviewers(ctx, d.Id()).ReviewerIDList(*opal.NewReviewerIDList(reviewerIds)).Execute(); err != nil {
-		return diagFromErr(ctx, err)
-	}
-	return nil
+	return reviewerIds, nil
 }
 
 func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
@@ -462,7 +502,6 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 		d.Set("group_type", group.GroupType),
 		d.Set("app_id", group.AppId),
 		d.Set("admin_owner_id", group.AdminOwnerId),
-		d.Set("require_manager_approval", group.RequireManagerApproval),
 		d.Set("auto_approval", group.AutoApproval),
 		d.Set("require_mfa_to_approve", group.RequireMfaToApprove),
 		d.Set("require_mfa_to_request", group.RequireMfaToRequest),
@@ -471,7 +510,6 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 		d.Set("recommended_duration", group.RecommendedDuration),
 		d.Set("request_template_id", group.RequestTemplateId),
 		d.Set("is_requestable", group.IsRequestable),
-		// XXX: We don't get the metadata back. Will terraform state be okay?
 	); err.ErrorOrNil() != nil {
 		return diagFromErr(ctx, err)
 	}
@@ -513,20 +551,27 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 	}
 	d.Set("on_call_schedule", onCallSchedules)
 
-	reviewerIDs, _, err := client.GroupsApi.GetGroupReviewers(ctx, group.GroupId).Execute()
+	reviewerStages, _, err := client.GroupsApi.GetGroupReviewerStages(ctx, group.GroupId).Execute()
 	if err != nil {
 		return diagFromErr(ctx, err)
 	}
 
-	reviewers := make([]any, 0, len(reviewerIDs))
-	for _, reviewerID := range reviewerIDs {
-		reviewers = append(reviewers, map[string]any{
-			"id": reviewerID,
+	reviewerStagesI := make([]any, 0, len(reviewerStages))
+	for _, reviewerStage := range reviewerStages {
+		reviewersI := make([]any, 0, len(reviewerStage.OwnerIds))
+		for _, reviewerID := range reviewerStage.OwnerIds {
+			reviewersI = append(reviewersI, map[string]any{
+				"id": reviewerID,
+			})
+		}
+
+		reviewerStagesI = append(reviewerStagesI, map[string]any{
+			"reviewer":                 reviewersI,
+			"operator":                 reviewerStage.Operator,
+			"require_manager_approval": reviewerStage.RequireManagerApproval,
 		})
 	}
-	d.Set("reviewer", reviewers)
-
-	// XXX: Read out message channels.
+	d.Set("reviewer_stage", reviewerStagesI)
 
 	return nil
 }
@@ -549,10 +594,6 @@ func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, m any) dia
 	if d.HasChange("admin_owner_id") {
 		hasBasicUpdate = true
 		updateInfo.SetAdminOwnerId(d.Get("admin_owner_id").(string))
-	}
-	if d.HasChange("require_manager_approval") {
-		hasBasicUpdate = true
-		updateInfo.SetRequireManagerApproval(d.Get("require_manager_approval").(bool))
 	}
 	if d.HasChange("auto_approval") {
 		hasBasicUpdate = true
@@ -613,15 +654,12 @@ func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, m any) dia
 		}
 	}
 
-	if d.HasChange("reviewer") {
-		// If all reviewer blocks were unset, let's use the admin owner id. If we don't do this,
-		// the group will be configured to an invalid state that the Opal API will still accept,
-		// but the group will be unrequestable.
-		reviewers := any([]any{map[string]any{"id": d.State().Attributes["admin_owner_id"]}})
-		if reviewersBlock, ok := d.GetOk("reviewer"); ok {
-			reviewers = reviewersBlock
+	if d.HasChange("reviewer_stage") {
+		reviewerStages := any([]any{})
+		if reviewersStagesBlock, ok := d.GetOk("reviewer_stage"); ok {
+			reviewerStages = reviewersStagesBlock
 		}
-		if diag := resourceGroupUpdateReviewers(ctx, d, client, reviewers); diag != nil {
+		if diag := resourceGroupUpdateReviewerStages(ctx, d, client, reviewerStages); diag != nil {
 			return diag
 		}
 	}

@@ -3,15 +3,14 @@ package opal
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/opalsecurity/opal-go"
 	"os"
 	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-
-	"github.com/opalsecurity/opal-go"
 )
 
 var knownOpalAppID = os.Getenv("OPAL_TEST_KNOWN_OPAL_APP_ID")
@@ -55,36 +54,33 @@ func TestAccGroup_CRUD(t *testing.T) {
 			{
 				Config: testAccGroupResourceWithReviewer(baseName, baseName, ""),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "name", baseName),                           // Verify that the name was set.
-					resource.TestCheckResourceAttr(resourceName, "description", ""),                          // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "max_duration", "0"),                        // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "admin_owner_id", knownOpalAppAdminOwnerID), // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "require_manager_approval", "false"),        // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "require_support_ticket", "false"),          // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "require_mfa_to_approve", "false"),          // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "auto_approval", "false"),                   // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "visibility", "GLOBAL"),                     // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "reviewer.0.id", knownOpalAppAdminOwnerID),  // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "is_requestable", "true"),                   // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),                                           // Verify that the name was set.
+					resource.TestCheckResourceAttr(resourceName, "description", ""),                                          // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "max_duration", "0"),                                        // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "admin_owner_id", knownOpalAppAdminOwnerID),                 // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "require_support_ticket", "false"),                          // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "require_mfa_to_approve", "false"),                          // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "auto_approval", "false"),                                   // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "visibility", "GLOBAL"),                                     // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.reviewer.0.id", knownOpalAppAdminOwnerID), // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "is_requestable", "true"),                                   // Verify that optional works.
 				),
 			},
 			{
 				Config: testAccGroupResourceWithReviewer(baseName, baseName+"_changed", `
 description = "test desc"
 max_duration = 60
-require_manager_approval = true
 require_support_ticket = true
 require_mfa_to_approve = true
 is_requestable = false
 `),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "name", baseName+"_changed"),        // Verify that updating the name works.
-					resource.TestCheckResourceAttr(resourceName, "description", "test desc"),         // Verify that updating the description works.
-					resource.TestCheckResourceAttr(resourceName, "max_duration", "60"),               // Verify that updating works.
-					resource.TestCheckResourceAttr(resourceName, "require_manager_approval", "true"), // Verify that updating works.
-					resource.TestCheckResourceAttr(resourceName, "require_support_ticket", "true"),   // Verify that updating works.
-					resource.TestCheckResourceAttr(resourceName, "require_mfa_to_approve", "true"),   // Verify that updating works.
-					resource.TestCheckResourceAttr(resourceName, "is_requestable", "false"),          // Verify that updating works.
+					resource.TestCheckResourceAttr(resourceName, "name", baseName+"_changed"),      // Verify that updating the name works.
+					resource.TestCheckResourceAttr(resourceName, "description", "test desc"),       // Verify that updating the description works.
+					resource.TestCheckResourceAttr(resourceName, "max_duration", "60"),             // Verify that updating works.
+					resource.TestCheckResourceAttr(resourceName, "require_support_ticket", "true"), // Verify that updating works.
+					resource.TestCheckResourceAttr(resourceName, "require_mfa_to_approve", "true"), // Verify that updating works.
+					resource.TestCheckResourceAttr(resourceName, "is_requestable", "false"),        // Verify that updating works.
 				),
 			},
 		},
@@ -137,8 +133,10 @@ resource "opal_group" "%s" {
 	group_type = "OPAL_GROUP"
 	admin_owner_id = "%s"
 
-	reviewer {
-		id = "%s"
+	reviewer_stage {
+		reviewer {
+			id = "%s"
+		}
 	}
 
 	%s
@@ -150,8 +148,10 @@ resource "opal_group" "%s" {
 	group_type = "OPAL_GROUP"
 	admin_owner_id = "%s"
 
-	reviewer {
-		id = "%s"
+	reviewer_stage {
+		reviewer {
+			id = "%s"
+		}
 	}
 }
 `, resourceName, resourceName, knownOpalAppID, knownOpalAppAdminOwnerID, knownOpalAppAdminOwnerID, additional, groupName, groupName, knownOpalAppID, knownOpalAppAdminOwnerID, knownOpalAppAdminOwnerID)
@@ -167,62 +167,69 @@ func TestAccGroup_Reviewer(t *testing.T) {
 		CheckDestroy: testAccCheckGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGroupResource(baseName, baseName, ""),
+				Config: testAccGroupResource(baseName, baseName, "auto_approval = true"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
-					// The reviewer isn't saved since it is not marked as Computed.
-					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "0"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.#", "0"),
 				),
 			},
 			{
-				Config: testAccGroupResource(baseName, baseName, fmt.Sprintf(`reviewer { id = "%s" }`, knownOpalAppAdminOwnerID)),
+				Config: testAccGroupResource(baseName, baseName, testReviewerStage("AND", false, knownOpalAppAdminOwnerID)),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
-					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "1"),
-					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer.*", map[string]string{"id": knownOpalAppAdminOwnerID}),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.reviewer.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.operator", "AND"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.require_manager_approval", "false"),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer_stage.0.reviewer.*", map[string]string{"id": knownOpalAppAdminOwnerID}),
 				),
 			},
 			{
-				Config: testAccGroupResource(baseName, baseName, fmt.Sprintf(`reviewer { id = "%s" }
-reviewer { id = "%s" }`, knownOpalAppAdminOwnerID, knownCustomAppAdminOwnerID)),
+				Config: testAccGroupResource(baseName, baseName, testReviewerStage("OR", true, knownOpalAppAdminOwnerID, knownCustomAppAdminOwnerID)),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
-					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "2"),
-					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer.*", map[string]string{"id": knownOpalAppAdminOwnerID}),
-					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer.*", map[string]string{"id": knownCustomAppAdminOwnerID}),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.reviewer.#", "2"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.operator", "OR"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.require_manager_approval", "true"),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer_stage.0.reviewer.*", map[string]string{"id": knownOpalAppAdminOwnerID}),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer_stage.0.reviewer.*", map[string]string{"id": knownCustomAppAdminOwnerID}),
 				),
 			},
 			{
-				Config: testAccGroupResource(baseName, baseName, fmt.Sprintf(`reviewer { id = "%s" }`, knownCustomAppAdminOwnerID)),
+				Config: testAccGroupResource(baseName, baseName, testReviewerStage("AND", false, knownCustomAppAdminOwnerID)),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
-					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "1"),
-					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer.*", map[string]string{"id": knownCustomAppAdminOwnerID}),
-				),
-			},
-			{
-				Config: testAccGroupResource(baseName, baseName, ""),
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "name", baseName),
-					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "0"),
-				),
-			},
-			{
-				Config: testAccGroupResource(baseName, baseName, fmt.Sprintf(`reviewer { id = "%s" }`, knownOpalAppAdminOwnerID)),
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "name", baseName),
-					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "1"),
-					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer.*", map[string]string{"id": knownOpalAppAdminOwnerID}),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.reviewer.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.operator", "AND"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.require_manager_approval", "false"),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer_stage.0.reviewer.*", map[string]string{"id": knownCustomAppAdminOwnerID}),
 				),
 			},
 			{
 				Config: testAccGroupResource(baseName, baseName, ""),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
-					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "1"),
-					// This is a bit weird. If we delete the reviewer list and the only reviewer is the app owner, then
-					// we don't make the diff and the reviewer stays in the state. This is fine but a bit inconsistent.
-					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer.*", map[string]string{"id": knownOpalAppAdminOwnerID}),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.#", "0"),
+				),
+			},
+			{
+				Config: testAccGroupResource(baseName, baseName, testReviewerStage("AND", false, knownOpalAppAdminOwnerID)),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.reviewer.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.operator", "AND"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.require_manager_approval", "false"),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer_stage.0.reviewer.*", map[string]string{"id": knownOpalAppAdminOwnerID}),
+				),
+			},
+			{
+				Config: testAccGroupResource(baseName, baseName, ""),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.#", "0"),
 				),
 			},
 		},
@@ -239,14 +246,14 @@ func TestAccGroup_Resource(t *testing.T) {
 		CheckDestroy: testAccCheckGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGroupResource(baseName, baseName, ""),
+				Config: testAccGroupResourceWithReviewer(baseName, baseName, ""),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
 					resource.TestCheckResourceAttr(resourceName, "resource.#", "0"),
 				),
 			},
 			{
-				Config: testAccGroupResource(baseName, baseName, testAccGroupResourceWithAccessLevel(knownGithubRepoResourceID, "pull")),
+				Config: testAccGroupResourceWithReviewer(baseName, baseName, testAccGroupResourceWithAccessLevel(knownGithubRepoResourceID, "pull")),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
 					resource.TestCheckResourceAttr(resourceName, "resource.#", "1"),
@@ -254,7 +261,7 @@ func TestAccGroup_Resource(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccGroupResource(baseName, baseName, ""),
+				Config: testAccGroupResourceWithReviewer(baseName, baseName, ""),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
 					resource.TestCheckResourceAttr(resourceName, "resource.#", "0"),
@@ -266,6 +273,7 @@ func TestAccGroup_Resource(t *testing.T) {
 
 // TestAccGroup_SetOnCreate tests that setting attributes on creation
 // works.
+
 func TestAccGroup_SetOnCreate(t *testing.T) {
 	baseName := "tf_acc_group_test_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
 	resourceName := "opal_group." + baseName
@@ -277,12 +285,13 @@ func TestAccGroup_SetOnCreate(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGroupResourceWithReviewer(baseName, baseName, fmt.Sprintf(`
+
 description = "test desc"
-require_manager_approval = true
 require_support_ticket = true
 max_duration = 30
 request_template_id = "%s"
 `, knownRequestTemplateID)),
+
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
 					resource.TestCheckResourceAttr(resourceName, "description", "test desc"),
@@ -294,6 +303,7 @@ request_template_id = "%s"
 }
 
 // TestAccGroup_SetOnCreate tests that setting auto approve on creation works.
+
 func TestAccGroup_SetOnCreate_AutoApproval(t *testing.T) {
 	baseName := "tf_acc_group_test_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
 	resourceName := "opal_group." + baseName
@@ -305,8 +315,10 @@ func TestAccGroup_SetOnCreate_AutoApproval(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGroupResource(baseName, baseName, `
+
 auto_approval = true
 `),
+
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "auto_approval", "true"),
 				),
@@ -318,6 +330,7 @@ auto_approval = true
 var knownGithubTeamName = os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_TEAM_SLUG")
 
 // TestAccGroup_Remote tests creating a resource with a remote system.
+
 func TestAccGroup_Remote(t *testing.T) {
 	baseName := "tf_acc_group_test_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
 	resourceName := "opal_group." + baseName
@@ -329,20 +342,24 @@ func TestAccGroup_Remote(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: fmt.Sprintf(`resource "opal_group" "%s" {
-	name = "%s"
-	app_id = "%s"
-	admin_owner_id = "%s"
-	reviewer {
-		id = "%s"
-	}
-	group_type = "GIT_HUB_TEAM"
-	remote_info {
-		github_team {
-			team_slug = "%s"
+		name = "%s"
+		app_id = "%s"
+		admin_owner_id = "%s"
+		reviewer_stage {
+			reviewer {
+				id = "%s"
+			}
+		}
+		group_type = "GIT_HUB_TEAM"
+		remote_info {
+			github_team {
+				team_slug = "%s"
+			}
 		}
 	}
-}
+
 `, baseName, baseName, knownGithubAppID, knownOpalAppAdminOwnerID, knownOpalAppAdminOwnerID, knownGithubTeamName),
+
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
 				),
@@ -395,8 +412,10 @@ resource "opal_group" "%s" {
 
 func testAccGroupResourceWithReviewer(tfName, name, additional string) string {
 	return testAccGroupResource(tfName, name, fmt.Sprintf(`
-	reviewer {
-		id = "%s"
+	reviewer_stage {
+		reviewer {
+			id = "%s"
+		}
 	}
 
 	%s

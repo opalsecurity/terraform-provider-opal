@@ -54,38 +54,35 @@ func TestAccResource_CRUD(t *testing.T) {
 			{
 				Config: testAccResourceResourceWithReviewer(baseName, baseName, ""),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "name", baseName),                             // Verify that the name was set.
-					resource.TestCheckResourceAttr(resourceName, "description", ""),                            // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "max_duration", "0"),                          // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "admin_owner_id", knownCustomAppAdminOwnerID), // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "require_manager_approval", "false"),          // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "require_support_ticket", "false"),            // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "require_mfa_to_approve", "false"),            // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "require_mfa_to_request", "false"),            // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "require_mfa_to_connect", "false"),            // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "is_requestable", "true"),                     // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "auto_approval", "false"),                     // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "visibility", "GLOBAL"),                       // Verify that optional works.
-					resource.TestCheckResourceAttr(resourceName, "reviewer.0.id", knownCustomAppAdminOwnerID),  // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),                                             // Verify that the name was set.
+					resource.TestCheckResourceAttr(resourceName, "description", ""),                                            // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "max_duration", "0"),                                          // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "admin_owner_id", knownCustomAppAdminOwnerID),                 // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "require_support_ticket", "false"),                            // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "require_mfa_to_approve", "false"),                            // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "require_mfa_to_request", "false"),                            // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "require_mfa_to_connect", "false"),                            // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "is_requestable", "true"),                                     // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "auto_approval", "false"),                                     // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "visibility", "GLOBAL"),                                       // Verify that optional works.
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.reviewer.0.id", knownCustomAppAdminOwnerID), // Verify that optional works.
 				),
 			},
 			{
 				Config: testAccResourceResourceWithReviewer(baseName, baseName+"_changed", `
 description = "test desc"
 max_duration = 60
-require_manager_approval = true
 require_support_ticket = true
 require_mfa_to_approve = true
 is_requestable = false
 `),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "name", baseName+"_changed"),        // Verify that updating the name works.
-					resource.TestCheckResourceAttr(resourceName, "description", "test desc"),         // Verify that updating the description works.
-					resource.TestCheckResourceAttr(resourceName, "max_duration", "60"),               // Verify that updating works.
-					resource.TestCheckResourceAttr(resourceName, "require_manager_approval", "true"), // Verify that updating works.
-					resource.TestCheckResourceAttr(resourceName, "require_support_ticket", "true"),   // Verify that updating works.
-					resource.TestCheckResourceAttr(resourceName, "require_mfa_to_approve", "true"),   // Verify that updating works.
-					resource.TestCheckResourceAttr(resourceName, "is_requestable", "false"),          // Verify that updating works.
+					resource.TestCheckResourceAttr(resourceName, "name", baseName+"_changed"),      // Verify that updating the name works.
+					resource.TestCheckResourceAttr(resourceName, "description", "test desc"),       // Verify that updating the description works.
+					resource.TestCheckResourceAttr(resourceName, "max_duration", "60"),             // Verify that updating works.
+					resource.TestCheckResourceAttr(resourceName, "require_support_ticket", "true"), // Verify that updating works.
+					resource.TestCheckResourceAttr(resourceName, "require_mfa_to_approve", "true"), // Verify that updating works.
+					resource.TestCheckResourceAttr(resourceName, "is_requestable", "false"),        // Verify that updating works.
 				),
 			},
 		},
@@ -138,9 +135,12 @@ resource "opal_resource" "%s" {
 	resource_type = "CUSTOM"
 	admin_owner_id = "%s"
 	
-	reviewer {
-		id  = "%s"
-	}
+	reviewer_stage {
+		reviewer {
+			id = "%s"
+		}
+	}		
+
 
 	%s
 }
@@ -151,9 +151,11 @@ resource "opal_group" "%s" {
 	group_type = "OPAL_GROUP"
 	admin_owner_id = "%s"
 	
-	reviewer {
-		id  = "%s"
-	}
+	reviewer_stage {
+		reviewer {
+			id = "%s"
+		}
+	}		
 }
 `, resourceName, resourceName, knownCustomAppID, knownCustomAppAdminOwnerID, knownCustomAppAdminOwnerID, additional, groupName, groupName, knownOpalAppID, knownOpalAppAdminOwnerID, knownOpalAppAdminOwnerID)
 }
@@ -168,62 +170,69 @@ func TestAccResource_Reviewer(t *testing.T) {
 		CheckDestroy: testAccCheckResourceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceResource(baseName, baseName, ""),
+				Config: testAccResourceResource(baseName, baseName, "auto_approval = true"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
-					// The reviewer isn't saved since it is not marked as Computed.
-					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "0"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.#", "0"),
 				),
 			},
 			{
-				Config: testAccResourceResource(baseName, baseName, fmt.Sprintf(`reviewer { id = "%s" }`, knownOpalAppAdminOwnerID)),
+				Config: testAccResourceResource(baseName, baseName, testReviewerStage("AND", false, knownOpalAppAdminOwnerID)),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
-					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "1"),
-					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer.*", map[string]string{"id": knownOpalAppAdminOwnerID}),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.reviewer.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.operator", "AND"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.require_manager_approval", "false"),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer_stage.0.reviewer.*", map[string]string{"id": knownOpalAppAdminOwnerID}),
 				),
 			},
 			{
-				Config: testAccResourceResource(baseName, baseName, fmt.Sprintf(`reviewer { id = "%s" }
-reviewer { id = "%s" }`, knownOpalAppAdminOwnerID, knownCustomAppAdminOwnerID)),
+				Config: testAccResourceResource(baseName, baseName, testReviewerStage("OR", true, knownOpalAppAdminOwnerID, knownCustomAppAdminOwnerID)),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
-					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "2"),
-					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer.*", map[string]string{"id": knownOpalAppAdminOwnerID}),
-					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer.*", map[string]string{"id": knownCustomAppAdminOwnerID}),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.reviewer.#", "2"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.operator", "OR"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.require_manager_approval", "true"),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer_stage.0.reviewer.*", map[string]string{"id": knownOpalAppAdminOwnerID}),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer_stage.0.reviewer.*", map[string]string{"id": knownCustomAppAdminOwnerID}),
 				),
 			},
 			{
-				Config: testAccResourceResource(baseName, baseName, fmt.Sprintf(`reviewer { id = "%s" }`, knownOpalAppAdminOwnerID)),
+				Config: testAccResourceResource(baseName, baseName, testReviewerStage("AND", false, knownCustomAppAdminOwnerID)),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
-					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "1"),
-					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer.*", map[string]string{"id": knownOpalAppAdminOwnerID}),
-				),
-			},
-			{
-				Config: testAccResourceResource(baseName, baseName, ""),
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "name", baseName),
-					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "0"),
-				),
-			},
-			{
-				Config: testAccResourceResource(baseName, baseName, fmt.Sprintf(`reviewer { id = "%s" }`, knownCustomAppAdminOwnerID)),
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "name", baseName),
-					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "1"),
-					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer.*", map[string]string{"id": knownCustomAppAdminOwnerID}),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.reviewer.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.operator", "AND"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.require_manager_approval", "false"),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer_stage.0.reviewer.*", map[string]string{"id": knownCustomAppAdminOwnerID}),
 				),
 			},
 			{
 				Config: testAccResourceResource(baseName, baseName, ""),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
-					resource.TestCheckResourceAttr(resourceName, "reviewer.#", "1"),
-					// This is a bit weird. If we delete the reviewer list and the only reviewer is the app owner, then
-					// we don't make the diff and the reviewer stays in the state. This is fine but a bit inconsistent.
-					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer.*", map[string]string{"id": knownCustomAppAdminOwnerID}),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.#", "0"),
+				),
+			},
+			{
+				Config: testAccResourceResource(baseName, baseName, testReviewerStage("AND", false, knownOpalAppAdminOwnerID)),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.reviewer.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.operator", "AND"),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.0.require_manager_approval", "false"),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "reviewer_stage.0.reviewer.*", map[string]string{"id": knownOpalAppAdminOwnerID}),
+				),
+			},
+			{
+				Config: testAccResourceResource(baseName, baseName, ""),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),
+					resource.TestCheckResourceAttr(resourceName, "reviewer_stage.#", "0"),
 				),
 			},
 		},
@@ -244,7 +253,6 @@ func TestAccResource_SetOnCreate(t *testing.T) {
 			{
 				Config: testAccResourceResourceWithReviewer(baseName, baseName, fmt.Sprintf(`
 description = "test desc"
-require_manager_approval = true
 require_support_ticket = true
 max_duration = 30
 request_template_id = "%s"
@@ -299,8 +307,10 @@ func TestAccResource_Remote(t *testing.T) {
 	name = "%s"
 	app_id = "%s"
 	admin_owner_id = "%s"
-	reviewer {
-		id = "%s"
+	reviewer_stage {
+		reviewer {
+			id = "%s"
+		}
 	}
 	resource_type = "GIT_HUB_REPO"
 	remote_info {
@@ -333,11 +343,13 @@ resource "opal_resource" "%s" {
 
 func testAccResourceResourceWithReviewer(tfName, name, additional string) string {
 	return testAccResourceResource(tfName, name, fmt.Sprintf(`
+reviewer_stage {
 	reviewer {
 		id = "%s"
 	}
+}
 
-	%s
+%s
 `, knownCustomAppAdminOwnerID, additional))
 }
 
@@ -379,7 +391,7 @@ func TestAccResource_SetOnCreate_WithOwner(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceResourceName, "name", resourceBaseName),
 					resource.TestCheckResourceAttrPair(resourceResourceName, "admin_owner_id", ownerResourceName, "id"),
-					resource.TestCheckResourceAttr(resourceResourceName, "reviewer.0.id", knownOpalAppAdminOwnerID),
+					resource.TestCheckResourceAttr(resourceResourceName, "reviewer_stage.0.reviewer.0.id", knownOpalAppAdminOwnerID),
 				),
 			},
 			{
@@ -388,20 +400,7 @@ func TestAccResource_SetOnCreate_WithOwner(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceResourceName, "name", resourceBaseName),
 					resource.TestCheckResourceAttr(resourceResourceName, "admin_owner_id", knownCustomAppAdminOwnerID),
-					resource.TestCheckResourceAttr(resourceResourceName, "reviewer.0.id", knownOpalAppAdminOwnerID),
-				),
-			},
-			{
-				// Change the reviewer as well and verify it's changed.
-				Config: testAccResourceResourceWithOwner(ownerBaseName, resourceBaseName, fmt.Sprintf(`admin_owner_id = "%s"
-reviewer {
-	id = "%s"
-}`, knownCustomAppAdminOwnerID, knownCustomAppAdminOwnerID)),
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceResourceName, "name", resourceBaseName),
-					resource.TestCheckResourceAttr(resourceResourceName, "admin_owner_id", knownCustomAppAdminOwnerID),
-					resource.TestCheckResourceAttr(resourceResourceName, "reviewer.0.id", knownOpalAppAdminOwnerID),
-					resource.TestCheckResourceAttr(resourceResourceName, "reviewer.1.id", knownCustomAppAdminOwnerID),
+					resource.TestCheckResourceAttr(resourceResourceName, "reviewer_stage.0.reviewer.0.id", knownOpalAppAdminOwnerID),
 				),
 			},
 		},
@@ -423,9 +422,11 @@ resource "opal_resource" "%s" {
 	resource_type = "CUSTOM"
 	app_id = "%s"
 
-	reviewer {
-		id = "%s"
-	}
+	reviewer_stage {
+		reviewer {
+			id = "%s"
+		}
+	}		
 
 	%s
 }

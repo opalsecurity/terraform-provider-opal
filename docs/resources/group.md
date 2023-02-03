@@ -20,10 +20,74 @@ resource "opal_group" "opal_group_example" {
   admin_owner_id = opal_owner.security.id
   require_mfa_to_approve = true
   auto_approval = false
-  require_manager_approval = true
 
-  reviewer {
-    id = opal_owner.security.id
+  reviewer_stage {
+    reviewer {
+      id = opal_owner.security.id
+    }
+  }
+}
+```
+
+## Reviewer Configuration
+Reviewer configuration can be managed via the `is_requestable`, `auto_approval`, and `reviewer_stage` attributes. See examples below:
+
+```terraform
+resource "opal_group" "not_requestable" {
+  // ...
+
+  // If you want a group to not be requestable, you can set `is_requestable` to false and omit the `reviewer_stage` attribute
+  is_requestable = false
+}
+
+resource "opal_group" "auto_approval" {
+  // ...
+
+  // If you want a group to be auto-approved, you can set `auto_approval` to true and omit the `reviewer_stage` attribute
+  auto_approval = false
+}
+
+resource "opal_group" "basic_reviewer_config" {
+  // ...
+
+  // NOTE: operator = "AND" and require_manager_approval = false are the default if not explicitly set
+  reviewer_stage {
+    reviewer {
+      id = opal_owner.security.id
+    }
+  }
+}
+
+resource "opal_group" "or_reviewer_config" {
+  // ...
+
+  // Here the manager of the requesting user or the security owner would need to approve
+  reviewer_stage {
+    operator = "OR"
+    require_manager_approval = true
+    reviewer {
+      id = opal_owner.security.id
+    }
+  }
+}
+
+resource "opal_group" "complex_reviewer_config" {
+  // ...
+
+  // Here first the manager has to approve. Once the manager has approved, both the security owner and the data owner need to approve
+  // NOTE: The ordering determines the ordering of the stages
+  reviewer_stage {
+    require_manager_approval = true
+  }
+
+  reviewer_stage {
+    reviewer {
+      id = opal_owner.security.id
+    }
+
+    reviewer {
+      id = opal_owner.data.id
+    }
   }
 }
 ```
@@ -38,10 +102,6 @@ resource "opal_group" "okta_group_example" {
   group_type = "OKTA_GROUP"
   app_id = data.opal_app.okta.id
   admin_owner_id = opal_owner.security.id
-
-  reviewer {
-    id = opal_owner.security.id
-  }
 
   remote_info {
     okta_group {
@@ -86,12 +146,11 @@ resource "opal_group" "google_group_example" {
 - `recommended_duration` (Number) The recommended duration for which the group should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.
 - `remote_info` (Block List, Max: 1) Remote info that is required for the creation of remote groups. (see [below for nested schema](#nestedblock--remote_info))
 - `request_template_id` (String) The ID of a request template for this group. You can get this ID from the URL in the Opal web app.
-- `require_manager_approval` (Boolean) Require the requester's manager's approval for requests to this group.
 - `require_mfa_to_approve` (Boolean) Require that reviewers MFA to approve requests for this group.
 - `require_mfa_to_request` (Boolean) Require that users MFA to request this group.
 - `require_support_ticket` (Boolean) Require that requesters attach a support ticket to requests for this group.
 - `resource` (Block Set) A resource that members of the group get access to. (see [below for nested schema](#nestedblock--resource))
-- `reviewer` (Block Set) A required reviewer for this group. If none are specified, then the admin owner will be used. (see [below for nested schema](#nestedblock--reviewer))
+- `reviewer_stage` (Block List) A reviewer stage for this group. You are allowed to provide up to 3. (see [below for nested schema](#nestedblock--reviewer_stage))
 - `visibility` (String) The visibility level of the group, i.e. LIMITED or GLOBAL.
 - `visibility_group` (Block List) The groups that can see this group when visibility is limited. If not specified, only users with direct access can see this resource when visibility is set to LIMITED. (see [below for nested schema](#nestedblock--visibility_group))
 
@@ -188,12 +247,22 @@ Optional:
 - `access_level_remote_id` (String) The access level remote id of the resource that this group gives access to.
 
 
-<a id="nestedblock--reviewer"></a>
-### Nested Schema for `reviewer`
+<a id="nestedblock--reviewer_stage"></a>
+### Nested Schema for `reviewer_stage`
+
+Optional:
+
+- `operator` (String) The operator of the stage. Operator is either "AND" or "OR".
+- `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval.
+- `reviewer` (Block Set) A reviewer for this stage. (see [below for nested schema](#nestedblock--reviewer_stage--reviewer))
+
+<a id="nestedblock--reviewer_stage--reviewer"></a>
+### Nested Schema for `reviewer_stage.reviewer`
 
 Required:
 
-- `id` (String) The ID of the owner that must review requests to this group.
+- `id` (String) The ID of the owner.
+
 
 
 <a id="nestedblock--visibility_group"></a>
