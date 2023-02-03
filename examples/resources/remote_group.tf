@@ -5,10 +5,6 @@ resource "opal_group" "okta_group_example" {
   app_id = data.opal_app.okta.id
   admin_owner_id = opal_owner.security.id
 
-  reviewer {
-    id = opal_owner.security.id
-  }
-
   remote_info {
     okta_group {
       # Note: This can reference your Okta terraform files

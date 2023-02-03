@@ -6,9 +6,10 @@ resource "opal_group" "opal_group_example" {
   admin_owner_id = opal_owner.security.id
   require_mfa_to_approve = true
   auto_approval = false
-  require_manager_approval = true
 
-  reviewer {
-    id = opal_owner.security.id
+  reviewer_stage {
+    reviewer {
+      id = opal_owner.security.id
+    }
   }
 }
