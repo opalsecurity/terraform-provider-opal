@@ -233,15 +233,15 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 	// Because group creation does not let us set some properties immediately,
 	// we may have to update them in a follow up request.
 	adminOwnerIDI, adminOwnerIDOk := d.GetOk("admin_owner_id")
-	requireManagerApprovalI, requireManagerApprovalOk := d.GetOk("require_manager_approval")
-	autoApprovalI, autoApprovalOk := d.GetOk("auto_approval")
-	requireMfaToApproveI, requireMfaToApproveOk := d.GetOk("require_mfa_to_approve")
-	requireMfaToRequestI, requireMfaToRequestOk := d.GetOk("require_mfa_to_request")
-	requireSupportTicketI, requireSupportTicketOk := d.GetOk("require_support_ticket")
+	requireManagerApprovalI, requireManagerApprovalOk := d.GetOkExists("require_manager_approval")
+	autoApprovalI, autoApprovalOk := d.GetOkExists("auto_approval")
+	requireMfaToApproveI, requireMfaToApproveOk := d.GetOkExists("require_mfa_to_approve")
+	requireMfaToRequestI, requireMfaToRequestOk := d.GetOkExists("require_mfa_to_request")
+	requireSupportTicketI, requireSupportTicketOk := d.GetOkExists("require_support_ticket")
 	maxDurationI, maxDurationOk := d.GetOk("max_duration")
 	recommendedDurationI, recommendedDurationOk := d.GetOk("recommended_duration")
 	requestTemplateIDI, requestTemplateIDOk := d.GetOk("request_template_id")
-	isRequestableI, isRequestableOk := d.GetOk("is_requestable")
+	isRequestableI, isRequestableOk := d.GetOkExists("is_requestable")
 	if adminOwnerIDOk || requireManagerApprovalOk || autoApprovalOk || requireMfaToApproveOk || requireMfaToRequestOk || requireSupportTicketOk || maxDurationOk || requestTemplateIDOk || isRequestableOk {
 		updateInfo := opal.NewUpdateGroupInfo(group.GroupId)
 		if adminOwnerIDOk {
