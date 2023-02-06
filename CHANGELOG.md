@@ -25,6 +25,9 @@ resource "opal_group" "security" {
   }
 ```
 
+BUG FIXES:
+- prevents resource / groups created without description to have an immediate diff from default description generation
+
 ## v0.0.4
 - Fixes a bug for owner user parsing
 
