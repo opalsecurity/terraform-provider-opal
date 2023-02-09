@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.1
+
+BUG FIXES:
+- prevents resource / groups created without description to have an immediate diff from default description generation
+
 ## v1.0.0
 
 BREAKING CHANGES:

@@ -42,6 +42,7 @@ func resourceGroup() *schema.Resource {
 				Description: "The description of the group.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 			},
 			"group_type": {
 				Description:  "The type of the group, i.e. GIT_HUB_TEAM.",

@@ -48,6 +48,7 @@ func resourceResource() *schema.Resource {
 				Description: "The description of the resource.",
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 			},
 			"resource_type": {
 				Description:  "The type of the resource, i.e. AWS_EC2_INSTANCE.",
