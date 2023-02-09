@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.1
+
+BUG FIXES:
+- prevents resource / groups created without description to have an immediate diff from default description generation
+
 ## v1.0.0
 
 BREAKING CHANGES:
@@ -24,9 +29,6 @@ resource "opal_group" "security" {
     id = opal_on_call_schedule.security_oncall_rotation.id
   }
 ```
-
-BUG FIXES:
-- prevents resource / groups created without description to have an immediate diff from default description generation
 
 ## v0.0.4
 - Fixes a bug for owner user parsing
