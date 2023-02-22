@@ -2,6 +2,7 @@ package opal
 
 import (
 	"context"
+	"errors"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -9,6 +10,59 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/opalsecurity/opal-go"
 )
+
+func dataSourceOwner() *schema.Resource {
+	return &schema.Resource{
+		Description: "An Opal owner data source.",
+		ReadContext: dataSourceOwnerRead,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
+		Schema: map[string]*schema.Schema{
+			"id": {
+				Description: "The ID of the owner.",
+				Type:        schema.TypeString,
+				Optional:    true,
+			},
+			"name": {
+				Description: "The name of the owner.",
+				Type:        schema.TypeString,
+				Optional:    true,
+			},
+		},
+	}
+}
+
+func dataSourceOwnerRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	client := m.(*opal.APIClient)
+
+	id, idOk := d.GetOk("id")
+	name, nameOk := d.GetOk("name")
+	var owner *opal.Owner
+	var err error
+	if idOk {
+		owner, _, err = client.OwnersApi.GetOwner(ctx, id.(string)).Execute()
+		if err != nil {
+			return diagFromErr(ctx, err)
+		}
+	} else if nameOk {
+		owner, _, err = client.OwnersApi.GetOwnerFromName(ctx, name.(string)).Execute()
+		if err != nil {
+			return diagFromErr(ctx, err)
+		}
+	} else {
+		return diagFromErr(ctx, errors.New("must provide id or name for owner data source"))
+	}
+
+	d.SetId(owner.OwnerId)
+	if err := multierror.Append(
+		d.Set("name", owner.Name),
+	); err.ErrorOrNil() != nil {
+		return diagFromErr(ctx, err)
+	}
+
+	return nil
+}
 
 func resourceOwner() *schema.Resource {
 	return &schema.Resource{
