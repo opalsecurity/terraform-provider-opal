@@ -35,9 +35,10 @@ func TestAccGroup_Import(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      resourceName,
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            resourceName,
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"manage_resources"},
 			},
 		},
 	})
@@ -262,7 +263,16 @@ func TestAccGroup_Resource(t *testing.T) {
 				),
 			},
 			{
+				// Here we validate that without the manage_resources attribute the group resource does not get removed
+				// even when no group resources are provided
 				Config: testAccGroupResourceWithReviewer(baseName, baseName, ""),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),
+					resource.TestCheckResourceAttr(resourceName, "resource.#", "1"),
+				),
+			},
+			{
+				Config: testAccGroupResourceWithReviewer(baseName, baseName, "manage_resources=true"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
 					resource.TestCheckResourceAttr(resourceName, "resource.#", "0"),
@@ -390,6 +400,7 @@ func TestAccGroup_OnCallSchedule(t *testing.T) {
 
 func testAccGroupResourceWithAccessLevel(resourceID, accessLevelRemoteID string) string {
 	return fmt.Sprintf(`
+manage_resources = true
 resource {
 	id = "%s"
 	access_level_remote_id = "%s"
