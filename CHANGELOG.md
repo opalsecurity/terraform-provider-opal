@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.0.2
+
+BUG FIXES:
+- adds a boolean flag to turn management of group <-> resource relationships off by default to avoid accidental access changes
+
+NEW FEATURES:
+- adds opal_owner data source
+
 ## v1.0.1
 
 BUG FIXES:
