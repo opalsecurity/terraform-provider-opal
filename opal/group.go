@@ -574,6 +574,21 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 	}
 	d.Set("reviewer_stage", reviewerStagesI)
 
+	groupResources, _, err := client.GroupsApi.GetGroupResources(ctx, group.GroupId).Execute()
+	if err != nil {
+		return diagFromErr(ctx, err)
+	}
+
+	groupResourcesI := make([]any, 0, len(reviewerStages))
+	for _, groupResource := range groupResources.GroupResources {
+		groupResourceI := map[string]any{
+			"id":                     groupResource.ResourceId,
+			"access_level_remote_id": groupResource.AccessLevel.AccessLevelRemoteId,
+		}
+		groupResourcesI = append(groupResourcesI, groupResourceI)
+	}
+	d.Set("resource", groupResourcesI)
+
 	return nil
 }
 
