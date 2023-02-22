@@ -176,10 +176,22 @@ func resourceGroup() *schema.Resource {
 					},
 				},
 			},
+			"manage_resources": {
+				Description: "Boolean flag to indicate if you intend to manage group <-> resource relationships via terraform.",
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+			},
 			"resource": {
 				Description: "A resource that members of the group get access to.",
 				Type:        schema.TypeSet,
 				Optional:    true,
+				DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
+					if manage, ok := d.GetOk("manage_resources"); ok {
+						return !manage.(bool)
+					}
+					return true
+				},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
