@@ -591,7 +591,7 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 		return diagFromErr(ctx, err)
 	}
 
-	groupResourcesI := make([]any, 0, len(reviewerStages))
+	groupResourcesI := make([]any, 0, len(groupResources.GroupResources))
 	for _, groupResource := range groupResources.GroupResources {
 		groupResourceI := map[string]any{
 			"id":                     groupResource.ResourceId,
