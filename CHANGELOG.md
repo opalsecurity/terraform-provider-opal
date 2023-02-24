@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.3
+
+NEW FEATURES:
+- adds creation support for Gitlab and Teleport
+
 ## v1.0.2
 
 BUG FIXES:

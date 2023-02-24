@@ -177,9 +177,11 @@ Optional:
 - `aws_iam_role` (Block List, Max: 1) The remote_info for an AWS IAM role. (see [below for nested schema](#nestedblock--remote_info--aws_iam_role))
 - `aws_rds_instance` (Block List, Max: 1) The remote_info for an AWS RDS instance. (see [below for nested schema](#nestedblock--remote_info--aws_rds_instance))
 - `github_repo` (Block List, Max: 1) The remote_info for a Github repo. (see [below for nested schema](#nestedblock--remote_info--github_repo))
+- `gitlab_project` (Block List, Max: 1) The remote_info for a Gitlab project. (see [below for nested schema](#nestedblock--remote_info--gitlab_project))
 - `okta_app` (Block List, Max: 1) The remote_info for an Okta app. (see [below for nested schema](#nestedblock--remote_info--okta_app))
 - `okta_custom_role` (Block List, Max: 1) The remote_info for an Okta custom role. (see [below for nested schema](#nestedblock--remote_info--okta_custom_role))
 - `okta_standard_role` (Block List, Max: 1) The remote_info for an Okta standard role. (see [below for nested schema](#nestedblock--remote_info--okta_standard_role))
+- `teleport_role` (Block List, Max: 1) The remote_info for a Teleport role. (see [below for nested schema](#nestedblock--remote_info--teleport_role))
 
 <a id="nestedblock--remote_info--aws_ec2_instance"></a>
 ### Nested Schema for `remote_info.aws_ec2_instance`
@@ -224,6 +226,14 @@ Required:
 - `repo_name` (String) The name of the repository.
 
 
+<a id="nestedblock--remote_info--gitlab_project"></a>
+### Nested Schema for `remote_info.gitlab_project`
+
+Required:
+
+- `project_id` (String) The id of the project.
+
+
 <a id="nestedblock--remote_info--okta_app"></a>
 ### Nested Schema for `remote_info.okta_app`
 
@@ -246,6 +256,14 @@ Required:
 Required:
 
 - `role_type` (String) The type of the role.
+
+
+<a id="nestedblock--remote_info--teleport_role"></a>
+### Nested Schema for `remote_info.teleport_role`
+
+Required:
+
+- `role_name` (String) The name of the role.
 
 
 
