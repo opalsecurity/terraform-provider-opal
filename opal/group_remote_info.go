@@ -62,6 +62,22 @@ func groupRemoteInfoElem() *schema.Resource {
 					},
 				},
 			},
+			"gitlab_group": {
+				Description: "The remote_info for a Gitlab group.",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"group_id": {
+							Description: "The id of the Gitlab group.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+					},
+				},
+			},
 			"google_group": {
 				Description: "The remote_info for a Google group.",
 				Type:        schema.TypeList,
@@ -154,6 +170,18 @@ func parseGroupRemoteInfo(remoteInfoI interface{}) (*opal.GroupRemoteInfo, error
 			return &opal.GroupRemoteInfo{
 				GithubTeam: &opal.GroupRemoteInfoGithubTeam{
 					TeamSlug: githubTeam["team_slug"].(string),
+				},
+			}, nil
+		}
+	}
+	if gitlabGroupI, ok := remoteInfoMap["gitlab_group"]; ok {
+		gitlabGroupIList := gitlabGroupI.([]interface{})
+
+		if len(gitlabGroupIList) == 1 {
+			gitlabGroup := gitlabGroupIList[0].(map[string]any)
+			return &opal.GroupRemoteInfo{
+				GitlabGroup: &opal.GroupRemoteInfoGitlabGroup{
+					GroupId: gitlabGroup["group_id"].(string),
 				},
 			}, nil
 		}

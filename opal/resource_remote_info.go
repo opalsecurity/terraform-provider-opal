@@ -112,6 +112,22 @@ func resourceRemoteInfoElem() *schema.Resource {
 					},
 				},
 			},
+			"gitlab_project": {
+				Description: "The remote_info for a Gitlab project.",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"project_id": {
+							Description: "The id of the project.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+					},
+				},
+			},
 			"okta_app": {
 				Description: "The remote_info for an Okta app.",
 				Type:        schema.TypeList,
@@ -153,6 +169,22 @@ func resourceRemoteInfoElem() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"role_id": {
 							Description: "The id of the role.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+					},
+				},
+			},
+			"teleport_role": {
+				Description: "The remote_info for a Teleport role.",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"role_name": {
+							Description: "The name of the role.",
 							Type:        schema.TypeString,
 							Required:    true,
 							ForceNew:    true,
@@ -235,6 +267,18 @@ func parseResourceRemoteInfo(remoteInfoI interface{}) (*opal.ResourceRemoteInfo,
 			}, nil
 		}
 	}
+	if gitlabProjectI, ok := remoteInfoMap["gitlab_project"]; ok {
+		gitlabProjectIList := gitlabProjectI.([]interface{})
+
+		if len(gitlabProjectIList) == 1 {
+			gitlabProject := gitlabProjectIList[0].(map[string]any)
+			return &opal.ResourceRemoteInfo{
+				GitlabProject: &opal.ResourceRemoteInfoGitlabProject{
+					ProjectId: gitlabProject["project_id"].(string),
+				},
+			}, nil
+		}
+	}
 	if oktaAppI, ok := remoteInfoMap["okta_app"]; ok {
 		oktaAppIList := oktaAppI.([]interface{})
 
@@ -267,6 +311,18 @@ func parseResourceRemoteInfo(remoteInfoI interface{}) (*opal.ResourceRemoteInfo,
 			return &opal.ResourceRemoteInfo{
 				OktaCustomRole: &opal.ResourceRemoteInfoOktaCustomRole{
 					RoleId: oktaCustomRole["role_id"].(string),
+				},
+			}, nil
+		}
+	}
+	if teleportRoleI, ok := remoteInfoMap["teleport_role"]; ok {
+		teleportRoleIList := teleportRoleI.([]interface{})
+
+		if len(teleportRoleIList) == 1 {
+			teleportRole := teleportRoleIList[0].(map[string]any)
+			return &opal.ResourceRemoteInfo{
+				TeleportRole: &opal.ResourceRemoteInfoTeleportRole{
+					RoleName: teleportRole["role_name"].(string),
 				},
 			}, nil
 		}
