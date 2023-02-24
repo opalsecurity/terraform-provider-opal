@@ -142,7 +142,7 @@ resource "opal_group" "google_group_example" {
 - `description` (String) The description of the group.
 - `is_requestable` (Boolean) Allow users to create an access request for this group. By default, any group is requestable.
 - `manage_resources` (Boolean) Boolean flag to indicate if you intend to manage group <-> resource relationships via terraform.
-- `max_duration` (Number) The maximum duration for which this group can be requested (in minutes). By default, the max duration is indefinite access.
+- `max_duration` (Number) The maximum duration for which this group can be requested (in minutes).
 - `on_call_schedule` (Block Set) An on call schedule for this group. (see [below for nested schema](#nestedblock--on_call_schedule))
 - `recommended_duration` (Number) The recommended duration for which the group should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.
 - `remote_info` (Block List, Max: 1) Remote info that is required for the creation of remote groups. (see [below for nested schema](#nestedblock--remote_info))

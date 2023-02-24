@@ -2,6 +2,7 @@ package opal
 
 import (
 	"context"
+
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -94,7 +95,7 @@ func resourceResource() *schema.Resource {
 				Optional:    true,
 			},
 			"max_duration": {
-				Description: "The maximum duration for which this resource can be requested (in minutes). By default, the max duration is indefinite access.",
+				Description: "The maximum duration for which this resource can be requested (in minutes).",
 				Type:        schema.TypeInt,
 				Optional:    true,
 			},
