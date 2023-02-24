@@ -183,6 +183,7 @@ Optional:
 - `active_directory_group` (Block List, Max: 1) The remote_info for an Active Directory group. (see [below for nested schema](#nestedblock--remote_info--active_directory_group))
 - `duo_group` (Block List, Max: 1) The remote_info for an Duo Security group. (see [below for nested schema](#nestedblock--remote_info--duo_group))
 - `github_team` (Block List, Max: 1) The remote_info for a GitHub team. (see [below for nested schema](#nestedblock--remote_info--github_team))
+- `gitlab_group` (Block List, Max: 1) The remote_info for a Gitlab group. (see [below for nested schema](#nestedblock--remote_info--gitlab_group))
 - `google_group` (Block List, Max: 1) The remote_info for a Google group. (see [below for nested schema](#nestedblock--remote_info--google_group))
 - `ldap_group` (Block List, Max: 1) The remote_info for a LDAP group. (see [below for nested schema](#nestedblock--remote_info--ldap_group))
 - `okta_group` (Block List, Max: 1) The remote_info for an Okta group. (see [below for nested schema](#nestedblock--remote_info--okta_group))
@@ -209,6 +210,14 @@ Required:
 Required:
 
 - `team_slug` (String) The slug of the GitHub team.
+
+
+<a id="nestedblock--remote_info--gitlab_group"></a>
+### Nested Schema for `remote_info.gitlab_group`
+
+Required:
+
+- `group_id` (String) The id of the Gitlab group.
 
 
 <a id="nestedblock--remote_info--google_group"></a>
