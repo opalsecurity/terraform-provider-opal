@@ -2,6 +2,7 @@ package opal
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -326,7 +327,7 @@ func resourceResourceUpdateReviewerStages(ctx context.Context, d *schema.Resourc
 		reviewerStage := rawReviewerStage.(map[string]any)
 		requireManagerApproval := reviewerStage["require_manager_approval"].(bool)
 		operator := reviewerStage["operator"].(string)
-		reviewersI := reviewerStage["reviewer"].(any)
+		reviewersI := reviewerStage["reviewer"]
 		reviewerIds, err := extractReviewerIDs(reviewersI)
 		if err != nil {
 			return diagFromErr(ctx, err)
@@ -380,14 +381,8 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 	if err != nil {
 		return diagFromErr(ctx, err)
 	}
-
-	visibilityGroups := make([]any, 0, len(visibility.VisibilityGroupIds))
-	for _, groupID := range visibility.VisibilityGroupIds {
-		visibilityGroups = append(visibilityGroups, map[string]any{
-			"id": groupID,
-		})
-	}
 	d.Set("visibility", visibility.Visibility)
+
 	flattenedGroups := make([]any, 0, len(visibility.VisibilityGroupIds))
 	for _, groupID := range visibility.VisibilityGroupIds {
 		flattenedGroups = append(flattenedGroups, map[string]any{"id": groupID})
@@ -416,14 +411,38 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 	}
 	d.Set("reviewer_stage", reviewerStagesI)
 
+	if resource.Metadata != nil {
+		remoteInfoIList := make([]any, 0, 1)
+		switch *resource.ResourceType {
+		case opal.RESOURCETYPEENUM_AWS_SSO_PERMISSION_SET:
+			// TODO: Handle other AWS Orgs resource types
+			var metadata opal.AwsPermissionSetMetadata
+			if err := json.Unmarshal([]byte(*resource.Metadata), &metadata); err != nil {
+				return diagFromErr(ctx, err)
+			}
+			permissionSetIList := make([]any, 0, 1)
+			permissionSetIList = append(permissionSetIList, map[string]any{
+				"arn":        metadata.AwsPermissionSet.Arn,
+				"account_id": metadata.AwsPermissionSet.AccountId,
+			})
+			remoteInfoIList = append(remoteInfoIList, map[string]any{
+				"aws_permission_set": permissionSetIList,
+			})
+		}
+
+		if len(remoteInfoIList) == 1 {
+			d.Set("remote_info", remoteInfoIList)
+		}
+	}
+
 	return nil
 }
 
 func resourceResourceUpdate(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*opal.APIClient)
 
-	// Note that metadata, app_id, and resource_type force a recreation, so we do not need to
-	// worry about those values here.
+	// Note that fields like metadata, app_id, resource_type, and remote_info
+	// force a recreation, so we do not need to worry about those values here.
 	hasBasicChange := false
 	updateInfo := opal.NewUpdateResourceInfo(d.Id())
 	if d.HasChange("name") {

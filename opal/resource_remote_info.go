@@ -2,6 +2,7 @@ package opal
 
 import (
 	"errors"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/opalsecurity/opal-go"
 )
@@ -89,6 +90,28 @@ func resourceRemoteInfoElem() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"arn": {
 							Description: "The ARN of the EKS cluster.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+					},
+				},
+			},
+			"aws_permission_set": {
+				Description: "The remote_info for an AWS permission set.",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"arn": {
+							Description: "The ARN of the permission set.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+						"account_id": {
+							Description: "The ID of the AWS account.",
 							Type:        schema.TypeString,
 							Required:    true,
 							ForceNew:    true,
@@ -251,6 +274,18 @@ func parseResourceRemoteInfo(remoteInfoI interface{}) (*opal.ResourceRemoteInfo,
 			return &opal.ResourceRemoteInfo{
 				AwsEksCluster: &opal.ResourceRemoteInfoAwsEksCluster{
 					Arn: awsEksCluster["arn"].(string),
+				},
+			}, nil
+		}
+	}
+	if awsPermissionSetI, ok := remoteInfoMap["aws_permission_set"]; ok {
+		awsPermissionSetIList := awsPermissionSetI.([]interface{})
+		if len(awsPermissionSetIList) == 1 {
+			awsPermissionSet := awsPermissionSetIList[0].(map[string]any)
+			return &opal.ResourceRemoteInfo{
+				AwsPermissionSet: &opal.ResourceRemoteInfoAwsPermissionSet{
+					Arn:       awsPermissionSet["arn"].(string),
+					AccountId: awsPermissionSet["account_id"].(string),
 				},
 			}, nil
 		}
