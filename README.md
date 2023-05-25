@@ -1,7 +1,6 @@
 # Terraform Opal Provider
-[![Terraform Provider Tests](https://github.com/opalsecurity/terraform-provider-opal/actions/workflows/test.yml/badge.svg)](https://github.com/opalsecurity/terraform-provider-opal/actions/workflows/test.yml)
 
-This project is under **active development** and is not yet ready for use.
+[![Terraform Provider Tests](https://github.com/opalsecurity/terraform-provider-opal/actions/workflows/test.yml/badge.svg)](https://github.com/opalsecurity/terraform-provider-opal/actions/workflows/test.yml)
 
 ## Installation
 
@@ -23,7 +22,8 @@ provider "opal" {
 
 ## Development
 
-Go `>= 1.18` and terraform `>= 0.14` is required for development. It's recommended that you use a [`dev_overrides` block](https://www.terraform.io/cli/config/config-file) while developing:
+Go `>= 1.20` and terraform `>= 0.14` is required for development. It's recommended that you use a [`dev_overrides` block](https://www.terraform.io/cli/config/config-file) while developing:
+
 ```hcl
 provider_installation {
   dev_overrides {
@@ -38,17 +38,20 @@ provider_installation {
 ```
 
 You can also source your local `OPAL_AUTH_TOKEN` while developing by using [direnv](https://direnv.net) (installable via homebrew) and creating a `.envrc.local` file:
+
 ```bash
 # Get an auth token from https://app.opal.dev/settings#api or your Opal installation.
 export OPAL_AUTH_TOKEN=YOUR_TOKEN_HERE
 ```
 
 You can build the plugin using:
+
 ```
 make build
 ```
 
 Your `dev_overrides` configured above should tell your local terraform installation how to resolve the plugin:
+
 ```
 $ cd examples/
 $ terraform apply

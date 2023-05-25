@@ -13,6 +13,19 @@ resource "opal_resource" "aws_iam_role_example" {
   }
 }
 
+resource "opal_resource" "aws_permission_set" {
+  name                 = "AWS permission set"
+  // ...
+
+  remote_info {
+    aws_permission_set {
+      # Note: This can reference your AWS terraform files
+      account_id = "234234234234"
+      arn        = "arn:aws:sso:::permissionSet/ssoins-123123123abcdefg/ps-abc123abc123abcd"
+    }
+  }
+}
+
 resource "opal_resource" "okta_app_example" {
   name = "Okta app"
   // ...
