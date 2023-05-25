@@ -174,8 +174,8 @@ github.com/mitchellh/reflectwalk v1.0.2/go.mod h1:mSTlrgnPZtwu0c4WaC2kGObEpuNDbx
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
 github.com/oklog/run v1.1.0 h1:GEenZ1cK0+q0+wsJew9qUg/DyD8k3JzYsZAi5gYi2mA=
 github.com/oklog/run v1.1.0/go.mod h1:sVPdnTZT1zYwAJeCMu2Th4T21pA3FPOQRfWjQlk7DVU=
-github.com/opalsecurity/opal-go v1.0.21 h1:tKOfn+QrzBZvZy7ZiOmnulil1sF73LWDbHiZ3fDWvQc=
-github.com/opalsecurity/opal-go v1.0.21/go.mod h1:cdQrqgbdjsZHjrKV8ibsle6r6c7jRBKryI1x3oSVm1I=
+github.com/opalsecurity/opal-go v1.0.23 h1:TUZ9XoHlVBTNfhgytPOA9QEWhHoYMrKZcRRnVE9rF3c=
+github.com/opalsecurity/opal-go v1.0.23/go.mod h1:cdQrqgbdjsZHjrKV8ibsle6r6c7jRBKryI1x3oSVm1I=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
