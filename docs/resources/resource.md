@@ -111,6 +111,19 @@ resource "opal_resource" "aws_iam_role_example" {
   }
 }
 
+resource "opal_resource" "aws_permission_set" {
+  name                 = "AWS permission set"
+  // ...
+
+  remote_info {
+    aws_permission_set {
+      # Note: This can reference your AWS terraform files
+      account_id = "234234234234"
+      arn        = "arn:aws:sso:::permissionSet/ssoins-123123123abcdefg/ps-abc123abc123abcd"
+    }
+  }
+}
+
 resource "opal_resource" "okta_app_example" {
   name = "Okta app"
   // ...
@@ -175,6 +188,7 @@ Optional:
 - `aws_ec2_instance` (Block List, Max: 1) The remote_info for an AWS EC2 instance. (see [below for nested schema](#nestedblock--remote_info--aws_ec2_instance))
 - `aws_eks_cluster` (Block List, Max: 1) The remote_info for an AWS EKS cluster. (see [below for nested schema](#nestedblock--remote_info--aws_eks_cluster))
 - `aws_iam_role` (Block List, Max: 1) The remote_info for an AWS IAM role. (see [below for nested schema](#nestedblock--remote_info--aws_iam_role))
+- `aws_permission_set` (Block List, Max: 1) The remote_info for an AWS permission set. (see [below for nested schema](#nestedblock--remote_info--aws_permission_set))
 - `aws_rds_instance` (Block List, Max: 1) The remote_info for an AWS RDS instance. (see [below for nested schema](#nestedblock--remote_info--aws_rds_instance))
 - `github_repo` (Block List, Max: 1) The remote_info for a Github repo. (see [below for nested schema](#nestedblock--remote_info--github_repo))
 - `gitlab_project` (Block List, Max: 1) The remote_info for a Gitlab project. (see [below for nested schema](#nestedblock--remote_info--gitlab_project))
@@ -206,6 +220,15 @@ Required:
 Required:
 
 - `arn` (String) The ARN of the IAM role.
+
+
+<a id="nestedblock--remote_info--aws_permission_set"></a>
+### Nested Schema for `remote_info.aws_permission_set`
+
+Required:
+
+- `account_id` (String) The ID of the AWS account.
+- `arn` (String) The ARN of the permission set.
 
 
 <a id="nestedblock--remote_info--aws_rds_instance"></a>
