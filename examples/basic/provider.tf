@@ -50,8 +50,10 @@ resource "opal_resource" "sensitive_resource" {
     id = opal_group.oncall.id
   }
 
-  reviewer {
-    id = opal_owner.security.id
+  reviewer_stage {
+    reviewer {
+      id = opal_owner.security.id
+    }
   }
 }
 
@@ -60,4 +62,11 @@ resource "opal_group" "oncall" {
   group_type = "OPAL_GROUP"
   app_id = data.opal_app.opal.id
   require_mfa_to_approve = true
+  admin_owner_id = opal_owner.security.id
+
+  reviewer_stage {
+    reviewer {
+      id = opal_owner.security.id
+    }
+  }
 }

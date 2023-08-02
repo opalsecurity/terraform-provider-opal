@@ -2,6 +2,7 @@ package opal
 
 import (
 	"errors"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/opalsecurity/opal-go"
 )
@@ -126,6 +127,38 @@ func groupRemoteInfoElem() *schema.Resource {
 					},
 				},
 			},
+			"azure_ad_microsoft_365_group": {
+				Description: "The remote_info for an Azure AD Microsoft 365 group.",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"group_id": {
+							Description: "The id of the Azure AD Microsoft 365 group.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+					},
+				},
+			},
+			"azure_ad_security_group": {
+				Description: "The remote_info for an Azure AD security group.",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"group_id": {
+							Description: "The id of the Azure AD security group.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -218,6 +251,31 @@ func parseGroupRemoteInfo(remoteInfoI interface{}) (*opal.GroupRemoteInfo, error
 			return &opal.GroupRemoteInfo{
 				OktaGroup: &opal.GroupRemoteInfoOktaGroup{
 					GroupId: oktaGroup["group_id"].(string),
+				},
+			}, nil
+		}
+	}
+	if azureAdMicrosoft365Group, ok := remoteInfoMap["azure_ad_microsoft_365_group"]; ok {
+		azureAdMicrosoft365GroupIList := azureAdMicrosoft365Group.([]interface{})
+
+		if len(azureAdMicrosoft365GroupIList) == 1 {
+			azureAdMicrosoft365 := azureAdMicrosoft365GroupIList[0].(map[string]any)
+			return &opal.GroupRemoteInfo{
+				AzureAdMicrosoft365Group: &opal.GroupRemoteInfoAzureAdMicrosoft365Group{
+					GroupId: azureAdMicrosoft365["group_id"].(string),
+				},
+			}, nil
+		}
+	}
+
+	if azureAdSecurityGroup, ok := remoteInfoMap["azure_ad_security_group"]; ok {
+		azureAdSecurityGroupIList := azureAdSecurityGroup.([]interface{})
+
+		if len(azureAdSecurityGroupIList) == 1 {
+			azureAdSecurityGroup := azureAdSecurityGroupIList[0].(map[string]any)
+			return &opal.GroupRemoteInfo{
+				AzureAdSecurityGroup: &opal.GroupRemoteInfoAzureAdSecurityGroup{
+					GroupId: azureAdSecurityGroup["group_id"].(string),
 				},
 			}, nil
 		}
