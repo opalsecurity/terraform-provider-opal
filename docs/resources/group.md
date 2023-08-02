@@ -122,6 +122,29 @@ resource "opal_group" "google_group_example" {
     }
   }
 }
+
+resource "opal_group" "azure_ad_365_example" {
+  name = "ms365group"
+  // ...
+
+  remote_info {
+    azure_ad_microsoft_365_group {
+      group_id = "70ef8380-1e43-47cb-80a3-2afd16fe1e96"
+    }
+  }
+}
+
+
+resource "opal_group" "azure_ad_security_group_example" {
+  name = "another group"
+  // ...
+
+  remote_info {
+    azure_ad_security_group {
+      group_id = "265a2b67-7bcd-4ef5-9325-4ebb21254efb"
+    }
+  }
+}
 ```
 
 
