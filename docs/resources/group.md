@@ -181,6 +181,8 @@ Required:
 Optional:
 
 - `active_directory_group` (Block List, Max: 1) The remote_info for an Active Directory group. (see [below for nested schema](#nestedblock--remote_info--active_directory_group))
+- `azure_ad_microsoft_365_group` (Block List, Max: 1) The remote_info for an Azure AD Microsoft 365 group. (see [below for nested schema](#nestedblock--remote_info--azure_ad_microsoft_365_group))
+- `azure_ad_security_group` (Block List, Max: 1) The remote_info for an Azure AD security group. (see [below for nested schema](#nestedblock--remote_info--azure_ad_security_group))
 - `duo_group` (Block List, Max: 1) The remote_info for an Duo Security group. (see [below for nested schema](#nestedblock--remote_info--duo_group))
 - `github_team` (Block List, Max: 1) The remote_info for a GitHub team. (see [below for nested schema](#nestedblock--remote_info--github_team))
 - `gitlab_group` (Block List, Max: 1) The remote_info for a Gitlab group. (see [below for nested schema](#nestedblock--remote_info--gitlab_group))
@@ -194,6 +196,22 @@ Optional:
 Required:
 
 - `group_id` (String) The id of the Active Directory group.
+
+
+<a id="nestedblock--remote_info--azure_ad_microsoft_365_group"></a>
+### Nested Schema for `remote_info.azure_ad_microsoft_365_group`
+
+Required:
+
+- `group_id` (String) The id of the Azure AD Microsoft 365 group.
+
+
+<a id="nestedblock--remote_info--azure_ad_security_group"></a>
+### Nested Schema for `remote_info.azure_ad_security_group`
+
+Required:
+
+- `group_id` (String) The id of the Azure AD security group.
 
 
 <a id="nestedblock--remote_info--duo_group"></a>
