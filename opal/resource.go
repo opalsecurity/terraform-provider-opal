@@ -226,7 +226,7 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 	// reviewer configuration.
 	// NOTE: This call should come before updating is_requestable and auto_approval as it otherwise
 	// overrides those values
-	var reviewerStages any = make([]any, 0)
+	var reviewerStages any = make([]any, 0, 1)
 	if reviewerStagesI, ok := d.GetOk("reviewer_stage"); ok {
 		reviewerStages = reviewerStagesI
 	}
@@ -414,8 +414,19 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 	if resource.Metadata != nil {
 		remoteInfoIList := make([]any, 0, 1)
 		switch *resource.ResourceType {
+		case opal.RESOURCETYPEENUM_AWS_ACCOUNT:
+			var metadata opal.ResourceRemoteInfo
+			if err := json.Unmarshal([]byte(*resource.Metadata), &metadata); err != nil {
+				return diagFromErr(ctx, err)
+			}
+			accountIList := make([]any, 0, 1)
+			accountIList = append(accountIList, map[string]any{
+				"account_id": metadata.AwsAccount.AccountId,
+			})
+			remoteInfoIList = append(remoteInfoIList, map[string]any{
+				"aws_account": accountIList,
+			})
 		case opal.RESOURCETYPEENUM_AWS_SSO_PERMISSION_SET:
-			// TODO: Handle other AWS Orgs resource types
 			var metadata opal.AwsPermissionSetMetadata
 			if err := json.Unmarshal([]byte(*resource.Metadata), &metadata); err != nil {
 				return diagFromErr(ctx, err)
@@ -427,6 +438,62 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 			})
 			remoteInfoIList = append(remoteInfoIList, map[string]any{
 				"aws_permission_set": permissionSetIList,
+			})
+		case opal.RESOURCETYPEENUM_AWS_IAM_ROLE:
+			var metadata map[string]opal.ResourceRemoteInfoAwsIamRole
+			if err := json.Unmarshal([]byte(*resource.Metadata), &metadata); err != nil {
+				return diagFromErr(ctx, err)
+			}
+			roleIList := make([]any, 0, 1)
+			roleIList = append(roleIList, map[string]any{
+				"arn":        metadata["aws_role"].Arn,
+				"account_id": metadata["aws_role"].AccountId,
+			})
+			remoteInfoIList = append(remoteInfoIList, map[string]any{
+				"aws_iam_role": roleIList,
+			})
+		case opal.RESOURCETYPEENUM_AWS_EC2_INSTANCE:
+			var metadata opal.ResourceRemoteInfo
+			if err := json.Unmarshal([]byte(*resource.Metadata), &metadata); err != nil {
+				return diagFromErr(ctx, err)
+			}
+			instanceIList := make([]any, 0, 1)
+			instanceIList = append(instanceIList, map[string]any{
+				"instance_id": metadata.AwsEc2Instance.InstanceId,
+				"region":      metadata.AwsEc2Instance.Region,
+				"account_id":  metadata.AwsEc2Instance.AccountId,
+			})
+			remoteInfoIList = append(remoteInfoIList, map[string]any{
+				"aws_ec2_instance": instanceIList,
+			})
+		case opal.RESOURCETYPEENUM_AWS_RDS_MYSQL_INSTANCE,
+			opal.RESOURCETYPEENUM_AWS_RDS_POSTGRES_INSTANCE:
+			var metadata opal.ResourceRemoteInfo
+			if err := json.Unmarshal([]byte(*resource.Metadata), &metadata); err != nil {
+				return diagFromErr(ctx, err)
+			}
+			databaseIList := make([]any, 0, 1)
+			databaseIList = append(databaseIList, map[string]any{
+				"instance_id": metadata.AwsRdsInstance.InstanceId,
+				"region":      metadata.AwsRdsInstance.Region,
+				"account_id":  metadata.AwsRdsInstance.AccountId,
+				"resource_id": metadata.AwsRdsInstance.ResourceId,
+			})
+			remoteInfoIList = append(remoteInfoIList, map[string]any{
+				"aws_rds_instance": databaseIList,
+			})
+		case opal.RESOURCETYPEENUM_AWS_EKS_CLUSTER:
+			var metadata map[string]opal.ResourceRemoteInfoAwsEksCluster
+			if err := json.Unmarshal([]byte(*resource.Metadata), &metadata); err != nil {
+				return diagFromErr(ctx, err)
+			}
+			clusterIList := make([]any, 0, 1)
+			clusterIList = append(clusterIList, map[string]any{
+				"arn":        metadata["aws_eks_role"].Arn,
+				"account_id": metadata["aws_eks_role"].AccountId,
+			})
+			remoteInfoIList = append(remoteInfoIList, map[string]any{
+				"aws_eks_cluster": clusterIList,
 			})
 		}
 
