@@ -444,6 +444,7 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 				"aws_permission_set": permissionSetIList,
 			})
 		case opal.RESOURCETYPEENUM_AWS_IAM_ROLE:
+			// TODO: Either make metadata and remote_info match or create a new object for this
 			var metadata map[string]opal.ResourceRemoteInfoAwsIamRole
 			if err := json.Unmarshal([]byte(*resource.Metadata), &metadata); err != nil {
 				return diagFromErr(ctx, err)
@@ -498,6 +499,7 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 				"aws_rds_instance": databaseIList,
 			})
 		case opal.RESOURCETYPEENUM_AWS_EKS_CLUSTER:
+			// TODO: Either make metadata and remote_info match or create a new object for this
 			var metadata map[string]opal.ResourceRemoteInfoAwsEksCluster
 			if err := json.Unmarshal([]byte(*resource.Metadata), &metadata); err != nil {
 				return diagFromErr(ctx, err)
