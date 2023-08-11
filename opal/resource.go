@@ -3,6 +3,7 @@ package opal
 import (
 	"context"
 	"encoding/json"
+	"errors"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -419,6 +420,9 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 			if err := json.Unmarshal([]byte(*resource.Metadata), &metadata); err != nil {
 				return diagFromErr(ctx, err)
 			}
+			if metadata.AwsAccount == nil {
+				return diagFromErr(ctx, errors.New("resource metadata is missing aws_account"))
+			}
 			accountIList := make([]any, 0, 1)
 			accountIList = append(accountIList, map[string]any{
 				"account_id": metadata.AwsAccount.AccountId,
@@ -444,18 +448,26 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 			if err := json.Unmarshal([]byte(*resource.Metadata), &metadata); err != nil {
 				return diagFromErr(ctx, err)
 			}
-			roleIList := make([]any, 0, 1)
-			roleIList = append(roleIList, map[string]any{
-				"arn":        metadata["aws_role"].Arn,
-				"account_id": metadata["aws_role"].AccountId,
-			})
-			remoteInfoIList = append(remoteInfoIList, map[string]any{
-				"aws_iam_role": roleIList,
-			})
+			if awsRole, ok := metadata["aws_role"]; ok {
+				roleIList := make([]any, 0, 1)
+				roleIList = append(roleIList, map[string]any{
+					"arn":        awsRole.Arn,
+					"account_id": awsRole.AccountId,
+				})
+				remoteInfoIList = append(remoteInfoIList, map[string]any{
+					"aws_iam_role": roleIList,
+				})
+			} else if !ok {
+				return diagFromErr(ctx, errors.New("resource metadata is missing aws_role"))
+			}
+
 		case opal.RESOURCETYPEENUM_AWS_EC2_INSTANCE:
 			var metadata opal.ResourceRemoteInfo
 			if err := json.Unmarshal([]byte(*resource.Metadata), &metadata); err != nil {
 				return diagFromErr(ctx, err)
+			}
+			if metadata.AwsEc2Instance == nil {
+				return diagFromErr(ctx, errors.New("resource metadata is missing aws_ec2_instance"))
 			}
 			instanceIList := make([]any, 0, 1)
 			instanceIList = append(instanceIList, map[string]any{
@@ -472,6 +484,9 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 			if err := json.Unmarshal([]byte(*resource.Metadata), &metadata); err != nil {
 				return diagFromErr(ctx, err)
 			}
+			if metadata.AwsRdsInstance == nil {
+				return diagFromErr(ctx, errors.New("resource metadata is missing aws_rds_instance"))
+			}
 			databaseIList := make([]any, 0, 1)
 			databaseIList = append(databaseIList, map[string]any{
 				"instance_id": metadata.AwsRdsInstance.InstanceId,
@@ -487,14 +502,18 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 			if err := json.Unmarshal([]byte(*resource.Metadata), &metadata); err != nil {
 				return diagFromErr(ctx, err)
 			}
-			clusterIList := make([]any, 0, 1)
-			clusterIList = append(clusterIList, map[string]any{
-				"arn":        metadata["aws_eks_role"].Arn,
-				"account_id": metadata["aws_eks_role"].AccountId,
-			})
-			remoteInfoIList = append(remoteInfoIList, map[string]any{
-				"aws_eks_cluster": clusterIList,
-			})
+			if awsEksCluster, ok := metadata["aws_eks_role"]; ok {
+				clusterIList := make([]any, 0, 1)
+				clusterIList = append(clusterIList, map[string]any{
+					"arn":        awsEksCluster.Arn,
+					"account_id": awsEksCluster.AccountId,
+				})
+				remoteInfoIList = append(remoteInfoIList, map[string]any{
+					"aws_eks_cluster": clusterIList,
+				})
+			} else if !ok {
+				return diagFromErr(ctx, errors.New("resource metadata is missing aws_eks_cluster"))
+			}
 		}
 
 		if len(remoteInfoIList) == 1 {
