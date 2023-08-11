@@ -15,6 +15,22 @@ import (
 func resourceRemoteInfoElem() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
+			"aws_account": {
+				Description: "The remote_info for an AWS account.",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"account_id": {
+							Description: "The ID of the AWS account.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+					},
+				},
+			},
 			"aws_iam_role": {
 				Description: "The remote_info for an AWS IAM role.",
 				Type:        schema.TypeList,
@@ -27,6 +43,12 @@ func resourceRemoteInfoElem() *schema.Resource {
 							Type:        schema.TypeString,
 							Required:    true,
 							ForceNew:    true,
+						},
+						"account_id": {
+							Description: "The ID of the AWS account.",
+							Type:        schema.TypeString,
+							ForceNew:    true,
+							Optional:    true,
 						},
 					},
 				},
@@ -49,6 +71,12 @@ func resourceRemoteInfoElem() *schema.Resource {
 							Type:        schema.TypeString,
 							Required:    true,
 							ForceNew:    true,
+						},
+						"account_id": {
+							Description: "The ID of the AWS account.",
+							Type:        schema.TypeString,
+							ForceNew:    true,
+							Optional:    true,
 						},
 					},
 				},
@@ -78,6 +106,12 @@ func resourceRemoteInfoElem() *schema.Resource {
 							Required:    true,
 							ForceNew:    true,
 						},
+						"account_id": {
+							Description: "The ID of the AWS account.",
+							Type:        schema.TypeString,
+							ForceNew:    true,
+							Optional:    true,
+						},
 					},
 				},
 			},
@@ -93,6 +127,12 @@ func resourceRemoteInfoElem() *schema.Resource {
 							Type:        schema.TypeString,
 							Required:    true,
 							ForceNew:    true,
+						},
+						"account_id": {
+							Description: "The ID of the AWS account.",
+							Type:        schema.TypeString,
+							ForceNew:    true,
+							Optional:    true,
 						},
 					},
 				},
@@ -227,16 +267,32 @@ func parseResourceRemoteInfo(remoteInfoI interface{}) (*opal.ResourceRemoteInfo,
 	}
 
 	remoteInfoMap := remoteInfoIList[0].(map[string]interface{})
+	if awsAccountI, ok := remoteInfoMap["aws_account"]; ok {
+		awsAccountIList := awsAccountI.([]interface{})
+		if len(awsAccountIList) == 1 {
+			awsAccount := awsAccountIList[0].(map[string]any)
+			return &opal.ResourceRemoteInfo{
+				AwsAccount: &opal.ResourceRemoteInfoAwsAccount{
+					AccountId: awsAccount["account_id"].(string),
+				},
+			}, nil
+		}
+	}
 	if awsIamRoleI, ok := remoteInfoMap["aws_iam_role"]; ok {
 		awsIamRoleIList := awsIamRoleI.([]interface{})
 
 		if len(awsIamRoleIList) == 1 {
 			awsIamRole := awsIamRoleIList[0].(map[string]any)
-			return &opal.ResourceRemoteInfo{
+			remoteInfo := &opal.ResourceRemoteInfo{
 				AwsIamRole: &opal.ResourceRemoteInfoAwsIamRole{
 					Arn: awsIamRole["arn"].(string),
 				},
-			}, nil
+			}
+			if awsIamRoleAccountIdI, ok := awsIamRole["account_id"]; ok {
+				awsIamRoleAccountId := awsIamRoleAccountIdI.(string)
+				remoteInfo.AwsIamRole.AccountId = &awsIamRoleAccountId
+			}
+			return remoteInfo, nil
 		}
 	}
 	if awsEc2InstanceI, ok := remoteInfoMap["aws_ec2_instance"]; ok {
@@ -244,12 +300,17 @@ func parseResourceRemoteInfo(remoteInfoI interface{}) (*opal.ResourceRemoteInfo,
 
 		if len(awsEc2InstanceIList) == 1 {
 			awsEc2Instance := awsEc2InstanceIList[0].(map[string]any)
-			return &opal.ResourceRemoteInfo{
+			remoteInfo := &opal.ResourceRemoteInfo{
 				AwsEc2Instance: &opal.ResourceRemoteInfoAwsEc2Instance{
 					InstanceId: awsEc2Instance["instance_id"].(string),
 					Region:     awsEc2Instance["region"].(string),
 				},
-			}, nil
+			}
+			if awsEc2InstanceAccountIdI, ok := awsEc2Instance["account_id"]; ok {
+				awsEc2InstanceAccountId := awsEc2InstanceAccountIdI.(string)
+				remoteInfo.AwsEc2Instance.AccountId = &awsEc2InstanceAccountId
+			}
+			return remoteInfo, nil
 		}
 	}
 	if awsRdsInstanceI, ok := remoteInfoMap["aws_rds_instance"]; ok {
@@ -257,13 +318,18 @@ func parseResourceRemoteInfo(remoteInfoI interface{}) (*opal.ResourceRemoteInfo,
 
 		if len(awsRdsInstanceIList) == 1 {
 			awsRdsInstance := awsRdsInstanceIList[0].(map[string]any)
-			return &opal.ResourceRemoteInfo{
+			remoteInfo := &opal.ResourceRemoteInfo{
 				AwsRdsInstance: &opal.ResourceRemoteInfoAwsRdsInstance{
 					InstanceId: awsRdsInstance["instance_id"].(string),
 					ResourceId: awsRdsInstance["resource_id"].(string),
 					Region:     awsRdsInstance["region"].(string),
 				},
-			}, nil
+			}
+			if awsRdsInstanceAccountIdI, ok := awsRdsInstance["account_id"]; ok {
+				awsRdsInstanceAccountId := awsRdsInstanceAccountIdI.(string)
+				remoteInfo.AwsRdsInstance.AccountId = &awsRdsInstanceAccountId
+			}
+			return remoteInfo, nil
 		}
 	}
 	if awsEksClusterI, ok := remoteInfoMap["aws_eks_cluster"]; ok {
@@ -271,11 +337,16 @@ func parseResourceRemoteInfo(remoteInfoI interface{}) (*opal.ResourceRemoteInfo,
 
 		if len(awsEksClusterIList) == 1 {
 			awsEksCluster := awsEksClusterIList[0].(map[string]any)
-			return &opal.ResourceRemoteInfo{
+			remoteInfo := &opal.ResourceRemoteInfo{
 				AwsEksCluster: &opal.ResourceRemoteInfoAwsEksCluster{
 					Arn: awsEksCluster["arn"].(string),
 				},
-			}, nil
+			}
+			if awsEksClusterAccountIdI, ok := awsEksCluster["account_id"]; ok {
+				awsEksClusterAccountId := awsEksClusterAccountIdI.(string)
+				remoteInfo.AwsEksCluster.AccountId = &awsEksClusterAccountId
+			}
+			return remoteInfo, nil
 		}
 	}
 	if awsPermissionSetI, ok := remoteInfoMap["aws_permission_set"]; ok {

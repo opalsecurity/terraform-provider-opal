@@ -185,6 +185,7 @@ resource "opal_resource" "github_repo_example" {
 
 Optional:
 
+- `aws_account` (Block List, Max: 1) The remote_info for an AWS account. (see [below for nested schema](#nestedblock--remote_info--aws_account))
 - `aws_ec2_instance` (Block List, Max: 1) The remote_info for an AWS EC2 instance. (see [below for nested schema](#nestedblock--remote_info--aws_ec2_instance))
 - `aws_eks_cluster` (Block List, Max: 1) The remote_info for an AWS EKS cluster. (see [below for nested schema](#nestedblock--remote_info--aws_eks_cluster))
 - `aws_iam_role` (Block List, Max: 1) The remote_info for an AWS IAM role. (see [below for nested schema](#nestedblock--remote_info--aws_iam_role))
@@ -197,6 +198,14 @@ Optional:
 - `okta_standard_role` (Block List, Max: 1) The remote_info for an Okta standard role. (see [below for nested schema](#nestedblock--remote_info--okta_standard_role))
 - `teleport_role` (Block List, Max: 1) The remote_info for a Teleport role. (see [below for nested schema](#nestedblock--remote_info--teleport_role))
 
+<a id="nestedblock--remote_info--aws_account"></a>
+### Nested Schema for `remote_info.aws_account`
+
+Required:
+
+- `account_id` (String) The ID of the AWS account.
+
+
 <a id="nestedblock--remote_info--aws_ec2_instance"></a>
 ### Nested Schema for `remote_info.aws_ec2_instance`
 
@@ -204,6 +213,10 @@ Required:
 
 - `instance_id` (String) The instanceId of the EC2 instance.
 - `region` (String) The region of the EC2 instance.
+
+Optional:
+
+- `account_id` (String) The ID of the AWS account.
 
 
 <a id="nestedblock--remote_info--aws_eks_cluster"></a>
@@ -213,6 +226,10 @@ Required:
 
 - `arn` (String) The ARN of the EKS cluster.
 
+Optional:
+
+- `account_id` (String) The ID of the AWS account.
+
 
 <a id="nestedblock--remote_info--aws_iam_role"></a>
 ### Nested Schema for `remote_info.aws_iam_role`
@@ -220,6 +237,10 @@ Required:
 Required:
 
 - `arn` (String) The ARN of the IAM role.
+
+Optional:
+
+- `account_id` (String) The ID of the AWS account.
 
 
 <a id="nestedblock--remote_info--aws_permission_set"></a>
@@ -239,6 +260,10 @@ Required:
 - `instance_id` (String) The instanceId of the RDS instance.
 - `region` (String) The region of the RDS instance.
 - `resource_id` (String) The resourceId of the RDS instance.
+
+Optional:
+
+- `account_id` (String) The ID of the AWS account.
 
 
 <a id="nestedblock--remote_info--github_repo"></a>

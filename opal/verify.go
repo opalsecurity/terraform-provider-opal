@@ -2,6 +2,7 @@ package opal
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/opalsecurity/opal-go"
 	"github.com/pkg/errors"
 )
 
@@ -9,7 +10,8 @@ import (
 // - a reviewer_stage is defined
 // - auto_approve is set to true
 // - is_requestable is set to false
-// NOTE: We only care that one of these 3 is correct in order for the item to have a valid reviewer config
+// - resource_type is set to a parent resource type (e.g. AWS_ACCOUNT)
+// NOTE: We only care that one of these 4 is correct in order for the item to have a valid reviewer config
 // without needing to fall back on the default creation behavior which would cause an immediate diff after
 // creation
 func validateReviewerConfigDuringCreate(d *schema.ResourceData) error {
@@ -25,6 +27,11 @@ func validateReviewerConfigDuringCreate(d *schema.ResourceData) error {
 	}
 	if isRequestableI, ok := d.GetOkExists("is_requestable"); ok {
 		if !isRequestableI.(bool) {
+			return nil
+		}
+	}
+	if resourceTypeI, ok := d.GetOkExists("resource_type"); ok {
+		if opal.ResourceTypeEnum(resourceTypeI.(string)) == opal.RESOURCETYPEENUM_AWS_ACCOUNT {
 			return nil
 		}
 	}
