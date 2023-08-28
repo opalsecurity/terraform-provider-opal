@@ -46,9 +46,11 @@ func NewProvider() *schema.Provider {
 			"opal_on_call_schedule": resourceOnCallSchedule(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"opal_owner": dataSourceOwner(),
-			"opal_app":   dataSourceApp(),
-			"opal_user":  dataSourceUser(),
+			"opal_owner":    dataSourceOwner(),
+			"opal_app":      dataSourceApp(),
+			"opal_user":     dataSourceUser(),
+			"opal_resource": dataSourceResource(),
+			"opal_group":    dataSourceGroup(),
 		},
 		ConfigureContextFunc: configure,
 	}

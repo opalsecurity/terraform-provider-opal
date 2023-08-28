@@ -18,6 +18,58 @@ import (
 var allowedGroupTypes = enumSliceToStringSlice(opal.AllowedGroupTypeEnumEnumValues)
 var allowedReviewerStageOperators = []string{"AND", "OR"}
 
+func dataSourceGroup() *schema.Resource {
+	return &schema.Resource{
+		Description: "An Opal group data source.",
+		ReadContext: dataSourceGroupRead,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
+		Schema: map[string]*schema.Schema{
+			"id": {
+				Description: "The ID of the resource.",
+				Type:        schema.TypeString,
+				Required:    true,
+			},
+			"name": {
+				Description: "The name of the group.",
+				Type:        schema.TypeString,
+				Computed:    true,
+			},
+		},
+	}
+}
+
+func dataSourceGroupRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	client := m.(*opal.APIClient)
+
+	id, idOk := d.GetOk("id")
+	var group opal.Group
+	if idOk {
+		groups, _, err := client.GroupsApi.GetGroups(ctx).GroupIds([]string{id.(string)}).Execute()
+		if err != nil {
+			return diagFromErr(ctx, err)
+		}
+		if len(groups.Results) != 1 {
+			return diagFromErr(ctx, fmt.Errorf("expected 1 group returned but got %d", len(groups.Results)))
+		}
+		group = groups.Results[0]
+		if err != nil {
+			return diagFromErr(ctx, err)
+		}
+	} else {
+		return diagFromErr(ctx, errors.New("must provide id for resource data source"))
+	}
+
+	d.SetId(group.GroupId)
+	if err := multierror.Append(
+		d.Set("name", group.Name),
+	); err.ErrorOrNil() != nil {
+		return diagFromErr(ctx, err)
+	}
+	return nil
+}
+
 func resourceGroup() *schema.Resource {
 	return &schema.Resource{
 		Description:   "An Opal Group resource.",
