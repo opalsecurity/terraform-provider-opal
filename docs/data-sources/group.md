@@ -22,7 +22,7 @@ data "opal_group" "engineering_admins" {
 
 ### Required
 
-- `id` (String) The ID of the resource.
+- `id` (String) The ID of the group.
 
 ### Read-Only
 

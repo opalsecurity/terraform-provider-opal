@@ -27,7 +27,7 @@ func dataSourceGroup() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"id": {
-				Description: "The ID of the resource.",
+				Description: "The ID of the group.",
 				Type:        schema.TypeString,
 				Required:    true,
 			},
