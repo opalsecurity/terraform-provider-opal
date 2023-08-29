@@ -161,20 +161,21 @@ resource "opal_group" "azure_ad_security_group_example" {
 ### Optional
 
 - `audit_message_channel` (Block Set) An audit message channel for this group. (see [below for nested schema](#nestedblock--audit_message_channel))
-- `auto_approval` (Boolean) Automatically approve all requests for this group without review.
+- `auto_approval` (Boolean, Deprecated) Automatically approve all requests for this group without review.
 - `description` (String) The description of the group.
-- `is_requestable` (Boolean) Allow users to create an access request for this group. By default, any group is requestable.
+- `is_requestable` (Boolean, Deprecated) Allow users to create an access request for this group. By default, any group is requestable.
 - `manage_resources` (Boolean) Boolean flag to indicate if you intend to manage group <-> resource relationships via terraform.
-- `max_duration` (Number) The maximum duration for which this group can be requested (in minutes).
+- `max_duration` (Number, Deprecated) The maximum duration for which this group can be requested (in minutes).
 - `on_call_schedule` (Block Set) An on call schedule for this group. (see [below for nested schema](#nestedblock--on_call_schedule))
-- `recommended_duration` (Number) The recommended duration for which the group should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.
+- `recommended_duration` (Number, Deprecated) The recommended duration for which the group should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.
 - `remote_info` (Block List, Max: 1) Remote info that is required for the creation of remote groups. (see [below for nested schema](#nestedblock--remote_info))
-- `request_template_id` (String) The ID of a request template for this group. You can get this ID from the URL in the Opal web app.
-- `require_mfa_to_approve` (Boolean) Require that reviewers MFA to approve requests for this group.
-- `require_mfa_to_request` (Boolean) Require that users MFA to request this group.
-- `require_support_ticket` (Boolean) Require that requesters attach a support ticket to requests for this group.
+- `request_configuration` (Block List) A request configuration for this group. (see [below for nested schema](#nestedblock--request_configuration))
+- `request_template_id` (String, Deprecated) The ID of a request template for this group. You can get this ID from the URL in the Opal web app.
+- `require_mfa_to_approve` (Boolean, Deprecated) Require that reviewers MFA to approve requests for this group.
+- `require_mfa_to_request` (Boolean, Deprecated) Require that users MFA to request this group.
+- `require_support_ticket` (Boolean, Deprecated) Require that requesters attach a support ticket to requests for this group.
 - `resource` (Block Set) A resource that members of the group get access to. (see [below for nested schema](#nestedblock--resource))
-- `reviewer_stage` (Block List) A reviewer stage for this group. You are allowed to provide up to 3. (see [below for nested schema](#nestedblock--reviewer_stage))
+- `reviewer_stage` (Block List, Deprecated) A reviewer stage for this group. You are allowed to provide up to 3. (see [below for nested schema](#nestedblock--reviewer_stage))
 - `visibility` (String) The visibility level of the group, i.e. LIMITED or GLOBAL.
 - `visibility_group` (Block List) The groups that can see this group when visibility is limited. If not specified, only users with direct access can see this resource when visibility is set to LIMITED. (see [below for nested schema](#nestedblock--visibility_group))
 
@@ -283,6 +284,41 @@ Required:
 Required:
 
 - `group_id` (String) The id of the Okta group.
+
+
+
+<a id="nestedblock--request_configuration"></a>
+### Nested Schema for `request_configuration`
+
+Optional:
+
+- `auto_approval` (Boolean) Automatically approve all requests for this resource without review.
+- `group_ids` (List of String) The group IDs that can request this resource. For the default request configuration, this should be empty and priority should be 0, otherwise, this should contain one group ID.
+- `is_requestable` (Boolean) Allow users to create an access request for this resource. By default, any resource is requestable.
+- `max_duration` (Number) The maximum duration for which this resource can be requested (in minutes).
+- `priority` (Number) The priority of this request configuration. The higher the number, the higher the priority. Defaults to 0.
+- `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.
+- `request_template_id` (String) The ID of a request template for this resource. You can get this ID from the URL in the Opal web app.
+- `require_mfa_to_request` (Boolean) Require that users MFA to request this resource.
+- `require_support_ticket` (Boolean) Require that requesters attach a support ticket to requests for this resource.
+- `reviewer_stage` (Block List) A reviewer stage for this resource. You are allowed to provide up to 3. (see [below for nested schema](#nestedblock--request_configuration--reviewer_stage))
+
+<a id="nestedblock--request_configuration--reviewer_stage"></a>
+### Nested Schema for `request_configuration.reviewer_stage`
+
+Optional:
+
+- `operator` (String) The operator of the stage. Operator is either "AND" or "OR".
+- `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval.
+- `reviewer` (Block Set) A reviewer for this stage. (see [below for nested schema](#nestedblock--request_configuration--reviewer_stage--reviewer))
+
+<a id="nestedblock--request_configuration--reviewer_stage--reviewer"></a>
+### Nested Schema for `request_configuration.reviewer_stage.reviewer`
+
+Required:
+
+- `id` (String) The ID of the owner.
+
 
 
 
