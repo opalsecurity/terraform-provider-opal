@@ -159,6 +159,120 @@ func resourceRemoteInfoElem() *schema.Resource {
 					},
 				},
 			},
+			"gcp_bucket": {
+				Description: "The remote_info for a GCP bucket.",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"bucket_id": {
+							Description: "The id of the bucket.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+					},
+				},
+			},
+			"gcp_compute_instance": {
+				Description: "The remote_info for a GCP compute instance.",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"instance_id": {
+							Description: "The id of the compute instance.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+						"project_id": {
+							Description: "The id of the project the instance is in.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+						"zone": {
+							Description: "The zone of the compute instance.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+					},
+				},
+			},
+			"gcp_folder": {
+				Description: "The remote_info for a GCP folder.",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"folder_id": {
+							Description: "The id of the folder.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+					},
+				},
+			},
+			"gcp_gke_cluster": {
+				Description: "The remote_info for a GCP GKE cluster.",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"cluster_name": {
+							Description: "The name of the cluster.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+					},
+				},
+			},
+			"gcp_project": {
+				Description: "The remote_info for a GCP project.",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"project_id": {
+							Description: "The id of the project.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+					},
+				},
+			},
+			"gcp_sql_instance": {
+				Description: "The remote_info for a GCP SQL instance.",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"instance_id": {
+							Description: "The id of the sql instance.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+						"project_id": {
+							Description: "The id of the project the instance is in.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+					},
+				},
+			},
 			"github_repo": {
 				Description: "The remote_info for a Github repo.",
 				Type:        schema.TypeList,
@@ -225,6 +339,76 @@ func resourceRemoteInfoElem() *schema.Resource {
 			},
 			"okta_custom_role": {
 				Description: "The remote_info for an Okta custom role.",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"role_id": {
+							Description: "The id of the role.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+					},
+				},
+			},
+			"pagerduty_role": {
+				Description: "The remote_info for a Pagerduty role.",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"role_name": {
+							Description: "The name of the role.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+					},
+				},
+			},
+			"salesforce_permission_set": {
+				Description: "The remote_info for a Salesforce permission set.",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"permission_set_id": {
+							Description: "The id of the permission set.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+					},
+				},
+			},
+			"salesforce_profile": {
+				Description: "The remote_info for a Salesforce profile.",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"profile_id": {
+							Description: "The id of the profile.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+						"user_license_id": {
+							Description: "The id of the user license.",
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+						},
+					},
+				},
+			},
+			"salesforce_role": {
+				Description: "The remote_info for a Salesforce role.",
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
@@ -361,6 +545,81 @@ func parseResourceRemoteInfo(remoteInfoI interface{}) (*opal.ResourceRemoteInfo,
 			}, nil
 		}
 	}
+	if gcpBucketI, ok := remoteInfoMap["gcp_bucket"]; ok {
+		gcpBucketIList := gcpBucketI.([]interface{})
+
+		if len(gcpBucketIList) == 1 {
+			gcpBucket := gcpBucketIList[0].(map[string]any)
+			return &opal.ResourceRemoteInfo{
+				GcpBucket: &opal.ResourceRemoteInfoGcpBucket{
+					BucketId: gcpBucket["bucket_id"].(string),
+				},
+			}, nil
+		}
+	}
+	if gcpComputeInstanceI, ok := remoteInfoMap["gcp_compute_instance"]; ok {
+		gcpComputeInstanceIList := gcpComputeInstanceI.([]interface{})
+
+		if len(gcpComputeInstanceIList) == 1 {
+			gcpComputeInstance := gcpComputeInstanceIList[0].(map[string]any)
+			return &opal.ResourceRemoteInfo{
+				GcpComputeInstance: &opal.ResourceRemoteInfoGcpComputeInstance{
+					InstanceId: gcpComputeInstance["instance_id"].(string),
+					ProjectId:  gcpComputeInstance["project_id"].(string),
+					Zone:       gcpComputeInstance["zone"].(string),
+				},
+			}, nil
+		}
+	}
+	if gcpFolderI, ok := remoteInfoMap["gcp_folder"]; ok {
+		gcpFolderIList := gcpFolderI.([]interface{})
+
+		if len(gcpFolderIList) == 1 {
+			gcpFolder := gcpFolderIList[0].(map[string]any)
+			return &opal.ResourceRemoteInfo{
+				GcpFolder: &opal.ResourceRemoteInfoGcpFolder{
+					FolderId: gcpFolder["folder_id"].(string),
+				},
+			}, nil
+		}
+	}
+	if gcpGkeClusterI, ok := remoteInfoMap["gcp_gke_cluster"]; ok {
+		gcpGkeClusterIList := gcpGkeClusterI.([]interface{})
+
+		if len(gcpGkeClusterIList) == 1 {
+			gcpGkeCluster := gcpGkeClusterIList[0].(map[string]any)
+			return &opal.ResourceRemoteInfo{
+				GcpGkeCluster: &opal.ResourceRemoteInfoGcpGkeCluster{
+					ClusterName: gcpGkeCluster["cluster_name"].(string),
+				},
+			}, nil
+		}
+	}
+	if gcpProjectI, ok := remoteInfoMap["gcp_project"]; ok {
+		gcpProjectIList := gcpProjectI.([]interface{})
+
+		if len(gcpProjectIList) == 1 {
+			gcpProject := gcpProjectIList[0].(map[string]any)
+			return &opal.ResourceRemoteInfo{
+				GcpProject: &opal.ResourceRemoteInfoGcpProject{
+					ProjectId: gcpProject["project_id"].(string),
+				},
+			}, nil
+		}
+	}
+	if gcpSqlInstanceI, ok := remoteInfoMap["gcp_sql_instance"]; ok {
+		gcpSqlInstanceIList := gcpSqlInstanceI.([]interface{})
+
+		if len(gcpSqlInstanceIList) == 1 {
+			gcpSqlInstance := gcpSqlInstanceIList[0].(map[string]any)
+			return &opal.ResourceRemoteInfo{
+				GcpSqlInstance: &opal.ResourceRemoteInfoGcpSqlInstance{
+					InstanceId: gcpSqlInstance["instance_id"].(string),
+					ProjectId:  gcpSqlInstance["project_id"].(string),
+				},
+			}, nil
+		}
+	}
 	if githubRepoI, ok := remoteInfoMap["github_repo"]; ok {
 		githubRepoIList := githubRepoI.([]interface{})
 
@@ -417,6 +676,55 @@ func parseResourceRemoteInfo(remoteInfoI interface{}) (*opal.ResourceRemoteInfo,
 			return &opal.ResourceRemoteInfo{
 				OktaCustomRole: &opal.ResourceRemoteInfoOktaCustomRole{
 					RoleId: oktaCustomRole["role_id"].(string),
+				},
+			}, nil
+		}
+	}
+	if pagerdutyRoleI, ok := remoteInfoMap["pagerduty_role"]; ok {
+		pagerdutyRoleIList := pagerdutyRoleI.([]interface{})
+
+		if len(pagerdutyRoleIList) == 1 {
+			pagerdutyRole := pagerdutyRoleIList[0].(map[string]any)
+			return &opal.ResourceRemoteInfo{
+				PagerdutyRole: &opal.ResourceRemoteInfoPagerdutyRole{
+					RoleName: pagerdutyRole["role_name"].(string),
+				},
+			}, nil
+		}
+	}
+	if salesforcePermissionSetI, ok := remoteInfoMap["salesforce_permission_set"]; ok {
+		salesforcePermissionSetIList := salesforcePermissionSetI.([]interface{})
+
+		if len(salesforcePermissionSetIList) == 1 {
+			salesforcePermissionSet := salesforcePermissionSetIList[0].(map[string]any)
+			return &opal.ResourceRemoteInfo{
+				SalesforcePermissionSet: &opal.ResourceRemoteInfoSalesforcePermissionSet{
+					PermissionSetId: salesforcePermissionSet["permission_set_id"].(string),
+				},
+			}, nil
+		}
+	}
+	if salesforceProfileI, ok := remoteInfoMap["salesforce_profile"]; ok {
+		salesforceProfileIList := salesforceProfileI.([]interface{})
+
+		if len(salesforceProfileIList) == 1 {
+			salesforceProfile := salesforceProfileIList[0].(map[string]any)
+			return &opal.ResourceRemoteInfo{
+				SalesforceProfile: &opal.ResourceRemoteInfoSalesforceProfile{
+					ProfileId:     salesforceProfile["profile_id"].(string),
+					UserLicenseId: salesforceProfile["user_license_id"].(string),
+				},
+			}, nil
+		}
+	}
+	if salesforceRoleI, ok := remoteInfoMap["salesforce_role"]; ok {
+		salesforceRoleIList := salesforceRoleI.([]interface{})
+
+		if len(salesforceRoleIList) == 1 {
+			salesforceRole := salesforceRoleIList[0].(map[string]any)
+			return &opal.ResourceRemoteInfo{
+				SalesforceRole: &opal.ResourceRemoteInfoSalesforceRole{
+					RoleId: salesforceRole["role_id"].(string),
 				},
 			}, nil
 		}
