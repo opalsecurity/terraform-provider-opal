@@ -505,7 +505,7 @@ func resourceGroupUpdateResources(ctx context.Context, d *schema.ResourceData, c
 func resourceGroupUpdateReviewerStages(ctx context.Context, d *schema.ResourceData, client *opal.APIClient, reviewerStagesI any) diag.Diagnostics {
 	rawReviewerStages := reviewerStagesI.([]any)
 	reviewerStages := make([]opal.ReviewerStage, 0, len(rawReviewerStages))
-	for _, rawReviewerStage := range rawReviewerStages {
+	for i, rawReviewerStage := range rawReviewerStages {
 		reviewerStage := rawReviewerStage.(map[string]any)
 		requireManagerApproval := reviewerStage["require_manager_approval"].(bool)
 		operator := reviewerStage["operator"].(string)
@@ -515,7 +515,7 @@ func resourceGroupUpdateReviewerStages(ctx context.Context, d *schema.ResourceDa
 			return diagFromErr(ctx, err)
 		}
 
-		reviewerStages = append(reviewerStages, *opal.NewReviewerStage(requireManagerApproval, operator, reviewerIds))
+		reviewerStages = append(reviewerStages, *opal.NewReviewerStage(requireManagerApproval, operator, reviewerIds, int32(i+1)))
 		tflog.Debug(ctx, "Setting group reviewer stage", map[string]any{
 			"id":                     d.Id(),
 			"requireManagerApproval": requireManagerApproval,

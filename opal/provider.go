@@ -27,7 +27,7 @@ func NewProvider() *schema.Provider {
 			"token": {
 				Description: "The authentication token used to connect to Opal. The value can be sourced OPAL_AUTH_TOKEN.",
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"OPAL_AUTH_TOKEN"}, nil),
 				Sensitive:   true,
 			},
