@@ -11,23 +11,23 @@ provider "opal" {
 
 data "opal_app" "opal" {
   # App ids can be retrieved via the Opal web app or via the API (https://docs.opal.dev/reference/getapps)
-  id = "ba0ec360-af48-4b98-be34-bceb58760626"
+  id = "dbe38d2d-9ce4-4d13-95a4-945716a257b4"
 }
 
 data "opal_app" "my_custom_app" {
-  id = "077f6beb-956e-42be-815c-e0b17ef9077e"
+  id = "03c06479-6ffa-45e1-9f65-cd470ff128b3"
 }
 
 data "opal_user" "alice" {
-  email = "aashish@opal.dev"
+  email = "alice@mycompany.com"
 }
 
 data "opal_user" "bob" {
-  id = "5c0a330c-dd4c-403b-aca5-888dd847fca4"
+  id = "e5e5ba2b-e126-4699-a8bc-dc186d490b6e"
 }
 
 resource "opal_owner" "security" {
-  name = "Andrew's TF owner 4"
+  name = "Security Team"
 
   user {
     id = data.opal_user.alice.id
@@ -78,16 +78,16 @@ resource "opal_resource" "sensitive_resource" {
   }
 }
 
-# resource "opal_group" "oncall" {
-#   name = "On-Call Rotation"
-#   group_type = "OPAL_GROUP"
-#   app_id = data.opal_app.opal.id
-#   require_mfa_to_approve = true
-#   admin_owner_id = opal_owner.security.id
+resource "opal_group" "oncall" {
+  name = "On-Call Rotation"
+  group_type = "OPAL_GROUP"
+  app_id = data.opal_app.opal.id
+  require_mfa_to_approve = true
+  admin_owner_id = opal_owner.security.id
 
-#   reviewer_stage {
-#     reviewer {
-#       id = opal_owner.security.id
-#     }
-#   }
-# }
+  reviewer_stage {
+    reviewer {
+      id = opal_owner.security.id
+    }
+  }
+}

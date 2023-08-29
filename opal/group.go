@@ -138,7 +138,7 @@ func resourceGroup() *schema.Resource {
 				Description: "A reviewer stage for this group. You are allowed to provide up to 3.",
 				Type:        schema.TypeList,
 				Optional:    true,
-				Deprecated:  "Use request_configuration instead.",
+				Deprecated:  "Use request_configuration instead. When terraform planning, this will show as a diff even if the reviewer stages are the same, since they are parsed into request_configurations now.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"operator": {
@@ -244,7 +244,7 @@ func resourceGroup() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"group_ids": {
-							Description: "The group IDs that can request this resource. For the default request configuration, this should be empty and priority should be 0, otherwise, this should contain one group ID.",
+							Description: "The group IDs satisfying this request configuration. For the default request configuration, this should be empty and priority should be 0, otherwise, this should contain one group ID.",
 							Type:        schema.TypeList,
 							Optional:    true,
 							Elem: &schema.Schema{
@@ -253,38 +253,38 @@ func resourceGroup() *schema.Resource {
 							MaxItems: 1,
 						},
 						"is_requestable": {
-							Description: "Allow users to create an access request for this resource. By default, any resource is requestable.",
+							Description: "For users satisfying the condition, allow them to create an access request for this group. By default, any group is requestable.",
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     true,
 						},
 						"auto_approval": {
-							Description: "Automatically approve all requests for this resource without review.",
+							Description: "For users satisfying the condition, automatically approve all requests for this group without review.",
 							Type:        schema.TypeBool,
 							Optional:    true,
 						},
 						"require_mfa_to_request": {
-							Description: "Require that users MFA to request this resource.",
+							Description: "For users satisfying the condition, require that users MFA to request this group.",
 							Type:        schema.TypeBool,
 							Optional:    true,
 						},
 						"require_support_ticket": {
-							Description: "Require that requesters attach a support ticket to requests for this resource.",
+							Description: "For users satisfying the condition, require that requesters attach a support ticket to request for this group.",
 							Type:        schema.TypeBool,
 							Optional:    true,
 						},
 						"max_duration": {
-							Description: "The maximum duration for which this resource can be requested (in minutes).",
+							Description: "For users satisfying the condition, the maximum duration for which this group can be requested (in minutes).",
 							Type:        schema.TypeInt,
 							Optional:    true,
 						},
 						"recommended_duration": {
-							Description: "The recommended duration for which the resource should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.",
+							Description: "For users satisfying the condition, the recommended duration for which the group should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.",
 							Type:        schema.TypeInt,
 							Optional:    true,
 						},
 						"request_template_id": {
-							Description: "The ID of a request template for this resource. You can get this ID from the URL in the Opal web app.",
+							Description: "For users satisfying the condition, the ID of a request template for this group. You can get this ID from the URL in the Opal web app.",
 							Type:        schema.TypeString,
 							Optional:    true,
 						},
@@ -295,7 +295,7 @@ func resourceGroup() *schema.Resource {
 							Default:     0,
 						},
 						"reviewer_stage": {
-							Description: "A reviewer stage for this resource. You are allowed to provide up to 3.",
+							Description: "A reviewer stage for this request configuration. You are allowed to provide up to 3.",
 							Type:        schema.TypeList,
 							Optional:    true,
 							Elem: &schema.Resource{
@@ -384,8 +384,12 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 	if reviewerStagesI, ok := d.GetOk("reviewer_stage"); ok {
 		reviewerStages = reviewerStagesI
 	}
-	if diag := resourceGroupUpdateReviewerStages(ctx, d, client, reviewerStages); diag != nil {
-		return diag
+	requestConfigurationsListI, requestConfigurationsListOk := d.GetOk("request_configuration")
+	// We only want this run if we don't have a request configuration list
+	if !requestConfigurationsListOk {
+		if diag := resourceGroupUpdateReviewerStages(ctx, d, client, reviewerStages); diag != nil {
+			return diag
+		}
 	}
 
 	// Because group creation does not let us set some properties immediately,
@@ -399,7 +403,6 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 	recommendedDurationI, recommendedDurationOk := d.GetOk("recommended_duration")
 	requestTemplateIDI, requestTemplateIDOk := d.GetOk("request_template_id")
 	isRequestableI, isRequestableOk := d.GetOkExists("is_requestable")
-	requestConfigurationsListI, requestConfigurationsListOk := d.GetOk("request_configuration")
 
 	if adminOwnerIDOk || autoApprovalOk || requireMfaToApproveOk || requireMfaToRequestOk || requireSupportTicketOk || maxDurationOk || requestTemplateIDOk || isRequestableOk {
 		updateInfo := opal.NewUpdateGroupInfo(group.GroupId)
@@ -427,12 +430,20 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 		if requestTemplateIDOk {
 			updateInfo.SetRequestTemplateId(requestTemplateIDI.(string))
 		}
+
 		if isRequestableOk {
-			updateInfo.SetIsRequestable(isRequestableI.(bool))
+			// isRequestable is a special case because it has a default value of true,
+			// but we only need it if we don't have a request configuration list
+			if !requestConfigurationsListOk {
+				updateInfo.SetIsRequestable(isRequestableI.(bool))
+			}
 		}
 		if requestConfigurationsListOk {
 			requestConfigurationsList, err := parseRequestConfigurationList(ctx, requestConfigurationsListI)
 			if err != nil {
+				return diagFromErr(ctx, err)
+			}
+			if err := validateRequestConfigurationListDuringCreate(ctx, d); err != nil {
 				return diagFromErr(ctx, err)
 			}
 			updateInfo.SetRequestConfigurationList(*requestConfigurationsList)
@@ -620,7 +631,7 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 	}
 	group := groups.Results[0]
 
-	requestConfigurations := make([]any, 0, len(group.RequestConfigurationList))
+	requestConfigurations := make([]map[string]interface{}, 0, len(group.RequestConfigurationList))
 	for _, requestConfiguration := range group.RequestConfigurationList {
 		requestConfigurationI, err := parseSDKRequestConfiguration(ctx, &requestConfiguration)
 		if err != nil {
@@ -637,9 +648,29 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 		d.Set("app_id", group.AppId),
 		d.Set("admin_owner_id", group.AdminOwnerId),
 		d.Set("require_mfa_to_approve", group.RequireMfaToApprove),
-		d.Set("request_configuration", requestConfigurations),
 	); err.ErrorOrNil() != nil {
 		return diagFromErr(ctx, err)
+	}
+
+	reviewerStages, _, err := client.GroupsApi.GetGroupReviewerStages(ctx, group.GroupId).Execute()
+	if err != nil {
+		return diagFromErr(ctx, err)
+	}
+
+	reviewerStagesI := make([]any, 0, len(reviewerStages))
+	for _, reviewerStage := range reviewerStages {
+		reviewersI := make([]any, 0, len(reviewerStage.OwnerIds))
+		for _, reviewerID := range reviewerStage.OwnerIds {
+			reviewersI = append(reviewersI, map[string]any{
+				"id": reviewerID,
+			})
+		}
+
+		reviewerStagesI = append(reviewerStagesI, map[string]any{
+			"reviewer":                 reviewersI,
+			"operator":                 reviewerStage.Operator,
+			"require_manager_approval": reviewerStage.RequireManagerApproval,
+		})
 	}
 
 	if len(requestConfigurations) == 0 {
@@ -650,6 +681,12 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 		d.Set("recommended_duration", group.RecommendedDuration)
 		d.Set("request_template_id", group.RequestTemplateId)
 		d.Set("is_requestable", group.IsRequestable)
+		d.Set("reviewer_stage", reviewerStagesI)
+	} else {
+		d.Set("request_configuration", requestConfigurations)
+		// if we set request_configuration, we want to unset reviewer_stage since
+		// it's populated separately
+		d.Set("reviewer_stage", nil)
 	}
 
 	visibility, _, err := client.GroupsApi.GetGroupVisibility(ctx, group.GroupId).Execute()
@@ -688,28 +725,6 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 		})
 	}
 	d.Set("on_call_schedule", onCallSchedules)
-
-	reviewerStages, _, err := client.GroupsApi.GetGroupReviewerStages(ctx, group.GroupId).Execute()
-	if err != nil {
-		return diagFromErr(ctx, err)
-	}
-
-	reviewerStagesI := make([]any, 0, len(reviewerStages))
-	for _, reviewerStage := range reviewerStages {
-		reviewersI := make([]any, 0, len(reviewerStage.OwnerIds))
-		for _, reviewerID := range reviewerStage.OwnerIds {
-			reviewersI = append(reviewersI, map[string]any{
-				"id": reviewerID,
-			})
-		}
-
-		reviewerStagesI = append(reviewerStagesI, map[string]any{
-			"reviewer":                 reviewersI,
-			"operator":                 reviewerStage.Operator,
-			"require_manager_approval": reviewerStage.RequireManagerApproval,
-		})
-	}
-	d.Set("reviewer_stage", reviewerStagesI)
 
 	groupResources, _, err := client.GroupsApi.GetGroupResources(ctx, group.GroupId).Execute()
 	if err != nil {
@@ -777,8 +792,24 @@ func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, m any) dia
 		updateInfo.SetRequestTemplateId(d.Get("request_template_id").(string))
 	}
 	if d.HasChange("is_requestable") {
+		if updateInfo.RequestConfigurationList == nil {
+			hasBasicUpdate = true
+			updateInfo.SetIsRequestable(d.Get("is_requestable").(bool))
+		}
+	}
+	if d.HasChange("request_configuration") {
 		hasBasicUpdate = true
-		updateInfo.SetIsRequestable(d.Get("is_requestable").(bool))
+		requestConfigurationsListI, ok := d.GetOk("request_configuration")
+		if err := validateRequestConfigurationListDuringCreate(ctx, d); err != nil {
+			return diagFromErr(ctx, err)
+		}
+		if ok {
+			requestConfigurationsList, err := parseRequestConfigurationList(ctx, requestConfigurationsListI)
+			if err != nil {
+				return diagFromErr(ctx, err)
+			}
+			updateInfo.SetRequestConfigurationList(*requestConfigurationsList)
+		}
 	}
 
 	if hasBasicUpdate {

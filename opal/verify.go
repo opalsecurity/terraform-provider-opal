@@ -54,9 +54,8 @@ func validateRequestConfigurationListDuringCreate(ctx context.Context, d *schema
 	_, maxDurationOk := d.GetOk("max_duration")
 	_, recommendedDurationOk := d.GetOk("recommended_duration")
 	_, requestTemplateIDOk := d.GetOk("request_template_id")
-	_, isRequestableOk := d.GetOk("is_requestable")
 	requestConfigurationListI, requestConfigurationListOk := d.GetOk("request_configuration")
-	oldRequestConfigurationFieldsChanged := autoApprovalOk || requireMfaToRequestOk || requireSupportTicketOk || maxDurationOk || recommendedDurationOk || requestTemplateIDOk || isRequestableOk
+	oldRequestConfigurationFieldsChanged := autoApprovalOk || requireMfaToRequestOk || requireSupportTicketOk || maxDurationOk || recommendedDurationOk || requestTemplateIDOk
 
 	if requestConfigurationListOk {
 		if oldRequestConfigurationFieldsChanged {

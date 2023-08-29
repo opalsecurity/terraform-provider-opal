@@ -15,6 +15,8 @@ type Condition struct {
 	GroupIds []string `json:"group_ids"`
 }
 
+const NIL_MINUTES = -1
+
 // parseRequestConfigurationList parses a request_configuration_list from a terraform resource data object
 func parseRequestConfigurationList(
 	ctx context.Context,
@@ -61,7 +63,7 @@ func parseRequestConfiguration(
 		requestConfiguration.RequireMfaToRequest = requireMfaToRequestI.(bool)
 	}
 
-	requestConfiguration.MaxDurationMinutes = Ptr(int32(-1))
+	requestConfiguration.MaxDurationMinutes = Ptr(int32(NIL_MINUTES))
 	if maxDurationI, ok := requestConfigurationMap["max_duration"]; ok {
 		maxDurationVal := int32(maxDurationI.(int))
 		if maxDurationVal > 0 {
@@ -69,7 +71,7 @@ func parseRequestConfiguration(
 		}
 	}
 
-	requestConfiguration.RecommendedDurationMinutes = Ptr(int32(-1))
+	requestConfiguration.RecommendedDurationMinutes = Ptr(int32(NIL_MINUTES))
 	if recommendedDurationI, ok := requestConfigurationMap["recommended_duration"]; ok {
 		recommendedDurationVal := int32(recommendedDurationI.(int))
 		if recommendedDurationVal > 0 {
@@ -119,14 +121,20 @@ func parseReviewerStages(reviewerStagesI any) ([]opal.ReviewerStage, error) {
 	for _, rawReviewerStage := range rawReviewerStages {
 		reviewerStage := rawReviewerStage.(map[string]any)
 		requireManagerApproval := reviewerStage["require_manager_approval"].(bool)
+		// if reviewerStage["require_manager_approval"] == nil {
+		// 	requireManagerApproval = false
+		// }
 		operator := reviewerStage["operator"].(string)
+		// if reviewerStage["operator"] == nil {
+		// 	operator = "AND"
+		// }
 		reviewersI := reviewerStage["reviewer"]
 		reviewerIds, err := extractReviewerIDs(reviewersI)
 		if err != nil {
 			return nil, err
 		}
-		reviewerStages = append(reviewerStages, *opal.NewReviewerStage(requireManagerApproval, operator, reviewerIds))
 
+		reviewerStages = append(reviewerStages, *opal.NewReviewerStage(requireManagerApproval, operator, reviewerIds))
 	}
 	return reviewerStages, nil
 }
@@ -147,13 +155,13 @@ func parseSDKRequestConfiguration(
 	if requestConfiguration.MaxDurationMinutes != nil && int(*requestConfiguration.MaxDurationMinutes) > 0 {
 		requestConfigurationMap["max_duration"] = requestConfiguration.MaxDurationMinutes
 	} else {
-		requestConfigurationMap["max_duration"] = -1
+		requestConfigurationMap["max_duration"] = NIL_MINUTES
 	}
 
 	if requestConfiguration.RecommendedDurationMinutes != nil && int(*requestConfiguration.RecommendedDurationMinutes) > 0 {
 		requestConfigurationMap["recommended_duration"] = requestConfiguration.RecommendedDurationMinutes
 	} else {
-		requestConfigurationMap["recommended_duration"] = -1
+		requestConfigurationMap["recommended_duration"] = NIL_MINUTES
 	}
 
 	if requestConfiguration.RequestTemplateId != nil {
@@ -186,6 +194,7 @@ func parseSDKReviewerStages(reviewerStages []opal.ReviewerStage) ([]map[string]i
 		for _, ownerID := range reviewerStage.OwnerIds {
 			reviewers = append(reviewers, map[string]string{"id": ownerID})
 		}
+		reviewerStageMap["reviewer"] = reviewers
 		rawReviewerStages = append(rawReviewerStages, reviewerStageMap)
 	}
 	return rawReviewerStages, nil

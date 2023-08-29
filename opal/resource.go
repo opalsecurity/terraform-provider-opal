@@ -74,7 +74,7 @@ func resourceResource() *schema.Resource {
 				Description: "Automatically approve all requests for this resource without review.",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Deprecated:  "Use request_configurations_list instead.",
+				Deprecated:  "Use request_configuration instead.",
 			},
 			"require_mfa_to_approve": {
 				Description: "Require that reviewers MFA to approve requests for this resource.",
@@ -90,31 +90,31 @@ func resourceResource() *schema.Resource {
 				Description: "Require that users MFA to request this resource.",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Deprecated:  "Use request_configurations_list instead.",
+				Deprecated:  "Use request_configuration instead.",
 			},
 			"require_support_ticket": {
 				Description: "Require that requesters attach a support ticket to requests for this resource.",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Deprecated:  "Use request_configurations_list instead.",
+				Deprecated:  "Use request_configuration instead.",
 			},
 			"max_duration": {
 				Description: "The maximum duration for which this resource can be requested (in minutes).",
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Deprecated:  "Use request_configurations_list instead.",
+				Deprecated:  "Use request_configuration instead.",
 			},
 			"recommended_duration": {
 				Description: "The recommended duration for which the resource should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.",
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Deprecated:  "Use request_configurations_list instead.",
+				Deprecated:  "Use request_configuration instead.",
 			},
 			"request_template_id": {
 				Description: "The ID of a request template for this resource. You can get this ID from the URL in the Opal web app.",
 				Type:        schema.TypeString,
 				Optional:    true,
-				Deprecated:  "Use request_configurations_list instead.",
+				Deprecated:  "Use request_configuration instead.",
 			},
 			"remote_info": {
 				Description: "Remote info that is required for the creation of remote resources.",
@@ -149,7 +149,7 @@ func resourceResource() *schema.Resource {
 				Description: "A reviewer stage for this resource. You are allowed to provide up to 3.",
 				Type:        schema.TypeList,
 				Optional:    true,
-				Deprecated:  "Use request_configurations_list instead.",
+				Deprecated:  "Use request_configuration instead. When terraform planning, this will show as a diff even if the reviewer stages are the same, since they are parsed into request_configurations now.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"operator": {
@@ -187,7 +187,7 @@ func resourceResource() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Deprecated:  "Use request_configurations_list instead.",
+				Deprecated:  "Use request_configuration instead.",
 			},
 			"request_configuration": {
 				Description: "A request configuration for this resource.",
@@ -196,7 +196,7 @@ func resourceResource() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"group_ids": {
-							Description: "The group IDs that can request this resource. For the default request configuration, this should be empty and priority should be 0, otherwise, this should contain one group ID.",
+							Description: "The group IDs satosfying this request configuration. For the default request configuration, this should be empty and priority should be 0, otherwise, this should contain one group ID.",
 							Type:        schema.TypeList,
 							Optional:    true,
 							Elem: &schema.Schema{
@@ -205,38 +205,38 @@ func resourceResource() *schema.Resource {
 							MaxItems: 1,
 						},
 						"is_requestable": {
-							Description: "Allow users to create an access request for this resource. By default, any resource is requestable.",
+							Description: "For users satisfying the condition, allow the creation an access request for this resource. By default, any resource is requestable.",
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     true,
 						},
 						"auto_approval": {
-							Description: "Automatically approve all requests for this resource without review.",
+							Description: "For users satisfying the condition, automatically approve all requests for this resource without review.",
 							Type:        schema.TypeBool,
 							Optional:    true,
 						},
 						"require_mfa_to_request": {
-							Description: "Require that users MFA to request this resource.",
+							Description: "For users satisfying the condition, require  MFA to request this resource.",
 							Type:        schema.TypeBool,
 							Optional:    true,
 						},
 						"require_support_ticket": {
-							Description: "Require that requesters attach a support ticket to requests for this resource.",
+							Description: "For users satisfying the condition, require attaching a support ticket to requests for this resource.",
 							Type:        schema.TypeBool,
 							Optional:    true,
 						},
 						"max_duration": {
-							Description: "The maximum duration for which this resource can be requested (in minutes).",
+							Description: "For users satisfying the condition, the maximum duration for which this resource can be requested (in minutes).",
 							Type:        schema.TypeInt,
 							Optional:    true,
 						},
 						"recommended_duration": {
-							Description: "The recommended duration for which the resource should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.",
+							Description: "For users satisfying the condition, the recommended duration for which the resource should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.",
 							Type:        schema.TypeInt,
 							Optional:    true,
 						},
 						"request_template_id": {
-							Description: "The ID of a request template for this resource. You can get this ID from the URL in the Opal web app.",
+							Description: "For users satisfying the condition, the ID of a request template for this resource. You can get this ID from the URL in the Opal web app.",
 							Type:        schema.TypeString,
 							Optional:    true,
 						},
@@ -247,7 +247,7 @@ func resourceResource() *schema.Resource {
 							Default:     0,
 						},
 						"reviewer_stage": {
-							Description: "A reviewer stage for this resource. You are allowed to provide up to 3.",
+							Description: "A reviewer stage for this request configuration. You are allowed to provide up to 3.",
 							Type:        schema.TypeList,
 							Optional:    true,
 							Elem: &schema.Resource{
@@ -338,8 +338,12 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 	if reviewerStagesI, ok := d.GetOk("reviewer_stage"); ok {
 		reviewerStages = reviewerStagesI
 	}
-	if diag := resourceResourceUpdateReviewerStages(ctx, d, client, reviewerStages); diag != nil {
-		return diag
+	requestConfigurationsListI, requestConfigurationsListOk := d.GetOk("request_configuration")
+	// We only want this run if we don't have a request configuration list
+	if !requestConfigurationsListOk {
+		if diag := resourceResourceUpdateReviewerStages(ctx, d, client, reviewerStages); diag != nil {
+			return diag
+		}
 	}
 
 	// Because resource creation does not let us set some properties immediately,
@@ -354,12 +358,11 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 	maxDurationI, maxDurationOk := d.GetOk("max_duration")
 	recommendedDurationI, recommendedDurationOk := d.GetOk("recommended_duration")
 	requestTemplateIDI, requestTemplateIDOk := d.GetOk("request_template_id")
-	requestConfigurationsListI, requestConfigurationsListOk := d.GetOk("request_configuration")
 
-	// validateRequestConfigurationListDuringCreate ensures that if request_configurations_list is set, none of the other fields are set
-	oldRequestConfigurationFieldsChanged := autoApprovalOk || requireMfaToRequestOk || requireSupportTicketOk || maxDurationOk || recommendedDurationOk || requestTemplateIDOk || isRequestableOk
+	// validateRequestConfigurationListDuringCreate ensures that if request_configuration is set, none of the other fields are set
+	oldRequestConfigurationFieldsChanged := autoApprovalOk || requireMfaToRequestOk || requireSupportTicketOk || maxDurationOk || recommendedDurationOk || requestTemplateIDOk
 
-	if adminOwnerIDOk || oldRequestConfigurationFieldsChanged || requestConfigurationsListOk || requireMfaToApproveOk || requireMfaToConnectOk {
+	if adminOwnerIDOk || oldRequestConfigurationFieldsChanged || requestConfigurationsListOk || requireMfaToApproveOk || requireMfaToConnectOk || isRequestableOk {
 		updateInfo := opal.NewUpdateResourceInfo(resource.ResourceId)
 		if adminOwnerIDOk {
 			updateInfo.SetAdminOwnerId(adminOwnerIDI.(string))
@@ -389,11 +392,18 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 			updateInfo.SetRequestTemplateId(requestTemplateIDI.(string))
 		}
 		if isRequestableOk {
-			updateInfo.SetIsRequestable(isRequestableI.(bool))
+			// isRequestable is a special case because it has a default value of true,
+			// but we only need it if we don't have a request configuration list
+			if !requestConfigurationsListOk {
+				updateInfo.SetIsRequestable(isRequestableI.(bool))
+			}
 		}
 		if requestConfigurationsListOk {
 			requestConfigurationsList, err := parseRequestConfigurationList(ctx, requestConfigurationsListI)
 			if err != nil {
+				return diagFromErr(ctx, err)
+			}
+			if err := validateRequestConfigurationListDuringCreate(ctx, d); err != nil {
 				return diagFromErr(ctx, err)
 			}
 			updateInfo.SetRequestConfigurationList(*requestConfigurationsList)
@@ -469,7 +479,7 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 		return diagFromErr(ctx, err)
 	}
 
-	requestConfigurations := make([]any, 0, len(resource.RequestConfigurationList))
+	requestConfigurations := make([]map[string]interface{}, 0, len(resource.RequestConfigurationList))
 	for _, requestConfiguration := range resource.RequestConfigurationList {
 		requestConfigurationI, err := parseSDKRequestConfiguration(ctx, &requestConfiguration)
 		if err != nil {
@@ -487,33 +497,10 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 		d.Set("admin_owner_id", resource.AdminOwnerId),
 		d.Set("require_mfa_to_approve", resource.RequireMfaToApprove),
 		d.Set("require_mfa_to_connect", resource.RequireMfaToConnect),
-		d.Set("request_configuration", requestConfigurations),
 		// XXX: We don't get the metadata back. Will terraform state be okay?
 	); err.ErrorOrNil() != nil {
 		return diagFromErr(ctx, err)
 	}
-
-	if len(requestConfigurations) == 0 {
-		d.Set("auto_approval", resource.AutoApproval)
-		d.Set("require_mfa_to_request", resource.RequireMfaToRequest)
-		d.Set("require_support_ticket", resource.RequireSupportTicket)
-		d.Set("max_duration", resource.MaxDuration)
-		d.Set("recommended_duration", resource.RecommendedDuration)
-		d.Set("request_template_id", resource.RequestTemplateId)
-		d.Set("is_requestable", resource.IsRequestable)
-	}
-
-	visibility, _, err := client.ResourcesApi.GetResourceVisibility(ctx, resource.ResourceId).Execute()
-	if err != nil {
-		return diagFromErr(ctx, err)
-	}
-	d.Set("visibility", visibility.Visibility)
-
-	flattenedGroups := make([]any, 0, len(visibility.VisibilityGroupIds))
-	for _, groupID := range visibility.VisibilityGroupIds {
-		flattenedGroups = append(flattenedGroups, map[string]any{"id": groupID})
-	}
-	d.Set("visibility_group", flattenedGroups)
 
 	reviewerStages, _, err := client.ResourcesApi.GetResourceReviewerStages(ctx, resource.ResourceId).Execute()
 	if err != nil {
@@ -535,7 +522,34 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 			"require_manager_approval": reviewerStage.RequireManagerApproval,
 		})
 	}
-	d.Set("reviewer_stage", reviewerStagesI)
+
+	if len(requestConfigurations) == 0 {
+		d.Set("auto_approval", resource.AutoApproval)
+		d.Set("require_mfa_to_request", resource.RequireMfaToRequest)
+		d.Set("require_support_ticket", resource.RequireSupportTicket)
+		d.Set("max_duration", resource.MaxDuration)
+		d.Set("recommended_duration", resource.RecommendedDuration)
+		d.Set("request_template_id", resource.RequestTemplateId)
+		d.Set("is_requestable", resource.IsRequestable)
+		d.Set("reviewer_stage", reviewerStagesI)
+	} else {
+		d.Set("request_configuration", requestConfigurations)
+		// if we set request_configuration, we want to unset reviewer_stage since
+		// it's populated separately
+		d.Set("reviewer_stage", nil)
+	}
+
+	visibility, _, err := client.ResourcesApi.GetResourceVisibility(ctx, resource.ResourceId).Execute()
+	if err != nil {
+		return diagFromErr(ctx, err)
+	}
+	d.Set("visibility", visibility.Visibility)
+
+	flattenedGroups := make([]any, 0, len(visibility.VisibilityGroupIds))
+	for _, groupID := range visibility.VisibilityGroupIds {
+		flattenedGroups = append(flattenedGroups, map[string]any{"id": groupID})
+	}
+	d.Set("visibility_group", flattenedGroups)
 
 	if resource.Metadata != nil {
 		remoteInfoIList := make([]any, 0, 1)
@@ -615,9 +629,26 @@ func resourceResourceUpdate(ctx context.Context, d *schema.ResourceData, m any) 
 		hasBasicChange = true
 		updateInfo.SetRequestTemplateId(d.Get("request_template_id").(string))
 	}
-	if d.HasChange("is_requestable") {
+	if d.HasChange("request_configuration") {
 		hasBasicChange = true
-		updateInfo.SetIsRequestable(d.Get("is_requestable").(bool))
+		requestConfigurationsListI, ok := d.GetOk("request_configuration")
+		if err := validateRequestConfigurationListDuringCreate(ctx, d); err != nil {
+			return diagFromErr(ctx, err)
+		}
+		if ok {
+			requestConfigurationsList, err := parseRequestConfigurationList(ctx, requestConfigurationsListI)
+			if err != nil {
+				return diagFromErr(ctx, err)
+			}
+			updateInfo.SetRequestConfigurationList(*requestConfigurationsList)
+		}
+	}
+
+	if d.HasChange("is_requestable") {
+		if updateInfo.RequestConfigurationList == nil {
+			hasBasicChange = true
+			updateInfo.SetIsRequestable(d.Get("is_requestable").(bool))
+		}
 	}
 
 	if hasBasicChange {
