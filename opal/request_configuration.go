@@ -168,7 +168,7 @@ func parseSDKRequestConfiguration(
 		requestConfigurationMap["request_template_id"] = *requestConfiguration.RequestTemplateId
 	}
 
-	if requestConfiguration.Condition != nil && requestConfiguration.Condition.GroupIds != nil {
+	if requestConfiguration.Condition != nil && requestConfiguration.Condition.GroupIds != nil && len(requestConfiguration.Condition.GroupIds) > 0 {
 		requestConfigurationMap["group_ids"] = requestConfiguration.Condition.GroupIds
 	}
 

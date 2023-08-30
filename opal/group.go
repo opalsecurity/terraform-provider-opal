@@ -277,11 +277,13 @@ func resourceGroup() *schema.Resource {
 							Description: "For users satisfying the condition, the maximum duration for which this group can be requested (in minutes).",
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Default:     -1,
 						},
 						"recommended_duration": {
 							Description: "For users satisfying the condition, the recommended duration for which the group should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.",
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Default:     -1,
 						},
 						"request_template_id": {
 							Description: "For users satisfying the condition, the ID of a request template for this group. You can get this ID from the URL in the Opal web app.",
@@ -800,9 +802,6 @@ func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, m any) dia
 	if d.HasChange("request_configuration") {
 		hasBasicUpdate = true
 		requestConfigurationsListI, ok := d.GetOk("request_configuration")
-		if err := validateRequestConfigurationListDuringCreate(ctx, d); err != nil {
-			return diagFromErr(ctx, err)
-		}
 		if ok {
 			requestConfigurationsList, err := parseRequestConfigurationList(ctx, requestConfigurationsListI)
 			if err != nil {

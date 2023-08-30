@@ -59,7 +59,7 @@ func validateRequestConfigurationListDuringCreate(ctx context.Context, d *schema
 
 	if requestConfigurationListOk {
 		if oldRequestConfigurationFieldsChanged {
-			return errors.New("Cannot set both request_configuration_list and any of auto_approval, require_mfa_to_request, require_support_ticket, is_requestable, max_duration, recommended_duration, or request_template_id.")
+			return errors.New("Cannot set both request_configuration and any of auto_approval, require_mfa_to_request, require_support_ticket, is_requestable, max_duration, recommended_duration, or request_template_id.")
 		}
 		if len(requestConfigurationListI.([]interface{})) < 1 {
 			return errors.New("Invalid request configuration list. Please specify at least 1 request configuration")
