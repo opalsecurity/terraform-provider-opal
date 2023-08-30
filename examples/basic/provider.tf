@@ -46,6 +46,10 @@ resource "opal_resource" "sensitive_resource" {
   admin_owner_id = opal_owner.security.id
   visibility = "LIMITED"
 
+  visibility_group {
+    id = opal_group.oncall.id
+  }
+
   request_configuration {
     priority = 0
     is_requestable = true
