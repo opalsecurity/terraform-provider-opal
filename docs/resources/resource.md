@@ -321,16 +321,16 @@ Required:
 
 Optional:
 
-- `auto_approval` (Boolean) Automatically approve all requests for this resource without review.
-- `group_ids` (List of String) The group IDs that can request this resource. For the default request configuration, this should be empty and priority should be 0, otherwise, this should contain one group ID.
-- `is_requestable` (Boolean) Allow users to create an access request for this resource. By default, any resource is requestable.
-- `max_duration` (Number) The maximum duration for which this resource can be requested (in minutes).
+- `auto_approval` (Boolean) For users satisfying the condition, automatically approve all requests for this resource without review.
+- `group_ids` (List of String) The group IDs satosfying this request configuration. For the default request configuration, this should be empty and priority should be 0, otherwise, this should contain one group ID.
+- `is_requestable` (Boolean) For users satisfying the condition, allow the creation an access request for this resource. By default, any resource is requestable.
+- `max_duration` (Number) For users satisfying the condition, the maximum duration for which this resource can be requested (in minutes).
 - `priority` (Number) The priority of this request configuration. The higher the number, the higher the priority. Defaults to 0.
-- `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.
-- `request_template_id` (String) The ID of a request template for this resource. You can get this ID from the URL in the Opal web app.
-- `require_mfa_to_request` (Boolean) Require that users MFA to request this resource.
-- `require_support_ticket` (Boolean) Require that requesters attach a support ticket to requests for this resource.
-- `reviewer_stage` (Block List) A reviewer stage for this resource. You are allowed to provide up to 3. (see [below for nested schema](#nestedblock--request_configuration--reviewer_stage))
+- `recommended_duration` (Number) For users satisfying the condition, the recommended duration for which the resource should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.
+- `request_template_id` (String) For users satisfying the condition, the ID of a request template for this resource. You can get this ID from the URL in the Opal web app.
+- `require_mfa_to_request` (Boolean) For users satisfying the condition, require  MFA to request this resource.
+- `require_support_ticket` (Boolean) For users satisfying the condition, require attaching a support ticket to requests for this resource.
+- `reviewer_stage` (Block List) A reviewer stage for this request configuration. You are allowed to provide up to 3. (see [below for nested schema](#nestedblock--request_configuration--reviewer_stage))
 
 <a id="nestedblock--request_configuration--reviewer_stage"></a>
 ### Nested Schema for `request_configuration.reviewer_stage`
