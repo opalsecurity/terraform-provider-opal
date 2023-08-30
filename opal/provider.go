@@ -27,7 +27,7 @@ func NewProvider() *schema.Provider {
 			"token": {
 				Description: "The authentication token used to connect to Opal. The value can be sourced OPAL_AUTH_TOKEN.",
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"OPAL_AUTH_TOKEN"}, nil),
 				Sensitive:   true,
 			},
@@ -46,9 +46,11 @@ func NewProvider() *schema.Provider {
 			"opal_on_call_schedule": resourceOnCallSchedule(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"opal_owner": dataSourceOwner(),
-			"opal_app":   dataSourceApp(),
-			"opal_user":  dataSourceUser(),
+			"opal_owner":    dataSourceOwner(),
+			"opal_app":      dataSourceApp(),
+			"opal_user":     dataSourceUser(),
+			"opal_resource": dataSourceResource(),
+			"opal_group":    dataSourceGroup(),
 		},
 		ConfigureContextFunc: configure,
 	}

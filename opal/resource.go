@@ -3,6 +3,7 @@ package opal
 import (
 	"context"
 	"encoding/json"
+	"errors"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -24,6 +25,53 @@ func enumSliceToStringSlice[T ~string](input []T) []string {
 
 var allowedResourceTypes = enumSliceToStringSlice(opal.AllowedResourceTypeEnumEnumValues)
 var allowedVisibilityTypes = enumSliceToStringSlice(opal.AllowedVisibilityTypeEnumEnumValues)
+
+func dataSourceResource() *schema.Resource {
+	return &schema.Resource{
+		Description: "An Opal resource data source.",
+		ReadContext: dataSourceResourceRead,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
+		Schema: map[string]*schema.Schema{
+			"id": {
+				Description: "The ID of the resource.",
+				Type:        schema.TypeString,
+				Required:    true,
+			},
+			"name": {
+				Description: "The name of the resource.",
+				Type:        schema.TypeString,
+				Computed:    true,
+			},
+		},
+	}
+}
+
+func dataSourceResourceRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	client := m.(*opal.APIClient)
+
+	id, idOk := d.GetOk("id")
+	var resource *opal.Resource
+	var err error
+	if idOk {
+		resource, _, err = client.ResourcesApi.GetResource(ctx, id.(string)).Execute()
+		if err != nil {
+			return diagFromErr(ctx, err)
+		}
+	} else {
+		return diagFromErr(ctx, errors.New("must provide id for resource data source"))
+	}
+
+	d.SetId(resource.ResourceId)
+	if err := multierror.Append(
+		d.Set("name", resource.Name),
+	); err.ErrorOrNil() != nil {
+		return diagFromErr(ctx, err)
+	}
+
+	return nil
+}
 
 func resourceResource() *schema.Resource {
 	return &schema.Resource{

@@ -19,8 +19,11 @@ var knownOpalAppAdminOwnerID = os.Getenv("OPAL_TEST_KNOWN_OPAL_APP_ADMIN_OWNER_I
 var knownGithubRepoResourceID = os.Getenv("OPAL_TEST_KNOWN_GITHUB_TEST_REPO_2_RESOURCE_ID")
 var knownOnCallScheduleID = os.Getenv("OPAL_TEST_KNOWN_ON_CALL_SCHEDULE_ID")
 
-// Commenting out while we have weird state due to the request_configuration and
-// deprecated related fields not being fully removed yet
+// Commenting this out for now since while supporting the deprecated request configuration
+// fields, is_requestable has a default value and gets populated, which causes a diff from
+// parsing just the request_configuration fields. Will add this back once we remove support
+// for the deprecated fields.
+
 // func TestAccGroup_Import(t *testing.T) {
 // 	baseName := "tf_acc_group_test_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
 // 	resourceName := "opal_group." + baseName
@@ -56,7 +59,7 @@ func TestAccGroup_CRUD(t *testing.T) {
 		CheckDestroy: testAccCheckGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGroupResourceWithRequestConfigurationAndReviewers(baseName, baseName, "", ""),
+				Config: testAccGroupResourceWithRequestConfigAndReviewers(baseName, baseName, "", ""),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),                                                                   // Verify that the name was set.
 					resource.TestCheckResourceAttr(resourceName, "description", ""),                                                                  // Verify that optional works.
@@ -71,10 +74,9 @@ func TestAccGroup_CRUD(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccGroupResourceWithRequestConfigurationAndReviewers(baseName, baseName+"_changed", `
+				Config: testAccGroupResourceWithRequestConfigAndReviewers(baseName, baseName+"_changed", `
 max_duration = 60
 require_support_ticket = true
-is_requestable = true
 require_mfa_to_request = true
 `, `
 require_mfa_to_approve = true
@@ -140,13 +142,12 @@ resource "opal_group" "%s" {
 	admin_owner_id = "%s"
 
 	request_configuration {
-	reviewer_stage {
-		reviewer {
-			id = "%s"
+		reviewer_stage {
+			reviewer {
+				id = "%s"
+			}
 		}
 	}
-}
-
 	%s
 }
 
@@ -157,12 +158,12 @@ resource "opal_group" "%s" {
 	admin_owner_id = "%s"
 
 	request_configuration {
-	reviewer_stage {
-		reviewer {
-			id = "%s"
+		reviewer_stage {
+			reviewer {
+				id = "%s"
+			}
 		}
 	}
-}
 }
 `, resourceName, resourceName, knownOpalAppID, knownOpalAppAdminOwnerID, knownOpalAppAdminOwnerID, additional, groupName, groupName, knownOpalAppID, knownOpalAppAdminOwnerID, knownOpalAppAdminOwnerID)
 }
@@ -210,14 +211,6 @@ func TestAccGroup_Reviewer(t *testing.T) {
 					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "request_configuration.0.reviewer_stage.0.reviewer.*", map[string]string{"id": knownCustomAppAdminOwnerID}),
 				),
 			},
-			// can't test this since we are deprecating the old way of passing in reviewers
-			// {
-			// 	Config: testAccGroupResource(baseName, baseName, ""),
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		resource.TestCheckResourceAttr(resourceName, "name", baseName),
-			// 		resource.TestCheckResourceAttr(resourceName, "request_configuration.0.reviewer_stage.#", "1"),
-			// 	),
-			// },
 			{
 				Config: testAccGroupResource(baseName, baseName, testReviewerStage("AND", false, knownOpalAppAdminOwnerID)),
 				Check: resource.ComposeTestCheckFunc(
@@ -229,13 +222,6 @@ func TestAccGroup_Reviewer(t *testing.T) {
 					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "request_configuration.0.reviewer_stage.0.reviewer.*", map[string]string{"id": knownOpalAppAdminOwnerID}),
 				),
 			},
-			// {
-			// 	Config: testAccGroupResource(baseName, baseName, ""),
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		resource.TestCheckResourceAttr(resourceName, "name", baseName),
-			// 		resource.TestCheckResourceAttr(resourceName, "request_configuration.0.reviewer_stage.#", "1"),
-			// 	),
-			// },
 		},
 	})
 }
@@ -250,14 +236,14 @@ func TestAccGroup_Resource(t *testing.T) {
 		CheckDestroy: testAccCheckGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGroupResourceWithRequestConfigurationAndReviewers(baseName, baseName, "", ""),
+				Config: testAccGroupResourceWithRequestConfigAndReviewers(baseName, baseName, "", ""),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
 					resource.TestCheckResourceAttr(resourceName, "resource.#", "0"),
 				),
 			},
 			{
-				Config: testAccGroupResourceWithRequestConfigurationAndReviewers(baseName, baseName, "", testAccGroupResourceWithAccessLevel(knownGithubRepoResourceID, "pull")),
+				Config: testAccGroupResourceWithRequestConfigAndReviewers(baseName, baseName, "", testAccGroupResourceWithAccessLevel(knownGithubRepoResourceID, "pull")),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
 					resource.TestCheckResourceAttr(resourceName, "resource.#", "1"),
@@ -267,14 +253,14 @@ func TestAccGroup_Resource(t *testing.T) {
 			{
 				// Here we validate that without the manage_resources attribute the group resource does not get removed
 				// even when no group resources are provided
-				Config: testAccGroupResourceWithRequestConfigurationAndReviewers(baseName, baseName, "", ""),
+				Config: testAccGroupResourceWithRequestConfigAndReviewers(baseName, baseName, "", ""),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
 					resource.TestCheckResourceAttr(resourceName, "resource.#", "1"),
 				),
 			},
 			{
-				Config: testAccGroupResourceWithRequestConfigurationAndReviewers(baseName, baseName, "", "manage_resources=true"),
+				Config: testAccGroupResourceWithRequestConfigAndReviewers(baseName, baseName, "", "manage_resources=true"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
 					resource.TestCheckResourceAttr(resourceName, "resource.#", "0"),
@@ -297,13 +283,11 @@ func TestAccGroup_SetOnCreate(t *testing.T) {
 		CheckDestroy: testAccCheckGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGroupResourceWithRequestConfigurationAndReviewers(baseName, baseName, fmt.Sprintf(`
+				Config: testAccGroupResourceWithRequestConfigAndReviewers(baseName, baseName, fmt.Sprintf(`
 require_support_ticket = true
 max_duration = 30
 request_template_id = "%s"
-`, knownRequestTemplateID), `
-description = "test desc"
-`),
+`, knownRequestTemplateID), `description = "test desc"`),
 
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
@@ -327,9 +311,7 @@ func TestAccGroup_SetOnCreate_AutoApproval(t *testing.T) {
 		CheckDestroy: testAccCheckGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGroupResourceWithRequestConfigurationAndReviewers(baseName, baseName, `
-auto_approval = true
-`, ""),
+				Config: testAccGroupResourceWithRequestConfigAndReviewers(baseName, baseName, `auto_approval = true`, ""),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "request_configuration.0.auto_approval", "true"),
 				),
@@ -357,12 +339,12 @@ func TestAccGroup_Remote(t *testing.T) {
 		app_id = "%s"
 		admin_owner_id = "%s"
 		request_configuration{
-		reviewer_stage {
-			reviewer {
-				id = "%s"
+			reviewer_stage {
+				reviewer {
+					id = "%s"
+				}
 			}
 		}
-	}
 		group_type = "GIT_HUB_TEAM"
 		remote_info {
 			github_team {
@@ -380,6 +362,31 @@ func TestAccGroup_Remote(t *testing.T) {
 		},
 	})
 }
+func TestAccGroup_RequestConfiguration(t *testing.T) {
+	baseName := "tf_acc_group_test_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
+	resourceName := "opal_group." + baseName
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckGroupDestroy,
+		Steps: []resource.TestStep{
+			// Test that we can create a group with a request configuration
+			{
+				Config: testAccGroupResourceWithRequestConfigAndReviewers(baseName, baseName, `
+				auto_approval = true`, ""),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName),
+					resource.TestCheckResourceAttr(resourceName, "request_configuration.0.reviewer_stage.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "request_configuration.0.reviewer_stage.0.reviewer.#", "1"),
+					resource.TestCheckResourceAttr(resourceName, "request_configuration.0.reviewer_stage.0.operator", "AND"),
+					resource.TestCheckResourceAttr(resourceName, "request_configuration.0.reviewer_stage.0.require_manager_approval", "false"),
+					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "request_configuration.0.reviewer_stage.0.reviewer.*", map[string]string{"id": knownOpalAppAdminOwnerID}),
+				),
+			},
+		},
+	})
+}
 
 func TestAccGroup_OnCallSchedule(t *testing.T) {
 	baseName := "tf_acc_group_test_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
@@ -390,7 +397,7 @@ func TestAccGroup_OnCallSchedule(t *testing.T) {
 		CheckDestroy: testAccCheckGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGroupResourceWithRequestConfigurationAndReviewers(baseName, baseName, "", fmt.Sprintf(`on_call_schedule { id = "%s" }`, knownOnCallScheduleID)),
+				Config: testAccGroupResourceWithRequestConfigAndReviewers(baseName, baseName, "", fmt.Sprintf(`on_call_schedule { id = "%s" }`, knownOnCallScheduleID)),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "on_call_schedule.#", "1"),
 					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "on_call_schedule.*", map[string]string{"id": knownOnCallScheduleID}),
@@ -424,9 +431,10 @@ resource "opal_group" "%s" {
 `, tfName, name, knownOpalAppID, knownOpalAppAdminOwnerID, additional)
 }
 
-func testAccGroupResourceWithRequestConfigurationAndReviewers(tfName, name, additionalRequestConfig, additional string) string {
+func testAccGroupResourceWithRequestConfigAndReviewers(tfName, name, additionalRequestConfig, additional string) string {
 	return testAccGroupResource(tfName, name, fmt.Sprintf(`
-	request_configuration {
+request_configuration {
+	is_requestable = true
 	reviewer_stage {
 		reviewer {
 			id = "%s"
@@ -434,8 +442,7 @@ func testAccGroupResourceWithRequestConfigurationAndReviewers(tfName, name, addi
 	}
 	%s
 }
-
-	%s
+%s
 `, knownOpalAppAdminOwnerID, additionalRequestConfig, additional))
 }
 

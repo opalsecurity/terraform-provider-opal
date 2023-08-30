@@ -13,12 +13,12 @@ reviewer {
 	}
 
 	return fmt.Sprintf(`
-	request_configuration {
-reviewer_stage {
-	operator = "%s"
-	require_manager_approval = "%t"
-	
-	%s
+request_configuration {
+	reviewer_stage {
+		operator = "%s"
+		require_manager_approval = "%t"
+		%s
+	}
 }
-}`, op, requireManagerApproval, reviewerString)
+`, op, requireManagerApproval, reviewerString)
 }

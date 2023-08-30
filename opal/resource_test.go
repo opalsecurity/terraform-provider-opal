@@ -10,7 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-
 	"github.com/opalsecurity/opal-go"
 )
 
@@ -18,7 +17,10 @@ var knownCustomAppID = os.Getenv("OPAL_TEST_KNOWN_CUSTOM_APP_ID")
 var knownCustomAppAdminOwnerID = os.Getenv("OPAL_TEST_KNOWN_CUSTOM_APP_ADMIN_OWNER_ID")
 var knownRequestTemplateID = os.Getenv("OPAL_TEST_KNOWN_REQUEST_TEMPLATE_ID")
 
-// Commenting out for now because we have some weird state with having request_configurations and reviewer_stages
+// Commenting this out for now since while supporting the deprecated request configuration
+// fields, is_requestable has a default value and gets populated, which causes a diff from
+// parsing just the request_configuration fields. Will add this back once we remove support
+// for the deprecated fields.
 // func TestAccResource_Import(t *testing.T) {
 // 	baseName := "tf_acc_test_resource_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
 // 	resourceName := "opal_resource." + baseName
@@ -28,9 +30,7 @@ var knownRequestTemplateID = os.Getenv("OPAL_TEST_KNOWN_REQUEST_TEMPLATE_ID")
 // 		Providers: testAccProviders,
 // 		Steps: []resource.TestStep{
 // 			{
-// 				Config: testAccResourceResource(baseName, baseName, testReviewerStage(
-// 					"AND", false, knownOpalAppAdminOwnerID,
-// 				)),
+// 				Config: testAccResourceResourceWithRequestConfigAndReviewers(baseName, baseName, "", ""),
 // 				Check: resource.ComposeTestCheckFunc(
 // 					resource.TestCheckResourceAttr(resourceName, "name", baseName), // Verify that the name was set.
 // 				),
@@ -54,7 +54,7 @@ func TestAccResource_CRUD(t *testing.T) {
 		CheckDestroy: testAccCheckResourceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceResourceWithReviewer(baseName, baseName, ""),
+				Config: testAccResourceResourceWithRequestConfigAndReviewers(baseName, baseName, "", ""),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),                                                                     // Verify that the name was set.
 					resource.TestCheckResourceAttr(resourceName, "description", ""),                                                                    // Verify that optional works.
@@ -71,15 +71,18 @@ func TestAccResource_CRUD(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccResourceResourceWithReviewer(baseName, baseName+"_changed", `
+				Config: testAccResourceResourceWithRequestConfigAndReviewers(baseName, baseName+"_changed", `
 max_duration = 60
 require_support_ticket = true
+`, `
+description = "description"
 `),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName+"_changed"),                              // Verify that updating the name works.
 					resource.TestCheckResourceAttr(resourceName, "request_configuration.0.max_duration", "60"),             // Verify that updating works.
 					resource.TestCheckResourceAttr(resourceName, "request_configuration.0.require_support_ticket", "true"), // Verify that updating works.
 					resource.TestCheckResourceAttr(resourceName, "request_configuration.0.is_requestable", "true"),         // Verify that updating works.
+					resource.TestCheckResourceAttr(resourceName, "description", "description"),                             // Verify that updating works.
 				),
 			},
 		},
@@ -133,14 +136,12 @@ resource "opal_resource" "%s" {
 	admin_owner_id = "%s"
 	
 	request_configuration {
-	reviewer_stage {
-		reviewer {
-			id = "%s"
-		}
-	}		
+		reviewer_stage {
+			reviewer {
+				id = "%s"
+			}
+		}		
 	}
-
-
 	%s
 }
 
@@ -169,15 +170,6 @@ func TestAccResource_Reviewer(t *testing.T) {
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
-			// TODO: Revert this. Skip until API behavior is fixed.
-			// {
-			// 	Config: testAccResourceResource(baseName, baseName, "request_configuration.0.auto_approval = true"),
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		resource.TestCheckResourceAttr(resourceName, "name", baseName),
-			// 		resource.TestCheckResourceAttr(resourceName, "request_configuration.0.reviewer_stage.#", "0"),
-			// 		resource.TestCheckResourceAttr(resourceName, "request_configuration.0.auto_approval", "true"),
-			// 	),
-			// },
 			{
 				Config: testAccResourceResource(baseName, baseName, testReviewerStage("AND", false, knownOpalAppAdminOwnerID)),
 				Check: resource.ComposeTestCheckFunc(
@@ -212,31 +204,6 @@ func TestAccResource_Reviewer(t *testing.T) {
 					resource.TestCheckTypeSetElemNestedAttrs(resourceName, "request_configuration.0.reviewer_stage.0.reviewer.*", map[string]string{"id": knownCustomAppAdminOwnerID}),
 				),
 			},
-			// {
-			// 	Config: testAccResourceResource(baseName, baseName, ""),
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		resource.TestCheckResourceAttr(resourceName, "name", baseName),
-			// 		resource.TestCheckResourceAttr(resourceName, "request_configuration.0.reviewer_stage.#", "1"),
-			// 	),
-			// },
-			// {
-			// 	Config: testAccResourceResource(baseName, baseName, testReviewerStage("AND", false, knownOpalAppAdminOwnerID)),
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		resource.TestCheckResourceAttr(resourceName, "name", baseName),
-			// 		resource.TestCheckResourceAttr(resourceName, "request_configuration.0.reviewer_stage.#", "1"),
-			// 		resource.TestCheckResourceAttr(resourceName, "request_configuration.0.reviewer_stage.0.reviewer.#", "1"),
-			// 		resource.TestCheckResourceAttr(resourceName, "request_configuration.0.reviewer_stage.0.operator", "AND"),
-			// 		resource.TestCheckResourceAttr(resourceName, "request_configuration.0.reviewer_stage.0.require_manager_approval", "false"),
-			// 		resource.TestCheckTypeSetElemNestedAttrs(resourceName, "request_configuration.0.reviewer_stage.0.reviewer.*", map[string]string{"id": knownOpalAppAdminOwnerID}),
-			// 	),
-			// },
-			// {
-			// 	Config: testAccResourceResource(baseName, baseName, ""),
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		resource.TestCheckResourceAttr(resourceName, "name", baseName),
-			// 		resource.TestCheckResourceAttr(resourceName, "request_configuration.0.reviewer_stage.#", "1"),
-			// 	),
-			// },
 		},
 	})
 }
@@ -253,7 +220,7 @@ func TestAccResource_SetOnCreate(t *testing.T) {
 		CheckDestroy: testAccCheckResourceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceResourceWithReviewer(baseName, baseName, ""),
+				Config: testAccResourceResourceWithRequestConfigAndReviewers(baseName, baseName, "", ""),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
 				),
@@ -301,17 +268,18 @@ func TestAccResource_Remote(t *testing.T) {
 		CheckDestroy: testAccCheckResourceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(`resource "opal_resource" "%s" {
+				Config: fmt.Sprintf(`
+resource "opal_resource" "%s" {
 	name = "%s"
 	app_id = "%s"
 	admin_owner_id = "%s"
 	request_configuration {
-	reviewer_stage {
-		reviewer {
-			id = "%s"
+		reviewer_stage {
+			reviewer {
+				id = "%s"
+			}
 		}
 	}
-}
 	resource_type = "GIT_HUB_REPO"
 	remote_info {
 		github_repo {
@@ -335,24 +303,24 @@ resource "opal_resource" "%s" {
 	app_id = "%s"
 	resource_type = "CUSTOM"
 	admin_owner_id = "%s"
-
 	%s
 }
 `, tfName, name, knownCustomAppID, knownCustomAppAdminOwnerID, additional)
 }
 
-func testAccResourceResourceWithReviewer(tfName, name, additional string) string {
+func testAccResourceResourceWithRequestConfigAndReviewers(tfName, name, additionalRequestConfig, additional string) string {
 	return testAccResourceResource(tfName, name, fmt.Sprintf(`
-	request_configuration {
-		is_requestable = true
-reviewer_stage {
-	reviewer {
-		id = "%s"
+request_configuration {
+	is_requestable = true
+	reviewer_stage {
+		reviewer {
+			id = "%s"
+		}
 	}
+	%s
 }
 %s
-}
-`, knownCustomAppAdminOwnerID, additional))
+`, knownCustomAppAdminOwnerID, additionalRequestConfig, additional))
 }
 
 func testAccCheckResourceDestroy(s *terraform.State) error {
@@ -425,13 +393,12 @@ resource "opal_resource" "%s" {
 	app_id = "%s"
 
 	request_configuration {
-	reviewer_stage {
-		reviewer {
-			id = "%s"
+		reviewer_stage {
+			reviewer {
+				id = "%s"
+			}
 		}
 	}
-}
-
 	%s
 }
 `, ownerName, ownerName, knownUserID1, resourceName, resourceName, knownCustomAppID, knownOpalAppAdminOwnerID, additional)
