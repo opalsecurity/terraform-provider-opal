@@ -180,6 +180,8 @@ github.com/opalsecurity/opal-go v1.0.24 h1:8CSsqC7V1m2oyGNVfmaH7GOyBPBoQ08+TVtyd
 github.com/opalsecurity/opal-go v1.0.24/go.mod h1:cdQrqgbdjsZHjrKV8ibsle6r6c7jRBKryI1x3oSVm1I=
 github.com/opalsecurity/opal-go v1.0.25 h1:XPlvDvcYIlSU0fpC7mn3MD56IEv4B+0X2eF0eAgO5pc=
 github.com/opalsecurity/opal-go v1.0.25/go.mod h1:cdQrqgbdjsZHjrKV8ibsle6r6c7jRBKryI1x3oSVm1I=
+github.com/opalsecurity/opal-go v1.0.28 h1:/kNp0Jp4bF8GXxLdFMWIwgGAXWRfiEXTHc1mg20gVUY=
+github.com/opalsecurity/opal-go v1.0.28/go.mod h1:cdQrqgbdjsZHjrKV8ibsle6r6c7jRBKryI1x3oSVm1I=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=

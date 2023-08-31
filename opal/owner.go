@@ -3,6 +3,7 @@ package opal
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -46,9 +47,16 @@ func dataSourceOwnerRead(ctx context.Context, d *schema.ResourceData, m interfac
 			return diagFromErr(ctx, err)
 		}
 	} else if nameOk {
-		owner, _, err = client.OwnersApi.GetOwnerFromName(ctx, name.(string)).Execute()
+		owners, _, err := client.OwnersApi.GetOwners(ctx).Name(name.(string)).Execute()
 		if err != nil {
 			return diagFromErr(ctx, err)
+		}
+		if len(owners.Results) == 1 {
+			owner = &owners.Results[0]
+		} else if len(owners.Results) > 1 {
+			return diagFromErr(ctx, fmt.Errorf("more than one owner found with name %s", name.(string)))
+		} else {
+			return diagFromErr(ctx, fmt.Errorf("no owners found with name %s", name.(string)))
 		}
 	} else {
 		return diagFromErr(ctx, errors.New("must provide id or name for owner data source"))
