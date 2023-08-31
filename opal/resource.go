@@ -371,7 +371,7 @@ func resourceResourceUpdateVisibility(ctx context.Context, d *schema.ResourceDat
 func resourceResourceUpdateReviewerStages(ctx context.Context, d *schema.ResourceData, client *opal.APIClient, reviewerStagesI any) diag.Diagnostics {
 	rawReviewerStages := reviewerStagesI.([]any)
 	reviewerStages := make([]opal.ReviewerStage, 0, len(rawReviewerStages))
-	for i, rawReviewerStage := range rawReviewerStages {
+	for _, rawReviewerStage := range rawReviewerStages {
 		reviewerStage := rawReviewerStage.(map[string]any)
 		requireManagerApproval := reviewerStage["require_manager_approval"].(bool)
 		operator := reviewerStage["operator"].(string)
@@ -381,7 +381,7 @@ func resourceResourceUpdateReviewerStages(ctx context.Context, d *schema.Resourc
 			return diagFromErr(ctx, err)
 		}
 
-		reviewerStages = append(reviewerStages, *opal.NewReviewerStage(requireManagerApproval, operator, reviewerIds, int32(i+1)))
+		reviewerStages = append(reviewerStages, *opal.NewReviewerStage(requireManagerApproval, operator, reviewerIds))
 		tflog.Debug(ctx, "Setting resource reviewer stage", map[string]any{
 			"id":                     d.Id(),
 			"requireManagerApproval": requireManagerApproval,
@@ -420,7 +420,6 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 		d.Set("recommended_duration", resource.RecommendedDuration),
 		d.Set("request_template_id", resource.RequestTemplateId),
 		d.Set("is_requestable", resource.IsRequestable),
-		// XXX: We don't get the metadata back. Will terraform state be okay?
 	); err.ErrorOrNil() != nil {
 		return diagFromErr(ctx, err)
 	}
