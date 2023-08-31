@@ -300,7 +300,7 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 		createInfo.SetDescription(descI.(string))
 	}
 	if remoteInfoI, ok := d.GetOk("remote_info"); ok {
-		remoteInfo, err := parseGroupRemoteInfo(remoteInfoI)
+		remoteInfo, err := groupRemoteInfoTerraformToAPI(remoteInfoI)
 		if err != nil {
 			return diagFromErr(ctx, err)
 		}
@@ -578,6 +578,14 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 		d.Set("is_requestable", group.IsRequestable),
 	); err.ErrorOrNil() != nil {
 		return diagFromErr(ctx, err)
+	}
+
+	remoteInfoI, err := groupRemoteInfoAPIToTerraform(group.RemoteInfo)
+	if err != nil {
+		return diagFromErr(ctx, err)
+	}
+	if remoteInfoI != nil {
+		d.Set("remote_info", remoteInfoI)
 	}
 
 	visibility, _, err := client.GroupsApi.GetGroupVisibility(ctx, group.GroupId).Execute()

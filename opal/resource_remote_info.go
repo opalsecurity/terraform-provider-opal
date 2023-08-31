@@ -1,8 +1,8 @@
 package opal
 
 import (
+	"encoding/json"
 	"errors"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/opalsecurity/opal-go"
 )
@@ -443,8 +443,58 @@ func resourceRemoteInfoElem() *schema.Resource {
 	}
 }
 
+func resourceRemoteInfoAPIToTerraform(remoteInfo *opal.ResourceRemoteInfo) (interface{}, error) {
+	return remoteInfoAPIToTerraformInternal(remoteInfo)
+}
+
+// NOTE: See comment in `resourceRemoteInfoElem` for details on the structure we're parsing into
+func remoteInfoAPIToTerraformInternal(remoteInfo interface{}) (interface{}, error) {
+	var remoteInfoMap map[string]map[string]interface{}
+	jsonRemoteInfo, err := json.Marshal(remoteInfo)
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal(jsonRemoteInfo, &remoteInfoMap)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(remoteInfoMap) == 0 {
+		return nil, nil
+	}
+
+	deprecatedKeysByApp := map[string]map[string]bool{
+		"github_repo": {
+			"repo_id": true,
+		},
+		"github_team": {
+			"team_id": true,
+		},
+	}
+	remoteInfoIList := make([]interface{}, 1)
+	for appKey, remoteInfoRaw := range remoteInfoMap {
+		itemRemoteInfo := map[string]interface{}{}
+		for k, v := range remoteInfoRaw {
+			if deprecatedKeys, ok := deprecatedKeysByApp[appKey]; ok {
+				if _, ok := deprecatedKeys[k]; ok {
+					continue
+				}
+			}
+			itemRemoteInfo[k] = v
+		}
+
+		remoteInfoIList[0] = map[string]interface{}{
+			appKey: []interface{}{
+				itemRemoteInfo,
+			},
+		}
+	}
+
+	return remoteInfoIList, nil
+}
+
 // NOTE: See comment in `resourceRemoteInfoElem` for why the parsing is so convoluted.
-func parseResourceRemoteInfo(remoteInfoI interface{}) (*opal.ResourceRemoteInfo, error) {
+func resourceRemoteInfoTerraformToAPI(remoteInfoI interface{}) (*opal.ResourceRemoteInfo, error) {
 	remoteInfoIList := remoteInfoI.([]interface{})
 	if len(remoteInfoIList) != 1 {
 		return nil, errors.New("you cannot provide multiple remote_info blobs")

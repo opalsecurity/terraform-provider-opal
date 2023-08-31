@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -251,7 +250,7 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 	}
 
 	if remoteInfoI, ok := d.GetOk("remote_info"); ok {
-		remoteInfo, err := parseResourceRemoteInfo(remoteInfoI)
+		remoteInfo, err := resourceRemoteInfoTerraformToAPI(remoteInfoI)
 		if err != nil {
 			return diagFromErr(ctx, err)
 		}
@@ -422,6 +421,14 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 		d.Set("is_requestable", resource.IsRequestable),
 	); err.ErrorOrNil() != nil {
 		return diagFromErr(ctx, err)
+	}
+
+	remoteInfoI, err := resourceRemoteInfoAPIToTerraform(resource.RemoteInfo)
+	if err != nil {
+		return diagFromErr(ctx, err)
+	}
+	if remoteInfoI != nil {
+		d.Set("remote_info", remoteInfoI)
 	}
 
 	visibility, _, err := client.ResourcesApi.GetResourceVisibility(ctx, resource.ResourceId).Execute()
