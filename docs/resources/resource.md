@@ -76,14 +76,10 @@ resource "opal_resource" "complex_reviewer_config" {
 
   // Here first the manager has to approve. Once the manager has approved, both the security owner and the data owner need to approve
   // NOTE: The ordering determines the ordering of the stages
-  reviewer_stage {
-    require_manager_approval = true
-  }
+  reviewer_stage { require_manager_approval = true }
 
   reviewer_stage {
-    reviewer {
-      id = opal_owner.security.id
-    }
+    reviewer { id = opal_owner.security.id }
 
     reviewer {
       id = opal_owner.data.id
@@ -161,19 +157,11 @@ resource "opal_resource" "github_repo_example" {
 
 ### Optional
 
-- `auto_approval` (Boolean, Deprecated) Automatically approve all requests for this resource without review.
 - `description` (String) The description of the resource.
-- `is_requestable` (Boolean, Deprecated) Allow users to create an access request for this resource. By default, any resource is requestable.
-- `max_duration` (Number, Deprecated) The maximum duration for which this resource can be requested (in minutes).
-- `recommended_duration` (Number, Deprecated) The recommended duration for which the resource should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.
 - `remote_info` (Block List, Max: 1) Remote info that is required for the creation of remote resources. (see [below for nested schema](#nestedblock--remote_info))
 - `request_configuration` (Block List) A request configuration for this resource. (see [below for nested schema](#nestedblock--request_configuration))
-- `request_template_id` (String, Deprecated) The ID of a request template for this resource. You can get this ID from the URL in the Opal web app.
 - `require_mfa_to_approve` (Boolean) Require that reviewers MFA to approve requests for this resource.
 - `require_mfa_to_connect` (Boolean) Require that users MFA to connect to this resource. Only applicable for resources where a session can be started from Opal (i.e. AWS RDS database)
-- `require_mfa_to_request` (Boolean, Deprecated) Require that users MFA to request this resource.
-- `require_support_ticket` (Boolean, Deprecated) Require that requesters attach a support ticket to requests for this resource.
-- `reviewer_stage` (Block List, Deprecated) A reviewer stage for this resource. You are allowed to provide up to 3. (see [below for nested schema](#nestedblock--reviewer_stage))
 - `visibility` (String) The visibility level of the resource, i.e. LIMITED or GLOBAL.
 - `visibility_group` (Block List) The groups that can see this resource when visibility is limited. If not specified, only admins and users with direct access can see this resource when visibility is set to LIMITED. (see [below for nested schema](#nestedblock--visibility_group))
 
@@ -442,24 +430,6 @@ Required:
 
 - `id` (String) The ID of the owner.
 
-
-
-
-<a id="nestedblock--reviewer_stage"></a>
-### Nested Schema for `reviewer_stage`
-
-Optional:
-
-- `operator` (String) The operator of the stage. Operator is either "AND" or "OR".
-- `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval.
-- `reviewer` (Block Set) A reviewer for this stage. (see [below for nested schema](#nestedblock--reviewer_stage--reviewer))
-
-<a id="nestedblock--reviewer_stage--reviewer"></a>
-### Nested Schema for `reviewer_stage.reviewer`
-
-Required:
-
-- `id` (String) The ID of the owner.
 
 
 
