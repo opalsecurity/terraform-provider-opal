@@ -17,32 +17,28 @@ var knownCustomAppID = os.Getenv("OPAL_TEST_KNOWN_CUSTOM_APP_ID")
 var knownCustomAppAdminOwnerID = os.Getenv("OPAL_TEST_KNOWN_CUSTOM_APP_ADMIN_OWNER_ID")
 var knownRequestTemplateID = os.Getenv("OPAL_TEST_KNOWN_REQUEST_TEMPLATE_ID")
 
-// Commenting this out for now since while supporting the deprecated request configuration
-// fields, is_requestable has a default value and gets populated, which causes a diff from
-// parsing just the request_configuration fields. Will add this back once we remove support
-// for the deprecated fields.
-// func TestAccResource_Import(t *testing.T) {
-// 	baseName := "tf_acc_test_resource_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
-// 	resourceName := "opal_resource." + baseName
+func TestAccResource_Import(t *testing.T) {
+	baseName := "tf_acc_test_resource_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
+	resourceName := "opal_resource." + baseName
 
-// 	resource.Test(t, resource.TestCase{
-// 		PreCheck:  func() { testAccPreCheck(t) },
-// 		Providers: testAccProviders,
-// 		Steps: []resource.TestStep{
-// 			{
-// 				Config: testAccResourceResourceWithRequestConfigAndReviewers(baseName, baseName, "", ""),
-// 				Check: resource.ComposeTestCheckFunc(
-// 					resource.TestCheckResourceAttr(resourceName, "name", baseName), // Verify that the name was set.
-// 				),
-// 			},
-// 			{
-// 				ResourceName:      resourceName,
-// 				ImportState:       true,
-// 				ImportStateVerify: true,
-// 			},
-// 		},
-// 	})
-// }
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccResourceResourceWithRequestConfigAndReviewers(baseName, baseName, "", ""),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName), // Verify that the name was set.
+				),
+			},
+			{
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
 
 func TestAccResource_CRUD(t *testing.T) {
 	baseName := "tf_acc_test_resource_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)

@@ -19,35 +19,30 @@ var knownOpalAppAdminOwnerID = os.Getenv("OPAL_TEST_KNOWN_OPAL_APP_ADMIN_OWNER_I
 var knownGithubRepoResourceID = os.Getenv("OPAL_TEST_KNOWN_GITHUB_TEST_REPO_2_RESOURCE_ID")
 var knownOnCallScheduleID = os.Getenv("OPAL_TEST_KNOWN_ON_CALL_SCHEDULE_ID")
 
-// Commenting this out for now since while supporting the deprecated request configuration
-// fields, is_requestable has a default value and gets populated, which causes a diff from
-// parsing just the request_configuration fields. Will add this back once we remove support
-// for the deprecated fields.
+func TestAccGroup_Import(t *testing.T) {
+	baseName := "tf_acc_group_test_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
+	resourceName := "opal_group." + baseName
 
-// func TestAccGroup_Import(t *testing.T) {
-// 	baseName := "tf_acc_group_test_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
-// 	resourceName := "opal_group." + baseName
-
-// 	resource.Test(t, resource.TestCase{
-// 		PreCheck:     func() { testAccPreCheck(t) },
-// 		Providers:    testAccProviders,
-// 		CheckDestroy: testAccCheckGroupDestroy,
-// 		Steps: []resource.TestStep{
-// 			{
-// 				Config: testAccGroupResourceWithRequestConfigurationAndReviewers(baseName, baseName, "", ""),
-// 				Check: resource.ComposeTestCheckFunc(
-// 					resource.TestCheckResourceAttr(resourceName, "name", baseName), // Verify that the name was set.
-// 				),
-// 			},
-// 			{
-// 				ResourceName:            resourceName,
-// 				ImportState:             true,
-// 				ImportStateVerify:       true,
-// 				ImportStateVerifyIgnore: []string{"manage_resources"},
-// 			},
-// 		},
-// 	})
-// }
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckGroupDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccGroupResourceWithRequestConfigurationAndReviewers(baseName, baseName, "", ""),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", baseName), // Verify that the name was set.
+				),
+			},
+			{
+				ResourceName:            resourceName,
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"manage_resources"},
+			},
+		},
+	})
+}
 
 func TestAccGroup_CRUD(t *testing.T) {
 	baseName := "tf_acc_group_test_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)

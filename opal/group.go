@@ -115,47 +115,10 @@ func resourceGroup() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 			},
-			"auto_approval": {
-				Description: "Automatically approve all requests for this group without review.",
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Deprecated:  "Use request_configuration instead.",
-			},
 			"require_mfa_to_approve": {
 				Description: "Require that reviewers MFA to approve requests for this group.",
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Deprecated:  "Use request_configuration instead.",
-			},
-			"require_mfa_to_request": {
-				Description: "Require that users MFA to request this group.",
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Deprecated:  "Use request_configuration instead.",
-			},
-			"require_support_ticket": {
-				Description: "Require that requesters attach a support ticket to requests for this group.",
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Deprecated:  "Use request_configuration instead.",
-			},
-			"max_duration": {
-				Description: "The maximum duration for which this group can be requested (in minutes).",
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Deprecated:  "Use request_configuration instead.",
-			},
-			"recommended_duration": {
-				Description: "The recommended duration for which the group should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.",
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Deprecated:  "Use request_configuration instead.",
-			},
-			"request_template_id": {
-				Description: "The ID of a request template for this group. You can get this ID from the URL in the Opal web app.",
-				Type:        schema.TypeString,
-				Optional:    true,
-				Deprecated:  "Use request_configuration instead.",
 			},
 			"remote_info": {
 				Description: "Remote info that is required for the creation of remote groups.",
@@ -182,43 +145,6 @@ func resourceGroup() *schema.Resource {
 							Description: "The ID of the group that can see this group.",
 							Type:        schema.TypeString,
 							Required:    true,
-						},
-					},
-				},
-			},
-			"reviewer_stage": {
-				Description: "A reviewer stage for this group. You are allowed to provide up to 3.",
-				Type:        schema.TypeList,
-				Optional:    true,
-				Deprecated:  "Use request_configuration instead. When terraform planning, this will show as a diff even if the reviewer stages are the same, since they are parsed into request_configurations now.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"operator": {
-							Description:  "The operator of the stage. Operator is either \"AND\" or \"OR\".",
-							Type:         schema.TypeString,
-							Optional:     true,
-							Default:      "AND",
-							ValidateFunc: validation.StringInSlice(allowedReviewerStageOperators, false),
-						},
-						"require_manager_approval": {
-							Description: "Whether this reviewer stage should require manager approval.",
-							Type:        schema.TypeBool,
-							Optional:    true,
-							Default:     false,
-						},
-						"reviewer": {
-							Description: "A reviewer for this stage.",
-							Type:        schema.TypeSet,
-							Optional:    true,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"id": {
-										Description: "The ID of the owner.",
-										Type:        schema.TypeString,
-										Required:    true,
-									},
-								},
-							},
 						},
 					},
 				},
@@ -267,13 +193,6 @@ func resourceGroup() *schema.Resource {
 						},
 					},
 				},
-			},
-			"is_requestable": {
-				Description: "Allow users to create an access request for this group. By default, any group is requestable.",
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     true,
-				Deprecated:  "Use request_configuration instead.",
 			},
 			"on_call_schedule": {
 				Description: "An on call schedule for this group.",
@@ -429,68 +348,20 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 		"id":   d.Id(),
 	})
 
-	// In the case that auto_approval is true or is_requestable is false, we still want to
-	// update the reviewer stages to be empty to avoid the immediate diff from the default
-	// reviewer configuration.
-	// NOTE: This call should come before updating is_requestable and auto_approval as it otherwise
-	// overrides those values
-	var reviewerStages any = make([]any, 0)
-	if reviewerStagesI, ok := d.GetOk("reviewer_stage"); ok {
-		reviewerStages = reviewerStagesI
-	}
 	requestConfigurationsListI, requestConfigurationsListOk := d.GetOk("request_configuration")
-	// We only want this run if we don't have a request configuration list
-	if !requestConfigurationsListOk {
-		if diag := resourceGroupUpdateReviewerStages(ctx, d, client, reviewerStages); diag != nil {
-			return diag
-		}
-	}
 
 	// Because group creation does not let us set some properties immediately,
 	// we may have to update them in a follow up request.
 	adminOwnerIDI, adminOwnerIDOk := d.GetOk("admin_owner_id")
-	autoApprovalI, autoApprovalOk := d.GetOkExists("auto_approval")
 	requireMfaToApproveI, requireMfaToApproveOk := d.GetOkExists("require_mfa_to_approve")
-	requireMfaToRequestI, requireMfaToRequestOk := d.GetOkExists("require_mfa_to_request")
-	requireSupportTicketI, requireSupportTicketOk := d.GetOkExists("require_support_ticket")
-	maxDurationI, maxDurationOk := d.GetOk("max_duration")
-	recommendedDurationI, recommendedDurationOk := d.GetOk("recommended_duration")
-	requestTemplateIDI, requestTemplateIDOk := d.GetOk("request_template_id")
-	isRequestableI, isRequestableOk := d.GetOkExists("is_requestable")
 
-	if adminOwnerIDOk || autoApprovalOk || requireMfaToApproveOk || requireMfaToRequestOk || requireSupportTicketOk || maxDurationOk || requestTemplateIDOk || isRequestableOk {
+	if adminOwnerIDOk || requireMfaToApproveOk || requestConfigurationsListOk {
 		updateInfo := opal.NewUpdateGroupInfo(group.GroupId)
 		if adminOwnerIDOk {
 			updateInfo.SetAdminOwnerId(adminOwnerIDI.(string))
 		}
-		if autoApprovalOk {
-			updateInfo.SetAutoApproval(autoApprovalI.(bool))
-		}
 		if requireMfaToApproveOk {
 			updateInfo.SetRequireMfaToApprove(requireMfaToApproveI.(bool))
-		}
-		if requireMfaToRequestOk {
-			updateInfo.SetRequireMfaToRequest(requireMfaToRequestI.(bool))
-		}
-		if requireSupportTicketOk {
-			updateInfo.SetRequireSupportTicket(requireSupportTicketI.(bool))
-		}
-		if maxDurationOk {
-			updateInfo.SetMaxDuration(int32(maxDurationI.(int)))
-		}
-		if recommendedDurationOk {
-			updateInfo.SetRecommendedDuration(int32(recommendedDurationI.(int)))
-		}
-		if requestTemplateIDOk {
-			updateInfo.SetRequestTemplateId(requestTemplateIDI.(string))
-		}
-
-		if isRequestableOk {
-			// isRequestable is a special case because it has a default value of true,
-			// but we only need it if we don't have a request configuration list
-			if !requestConfigurationsListOk {
-				updateInfo.SetIsRequestable(isRequestableI.(bool))
-			}
 		}
 		if requestConfigurationsListOk {
 			requestConfigurationsList, err := parseRequestConfigurationList(ctx, requestConfigurationsListI)
@@ -727,20 +598,8 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 		})
 	}
 
-	if len(requestConfigurations) == 0 {
-		d.Set("auto_approval", group.AutoApproval)
-		d.Set("require_mfa_to_request", group.RequireMfaToRequest)
-		d.Set("require_support_ticket", group.RequireSupportTicket)
-		d.Set("max_duration", group.MaxDuration)
-		d.Set("recommended_duration", group.RecommendedDuration)
-		d.Set("request_template_id", group.RequestTemplateId)
-		d.Set("is_requestable", group.IsRequestable)
-		d.Set("reviewer_stage", reviewerStagesI)
-	} else {
+	if len(requestConfigurations) != 0 {
 		d.Set("request_configuration", requestConfigurations)
-		// if we set request_configuration, we want to unset reviewer_stage since
-		// it's populated separately
-		d.Set("reviewer_stage", nil)
 	}
 
 	visibility, _, err := client.GroupsApi.GetGroupVisibility(ctx, group.GroupId).Execute()
@@ -817,39 +676,9 @@ func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, m any) dia
 		hasBasicUpdate = true
 		updateInfo.SetAdminOwnerId(d.Get("admin_owner_id").(string))
 	}
-	if d.HasChange("auto_approval") {
-		hasBasicUpdate = true
-		updateInfo.SetAutoApproval(d.Get("auto_approval").(bool))
-	}
 	if d.HasChange("require_mfa_to_approve") {
 		hasBasicUpdate = true
 		updateInfo.SetRequireMfaToApprove(d.Get("require_mfa_to_approve").(bool))
-	}
-	if d.HasChange("require_mfa_to_request") {
-		hasBasicUpdate = true
-		updateInfo.SetRequireMfaToRequest(d.Get("require_mfa_to_request").(bool))
-	}
-	if d.HasChange("require_support_ticket") {
-		hasBasicUpdate = true
-		updateInfo.SetRequireSupportTicket(d.Get("require_support_ticket").(bool))
-	}
-	if d.HasChange("max_duration") {
-		hasBasicUpdate = true
-		updateInfo.SetMaxDuration(int32(d.Get("max_duration").(int)))
-	}
-	if d.HasChange("recommended_duration") {
-		hasBasicUpdate = true
-		updateInfo.SetRecommendedDuration(int32(d.Get("recommended_duration").(int)))
-	}
-	if d.HasChange("request_template_id") {
-		hasBasicUpdate = true
-		updateInfo.SetRequestTemplateId(d.Get("request_template_id").(string))
-	}
-	if d.HasChange("is_requestable") {
-		if updateInfo.RequestConfigurationList == nil {
-			hasBasicUpdate = true
-			updateInfo.SetIsRequestable(d.Get("is_requestable").(bool))
-		}
 	}
 	if d.HasChange("request_configuration") {
 		hasBasicUpdate = true
@@ -885,16 +714,6 @@ func resourceGroupUpdate(ctx context.Context, d *schema.ResourceData, m any) dia
 
 	if d.HasChange("on_call_schedule") {
 		if diag := resourceGroupUpdateOnCallSchedules(ctx, d, client); diag != nil {
-			return diag
-		}
-	}
-
-	if d.HasChange("reviewer_stage") {
-		reviewerStages := any([]any{})
-		if reviewersStagesBlock, ok := d.GetOk("reviewer_stage"); ok {
-			reviewerStages = reviewersStagesBlock
-		}
-		if diag := resourceGroupUpdateReviewerStages(ctx, d, client, reviewerStages); diag != nil {
 			return diag
 		}
 	}
