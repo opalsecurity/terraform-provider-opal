@@ -24,23 +24,23 @@ provider "opal" {
 
 data "opal_app" "opal" {
   # App ids can be retrieved via the Opal web app or via the API (https://docs.opal.dev/reference/getapps)
-  id = "ba0ec360-af48-4b98-be34-bceb58760626"
+  id = "dbe38d2d-9ce4-4d13-95a4-945716a257b4"
 }
 
 data "opal_app" "my_custom_app" {
-  id = "077f6beb-956e-42be-815c-e0b17ef9077e"
+  id = "03c06479-6ffa-45e1-9f65-cd470ff128b3"
 }
 
 data "opal_user" "alice" {
-  email = "aashish@opal.dev"
+  email = "alice@mycompany.com"
 }
 
 data "opal_user" "bob" {
-  id = "5c0a330c-dd4c-403b-aca5-888dd847fca4"
+  id = "e5e5ba2b-e126-4699-a8bc-dc186d490b6e"
 }
 
 resource "opal_owner" "security" {
-  name = "Andrew's TF owner 4"
+  name = "Security Team"
 
   user {
     id = data.opal_user.alice.id
@@ -59,67 +59,36 @@ resource "opal_resource" "sensitive_resource" {
   admin_owner_id = opal_owner.security.id
   visibility = "LIMITED"
 
-  request_configuration {
-    priority = 0
-    is_requestable = true
-    auto_approval = false
-    require_mfa_to_request = false
-    max_duration = 120
-    recommended_duration = 60
-    require_support_ticket = false
-    reviewer_stage {
-      reviewer {
-        id = opal_owner.security.id
-      }
-    }
+  visibility_group {
+    id = opal_group.oncall.id
   }
-}
-
-resource "opal_resource" "sensitive_resource_4_me" {
-  name = "Sensitive Resource for me"
-  description = "A sensitive resource that should be accessed for on-call only."
-  resource_type = "CUSTOM"
-  app_id = data.opal_app.my_custom_app.id
-  admin_owner_id = opal_owner.security.id
-  visibility = "LIMITED"
 
   request_configuration {
     priority = 0
-    is_requestable = true
-    auto_approval = true
-    require_mfa_to_request = true
-    max_duration = 120
-    recommended_duration = 60
-    require_support_ticket = false
-    reviewer_stage {
-      reviewer {
-        id = opal_owner.security.id
-      }
-    }
-    reviewer_stage {
-      reviewer {
-        id = "c99dd319-f69d-4b19-88bf-451d85cad819"
-      }
-    }
   }
 
   request_configuration {
     priority = 1
     group_ids = ["bd8a3b83-2bac-410d-af5c-6c67263077ea"]
     is_requestable = true
-    auto_approval = false
+    auto_approval = true
     require_mfa_to_request = false
     max_duration = 60
-    recommended_duration = 30
+    recommended_duration = 60
     require_support_ticket = false
     reviewer_stage {
-      require_manager_approval = true
       reviewer {
-        id = "c99dd319-f69d-4b19-88bf-451d85cad819"
+        id = opal_owner.security.id
+      }
+    }
+    reviewer_stage {
+      reviewer {
+        id = opal_owner.security.id
       }
     }
   }
 }
+
 resource "opal_group" "oncall" {
   name = "On-Call Rotation"
   group_type = "OPAL_GROUP"

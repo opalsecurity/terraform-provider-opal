@@ -19,11 +19,13 @@ resource "opal_resource" "sensitive_resource" {
   app_id = data.opal_app.my_custom_app.id
   admin_owner_id = opal_owner.security.id
   require_mfa_to_approve = true
-  auto_approval = false
 
-  reviewer_stage {
-    reviewer {
-      id = opal_owner.security.id
+  request_configuration {
+    auto_approval = false
+    reviewer_stage {
+      reviewer {
+        id = opal_owner.security.id
+      }
     }
   }
 }
@@ -37,23 +39,29 @@ resource "opal_resource" "not_requestable" {
   // ...
 
   // If you want a resource to not be requestable, you can set `is_requestable` to false and omit the `reviewer_stage` attribute
-  is_requestable = false
+  request_configuration {
+    is_requestable = false
+  }
 }
 
 resource "opal_resource" "auto_approval" {
   // ...
 
   // If you want a resource to be auto-approved, you can set `auto_approval` to true and omit the `reviewer_stage` attribute
-  auto_approval = false
+  request_configuration {
+    auto_approval = false
+  }
 }
 
 resource "opal_resource" "basic_reviewer_config" {
   // ...
 
   // NOTE: operator = "AND" and require_manager_approval = false are the default if not explicitly set
-  reviewer_stage {
-    reviewer {
-      id = opal_owner.security.id
+  request_configuration {
+    reviewer_stage {
+      reviewer {
+        id = opal_owner.security.id
+      }
     }
   }
 }
@@ -62,11 +70,13 @@ resource "opal_resource" "or_reviewer_config" {
   // ...
 
   // Here the manager of the requesting user or the security owner would need to approve
-  reviewer_stage {
-    operator = "OR"
-    require_manager_approval = true
-    reviewer {
-      id = opal_owner.security.id
+  request_configuration {
+    reviewer_stage {
+      operator = "OR"
+      require_manager_approval = true
+      reviewer {
+        id = opal_owner.security.id
+      }
     }
   }
 }
@@ -76,13 +86,19 @@ resource "opal_resource" "complex_reviewer_config" {
 
   // Here first the manager has to approve. Once the manager has approved, both the security owner and the data owner need to approve
   // NOTE: The ordering determines the ordering of the stages
-  reviewer_stage { require_manager_approval = true }
 
-  reviewer_stage {
-    reviewer { id = opal_owner.security.id }
-
-    reviewer {
-      id = opal_owner.data.id
+  request_configuration {
+    reviewer_stage {
+      require_manager_approval = true
+    }
+    reviewer_stage {
+      reviewer {
+        id = opal_owner.security.id
+      }
+  
+      reviewer {
+        id = opal_owner.data.id
+      }
     }
   }
 }
