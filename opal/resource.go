@@ -161,6 +161,7 @@ func resourceResource() *schema.Resource {
 				Description: "Remote info that is required for the creation of remote resources.",
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				MaxItems:    1,
 				Elem:        resourceRemoteInfoElem(),
