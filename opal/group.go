@@ -155,6 +155,7 @@ func resourceGroup() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Elem:        groupRemoteInfoElem(),
 			},
