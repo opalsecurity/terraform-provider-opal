@@ -19,11 +19,13 @@ resource "opal_resource" "sensitive_resource" {
   app_id = data.opal_app.my_custom_app.id
   admin_owner_id = opal_owner.security.id
   require_mfa_to_approve = true
-  auto_approval = false
 
-  reviewer_stage {
-    reviewer {
-      id = opal_owner.security.id
+  request_configuration {
+    auto_approval = false
+    reviewer_stage {
+      reviewer {
+        id = opal_owner.security.id
+      }
     }
   }
 }
@@ -37,23 +39,29 @@ resource "opal_resource" "not_requestable" {
   // ...
 
   // If you want a resource to not be requestable, you can set `is_requestable` to false and omit the `reviewer_stage` attribute
-  is_requestable = false
+  request_configuration {
+    is_requestable = false
+  }
 }
 
 resource "opal_resource" "auto_approval" {
   // ...
 
   // If you want a resource to be auto-approved, you can set `auto_approval` to true and omit the `reviewer_stage` attribute
-  auto_approval = false
+  request_configuration {
+    auto_approval = false
+  }
 }
 
 resource "opal_resource" "basic_reviewer_config" {
   // ...
 
   // NOTE: operator = "AND" and require_manager_approval = false are the default if not explicitly set
-  reviewer_stage {
-    reviewer {
-      id = opal_owner.security.id
+  request_configuration {
+    reviewer_stage {
+      reviewer {
+        id = opal_owner.security.id
+      }
     }
   }
 }
@@ -62,11 +70,13 @@ resource "opal_resource" "or_reviewer_config" {
   // ...
 
   // Here the manager of the requesting user or the security owner would need to approve
-  reviewer_stage {
-    operator = "OR"
-    require_manager_approval = true
-    reviewer {
-      id = opal_owner.security.id
+  request_configuration {
+    reviewer_stage {
+      operator = "OR"
+      require_manager_approval = true
+      reviewer {
+        id = opal_owner.security.id
+      }
     }
   }
 }
@@ -76,17 +86,19 @@ resource "opal_resource" "complex_reviewer_config" {
 
   // Here first the manager has to approve. Once the manager has approved, both the security owner and the data owner need to approve
   // NOTE: The ordering determines the ordering of the stages
-  reviewer_stage {
-    require_manager_approval = true
-  }
 
-  reviewer_stage {
-    reviewer {
-      id = opal_owner.security.id
+  request_configuration {
+    reviewer_stage {
+      require_manager_approval = true
     }
-
-    reviewer {
-      id = opal_owner.data.id
+    reviewer_stage {
+      reviewer {
+        id = opal_owner.security.id
+      }
+  
+      reviewer {
+        id = opal_owner.data.id
+      }
     }
   }
 }
@@ -161,18 +173,11 @@ resource "opal_resource" "github_repo_example" {
 
 ### Optional
 
-- `auto_approval` (Boolean) Automatically approve all requests for this resource without review.
 - `description` (String) The description of the resource.
-- `is_requestable` (Boolean) Allow users to create an access request for this resource. By default, any resource is requestable.
-- `max_duration` (Number) The maximum duration for which this resource can be requested (in minutes).
-- `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.
 - `remote_info` (Block List, Max: 1) Remote info that is required for the creation of remote resources. (see [below for nested schema](#nestedblock--remote_info))
-- `request_template_id` (String) The ID of a request template for this resource. You can get this ID from the URL in the Opal web app.
+- `request_configuration` (Block List) A request configuration for this resource. (see [below for nested schema](#nestedblock--request_configuration))
 - `require_mfa_to_approve` (Boolean) Require that reviewers MFA to approve requests for this resource.
 - `require_mfa_to_connect` (Boolean) Require that users MFA to connect to this resource. Only applicable for resources where a session can be started from Opal (i.e. AWS RDS database)
-- `require_mfa_to_request` (Boolean) Require that users MFA to request this resource.
-- `require_support_ticket` (Boolean) Require that requesters attach a support ticket to requests for this resource.
-- `reviewer_stage` (Block List) A reviewer stage for this resource. You are allowed to provide up to 3. (see [below for nested schema](#nestedblock--reviewer_stage))
 - `visibility` (String) The visibility level of the resource, i.e. LIMITED or GLOBAL.
 - `visibility_group` (Block List) The groups that can see this resource when visibility is limited. If not specified, only admins and users with direct access can see this resource when visibility is set to LIMITED. (see [below for nested schema](#nestedblock--visibility_group))
 
@@ -409,21 +414,38 @@ Required:
 
 
 
-<a id="nestedblock--reviewer_stage"></a>
-### Nested Schema for `reviewer_stage`
+<a id="nestedblock--request_configuration"></a>
+### Nested Schema for `request_configuration`
+
+Optional:
+
+- `auto_approval` (Boolean) For users satisfying the condition, automatically approve all requests for this resource without review.
+- `group_ids` (List of String) The group IDs satosfying this request configuration. For the default request configuration, this should be empty and priority should be 0, otherwise, this should contain one group ID.
+- `is_requestable` (Boolean) For users satisfying the condition, allow the creation an access request for this resource. By default, any resource is requestable.
+- `max_duration` (Number) For users satisfying the condition, the maximum duration for which this resource can be requested (in minutes).
+- `priority` (Number) The priority of this request configuration. The higher the number, the higher the priority. Defaults to 0.
+- `recommended_duration` (Number) For users satisfying the condition, the recommended duration for which the resource should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.
+- `request_template_id` (String) For users satisfying the condition, the ID of a request template for this resource. You can get this ID from the URL in the Opal web app.
+- `require_mfa_to_request` (Boolean) For users satisfying the condition, require  MFA to request this resource.
+- `require_support_ticket` (Boolean) For users satisfying the condition, require attaching a support ticket to requests for this resource.
+- `reviewer_stage` (Block List) A reviewer stage for this request configuration. You are allowed to provide up to 3. (see [below for nested schema](#nestedblock--request_configuration--reviewer_stage))
+
+<a id="nestedblock--request_configuration--reviewer_stage"></a>
+### Nested Schema for `request_configuration.reviewer_stage`
 
 Optional:
 
 - `operator` (String) The operator of the stage. Operator is either "AND" or "OR".
 - `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval.
-- `reviewer` (Block Set) A reviewer for this stage. (see [below for nested schema](#nestedblock--reviewer_stage--reviewer))
+- `reviewer` (Block Set) A reviewer for this stage. (see [below for nested schema](#nestedblock--request_configuration--reviewer_stage--reviewer))
 
-<a id="nestedblock--reviewer_stage--reviewer"></a>
-### Nested Schema for `reviewer_stage.reviewer`
+<a id="nestedblock--request_configuration--reviewer_stage--reviewer"></a>
+### Nested Schema for `request_configuration.reviewer_stage.reviewer`
 
 Required:
 
 - `id` (String) The ID of the owner.
+
 
 
 

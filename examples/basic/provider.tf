@@ -50,9 +50,28 @@ resource "opal_resource" "sensitive_resource" {
     id = opal_group.oncall.id
   }
 
-  reviewer_stage {
-    reviewer {
-      id = opal_owner.security.id
+  request_configuration {
+    priority = 0
+  }
+
+  request_configuration {
+    priority = 1
+    group_ids = ["bd8a3b83-2bac-410d-af5c-6c67263077ea"]
+    is_requestable = true
+    auto_approval = true
+    require_mfa_to_request = false
+    max_duration = 60
+    recommended_duration = 60
+    require_support_ticket = false
+    reviewer_stage {
+      reviewer {
+        id = opal_owner.security.id
+      }
+    }
+    reviewer_stage {
+      reviewer {
+        id = opal_owner.security.id
+      }
     }
   }
 }
@@ -64,9 +83,11 @@ resource "opal_group" "oncall" {
   require_mfa_to_approve = true
   admin_owner_id = opal_owner.security.id
 
-  reviewer_stage {
-    reviewer {
-      id = opal_owner.security.id
+  request_configuration {
+    reviewer_stage {
+      reviewer {
+        id = opal_owner.security.id
+      }
     }
   }
 }

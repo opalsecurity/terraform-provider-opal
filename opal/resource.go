@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -117,11 +118,6 @@ func resourceResource() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 			},
-			"auto_approval": {
-				Description: "Automatically approve all requests for this resource without review.",
-				Type:        schema.TypeBool,
-				Optional:    true,
-			},
 			"require_mfa_to_approve": {
 				Description: "Require that reviewers MFA to approve requests for this resource.",
 				Type:        schema.TypeBool,
@@ -130,31 +126,6 @@ func resourceResource() *schema.Resource {
 			"require_mfa_to_connect": {
 				Description: "Require that users MFA to connect to this resource. Only applicable for resources where a session can be started from Opal (i.e. AWS RDS database)",
 				Type:        schema.TypeBool,
-				Optional:    true,
-			},
-			"require_mfa_to_request": {
-				Description: "Require that users MFA to request this resource.",
-				Type:        schema.TypeBool,
-				Optional:    true,
-			},
-			"require_support_ticket": {
-				Description: "Require that requesters attach a support ticket to requests for this resource.",
-				Type:        schema.TypeBool,
-				Optional:    true,
-			},
-			"max_duration": {
-				Description: "The maximum duration for which this resource can be requested (in minutes).",
-				Type:        schema.TypeInt,
-				Optional:    true,
-			},
-			"recommended_duration": {
-				Description: "The recommended duration for which the resource should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.",
-				Type:        schema.TypeInt,
-				Optional:    true,
-			},
-			"request_template_id": {
-				Description: "The ID of a request template for this resource. You can get this ID from the URL in the Opal web app.",
-				Type:        schema.TypeString,
 				Optional:    true,
 			},
 			"remote_info": {
@@ -187,47 +158,103 @@ func resourceResource() *schema.Resource {
 					},
 				},
 			},
-			"reviewer_stage": {
-				Description: "A reviewer stage for this resource. You are allowed to provide up to 3.",
+			"request_configuration": {
+				Description: "A request configuration for this resource.",
 				Type:        schema.TypeList,
 				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"operator": {
-							Description:  "The operator of the stage. Operator is either \"AND\" or \"OR\".",
-							Type:         schema.TypeString,
-							Optional:     true,
-							Default:      "AND",
-							ValidateFunc: validation.StringInSlice(allowedReviewerStageOperators, false),
+						"group_ids": {
+							Description: "The group IDs satosfying this request configuration. For the default request configuration, this should be empty and priority should be 0, otherwise, this should contain one group ID.",
+							Type:        schema.TypeList,
+							Optional:    true,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							MaxItems: 1,
 						},
-						"require_manager_approval": {
-							Description: "Whether this reviewer stage should require manager approval.",
+						"is_requestable": {
+							Description: "For users satisfying the condition, allow the creation an access request for this resource. By default, any resource is requestable.",
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Default:     false,
+							Default:     true,
 						},
-						"reviewer": {
-							Description: "A reviewer for this stage.",
-							Type:        schema.TypeSet,
+						"auto_approval": {
+							Description: "For users satisfying the condition, automatically approve all requests for this resource without review.",
+							Type:        schema.TypeBool,
+							Optional:    true,
+						},
+						"require_mfa_to_request": {
+							Description: "For users satisfying the condition, require  MFA to request this resource.",
+							Type:        schema.TypeBool,
+							Optional:    true,
+						},
+						"require_support_ticket": {
+							Description: "For users satisfying the condition, require attaching a support ticket to requests for this resource.",
+							Type:        schema.TypeBool,
+							Optional:    true,
+						},
+						"max_duration": {
+							Description: "For users satisfying the condition, the maximum duration for which this resource can be requested (in minutes).",
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Default:     -1,
+						},
+						"recommended_duration": {
+							Description: "For users satisfying the condition, the recommended duration for which the resource should be requested (in minutes). Will be the default value in a request. Use -1 to set to indefinite.",
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Default:     -1,
+						},
+						"request_template_id": {
+							Description: "For users satisfying the condition, the ID of a request template for this resource. You can get this ID from the URL in the Opal web app.",
+							Type:        schema.TypeString,
+							Optional:    true,
+						},
+						"priority": {
+							Description: "The priority of this request configuration. The higher the number, the higher the priority. Defaults to 0.",
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Default:     0,
+						},
+						"reviewer_stage": {
+							Description: "A reviewer stage for this request configuration. You are allowed to provide up to 3.",
+							Type:        schema.TypeList,
 							Optional:    true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"id": {
-										Description: "The ID of the owner.",
-										Type:        schema.TypeString,
-										Required:    true,
+									"operator": {
+										Description:  "The operator of the stage. Operator is either \"AND\" or \"OR\".",
+										Type:         schema.TypeString,
+										Optional:     true,
+										Default:      "AND",
+										ValidateFunc: validation.StringInSlice(allowedReviewerStageOperators, false),
+									},
+									"require_manager_approval": {
+										Description: "Whether this reviewer stage should require manager approval.",
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Default:     false,
+									},
+									"reviewer": {
+										Description: "A reviewer for this stage.",
+										Type:        schema.TypeSet,
+										Optional:    true,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"id": {
+													Description: "The ID of the owner.",
+													Type:        schema.TypeString,
+													Required:    true,
+												},
+											},
+										},
 									},
 								},
 							},
 						},
 					},
 				},
-			},
-			"is_requestable": {
-				Description: "Allow users to create an access request for this resource. By default, any resource is requestable.",
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     true,
 			},
 			// XXX: Audit message channel...
 		},
@@ -238,6 +265,10 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 	client := m.(*opal.APIClient)
 
 	if err := validateReviewerConfigDuringCreate(d); err != nil {
+		return diagFromErr(ctx, err)
+	}
+
+	if err := validateRequestConfigurationListDuringCreate(ctx, d); err != nil {
 		return diagFromErr(ctx, err)
 	}
 
@@ -269,38 +300,18 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 		"id":   d.Id(),
 	})
 
-	// In the case that auto_approval is true or is_requestable is false, we still want to
-	// update the reviewer stages to be empty to avoid the immediate diff from the default
-	// reviewer configuration.
-	// NOTE: This call should come before updating is_requestable and auto_approval as it otherwise
-	// overrides those values
-	var reviewerStages any = make([]any, 0)
-	if reviewerStagesI, ok := d.GetOk("reviewer_stage"); ok {
-		reviewerStages = reviewerStagesI
-	}
-	if diag := resourceResourceUpdateReviewerStages(ctx, d, client, reviewerStages); diag != nil {
-		return diag
-	}
+	requestConfigurationsListI, requestConfigurationsListOk := d.GetOk("request_configuration")
 
 	// Because resource creation does not let us set some properties immediately,
 	// we may have to update them in a follow up request.
 	adminOwnerIDI, adminOwnerIDOk := d.GetOk("admin_owner_id")
-	autoApprovalI, autoApprovalOk := d.GetOkExists("auto_approval")
 	requireMfaToApproveI, requireMfaToApproveOk := d.GetOkExists("require_mfa_to_approve")
 	requireMfaToConnectI, requireMfaToConnectOk := d.GetOkExists("require_mfa_to_connect")
-	requireMfaToRequestI, requireMfaToRequestOk := d.GetOkExists("require_mfa_to_request")
-	requireSupportTicketI, requireSupportTicketOk := d.GetOkExists("require_support_ticket")
-	isRequestableI, isRequestableOk := d.GetOkExists("is_requestable")
-	maxDurationI, maxDurationOk := d.GetOk("max_duration")
-	recommendedDurationI, recommendedDurationOk := d.GetOk("recommended_duration")
-	requestTemplateIDI, requestTemplateIDOk := d.GetOk("request_template_id")
-	if adminOwnerIDOk || autoApprovalOk || requireMfaToApproveOk || requireMfaToConnectOk || requireMfaToRequestOk || requireSupportTicketOk || isRequestableOk || maxDurationOk || recommendedDurationOk || requestTemplateIDOk {
+
+	if adminOwnerIDOk || requestConfigurationsListOk || requireMfaToApproveOk || requireMfaToConnectOk {
 		updateInfo := opal.NewUpdateResourceInfo(resource.ResourceId)
 		if adminOwnerIDOk {
 			updateInfo.SetAdminOwnerId(adminOwnerIDI.(string))
-		}
-		if autoApprovalOk {
-			updateInfo.SetAutoApproval(autoApprovalI.(bool))
 		}
 		if requireMfaToApproveOk {
 			updateInfo.SetRequireMfaToApprove(requireMfaToApproveI.(bool))
@@ -308,23 +319,15 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 		if requireMfaToConnectOk {
 			updateInfo.SetRequireMfaToConnect(requireMfaToConnectI.(bool))
 		}
-		if requireMfaToRequestOk {
-			updateInfo.SetRequireMfaToRequest(requireMfaToRequestI.(bool))
-		}
-		if requireSupportTicketOk {
-			updateInfo.SetRequireSupportTicket(requireSupportTicketI.(bool))
-		}
-		if maxDurationOk {
-			updateInfo.SetMaxDuration(int32(maxDurationI.(int)))
-		}
-		if recommendedDurationOk {
-			updateInfo.SetRecommendedDuration(int32(recommendedDurationI.(int)))
-		}
-		if requestTemplateIDOk {
-			updateInfo.SetRequestTemplateId(requestTemplateIDI.(string))
-		}
-		if isRequestableOk {
-			updateInfo.SetIsRequestable(isRequestableI.(bool))
+		if requestConfigurationsListOk {
+			requestConfigurationsList, err := parseRequestConfigurationList(ctx, requestConfigurationsListI)
+			if err != nil {
+				return diagFromErr(ctx, err)
+			}
+			if err := validateRequestConfigurationListDuringCreate(ctx, d); err != nil {
+				return diagFromErr(ctx, err)
+			}
+			updateInfo.SetRequestConfigurationList(*requestConfigurationsList)
 		}
 
 		tflog.Debug(ctx, "Immediately updating opal resource", map[string]any{
@@ -368,40 +371,21 @@ func resourceResourceUpdateVisibility(ctx context.Context, d *schema.ResourceDat
 	return nil
 }
 
-func resourceResourceUpdateReviewerStages(ctx context.Context, d *schema.ResourceData, client *opal.APIClient, reviewerStagesI any) diag.Diagnostics {
-	rawReviewerStages := reviewerStagesI.([]any)
-	reviewerStages := make([]opal.ReviewerStage, 0, len(rawReviewerStages))
-	for _, rawReviewerStage := range rawReviewerStages {
-		reviewerStage := rawReviewerStage.(map[string]any)
-		requireManagerApproval := reviewerStage["require_manager_approval"].(bool)
-		operator := reviewerStage["operator"].(string)
-		reviewersI := reviewerStage["reviewer"]
-		reviewerIds, err := extractReviewerIDs(reviewersI)
-		if err != nil {
-			return diagFromErr(ctx, err)
-		}
-
-		reviewerStages = append(reviewerStages, *opal.NewReviewerStage(requireManagerApproval, operator, reviewerIds))
-		tflog.Debug(ctx, "Setting resource reviewer stage", map[string]any{
-			"id":                     d.Id(),
-			"requireManagerApproval": requireManagerApproval,
-			"operator":               operator,
-			"reviewerIds":            reviewerIds,
-		})
-	}
-
-	if _, _, err := client.ResourcesApi.SetResourceReviewerStages(ctx, d.Id()).ReviewerStageList(*opal.NewReviewerStageList(reviewerStages)).Execute(); err != nil {
-		return diagFromErr(ctx, err)
-	}
-	return nil
-}
-
 func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*opal.APIClient)
 
 	resource, _, err := client.ResourcesApi.GetResource(ctx, d.Id()).Execute()
 	if err != nil {
 		return diagFromErr(ctx, err)
+	}
+
+	requestConfigurations := make([]map[string]interface{}, 0, len(resource.RequestConfigurationList))
+	for _, requestConfiguration := range resource.RequestConfigurationList {
+		requestConfigurationI, err := parseSDKRequestConfiguration(ctx, &requestConfiguration)
+		if err != nil {
+			return diagFromErr(ctx, err)
+		}
+		requestConfigurations = append(requestConfigurations, requestConfigurationI)
 	}
 
 	d.SetId(resource.ResourceId)
@@ -411,15 +395,9 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 		d.Set("resource_type", resource.ResourceType),
 		d.Set("app_id", resource.AppId),
 		d.Set("admin_owner_id", resource.AdminOwnerId),
-		d.Set("auto_approval", resource.AutoApproval),
 		d.Set("require_mfa_to_approve", resource.RequireMfaToApprove),
 		d.Set("require_mfa_to_connect", resource.RequireMfaToConnect),
-		d.Set("require_mfa_to_request", resource.RequireMfaToRequest),
-		d.Set("require_support_ticket", resource.RequireSupportTicket),
-		d.Set("max_duration", resource.MaxDuration),
-		d.Set("recommended_duration", resource.RecommendedDuration),
-		d.Set("request_template_id", resource.RequestTemplateId),
-		d.Set("is_requestable", resource.IsRequestable),
+		// XXX: We don't get the metadata back. Will terraform state be okay?
 	); err.ErrorOrNil() != nil {
 		return diagFromErr(ctx, err)
 	}
@@ -430,6 +408,10 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 	}
 	if remoteInfoI != nil {
 		d.Set("remote_info", remoteInfoI)
+	}
+
+	if len(requestConfigurations) != 0 {
+		d.Set("request_configuration", requestConfigurations)
 	}
 
 	visibility, _, err := client.ResourcesApi.GetResourceVisibility(ctx, resource.ResourceId).Execute()
@@ -443,28 +425,6 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 		flattenedGroups = append(flattenedGroups, map[string]any{"id": groupID})
 	}
 	d.Set("visibility_group", flattenedGroups)
-
-	reviewerStages, _, err := client.ResourcesApi.GetResourceReviewerStages(ctx, resource.ResourceId).Execute()
-	if err != nil {
-		return diagFromErr(ctx, err)
-	}
-
-	reviewerStagesI := make([]any, 0, len(reviewerStages))
-	for _, reviewerStage := range reviewerStages {
-		reviewersI := make([]any, 0, len(reviewerStage.OwnerIds))
-		for _, reviewerID := range reviewerStage.OwnerIds {
-			reviewersI = append(reviewersI, map[string]any{
-				"id": reviewerID,
-			})
-		}
-
-		reviewerStagesI = append(reviewerStagesI, map[string]any{
-			"reviewer":                 reviewersI,
-			"operator":                 reviewerStage.Operator,
-			"require_manager_approval": reviewerStage.RequireManagerApproval,
-		})
-	}
-	d.Set("reviewer_stage", reviewerStagesI)
 
 	if resource.Metadata != nil {
 		remoteInfoIList := make([]any, 0, 1)
@@ -512,10 +472,6 @@ func resourceResourceUpdate(ctx context.Context, d *schema.ResourceData, m any) 
 		hasBasicChange = true
 		updateInfo.SetAdminOwnerId(d.Get("admin_owner_id").(string))
 	}
-	if d.HasChange("auto_approval") {
-		hasBasicChange = true
-		updateInfo.SetAutoApproval(d.Get("auto_approval").(bool))
-	}
 	if d.HasChange("require_mfa_to_approve") {
 		hasBasicChange = true
 		updateInfo.SetRequireMfaToApprove(d.Get("require_mfa_to_approve").(bool))
@@ -524,29 +480,16 @@ func resourceResourceUpdate(ctx context.Context, d *schema.ResourceData, m any) 
 		hasBasicChange = true
 		updateInfo.SetRequireMfaToConnect(d.Get("require_mfa_to_connect").(bool))
 	}
-	if d.HasChange("require_mfa_to_request") {
+	if d.HasChange("request_configuration") {
 		hasBasicChange = true
-		updateInfo.SetRequireMfaToRequest(d.Get("require_mfa_to_request").(bool))
-	}
-	if d.HasChange("require_support_ticket") {
-		hasBasicChange = true
-		updateInfo.SetRequireSupportTicket(d.Get("require_support_ticket").(bool))
-	}
-	if d.HasChange("max_duration") {
-		hasBasicChange = true
-		updateInfo.SetMaxDuration(int32(d.Get("max_duration").(int)))
-	}
-	if d.HasChange("recommended_duration") {
-		hasBasicChange = true
-		updateInfo.SetRecommendedDuration(int32(d.Get("recommended_duration").(int)))
-	}
-	if d.HasChange("request_template_id") {
-		hasBasicChange = true
-		updateInfo.SetRequestTemplateId(d.Get("request_template_id").(string))
-	}
-	if d.HasChange("is_requestable") {
-		hasBasicChange = true
-		updateInfo.SetIsRequestable(d.Get("is_requestable").(bool))
+		requestConfigurationsListI, ok := d.GetOk("request_configuration")
+		if ok {
+			requestConfigurationsList, err := parseRequestConfigurationList(ctx, requestConfigurationsListI)
+			if err != nil {
+				return diagFromErr(ctx, err)
+			}
+			updateInfo.SetRequestConfigurationList(*requestConfigurationsList)
+		}
 	}
 
 	if hasBasicChange {
@@ -558,16 +501,6 @@ func resourceResourceUpdate(ctx context.Context, d *schema.ResourceData, m any) 
 
 	if d.HasChange("visibility") || d.HasChange("visibility_group") {
 		if diag := resourceResourceUpdateVisibility(ctx, d, client); diag != nil {
-			return diag
-		}
-	}
-
-	if d.HasChange("reviewer_stage") {
-		reviewerStages := any([]any{})
-		if reviewersStagesBlock, ok := d.GetOk("reviewer_stage"); ok {
-			reviewerStages = reviewersStagesBlock
-		}
-		if diag := resourceResourceUpdateReviewerStages(ctx, d, client, reviewerStages); diag != nil {
 			return diag
 		}
 	}
