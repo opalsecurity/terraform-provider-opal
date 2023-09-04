@@ -163,8 +163,12 @@ func groupRemoteInfoElem() *schema.Resource {
 	}
 }
 
-// NOTE: See comment in `resourceRemoteInfoElem` for why the parsing is so convoluted.
-func parseGroupRemoteInfo(remoteInfoI interface{}) (*opal.GroupRemoteInfo, error) {
+func groupRemoteInfoAPIToTerraform(remoteInfo *opal.GroupRemoteInfo) (interface{}, error) {
+	return remoteInfoAPIToTerraformInternal(remoteInfo)
+}
+
+// NOTE: See comment in `groupRemoteInfoElem` for why the parsing is so convoluted.
+func groupRemoteInfoTerraformToAPI(remoteInfoI interface{}) (*opal.GroupRemoteInfo, error) {
 	remoteInfoIList := remoteInfoI.([]interface{})
 	if len(remoteInfoIList) != 1 {
 		return nil, errors.New("you cannot provide multiple remote_info blobs")

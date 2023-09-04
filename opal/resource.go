@@ -132,6 +132,7 @@ func resourceResource() *schema.Resource {
 				Description: "Remote info that is required for the creation of remote resources.",
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				MaxItems:    1,
 				Elem:        resourceRemoteInfoElem(),
@@ -281,7 +282,7 @@ func resourceResourceCreate(ctx context.Context, d *schema.ResourceData, m any) 
 	}
 
 	if remoteInfoI, ok := d.GetOk("remote_info"); ok {
-		remoteInfo, err := parseResourceRemoteInfo(remoteInfoI)
+		remoteInfo, err := resourceRemoteInfoTerraformToAPI(remoteInfoI)
 		if err != nil {
 			return diagFromErr(ctx, err)
 		}
@@ -401,25 +402,12 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 		return diagFromErr(ctx, err)
 	}
 
-	reviewerStages, _, err := client.ResourcesApi.GetResourceReviewerStages(ctx, resource.ResourceId).Execute()
+	remoteInfoI, err := resourceRemoteInfoAPIToTerraform(resource.RemoteInfo)
 	if err != nil {
 		return diagFromErr(ctx, err)
 	}
-
-	reviewerStagesI := make([]any, 0, len(reviewerStages))
-	for _, reviewerStage := range reviewerStages {
-		reviewersI := make([]any, 0, len(reviewerStage.OwnerIds))
-		for _, reviewerID := range reviewerStage.OwnerIds {
-			reviewersI = append(reviewersI, map[string]any{
-				"id": reviewerID,
-			})
-		}
-
-		reviewerStagesI = append(reviewerStagesI, map[string]any{
-			"reviewer":                 reviewersI,
-			"operator":                 reviewerStage.Operator,
-			"require_manager_approval": reviewerStage.RequireManagerApproval,
-		})
+	if remoteInfoI != nil {
+		d.Set("remote_info", remoteInfoI)
 	}
 
 	if len(requestConfigurations) != 0 {

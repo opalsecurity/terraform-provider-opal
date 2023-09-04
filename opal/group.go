@@ -125,6 +125,7 @@ func resourceGroup() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Elem:        groupRemoteInfoElem(),
 			},
@@ -330,7 +331,7 @@ func resourceGroupCreate(ctx context.Context, d *schema.ResourceData, m any) dia
 		createInfo.SetDescription(descI.(string))
 	}
 	if remoteInfoI, ok := d.GetOk("remote_info"); ok {
-		remoteInfo, err := parseGroupRemoteInfo(remoteInfoI)
+		remoteInfo, err := groupRemoteInfoTerraformToAPI(remoteInfoI)
 		if err != nil {
 			return diagFromErr(ctx, err)
 		}
@@ -577,29 +578,12 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 		return diagFromErr(ctx, err)
 	}
 
-	reviewerStages, _, err := client.GroupsApi.GetGroupReviewerStages(ctx, group.GroupId).Execute()
+	remoteInfoI, err := groupRemoteInfoAPIToTerraform(group.RemoteInfo)
 	if err != nil {
 		return diagFromErr(ctx, err)
 	}
-
-	reviewerStagesI := make([]any, 0, len(reviewerStages))
-	for _, reviewerStage := range reviewerStages {
-		reviewersI := make([]any, 0, len(reviewerStage.OwnerIds))
-		for _, reviewerID := range reviewerStage.OwnerIds {
-			reviewersI = append(reviewersI, map[string]any{
-				"id": reviewerID,
-			})
-		}
-
-		reviewerStagesI = append(reviewerStagesI, map[string]any{
-			"reviewer":                 reviewersI,
-			"operator":                 reviewerStage.Operator,
-			"require_manager_approval": reviewerStage.RequireManagerApproval,
-		})
-	}
-
-	if len(requestConfigurations) != 0 {
-		d.Set("request_configuration", requestConfigurations)
+	if remoteInfoI != nil {
+		d.Set("remote_info", remoteInfoI)
 	}
 
 	visibility, _, err := client.GroupsApi.GetGroupVisibility(ctx, group.GroupId).Execute()
