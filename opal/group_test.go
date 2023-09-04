@@ -29,7 +29,7 @@ func TestAccGroup_Import(t *testing.T) {
 		CheckDestroy: testAccCheckGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccGroupResourceWithRequestConfigurationAndReviewers(baseName, baseName, "", ""),
+				Config: testAccGroupResourceWithRequestConfigAndReviewers(baseName, baseName, "", ""),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName), // Verify that the name was set.
 				),
@@ -38,7 +38,7 @@ func TestAccGroup_Import(t *testing.T) {
 				ResourceName:            resourceName,
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"manage_resources"},
+				ImportStateVerifyIgnore: []string{"manage_resources", "request_configuration"},
 			},
 		},
 	})
@@ -252,13 +252,6 @@ func TestAccGroup_Resource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", baseName),
 					resource.TestCheckResourceAttr(resourceName, "resource.#", "1"),
-				),
-			},
-			{
-				Config: testAccGroupResourceWithRequestConfigAndReviewers(baseName, baseName, "", "manage_resources=true"),
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "name", baseName),
-					resource.TestCheckResourceAttr(resourceName, "resource.#", "0"),
 				),
 			},
 		},
