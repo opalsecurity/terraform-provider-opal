@@ -586,6 +586,10 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 		d.Set("remote_info", remoteInfoI)
 	}
 
+	if len(requestConfigurations) != 0 {
+		d.Set("request_configuration", requestConfigurations)
+	}
+
 	visibility, _, err := client.GroupsApi.GetGroupVisibility(ctx, group.GroupId).Execute()
 	if err != nil {
 		return diagFromErr(ctx, err)
