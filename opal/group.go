@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"reflect"
+	"sort"
 
 	"github.com/opalsecurity/opal-go"
 	"github.com/pkg/errors"
@@ -558,6 +559,10 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 	group := groups.Results[0]
 
 	requestConfigurations := make([]map[string]interface{}, 0, len(group.RequestConfigurationList))
+	sort.SliceStable(group.RequestConfigurationList, func(i, j int) bool {
+		return group.RequestConfigurationList[i].Priority < group.RequestConfigurationList[j].Priority
+	})
+
 	for _, requestConfiguration := range group.RequestConfigurationList {
 		requestConfigurationI, err := parseSDKRequestConfiguration(ctx, &requestConfiguration)
 		if err != nil {
@@ -584,6 +589,10 @@ func resourceGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.
 	}
 	if remoteInfoI != nil {
 		d.Set("remote_info", remoteInfoI)
+	}
+
+	if len(requestConfigurations) != 0 {
+		d.Set("request_configuration", requestConfigurations)
 	}
 
 	visibility, _, err := client.GroupsApi.GetGroupVisibility(ctx, group.GroupId).Execute()
