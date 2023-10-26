@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"sort"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -380,6 +381,10 @@ func resourceResourceRead(ctx context.Context, d *schema.ResourceData, m any) di
 	}
 
 	requestConfigurations := make([]map[string]interface{}, 0, len(resource.RequestConfigurationList))
+	sort.SliceStable(resource.RequestConfigurationList, func(i, j int) bool {
+		return resource.RequestConfigurationList[i].Priority < resource.RequestConfigurationList[j].Priority
+	})
+
 	for _, requestConfiguration := range resource.RequestConfigurationList {
 		requestConfigurationI, err := parseSDKRequestConfiguration(ctx, &requestConfiguration)
 		if err != nil {
