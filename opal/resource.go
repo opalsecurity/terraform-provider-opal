@@ -147,7 +147,7 @@ func resourceResource() *schema.Resource {
 			},
 			"visibility_group": {
 				Description: "The groups that can see this resource when visibility is limited. If not specified, only admins and users with direct access can see this resource when visibility is set to LIMITED.",
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -357,7 +357,7 @@ func resourceResourceUpdateVisibility(ctx context.Context, d *schema.ResourceDat
 	}
 
 	if visibilityGroupI, ok := d.GetOk("visibility_group"); ok {
-		rawGroups := visibilityGroupI.([]any)
+		rawGroups := visibilityGroupI.(*schema.Set).List()
 		groupIds := make([]string, 0, len(rawGroups))
 		for _, rawGroup := range rawGroups {
 			group := rawGroup.(map[string]any)
