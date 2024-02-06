@@ -3,6 +3,7 @@ package opal
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/opalsecurity/opal-go"
 )
 
@@ -91,7 +92,7 @@ func parseRequestConfiguration(
 	}
 
 	if groupIDsI, ok := requestConfigurationMap["group_ids"]; ok {
-		groupIDsArrayI := groupIDsI.([]interface{})
+		groupIDsArrayI := groupIDsI.(*schema.Set).List()
 		groupIDs := make([]string, len(groupIDsArrayI))
 		for idx, groupIDI := range groupIDsArrayI {
 			groupIDs[idx] = groupIDI.(string)

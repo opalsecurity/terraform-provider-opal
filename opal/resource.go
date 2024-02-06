@@ -166,8 +166,8 @@ func resourceResource() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"group_ids": {
-							Description: "The group IDs satosfying this request configuration. For the default request configuration, this should be empty and priority should be 0, otherwise, this should contain one group ID.",
-							Type:        schema.TypeList,
+							Description: "The group IDs satisfying this request configuration. For the default request configuration, this should be empty and priority should be 0, otherwise, this should contain one group ID.",
+							Type:        schema.TypeSet,
 							Optional:    true,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
