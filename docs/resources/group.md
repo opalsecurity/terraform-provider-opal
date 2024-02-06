@@ -181,7 +181,7 @@ resource "opal_group" "azure_ad_security_group_example" {
 - `require_mfa_to_approve` (Boolean) Require that reviewers MFA to approve requests for this group.
 - `resource` (Block Set) A resource that members of the group get access to. (see [below for nested schema](#nestedblock--resource))
 - `visibility` (String) The visibility level of the group, i.e. LIMITED or GLOBAL.
-- `visibility_group` (Block List) The groups that can see this group when visibility is limited. If not specified, only users with direct access can see this resource when visibility is set to LIMITED. (see [below for nested schema](#nestedblock--visibility_group))
+- `visibility_group` (Block Set) The groups that can see this group when visibility is limited. If not specified, only users with direct access can see this resource when visibility is set to LIMITED. (see [below for nested schema](#nestedblock--visibility_group))
 
 ### Read-Only
 
