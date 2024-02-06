@@ -297,7 +297,7 @@ Required:
 Optional:
 
 - `auto_approval` (Boolean) For users satisfying the condition, automatically approve all requests for this group without review.
-- `group_ids` (List of String) The group IDs satisfying this request configuration. For the default request configuration, this should be empty and priority should be 0, otherwise, this should contain one group ID.
+- `group_ids` (Set of String) The group IDs satisfying this request configuration. For the default request configuration, this should be empty and priority should be 0, otherwise, this should contain one group ID.
 - `is_requestable` (Boolean) For users satisfying the condition, allow them to create an access request for this group. By default, any group is requestable.
 - `max_duration` (Number) For users satisfying the condition, the maximum duration for which this group can be requested (in minutes).
 - `priority` (Number) The priority of this request configuration. The higher the number, the higher the priority. Defaults to 0.
