@@ -13,10 +13,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	speakeasy_stringplanmodifier "github.com/opal-dev/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/models/operations"
-	"github.com/opal-dev/terraform-provider-opal/internal/validators"
+	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
+	"github.com/opalsecurity/terraform-provider-opal/internal/validators"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -142,7 +143,17 @@ func (r *TagResource) Create(ctx context.Context, req resource.CreateRequest, re
 		return
 	}
 
-	request := *data.ToSharedCreateTagInfo()
+	tagKey := data.TagKey.ValueString()
+	tagValue := new(string)
+	if !data.TagValue.IsUnknown() && !data.TagValue.IsNull() {
+		*tagValue = data.TagValue.ValueString()
+	} else {
+		tagValue = nil
+	}
+	request := shared.CreateTagInfo{
+		TagKey:   tagKey,
+		TagValue: tagValue,
+	}
 	res, err := r.client.Tags.CreateTag(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())

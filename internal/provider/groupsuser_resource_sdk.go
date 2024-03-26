@@ -4,9 +4,9 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	tfTypes "github.com/opal-dev/terraform-provider-opal/internal/provider/types"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/models/operations"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/models/shared"
+	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 	"time"
 )
 

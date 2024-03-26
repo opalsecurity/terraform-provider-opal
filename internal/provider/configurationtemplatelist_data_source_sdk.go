@@ -4,8 +4,8 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	tfTypes "github.com/opal-dev/terraform-provider-opal/internal/provider/types"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/models/shared"
+	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
 func (r *ConfigurationTemplateListDataSourceModel) RefreshFromSharedPaginatedConfigurationTemplateList(resp *shared.PaginatedConfigurationTemplateList) {
@@ -16,16 +16,16 @@ func (r *ConfigurationTemplateListDataSourceModel) RefreshFromSharedPaginatedCon
 		for resultsCount, resultsItem := range resp.Results {
 			var results1 tfTypes.ConfigurationTemplate
 			results1.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
-			results1.BreakGlassUserIds = []types.String{}
+			results1.BreakGlassUserIds = nil
 			for _, v := range resultsItem.BreakGlassUserIds {
 				results1.BreakGlassUserIds = append(results1.BreakGlassUserIds, types.StringValue(v))
 			}
 			results1.ConfigurationTemplateID = types.StringPointerValue(resultsItem.ConfigurationTemplateID)
-			results1.LinkedAuditMessageChannelIds = []types.String{}
+			results1.LinkedAuditMessageChannelIds = nil
 			for _, v := range resultsItem.LinkedAuditMessageChannelIds {
 				results1.LinkedAuditMessageChannelIds = append(results1.LinkedAuditMessageChannelIds, types.StringValue(v))
 			}
-			results1.MemberOncallScheduleIds = []types.String{}
+			results1.MemberOncallScheduleIds = nil
 			for _, v := range resultsItem.MemberOncallScheduleIds {
 				results1.MemberOncallScheduleIds = append(results1.MemberOncallScheduleIds, types.StringValue(v))
 			}
@@ -38,7 +38,7 @@ func (r *ConfigurationTemplateListDataSourceModel) RefreshFromSharedPaginatedCon
 			} else {
 				results1.Visibility = &tfTypes.VisibilityInfo{}
 				results1.Visibility.Visibility = types.StringValue(string(resultsItem.Visibility.Visibility))
-				results1.Visibility.VisibilityGroupIds = []types.String{}
+				results1.Visibility.VisibilityGroupIds = nil
 				for _, v := range resultsItem.Visibility.VisibilityGroupIds {
 					results1.Visibility.VisibilityGroupIds = append(results1.Visibility.VisibilityGroupIds, types.StringValue(v))
 				}

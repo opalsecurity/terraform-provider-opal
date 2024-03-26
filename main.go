@@ -8,7 +8,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
-	"github.com/opal-dev/terraform-provider-opal/internal/provider"
+	"github.com/opalsecurity/terraform-provider-opal/internal/provider"
 )
 
 // Run "go generate" to generate the docs for the registry/website on each regeneration of the provider.
@@ -30,7 +30,7 @@ func main() {
 	flag.Parse()
 
 	opts := providerserver.ServeOpts{
-		Address: "registry.terraform.io/opal-dev/opal",
+		Address: "registry.terraform.io/opalsecurity/opal",
 		Debug:   debug,
 	}
 

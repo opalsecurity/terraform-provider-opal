@@ -1,8 +1,8 @@
 terraform {
   required_providers {
     opal = {
-      source  = "opal-dev/opal"
-      version = "0.13.29"
+      source  = "opalsecurity/opal"
+      version = "0.13.30"
     }
   }
 }

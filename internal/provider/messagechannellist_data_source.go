@@ -9,8 +9,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	tfTypes "github.com/opal-dev/terraform-provider-opal/internal/provider/types"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk"
+	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.

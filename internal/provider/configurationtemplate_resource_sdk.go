@@ -4,7 +4,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/models/shared"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
 func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplateInfo() *shared.CreateConfigurationTemplateInfo {
@@ -122,16 +122,16 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 func (r *ConfigurationTemplateResourceModel) RefreshFromSharedConfigurationTemplate(resp *shared.ConfigurationTemplate) {
 	if resp != nil {
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
-		r.BreakGlassUserIds = []types.String{}
+		r.BreakGlassUserIds = nil
 		for _, v := range resp.BreakGlassUserIds {
 			r.BreakGlassUserIds = append(r.BreakGlassUserIds, types.StringValue(v))
 		}
 		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
-		r.LinkedAuditMessageChannelIds = []types.String{}
+		r.LinkedAuditMessageChannelIds = nil
 		for _, v := range resp.LinkedAuditMessageChannelIds {
 			r.LinkedAuditMessageChannelIds = append(r.LinkedAuditMessageChannelIds, types.StringValue(v))
 		}
-		r.MemberOncallScheduleIds = []types.String{}
+		r.MemberOncallScheduleIds = nil
 		for _, v := range resp.MemberOncallScheduleIds {
 			r.MemberOncallScheduleIds = append(r.MemberOncallScheduleIds, types.StringValue(v))
 		}
@@ -141,7 +141,7 @@ func (r *ConfigurationTemplateResourceModel) RefreshFromSharedConfigurationTempl
 		r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
 		if resp.Visibility != nil {
 			r.Visibility.Visibility = types.StringValue(string(resp.Visibility.Visibility))
-			r.Visibility.VisibilityGroupIds = []types.String{}
+			r.Visibility.VisibilityGroupIds = nil
 			for _, v := range resp.Visibility.VisibilityGroupIds {
 				r.Visibility.VisibilityGroupIds = append(r.Visibility.VisibilityGroupIds, types.StringValue(v))
 			}

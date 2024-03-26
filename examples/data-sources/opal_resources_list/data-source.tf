@@ -1,7 +1,7 @@
 data "opal_resources_list" "my_resources_list" {
   cursor             = "...my_cursor..."
-  page_size          = 2
-  parent_resource_id = "0bda3372-71b9-4e66-b364-a8975f5e89b7"
+  page_size          = 5
+  parent_resource_id = "a39c4c5c-ef6b-47ff-bf73-4610ff591a73"
   resource_ids = [
     "1b978423-db0a-4037-a4cf-f79c60cb67b3",
   ]

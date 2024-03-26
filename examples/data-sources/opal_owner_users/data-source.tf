@@ -1,3 +1,3 @@
 data "opal_owner_users" "my_ownerusers" {
-  owner_id = "be613b6b-8b95-4099-80b3-b36ede74eccd"
+  owner_id = "76d6e7aa-77d6-4742-9f37-19b9386785f0"
 }

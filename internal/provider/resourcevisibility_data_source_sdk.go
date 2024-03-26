@@ -4,13 +4,13 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/models/shared"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
 func (r *ResourceVisibilityDataSourceModel) RefreshFromSharedVisibilityInfo(resp *shared.VisibilityInfo) {
 	if resp != nil {
 		r.Visibility = types.StringValue(string(resp.Visibility))
-		r.VisibilityGroupIds = []types.String{}
+		r.VisibilityGroupIds = nil
 		for _, v := range resp.VisibilityGroupIds {
 			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
 		}

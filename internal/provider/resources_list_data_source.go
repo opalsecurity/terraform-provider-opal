@@ -9,10 +9,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	tfTypes "github.com/opal-dev/terraform-provider-opal/internal/provider/types"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/models/operations"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/models/shared"
+	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.

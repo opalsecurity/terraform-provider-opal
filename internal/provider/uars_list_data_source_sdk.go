@@ -4,8 +4,8 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	tfTypes "github.com/opal-dev/terraform-provider-opal/internal/provider/types"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/models/shared"
+	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 	"time"
 )
 
@@ -29,11 +29,11 @@ func (r *UARSListDataSourceModel) RefreshFromSharedPaginatedUARsList(resp *share
 				results1.UarScope = nil
 			} else {
 				results1.UarScope = &tfTypes.UARScope{}
-				results1.UarScope.Admins = []types.String{}
+				results1.UarScope.Admins = nil
 				for _, v := range resultsItem.UarScope.Admins {
 					results1.UarScope.Admins = append(results1.UarScope.Admins, types.StringValue(v))
 				}
-				results1.UarScope.Names = []types.String{}
+				results1.UarScope.Names = nil
 				for _, v := range resultsItem.UarScope.Names {
 					results1.UarScope.Names = append(results1.UarScope.Names, types.StringValue(v))
 				}

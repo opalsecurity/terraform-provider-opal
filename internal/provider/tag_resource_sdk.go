@@ -4,24 +4,9 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/models/shared"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 	"time"
 )
-
-func (r *TagResourceModel) ToSharedCreateTagInfo() *shared.CreateTagInfo {
-	tagKey := r.TagKey.ValueString()
-	tagValue := new(string)
-	if !r.TagValue.IsUnknown() && !r.TagValue.IsNull() {
-		*tagValue = r.TagValue.ValueString()
-	} else {
-		tagValue = nil
-	}
-	out := shared.CreateTagInfo{
-		TagKey:   tagKey,
-		TagValue: tagValue,
-	}
-	return &out
-}
 
 func (r *TagResourceModel) RefreshFromSharedTag(resp *shared.Tag) {
 	if resp != nil {

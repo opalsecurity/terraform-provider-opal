@@ -4,8 +4,8 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	tfTypes "github.com/opal-dev/terraform-provider-opal/internal/provider/types"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/models/shared"
+	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
 func (r *OnCallScheduleListDataSourceModel) RefreshFromSharedOnCallScheduleList(resp *shared.OnCallScheduleList) {
@@ -14,7 +14,7 @@ func (r *OnCallScheduleListDataSourceModel) RefreshFromSharedOnCallScheduleList(
 			r.OnCallSchedules = r.OnCallSchedules[:len(resp.OnCallSchedules)]
 		}
 		for onCallSchedulesCount, onCallSchedulesItem := range resp.OnCallSchedules {
-			var onCallSchedules1 tfTypes.GetGroupOnCallSchedulesResponseBody
+			var onCallSchedules1 tfTypes.OnCallSchedule
 			onCallSchedules1.ID = types.StringPointerValue(onCallSchedulesItem.ID)
 			onCallSchedules1.Name = types.StringPointerValue(onCallSchedulesItem.Name)
 			onCallSchedules1.RemoteID = types.StringPointerValue(onCallSchedulesItem.RemoteID)

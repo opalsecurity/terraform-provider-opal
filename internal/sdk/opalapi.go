@@ -5,9 +5,9 @@ package sdk
 import (
 	"context"
 	"fmt"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/internal/hooks"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/internal/utils"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/models/shared"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/hooks"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 	"net/http"
 	"time"
 )
@@ -178,8 +178,8 @@ func New(opts ...SDKOption) *OpalAPI {
 			Language:          "go",
 			OpenAPIDocVersion: "1.0",
 			SDKVersion:        "0.0.1",
-			GenVersion:        "2.287.0",
-			UserAgent:         "speakeasy-sdk/go 0.0.1 2.287.0 1.0 github.com/opal-dev/terraform-provider-opal/internal/sdk",
+			GenVersion:        "2.286.4",
+			UserAgent:         "speakeasy-sdk/go 0.0.1 2.286.4 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
 			Hooks:             hooks.New(),
 		},
 	}

@@ -4,7 +4,7 @@ package shared
 
 import (
 	"errors"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/internal/utils"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
 )
 
 type FieldValueType string

@@ -4,9 +4,9 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	tfTypes "github.com/opal-dev/terraform-provider-opal/internal/provider/types"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/models/operations"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/models/shared"
+	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
 func (r *GroupResourceModel) ToSharedCreateGroupInfo() *shared.CreateGroupInfo {
@@ -195,11 +195,11 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 				requestConfigurationListData1.Condition = nil
 			} else {
 				requestConfigurationListData1.Condition = &tfTypes.Condition{}
-				requestConfigurationListData1.Condition.GroupIds = []types.String{}
+				requestConfigurationListData1.Condition.GroupIds = nil
 				for _, v := range requestConfigurationListDataItem.Condition.GroupIds {
 					requestConfigurationListData1.Condition.GroupIds = append(requestConfigurationListData1.Condition.GroupIds, types.StringValue(v))
 				}
-				requestConfigurationListData1.Condition.RoleRemoteIds = []types.String{}
+				requestConfigurationListData1.Condition.RoleRemoteIds = nil
 				for _, v := range requestConfigurationListDataItem.Condition.RoleRemoteIds {
 					requestConfigurationListData1.Condition.RoleRemoteIds = append(requestConfigurationListData1.Condition.RoleRemoteIds, types.StringValue(v))
 				}
@@ -217,7 +217,7 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 				} else {
 					reviewerStages1.Operator = types.StringNull()
 				}
-				reviewerStages1.OwnerIds = []types.String{}
+				reviewerStages1.OwnerIds = nil
 				for _, v := range reviewerStagesItem.OwnerIds {
 					reviewerStages1.OwnerIds = append(reviewerStages1.OwnerIds, types.StringValue(v))
 				}
@@ -257,11 +257,11 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 				requestConfigurations1.Condition = nil
 			} else {
 				requestConfigurations1.Condition = &tfTypes.Condition{}
-				requestConfigurations1.Condition.GroupIds = []types.String{}
+				requestConfigurations1.Condition.GroupIds = nil
 				for _, v := range requestConfigurationsItem.Condition.GroupIds {
 					requestConfigurations1.Condition.GroupIds = append(requestConfigurations1.Condition.GroupIds, types.StringValue(v))
 				}
-				requestConfigurations1.Condition.RoleRemoteIds = []types.String{}
+				requestConfigurations1.Condition.RoleRemoteIds = nil
 				for _, v := range requestConfigurationsItem.Condition.RoleRemoteIds {
 					requestConfigurations1.Condition.RoleRemoteIds = append(requestConfigurations1.Condition.RoleRemoteIds, types.StringValue(v))
 				}
@@ -279,7 +279,7 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 				} else {
 					reviewerStages3.Operator = types.StringNull()
 				}
-				reviewerStages3.OwnerIds = []types.String{}
+				reviewerStages3.OwnerIds = nil
 				for _, v := range reviewerStagesItem1.OwnerIds {
 					reviewerStages3.OwnerIds = append(reviewerStages3.OwnerIds, types.StringValue(v))
 				}
@@ -443,11 +443,11 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(resp shared.Update
 			requestConfigurations1.Condition = nil
 		} else {
 			requestConfigurations1.Condition = &tfTypes.Condition{}
-			requestConfigurations1.Condition.GroupIds = []types.String{}
+			requestConfigurations1.Condition.GroupIds = nil
 			for _, v := range requestConfigurationsItem.Condition.GroupIds {
 				requestConfigurations1.Condition.GroupIds = append(requestConfigurations1.Condition.GroupIds, types.StringValue(v))
 			}
-			requestConfigurations1.Condition.RoleRemoteIds = []types.String{}
+			requestConfigurations1.Condition.RoleRemoteIds = nil
 			for _, v := range requestConfigurationsItem.Condition.RoleRemoteIds {
 				requestConfigurations1.Condition.RoleRemoteIds = append(requestConfigurations1.Condition.RoleRemoteIds, types.StringValue(v))
 			}
@@ -465,7 +465,7 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(resp shared.Update
 			} else {
 				reviewerStages1.Operator = types.StringNull()
 			}
-			reviewerStages1.OwnerIds = []types.String{}
+			reviewerStages1.OwnerIds = nil
 			for _, v := range reviewerStagesItem.OwnerIds {
 				reviewerStages1.OwnerIds = append(reviewerStages1.OwnerIds, types.StringValue(v))
 			}
@@ -522,8 +522,8 @@ func (r *GroupResourceModel) ToSharedVisibilityInfo() *shared.VisibilityInfo {
 
 func (r *GroupResourceModel) RefreshFromOperationsGetGroupMessageChannelsResponseBody(resp *operations.GetGroupMessageChannelsResponseBody) {
 	if resp != nil {
-		if len(r.MessageChannels.Channels) > len(resp.Channels) {
-			r.MessageChannels.Channels = r.MessageChannels.Channels[:len(resp.Channels)]
+		if len(r.Channels) > len(resp.Channels) {
+			r.Channels = r.Channels[:len(resp.Channels)]
 		}
 		for channelsCount, channelsItem := range resp.Channels {
 			var channels1 tfTypes.MessageChannel
@@ -536,14 +536,14 @@ func (r *GroupResourceModel) RefreshFromOperationsGetGroupMessageChannelsRespons
 			} else {
 				channels1.ThirdPartyProvider = types.StringNull()
 			}
-			if channelsCount+1 > len(r.MessageChannels.Channels) {
-				r.MessageChannels.Channels = append(r.MessageChannels.Channels, channels1)
+			if channelsCount+1 > len(r.Channels) {
+				r.Channels = append(r.Channels, channels1)
 			} else {
-				r.MessageChannels.Channels[channelsCount].ID = channels1.ID
-				r.MessageChannels.Channels[channelsCount].IsPrivate = channels1.IsPrivate
-				r.MessageChannels.Channels[channelsCount].Name = channels1.Name
-				r.MessageChannels.Channels[channelsCount].RemoteID = channels1.RemoteID
-				r.MessageChannels.Channels[channelsCount].ThirdPartyProvider = channels1.ThirdPartyProvider
+				r.Channels[channelsCount].ID = channels1.ID
+				r.Channels[channelsCount].IsPrivate = channels1.IsPrivate
+				r.Channels[channelsCount].Name = channels1.Name
+				r.Channels[channelsCount].RemoteID = channels1.RemoteID
+				r.Channels[channelsCount].ThirdPartyProvider = channels1.ThirdPartyProvider
 			}
 		}
 	}
@@ -551,10 +551,10 @@ func (r *GroupResourceModel) RefreshFromOperationsGetGroupMessageChannelsRespons
 
 func (r *GroupResourceModel) RefreshFromOperationsGetGroupVisibilityResponseBody(resp *operations.GetGroupVisibilityResponseBody) {
 	if resp != nil {
-		r.VisibilityInfo.Visibility = types.StringValue(string(resp.Visibility))
-		r.VisibilityInfo.VisibilityGroupIds = []types.String{}
+		r.Visibility = types.StringValue(string(resp.Visibility))
+		r.VisibilityGroupIds = nil
 		for _, v := range resp.VisibilityGroupIds {
-			r.VisibilityInfo.VisibilityGroupIds = append(r.VisibilityInfo.VisibilityGroupIds, types.StringValue(v))
+			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
 		}
 	}
 }

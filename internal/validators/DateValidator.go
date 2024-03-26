@@ -6,7 +6,7 @@ import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework-validators/helpers/validatordiag"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/types"
 )
 
 var _ validator.String = DateValidator{}

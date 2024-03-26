@@ -4,8 +4,8 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	tfTypes "github.com/opal-dev/terraform-provider-opal/internal/provider/types"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/models/shared"
+	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
 func (r *GroupReviewersStagesListDataSourceModel) RefreshFromSharedReviewerStage(resp []shared.ReviewerStage) {
@@ -19,7 +19,7 @@ func (r *GroupReviewersStagesListDataSourceModel) RefreshFromSharedReviewerStage
 		} else {
 			data.Operator = types.StringNull()
 		}
-		data.OwnerIds = []types.String{}
+		data.OwnerIds = nil
 		for _, v := range dataItem.OwnerIds {
 			data.OwnerIds = append(data.OwnerIds, types.StringValue(v))
 		}

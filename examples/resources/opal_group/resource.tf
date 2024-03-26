@@ -12,7 +12,4 @@ resource "opal_group" "my_group" {
   ]
   require_mfa_to_approve = false
   visibility             = "GLOBAL"
-  visibility_group_ids = [
-    "7ce27d58-f256-4147-992e-a246933c124e",
-  ]
 }

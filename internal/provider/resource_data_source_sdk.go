@@ -4,8 +4,8 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	tfTypes "github.com/opal-dev/terraform-provider-opal/internal/provider/types"
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/models/shared"
+	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
 func (r *ResourceDataSourceModel) RefreshFromSharedResource(resp *shared.Resource) {
@@ -203,11 +203,11 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(resp *shared.Resourc
 				requestConfigurations1.Condition = nil
 			} else {
 				requestConfigurations1.Condition = &tfTypes.Condition{}
-				requestConfigurations1.Condition.GroupIds = []types.String{}
+				requestConfigurations1.Condition.GroupIds = nil
 				for _, v := range requestConfigurationsItem.Condition.GroupIds {
 					requestConfigurations1.Condition.GroupIds = append(requestConfigurations1.Condition.GroupIds, types.StringValue(v))
 				}
-				requestConfigurations1.Condition.RoleRemoteIds = []types.String{}
+				requestConfigurations1.Condition.RoleRemoteIds = nil
 				for _, v := range requestConfigurationsItem.Condition.RoleRemoteIds {
 					requestConfigurations1.Condition.RoleRemoteIds = append(requestConfigurations1.Condition.RoleRemoteIds, types.StringValue(v))
 				}
@@ -225,7 +225,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(resp *shared.Resourc
 				} else {
 					reviewerStages1.Operator = types.StringNull()
 				}
-				reviewerStages1.OwnerIds = []types.String{}
+				reviewerStages1.OwnerIds = nil
 				for _, v := range reviewerStagesItem.OwnerIds {
 					reviewerStages1.OwnerIds = append(reviewerStages1.OwnerIds, types.StringValue(v))
 				}

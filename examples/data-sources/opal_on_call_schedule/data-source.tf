@@ -1,3 +1,3 @@
 data "opal_on_call_schedule" "my_oncallschedule" {
-  id = "6b6f0baa-3e2c-4f50-88df-6c7ef0f714d9"
+  id = "71060114-ab43-4bdd-a0c1-ba08b7f3a3e6"
 }

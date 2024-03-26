@@ -58,7 +58,7 @@ terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "v3.0.0-beta1"
+      version = "0.13.30"
     }
   }
 }
@@ -73,15 +73,6 @@ provider "opal" {
 
 <!-- Start SDK Example Usage [usage] -->
 ## SDK Example Usage
-
-### Autogenerating the provider with changes
-
-To make changes, update the `openapi.yaml` with the proper annotations, then run:
-
-```sh
-make terraform_overlay.yaml
-make speakeasy
-```
 
 ### Testing the provider locally
 

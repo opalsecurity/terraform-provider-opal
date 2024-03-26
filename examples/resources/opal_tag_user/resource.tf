@@ -1,4 +1,4 @@
 resource "opal_tag_user" "my_taguser" {
-  tag_id  = "ad9a192b-e13a-4fb8-aa28-5fd0c387f2b3"
-  user_id = "1cd922ce-15f9-4509-a6c2-bdfcb3e7464a"
+  tag_id  = "affecaf8-a4c7-4ec5-bb81-61728cd3687b"
+  user_id = "3ad9a192-be13-4afb-82a2-85fd0c387f2b"
 }

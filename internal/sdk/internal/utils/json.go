@@ -12,7 +12,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/types"
 
 	"github.com/ericlagergren/decimal"
 )

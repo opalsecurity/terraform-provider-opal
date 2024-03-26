@@ -13,7 +13,7 @@ import (
 
 	"github.com/ericlagergren/decimal"
 
-	"github.com/opal-dev/terraform-provider-opal/internal/sdk/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/types"
 )
 
 func GenerateURL(ctx context.Context, serverURL, path string, pathParams interface{}, globals map[string]map[string]map[string]interface{}) (string, error) {

@@ -1,5 +1,5 @@
 resource "opal_group_resource_list" "my_groupresourcelist" {
-  group_id = "146eb05c-d06c-416b-8673-554554108bae"
+  group_id = "7ce27d58-f256-4147-992e-a246933c124e"
   resources = [
     {
       access_level_remote_id = "write"

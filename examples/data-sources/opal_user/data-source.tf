@@ -1,4 +1,4 @@
 data "opal_user" "my_user" {
-  email = "Joseph21@gmail.com"
-  id    = "6b3e2752-b6d8-492a-badd-93e7f468517a"
+  email = "Reagan99@gmail.com"
+  id    = "5dc7ff87-3bcf-4427-bf02-345e7d928823"
 }
