@@ -1,0 +1,27 @@
+configVersion: 2.0.0
+generation:
+  sdkClassName: Opal-API
+  usageSnippets:
+    optionalPropertyRendering: withExample
+  fixes:
+    nameResolutionDec2023: false
+    parameterOrderingFeb2024: false
+    requestResponseComponentNamesFeb2024: false
+  auth:
+    oAuth2ClientCredentialsEnabled: false
+  baseServerURL: ""
+  flattenGlobalSecurity: true
+terraform:
+  version: 0.13.29
+  author: opalsecurity
+  imports:
+    option: openapi
+    paths:
+      callbacks: callbacks
+      errors: sdkerrors
+      operations: operations
+      shared: shared
+      webhooks: webhooks
+  inputModelSuffix: input
+  outputModelSuffix: output
+  packageName: opal

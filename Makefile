@@ -1,17 +1,22 @@
+.PHONY: *
 
-build:
-	mkdir -p bin/
-	go build -o bin/terraform-provider-opal
-
-testacc:
-	TF_ACC=1 go test ./... -v $(TESTARGS) -timeout 3m
-.PHONY: testacc
-
-sweep:
-	@echo "WARNING: This will destroy infrastructure. Use only in development accounts."
-	go test ./opal -v -sweep=test $(SWEEPARGS) -timeout 2m
-.PHONY: sweep
+all: speakeasy docs
 
 docs:
-	OPAL_AUTH_TOKEN= go generate
-.PHONY: docs
+	go generate ./...
+
+
+speakeasy: check-speakeasy openapi.yaml
+	speakeasy generate sdk --lang terraform -o . -s ./openapi.yaml
+
+speakeasy-validate: check-speakeasy
+	speakeasy validate openapi -s ./openapi.yaml
+
+terraform_overlay.yaml: check-speakeasy
+	speakeasy overlay compare -s ./openapi_original.yaml -s ./openapi.yaml > ./terraform_overlay.yaml
+
+openapi.yaml: check-speakeasy
+	speakeasy overlay apply -s ./openapi_original.yaml -o ./terraform_overlay.yaml > ./openapi.yaml
+
+check-speakeasy:
+	@command -v speakeasy >/dev/null 2>&1 || { echo >&2 "speakeasy CLI is not installed. Please install before continuing."; exit 1; }

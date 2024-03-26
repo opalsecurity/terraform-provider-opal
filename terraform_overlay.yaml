@@ -1,0 +1,1223 @@
+overlay: 1.0.0
+info:
+  title: Overlay ./openapi_original.yaml => ./openapi.yaml
+  version: 0.0.0
+actions:
+  - target: $["servers"][0]
+    update:
+      x-speakeasy-server-id: prod
+  - target: $["paths"]["/apps"]["get"]
+    update:
+      x-speakeasy-name-override: get
+  - target: $["paths"]["/apps"]["get"]
+    update:
+      x-speakeasy-entity-operation: Apps#get
+  - target: $["paths"]["/apps/{app_id}"]["get"]["operationId"]
+    update: getAppID
+  - target: $["paths"]["/apps/{app_id}"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/apps/{app_id}"]["get"]
+    update:
+      x-speakeasy-name-override: get_id
+  - target: $["paths"]["/apps/{app_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: App#get
+  - target: $["paths"]["/configuration-templates"]["get"]
+    update:
+      x-speakeasy-name-override: get
+  - target: $["paths"]["/configuration-templates"]["get"]
+    update:
+      x-speakeasy-entity-operation: ConfigurationTemplateList#get
+  - target: $["paths"]["/configuration-templates"]["post"]
+    update:
+      x-speakeasy-name-override: create
+  - target: $["paths"]["/configuration-templates"]["post"]
+    update:
+      x-speakeasy-entity-operation: ConfigurationTemplate#create
+  - target: $["paths"]["/configuration-templates"]["put"]
+    update:
+      x-speakeasy-name-override: update
+  - target: $["paths"]["/configuration-templates"]["put"]
+    update:
+      x-speakeasy-entity-operation: ConfigurationTemplate#update
+  - target: $["paths"]["/events"]["get"]["operationId"]
+    update: getEvents
+  - target: $["paths"]["/events"]["get"]
+    update:
+      x-speakeasy-name-override: get
+  - target: $["paths"]["/events"]["get"]
+    update:
+      x-speakeasy-entity-operation: Events#get
+  - target: $["paths"]["/groups"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["paths"]["/groups"]["get"]
+    update:
+      x-speakeasy-name-override: list
+  - target: $["paths"]["/groups"]["get"]
+    update:
+      x-speakeasy-entity-operation:
+        - Group_list#read
+  - target: $["paths"]["/groups"]["put"]
+    update:
+      x-speakeasy-name-override: update
+  - target: $["paths"]["/groups"]["put"]
+    update:
+      x-speakeasy-entity-operation:
+        - Group#create#2
+        - Group#update
+  - target: $["paths"]["/groups"]["post"]
+    update:
+      x-speakeasy-name-override: create
+  - target: $["paths"]["/groups"]["post"]
+    update:
+      x-speakeasy-entity-operation: Group#create
+  - target: $["paths"]["/groups/{group_id}"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/groups/{group_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: Group#read
+  - target: $["paths"]["/groups/{group_id}"]["delete"]["operationId"]
+    update: deleteGroup
+  - target: $["paths"]["/groups/{group_id}"]["delete"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/groups/{group_id}"]["delete"]
+    update:
+      x-speakeasy-name-override: delete
+  - target: $["paths"]["/groups/{group_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: Group#delete
+  - target: $["paths"]["/groups/{group_id}/message-channels"]["get"]["operationId"]
+    update: getGroupMessageChannels
+  - target: $["paths"]["/groups/{group_id}/message-channels"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/groups/{group_id}/message-channels"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]
+    update:
+      allOf:
+        - $ref: "#/components/schemas/MessageChannelList"
+        - x-speakeasy-wrapped-attribute: "message_channels"
+  - target: $["paths"]["/groups/{group_id}/message-channels"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]["$ref"]
+    remove: true
+  - target: $["paths"]["/groups/{group_id}/message-channels"]["get"]
+    update:
+      x-speakeasy-name-override: get_message_channels
+  - target: $["paths"]["/groups/{group_id}/message-channels"]["get"]
+    update:
+      x-speakeasy-entity-operation: Group#read#2
+  - target: $["paths"]["/groups/{group_id}/message-channels"]["put"]["operationId"]
+    update: updateGroupMessageChannels
+  - target: $["paths"]["/groups/{group_id}/message-channels"]["put"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/groups/{group_id}/message-channels"]["put"]["responses"]["200"]["content"]["application/json"]
+    update:
+      x-speakeasy-terraform-ignore: true
+  - target: $["paths"]["/groups/{group_id}/message-channels"]["put"]["responses"]["200"]["content"]["application/json"]["schema"]
+    remove: true
+  - target: $["paths"]["/groups/{group_id}/message-channels"]["put"]
+    update:
+      x-speakeasy-name-override: update_message_channels
+  - target: $["paths"]["/groups/{group_id}/message-channels"]["put"]
+    update:
+      x-speakeasy-entity-operation:
+        - Group#create#3
+        - Group#update#2
+  - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["get"]["operationId"]
+    update: getGroupOnCallSchedules
+  - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]
+    update:
+      allOf:
+        - $ref: "#/components/schemas/OnCallScheduleList"
+        - x-speakeasy-wrapped-attribute: "oncall_schedules"
+  - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]["$ref"]
+    remove: true
+  - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["get"]
+    update:
+      x-speakeasy-name-override: get_on_call_schedule
+  - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["get"]
+    update:
+      x-speakeasy-entity-operation: Group#read#3
+  - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["put"]["operationId"]
+    update: updateGroupOnCallSchedules
+  - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["put"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["put"]["responses"]["200"]["content"]["application/json"]
+    update:
+      x-speakeasy-terraform-ignore: true
+  - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["put"]["responses"]["200"]["content"]["application/json"]["schema"]
+    remove: true
+  - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["put"]
+    update:
+      x-speakeasy-name-override: update_on_call_schedule
+  - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["put"]
+    update:
+      x-speakeasy-entity-operation:
+        - Group#create#4
+        - Group#update#3
+  - target: $["paths"]["/groups/{group_id}/resources"]["get"]["operationId"]
+    update: getGroupResources
+  - target: $["paths"]["/groups/{group_id}/resources"]["get"]
+    update:
+      x-speakeasy-name-override: get_resources
+  - target: $["paths"]["/groups/{group_id}/resources"]["get"]
+    update:
+      x-speakeasy-entity-operation: GroupResourceList#get
+  - target: $["paths"]["/groups/{group_id}/resources"]["put"]["operationId"]
+    update: updateGroupResources
+  - target: $["paths"]["/groups/{group_id}/resources"]["put"]
+    update:
+      x-speakeasy-name-override: update_resources
+  - target: $["paths"]["/groups/{group_id}/resources"]["put"]
+    update:
+      x-speakeasy-entity-operation: GroupResourceList#create,update
+  - target: $["paths"]["/groups/{group_id}/resources/{resource_id}"]["post"]["operationId"]
+    update: createGroupResources
+  - target: $["paths"]["/groups/{group_id}/resources/{resource_id}"]["post"]
+    update:
+      x-speakeasy-name-override: create_resources
+  - target: $["paths"]["/groups/{group_id}/visibility"]["get"]["operationId"]
+    update: getGroupVisibility
+  - target: $["paths"]["/groups/{group_id}/visibility"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/groups/{group_id}/visibility"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]
+    update:
+      allOf:
+        - $ref: "#/components/schemas/VisibilityInfo"
+        - x-speakeasy-wrapped-attribute: "visibility_info"
+  - target: $["paths"]["/groups/{group_id}/visibility"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]["$ref"]
+    remove: true
+  - target: $["paths"]["/groups/{group_id}/visibility"]["get"]
+    update:
+      x-speakeasy-name-override: get_visibility
+  - target: $["paths"]["/groups/{group_id}/visibility"]["get"]
+    update:
+      x-speakeasy-entity-operation: Group#read#4
+  - target: $["paths"]["/groups/{group_id}/visibility"]["put"]["operationId"]
+    update: updateGroupVisibility
+  - target: $["paths"]["/groups/{group_id}/visibility"]["put"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/groups/{group_id}/visibility"]["put"]["responses"]["200"]["content"]["application/json"]
+    update:
+      x-speakeasy-terraform-ignore: true
+  - target: $["paths"]["/groups/{group_id}/visibility"]["put"]["responses"]["200"]["content"]["application/json"]["schema"]
+    remove: true
+  - target: $["paths"]["/groups/{group_id}/visibility"]["put"]
+    update:
+      x-speakeasy-name-override: update_visibility
+  - target: $["paths"]["/groups/{group_id}/visibility"]["put"]
+    update:
+      x-speakeasy-entity-operation:
+        - Group#create#5
+        - Group#update#4
+  - target: $["paths"]["/groups/{group_id}/reviewers"]["get"]["operationId"]
+    update: getGroupReviewers
+  - target: $["paths"]["/groups/{group_id}/reviewers"]["get"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["paths"]["/groups/{group_id}/reviewers"]["put"]["operationId"]
+    update: updateGroupReviewers
+  - target: $["paths"]["/groups/{group_id}/reviewers"]["put"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["paths"]["/groups/{group_id}/reviewer-stages"]["get"]["operationId"]
+    update: getGroupReviewersStages
+  - target: $["paths"]["/groups/{group_id}/reviewer-stages"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]
+    update:
+      x-speakeasy-entity: GroupReviewersStagesList
+  - target: $["paths"]["/groups/{group_id}/reviewer-stages"]["get"]
+    update:
+      x-speakeasy-name-override: get_reviewers_stages
+  - target: $["paths"]["/groups/{group_id}/reviewer-stages"]["get"]
+    update:
+      x-speakeasy-entity-operation: GroupReviewersStagesList#get
+  - target: $["paths"]["/groups/{group_id}/reviewer-stages"]["put"]["operationId"]
+    update: updateGroupReviewersStages
+  - target: $["paths"]["/groups/{group_id}/reviewer-stages"]["put"]
+    update:
+      x-speakeasy-name-override: update_reviewers_stages
+  - target: $["paths"]["/groups/{group_id}/reviewer-stages"]["put"]
+    update:
+      x-speakeasy-entity-operation: GroupsReviewersStages#update
+  - target: $["paths"]["/groups/{group_id}/tags"]["get"]["operationId"]
+    update: getGroupTags
+  - target: $["paths"]["/groups/{group_id}/tags"]["get"]
+    update:
+      x-speakeasy-name-override: get_tags
+  - target: $["paths"]["/groups/{group_id}/tags"]["get"]
+    update:
+      x-speakeasy-entity-operation: GroupTags#get
+  - target: $["paths"]["/groups/{group_id}/users"]["get"]["operationId"]
+    update: getGroupUsers
+  - target: $["paths"]["/groups/{group_id}/users"]["get"]
+    update:
+      x-speakeasy-name-override: get_users
+  - target: $["paths"]["/groups/{group_id}/users"]["get"]
+    update:
+      x-speakeasy-entity-operation: GroupUsers#get
+  - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["post"]["operationId"]
+    update: createGroupUser
+  - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["post"]["parameters"][*]
+    remove: true
+  - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["post"]["parameters"]
+    update:
+      - description: The ID of the group.
+        example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+        explode: false
+        in: path
+        name: group_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: The ID of the user to add.
+        example: f92aa855-cea9-4814-b9d8-f2a60d3e4a06
+        explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used.
+        example: arn:aws:iam::590304332660:role/AdministratorAccess
+        explode: true
+        in: query
+        name: access_level_remote_id
+        required: false
+        schema:
+          type: string
+        style: form
+        deprecated: true
+  - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["post"]["requestBody"]["required"]
+    update: true
+  - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["post"]
+    update:
+      x-speakeasy-name-override: create_user
+  - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["post"]
+    update:
+      x-speakeasy-entity-operation: GroupsUser#create
+  - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["delete"]["operationId"]
+    update: deleteGroupUser
+  - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["delete"]
+    update:
+      x-speakeasy-name-override: delete_user
+  - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: GroupsUser#delete
+  - target: $["paths"]["/owners"]["get"]["operationId"]
+    update: getOwners
+  - target: $["paths"]["/owners"]["get"]
+    update:
+      x-speakeasy-name-override: get
+  - target: $["paths"]["/owners"]["get"]
+    update:
+      x-speakeasy-entity-operation: Owners#get
+  - target: $["paths"]["/owners"]["post"]
+    update:
+      x-speakeasy-name-override: create
+  - target: $["paths"]["/owners"]["post"]
+    update:
+      x-speakeasy-entity-operation: Owner#create
+  - target: $["paths"]["/owners"]["put"]
+    update:
+      x-speakeasy-name-override: update
+  - target: $["paths"]["/owners"]["put"]
+    update:
+      x-speakeasy-entity-operation: Owner#update
+  - target: $["paths"]["/owners/{owner_id}"]["get"]["operationId"]
+    update: getOwnerID
+  - target: $["paths"]["/owners/{owner_id}"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/owners/{owner_id}"]["get"]
+    update:
+      x-speakeasy-name-override: get_id
+  - target: $["paths"]["/owners/{owner_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: Owner#get
+  - target: $["paths"]["/owners/{owner_id}"]["delete"]["operationId"]
+    update: deleteOwner
+  - target: $["paths"]["/owners/{owner_id}"]["delete"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/owners/{owner_id}"]["delete"]
+    update:
+      x-speakeasy-name-override: delete
+  - target: $["paths"]["/owners/{owner_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: Owner#delete
+  - target: $["paths"]["/owners/name/{owner_name}"]["get"]
+    update:
+      x-speakeasy-name-override: get_from_name
+  - target: $["paths"]["/owners/name/{owner_name}"]["get"]
+    update:
+      x-speakeasy-entity-operation: OwnerFromName#get
+  - target: $["paths"]["/owners/{owner_id}/users"]["get"]
+    update:
+      x-speakeasy-name-override: get_users
+  - target: $["paths"]["/owners/{owner_id}/users"]["get"]
+    update:
+      x-speakeasy-entity-operation: OwnerUsers#get
+  - target: $["paths"]["/owners/{owner_id}/users"]["put"]["operationId"]
+    update: update_owner_users
+  - target: $["paths"]["/owners/{owner_id}/users"]["put"]
+    update:
+      x-speakeasy-name-override: update_users
+  - target: $["paths"]["/owners/{owner_id}/users"]["put"]
+    update:
+      x-speakeasy-entity-operation: OwnerUsers#update
+  - target: $["paths"]["/requests"]["get"]
+    update:
+      x-speakeasy-name-override: get
+  - target: $["paths"]["/requests"]["get"]
+    update:
+      x-speakeasy-entity-operation: Requests#get
+  - target: $["paths"]["/resources"]["get"]
+    update:
+      x-speakeasy-name-override: get
+  - target: $["paths"]["/resources"]["get"]
+    update:
+      x-speakeasy-entity-operation: Resources_list#get
+  - target: $["paths"]["/resources"]["put"]
+    update:
+      x-speakeasy-name-override: update
+  - target: $["paths"]["/resources"]["put"]
+    update:
+      x-speakeasy-entity-operation:
+        - Resource#update
+        - Resource#create#2
+  - target: $["paths"]["/resources"]["post"]
+    update:
+      x-speakeasy-name-override: create
+  - target: $["paths"]["/resources"]["post"]
+    update:
+      x-speakeasy-entity-operation: Resource#create
+  - target: $["paths"]["/resources/{resource_id}"]["get"]["operationId"]
+    update: getResourceID
+  - target: $["paths"]["/resources/{resource_id}"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/resources/{resource_id}"]["get"]
+    update:
+      x-speakeasy-name-override: get_id
+  - target: $["paths"]["/resources/{resource_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: Resource#get
+  - target: $["paths"]["/resources/{resource_id}"]["delete"]["operationId"]
+    update: deleteResource
+  - target: $["paths"]["/resources/{resource_id}"]["delete"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/resources/{resource_id}"]["delete"]
+    update:
+      x-speakeasy-name-override: delete
+  - target: $["paths"]["/resources/{resource_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: Resource#delete
+  - target: $["paths"]["/resources/{resource_id}/message-channels"]["get"]["operationId"]
+    update: getResourceMessageChannels
+  - target: $["paths"]["/resources/{resource_id}/message-channels"]["get"]
+    update:
+      x-speakeasy-name-override: get_message_channels
+  - target: $["paths"]["/resources/{resource_id}/message-channels"]["get"]
+    update:
+      x-speakeasy-entity-operation: ResourceMessageChannelList#get
+  - target: $["paths"]["/resources/{resource_id}/message-channels"]["put"]["operationId"]
+    update: updateResourceMessageChannels
+  - target: $["paths"]["/resources/{resource_id}/message-channels"]["put"]
+    update:
+      x-speakeasy-name-override: update_message_channels
+  - target: $["paths"]["/resources/{resource_id}/message-channels"]["put"]
+    update:
+      x-speakeasy-entity-operation: ResourceMessageChannels#update
+  - target: $["paths"]["/resources/{resource_id}/visibility"]["get"]["operationId"]
+    update: getResourceVisibility
+  - target: $["paths"]["/resources/{resource_id}/visibility"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/resources/{resource_id}/visibility"]["get"]
+    update:
+      x-speakeasy-name-override: get_visibility
+  - target: $["paths"]["/resources/{resource_id}/visibility"]["get"]
+    update:
+      x-speakeasy-entity-operation: ResourceVisibility#get
+  - target: $["paths"]["/resources/{resource_id}/visibility"]["put"]["operationId"]
+    update: updateResourceVisibility
+  - target: $["paths"]["/resources/{resource_id}/visibility"]["put"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/resources/{resource_id}/visibility"]["put"]
+    update:
+      x-speakeasy-name-override: update_visibility
+  - target: $["paths"]["/resources/{resource_id}/visibility"]["put"]
+    update:
+      x-speakeasy-entity-operation:
+        - Resource#create#3
+        - Resource#update#2
+  - target: $["paths"]["/resources/{resource_id}/reviewers"]["get"]["operationId"]
+    update: getResourceReviewers
+  - target: $["paths"]["/resources/{resource_id}/reviewers"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]
+    update:
+      x-speakeasy-entity: ResourceReviewersList
+  - target: $["paths"]["/resources/{resource_id}/reviewers"]["get"]
+    update:
+      x-speakeasy-name-override: get_reviewers
+  - target: $["paths"]["/resources/{resource_id}/reviewers"]["get"]
+    update:
+      x-speakeasy-entity-operation: ResourceReviewersList#get
+  - target: $["paths"]["/resources/{resource_id}/reviewers"]["put"]["operationId"]
+    update: updateResourceReviewers
+  - target: $["paths"]["/resources/{resource_id}/reviewers"]["put"]["responses"]["200"]["content"]["application/json"]["schema"]
+    update:
+      x-speakeasy-entity: ResourceReviewerList
+  - target: $["paths"]["/resources/{resource_id}/reviewers"]["put"]
+    update:
+      x-speakeasy-name-override: update_reviewers
+  - target: $["paths"]["/resources/{resource_id}/reviewers"]["put"]
+    update:
+      x-speakeasy-entity-operation: ResourceReviewerList#update
+  - target: $["paths"]["/resources/{resource_id}/reviewer-stages"]["get"]["operationId"]
+    update: getResourceReviewerStages
+  - target: $["paths"]["/resources/{resource_id}/reviewer-stages"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]
+    update:
+      x-speakeasy-entity: ResourceReviewersStagesList
+  - target: $["paths"]["/resources/{resource_id}/reviewer-stages"]["get"]
+    update:
+      x-speakeasy-terraform-ignore: true
+  - target: $["paths"]["/resources/{resource_id}/reviewer-stages"]["put"]["operationId"]
+    update: updateResourceReviewerStages
+  - target: $["paths"]["/resources/{resource_id}/reviewer-stages"]["put"]["responses"]["200"]["content"]["application/json"]["schema"]
+    update:
+      x-speakeasy-entity: ResourcesReviewersStagesList
+  - target: $["paths"]["/resources/{resource_id}/reviewer-stages"]["put"]
+    update:
+      x-speakeasy-terraform-ignore: true
+  - target: $["paths"]["/resources/{resource_id}/users"]["get"]["operationId"]
+    update: getResourceUsers
+  - target: $["paths"]["/resources/{resource_id}/users"]["get"]
+    update:
+      x-speakeasy-name-override: get_users
+  - target: $["paths"]["/resources/{resource_id}/users"]["get"]
+    update:
+      x-speakeasy-entity-operation: ResourcesUsers_list#get
+  - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]["post"]["operationId"]
+    update: createResourceUsers
+  - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]["post"]["parameters"][*]
+    remove: true
+  - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]["post"]["parameters"]
+    update:
+      - description: The ID of the resource.
+        example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+        explode: false
+        in: path
+        name: resource_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: The ID of the user to add.
+        example: f92aa855-cea9-4814-b9d8-f2a60d3e4a06
+        explode: false
+        in: path
+        name: user_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used.
+        example: arn:aws:iam::590304332660:role/AdministratorAccess
+        explode: true
+        in: query
+        name: access_level_remote_id
+        required: false
+        schema:
+          type: string
+        style: form
+        deprecated: true
+  - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]["post"]["requestBody"]["required"]
+    update: true
+  - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]["post"]
+    update:
+      x-speakeasy-name-override: create_users
+  - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]["post"]
+    update:
+      x-speakeasy-entity-operation: ResourcesUsers#create
+  - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]["delete"]["operationId"]
+    update: deleteResourceUsers
+  - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]["delete"]
+    update:
+      x-speakeasy-name-override: delete_users
+  - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: ResourcesUsers#delete
+  - target: $["paths"]["/resource-user-access-status/{resource_id}/{user_id}"]["get"]["operationId"]
+    update: getResourceUserAccessStatus
+  - target: $["paths"]["/resource-user-access-status/{resource_id}/{user_id}"]["get"]
+    update:
+      x-speakeasy-name-override: get_access_status
+  - target: $["paths"]["/resource-user-access-status/{resource_id}/{user_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: ResourcesAccessStatus#get
+  - target: $["paths"]["/resources/{resource_id}/tags"]["get"]["operationId"]
+    update: getResourceTags
+  - target: $["paths"]["/resources/{resource_id}/tags"]["get"]
+    update:
+      x-speakeasy-name-override: get_tags
+  - target: $["paths"]["/resources/{resource_id}/tags"]["get"]
+    update:
+      x-speakeasy-entity-operation: ResourceTags#get
+  - target: $["paths"]["/sessions"]["get"]["operationId"]
+    update: getSessions
+  - target: $["paths"]["/sessions"]["get"]
+    update:
+      x-speakeasy-name-override: get
+  - target: $["paths"]["/sessions"]["get"]
+    update:
+      x-speakeasy-entity-operation: Sessions#get
+  - target: $["paths"]["/user"]["get"]["operationId"]
+    update: getUser
+  - target: $["paths"]["/user"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/user"]["get"]
+    update:
+      x-speakeasy-name-override: get
+  - target: $["paths"]["/user"]["get"]
+    update:
+      x-speakeasy-entity-operation: User#get
+  - target: $["paths"]["/users"]["get"]
+    update:
+      x-speakeasy-name-override: get_users
+  - target: $["paths"]["/users"]["get"]
+    update:
+      x-speakeasy-entity-operation: Users#get
+  - target: $["paths"]["/users/{user_id}/tags"]["get"]["operationId"]
+    update: getUserTags
+  - target: $["paths"]["/users/{user_id}/tags"]["get"]
+    update:
+      x-speakeasy-name-override: get_user_tags
+  - target: $["paths"]["/users/{user_id}/tags"]["get"]
+    update:
+      x-speakeasy-entity-operation: UserTags#get
+  - target: $["paths"]["/tag"]["get"]["operationId"]
+    update: getTag
+  - target: $["paths"]["/tag"]["get"]
+    update:
+      x-speakeasy-name-override: get
+  - target: $["paths"]["/tag"]["get"]
+    update:
+      x-speakeasy-entity-operation: Tag#get
+  - target: $["paths"]["/tag"]["post"]["operationId"]
+    update: createTag
+  - target: $["paths"]["/tag"]["post"]["requestBody"]["required"]
+    update: true
+  - target: $["paths"]["/tag"]["post"]
+    update:
+      x-speakeasy-entity-operation: Tag#create
+  - target: $["paths"]["/tag"]["post"]["parameters"]
+    remove: true
+  - target: $["paths"]["/tags"]["get"]
+    update:
+      x-speakeasy-name-override: get_tags
+  - target: $["paths"]["/tags"]["get"]
+    update:
+      x-speakeasy-entity-operation: Tags_list#get
+  - target: $["paths"]["/tags/{tag_id}/users/{user_id}"]["post"]["operationId"]
+    update: createUserTag
+  - target: $["paths"]["/tags/{tag_id}/users/{user_id}"]["post"]
+    update:
+      x-speakeasy-name-override: create_user
+  - target: $["paths"]["/tags/{tag_id}/users/{user_id}"]["post"]
+    update:
+      x-speakeasy-entity-operation: TagUser#create
+  - target: $["paths"]["/tags/{tag_id}/users/{user_id}"]["delete"]["operationId"]
+    update: deleteUserTag
+  - target: $["paths"]["/tags/{tag_id}/users/{user_id}"]["delete"]
+    update:
+      x-speakeasy-name-override: delete
+  - target: $["paths"]["/tags/{tag_id}/users/{user_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: TagUser#delete
+  - target: $["paths"]["/tags/{tag_id}/groups/{group_id}"]["post"]["operationId"]
+    update: createGroupTag
+  - target: $["paths"]["/tags/{tag_id}/groups/{group_id}"]["post"]
+    update:
+      x-speakeasy-name-override: create_group
+  - target: $["paths"]["/tags/{tag_id}/groups/{group_id}"]["post"]
+    update:
+      x-speakeasy-entity-operation: GroupTag#create
+  - target: $["paths"]["/tags/{tag_id}/groups/{group_id}"]["delete"]["operationId"]
+    update: deleteGroupTag
+  - target: $["paths"]["/tags/{tag_id}/groups/{group_id}"]["delete"]
+    update:
+      x-speakeasy-name-override: delete_group
+  - target: $["paths"]["/tags/{tag_id}/groups/{group_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: GroupTag#delete
+  - target: $["paths"]["/tags/{tag_id}/resources/{resource_id}"]["post"]["operationId"]
+    update: createResourceTag
+  - target: $["paths"]["/tags/{tag_id}/resources/{resource_id}"]["post"]
+    update:
+      x-speakeasy-name-override: create_resource
+  - target: $["paths"]["/tags/{tag_id}/resources/{resource_id}"]["post"]
+    update:
+      x-speakeasy-entity-operation: ResourceTag#create
+  - target: $["paths"]["/tags/{tag_id}/resources/{resource_id}"]["delete"]["operationId"]
+    update: deleteResourceTag
+  - target: $["paths"]["/tags/{tag_id}/resources/{resource_id}"]["delete"]
+    update:
+      x-speakeasy-name-override: delete_resource
+  - target: $["paths"]["/tags/{tag_id}/resources/{resource_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: ResourceTag#delete
+  - target: $["paths"]["/message-channels"]["get"]["operationId"]
+    update: getMessageChannels
+  - target: $["paths"]["/message-channels"]["get"]
+    update:
+      x-speakeasy-name-override: get
+  - target: $["paths"]["/message-channels"]["get"]
+    update:
+      x-speakeasy-entity-operation: MessageChannelList#get
+  - target: $["paths"]["/message-channels"]["post"]["operationId"]
+    update: createMessageChannel
+  - target: $["paths"]["/message-channels"]["post"]
+    update:
+      x-speakeasy-name-override: create
+  - target: $["paths"]["/message-channels"]["post"]
+    update:
+      x-speakeasy-entity-operation: MessageChannel#create
+  - target: $["paths"]["/message-channels/{message_channel_id}"]["get"]["operationId"]
+    update: getMessageChannelID
+  - target: $["paths"]["/message-channels/{message_channel_id}"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/message-channels/{message_channel_id}"]["get"]
+    update:
+      x-speakeasy-name-override: get_id
+  - target: $["paths"]["/message-channels/{message_channel_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: MessageChannel#get
+  - target: $["paths"]["/on-call-schedules"]["get"]["operationId"]
+    update: getOnCallSchedule
+  - target: $["paths"]["/on-call-schedules"]["get"]
+    update:
+      x-speakeasy-name-override: get
+  - target: $["paths"]["/on-call-schedules"]["get"]
+    update:
+      x-speakeasy-entity-operation: OnCallSchedule_list#get
+  - target: $["paths"]["/on-call-schedules"]["post"]["operationId"]
+    update: createOnCallSchedule
+  - target: $["paths"]["/on-call-schedules"]["post"]
+    update:
+      x-speakeasy-name-override: create
+  - target: $["paths"]["/on-call-schedules"]["post"]
+    update:
+      x-speakeasy-entity-operation: OnCallSchedule#create
+  - target: $["paths"]["/on-call-schedules/{on_call_schedule_id}"]["get"]["operationId"]
+    update: getOnCallScheduleID
+  - target: $["paths"]["/on-call-schedules/{on_call_schedule_id}"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/on-call-schedules/{on_call_schedule_id}"]["get"]
+    update:
+      x-speakeasy-name-override: get_id
+  - target: $["paths"]["/on-call-schedules/{on_call_schedule_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: OnCallSchedule#get
+  - target: $["paths"]["/uars"]["get"]
+    update:
+      x-speakeasy-name-override: get
+  - target: $["paths"]["/uars"]["get"]
+    update:
+      x-speakeasy-entity-operation: UARS_list#get
+  - target: $["paths"]["/uar"]["post"]["operationId"]
+    update: createUAR
+  - target: $["paths"]["/uar"]["post"]
+    update:
+      x-speakeasy-name-override: create
+  - target: $["paths"]["/uar/{uar_id}"]["get"]["operationId"]
+    update: getUARID
+  - target: $["paths"]["/uar/{uar_id}"]["get"]
+    update:
+      x-speakeasy-name-override: get_id
+  - target: $["paths"]["/uar/{uar_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: UAR#get
+  - target: $["components"]["schemas"]["PaginatedUARsList"]
+    update:
+      x-speakeasy-entity: UARS_list
+  - target: $["components"]["schemas"]["UAR"]
+    update:
+      x-speakeasy-entity: UAR
+  - target: $["components"]["schemas"]["AppsList"]
+    update:
+      x-speakeasy-entity: Apps
+  - target: $["components"]["schemas"]["App"]["properties"]["app_id"]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["components"]["schemas"]["App"]["properties"]["app_id"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["App"]["properties"]["app_type"]
+    update:
+      # have to do all of this instead because the speakeasy codegen cli doesn't currently (3/18/2023 support x-speakeasy-name-override along with $ref)
+      x-speakeasy-name-override: type
+  - target: $["components"]["schemas"]["App"]["properties"]["app_type"]
+    update:
+      description: The type of an app.
+  - target: $["components"]["schemas"]["App"]["properties"]["app_type"]
+    update:
+      enum:
+        $ref: "#/components/schemas/AppTypeEnum/enum"
+  - target: $["components"]["schemas"]["App"]["properties"]["app_type"]
+    update:
+      example: OKTA_DIRECTORY
+  - target: $["components"]["schemas"]["App"]["properties"]["app_type"]
+    update:
+      type: string
+  - target: $["components"]["schemas"]["App"]["properties"]["app_type"]["$ref"]
+    remove: true
+  - target: $["components"]["schemas"]["App"]
+    update:
+      x-speakeasy-entity: App
+  - target: $["components"]["schemas"]["Event"]
+    update:
+      x-speakeasy-entity: Events
+  - target: $["components"]["schemas"]["SubEvent"]
+    update:
+      x-speakeasy-entity: Events
+  - target: $["components"]["schemas"]["PaginatedEventList"]
+    update:
+      x-speakeasy-entity: Events
+  - target: $["components"]["schemas"]["ResourceAccessUserList"]
+    update:
+      x-speakeasy-entity: ResourcesUsers_list
+  - target: $["components"]["schemas"]["ResourceAccessLevel"]
+    update:
+      x-speakeasy-entity: Resources
+  - target: $["components"]["schemas"]["ResourceUserAccessStatus"]
+    update:
+      x-speakeasy-entity: ResourcesAccessStatus
+  - target: $["components"]["schemas"]["ResourceUser"]
+    update:
+      x-speakeasy-entity: ResourcesUsers
+  - target: $["components"]["schemas"]["SessionsList"]
+    update:
+      x-speakeasy-entity: Sessions
+  - target: $["components"]["schemas"]["Session"]
+    update:
+      x-speakeasy-entity: Sessions
+  - target: $["components"]["schemas"]["PaginatedUsersList"]
+    update:
+      x-speakeasy-entity: Users
+  - target: $["components"]["schemas"]["User"]["properties"]["user_id"]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["components"]["schemas"]["User"]["properties"]["user_id"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["User"]["properties"]["full_name"]
+    update:
+      x-speakeasy-name-override: name # in old SDK this was called name
+  - target: $["components"]["schemas"]["User"]
+    update:
+      x-speakeasy-entity: User
+  - target: $["components"]["schemas"]["UserList"]
+    update:
+      x-speakeasy-entity: OwnerUsers
+  - target: $["components"]["schemas"]["UserIDList"]
+    update:
+      x-speakeasy-entity: OwnerUsers
+  - target: $["components"]["schemas"]["UserHrIdpStatusEnum"]
+    update:
+      x-speakeasy-entity: Users
+  - target: $["components"]["schemas"]["PaginatedGroupsList"]["properties"]["next"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["PaginatedGroupsList"]["properties"]["previous"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["PaginatedGroupsList"]
+    update:
+      x-speakeasy-entity: Group_list
+  - target: $["components"]["schemas"]["Group"]["properties"]["group_id"]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["components"]["schemas"]["Group"]["properties"]["group_id"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["require_manager_approval"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["configuration_template_id"]
+    update:
+      x-speakeasy-terraform-ignore: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["request_configuration_list"]
+    update:
+      x-speakeasy-name-override: request_configuration_list_data
+  - target: $["components"]["schemas"]["Group"]["properties"]["request_configuration_list"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["request_configuration_list"]
+    update:
+      minItems: 1
+  - target: $["components"]["schemas"]["Group"]["properties"]["metadata"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Group"]
+    update:
+      x-speakeasy-entity: Group
+  - target: $["components"]["schemas"]["GroupUserList"]
+    update:
+      x-speakeasy-entity: GroupUsers
+  - target: $["components"]["schemas"]["GroupAccessLevel"]
+    update:
+      x-speakeasy-entity: Groups
+  - target: $["components"]["schemas"]["GroupUser"]
+    update:
+      x-speakeasy-entity: GroupsUser
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["group_id"]
+    update:
+      x-speakeasy-param-readonly: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["group_id"]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["max_duration"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["recommended_duration"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["require_manager_approval"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["require_support_ticket"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["folder_id"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["require_mfa_to_request"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["auto_approval"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["configuration_template_id"]
+    update:
+      x-speakeasy-terraform-ignore: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_template_id"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["is_requestable"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_configuration_list"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]
+    update:
+      x-speakeasy-entity: Group
+  - target: $["components"]["schemas"]["VisibilityTypeEnum"]
+    update:
+      x-speakeasy-entity: Groups
+  - target: $["components"]["schemas"]["UpdateGroupResourcesInfo"]
+    update:
+      x-speakeasy-entity: GroupResourceList
+  - target: $["components"]["schemas"]["GroupResourceList"]
+    update:
+      x-speakeasy-entity: GroupResourceList
+  - target: $["components"]["schemas"]["MessageChannelList"]
+    update:
+      x-speakeasy-entity:
+        - MessageChannelList
+        - ResourceMessageChannelList
+        - GroupMessageChannels
+  - target: $["components"]["schemas"]["OnCallScheduleList"]
+    update:
+      x-speakeasy-entity: OnCallSchedule_list
+  - target: $["components"]["schemas"]["VisibilityInfo"]
+    update:
+      x-speakeasy-entity:
+        - GroupVisibility
+        - ResourceVisibility
+  - target: $["components"]["schemas"]["MessageChannelIDList"]
+    update:
+      x-speakeasy-entity:
+        - GroupsMessageChannels
+        - ResourceMessageChannels
+  - target: $["components"]["schemas"]["OnCallScheduleIDList"]
+    update:
+      x-speakeasy-entity: GroupOnCallSchedule
+  - target: $["components"]["schemas"]["ReviewerIDList"]
+    update:
+      x-speakeasy-entity:
+        - ResourceReviewerList
+  - target: $["components"]["schemas"]["ReviewerStageList"]
+    update:
+      x-speakeasy-entity:
+        - GroupsReviewersStages
+        - ResourcesReviewersStagesList
+  - target: $["components"]["schemas"]["ReviewerStage"]["properties"]["operator"]
+    update:
+      default: AND
+  - target: $["components"]["schemas"]["MessageChannel"]["properties"]["message_channel_id"]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["components"]["schemas"]["MessageChannel"]["properties"]["message_channel_id"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["MessageChannel"]
+    update:
+      x-speakeasy-entity: MessageChannel
+  - target: $["components"]["schemas"]["CreateMessageChannelInfo"]
+    update:
+      x-speakeasy-entity: MessageChannel
+  - target: $["components"]["schemas"]["MessageChannelProviderEnum"]
+    update:
+      x-speakeasy-entity: MessageChannels
+  - target: $["components"]["schemas"]["OnCallSchedule"]["properties"]["on_call_schedule_id"]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["components"]["schemas"]["OnCallSchedule"]["properties"]["on_call_schedule_id"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["OnCallSchedule"]
+    update:
+      x-speakeasy-entity: OnCallSchedule
+  - target: $["components"]["schemas"]["CreateOnCallScheduleInfo"]
+    update:
+      x-speakeasy-entity: OnCallSchedule
+  - target: $["components"]["schemas"]["OnCallScheduleProviderEnum"]
+    update:
+      x-speakeasy-entity: OnCallSchedule
+  - target: $["components"]["schemas"]["GroupRemoteInfo"]["properties"]["github_team"]["properties"]["team_id"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["GroupRemoteInfo"]
+    update:
+      x-speakeasy-entity: GroupRemote
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["github_repo"]["properties"]["repo_id"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["CreateResourceInfo"]["properties"]["remote_resource_id"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["CreateResourceInfo"]["properties"]["metadata"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["CreateResourceInfo"]
+    update:
+      x-speakeasy-entity: Resource
+  - target: $["components"]["schemas"]["CreateGroupInfo"]["properties"]["remote_group_id"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["CreateGroupInfo"]["properties"]["metadata"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["CreateGroupInfo"]
+    update:
+      x-speakeasy-entity: Group
+  - target: $["components"]["schemas"]["PaginatedResourcesList"]
+    update:
+      x-speakeasy-entity: Resources_list
+  - target: $["components"]["schemas"]["RequestStatusEnum"]
+    update:
+      x-speakeasy-entity: Requests
+  - target: $["components"]["schemas"]["Request"]["example"]
+    update:
+      type: object
+  - target: $["components"]["schemas"]["Request"]
+    update:
+      x-speakeasy-entity: Requests
+  - target: $["components"]["schemas"]["Request"]
+    update:
+      type: object
+  - target: $["components"]["schemas"]["RequestedItem"]
+    update:
+      x-speakeasy-entity: Requests
+  - target: $["components"]["schemas"]["RequestedItem"]
+    update:
+      type: object
+  - target: $["components"]["schemas"]["RequestList"]["example"]
+    update:
+      type: object
+  - target: $["components"]["schemas"]["RequestList"]
+    update:
+      x-speakeasy-entity: Requests
+  - target: $["components"]["schemas"]["RequestList"]
+    update:
+      type: object
+  - target: $["components"]["schemas"]["Resource"]["properties"]["resource_id"]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["components"]["schemas"]["Resource"]["properties"]["resource_id"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["require_manager_approval"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["configuration_template_id"]
+    update:
+      x-speakeasy-terraform-ignore: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["request_configuration_list"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["metadata"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Resource"]
+    update:
+      x-speakeasy-entity: Resource
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["resource_id"]
+    update:
+      x-speakeasy-param-readonly: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["resource_id"]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["max_duration"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["recommended_duration"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["require_manager_approval"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["require_support_ticket"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["folder_id"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["require_mfa_to_request"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["auto_approval"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["configuration_template_id"]
+    update:
+      x-speakeasy-terraform-ignore: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_template_id"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["is_requestable"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]
+    update:
+      x-speakeasy-entity: Resource
+  - target: $["components"]["schemas"]["PaginatedTagsList"]
+    update:
+      x-speakeasy-entity: Tags_list
+  - target: $["components"]["schemas"]["TagsList"]
+    update:
+      x-speakeasy-entity:
+        - GroupTags
+        - UserTags
+        - ResourceTags
+  - target: $["components"]["schemas"]["Tag"]["properties"]["tag_id"]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["components"]["schemas"]["Tag"]["properties"]["tag_id"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Tag"]
+    update:
+      x-speakeasy-entity: Tag
+  - target: $["components"]["schemas"]["PaginatedOwnersList"]
+    update:
+      x-speakeasy-entity: Owners
+  - target: $["components"]["schemas"]["Owner"]["properties"]["owner_id"]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["components"]["schemas"]["Owner"]["properties"]["owner_id"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Owner"]
+    update:
+      x-speakeasy-entity:
+        - Owner
+        - OwnerFromName
+  - target: $["components"]["schemas"]["CreateOwnerInfo"]
+    update:
+      x-speakeasy-entity: Owner
+  - target: $["components"]["schemas"]["UpdateOwnerInfo"]["properties"]["owner_id"]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["components"]["schemas"]["UpdateOwnerInfo"]
+    update:
+      x-speakeasy-entity: Owner
+  - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["max_duration_minutes"]
+    update:
+      x-speakeasy-name-override: max_duration
+  - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["recommended_duration_minutes"]
+    update:
+      x-speakeasy-name-override: recommended_duration
+  - target: $["components"]["schemas"]["RequestConfiguration"]
+    update:
+      # x-speakeasy-plan-validators: "RequestConfiguration"
+      x-speakeasy-entity: Requests
+  - target: $["components"]["schemas"]["CreateRequestConfigurationInfoList"]
+    update:
+      x-speakeasy-terraform-ignore: true
+  - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]
+    update:
+      x-speakeasy-entity: ConfigurationTemplate
+  - target: $["components"]["schemas"]["ConfigurationTemplate"]["properties"]["configuration_template_id"]
+    update:
+      # Special case : because there's no "DELETE" or "GET" request attribute we can't derive this as an ID
+      x-speakeasy-param-readonly: true
+  - target: $["components"]["schemas"]["ConfigurationTemplate"]
+    update:
+      x-speakeasy-entity: ConfigurationTemplate
+  - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]
+    update:
+      x-speakeasy-entity: ConfigurationTemplate
+  - target: $["components"]["schemas"]["PaginatedConfigurationTemplateList"]
+    update:
+      x-speakeasy-entity: ConfigurationTemplateList
+  - target: $
+    update:
+      tags:
+        - name: apps
+          description: Operations related to apps
+        - name: configuration-templates
+          description: Operations related to configuration templates
+        - name: events
+          description: Operations related to events
+        - name: groups
+          description: Operations related to groups
+        - name: owners
+          description: Operations related to owners
+        - name: requests
+          description: Operations related to requests
+        - name: resources
+          description: Operations related to resources
+        - name: sessions
+          description: Operations related to sessions
+        - name: users
+          description: Operations related to users
+        - name: tags
+          description: Operations related to tags
+        - name: message-channels
+          description: Operations related to message channels
+        - name: on-call-schedules
+          description: Operations related to on-call schedules
+        - name: uars
+          description: Operations related to uars
