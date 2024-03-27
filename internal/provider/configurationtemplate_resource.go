@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
+	custom_objectvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/objectvalidators"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -198,6 +199,9 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 					},
 				},
 				Description: `Visibility infomation of an entity.`,
+				Validators: []validator.Object{
+					custom_objectvalidators.VisibilityInfo(),
+				},
 			},
 		},
 	}

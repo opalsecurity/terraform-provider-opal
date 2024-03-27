@@ -2,7 +2,7 @@ overlay: 1.0.0
 info:
   title: Overlay ./openapi_original.yaml => ./openapi.yaml
   version: 0.0.0
-extends: file:///Users/amruthvenkatraman/src/old-tf-provider/openapi_original.yaml
+extends: file:///Users/andrewsy/src/terraform-provider-opal/openapi_original.yaml
 actions:
   - target: $["servers"][0]
     update:
@@ -959,6 +959,10 @@ actions:
       x-speakeasy-entity:
         - GroupVisibility
         - ResourceVisibility
+  - target: $["components"]["schemas"]["VisibilityInfo"]
+    update:
+      x-speakeasy-plan-validators:
+        - VisibilityInfo
   - target: $["components"]["schemas"]["MessageChannelIDList"]
     update:
       x-speakeasy-entity:

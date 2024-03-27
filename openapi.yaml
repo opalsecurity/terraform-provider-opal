@@ -4288,6 +4288,8 @@ components:
             x-speakeasy-entity:
                 - GroupVisibility
                 - ResourceVisibility
+            x-speakeasy-plan-validators:
+                - VisibilityInfo
         MessageChannelIDList:
             description: A list of message channel IDs.
             example:
