@@ -10,7 +10,7 @@ import (
 func (r *ResourceVisibilityDataSourceModel) RefreshFromSharedVisibilityInfo(resp *shared.VisibilityInfo) {
 	if resp != nil {
 		r.Visibility = types.StringValue(string(resp.Visibility))
-		r.VisibilityGroupIds = nil
+		r.VisibilityGroupIds = []types.String{}
 		for _, v := range resp.VisibilityGroupIds {
 			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
 		}

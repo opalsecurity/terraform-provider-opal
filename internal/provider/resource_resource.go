@@ -892,8 +892,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Description: `The ID of the associated request template.`,
 			},
 			"request_configurations": schema.ListNestedAttribute{
-				Computed: true,
-				Optional: true,
+				Required: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"allow_requests": schema.BoolAttribute{

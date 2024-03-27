@@ -14,7 +14,7 @@ func (r *OnCallScheduleListDataSourceModel) RefreshFromSharedOnCallScheduleList(
 			r.OnCallSchedules = r.OnCallSchedules[:len(resp.OnCallSchedules)]
 		}
 		for onCallSchedulesCount, onCallSchedulesItem := range resp.OnCallSchedules {
-			var onCallSchedules1 tfTypes.OnCallSchedule
+			var onCallSchedules1 tfTypes.GetGroupOnCallSchedulesResponseBody
 			onCallSchedules1.ID = types.StringPointerValue(onCallSchedulesItem.ID)
 			onCallSchedules1.Name = types.StringPointerValue(onCallSchedulesItem.Name)
 			onCallSchedules1.RemoteID = types.StringPointerValue(onCallSchedulesItem.RemoteID)

@@ -25,10 +25,39 @@ resource "opal_group" "my_group" {
   on_call_schedule_ids = [
     "10c42893-326c-48d3-b654-3ad1053f385d",
   ]
+  request_configurations = [
+    {
+      allow_requests = true
+      auto_approval  = false
+      condition = {
+        group_ids = [
+          "ce27d58f-2561-447d-92ea-246933c124e1",
+        ]
+        role_remote_ids = [
+          "...",
+        ]
+      }
+      max_duration           = 120
+      priority               = 1
+      recommended_duration   = 120
+      request_template_id    = "06851574-e50d-40ca-8c78-f72ae6ab4304"
+      require_mfa_to_request = false
+      require_support_ticket = false
+      reviewer_stages = [
+        {
+          operator = "AND"
+          owner_ids = [
+            "53ec25e2-8706-4e50-ad65-59d94490f519",
+          ]
+          require_manager_approval = false
+        },
+      ]
+    },
+  ]
   require_mfa_to_approve = false
   visibility             = "GLOBAL"
   visibility_group_ids = [
-    "7ce27d58-f256-4147-992e-a246933c124e",
+    "d5bf1886-9ae7-426c-8cc0-18ec506c2a39",
   ]
 }
 ```
@@ -43,6 +72,7 @@ resource "opal_group" "my_group" {
 - `message_channel_ids` (List of String)
 - `name` (String) The name of the remote group.
 - `on_call_schedule_ids` (List of String)
+- `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 
 ### Optional
@@ -50,7 +80,6 @@ resource "opal_group" "my_group" {
 - `admin_owner_id` (String) The ID of the owner of the group.
 - `description` (String) A description of the remote group.
 - `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info))
-- `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this group.
 - `visibility_group_ids` (List of String)
 
@@ -71,6 +100,47 @@ resource "opal_group" "my_group" {
 - `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this group.
 - `require_support_ticket` (Boolean) A bool representing whether or not access requests to the group require an access ticket.
 - `visibility_info` (Attributes) Visibility infomation of an entity. (see [below for nested schema](#nestedatt--visibility_info))
+
+<a id="nestedatt--request_configurations"></a>
+### Nested Schema for `request_configurations`
+
+Optional:
+
+- `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource. Not Null
+- `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource. Not Null
+- `condition` (Attributes) # Condition Object
+### Description
+The `Condition` object is used to represent a condition.
+
+### Usage Example
+Used to match request configurations to users in `RequestConfiguration` (see [below for nested schema](#nestedatt--request_configurations--condition))
+- `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
+- `priority` (Number) The priority of the request configuration. Not Null
+- `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
+- `request_template_id` (String) The ID of the associated request template.
+- `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this resource. Not Null
+- `require_support_ticket` (Boolean) A bool representing whether or not access requests to the resource require an access ticket. Not Null
+- `reviewer_stages` (Attributes List) The list of reviewer stages for the request configuration. Not Null (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages))
+
+<a id="nestedatt--request_configurations--condition"></a>
+### Nested Schema for `request_configurations.condition`
+
+Optional:
+
+- `group_ids` (List of String) The list of group IDs to match.
+- `role_remote_ids` (List of String) The list of role remote IDs to match.
+
+
+<a id="nestedatt--request_configurations--reviewer_stages"></a>
+### Nested Schema for `request_configurations.reviewer_stages`
+
+Optional:
+
+- `operator` (String) The operator of the reviewer stage. must be one of ["AND", "OR"]; Default: "AND"
+- `owner_ids` (List of String) Not Null
+- `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval. Not Null
+
+
 
 <a id="nestedatt--remote_info"></a>
 ### Nested Schema for `remote_info`
@@ -157,47 +227,6 @@ Optional:
 Optional:
 
 - `group_id` (String) The id of the Okta Directory group. Requires replacement if changed. ; Not Null
-
-
-
-<a id="nestedatt--request_configurations"></a>
-### Nested Schema for `request_configurations`
-
-Optional:
-
-- `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource. Not Null
-- `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource. Not Null
-- `condition` (Attributes) # Condition Object
-### Description
-The `Condition` object is used to represent a condition.
-
-### Usage Example
-Used to match request configurations to users in `RequestConfiguration` (see [below for nested schema](#nestedatt--request_configurations--condition))
-- `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
-- `priority` (Number) The priority of the request configuration. Not Null
-- `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
-- `request_template_id` (String) The ID of the associated request template.
-- `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this resource. Not Null
-- `require_support_ticket` (Boolean) A bool representing whether or not access requests to the resource require an access ticket. Not Null
-- `reviewer_stages` (Attributes List) The list of reviewer stages for the request configuration. Not Null (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages))
-
-<a id="nestedatt--request_configurations--condition"></a>
-### Nested Schema for `request_configurations.condition`
-
-Optional:
-
-- `group_ids` (List of String) The list of group IDs to match.
-- `role_remote_ids` (List of String) The list of role remote IDs to match.
-
-
-<a id="nestedatt--request_configurations--reviewer_stages"></a>
-### Nested Schema for `request_configurations.reviewer_stages`
-
-Optional:
-
-- `operator` (String) The operator of the reviewer stage. must be one of ["AND", "OR"]; Default: "AND"
-- `owner_ids` (List of String) Not Null
-- `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval. Not Null
 
 
 

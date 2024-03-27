@@ -14,7 +14,7 @@ OwnerUsers DataSource
 
 ```terraform
 data "opal_owner_users" "my_ownerusers" {
-  owner_id = "be613b6b-8b95-4099-80b3-b36ede74eccd"
+  owner_id = "dba6b988-1a6b-452c-9c93-4d25038b6404"
 }
 ```
 

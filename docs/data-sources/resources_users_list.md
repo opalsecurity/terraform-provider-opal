@@ -14,8 +14,8 @@ ResourcesUsersList DataSource
 
 ```terraform
 data "opal_resources_users_list" "my_resourcesusers_list" {
-  limit       = 8
-  resource_id = "dedaf753-fdfe-4c26-bd66-a3b2a081ddc2"
+  limit       = 4
+  resource_id = "b9c12805-779f-4076-a60b-81a19e052a61"
 }
 ```
 

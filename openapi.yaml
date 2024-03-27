@@ -4106,6 +4106,7 @@ components:
                     x-speakeasy-ignore: true
             required:
                 - group_id
+                - request_configurations
             type: object
             x-speakeasy-entity: Group
         GroupTypeEnum:
@@ -5948,6 +5949,7 @@ components:
                               priority: 1
             required:
                 - resource_id
+                - request_configurations
             type: object
             x-speakeasy-entity: Resource
         PaginatedTagsList:

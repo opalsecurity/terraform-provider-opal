@@ -1,3 +1,3 @@
 data "opal_resource_message_channel_list" "my_resourcemessagechannellist" {
-  resource_id = "3dc96cf9-85c8-45ff-a575-a989c8e2bbbd"
+  resource_id = "c263d66a-3b2a-4081-9dc2-811838b263dd"
 }

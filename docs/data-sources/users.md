@@ -15,7 +15,7 @@ Users DataSource
 ```terraform
 data "opal_users" "my_users" {
   cursor    = "...my_cursor..."
-  page_size = 0
+  page_size = 3
 }
 ```
 

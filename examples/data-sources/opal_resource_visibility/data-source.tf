@@ -1,3 +1,3 @@
 data "opal_resource_visibility" "my_resourcevisibility" {
-  id = "811838b2-63dd-46c1-bd19-c3371396f9ea"
+  id = "2b83615f-5918-42ce-94a6-1d7e2dadcd9e"
 }

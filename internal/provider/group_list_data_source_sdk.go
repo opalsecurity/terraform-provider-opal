@@ -99,11 +99,11 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 					requestConfigurationListData1.Condition = nil
 				} else {
 					requestConfigurationListData1.Condition = &tfTypes.Condition{}
-					requestConfigurationListData1.Condition.GroupIds = nil
+					requestConfigurationListData1.Condition.GroupIds = []types.String{}
 					for _, v := range requestConfigurationListDataItem.Condition.GroupIds {
 						requestConfigurationListData1.Condition.GroupIds = append(requestConfigurationListData1.Condition.GroupIds, types.StringValue(v))
 					}
-					requestConfigurationListData1.Condition.RoleRemoteIds = nil
+					requestConfigurationListData1.Condition.RoleRemoteIds = []types.String{}
 					for _, v := range requestConfigurationListDataItem.Condition.RoleRemoteIds {
 						requestConfigurationListData1.Condition.RoleRemoteIds = append(requestConfigurationListData1.Condition.RoleRemoteIds, types.StringValue(v))
 					}
@@ -121,7 +121,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 					} else {
 						reviewerStages1.Operator = types.StringNull()
 					}
-					reviewerStages1.OwnerIds = nil
+					reviewerStages1.OwnerIds = []types.String{}
 					for _, v := range reviewerStagesItem.OwnerIds {
 						reviewerStages1.OwnerIds = append(reviewerStages1.OwnerIds, types.StringValue(v))
 					}
@@ -157,11 +157,11 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 					requestConfigurations1.Condition = nil
 				} else {
 					requestConfigurations1.Condition = &tfTypes.Condition{}
-					requestConfigurations1.Condition.GroupIds = nil
+					requestConfigurations1.Condition.GroupIds = []types.String{}
 					for _, v := range requestConfigurationsItem.Condition.GroupIds {
 						requestConfigurations1.Condition.GroupIds = append(requestConfigurations1.Condition.GroupIds, types.StringValue(v))
 					}
-					requestConfigurations1.Condition.RoleRemoteIds = nil
+					requestConfigurations1.Condition.RoleRemoteIds = []types.String{}
 					for _, v := range requestConfigurationsItem.Condition.RoleRemoteIds {
 						requestConfigurations1.Condition.RoleRemoteIds = append(requestConfigurations1.Condition.RoleRemoteIds, types.StringValue(v))
 					}
@@ -179,7 +179,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 					} else {
 						reviewerStages3.Operator = types.StringNull()
 					}
-					reviewerStages3.OwnerIds = nil
+					reviewerStages3.OwnerIds = []types.String{}
 					for _, v := range reviewerStagesItem1.OwnerIds {
 						reviewerStages3.OwnerIds = append(reviewerStages3.OwnerIds, types.StringValue(v))
 					}

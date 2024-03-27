@@ -14,8 +14,8 @@ ResourceTag Resource
 
 ```terraform
 resource "opal_resource_tag" "my_resourcetag" {
-  resource_id = "cdd06b0b-32b9-4f65-bf84-9e2bffa28b2a"
-  tag_id      = "ffecaf8a-4c7e-4c57-b816-1728cd3687b3"
+  resource_id = "e6059909-fc8f-41d1-a174-cc096b23d6f0"
+  tag_id      = "e45912c1-1553-4e8e-b4cf-56bf9ec06486"
 }
 ```
 

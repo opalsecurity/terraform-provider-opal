@@ -14,10 +14,39 @@ Resource Resource
 
 ```terraform
 resource "opal_resource" "my_resource" {
-  admin_owner_id         = "7c86c85d-0651-43e2-a748-d69d658418e8"
-  app_id                 = "f454d283-ca87-4a8a-bdbb-df212eca5353"
-  description            = "Engineering team Okta role."
-  name                   = "mongo-db-prod"
+  admin_owner_id = "7c86c85d-0651-43e2-a748-d69d658418e8"
+  app_id         = "f454d283-ca87-4a8a-bdbb-df212eca5353"
+  description    = "Engineering team Okta role."
+  name           = "mongo-db-prod"
+  request_configurations = [
+    {
+      allow_requests = true
+      auto_approval  = false
+      condition = {
+        group_ids = [
+          "8a4c7ec5-7b81-4617-a8cd-3687b3ad9a19",
+        ]
+        role_remote_ids = [
+          "...",
+        ]
+      }
+      max_duration           = 120
+      priority               = 1
+      recommended_duration   = 120
+      request_template_id    = "06851574-e50d-40ca-8c78-f72ae6ab4304"
+      require_mfa_to_request = false
+      require_support_ticket = false
+      reviewer_stages = [
+        {
+          operator = "AND"
+          owner_ids = [
+            "950966c2-bdfc-4b3e-b464-ae94bc89fbd0",
+          ]
+          require_manager_approval = false
+        },
+      ]
+    },
+  ]
   require_mfa_to_approve = false
   require_mfa_to_connect = false
   resource_type          = "AWS_IAM_ROLE"
@@ -32,6 +61,7 @@ resource "opal_resource" "my_resource" {
 
 - `app_id` (String) The ID of the app for the resource. Requires replacement if changed.
 - `name` (String) The name of the remote resource.
+- `request_configurations` (Attributes List) A list of configurations for requests to this resource. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `resource_type` (String) The type of the resource. Requires replacement if changed. ; must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "CUSTOM", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GIT_HUB_REPO", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "TELEPORT_ROLE"]
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 
@@ -40,7 +70,6 @@ resource "opal_resource" "my_resource" {
 - `admin_owner_id` (String) The ID of the owner of the resource.
 - `description` (String) A description of the remote resource.
 - `remote_info` (Attributes) Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info))
-- `request_configurations` (Attributes List) A list of configurations for requests to this resource. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to this resource.
 - `visibility_group_ids` (List of String)
@@ -58,6 +87,47 @@ resource "opal_resource" "my_resource" {
 - `request_template_id` (String) The ID of the associated request template.
 - `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this resource.
 - `require_support_ticket` (Boolean) A bool representing whether or not access requests to the resource require an access ticket.
+
+<a id="nestedatt--request_configurations"></a>
+### Nested Schema for `request_configurations`
+
+Optional:
+
+- `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource. Not Null
+- `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource. Not Null
+- `condition` (Attributes) # Condition Object
+### Description
+The `Condition` object is used to represent a condition.
+
+### Usage Example
+Used to match request configurations to users in `RequestConfiguration` (see [below for nested schema](#nestedatt--request_configurations--condition))
+- `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
+- `priority` (Number) The priority of the request configuration. Not Null
+- `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
+- `request_template_id` (String) The ID of the associated request template.
+- `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this resource. Not Null
+- `require_support_ticket` (Boolean) A bool representing whether or not access requests to the resource require an access ticket. Not Null
+- `reviewer_stages` (Attributes List) The list of reviewer stages for the request configuration. Not Null (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages))
+
+<a id="nestedatt--request_configurations--condition"></a>
+### Nested Schema for `request_configurations.condition`
+
+Optional:
+
+- `group_ids` (List of String) The list of group IDs to match.
+- `role_remote_ids` (List of String) The list of role remote IDs to match.
+
+
+<a id="nestedatt--request_configurations--reviewer_stages"></a>
+### Nested Schema for `request_configurations.reviewer_stages`
+
+Optional:
+
+- `operator` (String) The operator of the reviewer stage. must be one of ["AND", "OR"]; Default: "AND"
+- `owner_ids` (List of String) Not Null
+- `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval. Not Null
+
+
 
 <a id="nestedatt--remote_info"></a>
 ### Nested Schema for `remote_info`
@@ -303,46 +373,5 @@ Optional:
 Optional:
 
 - `role_name` (String) The name role. Requires replacement if changed. ; Not Null
-
-
-
-<a id="nestedatt--request_configurations"></a>
-### Nested Schema for `request_configurations`
-
-Optional:
-
-- `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource. Not Null
-- `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource. Not Null
-- `condition` (Attributes) # Condition Object
-### Description
-The `Condition` object is used to represent a condition.
-
-### Usage Example
-Used to match request configurations to users in `RequestConfiguration` (see [below for nested schema](#nestedatt--request_configurations--condition))
-- `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
-- `priority` (Number) The priority of the request configuration. Not Null
-- `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
-- `request_template_id` (String) The ID of the associated request template.
-- `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this resource. Not Null
-- `require_support_ticket` (Boolean) A bool representing whether or not access requests to the resource require an access ticket. Not Null
-- `reviewer_stages` (Attributes List) The list of reviewer stages for the request configuration. Not Null (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages))
-
-<a id="nestedatt--request_configurations--condition"></a>
-### Nested Schema for `request_configurations.condition`
-
-Optional:
-
-- `group_ids` (List of String) The list of group IDs to match.
-- `role_remote_ids` (List of String) The list of role remote IDs to match.
-
-
-<a id="nestedatt--request_configurations--reviewer_stages"></a>
-### Nested Schema for `request_configurations.reviewer_stages`
-
-Optional:
-
-- `operator` (String) The operator of the reviewer stage. must be one of ["AND", "OR"]; Default: "AND"
-- `owner_ids` (List of String) Not Null
-- `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval. Not Null
 
 

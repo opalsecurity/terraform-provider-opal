@@ -122,16 +122,16 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 func (r *ConfigurationTemplateResourceModel) RefreshFromSharedConfigurationTemplate(resp *shared.ConfigurationTemplate) {
 	if resp != nil {
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
-		r.BreakGlassUserIds = nil
+		r.BreakGlassUserIds = []types.String{}
 		for _, v := range resp.BreakGlassUserIds {
 			r.BreakGlassUserIds = append(r.BreakGlassUserIds, types.StringValue(v))
 		}
 		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
-		r.LinkedAuditMessageChannelIds = nil
+		r.LinkedAuditMessageChannelIds = []types.String{}
 		for _, v := range resp.LinkedAuditMessageChannelIds {
 			r.LinkedAuditMessageChannelIds = append(r.LinkedAuditMessageChannelIds, types.StringValue(v))
 		}
-		r.MemberOncallScheduleIds = nil
+		r.MemberOncallScheduleIds = []types.String{}
 		for _, v := range resp.MemberOncallScheduleIds {
 			r.MemberOncallScheduleIds = append(r.MemberOncallScheduleIds, types.StringValue(v))
 		}
@@ -141,7 +141,7 @@ func (r *ConfigurationTemplateResourceModel) RefreshFromSharedConfigurationTempl
 		r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
 		if resp.Visibility != nil {
 			r.Visibility.Visibility = types.StringValue(string(resp.Visibility.Visibility))
-			r.Visibility.VisibilityGroupIds = nil
+			r.Visibility.VisibilityGroupIds = []types.String{}
 			for _, v := range resp.Visibility.VisibilityGroupIds {
 				r.Visibility.VisibilityGroupIds = append(r.Visibility.VisibilityGroupIds, types.StringValue(v))
 			}

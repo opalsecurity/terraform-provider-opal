@@ -207,11 +207,11 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 					requestConfigurations1.Condition = nil
 				} else {
 					requestConfigurations1.Condition = &tfTypes.Condition{}
-					requestConfigurations1.Condition.GroupIds = nil
+					requestConfigurations1.Condition.GroupIds = []types.String{}
 					for _, v := range requestConfigurationsItem.Condition.GroupIds {
 						requestConfigurations1.Condition.GroupIds = append(requestConfigurations1.Condition.GroupIds, types.StringValue(v))
 					}
-					requestConfigurations1.Condition.RoleRemoteIds = nil
+					requestConfigurations1.Condition.RoleRemoteIds = []types.String{}
 					for _, v := range requestConfigurationsItem.Condition.RoleRemoteIds {
 						requestConfigurations1.Condition.RoleRemoteIds = append(requestConfigurations1.Condition.RoleRemoteIds, types.StringValue(v))
 					}
@@ -229,7 +229,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 					} else {
 						reviewerStages1.Operator = types.StringNull()
 					}
-					reviewerStages1.OwnerIds = nil
+					reviewerStages1.OwnerIds = []types.String{}
 					for _, v := range reviewerStagesItem.OwnerIds {
 						reviewerStages1.OwnerIds = append(reviewerStages1.OwnerIds, types.StringValue(v))
 					}

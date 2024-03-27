@@ -21,11 +21,11 @@ func (r *UarDataSourceModel) RefreshFromSharedUar(resp *shared.Uar) {
 			r.UarScope = nil
 		} else {
 			r.UarScope = &tfTypes.UARScope{}
-			r.UarScope.Admins = nil
+			r.UarScope.Admins = []types.String{}
 			for _, v := range resp.UarScope.Admins {
 				r.UarScope.Admins = append(r.UarScope.Admins, types.StringValue(v))
 			}
-			r.UarScope.Names = nil
+			r.UarScope.Names = []types.String{}
 			for _, v := range resp.UarScope.Names {
 				r.UarScope.Names = append(r.UarScope.Names, types.StringValue(v))
 			}

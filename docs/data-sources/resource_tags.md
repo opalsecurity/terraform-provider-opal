@@ -14,7 +14,7 @@ ResourceTags DataSource
 
 ```terraform
 data "opal_resource_tags" "my_resourcetags" {
-  resource_id = "811838b2-63dd-46c1-bd19-c3371396f9ea"
+  resource_id = "337bd569-600e-4d43-99a9-2039280c1b7e"
 }
 ```
 

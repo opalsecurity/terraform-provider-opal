@@ -14,7 +14,7 @@ Sessions DataSource
 
 ```terraform
 data "opal_sessions" "my_sessions" {
-  resource_id = "6169f5fe-fbfb-4a9d-a3ac-72a698985c24"
+  resource_id = "9ac25633-7c2c-44cb-9999-88ace51fe0f1"
   user_id     = "...my_user_id..."
 }
 ```

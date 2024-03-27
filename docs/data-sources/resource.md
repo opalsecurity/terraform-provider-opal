@@ -14,7 +14,7 @@ Resource DataSource
 
 ```terraform
 data "opal_resource" "my_resource" {
-  id = "3dc96cf9-85c8-45ff-a575-a989c8e2bbbd"
+  id = "484eea2a-3bbb-4602-bddb-dedaf753fdfe"
 }
 ```
 

@@ -29,11 +29,11 @@ func (r *UARSListDataSourceModel) RefreshFromSharedPaginatedUARsList(resp *share
 				results1.UarScope = nil
 			} else {
 				results1.UarScope = &tfTypes.UARScope{}
-				results1.UarScope.Admins = nil
+				results1.UarScope.Admins = []types.String{}
 				for _, v := range resultsItem.UarScope.Admins {
 					results1.UarScope.Admins = append(results1.UarScope.Admins, types.StringValue(v))
 				}
-				results1.UarScope.Names = nil
+				results1.UarScope.Names = []types.String{}
 				for _, v := range resultsItem.UarScope.Names {
 					results1.UarScope.Names = append(results1.UarScope.Names, types.StringValue(v))
 				}

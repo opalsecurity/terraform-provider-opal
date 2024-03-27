@@ -16,7 +16,6 @@ import (
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 	"github.com/opalsecurity/terraform-provider-opal/internal/validators"
 )
 
@@ -143,17 +142,7 @@ func (r *TagResource) Create(ctx context.Context, req resource.CreateRequest, re
 		return
 	}
 
-	tagKey := data.TagKey.ValueString()
-	tagValue := new(string)
-	if !data.TagValue.IsUnknown() && !data.TagValue.IsNull() {
-		*tagValue = data.TagValue.ValueString()
-	} else {
-		tagValue = nil
-	}
-	request := shared.CreateTagInfo{
-		TagKey:   tagKey,
-		TagValue: tagValue,
-	}
+	request := *data.ToSharedCreateTagInfo()
 	res, err := r.client.Tags.CreateTag(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())

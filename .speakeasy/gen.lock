@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: d63db25c5b6a4277f4831d1ba3d92567
+  docChecksum: 74c3659000cac9317875ca9af76e6974
   docVersion: "1.0"
-  speakeasyVersion: 1.215.1
-  generationVersion: 2.286.4
-  releaseVersion: 0.13.30
-  configChecksum: fbc170f3e869699c722b623aa34370b9
+  speakeasyVersion: 1.225.0
+  generationVersion: 2.291.0
+  releaseVersion: 0.14.0
+  configChecksum: 908aebc2a2b130f4eb72f81e534c0573
   repoURL: https://github.com/speakeasy-sdks/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -14,7 +14,7 @@ features:
   terraform:
     additionalProperties: 0.1.2
     constsAndDefaults: 0.1.4
-    core: 3.11.1
+    core: 3.12.1
     deprecations: 2.81.1
     globalSecurity: 2.81.6
     globalServerURLs: 2.82.1
@@ -277,6 +277,8 @@ generatedFiles:
   - internal/provider/types/request_configuration.go
   - internal/provider/types/visibility_info.go
   - internal/provider/types/message_channel.go
+  - internal/provider/types/get_group_message_channels_response_body.go
+  - internal/provider/types/get_group_on_call_schedules_response_body.go
   - internal/provider/types/active_directory_group.go
   - internal/provider/types/github_team.go
   - internal/provider/types/group_remote_info.go
@@ -312,7 +314,6 @@ generatedFiles:
   - internal/provider/types/group.go
   - internal/provider/types/tag.go
   - internal/provider/types/group_user.go
-  - internal/provider/types/on_call_schedule.go
   - internal/provider/types/owner.go
   - internal/provider/types/user.go
   - internal/provider/types/field_value.go

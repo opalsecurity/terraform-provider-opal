@@ -16,16 +16,16 @@ func (r *ConfigurationTemplateListDataSourceModel) RefreshFromSharedPaginatedCon
 		for resultsCount, resultsItem := range resp.Results {
 			var results1 tfTypes.ConfigurationTemplate
 			results1.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
-			results1.BreakGlassUserIds = nil
+			results1.BreakGlassUserIds = []types.String{}
 			for _, v := range resultsItem.BreakGlassUserIds {
 				results1.BreakGlassUserIds = append(results1.BreakGlassUserIds, types.StringValue(v))
 			}
 			results1.ConfigurationTemplateID = types.StringPointerValue(resultsItem.ConfigurationTemplateID)
-			results1.LinkedAuditMessageChannelIds = nil
+			results1.LinkedAuditMessageChannelIds = []types.String{}
 			for _, v := range resultsItem.LinkedAuditMessageChannelIds {
 				results1.LinkedAuditMessageChannelIds = append(results1.LinkedAuditMessageChannelIds, types.StringValue(v))
 			}
-			results1.MemberOncallScheduleIds = nil
+			results1.MemberOncallScheduleIds = []types.String{}
 			for _, v := range resultsItem.MemberOncallScheduleIds {
 				results1.MemberOncallScheduleIds = append(results1.MemberOncallScheduleIds, types.StringValue(v))
 			}
@@ -38,7 +38,7 @@ func (r *ConfigurationTemplateListDataSourceModel) RefreshFromSharedPaginatedCon
 			} else {
 				results1.Visibility = &tfTypes.VisibilityInfo{}
 				results1.Visibility.Visibility = types.StringValue(string(resultsItem.Visibility.Visibility))
-				results1.Visibility.VisibilityGroupIds = nil
+				results1.Visibility.VisibilityGroupIds = []types.String{}
 				for _, v := range resultsItem.Visibility.VisibilityGroupIds {
 					results1.Visibility.VisibilityGroupIds = append(results1.Visibility.VisibilityGroupIds, types.StringValue(v))
 				}

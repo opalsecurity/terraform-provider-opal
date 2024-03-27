@@ -14,7 +14,7 @@ App DataSource
 
 ```terraform
 data "opal_app" "my_app" {
-  id = "e94bc89f-bd03-4a92-a42f-2e3005dda204"
+  id = "589e4478-1ce6-4ef6-835f-4c67e895185d"
 }
 ```
 

@@ -19,7 +19,7 @@ func (r *GroupReviewersStagesListDataSourceModel) RefreshFromSharedReviewerStage
 		} else {
 			data.Operator = types.StringNull()
 		}
-		data.OwnerIds = nil
+		data.OwnerIds = []types.String{}
 		for _, v := range dataItem.OwnerIds {
 			data.OwnerIds = append(data.OwnerIds, types.StringValue(v))
 		}

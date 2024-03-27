@@ -36,7 +36,7 @@ type UpdateResourceInfo struct {
 	// using a single group as a condition.
 	RequestConfigurationList *CreateRequestConfigurationInfoList `json:"request_configuration_list,omitempty"`
 	// A list of configurations for requests to this resource. If not provided, the default request configuration will be used.
-	RequestConfigurations []RequestConfiguration `json:"request_configurations,omitempty"`
+	RequestConfigurations []RequestConfiguration `json:"request_configurations"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
 	RequireMfaToApprove *bool `json:"require_mfa_to_approve,omitempty"`
 	// A bool representing whether or not to require MFA to connect to this resource.
@@ -87,7 +87,7 @@ func (o *UpdateResourceInfo) GetRequestConfigurationList() *CreateRequestConfigu
 
 func (o *UpdateResourceInfo) GetRequestConfigurations() []RequestConfiguration {
 	if o == nil {
-		return nil
+		return []RequestConfiguration{}
 	}
 	return o.RequestConfigurations
 }

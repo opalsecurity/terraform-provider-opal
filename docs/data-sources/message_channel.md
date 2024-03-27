@@ -14,7 +14,7 @@ MessageChannel DataSource
 
 ```terraform
 data "opal_message_channel" "my_messagechannel" {
-  id = "1060114a-b43b-4dd6-8c1b-a08b7f3a3e61"
+  id = "5cef6b7f-f3f7-4346-90ff-591a730bda33"
 }
 ```
 
