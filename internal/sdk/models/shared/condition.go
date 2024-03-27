@@ -2,12 +2,6 @@
 
 package shared
 
-// # Condition Object
-// ### Description
-// The `Condition` object is used to represent a condition.
-//
-// ### Usage Example
-// Used to match request configurations to users in `RequestConfiguration`
 type Condition struct {
 	// The list of group IDs to match.
 	GroupIds []string `json:"group_ids,omitempty"`

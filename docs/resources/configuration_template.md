@@ -105,12 +105,7 @@ Required:
 
 Optional:
 
-- `condition` (Attributes) # Condition Object
-### Description
-The `Condition` object is used to represent a condition.
-
-### Usage Example
-Used to match request configurations to users in `RequestConfiguration` (see [below for nested schema](#nestedatt--request_configurations--condition))
+- `condition` (Attributes) (see [below for nested schema](#nestedatt--request_configurations--condition))
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
 - `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
 - `request_template_id` (String) The ID of the associated request template.

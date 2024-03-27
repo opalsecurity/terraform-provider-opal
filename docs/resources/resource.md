@@ -95,12 +95,7 @@ Optional:
 
 - `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource. Not Null
 - `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource. Not Null
-- `condition` (Attributes) # Condition Object
-### Description
-The `Condition` object is used to represent a condition.
-
-### Usage Example
-Used to match request configurations to users in `RequestConfiguration` (see [below for nested schema](#nestedatt--request_configurations--condition))
+- `condition` (Attributes) (see [below for nested schema](#nestedatt--request_configurations--condition))
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
 - `priority` (Number) The priority of the request configuration. Not Null
 - `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.

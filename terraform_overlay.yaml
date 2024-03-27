@@ -2,7 +2,7 @@ overlay: 1.0.0
 info:
   title: Overlay ./openapi_original.yaml => ./openapi.yaml
   version: 0.0.0
-extends: file:///Users/andrewsy/src/terraform-provider-opal/openapi_original.yaml
+extends: file:///Users/amruthvenkatraman/src/old-tf-provider/openapi_original.yaml
 actions:
   - target: $["servers"][0]
     update:
@@ -1170,6 +1170,8 @@ actions:
   - target: $["components"]["schemas"]["UpdateOwnerInfo"]
     update:
       x-speakeasy-entity: Owner
+  - target: $["components"]["schemas"]["Condition"]["description"]
+    remove: true
   - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["max_duration_minutes"]
     update:
       x-speakeasy-name-override: max_duration

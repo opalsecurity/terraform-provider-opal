@@ -6489,13 +6489,6 @@ components:
             type: object
             x-speakeasy-entity: Owner
         Condition:
-            description: |-
-                # Condition Object
-                ### Description
-                The `Condition` object is used to represent a condition.
-
-                ### Usage Example
-                Used to match request configurations to users in `RequestConfiguration`
             example:
                 group_ids:
                     - 1b978423-db0a-4037-a4cf-f79c60cb67b3

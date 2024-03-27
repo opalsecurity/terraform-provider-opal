@@ -452,12 +452,6 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 									Description: `The list of role remote IDs to match.`,
 								},
 							},
-							MarkdownDescription: `# Condition Object` + "\n" +
-								`### Description` + "\n" +
-								`The ` + "`" + `Condition` + "`" + ` object is used to represent a condition.` + "\n" +
-								`` + "\n" +
-								`### Usage Example` + "\n" +
-								`Used to match request configurations to users in ` + "`" + `RequestConfiguration` + "`" + ``,
 						},
 						"max_duration": schema.Int64Attribute{
 							Computed:    true,

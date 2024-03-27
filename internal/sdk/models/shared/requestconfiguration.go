@@ -12,14 +12,8 @@ type RequestConfiguration struct {
 	// A bool representing whether or not to allow requests for this resource.
 	AllowRequests bool `json:"allow_requests"`
 	// A bool representing whether or not to automatically approve requests for this resource.
-	AutoApproval bool `json:"auto_approval"`
-	// # Condition Object
-	// ### Description
-	// The `Condition` object is used to represent a condition.
-	//
-	// ### Usage Example
-	// Used to match request configurations to users in `RequestConfiguration`
-	Condition *Condition `json:"condition,omitempty"`
+	AutoApproval bool       `json:"auto_approval"`
+	Condition    *Condition `json:"condition,omitempty"`
 	// The maximum duration for which the resource can be requested (in minutes).
 	MaxDuration *int64 `json:"max_duration_minutes,omitempty"`
 	// The priority of the request configuration.
