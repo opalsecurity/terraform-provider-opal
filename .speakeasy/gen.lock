@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 92cce90346741e446f7548f416bdeb90
+  docChecksum: 037734328a29cbdb4544db3aba829b56
   docVersion: "1.0"
   speakeasyVersion: 1.228.1
   generationVersion: 2.292.0
-  releaseVersion: 0.14.6
-  configChecksum: 0e54d05d9e2452d3f8e61f99e401defe
+  releaseVersion: 0.15.0
+  configChecksum: e5b4fa3cecf3282a068692bf72c8668c
   repoURL: https://github.com/speakeasy-sdks/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -20,6 +20,7 @@ features:
     globalServerURLs: 2.82.1
     ignores: 2.81.1
     nameOverrides: 2.81.1
+    retries: 2.81.1
     serverIDs: 2.81.1
     unions: 2.81.10
 generatedFiles:
@@ -225,6 +226,7 @@ generatedFiles:
   - internal/sdk/models/shared/paginateduserslist.go
   - internal/sdk/models/shared/security.go
   - internal/sdk/.gitignore
+  - internal/sdk/models/operations/options.go
   - internal/sdk/.gitattributes
   - internal/sdk/internal/hooks/registration.go
   - internal/sdk/internal/hooks/hooks.go

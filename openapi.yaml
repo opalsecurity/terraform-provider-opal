@@ -7097,6 +7097,16 @@ components:
         BearerAuth:
             scheme: bearer
             type: http
+x-speakeasy-retries:
+    strategy: backoff
+    backoff:
+        initialInterval: 1000 # 1 second
+        maxInterval: 60000 # 60 seconds
+        maxElapsedTime: 3600000 # 5 minutes
+        exponent: 1.5
+    statusCodes:
+        - 429
+    retryConnectionErrors: true
 tags:
     - name: apps
       description: Operations related to apps
