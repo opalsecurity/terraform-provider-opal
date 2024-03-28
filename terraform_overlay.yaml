@@ -927,6 +927,9 @@ actions:
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["is_requestable"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_configurations"]
+    update:
+      x-speakeasy-plan-validators: RequestConfigurations
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
@@ -1127,6 +1130,9 @@ actions:
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["is_requestable"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_configurations"]
+    update:
+      x-speakeasy-plan-validators: RequestConfigurations
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["required"]
     update:
       - request_configurations
@@ -1184,7 +1190,6 @@ actions:
       x-speakeasy-name-override: recommended_duration
   - target: $["components"]["schemas"]["RequestConfiguration"]
     update:
-      # x-speakeasy-plan-validators: "RequestConfiguration"
       x-speakeasy-entity: Requests
   - target: $["components"]["schemas"]["CreateRequestConfigurationInfoList"]
     update:

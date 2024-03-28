@@ -4064,6 +4064,7 @@ components:
                     items:
                         $ref: "#/components/schemas/RequestConfiguration"
                     description: The request configuration list of the configuration template. If not provided, the default request configuration will be used.
+                    x-speakeasy-plan-validators: RequestConfigurations
                 request_configuration_list:
                     description: The request configuration list of the configuration template. If not provided, the default request configuration will be used. Deprecated in favor of `request_configurations`.
                     $ref: "#/components/schemas/CreateRequestConfigurationInfoList"
@@ -5910,6 +5911,7 @@ components:
                     items:
                         $ref: "#/components/schemas/RequestConfiguration"
                     description: A list of configurations for requests to this resource. If not provided, the default request configuration will be used.
+                    x-speakeasy-plan-validators: RequestConfigurations
                 request_configuration_list:
                     description: A list of configurations for requests to this resource. If not provided, the default request configuration will be used. Deprecated in favor of `request_configurations`.
                     $ref: "#/components/schemas/CreateRequestConfigurationInfoList"
@@ -6592,7 +6594,6 @@ components:
                 - require_support_ticket
                 - reviewer_stages
                 - priority
-            # x-speakeasy-plan-validators: "RequestConfiguration"
             x-speakeasy-entity: Requests
         CreateRequestConfigurationInfoList:
             description: |-

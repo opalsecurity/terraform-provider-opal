@@ -24,6 +24,7 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/boolvalidators"
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/internal/validators/int64validators"
+	custom_listvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/listvalidators"
 	speakeasy_listvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/listvalidators"
 	speakeasy_stringvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/stringvalidators"
 )
@@ -1012,6 +1013,9 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 					},
 				},
 				Description: `A list of configurations for requests to this resource. If not provided, the default request configuration will be used.`,
+				Validators: []validator.List{
+					custom_listvalidators.RequestConfigurations(),
+				},
 			},
 			"require_mfa_to_request": schema.BoolAttribute{
 				Computed:    true,
