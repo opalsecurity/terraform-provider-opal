@@ -861,6 +861,12 @@ actions:
   - target: $["components"]["schemas"]["Group"]["properties"]["group_id"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["app_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["group_type"]
+    update:
+      x-speakeasy-param-force-new: true
   - target: $["components"]["schemas"]["Group"]["properties"]["require_manager_approval"]
     update:
       x-speakeasy-ignore: true
@@ -879,6 +885,9 @@ actions:
   - target: $["components"]["schemas"]["Group"]["properties"]["metadata"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["remote_info"]
+    update:
+      x-speakeasy-param-force-new: true
   - target: $["components"]["schemas"]["Group"]
     update:
       x-speakeasy-entity: Group
@@ -992,6 +1001,12 @@ actions:
   - target: $["components"]["schemas"]["MessageChannel"]["properties"]["message_channel_id"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["MessageChannel"]["properties"]["third_party_provider"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["MessageChannel"]["properties"]["remote_id"]
+    update:
+      x-speakeasy-param-force-new: true
   - target: $["components"]["schemas"]["MessageChannel"]
     update:
       x-speakeasy-entity: MessageChannel
@@ -1007,6 +1022,12 @@ actions:
   - target: $["components"]["schemas"]["OnCallSchedule"]["properties"]["on_call_schedule_id"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["OnCallSchedule"]["properties"]["third_party_provider"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["OnCallSchedule"]["properties"]["remote_id"]
+    update:
+      x-speakeasy-param-force-new: true
   - target: $["components"]["schemas"]["OnCallSchedule"]
     update:
       x-speakeasy-entity: OnCallSchedule
@@ -1016,15 +1037,171 @@ actions:
   - target: $["components"]["schemas"]["OnCallScheduleProviderEnum"]
     update:
       x-speakeasy-entity: OnCallSchedule
+  - target: $["components"]["schemas"]["GroupRemoteInfo"]["properties"]["active_directory_group"]
+    update:
+      x-speakeasy-param-force-new: true
   - target: $["components"]["schemas"]["GroupRemoteInfo"]["properties"]["github_team"]["properties"]["team_id"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["GroupRemoteInfo"]["properties"]["github_team"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["GroupRemoteInfo"]["properties"]["gitlab_group"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["GroupRemoteInfo"]["properties"]["google_group"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["GroupRemoteInfo"]["properties"]["ldap_group"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["GroupRemoteInfo"]["properties"]["okta_group"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["GroupRemoteInfo"]["properties"]["duo_group"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["GroupRemoteInfo"]["properties"]["azure_ad_security_group"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["GroupRemoteInfo"]["properties"]["azure_ad_microsoft_365_group"]
+    update:
+      x-speakeasy-param-force-new: true
   - target: $["components"]["schemas"]["GroupRemoteInfo"]
     update:
       x-speakeasy-entity: GroupRemote
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["aws_account"]["properties"]["account_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["aws_permission_set"]["properties"]["arn"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["aws_permission_set"]["properties"]["account_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["aws_iam_role"]["properties"]["arn"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["aws_iam_role"]["properties"]["account_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["aws_ec2_instance"]["properties"]["instance_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["aws_ec2_instance"]["properties"]["region"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["aws_ec2_instance"]["properties"]["account_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["aws_rds_instance"]["properties"]["instance_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["aws_rds_instance"]["properties"]["region"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["aws_rds_instance"]["properties"]["resource_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["aws_rds_instance"]["properties"]["account_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["aws_eks_cluster"]["properties"]["arn"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["aws_eks_cluster"]["properties"]["account_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["gcp_organization"]["properties"]["organization_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["gcp_bucket"]["properties"]["bucket_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["gcp_compute_instance"]["properties"]["instance_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["gcp_compute_instance"]["properties"]["project_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["gcp_compute_instance"]["properties"]["zone"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["gcp_big_query_dataset"]["properties"]["project_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["gcp_big_query_dataset"]["properties"]["dataset_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["gcp_big_query_table"]["properties"]["project_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["gcp_big_query_table"]["properties"]["dataset_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["gcp_big_query_table"]["properties"]["table_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["gcp_folder"]["properties"]["folder_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["gcp_gke_cluster"]["properties"]["cluster_name"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["gcp_project"]["properties"]["project_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["gcp_sql_instance"]["properties"]["instance_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["gcp_sql_instance"]["properties"]["project_id"]
+    update:
+      x-speakeasy-param-force-new: true
   - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["github_repo"]["properties"]["repo_id"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["github_repo"]["properties"]["repo_name"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["gitlab_project"]["properties"]["project_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["okta_app"]["properties"]["app_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["okta_standard_role"]["properties"]["role_type"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["okta_custom_role"]["properties"]["role_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["pagerduty_role"]["properties"]["role_name"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["salesforce_permission_set"]["properties"]["permission_set_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["salesforce_profile"]["properties"]["profile_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["salesforce_profile"]["properties"]["user_license_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["salesforce_role"]["properties"]["role_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["teleport_role"]["properties"]["role_name"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["CreateResourceInfo"]["properties"]["resource_type"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["CreateResourceInfo"]["properties"]["app_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["CreateResourceInfo"]["properties"]["remote_info"]
+    update:
+      x-speakeasy-param-force-new: true
   - target: $["components"]["schemas"]["CreateResourceInfo"]["properties"]["remote_resource_id"]
     update:
       x-speakeasy-ignore: true
@@ -1034,6 +1211,15 @@ actions:
   - target: $["components"]["schemas"]["CreateResourceInfo"]
     update:
       x-speakeasy-entity: Resource
+  - target: $["components"]["schemas"]["CreateGroupInfo"]["properties"]["group_type"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["CreateGroupInfo"]["properties"]["app_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["CreateGroupInfo"]["properties"]["remote_info"]
+    update:
+      x-speakeasy-param-force-new: true
   - target: $["components"]["schemas"]["CreateGroupInfo"]["properties"]["remote_group_id"]
     update:
       x-speakeasy-ignore: true
@@ -1079,6 +1265,12 @@ actions:
   - target: $["components"]["schemas"]["Resource"]["properties"]["resource_id"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["app_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["resource_type"]
+    update:
+      x-speakeasy-param-force-new: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["require_manager_approval"]
     update:
       x-speakeasy-ignore: true
@@ -1091,6 +1283,9 @@ actions:
   - target: $["components"]["schemas"]["Resource"]["properties"]["metadata"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["remote_info"]
+    update:
+      x-speakeasy-param-force-new: true
   - target: $["components"]["schemas"]["Resource"]
     update:
       x-speakeasy-entity: Resource

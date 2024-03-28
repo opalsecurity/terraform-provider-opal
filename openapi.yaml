@@ -3735,6 +3735,7 @@ components:
                     example: b5a5ca27-0ea3-4d86-9199-2126d57d1fbd
                     format: uuid
                     type: string
+                    x-speakeasy-param-force-new: true
                 name:
                     description: The name of the group.
                     example: API Group
@@ -3758,6 +3759,7 @@ components:
                     type: string
                 group_type:
                     $ref: "#/components/schemas/GroupTypeEnum"
+                    x-speakeasy-param-force-new: true
                 max_duration:
                     description: The maximum duration for which the group can be requested (in minutes).
                     type: integer
@@ -3833,6 +3835,7 @@ components:
                     x-speakeasy-ignore: true
                 remote_info:
                     $ref: "#/components/schemas/GroupRemoteInfo"
+                    x-speakeasy-param-force-new: true
             required:
                 - group_id
             type: object
@@ -4409,10 +4412,12 @@ components:
                     x-speakeasy-param-suppress-computed-diff: true
                 third_party_provider:
                     $ref: "#/components/schemas/MessageChannelProviderEnum"
+                    x-speakeasy-param-force-new: true
                 remote_id:
                     description: The remote ID of the message channel
                     example: C03FJR97276
                     type: string
+                    x-speakeasy-param-force-new: true
                 name:
                     description: The name of the message channel.
                     example: api-team-audit-channel
@@ -4475,10 +4480,12 @@ components:
                     x-speakeasy-param-suppress-computed-diff: true
                 third_party_provider:
                     $ref: "#/components/schemas/OnCallScheduleProviderEnum"
+                    x-speakeasy-param-force-new: true
                 remote_id:
                     description: The remote ID of the on call schedule
                     example: P7OWH2R
                     type: string
+                    x-speakeasy-param-force-new: true
                 name:
                     description: The name of the on call schedule.
                     example: Customer Support On-Call
@@ -4528,6 +4535,7 @@ components:
                     type: object
                     required:
                         - group_id
+                    x-speakeasy-param-force-new: true
                 github_team:
                     description: Remote info for GitHub team.
                     properties:
@@ -4544,6 +4552,7 @@ components:
                     type: object
                     required:
                         - team_slug
+                    x-speakeasy-param-force-new: true
                 gitlab_group:
                     description: Remote info for Gitlab group.
                     properties:
@@ -4554,6 +4563,7 @@ components:
                     type: object
                     required:
                         - group_id
+                    x-speakeasy-param-force-new: true
                 google_group:
                     description: Remote info for Google group.
                     properties:
@@ -4564,6 +4574,7 @@ components:
                     type: object
                     required:
                         - group_id
+                    x-speakeasy-param-force-new: true
                 ldap_group:
                     description: Remote info for LDAP group.
                     properties:
@@ -4574,6 +4585,7 @@ components:
                     type: object
                     required:
                         - group_id
+                    x-speakeasy-param-force-new: true
                 okta_group:
                     description: Remote info for Okta Directory group.
                     properties:
@@ -4584,6 +4596,7 @@ components:
                     type: object
                     required:
                         - group_id
+                    x-speakeasy-param-force-new: true
                 duo_group:
                     description: Remote info for Duo Security group.
                     properties:
@@ -4594,6 +4607,7 @@ components:
                     type: object
                     required:
                         - group_id
+                    x-speakeasy-param-force-new: true
                 azure_ad_security_group:
                     description: Remote info for Azure AD Security group.
                     properties:
@@ -4604,6 +4618,7 @@ components:
                     type: object
                     required:
                         - group_id
+                    x-speakeasy-param-force-new: true
                 azure_ad_microsoft_365_group:
                     description: Remote info for Azure AD Microsoft 365 group.
                     properties:
@@ -4614,6 +4629,7 @@ components:
                     type: object
                     required:
                         - group_id
+                    x-speakeasy-param-force-new: true
             type: object
             x-speakeasy-entity: GroupRemote
         ResourceRemoteInfo:
@@ -4626,6 +4642,7 @@ components:
                             description: The id of the AWS account.
                             example: 234234234234
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - account_id
@@ -4636,10 +4653,12 @@ components:
                             description: The ARN of the permission set.
                             example: arn:aws:sso:::permissionSet/asdf-32139302d201d32/ps-f03323201211e1b9
                             type: string
+                            x-speakeasy-param-force-new: true
                         account_id:
                             description: The ID of an AWS account to which this permission set is provisioned.
                             example: 234234234234
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - arn
@@ -4651,10 +4670,12 @@ components:
                             description: The ARN of the IAM role.
                             example: arn:aws:iam::179308207300:role/MyRole
                             type: string
+                            x-speakeasy-param-force-new: true
                         account_id:
                             description: The id of the AWS account. Required for AWS Organizations.
                             example: 234234234234
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - arn
@@ -4665,14 +4686,17 @@ components:
                             description: The instanceId of the EC2 instance.
                             example: i-13f1a1e2899f9e93a
                             type: string
+                            x-speakeasy-param-force-new: true
                         region:
                             description: The region of the EC2 instance.
                             example: us-east-2
                             type: string
+                            x-speakeasy-param-force-new: true
                         account_id:
                             description: The id of the AWS account. Required for AWS Organizations.
                             example: 234234234234
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - instance_id
@@ -4684,18 +4708,22 @@ components:
                             description: The instanceId of the RDS instance.
                             example: demo-mysql-db
                             type: string
+                            x-speakeasy-param-force-new: true
                         region:
                             description: The region of the RDS instance.
                             example: us-east-2
                             type: string
+                            x-speakeasy-param-force-new: true
                         resource_id:
                             description: The resourceId of the RDS instance.
                             example: db-AOO8V0XUCNU13XLZXQDQRSN0NQ
                             type: string
+                            x-speakeasy-param-force-new: true
                         account_id:
                             description: The id of the AWS account. Required for AWS Organizations.
                             example: 234234234234
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - instance_id
@@ -4708,10 +4736,12 @@ components:
                             description: The ARN of the EKS cluster.
                             example: arn:aws:eks:us-east-2:234234234234:cluster/testcluster
                             type: string
+                            x-speakeasy-param-force-new: true
                         account_id:
                             description: The id of the AWS account. Required for AWS Organizations.
                             example: 234234234234
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - arn
@@ -4722,6 +4752,7 @@ components:
                             description: The id of the organization.
                             example: organizations/898931321
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - organization_id
@@ -4732,6 +4763,7 @@ components:
                             description: The id of the bucket.
                             example: example-bucket-898931321
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - bucket_id
@@ -4742,14 +4774,17 @@ components:
                             description: The id of the instance.
                             example: example-instance-898931321
                             type: string
+                            x-speakeasy-param-force-new: true
                         project_id:
                             description: The id of the project the instance is in.
                             example: example-project-898931321
                             type: string
+                            x-speakeasy-param-force-new: true
                         zone:
                             description: The zone the instance is in.
                             example: us-central1-a
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - instance_id
@@ -4762,10 +4797,12 @@ components:
                             description: The id of the project the dataset is in.
                             example: example-project-898931321
                             type: string
+                            x-speakeasy-param-force-new: true
                         dataset_id:
                             description: The id of the dataset.
                             example: example-dataset-898931321
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - project_id
@@ -4777,14 +4814,17 @@ components:
                             description: The id of the project the table is in.
                             example: example-project-898931321
                             type: string
+                            x-speakeasy-param-force-new: true
                         dataset_id:
                             description: The id of the dataset the table is in.
                             example: example-dataset-898931321
                             type: string
+                            x-speakeasy-param-force-new: true
                         table_id:
                             description: The id of the table.
                             example: example-table-898931321
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - project_id
@@ -4797,6 +4837,7 @@ components:
                             description: The id of the folder.
                             example: folder/898931321
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - folder_id
@@ -4807,6 +4848,7 @@ components:
                             description: The name of the GKE cluster.
                             example: example-cluster-898931321
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - cluster_name
@@ -4817,6 +4859,7 @@ components:
                             description: The id of the project.
                             example: example-project-898931321
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - project_id
@@ -4827,10 +4870,12 @@ components:
                             description: The id of the SQL instance.
                             example: example-sql-898931321
                             type: string
+                            x-speakeasy-param-force-new: true
                         project_id:
                             description: The id of the project the instance is in.
                             example: example-project-898931321
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - instance_id
@@ -4848,6 +4893,7 @@ components:
                             description: The name of the repository.
                             example: Opal Security
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - repo_name
@@ -4858,6 +4904,7 @@ components:
                             description: The id of the project.
                             example: 898931321
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - project_id
@@ -4868,6 +4915,7 @@ components:
                             description: The id of the app.
                             example: a9dfas0f678asdf67867
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - app_id
@@ -4878,6 +4926,7 @@ components:
                             description: The type of the standard role.
                             example: ORG_ADMIN
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - role_type
@@ -4888,6 +4937,7 @@ components:
                             description: The id of the custom role.
                             example: a9dfas0f678asdf67867
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - role_id
@@ -4898,6 +4948,7 @@ components:
                             description: The name of the role.
                             example: owner
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - role_name
@@ -4908,6 +4959,7 @@ components:
                             description: The id of the permission set.
                             example: 0PS5Y090202wOV7WAM
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - permission_set_id
@@ -4918,10 +4970,12 @@ components:
                             description: The id of the permission set.
                             example: 0PS5Y090202wOV7WAM
                             type: string
+                            x-speakeasy-param-force-new: true
                         user_license_id:
                             description: The id of the user license.
                             example: 1005Y030081Qb5XJHS
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - profile_id
@@ -4933,6 +4987,7 @@ components:
                             description: The id of the role.
                             example: 0PS5Y090202wOV7WAM
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - role_id
@@ -4943,6 +4998,7 @@ components:
                             description: The name role.
                             example: admin_role
                             type: string
+                            x-speakeasy-param-force-new: true
                     type: object
                     required:
                         - role_name
@@ -4980,13 +5036,16 @@ components:
                     type: string
                 resource_type:
                     $ref: "#/components/schemas/ResourceTypeEnum"
+                    x-speakeasy-param-force-new: true
                 app_id:
                     description: The ID of the app for the resource.
                     example: f454d283-ca87-4a8a-bdbb-df212eca5353
                     format: uuid
                     type: string
+                    x-speakeasy-param-force-new: true
                 remote_info:
                     $ref: "#/components/schemas/ResourceRemoteInfo"
+                    x-speakeasy-param-force-new: true
                 remote_resource_id:
                     deprecated: true
                     description: Deprecated - use remote_info instead. The ID of the resource on the remote system. Include only for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/end-system-objects) for details on how to specify this field.
@@ -5260,13 +5319,16 @@ components:
                     type: string
                 group_type:
                     $ref: "#/components/schemas/GroupTypeEnum"
+                    x-speakeasy-param-force-new: true
                 app_id:
                     description: The ID of the app for the group.
                     example: f454d283-ca87-4a8a-bdbb-df212eca5353
                     format: uuid
                     type: string
+                    x-speakeasy-param-force-new: true
                 remote_info:
                     $ref: "#/components/schemas/GroupRemoteInfo"
+                    x-speakeasy-param-force-new: true
                 remote_group_id:
                     deprecated: true
                     description: Deprecated - use remote_info instead. The ID of the group on the remote system. Include only for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/end-system-objects) for details on how to specify this field.
@@ -5648,6 +5710,7 @@ components:
                     example: b5a5ca27-0ea3-4d86-9199-2126d57d1fbd
                     format: uuid
                     type: string
+                    x-speakeasy-param-force-new: true
                 name:
                     description: The name of the resource.
                     example: mongo-db-prod
@@ -5671,6 +5734,7 @@ components:
                     type: string
                 resource_type:
                     $ref: "#/components/schemas/ResourceTypeEnum"
+                    x-speakeasy-param-force-new: true
                 max_duration:
                     description: The maximum duration for which the resource can be requested (in minutes).
                     type: integer
@@ -5752,6 +5816,7 @@ components:
                     x-speakeasy-ignore: true
                 remote_info:
                     $ref: "#/components/schemas/ResourceRemoteInfo"
+                    x-speakeasy-param-force-new: true
             required:
                 - resource_id
             type: object

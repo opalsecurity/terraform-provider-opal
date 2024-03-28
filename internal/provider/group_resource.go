@@ -173,7 +173,10 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 									Description: `The name of the message channel.`,
 								},
 								"remote_id": schema.StringAttribute{
-									Computed:    true,
+									Computed: true,
+									PlanModifiers: []planmodifier.String{
+										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+									},
 									Description: `The remote ID of the message channel`,
 								},
 								"third_party_provider": schema.StringAttribute{
