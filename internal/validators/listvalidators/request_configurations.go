@@ -18,7 +18,7 @@ type ListRequestConfigurationsValidator struct{}
 
 // Description describes the validation in plain text formatting.
 func (v ListRequestConfigurationsValidator) Description(_ context.Context) string {
-	return "TODO: add validator description"
+	return "validate request configurations to be well formed"
 }
 
 // MarkdownDescription describes the validation in Markdown formatting.
