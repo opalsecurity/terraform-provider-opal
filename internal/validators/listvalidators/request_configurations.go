@@ -4,11 +4,9 @@ package listvalidators
 
 import (
 	"context"
-	"slices"
 	"sort"
 
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 )
 
