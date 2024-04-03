@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/hashicorp/terraform-plugin-framework-validators/helpers/validatordiag"
 )
 
 var _ validator.List = ListRequestConfigurationsValidator{}
@@ -36,42 +37,42 @@ func (v ListRequestConfigurationsValidator) ValidateList(ctx context.Context, re
 
 	for idx, requestConfiguration := range requestConfigurations {
 		if requestConfiguration.Priority.ValueInt64() != int64(idx) {
-			resp.Diagnostics.AddAttributeError(
+			resp.Diagnostics.Append(validatordiag.InvalidAttributeTypeDiagnostic(
 				req.Path,
 				"request configurations must have sequential priority values starting from 0",
 				req.Path.String()+": "+v.Description(ctx),
-			)
+			))
 		}
 		
 		if requestConfiguration.Priority.ValueInt64() != 0 && requestConfiguration.Condition == nil {
-			resp.Diagnostics.AddAttributeError(
+			resp.Diagnostics.Append(validatordiag.InvalidAttributeTypeDiagnostic(
 				req.Path,
-				"non-default request configurations must have a condition",
+				"request configurations must have a condition when priority is not 0",
 				req.Path.String()+": "+v.Description(ctx),
-			)
+			))
 		} else if requestConfiguration.Priority.ValueInt64() == 0 && requestConfiguration.Condition != nil {
-			resp.Diagnostics.AddAttributeError(
+			resp.Diagnostics.Append(validatordiag.InvalidAttributeTypeDiagnostic(
 				req.Path,
 				"default request configurations must not have a condition",
 				req.Path.String()+": "+v.Description(ctx),
-			)
+			))
 		}
 
 		hasReviewerStages, isAutoApprove, isNotRequestable := len(requestConfiguration.ReviewerStages) > 0, requestConfiguration.AutoApproval.ValueBool(), !requestConfiguration.AllowRequests.ValueBool()
 		if !(hasReviewerStages || isAutoApprove || isNotRequestable) {
-			resp.Diagnostics.AddAttributeError(
+			resp.Diagnostics.Append(validatordiag.InvalidAttributeTypeDiagnostic(
 				req.Path,
 				"invalid request configuration. Please specify a reviewer_stage, set auto_approve to true, or set is_requestable to false",
 				req.Path.String()+": "+v.Description(ctx),
-			)
+			))
 		}
 
 		if hasReviewerStages && isAutoApprove {
-			resp.Diagnostics.AddAttributeError(
+			resp.Diagnostics.Append(validatordiag.InvalidAttributeTypeDiagnostic(
 				req.Path,
 				"request configuration cannot have reviewer_stages when auto_approve is set to true",
 				req.Path.String()+": "+v.Description(ctx),
-			)
+			))
 		}
 	}
 }
