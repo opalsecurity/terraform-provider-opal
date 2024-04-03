@@ -5,6 +5,8 @@ all: speakeasy docs
 docs:
 	go generate ./...
 
+testacc:
+	TF_ACC=1 go test -v ./...
 
 speakeasy: check-speakeasy openapi.yaml
 	speakeasy generate sdk --lang terraform -o . -s ./openapi.yaml
