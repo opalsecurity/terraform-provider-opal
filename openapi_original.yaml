@@ -2137,7 +2137,7 @@ paths:
   /tag/{tag_id}:
     get:
       description: UNSTABLE. May be removed at any time. Gets a tag with the given id. 
-      operationId: get_tag_by_id
+      operationId: get_tag_by_ID
       parameters:
         - description: The tag ID
           example: 1b978423-db0a-4037-a4cf-f79c60cb67b3

@@ -868,7 +868,7 @@ func (s *Tags) DeleteResource(ctx context.Context, request operations.DeleteReso
 func (s *Tags) GetTagByID(ctx context.Context, request operations.GetTagByIDRequest, opts ...operations.Option) (*operations.GetTagByIDResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
-		OperationID:    "get_tag_by_id",
+		OperationID:    "get_tag_by_ID",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
 	}
