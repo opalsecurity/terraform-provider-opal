@@ -365,20 +365,22 @@ actions:
   - target: $["paths"]["/owners/name/{owner_name}"]["get"]
     update:
       x-speakeasy-entity-operation: OwnerFromName#get
-  - target: $["paths"]["/owners/{owner_id}/users"]["get"]
-    update:
-      x-speakeasy-name-override: get_users
-  - target: $["paths"]["/owners/{owner_id}/users"]["get"]
-    update:
-      x-speakeasy-entity-operation: OwnerUsers#get
   - target: $["paths"]["/owners/{owner_id}/users"]["put"]["operationId"]
     update: update_owner_users
+  - target: $["paths"]["/owners/{owner_id}/users"]["put"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/owners/{owner_id}/users"]["put"]["responses"]["200"]
+    update:
+      x-speakeasy-entity: Owner
   - target: $["paths"]["/owners/{owner_id}/users"]["put"]
     update:
       x-speakeasy-name-override: update_users
   - target: $["paths"]["/owners/{owner_id}/users"]["put"]
     update:
-      x-speakeasy-entity-operation: OwnerUsers#update
+      x-speakeasy-entity-operation: Owner#update#2
+  - target: $["paths"]["/owners/{owner_id}/users"]["get"]
+    remove: true
   - target: $["paths"]["/requests"]["get"]
     update:
       x-speakeasy-name-override: get
@@ -839,7 +841,7 @@ actions:
       x-speakeasy-entity: OwnerUsers
   - target: $["components"]["schemas"]["UserIDList"]
     update:
-      x-speakeasy-entity: OwnerUsers
+      x-speakeasy-entity: Owner
   - target: $["components"]["schemas"]["UserHrIdpStatusEnum"]
     update:
       x-speakeasy-entity: Users

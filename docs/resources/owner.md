@@ -31,7 +31,7 @@ resource "opal_owner" "my_owner" {
 ### Required
 
 - `name` (String) The name of the owner.
-- `user_ids` (List of String) Users to add to the created owner. If setting a source_group_id this list must be empty. Requires replacement if changed.
+- `user_ids` (List of String) Users to add to the created owner. If setting a source_group_id this list must be empty.
 
 ### Optional
 

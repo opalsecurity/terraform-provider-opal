@@ -10,7 +10,7 @@ import (
 type UpdateOwnerUsersRequest struct {
 	UserIDList shared.UserIDList `request:"mediaType=application/json"`
 	// The ID of the owner.
-	OwnerID string `pathParam:"style=simple,explode=false,name=owner_id"`
+	ID string `pathParam:"style=simple,explode=false,name=owner_id"`
 }
 
 func (o *UpdateOwnerUsersRequest) GetUserIDList() shared.UserIDList {
@@ -20,11 +20,11 @@ func (o *UpdateOwnerUsersRequest) GetUserIDList() shared.UserIDList {
 	return o.UserIDList
 }
 
-func (o *UpdateOwnerUsersRequest) GetOwnerID() string {
+func (o *UpdateOwnerUsersRequest) GetID() string {
 	if o == nil {
 		return ""
 	}
-	return o.OwnerID
+	return o.ID
 }
 
 type UpdateOwnerUsersResponse struct {

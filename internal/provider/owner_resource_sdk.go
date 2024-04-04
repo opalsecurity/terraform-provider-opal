@@ -115,3 +115,14 @@ func (r *OwnerResourceModel) RefreshFromSharedUpdateOwnerInfo(resp shared.Update
 	r.ReviewerMessageChannelID = types.StringPointerValue(resp.ReviewerMessageChannelID)
 	r.SourceGroupID = types.StringPointerValue(resp.SourceGroupID)
 }
+
+func (r *OwnerResourceModel) ToSharedUserIDList() *shared.UserIDList {
+	var userIds []string = nil
+	for _, userIdsItem := range r.UserIds {
+		userIds = append(userIds, userIdsItem.ValueString())
+	}
+	out := shared.UserIDList{
+		UserIds: userIds,
+	}
+	return &out
+}

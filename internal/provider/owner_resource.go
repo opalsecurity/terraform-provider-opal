@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -83,12 +82,9 @@ func (r *OwnerResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Description: `Sync this owner's user list with a source group.`,
 			},
 			"user_ids": schema.ListAttribute{
-				PlanModifiers: []planmodifier.List{
-					listplanmodifier.RequiresReplaceIfConfigured(),
-				},
 				Required:    true,
 				ElementType: types.StringType,
-				Description: `Users to add to the created owner. If setting a source_group_id this list must be empty. Requires replacement if changed. `,
+				Description: `Users to add to the created owner. If setting a source_group_id this list must be empty.`,
 			},
 		},
 	}
@@ -274,6 +270,59 @@ func (r *OwnerResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		return
 	}
 	data.RefreshFromSharedUpdateOwnerInfo(res.UpdateOwnerInfoList.Owners[0])
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	userIDList := *data.ToSharedUserIDList()
+	id := data.ID.ValueString()
+	request1 := operations.UpdateOwnerUsersRequest{
+		UserIDList: userIDList,
+		ID:         id,
+	}
+	res1, err := r.client.Owners.UpdateUsers(ctx, request1)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res1 != nil && res1.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+		}
+		return
+	}
+	if res1 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
+		return
+	}
+	if res1.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
+		return
+	}
+	if res1.UserList == nil {
+		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res1.RawResponse))
+		return
+	}
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	id1 := data.ID.ValueString()
+	request2 := operations.GetOwnerIDRequest{
+		ID: id1,
+	}
+	res2, err := r.client.Owners.GetID(ctx, request2)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res2 != nil && res2.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res2.RawResponse))
+		}
+		return
+	}
+	if res2 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res2))
+		return
+	}
+	if res2.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
+		return
+	}
+	if res2.Owner == nil {
+		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res2.RawResponse))
+		return
+	}
+	data.RefreshFromSharedOwner(res2.Owner)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state

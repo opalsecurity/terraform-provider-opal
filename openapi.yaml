@@ -1319,33 +1319,6 @@ paths:
             x-speakeasy-name-override: get_from_name
             x-speakeasy-entity-operation: OwnerFromName#get
     /owners/{owner_id}/users:
-        get:
-            description: Gets the list of users for this owner, in escalation priority order if applicable.
-            operationId: get_owner_users
-            parameters:
-                - description: The ID of the owner.
-                  example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
-                  explode: false
-                  in: path
-                  name: owner_id
-                  required: true
-                  schema:
-                    format: uuid
-                    type: string
-                  style: simple
-            responses:
-                "200":
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/UserList"
-                    description: The users for this owner.
-            security:
-                - BearerAuth: []
-            tags:
-                - owners
-            x-speakeasy-name-override: get_users
-            x-speakeasy-entity-operation: OwnerUsers#get
         put:
             description: Sets the list of users for this owner. If escalation is enabled, the order of this list is the escalation priority order of the users. If the owner has a source group, adding or removing users from this list won't be possible.
             operationId: update_owner_users
@@ -1360,6 +1333,7 @@ paths:
                     format: uuid
                     type: string
                   style: simple
+                  x-speakeasy-name-override: id
             requestBody:
                 required: true
                 content:
@@ -1373,12 +1347,13 @@ paths:
                             schema:
                                 $ref: "#/components/schemas/UserList"
                     description: The updated users for the owner.
+                    x-speakeasy-entity: Owner
             security:
                 - BearerAuth: []
             tags:
                 - owners
             x-speakeasy-name-override: update_users
-            x-speakeasy-entity-operation: OwnerUsers#update
+            x-speakeasy-entity-operation: Owner#update#2
     /requests:
         get:
             description: Returns a list of requests for your organization that is visible by the admin.
@@ -3619,7 +3594,7 @@ components:
             type: object
             required:
                 - user_ids
-            x-speakeasy-entity: OwnerUsers
+            x-speakeasy-entity: Owner
         UserHrIdpStatusEnum:
             description: User status pulled from an HR/IDP provider.
             enum:

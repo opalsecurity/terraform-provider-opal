@@ -14,8 +14,7 @@ Tag DataSource
 
 ```terraform
 data "opal_tag" "my_tag" {
-  tag_key   = "...my_tag_key..."
-  tag_value = "...my_tag_value..."
+  id = "9d146487-1c94-462c-86fc-90b6e9f803e4"
 }
 ```
 
@@ -24,16 +23,11 @@ data "opal_tag" "my_tag" {
 
 ### Required
 
-- `tag_key` (String) The key of the tag to get.
-
-### Optional
-
-- `tag_value` (String) The value of the tag to get.
+- `id` (String) The tag ID
 
 ### Read-Only
 
 - `created_at` (String) The date the tag was created.
-- `id` (String) The ID of the tag.
 - `key` (String) The key of the tag.
 - `updated_at` (String) The date the tag was last updated.
 - `user_creator_id` (String) The ID of the user that created the tag.

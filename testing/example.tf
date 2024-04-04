@@ -45,7 +45,8 @@ resource "opal_owner" "security" {
   name = "Security Team 2"
 
   user_ids = [
-    data.opal_user.amruth.id,
+    "8ee65686-6c2c-4fca-a996-8d4b88137e4e",
+    data.opal_user.amruth.id
   ]
   description = "Test owner description"
   reviewer_message_channel_id = opal_message_channel.my_messagechannel.id

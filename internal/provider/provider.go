@@ -124,7 +124,6 @@ func (p *OpalProvider) DataSources(ctx context.Context) []func() datasource.Data
 		NewOwnerDataSource,
 		NewOwnerFromNameDataSource,
 		NewOwnersDataSource,
-		NewOwnerUsersDataSource,
 		NewRequestsDataSource,
 		NewResourceDataSource,
 		NewResourceMessageChannelListDataSource,
