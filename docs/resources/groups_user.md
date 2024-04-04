@@ -15,9 +15,9 @@ GroupsUser Resource
 ```terraform
 resource "opal_groups_user" "my_groupsuser" {
   access_level_remote_id = "arn:aws:iam::590304332660:role/AdministratorAccess"
-  duration_minutes       = 60
-  group_id               = "040eb635-d1ef-4437-9d08-dbe759fb0ef1"
-  user_id                = "dad9955d-0f34-49b3-b0ec-0cf728ce9e23"
+  duration_minutes       = "0"
+  group_id               = "4040eb63-5d1e-4f43-bdd0-8dbe759fb0ef"
+  user_id                = "1dad9955-d0f3-449b-bb0e-c0cf728ce9e2"
 }
 ```
 
@@ -26,13 +26,13 @@ resource "opal_groups_user" "my_groupsuser" {
 
 ### Required
 
-- `duration_minutes` (Number) The duration for which the group can be accessed (in minutes). Use 0 to set to indefinite. Requires replacement if changed.
 - `group_id` (String) The ID of the group. Requires replacement if changed.
 - `user_id` (String) The ID of the user to add. Requires replacement if changed.
 
 ### Optional
 
 - `access_level_remote_id` (String) The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used. Requires replacement if changed.
+- `duration_minutes` (Number) Must be set to 0. Any nonzerovalue in terraform does not make sense. Requires replacement if changed. ; must be one of ["0"]; Default: 0
 
 ### Read-Only
 

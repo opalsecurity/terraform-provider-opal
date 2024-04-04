@@ -3,15 +3,54 @@
 package operations
 
 import (
+	"encoding/json"
+	"fmt"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 	"net/http"
 )
 
+// DurationMinutes - Must be set to 0. Any nonzerovalue in terraform does not make sense.
+type DurationMinutes int64
+
+const (
+	DurationMinutesZero DurationMinutes = 0
+)
+
+func (e DurationMinutes) ToPointer() *DurationMinutes {
+	return &e
+}
+
+func (e *DurationMinutes) UnmarshalJSON(data []byte) error {
+	var v int64
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case 0:
+		*e = DurationMinutes(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for DurationMinutes: %v", v)
+	}
+}
+
 type CreateGroupUserRequestBody struct {
 	// The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used.
 	AccessLevelRemoteID *string `json:"access_level_remote_id,omitempty"`
-	// The duration for which the group can be accessed (in minutes). Use 0 to set to indefinite.
-	DurationMinutes int64 `json:"duration_minutes"`
+	// Must be set to 0. Any nonzerovalue in terraform does not make sense.
+	DurationMinutes *DurationMinutes `default:"0" json:"duration_minutes"`
+}
+
+func (c CreateGroupUserRequestBody) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(c, "", false)
+}
+
+func (c *CreateGroupUserRequestBody) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &c, "", false, false); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *CreateGroupUserRequestBody) GetAccessLevelRemoteID() *string {
@@ -21,9 +60,9 @@ func (o *CreateGroupUserRequestBody) GetAccessLevelRemoteID() *string {
 	return o.AccessLevelRemoteID
 }
 
-func (o *CreateGroupUserRequestBody) GetDurationMinutes() int64 {
+func (o *CreateGroupUserRequestBody) GetDurationMinutes() *DurationMinutes {
 	if o == nil {
-		return 0
+		return nil
 	}
 	return o.DurationMinutes
 }

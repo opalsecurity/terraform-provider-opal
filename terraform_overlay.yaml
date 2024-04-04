@@ -303,6 +303,16 @@ actions:
         deprecated: true
   - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["post"]["requestBody"]["required"]
     update: true
+  - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["post"]["requestBody"]["content"]["application/json"]["schema"]["properties"]["duration_minutes"]["description"]
+    update: Must be set to 0. Any nonzerovalue in terraform does not make sense.
+  - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["post"]["requestBody"]["content"]["application/json"]["schema"]["properties"]["duration_minutes"]["example"]
+    update: 0
+  - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["post"]["requestBody"]["content"]["application/json"]["schema"]["properties"]["duration_minutes"]
+    update:
+      enum: [0]
+  - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["post"]["requestBody"]["content"]["application/json"]["schema"]["properties"]["duration_minutes"]
+    update:
+      default: 0
   - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["post"]
     update:
       x-speakeasy-name-override: create_user

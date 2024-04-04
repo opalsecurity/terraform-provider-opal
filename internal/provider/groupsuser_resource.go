@@ -5,8 +5,10 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -82,11 +84,20 @@ func (r *GroupsUserResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Description: `The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used. Requires replacement if changed. `,
 			},
 			"duration_minutes": schema.Int64Attribute{
+				Computed: true,
 				PlanModifiers: []planmodifier.Int64{
 					int64planmodifier.RequiresReplaceIfConfigured(),
 				},
-				Required:    true,
-				Description: `The duration for which the group can be accessed (in minutes). Use 0 to set to indefinite. Requires replacement if changed. `,
+				Optional:    true,
+				Default:     int64default.StaticInt64(0),
+				Description: `Must be set to 0. Any nonzerovalue in terraform does not make sense. Requires replacement if changed. ; must be one of ["0"]; Default: 0`,
+				Validators: []validator.Int64{
+					int64validator.OneOf(
+						[]int64{
+							0,
+						}...,
+					),
+				},
 			},
 			"email": schema.StringAttribute{
 				Computed:    true,

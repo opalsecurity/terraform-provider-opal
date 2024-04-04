@@ -3,6 +3,7 @@
 *.tfstate*
 .DS_Store
 bin/
+testing/terraform.tfstate*
 # Used for development tf files
 dev/
 .envrc.local

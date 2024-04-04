@@ -973,9 +973,11 @@ paths:
                                 access_level_remote_id: arn:aws:iam::590304332660:role/AdministratorAccess
                             properties:
                                 duration_minutes:
-                                    description: The duration for which the group can be accessed (in minutes). Use 0 to set to indefinite.
-                                    example: 60
+                                    description: Must be set to 0. Any nonzerovalue in terraform does not make sense.
+                                    example: 0
                                     type: integer
+                                    enum: [0]
+                                    default: 0
                                 access_level_remote_id:
                                     description: The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used.
                                     example: arn:aws:iam::590304332660:role/AdministratorAccess

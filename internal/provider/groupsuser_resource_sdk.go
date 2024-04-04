@@ -17,7 +17,12 @@ func (r *GroupsUserResourceModel) ToOperationsCreateGroupUserRequestBody() *oper
 	} else {
 		accessLevelRemoteID = nil
 	}
-	durationMinutes := r.DurationMinutes.ValueInt64()
+	durationMinutes := new(operations.DurationMinutes)
+	if !r.DurationMinutes.IsUnknown() && !r.DurationMinutes.IsNull() {
+		*durationMinutes = operations.DurationMinutes(r.DurationMinutes.ValueInt64())
+	} else {
+		durationMinutes = nil
+	}
 	out := operations.CreateGroupUserRequestBody{
 		AccessLevelRemoteID: accessLevelRemoteID,
 		DurationMinutes:     durationMinutes,

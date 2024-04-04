@@ -175,7 +175,6 @@ resource "opal_resource" "another_one" {
 
 resource "opal_groups_user" "my_groupsuser" {
   # access_level_remote_id = "arn:aws:iam::590304332660:role/AdministratorAccess"
-  duration_minutes       = 120
   group_id               = opal_group.okta.id
   user_id                = data.opal_user.amruth.id
 }
@@ -187,13 +186,6 @@ resource "opal_group_resource_list" "my_groupresourcelist" {
       resource_id            = opal_resource.sensitive_resource.id
     },
   ]
-}
-
-resource "opal_resources_users" "my_resourcesusers" {
-  # access_level_remote_id = "arn:aws:iam::590304332660:role/AdministratorAccess"
-  duration_minutes       = 4
-  resource_id            = opal_resource.sensitive_resource.id
-  user_id                = data.opal_user.amruth.id
 }
 
 resource "opal_tag" "my_tag" {
