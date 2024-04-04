@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 037734328a29cbdb4544db3aba829b56
+  docChecksum: d35c7b8ec0fd1e7ee6ce8151fdfcea09
   docVersion: "1.0"
-  speakeasyVersion: 1.228.1
+  speakeasyVersion: 1.228.0
   generationVersion: 2.292.0
-  releaseVersion: 0.15.0
-  configChecksum: e5b4fa3cecf3282a068692bf72c8668c
+  releaseVersion: 0.15.2
+  configChecksum: eb324e19b3274c0b52916a8b99b38fac
   repoURL: https://github.com/speakeasy-sdks/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -127,7 +127,7 @@ generatedFiles:
   - internal/sdk/models/operations/deleteusertag.go
   - internal/sdk/models/operations/deletegrouptag.go
   - internal/sdk/models/operations/deleteresourcetag.go
-  - internal/sdk/models/operations/gettag.go
+  - internal/sdk/models/operations/gettagbyid.go
   - internal/sdk/models/operations/gettags.go
   - internal/sdk/models/operations/createuar.go
   - internal/sdk/models/operations/getuars.go

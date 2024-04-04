@@ -9,16 +9,21 @@ import (
 )
 
 func (r *TagResourceModel) ToSharedCreateTagInfo() *shared.CreateTagInfo {
-	tagKey := r.TagKey.ValueString()
-	tagValue := new(string)
-	if !r.TagValue.IsUnknown() && !r.TagValue.IsNull() {
-		*tagValue = r.TagValue.ValueString()
+	key := new(string)
+	if !r.Key.IsUnknown() && !r.Key.IsNull() {
+		*key = r.Key.ValueString()
 	} else {
-		tagValue = nil
+		key = nil
+	}
+	value := new(string)
+	if !r.Value.IsUnknown() && !r.Value.IsNull() {
+		*value = r.Value.ValueString()
+	} else {
+		value = nil
 	}
 	out := shared.CreateTagInfo{
-		TagKey:   tagKey,
-		TagValue: tagValue,
+		Key:   key,
+		Value: value,
 	}
 	return &out
 }

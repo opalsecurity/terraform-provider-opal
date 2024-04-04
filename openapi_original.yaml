@@ -2134,6 +2134,33 @@ paths:
         - BearerAuth: []
       tags:
         - users
+  /tag/{tag_id}:
+    get:
+      description: UNSTABLE. May be removed at any time. Gets a tag with the given id. 
+      operationId: get_tag_by_id
+      parameters:
+        - description: The tag ID
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          explode: false
+          in: path
+          name: tag_id
+          required: true
+          schema:
+            type: string
+            format: uuid
+          style: simple
+          x-speakeasy-name-override: id
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+          description: The tag requested.
+      security:
+        - BearerAuth: []
+      tags:
+        - tags
   /tag:
     get:
       description: Gets a tag with the given key and value.

@@ -31,8 +31,6 @@ type TagDataSourceModel struct {
 	CreatedAt     types.String `tfsdk:"created_at"`
 	ID            types.String `tfsdk:"id"`
 	Key           types.String `tfsdk:"key"`
-	TagKey        types.String `tfsdk:"tag_key"`
-	TagValue      types.String `tfsdk:"tag_value"`
 	UpdatedAt     types.String `tfsdk:"updated_at"`
 	UserCreatorID types.String `tfsdk:"user_creator_id"`
 	Value         types.String `tfsdk:"value"`
@@ -54,20 +52,12 @@ func (r *TagDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 				Description: `The date the tag was created.`,
 			},
 			"id": schema.StringAttribute{
-				Computed:    true,
-				Description: `The ID of the tag.`,
+				Required:    true,
+				Description: `The tag ID`,
 			},
 			"key": schema.StringAttribute{
 				Computed:    true,
 				Description: `The key of the tag.`,
-			},
-			"tag_key": schema.StringAttribute{
-				Required:    true,
-				Description: `The key of the tag to get.`,
-			},
-			"tag_value": schema.StringAttribute{
-				Optional:    true,
-				Description: `The value of the tag to get.`,
 			},
 			"updated_at": schema.StringAttribute{
 				Computed:    true,
@@ -123,18 +113,11 @@ func (r *TagDataSource) Read(ctx context.Context, req datasource.ReadRequest, re
 		return
 	}
 
-	tagKey := data.TagKey.ValueString()
-	tagValue := new(string)
-	if !data.TagValue.IsUnknown() && !data.TagValue.IsNull() {
-		*tagValue = data.TagValue.ValueString()
-	} else {
-		tagValue = nil
+	id := data.ID.ValueString()
+	request := operations.GetTagByIDRequest{
+		ID: id,
 	}
-	request := operations.GetTagRequest{
-		TagKey:   tagKey,
-		TagValue: tagValue,
-	}
-	res, err := r.client.Tags.Get(ctx, request)
+	res, err := r.client.Tags.GetTagByID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

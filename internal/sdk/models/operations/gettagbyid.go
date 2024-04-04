@@ -7,28 +7,19 @@ import (
 	"net/http"
 )
 
-type GetTagRequest struct {
-	// The key of the tag to get.
-	TagKey string `queryParam:"style=form,explode=false,name=tag_key"`
-	// The value of the tag to get.
-	TagValue *string `queryParam:"style=form,explode=false,name=tag_value"`
+type GetTagByIDRequest struct {
+	// The tag ID
+	ID string `pathParam:"style=simple,explode=false,name=tag_id"`
 }
 
-func (o *GetTagRequest) GetTagKey() string {
+func (o *GetTagByIDRequest) GetID() string {
 	if o == nil {
 		return ""
 	}
-	return o.TagKey
+	return o.ID
 }
 
-func (o *GetTagRequest) GetTagValue() *string {
-	if o == nil {
-		return nil
-	}
-	return o.TagValue
-}
-
-type GetTagResponse struct {
+type GetTagByIDResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
@@ -39,28 +30,28 @@ type GetTagResponse struct {
 	Tag *shared.Tag
 }
 
-func (o *GetTagResponse) GetContentType() string {
+func (o *GetTagByIDResponse) GetContentType() string {
 	if o == nil {
 		return ""
 	}
 	return o.ContentType
 }
 
-func (o *GetTagResponse) GetStatusCode() int {
+func (o *GetTagByIDResponse) GetStatusCode() int {
 	if o == nil {
 		return 0
 	}
 	return o.StatusCode
 }
 
-func (o *GetTagResponse) GetRawResponse() *http.Response {
+func (o *GetTagByIDResponse) GetRawResponse() *http.Response {
 	if o == nil {
 		return nil
 	}
 	return o.RawResponse
 }
 
-func (o *GetTagResponse) GetTag() *shared.Tag {
+func (o *GetTagByIDResponse) GetTag() *shared.Tag {
 	if o == nil {
 		return nil
 	}

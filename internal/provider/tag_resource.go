@@ -37,8 +37,6 @@ type TagResourceModel struct {
 	CreatedAt     types.String `tfsdk:"created_at"`
 	ID            types.String `tfsdk:"id"`
 	Key           types.String `tfsdk:"key"`
-	TagKey        types.String `tfsdk:"tag_key"`
-	TagValue      types.String `tfsdk:"tag_value"`
 	UpdatedAt     types.String `tfsdk:"updated_at"`
 	UserCreatorID types.String `tfsdk:"user_creator_id"`
 	Value         types.String `tfsdk:"value"`
@@ -68,22 +66,13 @@ func (r *TagResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 				Description: `The ID of the tag.`,
 			},
 			"key": schema.StringAttribute{
-				Computed:    true,
-				Description: `The key of the tag.`,
-			},
-			"tag_key": schema.StringAttribute{
+				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
-				},
-				Required:    true,
-				Description: `The key of the tag to create. Requires replacement if changed. `,
-			},
-			"tag_value": schema.StringAttribute{
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplaceIfConfigured(),
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 				Optional:    true,
-				Description: `The value of the tag to create. Requires replacement if changed. `,
+				Description: `The key of the tag to create. Requires replacement if changed. `,
 			},
 			"updated_at": schema.StringAttribute{
 				Computed:    true,
@@ -97,8 +86,13 @@ func (r *TagResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 				Description: `The ID of the user that created the tag.`,
 			},
 			"value": schema.StringAttribute{
-				Computed:    true,
-				Description: `The value of the tag.`,
+				Computed: true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplaceIfConfigured(),
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
+				Optional:    true,
+				Description: `The value of the tag to create. Requires replacement if changed. `,
 			},
 		},
 	}
@@ -188,18 +182,11 @@ func (r *TagResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 		return
 	}
 
-	tagKey := data.TagKey.ValueString()
-	tagValue := new(string)
-	if !data.TagValue.IsUnknown() && !data.TagValue.IsNull() {
-		*tagValue = data.TagValue.ValueString()
-	} else {
-		tagValue = nil
+	id := data.ID.ValueString()
+	request := operations.GetTagByIDRequest{
+		ID: id,
 	}
-	request := operations.GetTagRequest{
-		TagKey:   tagKey,
-		TagValue: tagValue,
-	}
-	res, err := r.client.Tags.Get(ctx, request)
+	res, err := r.client.Tags.GetTagByID(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -267,5 +254,5 @@ func (r *TagResource) Delete(ctx context.Context, req resource.DeleteRequest, re
 }
 
 func (r *TagResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("tag_key"), req.ID)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), req.ID)...)
 }

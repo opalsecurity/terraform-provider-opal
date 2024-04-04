@@ -2255,29 +2255,22 @@ paths:
                 - users
             x-speakeasy-name-override: get_user_tags
             x-speakeasy-entity-operation: UserTags#get
-    /tag:
+    /tag/{tag_id}:
         get:
-            description: Gets a tag with the given key and value.
-            operationId: getTag
+            description: UNSTABLE. May be removed at any time. Gets a tag with the given id.
+            operationId: get_tag_by_id
             parameters:
-                - description: The key of the tag to get.
-                  example: api-scope
+                - description: The tag ID
+                  example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
                   explode: false
-                  in: query
-                  name: tag_key
+                  in: path
+                  name: tag_id
                   required: true
                   schema:
                     type: string
-                  style: form
-                - description: The value of the tag to get.
-                  example: production
-                  explode: false
-                  in: query
-                  name: tag_value
-                  required: false
-                  schema:
-                    type: string
-                  style: form
+                    format: uuid
+                  style: simple
+                  x-speakeasy-name-override: id
             responses:
                 "200":
                     content:
@@ -2289,8 +2282,8 @@ paths:
                 - BearerAuth: []
             tags:
                 - tags
-            x-speakeasy-name-override: get
             x-speakeasy-entity-operation: Tag#get
+    /tag:
         post:
             description: Creates a tag with the given key and value.
             operationId: createTag
@@ -6154,10 +6147,12 @@ components:
                     description: The key of the tag to create.
                     example: api-scope
                     type: string
+                    x-speakeasy-name-override: key
                 tag_value:
                     description: The value of the tag to create.
                     example: production
                     type: string
+                    x-speakeasy-name-override: value
             required:
                 - tag_key
             type: object

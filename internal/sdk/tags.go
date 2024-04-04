@@ -864,11 +864,11 @@ func (s *Tags) DeleteResource(ctx context.Context, request operations.DeleteReso
 	return res, nil
 }
 
-// Get - Gets a tag with the given key and value.
-func (s *Tags) Get(ctx context.Context, request operations.GetTagRequest, opts ...operations.Option) (*operations.GetTagResponse, error) {
+// GetTagByID - UNSTABLE. May be removed at any time. Gets a tag with the given id.
+func (s *Tags) GetTagByID(ctx context.Context, request operations.GetTagByIDRequest, opts ...operations.Option) (*operations.GetTagByIDResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
-		OperationID:    "getTag",
+		OperationID:    "get_tag_by_id",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
 	}
@@ -884,7 +884,7 @@ func (s *Tags) Get(ctx context.Context, request operations.GetTagRequest, opts .
 		}
 	}
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
-	opURL, err := url.JoinPath(baseURL, "/tag")
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/tag/{tag_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -895,10 +895,6 @@ func (s *Tags) Get(ctx context.Context, request operations.GetTagRequest, opts .
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
-
-	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
-		return nil, fmt.Errorf("error populating query params: %w", err)
-	}
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err
@@ -963,7 +959,7 @@ func (s *Tags) Get(ctx context.Context, request operations.GetTagRequest, opts .
 		}
 	}
 
-	res := &operations.GetTagResponse{
+	res := &operations.GetTagByIDResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,

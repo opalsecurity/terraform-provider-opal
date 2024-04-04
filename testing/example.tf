@@ -1,13 +1,13 @@
 terraform {
   required_providers {
     opal = {
-      source  = "opal-dev/opal"
+      source  = "opalsecurity/opal"
       version = "0.3.0"
     }
   }
 }
 
-variable "api_key" {
+variable "auth_token" {
   type = string
 }
 variable "server_url" {
@@ -15,7 +15,7 @@ variable "server_url" {
 }
 
 provider "opal" {
-  bearer_auth = var.api_key
+  bearer_auth = var.auth_token
   server_url = var.server_url
 }
 
@@ -61,6 +61,7 @@ resource "opal_resource" "sensitive_resource" {
   admin_owner_id = opal_owner.security.id
   visibility = "LIMITED"
   visibility_group_ids=[]#"c95394cf-e1e8-4baa-b850-ab5fd27335dc"]
+  request_configurations=[]
 }
 
 resource "opal_message_channel" "my_messagechannel" {
@@ -79,6 +80,7 @@ resource "opal_group" "oncall" {
   # on_call_schedule_ids = ["d5d9099b-8ab1-4ed5-8ac6-7c874808dda1"]
   visibility = "LIMITED"
   # visibility_group_ids = ["c95394cf-e1e8-4baa-b850-ab5fd27335dc"]
+  request_configurations=[]
 }
 
 resource "opal_group" "okta" {
@@ -144,6 +146,7 @@ resource "opal_group" "foobarbaz" {
       group_id = "dummy value #2"
     }
   }
+  request_configurations=[]
 }
 
 resource "opal_resource" "another_one" {
@@ -163,6 +166,7 @@ resource "opal_resource" "another_one" {
   }
   require_mfa_to_approve = false
   require_mfa_to_connect = false
+  request_configurations=[]
   # admin_owner_id = opal_owner.security.id
   # visibility = "LIMITED"
   # visibility_group_ids=["c95394cf-e1e8-4baa-b850-ab5fd27335dc"]
@@ -193,8 +197,8 @@ resource "opal_resources_users" "my_resourcesusers" {
 
 resource "opal_tag" "my_tag" {
   # admin_owner_id = "94bc89fb-d03a-4922-82f2-e3005dda2041" # todo test
-  tag_key        = "amruth-key"
-  tag_value      = "amruth-value-updated2"
+  key        = "amruth-key"
+  value      = "amruth-value-updated2"
 }
 
 resource "opal_group_tag" "my_grouptag" {
