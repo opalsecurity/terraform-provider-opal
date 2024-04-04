@@ -515,58 +515,6 @@ actions:
   - target: $["paths"]["/resources/{resource_id}/users"]["get"]
     update:
       x-speakeasy-entity-operation: ResourcesUsers_list#get
-  - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]["post"]["operationId"]
-    update: createResourceUsers
-  - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]["post"]["parameters"][*]
-    remove: true
-  - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]["post"]["parameters"]
-    update:
-      - description: The ID of the resource.
-        example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
-        explode: false
-        in: path
-        name: resource_id
-        required: true
-        schema:
-          format: uuid
-          type: string
-        style: simple
-      - description: The ID of the user to add.
-        example: f92aa855-cea9-4814-b9d8-f2a60d3e4a06
-        explode: false
-        in: path
-        name: user_id
-        required: true
-        schema:
-          format: uuid
-          type: string
-        style: simple
-      - description: The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used.
-        example: arn:aws:iam::590304332660:role/AdministratorAccess
-        explode: true
-        in: query
-        name: access_level_remote_id
-        required: false
-        schema:
-          type: string
-        style: form
-        deprecated: true
-  - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]["post"]["requestBody"]["required"]
-    update: true
-  - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]["post"]
-    update:
-      x-speakeasy-name-override: create_users
-  - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]["post"]
-    update:
-      x-speakeasy-entity-operation: ResourcesUsers#create
-  - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]["delete"]["operationId"]
-    update: deleteResourceUsers
-  - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]["delete"]
-    update:
-      x-speakeasy-name-override: delete_users
-  - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]["delete"]
-    update:
-      x-speakeasy-entity-operation: ResourcesUsers#delete
   - target: $["paths"]["/resource-user-access-status/{resource_id}/{user_id}"]["get"]["operationId"]
     update: getResourceUserAccessStatus
   - target: $["paths"]["/resource-user-access-status/{resource_id}/{user_id}"]["get"]
@@ -757,6 +705,8 @@ actions:
   - target: $["paths"]["/uar/{uar_id}"]["get"]
     update:
       x-speakeasy-entity-operation: UAR#get
+  - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]
+    remove: true
   - target: $["components"]["schemas"]["PaginatedUARsList"]
     update:
       x-speakeasy-entity: UARS_list

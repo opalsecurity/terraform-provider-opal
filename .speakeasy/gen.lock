@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 0cd7eefa06c8a3defa025eda47a284cd
+  docChecksum: 10df8011b486b263af7c2123f5491ddb
   docVersion: "1.0"
   speakeasyVersion: 1.228.0
   generationVersion: 2.292.0
-  releaseVersion: 0.15.6
-  configChecksum: 7ef2fe12915a5df98005625ebaa945ff
+  releaseVersion: 0.15.7
+  configChecksum: 87cbaa7c073b249bae41dc2d16ec12f1
   repoURL: https://github.com/speakeasy-sdks/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -101,9 +101,7 @@ generatedFiles:
   - internal/sdk/models/operations/updateownerusers.go
   - internal/sdk/models/operations/getrequests.go
   - internal/sdk/models/operations/createresource.go
-  - internal/sdk/models/operations/createresourceusers.go
   - internal/sdk/models/operations/deleteresource.go
-  - internal/sdk/models/operations/deleteresourceusers.go
   - internal/sdk/models/operations/getresources.go
   - internal/sdk/models/operations/getresourcereviewerstages.go
   - internal/sdk/models/operations/getresourceuseraccessstatus.go
@@ -203,7 +201,6 @@ generatedFiles:
   - internal/sdk/models/shared/resourcetypeenum.go
   - internal/sdk/models/shared/resourceremoteinfo.go
   - internal/sdk/models/shared/createresourceinfo.go
-  - internal/sdk/models/shared/resourceuser.go
   - internal/sdk/models/shared/paginatedresourceslist.go
   - internal/sdk/models/shared/resourceuseraccessstatus.go
   - internal/sdk/models/shared/resourceuseraccessstatusenum.go
@@ -357,9 +354,6 @@ generatedFiles:
   - internal/provider/resource_resource.go
   - internal/provider/resource_resource_sdk.go
   - examples/resources/opal_resource/resource.tf
-  - internal/provider/resourcesusers_resource.go
-  - internal/provider/resourcesusers_resource_sdk.go
-  - examples/resources/opal_resources_users/resource.tf
   - internal/provider/resourcetag_resource.go
   - internal/provider/resourcetag_resource_sdk.go
   - examples/resources/opal_resource_tag/resource.tf

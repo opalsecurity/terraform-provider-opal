@@ -98,7 +98,6 @@ func (p *OpalProvider) Resources(ctx context.Context) []func() resource.Resource
 		NewOnCallScheduleResource,
 		NewOwnerResource,
 		NewResourceResource,
-		NewResourcesUsersResource,
 		NewResourceTagResource,
 		NewTagResource,
 		NewTagUserResource,
