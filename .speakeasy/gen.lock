@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 4496f97092539f10ca03d729a722b97d
+  docChecksum: 1d617dd833bfb0bf0a651185559a7217
   docVersion: "1.0"
   speakeasyVersion: 1.237.0
   generationVersion: 2.298.2
-  releaseVersion: 0.16.2
-  configChecksum: d18b4d17ae5c738343ba57d0a2093c58
+  releaseVersion: 0.16.3
+  configChecksum: 6a8b2b02af73585f48bb13d31e810467
   repoURL: https://github.com/speakeasy-sdks/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -336,12 +336,12 @@ generatedFiles:
   - internal/provider/groupresourcelist_resource.go
   - internal/provider/groupresourcelist_resource_sdk.go
   - examples/resources/opal_group_resource_list/resource.tf
-  - internal/provider/groupsuser_resource.go
-  - internal/provider/groupsuser_resource_sdk.go
-  - examples/resources/opal_groups_user/resource.tf
   - internal/provider/grouptag_resource.go
   - internal/provider/grouptag_resource_sdk.go
   - examples/resources/opal_group_tag/resource.tf
+  - internal/provider/groupuser_resource.go
+  - internal/provider/groupuser_resource_sdk.go
+  - examples/resources/opal_group_user/resource.tf
   - internal/provider/messagechannel_resource.go
   - internal/provider/messagechannel_resource_sdk.go
   - examples/resources/opal_message_channel/resource.tf

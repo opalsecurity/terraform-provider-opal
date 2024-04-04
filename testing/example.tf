@@ -173,7 +173,7 @@ resource "opal_resource" "another_one" {
   # visibility_group_ids=["c95394cf-e1e8-4baa-b850-ab5fd27335dc"]
 }
 
-resource "opal_groups_user" "my_groupsuser" {
+resource "opal_group_user" "my_groupsuser" {
   # access_level_remote_id = "arn:aws:iam::590304332660:role/AdministratorAccess"
   group_id               = opal_group.okta.id
   user_id                = data.opal_user.amruth.id

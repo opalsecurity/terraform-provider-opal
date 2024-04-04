@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func (r *GroupsUserResourceModel) ToOperationsCreateGroupUserRequestBody() *operations.CreateGroupUserRequestBody {
+func (r *GroupUserResourceModel) ToOperationsCreateGroupUserRequestBody() *operations.CreateGroupUserRequestBody {
 	accessLevelRemoteID := new(string)
 	if !r.AccessLevelRemoteID.IsUnknown() && !r.AccessLevelRemoteID.IsNull() {
 		*accessLevelRemoteID = r.AccessLevelRemoteID.ValueString()
@@ -30,7 +30,7 @@ func (r *GroupsUserResourceModel) ToOperationsCreateGroupUserRequestBody() *oper
 	return &out
 }
 
-func (r *GroupsUserResourceModel) RefreshFromSharedGroupUser(resp *shared.GroupUser) {
+func (r *GroupUserResourceModel) RefreshFromSharedGroupUser(resp *shared.GroupUser) {
 	if resp != nil {
 		if resp.AccessLevel == nil {
 			r.AccessLevel = nil

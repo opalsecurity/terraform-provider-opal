@@ -23,20 +23,20 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &GroupsUserResource{}
-var _ resource.ResourceWithImportState = &GroupsUserResource{}
+var _ resource.Resource = &GroupUserResource{}
+var _ resource.ResourceWithImportState = &GroupUserResource{}
 
-func NewGroupsUserResource() resource.Resource {
-	return &GroupsUserResource{}
+func NewGroupUserResource() resource.Resource {
+	return &GroupUserResource{}
 }
 
-// GroupsUserResource defines the resource implementation.
-type GroupsUserResource struct {
+// GroupUserResource defines the resource implementation.
+type GroupUserResource struct {
 	client *sdk.OpalAPI
 }
 
-// GroupsUserResourceModel describes the resource data model.
-type GroupsUserResourceModel struct {
+// GroupUserResourceModel describes the resource data model.
+type GroupUserResourceModel struct {
 	AccessLevel         *tfTypes.ResourceAccessLevel `tfsdk:"access_level"`
 	AccessLevelRemoteID types.String                 `tfsdk:"access_level_remote_id"`
 	DurationMinutes     types.Int64                  `tfsdk:"duration_minutes"`
@@ -47,13 +47,13 @@ type GroupsUserResourceModel struct {
 	UserID              types.String                 `tfsdk:"user_id"`
 }
 
-func (r *GroupsUserResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_groups_user"
+func (r *GroupUserResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_group_user"
 }
 
-func (r *GroupsUserResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *GroupUserResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "GroupsUser Resource",
+		MarkdownDescription: "GroupUser Resource",
 
 		Attributes: map[string]schema.Attribute{
 			"access_level": schema.SingleNestedAttribute{
@@ -134,7 +134,7 @@ func (r *GroupsUserResource) Schema(ctx context.Context, req resource.SchemaRequ
 	}
 }
 
-func (r *GroupsUserResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *GroupUserResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -154,8 +154,8 @@ func (r *GroupsUserResource) Configure(ctx context.Context, req resource.Configu
 	r.client = client
 }
 
-func (r *GroupsUserResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data *GroupsUserResourceModel
+func (r *GroupUserResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var data *GroupUserResourceModel
 	var plan types.Object
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
@@ -214,8 +214,8 @@ func (r *GroupsUserResource) Create(ctx context.Context, req resource.CreateRequ
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *GroupsUserResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data *GroupsUserResourceModel
+func (r *GroupUserResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var data *GroupUserResourceModel
 	var item types.Object
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &item)...)
@@ -238,8 +238,8 @@ func (r *GroupsUserResource) Read(ctx context.Context, req resource.ReadRequest,
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *GroupsUserResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data *GroupsUserResourceModel
+func (r *GroupUserResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var data *GroupUserResourceModel
 	var plan types.Object
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
@@ -258,8 +258,8 @@ func (r *GroupsUserResource) Update(ctx context.Context, req resource.UpdateRequ
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *GroupsUserResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data *GroupsUserResourceModel
+func (r *GroupUserResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var data *GroupUserResourceModel
 	var item types.Object
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &item)...)
@@ -301,6 +301,6 @@ func (r *GroupsUserResource) Delete(ctx context.Context, req resource.DeleteRequ
 
 }
 
-func (r *GroupsUserResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resp.Diagnostics.AddError("Not Implemented", "No available import state operation is available for resource groups_user.")
+func (r *GroupUserResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	resp.Diagnostics.AddError("Not Implemented", "No available import state operation is available for resource group_user.")
 }

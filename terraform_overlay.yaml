@@ -318,7 +318,7 @@ actions:
       x-speakeasy-name-override: create_user
   - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["post"]
     update:
-      x-speakeasy-entity-operation: GroupsUser#create
+      x-speakeasy-entity-operation: GroupUser#create
   - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["delete"]["operationId"]
     update: deleteGroupUser
   - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["delete"]
@@ -326,7 +326,7 @@ actions:
       x-speakeasy-name-override: delete_user
   - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["delete"]
     update:
-      x-speakeasy-entity-operation: GroupsUser#delete
+      x-speakeasy-entity-operation: GroupUser#delete
   - target: $["paths"]["/owners"]["get"]["operationId"]
     update: getOwners
   - target: $["paths"]["/owners"]["get"]
@@ -858,7 +858,7 @@ actions:
       x-speakeasy-entity: Groups
   - target: $["components"]["schemas"]["GroupUser"]
     update:
-      x-speakeasy-entity: GroupsUser
+      x-speakeasy-entity: GroupUser
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["group_id"]
     update:
       x-speakeasy-param-readonly: true

@@ -997,7 +997,7 @@ paths:
             tags:
                 - groups
             x-speakeasy-name-override: create_user
-            x-speakeasy-entity-operation: GroupsUser#create
+            x-speakeasy-entity-operation: GroupUser#create
         delete:
             description: Removes a user's access from this group.
             operationId: deleteGroupUser
@@ -1030,7 +1030,7 @@ paths:
             tags:
                 - groups
             x-speakeasy-name-override: delete_user
-            x-speakeasy-entity-operation: GroupsUser#delete
+            x-speakeasy-entity-operation: GroupUser#delete
     /group-bindings:
         get:
             description: Returns a list of `GroupBinding` objects.
@@ -3794,7 +3794,7 @@ components:
                 - group_id
                 - user_id
             type: object
-            x-speakeasy-entity: GroupsUser
+            x-speakeasy-entity: GroupUser
         UpdateGroupInfoList:
             example:
                 groups:
