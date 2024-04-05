@@ -2,5 +2,5 @@ data "opal_apps" "my_apps" {
   app_type_filter = [
     "OKTA_DIRECTORY",
   ]
-  owner_filter = "dbb0d5f3-dec6-4379-a1a5-f422d4f1a434"
+  owner_filter = "4b101a07-642b-4a38-bc73-7d2bdc6d83a7"
 }

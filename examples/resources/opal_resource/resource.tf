@@ -9,7 +9,7 @@ resource "opal_resource" "my_resource" {
       auto_approval  = false
       condition = {
         group_ids = [
-          "b32b9f65-3f84-49e2-bffa-28b2affecaf8",
+          "8a4c7ec5-7b81-4617-a8cd-3687b3ad9a19",
         ]
         role_remote_ids = [
           "...",
@@ -25,7 +25,7 @@ resource "opal_resource" "my_resource" {
         {
           operator = "AND"
           owner_ids = [
-            "fb82a285-fd0c-4387-b2b3-1cd922ce15f9",
+            "950966c2-bdfc-4b3e-b464-ae94bc89fbd0",
           ]
           require_manager_approval = false
         },
