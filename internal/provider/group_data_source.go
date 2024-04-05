@@ -31,22 +31,16 @@ type GroupDataSource struct {
 type GroupDataSourceModel struct {
 	AdminOwnerID          types.String                                `tfsdk:"admin_owner_id"`
 	AppID                 types.String                                `tfsdk:"app_id"`
-	AutoApproval          types.Bool                                  `tfsdk:"auto_approval"`
 	Description           types.String                                `tfsdk:"description"`
 	GroupBindingID        types.String                                `tfsdk:"group_binding_id"`
 	GroupType             types.String                                `tfsdk:"group_type"`
 	ID                    types.String                                `tfsdk:"id"`
-	IsRequestable         types.Bool                                  `tfsdk:"is_requestable"`
-	MaxDuration           types.Int64                                 `tfsdk:"max_duration"`
 	MessageChannels       tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
 	Name                  types.String                                `tfsdk:"name"`
 	OncallSchedules       tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"oncall_schedules"`
-	RecommendedDuration   types.Int64                                 `tfsdk:"recommended_duration"`
-	RemoteID              types.String                                `tfsdk:"remote_id"`
 	RemoteInfo            *tfTypes.GroupRemoteInfo                    `tfsdk:"remote_info"`
 	RemoteName            types.String                                `tfsdk:"remote_name"`
 	RequestConfigurations []tfTypes.RequestConfiguration              `tfsdk:"request_configurations"`
-	RequestTemplateID     types.String                                `tfsdk:"request_template_id"`
 	RequireMfaToApprove   types.Bool                                  `tfsdk:"require_mfa_to_approve"`
 	Visibility            types.String                                `tfsdk:"visibility"`
 	VisibilityGroupIds    []types.String                              `tfsdk:"visibility_group_ids"`
@@ -71,10 +65,6 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Computed:    true,
 				Description: `The ID of the group's app.`,
 			},
-			"auto_approval": schema.BoolAttribute{
-				Computed:    true,
-				Description: `A bool representing whether or not to automatically approve requests to this group.`,
-			},
 			"description": schema.StringAttribute{
 				Computed:    true,
 				Description: `A description of the group.`,
@@ -90,14 +80,6 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			"id": schema.StringAttribute{
 				Required:    true,
 				Description: `The ID of the group.`,
-			},
-			"is_requestable": schema.BoolAttribute{
-				Computed:    true,
-				Description: `A bool representing whether or not to allow access requests to this group.`,
-			},
-			"max_duration": schema.Int64Attribute{
-				Computed:    true,
-				Description: `The maximum duration for which the group can be requested (in minutes).`,
 			},
 			"message_channels": schema.SingleNestedAttribute{
 				Computed: true,
@@ -157,14 +139,6 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 					},
 				},
 				Description: `The on call schedules attached to the group.`,
-			},
-			"recommended_duration": schema.Int64Attribute{
-				Computed:    true,
-				Description: `The recommended duration for which the group should be requested (in minutes). -1 represents an indefinite duration.`,
-			},
-			"remote_id": schema.StringAttribute{
-				Computed:    true,
-				Description: `The ID of the remote.`,
 			},
 			"remote_info": schema.SingleNestedAttribute{
 				Computed: true,
@@ -340,10 +314,6 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 					},
 				},
 				Description: `A list of request configurations for this group.`,
-			},
-			"request_template_id": schema.StringAttribute{
-				Computed:    true,
-				Description: `The ID of the associated request template.`,
 			},
 			"require_mfa_to_approve": schema.BoolAttribute{
 				Computed:    true,

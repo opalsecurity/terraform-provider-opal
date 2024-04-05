@@ -444,6 +444,7 @@ paths:
                                 allOf:
                                     - $ref: "#/components/schemas/MessageChannelList"
                                     - x-speakeasy-wrapped-attribute: "message_channels"
+                                    - x-speakeasy-param-suppress-computed-diff: true
                     description: The audit and reviewer message channels attached to the group.
             security:
                 - BearerAuth: []
@@ -3579,7 +3580,6 @@ components:
                 remote_name: Finance Team
                 description: This group represents Active Directory group "Payments Production Admin". We use this AD group to facilitate staging deployments and qualifying new releases.
                 admin_owner_id: 7c86c85d-0651-43e2-a748-d69d658418e8
-                max_duration: 120
                 require_manager_approval: False
                 require_support_ticket: False
             properties:
@@ -3613,10 +3613,12 @@ components:
                     description: The ID of the remote.
                     example: google-group-group:037m2jsg218b2wb
                     type: string
+                    x-speakeasy-ignore: true # deprecated for the remote_info object
                 remote_name:
                     description: The name of the remote.
                     example: Finance team
                     type: string
+                    x-speakeasy-param-suppress-computed-diff: true # cannot set this it's derived on the backend
                 group_type:
                     $ref: "#/components/schemas/GroupTypeEnum"
                     x-speakeasy-param-force-new: true
@@ -3624,10 +3626,12 @@ components:
                     description: The maximum duration for which the group can be requested (in minutes).
                     type: integer
                     example: 120
+                    x-speakeasy-ignore: true
                 recommended_duration:
                     description: The recommended duration for which the group should be requested (in minutes). -1 represents an indefinite duration.
                     type: integer
                     example: 120
+                    x-speakeasy-ignore: true
                 require_manager_approval:
                     description: A bool representing whether or not access requests to the group require manager approval.
                     example: False
@@ -3652,11 +3656,13 @@ components:
                     description: A bool representing whether or not to automatically approve requests to this group.
                     example: False
                     type: boolean
+                    x-speakeasy-ignore: true
                 request_template_id:
                     description: The ID of the associated request template.
                     example: 06851574-e50d-40ca-8c78-f72ae6ab4304
                     format: uuid
                     type: string
+                    x-speakeasy-ignore: true
                 configuration_template_id:
                     description: The ID of the associated configuration template.
                     example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -3668,10 +3674,12 @@ components:
                     example: 06851574-e50d-40ca-8c78-f72ae6ab4304
                     format: uuid
                     type: string
+                    x-speakeasy-param-suppress-computed-diff: true # there's no way to set this through this resource in tf
                 is_requestable:
                     description: A bool representing whether or not to allow access requests to this group.
                     example: False
                     type: boolean
+                    x-speakeasy-ignore: true
                 request_configurations:
                     description: A list of request configurations for this group.
                     example: []
@@ -3804,14 +3812,12 @@ components:
                       description: This group represents Active Directory group "Payments Production Admin". We use this AD group to facilitate staging deployments and qualifying new releases.
                       name: api-group
                       admin_owner_id: 7c86c85d-0651-43e2-a748-d69d658418e8
-                      max_duration: 120
                       require_manager_approval: False
                       require_support_ticket: False
                     - group_id: 99d0b81d-14be-4cf6-bd27-348b4af1d11b
                       description: Manages the Integrations Team on-call privileged resources. This group is automatically synced with the on-call rotation defined in PagerDuty.
                       name: on-call-integrations
                       admin_owner_id: 4220bc12-ab8a-4b5d-be7b-f6bbcf9159f3
-                      max_duration: 360
                       require_manager_approval: False
                       require_support_ticket: True
             properties:
@@ -3833,7 +3839,6 @@ components:
                 description: This group represents Active Directory group "Payments Production Admin". We use this AD group to facilitate staging deployments and qualifying new releases.
                 name: api-group
                 admin_owner_id: 7c86c85d-0651-43e2-a748-d69d658418e8
-                max_duration: 120
                 require_manager_approval: False
                 require_support_ticket: False
             properties:

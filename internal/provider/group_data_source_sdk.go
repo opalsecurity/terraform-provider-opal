@@ -13,7 +13,6 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 	if resp != nil {
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 		r.AppID = types.StringPointerValue(resp.AppID)
-		r.AutoApproval = types.BoolPointerValue(resp.AutoApproval)
 		r.Description = types.StringPointerValue(resp.Description)
 		r.GroupBindingID = types.StringPointerValue(resp.GroupBindingID)
 		if resp.GroupType != nil {
@@ -22,11 +21,7 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 			r.GroupType = types.StringNull()
 		}
 		r.ID = types.StringPointerValue(resp.ID)
-		r.IsRequestable = types.BoolPointerValue(resp.IsRequestable)
-		r.MaxDuration = types.Int64PointerValue(resp.MaxDuration)
 		r.Name = types.StringPointerValue(resp.Name)
-		r.RecommendedDuration = types.Int64PointerValue(resp.RecommendedDuration)
-		r.RemoteID = types.StringPointerValue(resp.RemoteID)
 		if resp.RemoteInfo == nil {
 			r.RemoteInfo = nil
 		} else {
@@ -148,7 +143,6 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 				r.RequestConfigurations[requestConfigurationsCount].ReviewerStages = requestConfigurations1.ReviewerStages
 			}
 		}
-		r.RequestTemplateID = types.StringPointerValue(resp.RequestTemplateID)
 		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
 	}
 }

@@ -77,10 +77,6 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							Computed:    true,
 							Description: `The ID of the group's app.`,
 						},
-						"auto_approval": schema.BoolAttribute{
-							Computed:    true,
-							Description: `A bool representing whether or not to automatically approve requests to this group.`,
-						},
 						"description": schema.StringAttribute{
 							Computed:    true,
 							Description: `A description of the group.`,
@@ -97,25 +93,9 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							Computed:    true,
 							Description: `The ID of the group.`,
 						},
-						"is_requestable": schema.BoolAttribute{
-							Computed:    true,
-							Description: `A bool representing whether or not to allow access requests to this group.`,
-						},
-						"max_duration": schema.Int64Attribute{
-							Computed:    true,
-							Description: `The maximum duration for which the group can be requested (in minutes).`,
-						},
 						"name": schema.StringAttribute{
 							Computed:    true,
 							Description: `The name of the group.`,
-						},
-						"recommended_duration": schema.Int64Attribute{
-							Computed:    true,
-							Description: `The recommended duration for which the group should be requested (in minutes). -1 represents an indefinite duration.`,
-						},
-						"remote_id": schema.StringAttribute{
-							Computed:    true,
-							Description: `The ID of the remote.`,
 						},
 						"remote_info": schema.SingleNestedAttribute{
 							Computed: true,
@@ -291,10 +271,6 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 								},
 							},
 							Description: `A list of request configurations for this group.`,
-						},
-						"request_template_id": schema.StringAttribute{
-							Computed:    true,
-							Description: `The ID of the associated request template.`,
 						},
 						"require_mfa_to_approve": schema.BoolAttribute{
 							Computed:    true,

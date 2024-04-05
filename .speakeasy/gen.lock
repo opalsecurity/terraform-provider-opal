@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: dc5c624cf9a18a03fa48ad07e3d9c195
+  docChecksum: d70ce3912833731a29b768ef9c6f3089
   docVersion: "1.0"
   speakeasyVersion: 1.237.0
   generationVersion: 2.298.2
-  releaseVersion: 0.16.6
-  configChecksum: 0d16151b891ab2edbce9b90e9029b86a
+  releaseVersion: 0.16.12
+  configChecksum: 75c0e3b1aca3af7efec5c7fd1d9d97b2
   repoURL: https://github.com/speakeasy-sdks/terraform-provider-opal.git
   repoSubDirectory: .
   published: true

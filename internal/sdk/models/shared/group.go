@@ -13,8 +13,6 @@ type Group struct {
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
 	// The ID of the group's app.
 	AppID *string `json:"app_id,omitempty"`
-	// A bool representing whether or not to automatically approve requests to this group.
-	AutoApproval *bool `json:"auto_approval,omitempty"`
 	// A description of the group.
 	Description *string `json:"description,omitempty"`
 	// The ID of the associated group binding.
@@ -23,24 +21,14 @@ type Group struct {
 	GroupType *GroupTypeEnum `json:"group_type,omitempty"`
 	// The ID of the group.
 	ID *string `json:"group_id,omitempty"`
-	// A bool representing whether or not to allow access requests to this group.
-	IsRequestable *bool `json:"is_requestable,omitempty"`
-	// The maximum duration for which the group can be requested (in minutes).
-	MaxDuration *int64 `json:"max_duration,omitempty"`
 	// The name of the group.
 	Name *string `json:"name,omitempty"`
-	// The recommended duration for which the group should be requested (in minutes). -1 represents an indefinite duration.
-	RecommendedDuration *int64 `json:"recommended_duration,omitempty"`
-	// The ID of the remote.
-	RemoteID *string `json:"remote_id,omitempty"`
 	// Information that defines the remote group. This replaces the deprecated remote_id and metadata fields.
 	RemoteInfo *GroupRemoteInfo `json:"remote_info,omitempty"`
 	// The name of the remote.
 	RemoteName *string `json:"remote_name,omitempty"`
 	// A list of request configurations for this group.
 	RequestConfigurations []RequestConfiguration `json:"request_configurations,omitempty"`
-	// The ID of the associated request template.
-	RequestTemplateID *string `json:"request_template_id,omitempty"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this group.
 	RequireMfaToApprove *bool `json:"require_mfa_to_approve,omitempty"`
 }
@@ -57,13 +45,6 @@ func (o *Group) GetAppID() *string {
 		return nil
 	}
 	return o.AppID
-}
-
-func (o *Group) GetAutoApproval() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.AutoApproval
 }
 
 func (o *Group) GetDescription() *string {
@@ -94,39 +75,11 @@ func (o *Group) GetID() *string {
 	return o.ID
 }
 
-func (o *Group) GetIsRequestable() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.IsRequestable
-}
-
-func (o *Group) GetMaxDuration() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.MaxDuration
-}
-
 func (o *Group) GetName() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Name
-}
-
-func (o *Group) GetRecommendedDuration() *int64 {
-	if o == nil {
-		return nil
-	}
-	return o.RecommendedDuration
-}
-
-func (o *Group) GetRemoteID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.RemoteID
 }
 
 func (o *Group) GetRemoteInfo() *GroupRemoteInfo {
@@ -148,13 +101,6 @@ func (o *Group) GetRequestConfigurations() []RequestConfiguration {
 		return nil
 	}
 	return o.RequestConfigurations
-}
-
-func (o *Group) GetRequestTemplateID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.RequestTemplateID
 }
 
 func (o *Group) GetRequireMfaToApprove() *bool {

@@ -110,7 +110,6 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 	if resp != nil {
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 		r.AppID = types.StringPointerValue(resp.AppID)
-		r.AutoApproval = types.BoolPointerValue(resp.AutoApproval)
 		r.Description = types.StringPointerValue(resp.Description)
 		r.GroupBindingID = types.StringPointerValue(resp.GroupBindingID)
 		if resp.GroupType != nil {
@@ -119,11 +118,7 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 			r.GroupType = types.StringNull()
 		}
 		r.ID = types.StringPointerValue(resp.ID)
-		r.IsRequestable = types.BoolPointerValue(resp.IsRequestable)
-		r.MaxDuration = types.Int64PointerValue(resp.MaxDuration)
 		r.Name = types.StringPointerValue(resp.Name)
-		r.RecommendedDuration = types.Int64PointerValue(resp.RecommendedDuration)
-		r.RemoteID = types.StringPointerValue(resp.RemoteID)
 		if resp.RemoteInfo == nil {
 			r.RemoteInfo = nil
 		} else {
@@ -184,7 +179,6 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 			}
 		}
 		r.RemoteName = types.StringPointerValue(resp.RemoteName)
-		r.RequestTemplateID = types.StringPointerValue(resp.RequestTemplateID)
 		if len(r.RequestConfigurations) > len(resp.RequestConfigurations) {
 			r.RequestConfigurations = r.RequestConfigurations[:len(resp.RequestConfigurations)]
 		}

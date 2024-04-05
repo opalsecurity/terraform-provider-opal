@@ -17,7 +17,6 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 			var results1 tfTypes.Group
 			results1.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
 			results1.AppID = types.StringPointerValue(resultsItem.AppID)
-			results1.AutoApproval = types.BoolPointerValue(resultsItem.AutoApproval)
 			results1.Description = types.StringPointerValue(resultsItem.Description)
 			results1.GroupBindingID = types.StringPointerValue(resultsItem.GroupBindingID)
 			if resultsItem.GroupType != nil {
@@ -26,11 +25,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 				results1.GroupType = types.StringNull()
 			}
 			results1.ID = types.StringPointerValue(resultsItem.ID)
-			results1.IsRequestable = types.BoolPointerValue(resultsItem.IsRequestable)
-			results1.MaxDuration = types.Int64PointerValue(resultsItem.MaxDuration)
 			results1.Name = types.StringPointerValue(resultsItem.Name)
-			results1.RecommendedDuration = types.Int64PointerValue(resultsItem.RecommendedDuration)
-			results1.RemoteID = types.StringPointerValue(resultsItem.RemoteID)
 			if resultsItem.RemoteInfo == nil {
 				results1.RemoteInfo = nil
 			} else {
@@ -149,27 +144,20 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 					results1.RequestConfigurations[requestConfigurationsCount].ReviewerStages = requestConfigurations1.ReviewerStages
 				}
 			}
-			results1.RequestTemplateID = types.StringPointerValue(resultsItem.RequestTemplateID)
 			results1.RequireMfaToApprove = types.BoolPointerValue(resultsItem.RequireMfaToApprove)
 			if resultsCount+1 > len(r.Results) {
 				r.Results = append(r.Results, results1)
 			} else {
 				r.Results[resultsCount].AdminOwnerID = results1.AdminOwnerID
 				r.Results[resultsCount].AppID = results1.AppID
-				r.Results[resultsCount].AutoApproval = results1.AutoApproval
 				r.Results[resultsCount].Description = results1.Description
 				r.Results[resultsCount].GroupBindingID = results1.GroupBindingID
 				r.Results[resultsCount].GroupType = results1.GroupType
 				r.Results[resultsCount].ID = results1.ID
-				r.Results[resultsCount].IsRequestable = results1.IsRequestable
-				r.Results[resultsCount].MaxDuration = results1.MaxDuration
 				r.Results[resultsCount].Name = results1.Name
-				r.Results[resultsCount].RecommendedDuration = results1.RecommendedDuration
-				r.Results[resultsCount].RemoteID = results1.RemoteID
 				r.Results[resultsCount].RemoteInfo = results1.RemoteInfo
 				r.Results[resultsCount].RemoteName = results1.RemoteName
 				r.Results[resultsCount].RequestConfigurations = results1.RequestConfigurations
-				r.Results[resultsCount].RequestTemplateID = results1.RequestTemplateID
 				r.Results[resultsCount].RequireMfaToApprove = results1.RequireMfaToApprove
 			}
 		}
