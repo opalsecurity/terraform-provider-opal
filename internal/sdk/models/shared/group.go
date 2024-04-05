@@ -15,8 +15,6 @@ type Group struct {
 	AppID *string `json:"app_id,omitempty"`
 	// A bool representing whether or not to automatically approve requests to this group.
 	AutoApproval *bool `json:"auto_approval,omitempty"`
-	// The ID of the associated configuration template.
-	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
 	// A description of the group.
 	Description *string `json:"description,omitempty"`
 	// The ID of the associated group binding.
@@ -39,20 +37,12 @@ type Group struct {
 	RemoteInfo *GroupRemoteInfo `json:"remote_info,omitempty"`
 	// The name of the remote.
 	RemoteName *string `json:"remote_name,omitempty"`
-	// A list of request configurations for this group. Deprecated in favor of `request_configurations`.
-	//
-	// Deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
-	RequestConfigurationListData []RequestConfiguration `json:"request_configuration_list,omitempty"`
 	// A list of request configurations for this group.
 	RequestConfigurations []RequestConfiguration `json:"request_configurations,omitempty"`
 	// The ID of the associated request template.
 	RequestTemplateID *string `json:"request_template_id,omitempty"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this group.
 	RequireMfaToApprove *bool `json:"require_mfa_to_approve,omitempty"`
-	// A bool representing whether or not to require MFA for requesting access to this group.
-	RequireMfaToRequest *bool `json:"require_mfa_to_request,omitempty"`
-	// A bool representing whether or not access requests to the group require an access ticket.
-	RequireSupportTicket *bool `json:"require_support_ticket,omitempty"`
 }
 
 func (o *Group) GetAdminOwnerID() *string {
@@ -74,13 +64,6 @@ func (o *Group) GetAutoApproval() *bool {
 		return nil
 	}
 	return o.AutoApproval
-}
-
-func (o *Group) GetConfigurationTemplateID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ConfigurationTemplateID
 }
 
 func (o *Group) GetDescription() *string {
@@ -160,13 +143,6 @@ func (o *Group) GetRemoteName() *string {
 	return o.RemoteName
 }
 
-func (o *Group) GetRequestConfigurationListData() []RequestConfiguration {
-	if o == nil {
-		return nil
-	}
-	return o.RequestConfigurationListData
-}
-
 func (o *Group) GetRequestConfigurations() []RequestConfiguration {
 	if o == nil {
 		return nil
@@ -186,18 +162,4 @@ func (o *Group) GetRequireMfaToApprove() *bool {
 		return nil
 	}
 	return o.RequireMfaToApprove
-}
-
-func (o *Group) GetRequireMfaToRequest() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.RequireMfaToRequest
-}
-
-func (o *Group) GetRequireSupportTicket() *bool {
-	if o == nil {
-		return nil
-	}
-	return o.RequireSupportTicket
 }

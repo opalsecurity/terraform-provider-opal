@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 1d617dd833bfb0bf0a651185559a7217
+  docChecksum: dc5c624cf9a18a03fa48ad07e3d9c195
   docVersion: "1.0"
   speakeasyVersion: 1.237.0
   generationVersion: 2.298.2
-  releaseVersion: 0.16.3
-  configChecksum: 6a8b2b02af73585f48bb13d31e810467
+  releaseVersion: 0.16.6
+  configChecksum: 0d16151b891ab2edbce9b90e9029b86a
   repoURL: https://github.com/speakeasy-sdks/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -103,7 +103,6 @@ generatedFiles:
   - internal/sdk/models/operations/createresource.go
   - internal/sdk/models/operations/deleteresource.go
   - internal/sdk/models/operations/getresources.go
-  - internal/sdk/models/operations/getresourcereviewerstages.go
   - internal/sdk/models/operations/getresourceuseraccessstatus.go
   - internal/sdk/models/operations/getresourceid.go
   - internal/sdk/models/operations/getresourcemessagechannels.go
@@ -112,7 +111,6 @@ generatedFiles:
   - internal/sdk/models/operations/getresourceusers.go
   - internal/sdk/models/operations/getresourcevisibility.go
   - internal/sdk/models/operations/updateresources.go
-  - internal/sdk/models/operations/updateresourcereviewerstages.go
   - internal/sdk/models/operations/updateresourcemessagechannels.go
   - internal/sdk/models/operations/updateresourcereviewers.go
   - internal/sdk/models/operations/updateresourcevisibility.go
@@ -142,7 +140,6 @@ generatedFiles:
   - internal/sdk/models/shared/requestconfiguration.go
   - internal/sdk/models/shared/reviewerstage.go
   - internal/sdk/models/shared/condition.go
-  - internal/sdk/models/shared/createrequestconfigurationinfolist.go
   - internal/sdk/models/shared/paginatedconfigurationtemplatelist.go
   - internal/sdk/models/shared/updateconfigurationtemplateinfo.go
   - internal/sdk/models/shared/paginatedeventlist.go

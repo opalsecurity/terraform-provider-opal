@@ -1,3 +1,3 @@
 data "opal_group_reviewers_stages_list" "my_groupreviewersstageslist" {
-  group_id = "b9509980-b3b3-46ed-a74e-ccd4d3dc96cf"
+  group_id = "0c1ba08b-7f3a-43e6-96b6-f0baa3e2cf50"
 }

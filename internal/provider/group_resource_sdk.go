@@ -184,67 +184,6 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 			}
 		}
 		r.RemoteName = types.StringPointerValue(resp.RemoteName)
-		if len(r.RequestConfigurationListData) > len(resp.RequestConfigurationListData) {
-			r.RequestConfigurationListData = r.RequestConfigurationListData[:len(resp.RequestConfigurationListData)]
-		}
-		for requestConfigurationListDataCount, requestConfigurationListDataItem := range resp.RequestConfigurationListData {
-			var requestConfigurationListData1 tfTypes.RequestConfiguration
-			requestConfigurationListData1.AllowRequests = types.BoolValue(requestConfigurationListDataItem.AllowRequests)
-			requestConfigurationListData1.AutoApproval = types.BoolValue(requestConfigurationListDataItem.AutoApproval)
-			if requestConfigurationListDataItem.Condition == nil {
-				requestConfigurationListData1.Condition = nil
-			} else {
-				requestConfigurationListData1.Condition = &tfTypes.Condition{}
-				requestConfigurationListData1.Condition.GroupIds = []types.String{}
-				for _, v := range requestConfigurationListDataItem.Condition.GroupIds {
-					requestConfigurationListData1.Condition.GroupIds = append(requestConfigurationListData1.Condition.GroupIds, types.StringValue(v))
-				}
-				requestConfigurationListData1.Condition.RoleRemoteIds = []types.String{}
-				for _, v := range requestConfigurationListDataItem.Condition.RoleRemoteIds {
-					requestConfigurationListData1.Condition.RoleRemoteIds = append(requestConfigurationListData1.Condition.RoleRemoteIds, types.StringValue(v))
-				}
-			}
-			requestConfigurationListData1.MaxDuration = types.Int64PointerValue(requestConfigurationListDataItem.MaxDuration)
-			requestConfigurationListData1.Priority = types.Int64Value(requestConfigurationListDataItem.Priority)
-			requestConfigurationListData1.RecommendedDuration = types.Int64PointerValue(requestConfigurationListDataItem.RecommendedDuration)
-			requestConfigurationListData1.RequestTemplateID = types.StringPointerValue(requestConfigurationListDataItem.RequestTemplateID)
-			requestConfigurationListData1.RequireMfaToRequest = types.BoolValue(requestConfigurationListDataItem.RequireMfaToRequest)
-			requestConfigurationListData1.RequireSupportTicket = types.BoolValue(requestConfigurationListDataItem.RequireSupportTicket)
-			for reviewerStagesCount, reviewerStagesItem := range requestConfigurationListDataItem.ReviewerStages {
-				var reviewerStages1 tfTypes.ReviewerStage
-				if reviewerStagesItem.Operator != nil {
-					reviewerStages1.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
-				} else {
-					reviewerStages1.Operator = types.StringNull()
-				}
-				reviewerStages1.OwnerIds = []types.String{}
-				for _, v := range reviewerStagesItem.OwnerIds {
-					reviewerStages1.OwnerIds = append(reviewerStages1.OwnerIds, types.StringValue(v))
-				}
-				reviewerStages1.RequireManagerApproval = types.BoolValue(reviewerStagesItem.RequireManagerApproval)
-				if reviewerStagesCount+1 > len(requestConfigurationListData1.ReviewerStages) {
-					requestConfigurationListData1.ReviewerStages = append(requestConfigurationListData1.ReviewerStages, reviewerStages1)
-				} else {
-					requestConfigurationListData1.ReviewerStages[reviewerStagesCount].Operator = reviewerStages1.Operator
-					requestConfigurationListData1.ReviewerStages[reviewerStagesCount].OwnerIds = reviewerStages1.OwnerIds
-					requestConfigurationListData1.ReviewerStages[reviewerStagesCount].RequireManagerApproval = reviewerStages1.RequireManagerApproval
-				}
-			}
-			if requestConfigurationListDataCount+1 > len(r.RequestConfigurationListData) {
-				r.RequestConfigurationListData = append(r.RequestConfigurationListData, requestConfigurationListData1)
-			} else {
-				r.RequestConfigurationListData[requestConfigurationListDataCount].AllowRequests = requestConfigurationListData1.AllowRequests
-				r.RequestConfigurationListData[requestConfigurationListDataCount].AutoApproval = requestConfigurationListData1.AutoApproval
-				r.RequestConfigurationListData[requestConfigurationListDataCount].Condition = requestConfigurationListData1.Condition
-				r.RequestConfigurationListData[requestConfigurationListDataCount].MaxDuration = requestConfigurationListData1.MaxDuration
-				r.RequestConfigurationListData[requestConfigurationListDataCount].Priority = requestConfigurationListData1.Priority
-				r.RequestConfigurationListData[requestConfigurationListDataCount].RecommendedDuration = requestConfigurationListData1.RecommendedDuration
-				r.RequestConfigurationListData[requestConfigurationListDataCount].RequestTemplateID = requestConfigurationListData1.RequestTemplateID
-				r.RequestConfigurationListData[requestConfigurationListDataCount].RequireMfaToRequest = requestConfigurationListData1.RequireMfaToRequest
-				r.RequestConfigurationListData[requestConfigurationListDataCount].RequireSupportTicket = requestConfigurationListData1.RequireSupportTicket
-				r.RequestConfigurationListData[requestConfigurationListDataCount].ReviewerStages = requestConfigurationListData1.ReviewerStages
-			}
-		}
 		r.RequestTemplateID = types.StringPointerValue(resp.RequestTemplateID)
 		if len(r.RequestConfigurations) > len(resp.RequestConfigurations) {
 			r.RequestConfigurations = r.RequestConfigurations[:len(resp.RequestConfigurations)]
@@ -272,24 +211,24 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 			requestConfigurations1.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
 			requestConfigurations1.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
 			requestConfigurations1.RequireSupportTicket = types.BoolValue(requestConfigurationsItem.RequireSupportTicket)
-			for reviewerStagesCount1, reviewerStagesItem1 := range requestConfigurationsItem.ReviewerStages {
-				var reviewerStages3 tfTypes.ReviewerStage
-				if reviewerStagesItem1.Operator != nil {
-					reviewerStages3.Operator = types.StringValue(string(*reviewerStagesItem1.Operator))
+			for reviewerStagesCount, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
+				var reviewerStages1 tfTypes.ReviewerStage
+				if reviewerStagesItem.Operator != nil {
+					reviewerStages1.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
 				} else {
-					reviewerStages3.Operator = types.StringNull()
+					reviewerStages1.Operator = types.StringNull()
 				}
-				reviewerStages3.OwnerIds = []types.String{}
-				for _, v := range reviewerStagesItem1.OwnerIds {
-					reviewerStages3.OwnerIds = append(reviewerStages3.OwnerIds, types.StringValue(v))
+				reviewerStages1.OwnerIds = []types.String{}
+				for _, v := range reviewerStagesItem.OwnerIds {
+					reviewerStages1.OwnerIds = append(reviewerStages1.OwnerIds, types.StringValue(v))
 				}
-				reviewerStages3.RequireManagerApproval = types.BoolValue(reviewerStagesItem1.RequireManagerApproval)
-				if reviewerStagesCount1+1 > len(requestConfigurations1.ReviewerStages) {
-					requestConfigurations1.ReviewerStages = append(requestConfigurations1.ReviewerStages, reviewerStages3)
+				reviewerStages1.RequireManagerApproval = types.BoolValue(reviewerStagesItem.RequireManagerApproval)
+				if reviewerStagesCount+1 > len(requestConfigurations1.ReviewerStages) {
+					requestConfigurations1.ReviewerStages = append(requestConfigurations1.ReviewerStages, reviewerStages1)
 				} else {
-					requestConfigurations1.ReviewerStages[reviewerStagesCount1].Operator = reviewerStages3.Operator
-					requestConfigurations1.ReviewerStages[reviewerStagesCount1].OwnerIds = reviewerStages3.OwnerIds
-					requestConfigurations1.ReviewerStages[reviewerStagesCount1].RequireManagerApproval = reviewerStages3.RequireManagerApproval
+					requestConfigurations1.ReviewerStages[reviewerStagesCount].Operator = reviewerStages1.Operator
+					requestConfigurations1.ReviewerStages[reviewerStagesCount].OwnerIds = reviewerStages1.OwnerIds
+					requestConfigurations1.ReviewerStages[reviewerStagesCount].RequireManagerApproval = reviewerStages1.RequireManagerApproval
 				}
 			}
 			if requestConfigurationsCount+1 > len(r.RequestConfigurations) {
@@ -307,8 +246,6 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 				r.RequestConfigurations[requestConfigurationsCount].ReviewerStages = requestConfigurations1.ReviewerStages
 			}
 		}
-		r.RequireMfaToRequest = types.BoolPointerValue(resp.RequireMfaToRequest)
-		r.RequireSupportTicket = types.BoolPointerValue(resp.RequireSupportTicket)
 		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
 	}
 }
@@ -551,10 +488,10 @@ func (r *GroupResourceModel) RefreshFromOperationsGetGroupMessageChannelsRespons
 
 func (r *GroupResourceModel) RefreshFromOperationsGetGroupVisibilityResponseBody(resp *operations.GetGroupVisibilityResponseBody) {
 	if resp != nil {
-		r.VisibilityInfo.Visibility = types.StringValue(string(resp.Visibility))
-		r.VisibilityInfo.VisibilityGroupIds = []types.String{}
+		r.Visibility = types.StringValue(string(resp.Visibility))
+		r.VisibilityGroupIds = []types.String{}
 		for _, v := range resp.VisibilityGroupIds {
-			r.VisibilityInfo.VisibilityGroupIds = append(r.VisibilityInfo.VisibilityGroupIds, types.StringValue(v))
+			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
 		}
 	}
 }

@@ -5,24 +5,21 @@ package types
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type Group struct {
-	AdminOwnerID                 types.String           `tfsdk:"admin_owner_id"`
-	AppID                        types.String           `tfsdk:"app_id"`
-	AutoApproval                 types.Bool             `tfsdk:"auto_approval"`
-	Description                  types.String           `tfsdk:"description"`
-	GroupBindingID               types.String           `tfsdk:"group_binding_id"`
-	GroupType                    types.String           `tfsdk:"group_type"`
-	ID                           types.String           `tfsdk:"id"`
-	IsRequestable                types.Bool             `tfsdk:"is_requestable"`
-	MaxDuration                  types.Int64            `tfsdk:"max_duration"`
-	Name                         types.String           `tfsdk:"name"`
-	RecommendedDuration          types.Int64            `tfsdk:"recommended_duration"`
-	RemoteID                     types.String           `tfsdk:"remote_id"`
-	RemoteInfo                   *GroupRemoteInfo       `tfsdk:"remote_info"`
-	RemoteName                   types.String           `tfsdk:"remote_name"`
-	RequestConfigurationListData []RequestConfiguration `tfsdk:"request_configuration_list_data"`
-	RequestConfigurations        []RequestConfiguration `tfsdk:"request_configurations"`
-	RequestTemplateID            types.String           `tfsdk:"request_template_id"`
-	RequireMfaToApprove          types.Bool             `tfsdk:"require_mfa_to_approve"`
-	RequireMfaToRequest          types.Bool             `tfsdk:"require_mfa_to_request"`
-	RequireSupportTicket         types.Bool             `tfsdk:"require_support_ticket"`
+	AdminOwnerID          types.String           `tfsdk:"admin_owner_id"`
+	AppID                 types.String           `tfsdk:"app_id"`
+	AutoApproval          types.Bool             `tfsdk:"auto_approval"`
+	Description           types.String           `tfsdk:"description"`
+	GroupBindingID        types.String           `tfsdk:"group_binding_id"`
+	GroupType             types.String           `tfsdk:"group_type"`
+	ID                    types.String           `tfsdk:"id"`
+	IsRequestable         types.Bool             `tfsdk:"is_requestable"`
+	MaxDuration           types.Int64            `tfsdk:"max_duration"`
+	Name                  types.String           `tfsdk:"name"`
+	RecommendedDuration   types.Int64            `tfsdk:"recommended_duration"`
+	RemoteID              types.String           `tfsdk:"remote_id"`
+	RemoteInfo            *GroupRemoteInfo       `tfsdk:"remote_info"`
+	RemoteName            types.String           `tfsdk:"remote_name"`
+	RequestConfigurations []RequestConfiguration `tfsdk:"request_configurations"`
+	RequestTemplateID     types.String           `tfsdk:"request_template_id"`
+	RequireMfaToApprove   types.Bool             `tfsdk:"require_mfa_to_approve"`
 }

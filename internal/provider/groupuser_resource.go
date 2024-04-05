@@ -173,19 +173,12 @@ func (r *GroupUserResource) Create(ctx context.Context, req resource.CreateReque
 	}
 
 	requestBody := *data.ToOperationsCreateGroupUserRequestBody()
-	accessLevelRemoteID := new(string)
-	if !data.AccessLevelRemoteID.IsUnknown() && !data.AccessLevelRemoteID.IsNull() {
-		*accessLevelRemoteID = data.AccessLevelRemoteID.ValueString()
-	} else {
-		accessLevelRemoteID = nil
-	}
 	groupID := data.GroupID.ValueString()
 	userID := data.UserID.ValueString()
 	request := operations.CreateGroupUserRequest{
-		RequestBody:         requestBody,
-		AccessLevelRemoteID: accessLevelRemoteID,
-		GroupID:             groupID,
-		UserID:              userID,
+		RequestBody: requestBody,
+		GroupID:     groupID,
+		UserID:      userID,
 	}
 	res, err := r.client.Groups.CreateUser(ctx, request)
 	if err != nil {

@@ -135,6 +135,7 @@ resource "opal_group" "okta" {
 
 resource "opal_group" "foobarbaz" {
   name = "foobarbaz"
+  description = ""
   app_id = data.opal_app.okta.id
   group_type = "OKTA_GROUP"
   admin_owner_id = opal_owner.security.id

@@ -116,7 +116,7 @@ actions:
       x-speakeasy-name-override: id
   - target: $["paths"]["/groups/{group_id}/message-channels"]["put"]["responses"]["200"]["content"]["application/json"]
     update:
-      x-speakeasy-terraform-ignore: true
+      x-speakeasy-ignore: true
   - target: $["paths"]["/groups/{group_id}/message-channels"]["put"]["responses"]["200"]["content"]["application/json"]["schema"]
     remove: true
   - target: $["paths"]["/groups/{group_id}/message-channels"]["put"]
@@ -152,7 +152,7 @@ actions:
       x-speakeasy-name-override: id
   - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["put"]["responses"]["200"]["content"]["application/json"]
     update:
-      x-speakeasy-terraform-ignore: true
+      x-speakeasy-ignore: true
   - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["put"]["responses"]["200"]["content"]["application/json"]["schema"]
     remove: true
   - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["put"]
@@ -193,7 +193,7 @@ actions:
     update:
       allOf:
         - $ref: "#/components/schemas/VisibilityInfo"
-        - x-speakeasy-wrapped-attribute: "visibility_info"
+          # - x-speakeasy-wrapped-attribute: "visibility_info"
   - target: $["paths"]["/groups/{group_id}/visibility"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]["$ref"]
     remove: true
   - target: $["paths"]["/groups/{group_id}/visibility"]["get"]
@@ -209,7 +209,7 @@ actions:
       x-speakeasy-name-override: id
   - target: $["paths"]["/groups/{group_id}/visibility"]["put"]["responses"]["200"]["content"]["application/json"]
     update:
-      x-speakeasy-terraform-ignore: true
+      x-speakeasy-ignore: true
   - target: $["paths"]["/groups/{group_id}/visibility"]["put"]["responses"]["200"]["content"]["application/json"]["schema"]
     remove: true
   - target: $["paths"]["/groups/{group_id}/visibility"]["put"]
@@ -301,6 +301,7 @@ actions:
           type: string
         style: form
         deprecated: true
+        x-speakeasy-ignore: true
   - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["post"]["requestBody"]["required"]
     update: true
   - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["post"]["requestBody"]["content"]["application/json"]["schema"]["properties"]["duration_minutes"]["description"]
@@ -508,7 +509,7 @@ actions:
       x-speakeasy-entity: ResourceReviewersStagesList
   - target: $["paths"]["/resources/{resource_id}/reviewer-stages"]["get"]
     update:
-      x-speakeasy-terraform-ignore: true
+      x-speakeasy-ignore: true
   - target: $["paths"]["/resources/{resource_id}/reviewer-stages"]["put"]["operationId"]
     update: updateResourceReviewerStages
   - target: $["paths"]["/resources/{resource_id}/reviewer-stages"]["put"]["responses"]["200"]["content"]["application/json"]["schema"]
@@ -516,7 +517,7 @@ actions:
       x-speakeasy-entity: ResourcesReviewersStagesList
   - target: $["paths"]["/resources/{resource_id}/reviewer-stages"]["put"]
     update:
-      x-speakeasy-terraform-ignore: true
+      x-speakeasy-ignore: true
   - target: $["paths"]["/resources/{resource_id}/users"]["get"]["operationId"]
     update: getResourceUsers
   - target: $["paths"]["/resources/{resource_id}/users"]["get"]
@@ -829,15 +830,18 @@ actions:
   - target: $["components"]["schemas"]["Group"]["properties"]["require_manager_approval"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["require_support_ticket"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["require_mfa_to_request"]
+    update:
+      x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["Group"]["properties"]["configuration_template_id"]
     update:
-      x-speakeasy-terraform-ignore: true
+      x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["Group"]["properties"]["request_configuration_list"]
     update:
-      x-speakeasy-name-override: request_configuration_list_data
-  - target: $["components"]["schemas"]["Group"]["properties"]["request_configuration_list"]
-    update:
-      x-speakeasy-param-suppress-computed-diff: true
+      x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["Group"]["properties"]["request_configuration_list"]
     update:
       minItems: 1
@@ -888,7 +892,7 @@ actions:
       x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["configuration_template_id"]
     update:
-      x-speakeasy-terraform-ignore: true
+      x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_template_id"]
     update:
       x-speakeasy-ignore: true
@@ -1235,7 +1239,7 @@ actions:
       x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["configuration_template_id"]
     update:
-      x-speakeasy-terraform-ignore: true
+      x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
@@ -1277,7 +1281,7 @@ actions:
       x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["configuration_template_id"]
     update:
-      x-speakeasy-terraform-ignore: true
+      x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_template_id"]
     update:
       x-speakeasy-ignore: true
@@ -1287,6 +1291,9 @@ actions:
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_configurations"]
     update:
       x-speakeasy-plan-validators: RequestConfigurations
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_configuration_list"]
+    update:
+      x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["required"]
     update:
       - request_configurations
@@ -1353,7 +1360,10 @@ actions:
       x-speakeasy-entity: Requests
   - target: $["components"]["schemas"]["CreateRequestConfigurationInfoList"]
     update:
-      x-speakeasy-terraform-ignore: true
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["request_configuration_list"]
+    update:
+      x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]
     update:
       x-speakeasy-entity: ConfigurationTemplate
@@ -1364,6 +1374,9 @@ actions:
   - target: $["components"]["schemas"]["ConfigurationTemplate"]
     update:
       x-speakeasy-entity: ConfigurationTemplate
+  - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]["properties"]["request_configuration_list"]
+    update:
+      x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]
     update:
       x-speakeasy-entity: ConfigurationTemplate
