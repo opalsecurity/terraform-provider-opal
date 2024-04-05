@@ -22,3 +22,8 @@ openapi.yaml: check-speakeasy
 
 check-speakeasy:
 	@command -v speakeasy >/dev/null 2>&1 || { echo >&2 "speakeasy CLI is not installed. Please install before continuing."; exit 1; }
+
+sweep:
+	@echo "WARNING: This will destroy infrastructure. Use only in development accounts."
+	go test ./opal -v -sweep=test $(SWEEPARGS) -timeout 2m
+.PHONY: sweep
