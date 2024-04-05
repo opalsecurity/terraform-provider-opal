@@ -20,7 +20,7 @@ import (
 var knownOpalAppID = os.Getenv("OPAL_TEST_KNOWN_OPAL_APP_ID")
 var knownOpalAppAdminOwnerID = os.Getenv("OPAL_TEST_KNOWN_OPAL_APP_ADMIN_OWNER_ID")
 var knownOpalGroupID = os.Getenv("OPAL_TEST_KNOWN_OPAL_GROUP_ID")
-var knownOpalGithubTeamSlug = os.Getenv("OPAL_TEST_KNOWN_OPAL_GITHUB_TEAM_NAME")
+var knownOpalGithubTeamSlug = os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_TEAM_SLUG")
 var knownGithubAppID = os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_ID")
 
 func generateBaseNameAndResourceName() (string, string) {
