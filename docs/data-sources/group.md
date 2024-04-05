@@ -14,7 +14,7 @@ Group DataSource
 
 ```terraform
 data "opal_group" "my_group" {
-  id = "c137cf6f-e2c7-4c19-8104-295311709f01"
+  id = "b101a076-42ba-438b-8737-d2bdc6d83a7c"
 }
 ```
 
@@ -29,23 +29,18 @@ data "opal_group" "my_group" {
 
 - `admin_owner_id` (String) The ID of the owner of the group.
 - `app_id` (String) The ID of the group's app.
-- `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests to this group.
 - `description` (String) A description of the group.
 - `group_binding_id` (String) The ID of the associated group binding.
 - `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OPAL_GROUP", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP"]
-- `is_requestable` (Boolean) A bool representing whether or not to allow access requests to this group.
-- `max_duration` (Number) The maximum duration for which the group can be requested (in minutes).
 - `message_channels` (Attributes) The audit and reviewer message channels attached to the group. (see [below for nested schema](#nestedatt--message_channels))
 - `name` (String) The name of the group.
 - `oncall_schedules` (Attributes) The on call schedules attached to the group. (see [below for nested schema](#nestedatt--oncall_schedules))
-- `recommended_duration` (Number) The recommended duration for which the group should be requested (in minutes). -1 represents an indefinite duration.
-- `remote_id` (String) The ID of the remote.
 - `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. (see [below for nested schema](#nestedatt--remote_info))
 - `remote_name` (String) The name of the remote.
 - `request_configurations` (Attributes List) A list of request configurations for this group. (see [below for nested schema](#nestedatt--request_configurations))
-- `request_template_id` (String) The ID of the associated request template.
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this group.
-- `visibility_info` (Attributes) Visibility infomation of an entity. (see [below for nested schema](#nestedatt--visibility_info))
+- `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
+- `visibility_group_ids` (List of String)
 
 <a id="nestedatt--message_channels"></a>
 ### Nested Schema for `message_channels`
@@ -199,15 +194,5 @@ Read-Only:
 - `operator` (String) The operator of the reviewer stage. must be one of ["AND", "OR"]
 - `owner_ids` (List of String)
 - `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval.
-
-
-
-<a id="nestedatt--visibility_info"></a>
-### Nested Schema for `visibility_info`
-
-Read-Only:
-
-- `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
-- `visibility_group_ids` (List of String)
 
 

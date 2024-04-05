@@ -14,8 +14,8 @@ TagUser Resource
 
 ```terraform
 resource "opal_tag_user" "my_taguser" {
-  tag_id  = "dbb0d5f3-dec6-4379-a1a5-f422d4f1a434"
-  user_id = "d8baf069-fe55-4e23-a367-4e7f570e3140"
+  tag_id  = "ee194539-e33f-4dc8-8a5e-4af3e79e632e"
+  user_id = "e6059909-fc8f-41d1-a174-cc096b23d6f0"
 }
 ```
 

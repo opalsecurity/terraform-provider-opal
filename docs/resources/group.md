@@ -56,9 +56,6 @@ resource "opal_group" "my_group" {
   ]
   require_mfa_to_approve = false
   visibility             = "GLOBAL"
-  visibility_group_ids = [
-    "d5bf1886-9ae7-426c-8cc0-18ec506c2a39",
-  ]
 }
 ```
 
@@ -85,18 +82,11 @@ resource "opal_group" "my_group" {
 
 ### Read-Only
 
-- `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests to this group.
 - `group_binding_id` (String) The ID of the associated group binding.
 - `id` (String) The ID of the group.
-- `is_requestable` (Boolean) A bool representing whether or not to allow access requests to this group.
-- `max_duration` (Number) The maximum duration for which the group can be requested (in minutes).
 - `message_channels` (Attributes) The audit and reviewer message channels attached to the group. (see [below for nested schema](#nestedatt--message_channels))
 - `oncall_schedules` (Attributes) The on call schedules attached to the group. (see [below for nested schema](#nestedatt--oncall_schedules))
-- `recommended_duration` (Number) The recommended duration for which the group should be requested (in minutes). -1 represents an indefinite duration.
-- `remote_id` (String) The ID of the remote.
 - `remote_name` (String) The name of the remote.
-- `request_template_id` (String) The ID of the associated request template.
-- `visibility_info` (Attributes) Visibility infomation of an entity. (see [below for nested schema](#nestedatt--visibility_info))
 
 <a id="nestedatt--request_configurations"></a>
 ### Nested Schema for `request_configurations`
@@ -251,14 +241,5 @@ Read-Only:
 - `name` (String) The name of the on call schedule.
 - `remote_id` (String) The remote ID of the on call schedule
 - `third_party_provider` (String) The third party provider of the on call schedule. must be one of ["OPSGENIE", "PAGER_DUTY"]
-
-
-<a id="nestedatt--visibility_info"></a>
-### Nested Schema for `visibility_info`
-
-Read-Only:
-
-- `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
-- `visibility_group_ids` (List of String)
 
 

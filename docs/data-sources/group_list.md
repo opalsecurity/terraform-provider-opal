@@ -19,7 +19,7 @@ data "opal_group_list" "my_group_list" {
   ]
   group_name        = "...my_group_name..."
   group_type_filter = "OPAL_GROUP"
-  page_size         = 9
+  page_size         = 3
 }
 ```
 
@@ -44,20 +44,14 @@ Read-Only:
 
 - `admin_owner_id` (String) The ID of the owner of the group.
 - `app_id` (String) The ID of the group's app.
-- `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests to this group.
 - `description` (String) A description of the group.
 - `group_binding_id` (String) The ID of the associated group binding.
 - `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OPAL_GROUP", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP"]
 - `id` (String) The ID of the group.
-- `is_requestable` (Boolean) A bool representing whether or not to allow access requests to this group.
-- `max_duration` (Number) The maximum duration for which the group can be requested (in minutes).
 - `name` (String) The name of the group.
-- `recommended_duration` (Number) The recommended duration for which the group should be requested (in minutes). -1 represents an indefinite duration.
-- `remote_id` (String) The ID of the remote.
 - `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. (see [below for nested schema](#nestedatt--results--remote_info))
 - `remote_name` (String) The name of the remote.
 - `request_configurations` (Attributes List) A list of request configurations for this group. (see [below for nested schema](#nestedatt--results--request_configurations))
-- `request_template_id` (String) The ID of the associated request template.
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this group.
 
 <a id="nestedatt--results--remote_info"></a>
