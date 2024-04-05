@@ -12,7 +12,7 @@ var testAccProviderFactories map[string]func() (tfprotov6.ProviderServer, error)
 
 func init() {
 	os.Setenv("OPAL_AUTH_TOKEN", os.Getenv("OPAL_TEST_TOKEN"))
-	os.Setenv("OPAL_BASE_URL", os.Getenv("OPAL_TEST_BASE_URL")+"v1")
+	os.Setenv("OPAL_BASE_URL", os.Getenv("OPAL_TEST_BASE_URL"))
 	testAccProviderFactories = map[string]func() (tfprotov6.ProviderServer, error){
 		"opal": providerserver.NewProtocol6WithError(New("test")()),
 	}
