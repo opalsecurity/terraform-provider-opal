@@ -1,16 +1,15 @@
-# Terraform Opal Provider
+# Terraform provider for Opal
 
-[![Terraform Provider Tests](https://github.com/opalsecurity/terraform-provider-opal/actions/workflows/test.yml/badge.svg)](https://github.com/opalsecurity/terraform-provider-opal/actions/workflows/test.yml)
+<!-- Start SDK SDK Installation -->
+## SDK Installation
 
-## Installation
-
-See the [docs](https://registry.terraform.io/providers/opalsecurity/opal/latest/docs) for detailed examples.
+To install this provider, copy and paste this code into your Terraform configuration. Then, run `terraform init`.
 
 ```hcl
 terraform {
   required_providers {
     opal = {
-      source = "opalsecurity/opal"
+      source  = "opalsecurity/opal"
     }
   }
 }
@@ -19,58 +18,111 @@ provider "opal" {
   # Configuration options
 }
 ```
+<!-- End SDK SDK Installation -->
 
-## Development
+## SDK Example Usage
 
-Go `>= 1.20` and terraform `>= 0.14` is required for development. It's recommended that you use a [`dev_overrides` block](https://www.terraform.io/cli/config/config-file) while developing:
+<!-- Start SDK SDK Example Usage -->
+### Testing the provider locally
+
+Should you want to validate a change locally, the `--debug` flag allows you to execute the provider against a terraform instance locally.
+
+This also allows for debuggers (e.g. delve) to be attached to the provider.
+
+### Example
+
+```sh
+go run main.go --debug
+# Copy the TF_REATTACH_PROVIDERS env var
+# In a new terminal
+cd examples/your-example
+TF_REATTACH_PROVIDERS=... terraform init
+TF_REATTACH_PROVIDERS=... terraform apply
+```
+<!-- End SDK SDK Example Usage -->
+
+
+<!-- Start SDK SDK Available Operations -->
+
+<!-- End SDK SDK Available Operations -->
+
+
+
+<!-- Start SDK Installation [installation] -->
+## SDK Installation
+
+To install this provider, copy and paste this code into your Terraform configuration. Then, run `terraform init`.
 
 ```hcl
+terraform {
+  required_providers {
+    opal = {
+      source  = "opalsecurity/opal"
+      version = "0.16.3"
+    }
+  }
+}
+
+provider "opal" {
+  # Configuration options
+}
+```
+<!-- End SDK Installation [installation] -->
+
+
+
+<!-- Start SDK Example Usage [usage] -->
+## SDK Example Usage
+
+### Testing the provider locally
+
+Should you want to validate a change locally, the `--debug` flag allows you to execute the provider against a terraform instance locally.
+
+This also allows for debuggers (e.g. delve) to be attached to the provider.
+
+### Example
+
+```sh
+go run main.go --debug
+# Copy the TF_REATTACH_PROVIDERS env var
+# In a new terminal
+cd examples/your-example
+TF_REATTACH_PROVIDERS=... terraform init
+TF_REATTACH_PROVIDERS=... terraform apply
+```
+<!-- End SDK Example Usage [usage] -->
+
+
+
+<!-- Start Available Resources and Operations [operations] -->
+## Available Resources and Operations
+
+
+<!-- End Available Resources and Operations [operations] -->
+
+<!-- Placeholder for Future Speakeasy SDK Sections -->
+
+Terraform allows you to use local provider builds by setting a `dev_overrides` block in a configuration file called `.terraformrc`. This block overrides all other configured installation methods.
+
+Terraform searches for the `.terraformrc` file in your home directory and applies any configuration settings you set.
+
+```
 provider_installation {
+
   dev_overrides {
-    "registry.terraform.io/opalsecurity/opal" = "/Users/you/src/terraform-provider-opal/bin"
+      "registry.terraform.io/github.com/opal-dev/terraform-provider-opal/scaffolding" = "<PATH>"
   }
 
-   # For all other providers, install them directly from their origin provider
-   # registries as normal. If you omit this, Terraform will _only_ use
-   # the dev_overrides block, and so no other providers will be available.
-   direct {}
+  # For all other providers, install them directly from their origin provider
+  # registries as normal. If you omit this, Terraform will _only_ use
+  # the dev_overrides block, and so no other providers will be available.
+  direct {}
 }
 ```
 
-You can also source your local `OPAL_AUTH_TOKEN` while developing by using [direnv](https://direnv.net) (installable via homebrew) and creating a `.envrc.local` file:
+Your `<PATH>` may vary depending on how your Go environment variables are configured. Execute `go env GOBIN` to set it, then set the `<PATH>` to the value returned. If nothing is returned, set it to the default location, `$HOME/go/bin`.
 
-```bash
-# Get an auth token from https://app.opal.dev/settings#api or your Opal installation.
-export OPAL_AUTH_TOKEN=YOUR_TOKEN_HERE
-```
+### Contributions
 
-You can build the plugin using:
-
-```
-make build
-```
-
-Your `dev_overrides` configured above should tell your local terraform installation how to resolve the plugin:
-
-```
-$ cd examples/
-$ terraform apply
-╷
-│ Warning: Provider development overrides are in effect
-│
-│ The following provider development overrides are set in the CLI configuration:
-│  - opalsecurity/opal in /Users/user/src/terraform-provider-opal/bin
-│
-│ The behavior may therefore not match any released version of the provider and applying changes may cause the state to become incompatible
-│ with published releases.
-╵
-```
-
-If you don't see the above warning when running terraform commands, something is misconfigured.
-
-### Writing Documentation
-
-The `docs/` folder is entirely generated. Make changes to `templates/` or the go source files instead. `docs/`content is generated from:
-
-- The source code, i.e. `Description` and `Name` fields in the resource schema
-- The `templates/` folder, which serves as the basis for `docs/`. See [tfplugindocs](https://github.com/hashicorp/terraform-plugin-docs#templates) for more on the templating fields.
+While we value open-source contributions to this SDK, this library is generated programmatically.
+Feel free to open a PR or a Github issue as a proof of concept and we'll do our best to include it in a future release!

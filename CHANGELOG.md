@@ -1,5 +1,47 @@
 # Changelog
 
+## v3.0.0
+
+*Compared to 2.0.2*
+
+`opal_group`
+- message_channel_ids now required (can provide empty list [])
+- on_call_schedule_ids now required (can provide empty list [])
+- visibility now required
+- audit_message_channel => message_channel_ids (List of string ids)
+- on_call_schedule => on_call_schedule_ids (List of string ids)
+- visibility_group => visibility_group_ids (List of string ids)
+- manage_resources => removed in favor of optional declaration of group <> resource relationship
+- resource => moved to separate resource `opal_group_resource_list`
+- request_configuration => request_configurations. List of configurations with at minimum a default configuration. Optionally specify extra configurations to apply to targeted groups
+
+`opal_owner`
+- user (Block list) => user_ids (List of strings)
+- user_ids required instead of optional
+
+`opal_resource`
+- admin_owner_id now optional
+- visibility now required
+- visibility_group => visibility_group_ids (List of string ids)
+- request_configurations now required
+- request_configuration => request_configurations. List of configurations with at minimum a default configuration. Optionally specify extra configurations to apply to targeted groups
+
+#### New capabilities
+`opal_resources_users`
+- Grant access to a Resource for a specific User
+
+`opal_group_tag`
+- Associate a Group and a Tag
+
+`opal_resource_tag`
+- Associate a Resource and a Tag
+
+`opal_tag`
+- Create an Opal tag to use with other Opal objects
+
+`opal_tag_user`
+- Associate a User and a Tag
+
 ## v1.0.4
 
 NEW FEATURES:
