@@ -14,7 +14,7 @@ Tag DataSource
 
 ```terraform
 data "opal_tag" "my_tag" {
-  id = "b9c12805-779f-4076-a60b-81a19e052a61"
+  id = "9d146487-1c94-462c-86fc-90b6e9f803e4"
 }
 ```
 

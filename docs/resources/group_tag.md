@@ -14,8 +14,8 @@ GroupTag Resource
 
 ```terraform
 resource "opal_group_tag" "my_grouptag" {
-  group_id = "e9e478d8-8038-497a-a47b-4f991fc2397c"
-  tag_id   = "4040eb63-5d1e-4f43-bdd0-8dbe759fb0ef"
+  group_id = "d7f3ebad-f331-4c33-8879-2a4ec5fd6d75"
+  tag_id   = "e2e61d1e-f5c0-4fe3-a254-53aaabbdc741"
 }
 ```
 
