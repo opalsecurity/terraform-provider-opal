@@ -693,7 +693,6 @@ paths:
                             schema:
                                 allOf:
                                     - $ref: "#/components/schemas/VisibilityInfo"
-                                      # - x-speakeasy-wrapped-attribute: "visibility_info"
                     description: The visibility info of this group.
             security:
                 - BearerAuth: []
