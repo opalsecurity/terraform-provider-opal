@@ -46,23 +46,14 @@ type ResourceResource struct {
 type ResourceResourceModel struct {
 	AdminOwnerID          types.String                   `tfsdk:"admin_owner_id"`
 	AppID                 types.String                   `tfsdk:"app_id"`
-	AutoApproval          types.Bool                     `tfsdk:"auto_approval"`
 	Description           types.String                   `tfsdk:"description"`
 	ID                    types.String                   `tfsdk:"id"`
-	IsRequestable         types.Bool                     `tfsdk:"is_requestable"`
-	MaxDuration           types.Int64                    `tfsdk:"max_duration"`
 	Name                  types.String                   `tfsdk:"name"`
 	ParentResourceID      types.String                   `tfsdk:"parent_resource_id"`
-	RecommendedDuration   types.Int64                    `tfsdk:"recommended_duration"`
 	RemoteInfo            *tfTypes.ResourceRemoteInfo    `tfsdk:"remote_info"`
-	RemoteResourceID      types.String                   `tfsdk:"remote_resource_id"`
-	RemoteResourceName    types.String                   `tfsdk:"remote_resource_name"`
 	RequestConfigurations []tfTypes.RequestConfiguration `tfsdk:"request_configurations"`
-	RequestTemplateID     types.String                   `tfsdk:"request_template_id"`
 	RequireMfaToApprove   types.Bool                     `tfsdk:"require_mfa_to_approve"`
 	RequireMfaToConnect   types.Bool                     `tfsdk:"require_mfa_to_connect"`
-	RequireMfaToRequest   types.Bool                     `tfsdk:"require_mfa_to_request"`
-	RequireSupportTicket  types.Bool                     `tfsdk:"require_support_ticket"`
 	ResourceType          types.String                   `tfsdk:"resource_type"`
 	Visibility            types.String                   `tfsdk:"visibility"`
 	VisibilityGroupIds    []types.String                 `tfsdk:"visibility_group_ids"`
@@ -90,10 +81,6 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Required:    true,
 				Description: `The ID of the app for the resource. Requires replacement if changed. `,
 			},
-			"auto_approval": schema.BoolAttribute{
-				Computed:    true,
-				Description: `A bool representing whether or not to automatically approve requests to this resource.`,
-			},
 			"description": schema.StringAttribute{
 				Computed:    true,
 				Optional:    true,
@@ -106,25 +93,16 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				},
 				Description: `The ID of the resource.`,
 			},
-			"is_requestable": schema.BoolAttribute{
-				Computed:    true,
-				Description: `A bool representing whether or not to allow access requests to this resource.`,
-			},
-			"max_duration": schema.Int64Attribute{
-				Computed:    true,
-				Description: `The maximum duration for which the resource can be requested (in minutes).`,
-			},
 			"name": schema.StringAttribute{
 				Required:    true,
 				Description: `The name of the remote resource.`,
 			},
 			"parent_resource_id": schema.StringAttribute{
-				Computed:    true,
+				Computed: true,
+				PlanModifiers: []planmodifier.String{
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
 				Description: `The ID of the parent resource.`,
-			},
-			"recommended_duration": schema.Int64Attribute{
-				Computed:    true,
-				Description: `The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.`,
 			},
 			"remote_info": schema.SingleNestedAttribute{
 				Computed: true,
@@ -880,14 +858,6 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				},
 				Description: `Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed. `,
 			},
-			"remote_resource_id": schema.StringAttribute{
-				Computed:    true,
-				Description: `The ID of the resource on the remote system.`,
-			},
-			"remote_resource_name": schema.StringAttribute{
-				Computed:    true,
-				Description: `The name of the resource on the remote system.`,
-			},
 			"request_configurations": schema.ListNestedAttribute{
 				Required: true,
 				NestedObject: schema.NestedAttributeObject{
@@ -1013,10 +983,6 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 					custom_listvalidators.RequestConfigurations(),
 				},
 			},
-			"request_template_id": schema.StringAttribute{
-				Computed:    true,
-				Description: `The ID of the associated request template.`,
-			},
 			"require_mfa_to_approve": schema.BoolAttribute{
 				Computed:    true,
 				Optional:    true,
@@ -1026,14 +992,6 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Computed:    true,
 				Optional:    true,
 				Description: `A bool representing whether or not to require MFA to connect to this resource.`,
-			},
-			"require_mfa_to_request": schema.BoolAttribute{
-				Computed:    true,
-				Description: `A bool representing whether or not to require MFA for requesting access to this resource.`,
-			},
-			"require_support_ticket": schema.BoolAttribute{
-				Computed:    true,
-				Description: `A bool representing whether or not access requests to the resource require an access ticket.`,
 			},
 			"resource_type": schema.StringAttribute{
 				PlanModifiers: []planmodifier.String{
@@ -1090,7 +1048,6 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				},
 			},
 			"visibility_group_ids": schema.ListAttribute{
-				Computed:    true,
 				Optional:    true,
 				ElementType: types.StringType,
 			},
@@ -1208,11 +1165,6 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
 		return
 	}
-	if res2.VisibilityInfo == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res2.RawResponse))
-		return
-	}
-	data.RefreshFromSharedVisibilityInfo(res2.VisibilityInfo)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	id1 := data.ID.ValueString()
 	request3 := operations.GetResourceIDRequest{
@@ -1360,11 +1312,6 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if res1.VisibilityInfo == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res1.RawResponse))
-		return
-	}
-	data.RefreshFromSharedVisibilityInfo(res1.VisibilityInfo)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	id1 := data.ID.ValueString()
 	request2 := operations.GetResourceIDRequest{

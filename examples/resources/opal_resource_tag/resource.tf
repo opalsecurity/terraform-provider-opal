@@ -1,4 +1,4 @@
 resource "opal_resource_tag" "my_resourcetag" {
-  resource_id = "e6059909-fc8f-41d1-a174-cc096b23d6f0"
-  tag_id      = "e45912c1-1553-4e8e-b4cf-56bf9ec06486"
+  resource_id = "242f2e30-05dd-4a20-81a0-d761a93988b1"
+  tag_id      = "ee194539-e33f-4dc8-8a5e-4af3e79e632e"
 }

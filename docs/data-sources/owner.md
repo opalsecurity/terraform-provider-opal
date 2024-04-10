@@ -14,7 +14,7 @@ Owner DataSource
 
 ```terraform
 data "opal_owner" "my_owner" {
-  id = "0e74e016-d64f-4c1e-86ed-0867ba256ac5"
+  id = "5cef6b7f-f3f7-4346-90ff-591a730bda33"
 }
 ```
 

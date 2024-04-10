@@ -24,7 +24,7 @@ resource "opal_resource" "my_resource" {
       auto_approval  = false
       condition = {
         group_ids = [
-          "8a4c7ec5-7b81-4617-a8cd-3687b3ad9a19",
+          "b32b9f65-3f84-49e2-bffa-28b2affecaf8",
         ]
         role_remote_ids = [
           "...",
@@ -40,7 +40,7 @@ resource "opal_resource" "my_resource" {
         {
           operator = "AND"
           owner_ids = [
-            "950966c2-bdfc-4b3e-b464-ae94bc89fbd0",
+            "fb82a285-fd0c-4387-b2b3-1cd922ce15f9",
           ]
           require_manager_approval = false
         },
@@ -51,6 +51,9 @@ resource "opal_resource" "my_resource" {
   require_mfa_to_connect = false
   resource_type          = "AWS_IAM_ROLE"
   visibility             = "GLOBAL"
+  visibility_group_ids = [
+    "66c2bdfc-b3e7-4464-ae94-bc89fbd03a92",
+  ]
 }
 ```
 
@@ -76,17 +79,8 @@ resource "opal_resource" "my_resource" {
 
 ### Read-Only
 
-- `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests to this resource.
 - `id` (String) The ID of the resource.
-- `is_requestable` (Boolean) A bool representing whether or not to allow access requests to this resource.
-- `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
 - `parent_resource_id` (String) The ID of the parent resource.
-- `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
-- `remote_resource_id` (String) The ID of the resource on the remote system.
-- `remote_resource_name` (String) The name of the resource on the remote system.
-- `request_template_id` (String) The ID of the associated request template.
-- `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this resource.
-- `require_support_ticket` (Boolean) A bool representing whether or not access requests to the resource require an access ticket.
 
 <a id="nestedatt--request_configurations"></a>
 ### Nested Schema for `request_configurations`

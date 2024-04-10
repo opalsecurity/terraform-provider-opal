@@ -12,7 +12,7 @@ generation:
   baseServerURL: ""
   flattenGlobalSecurity: true
 terraform:
-  version: 0.17.0
+  version: 0.17.1
   author: opalsecurity
   imports:
     option: openapi

@@ -14,7 +14,7 @@ GroupReviewersStagesList DataSource
 
 ```terraform
 data "opal_group_reviewers_stages_list" "my_groupreviewersstageslist" {
-  group_id = "b9509980-b3b3-46ed-a74e-ccd4d3dc96cf"
+  group_id = "48df6c7e-f0f7-414d-9610-63a76d6e7aa7"
 }
 ```
 

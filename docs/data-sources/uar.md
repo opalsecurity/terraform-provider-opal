@@ -14,7 +14,7 @@ Uar DataSource
 
 ```terraform
 data "opal_uar" "my_uar" {
-  uar_id = "f3cbe343-ad88-49ee-89ea-509815a625cc"
+  uar_id = "83615f59-182c-4e94-a61d-7e2dadcd9e9a"
 }
 ```
 

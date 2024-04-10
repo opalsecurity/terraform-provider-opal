@@ -287,14 +287,10 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(resp *shared.Resource)
 	if resp != nil {
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 		r.AppID = types.StringPointerValue(resp.AppID)
-		r.AutoApproval = types.BoolPointerValue(resp.AutoApproval)
 		r.Description = types.StringPointerValue(resp.Description)
 		r.ID = types.StringPointerValue(resp.ID)
-		r.IsRequestable = types.BoolPointerValue(resp.IsRequestable)
-		r.MaxDuration = types.Int64PointerValue(resp.MaxDuration)
 		r.Name = types.StringPointerValue(resp.Name)
 		r.ParentResourceID = types.StringPointerValue(resp.ParentResourceID)
-		r.RecommendedDuration = types.Int64PointerValue(resp.RecommendedDuration)
 		if resp.RemoteInfo == nil {
 			r.RemoteInfo = nil
 		} else {
@@ -465,9 +461,6 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(resp *shared.Resource)
 				r.RemoteInfo.TeleportRole.RoleName = types.StringValue(resp.RemoteInfo.TeleportRole.RoleName)
 			}
 		}
-		r.RemoteResourceID = types.StringPointerValue(resp.RemoteResourceID)
-		r.RemoteResourceName = types.StringPointerValue(resp.RemoteResourceName)
-		r.RequestTemplateID = types.StringPointerValue(resp.RequestTemplateID)
 		if len(r.RequestConfigurations) > len(resp.RequestConfigurations) {
 			r.RequestConfigurations = r.RequestConfigurations[:len(resp.RequestConfigurations)]
 		}
@@ -529,8 +522,6 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(resp *shared.Resource)
 				r.RequestConfigurations[requestConfigurationsCount].ReviewerStages = requestConfigurations1.ReviewerStages
 			}
 		}
-		r.RequireMfaToRequest = types.BoolPointerValue(resp.RequireMfaToRequest)
-		r.RequireSupportTicket = types.BoolPointerValue(resp.RequireSupportTicket)
 		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
 		r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
 		if resp.ResourceType != nil {
@@ -743,14 +734,4 @@ func (r *ResourceResourceModel) ToSharedVisibilityInfo() *shared.VisibilityInfo 
 		VisibilityGroupIds: visibilityGroupIds,
 	}
 	return &out
-}
-
-func (r *ResourceResourceModel) RefreshFromSharedVisibilityInfo(resp *shared.VisibilityInfo) {
-	if resp != nil {
-		r.Visibility = types.StringValue(string(resp.Visibility))
-		r.VisibilityGroupIds = []types.String{}
-		for _, v := range resp.VisibilityGroupIds {
-			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
-		}
-	}
 }

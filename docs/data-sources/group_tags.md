@@ -14,7 +14,7 @@ GroupTags DataSource
 
 ```terraform
 data "opal_group_tags" "my_grouptags" {
-  group_id = "985c85ff-2575-4a98-9c8e-2bbbd9fd7583"
+  group_id = "7d67425f-3719-4b93-8678-5f0be613b6b8"
 }
 ```
 

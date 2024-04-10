@@ -14,7 +14,7 @@ GroupResourceList DataSource
 
 ```terraform
 data "opal_group_resource_list" "my_groupresourcelist" {
-  group_id = "7d67425f-3719-4b93-8678-5f0be613b6b8"
+  group_id = "0c1ba08b-7f3a-43e6-96b6-f0baa3e2cf50"
 }
 ```
 

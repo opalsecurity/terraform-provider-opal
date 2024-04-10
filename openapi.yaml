@@ -1703,8 +1703,7 @@ paths:
                 "200":
                     content:
                         application/json:
-                            schema:
-                                $ref: "#/components/schemas/VisibilityInfo"
+                            x-speakeasy-ignore: true
                     description: The visibility info of this resource.
             security:
                 - BearerAuth: []
@@ -5557,11 +5556,6 @@ components:
                 app_id: b5a5ca27-0ea3-4d86-9199-2126d57d1fbd
                 description: This resource represents AWS IAM role "SupportUser".
                 admin_owner_id: 7c86c85d-0651-43e2-a748-d69d658418e8
-                remote_id: 318038399
-                remote_name: repo-name
-                max_duration: 120
-                require_manager_approval: False
-                require_support_ticket: False
                 parent_resource_id: f454d283-ca67-4a8a-bdbb-df212eca5345
             properties:
                 resource_id:
@@ -5594,10 +5588,12 @@ components:
                     description: The ID of the resource on the remote system.
                     example: 318038399
                     type: string
+                    x-speakeasy-ignore: true
                 remote_resource_name:
                     description: The name of the resource on the remote system.
                     example: repo-name
                     type: string
+                    x-speakeasy-ignore: true
                 resource_type:
                     $ref: "#/components/schemas/ResourceTypeEnum"
                     x-speakeasy-param-force-new: true
@@ -5605,10 +5601,12 @@ components:
                     description: The maximum duration for which the resource can be requested (in minutes).
                     type: integer
                     example: 120
+                    x-speakeasy-ignore: true
                 recommended_duration:
                     description: The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
                     type: integer
                     example: 120
+                    x-speakeasy-ignore: true
                 require_manager_approval:
                     description: A bool representing whether or not access requests to the resource require manager approval.
                     example: False
@@ -5619,6 +5617,7 @@ components:
                     description: A bool representing whether or not access requests to the resource require an access ticket.
                     example: False
                     type: boolean
+                    x-speakeasy-ignore: true
                 require_mfa_to_approve:
                     description: A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
                     example: False
@@ -5627,6 +5626,7 @@ components:
                     description: A bool representing whether or not to require MFA for requesting access to this resource.
                     example: False
                     type: boolean
+                    x-speakeasy-ignore: true
                 require_mfa_to_connect:
                     description: A bool representing whether or not to require MFA to connect to this resource.
                     example: False
@@ -5635,20 +5635,24 @@ components:
                     description: A bool representing whether or not to automatically approve requests to this resource.
                     example: False
                     type: boolean
+                    x-speakeasy-ignore: true
                 request_template_id:
                     description: The ID of the associated request template.
                     example: 06851574-e50d-40ca-8c78-f72ae6ab4304
                     format: uuid
                     type: string
+                    x-speakeasy-ignore: true
                 is_requestable:
                     description: A bool representing whether or not to allow access requests to this resource.
                     example: False
                     type: boolean
+                    x-speakeasy-ignore: true
                 parent_resource_id:
                     description: The ID of the parent resource.
                     example: 06851574-e50d-40ca-8c78-f72ae6ab4305
                     format: uuid
                     type: string
+                    x-speakeasy-param-suppress-computed-diff: true
                 configuration_template_id:
                     description: The ID of the associated configuration template.
                     example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -5714,16 +5718,10 @@ components:
                       name: my-mongo-db
                       description: This resource represents AWS IAM role "SupportUser".
                       admin_owner_id: 7c86c85d-0651-43e2-a748-d69d658418e8
-                      max_duration: 120
-                      require_manager_approval: False
-                      require_support_ticket: False
                     - resource_id: 99d0b81d-14be-4cf6-bd27-348b4af1d11b
                       name: Admin Role
                       description: This resource represents GCP project "app-demo".
                       admin_owner_id: 4220bc12-ab8a-4b5d-be7b-f6bbcf9159f3
-                      max_duration: 360
-                      require_manager_approval: False
-                      require_support_ticket: True
             properties:
                 resources:
                     description: A list of resources with information to update.
@@ -5743,9 +5741,6 @@ components:
                 name: my-mongo-db
                 description: This resource represents AWS IAM role "SupportUser".
                 admin_owner_id: 7c86c85d-0651-43e2-a748-d69d658418e8
-                max_duration: 120
-                require_manager_approval: False
-                require_support_ticket: False
             properties:
                 resource_id:
                     description: The ID of the resource.

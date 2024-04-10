@@ -14,7 +14,7 @@ ResourceVisibility DataSource
 
 ```terraform
 data "opal_resource_visibility" "my_resourcevisibility" {
-  id = "2b83615f-5918-42ce-94a6-1d7e2dadcd9e"
+  id = "6d892a3a-dd93-4e7f-8685-17a0d1d6c16b"
 }
 ```
 

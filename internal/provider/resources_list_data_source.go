@@ -97,10 +97,6 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 							Computed:    true,
 							Description: `The ID of the app.`,
 						},
-						"auto_approval": schema.BoolAttribute{
-							Computed:    true,
-							Description: `A bool representing whether or not to automatically approve requests to this resource.`,
-						},
 						"description": schema.StringAttribute{
 							Computed:    true,
 							Description: `A description of the resource.`,
@@ -109,14 +105,6 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 							Computed:    true,
 							Description: `The ID of the resource.`,
 						},
-						"is_requestable": schema.BoolAttribute{
-							Computed:    true,
-							Description: `A bool representing whether or not to allow access requests to this resource.`,
-						},
-						"max_duration": schema.Int64Attribute{
-							Computed:    true,
-							Description: `The maximum duration for which the resource can be requested (in minutes).`,
-						},
 						"name": schema.StringAttribute{
 							Computed:    true,
 							Description: `The name of the resource.`,
@@ -124,10 +112,6 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 						"parent_resource_id": schema.StringAttribute{
 							Computed:    true,
 							Description: `The ID of the parent resource.`,
-						},
-						"recommended_duration": schema.Int64Attribute{
-							Computed:    true,
-							Description: `The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.`,
 						},
 						"remote_info": schema.SingleNestedAttribute{
 							Computed: true,
@@ -445,14 +429,6 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 							},
 							Description: `Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields.`,
 						},
-						"remote_resource_id": schema.StringAttribute{
-							Computed:    true,
-							Description: `The ID of the resource on the remote system.`,
-						},
-						"remote_resource_name": schema.StringAttribute{
-							Computed:    true,
-							Description: `The name of the resource on the remote system.`,
-						},
 						"request_configurations": schema.ListNestedAttribute{
 							Computed: true,
 							NestedObject: schema.NestedAttributeObject{
@@ -528,10 +504,6 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 							},
 							Description: `A list of configurations for requests to this resource.`,
 						},
-						"request_template_id": schema.StringAttribute{
-							Computed:    true,
-							Description: `The ID of the associated request template.`,
-						},
 						"require_mfa_to_approve": schema.BoolAttribute{
 							Computed:    true,
 							Description: `A bool representing whether or not to require MFA for reviewers to approve requests for this resource.`,
@@ -539,14 +511,6 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 						"require_mfa_to_connect": schema.BoolAttribute{
 							Computed:    true,
 							Description: `A bool representing whether or not to require MFA to connect to this resource.`,
-						},
-						"require_mfa_to_request": schema.BoolAttribute{
-							Computed:    true,
-							Description: `A bool representing whether or not to require MFA for requesting access to this resource.`,
-						},
-						"require_support_ticket": schema.BoolAttribute{
-							Computed:    true,
-							Description: `A bool representing whether or not access requests to the resource require an access ticket.`,
 						},
 						"resource_type": schema.StringAttribute{
 							Computed:    true,
