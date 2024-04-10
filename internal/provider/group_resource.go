@@ -52,11 +52,11 @@ type GroupResourceModel struct {
 	GroupBindingID        types.String                                `tfsdk:"group_binding_id"`
 	GroupType             types.String                                `tfsdk:"group_type"`
 	ID                    types.String                                `tfsdk:"id"`
-	MessageChannels       tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
 	MessageChannelIds     []types.String                              `tfsdk:"message_channel_ids"`
+	MessageChannels       tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
 	Name                  types.String                                `tfsdk:"name"`
-	OncallSchedules       tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"oncall_schedules"`
 	OnCallScheduleIds     []types.String                              `tfsdk:"on_call_schedule_ids"`
+	OncallSchedules       tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"oncall_schedules"`
 	RemoteInfo            *tfTypes.GroupRemoteInfo                    `tfsdk:"remote_info"`
 	RemoteName            types.String                                `tfsdk:"remote_name"`
 	RequestConfigurations []tfTypes.RequestConfiguration              `tfsdk:"request_configurations"`
@@ -129,6 +129,10 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 				Description: `The ID of the group.`,
 			},
+			"message_channel_ids": schema.ListAttribute{
+				Required:    true,
+				ElementType: types.StringType,
+			},
 			"message_channels": schema.SingleNestedAttribute{
 				Computed: true,
 				PlanModifiers: []planmodifier.Object{
@@ -188,13 +192,13 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 				Description: `The audit and reviewer message channels attached to the group.`,
 			},
-			"message_channel_ids": schema.ListAttribute{
-				Required:    true,
-				ElementType: types.StringType,
-			},
 			"name": schema.StringAttribute{
 				Required:    true,
 				Description: `The name of the remote group.`,
+			},
+			"on_call_schedule_ids": schema.ListAttribute{
+				Required:    true,
+				ElementType: types.StringType,
 			},
 			"oncall_schedules": schema.SingleNestedAttribute{
 				Computed: true,
@@ -238,10 +242,6 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					},
 				},
 				Description: `The on call schedules attached to the group.`,
-			},
-			"on_call_schedule_ids": schema.ListAttribute{
-				Required:    true,
-				ElementType: types.StringType,
 			},
 			"remote_info": schema.SingleNestedAttribute{
 				Computed: true,
@@ -922,6 +922,10 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
+		return
+	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -945,6 +949,10 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 	}
 	if res1 == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
+		return
+	}
+	if res1.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res1.StatusCode != 200 {
@@ -972,6 +980,10 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res2))
 		return
 	}
+	if res2.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
+		return
+	}
 	if res2.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
 		return
@@ -994,6 +1006,10 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 	}
 	if res3 == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res3))
+		return
+	}
+	if res3.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res3.StatusCode != 200 {

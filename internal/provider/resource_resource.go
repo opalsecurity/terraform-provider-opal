@@ -57,12 +57,12 @@ type ResourceResourceModel struct {
 	RemoteInfo            *tfTypes.ResourceRemoteInfo    `tfsdk:"remote_info"`
 	RemoteResourceID      types.String                   `tfsdk:"remote_resource_id"`
 	RemoteResourceName    types.String                   `tfsdk:"remote_resource_name"`
-	RequestTemplateID     types.String                   `tfsdk:"request_template_id"`
 	RequestConfigurations []tfTypes.RequestConfiguration `tfsdk:"request_configurations"`
-	RequireMfaToRequest   types.Bool                     `tfsdk:"require_mfa_to_request"`
-	RequireSupportTicket  types.Bool                     `tfsdk:"require_support_ticket"`
+	RequestTemplateID     types.String                   `tfsdk:"request_template_id"`
 	RequireMfaToApprove   types.Bool                     `tfsdk:"require_mfa_to_approve"`
 	RequireMfaToConnect   types.Bool                     `tfsdk:"require_mfa_to_connect"`
+	RequireMfaToRequest   types.Bool                     `tfsdk:"require_mfa_to_request"`
+	RequireSupportTicket  types.Bool                     `tfsdk:"require_support_ticket"`
 	ResourceType          types.String                   `tfsdk:"resource_type"`
 	Visibility            types.String                   `tfsdk:"visibility"`
 	VisibilityGroupIds    []types.String                 `tfsdk:"visibility_group_ids"`
@@ -888,10 +888,6 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Computed:    true,
 				Description: `The name of the resource on the remote system.`,
 			},
-			"request_template_id": schema.StringAttribute{
-				Computed:    true,
-				Description: `The ID of the associated request template.`,
-			},
 			"request_configurations": schema.ListNestedAttribute{
 				Required: true,
 				NestedObject: schema.NestedAttributeObject{
@@ -1017,13 +1013,9 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 					custom_listvalidators.RequestConfigurations(),
 				},
 			},
-			"require_mfa_to_request": schema.BoolAttribute{
+			"request_template_id": schema.StringAttribute{
 				Computed:    true,
-				Description: `A bool representing whether or not to require MFA for requesting access to this resource.`,
-			},
-			"require_support_ticket": schema.BoolAttribute{
-				Computed:    true,
-				Description: `A bool representing whether or not access requests to the resource require an access ticket.`,
+				Description: `The ID of the associated request template.`,
 			},
 			"require_mfa_to_approve": schema.BoolAttribute{
 				Computed:    true,
@@ -1034,6 +1026,14 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Computed:    true,
 				Optional:    true,
 				Description: `A bool representing whether or not to require MFA to connect to this resource.`,
+			},
+			"require_mfa_to_request": schema.BoolAttribute{
+				Computed:    true,
+				Description: `A bool representing whether or not to require MFA for requesting access to this resource.`,
+			},
+			"require_support_ticket": schema.BoolAttribute{
+				Computed:    true,
+				Description: `A bool representing whether or not access requests to the resource require an access ticket.`,
 			},
 			"resource_type": schema.StringAttribute{
 				PlanModifiers: []planmodifier.String{
@@ -1277,6 +1277,10 @@ func (r *ResourceResource) Read(ctx context.Context, req resource.ReadRequest, r
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

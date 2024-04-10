@@ -30,8 +30,8 @@ type AppsDataSource struct {
 
 // AppsDataSourceModel describes the data model.
 type AppsDataSourceModel struct {
-	Apps          []tfTypes.App  `tfsdk:"apps"`
 	AppTypeFilter []types.String `tfsdk:"app_type_filter"`
+	Apps          []tfTypes.App  `tfsdk:"apps"`
 	OwnerFilter   types.String   `tfsdk:"owner_filter"`
 }
 
@@ -46,6 +46,11 @@ func (r *AppsDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 		MarkdownDescription: "Apps DataSource",
 
 		Attributes: map[string]schema.Attribute{
+			"app_type_filter": schema.ListAttribute{
+				Optional:    true,
+				ElementType: types.StringType,
+				Description: `A list of app types to filter by.`,
+			},
 			"apps": schema.ListNestedAttribute{
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
@@ -72,11 +77,6 @@ func (r *AppsDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 						},
 					},
 				},
-			},
-			"app_type_filter": schema.ListAttribute{
-				Optional:    true,
-				ElementType: types.StringType,
-				Description: `A list of app types to filter by.`,
 			},
 			"owner_filter": schema.StringAttribute{
 				Optional:    true,
@@ -148,6 +148,10 @@ func (r *AppsDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {
