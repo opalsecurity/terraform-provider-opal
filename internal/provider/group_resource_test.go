@@ -337,7 +337,6 @@ func TestAccGroup_RequestConfigurations(t *testing.T) {
 }
 
 func TestAccGroup_RemoteInfo(t *testing.T) {
-	t.Parallel()
 	baseName, resourceName := generateBaseNameAndResourceName()
 	config := generateSimpleOpalGroupConfig(baseName, baseName)
 	// Manually adding remote_info since there's too many options for remote_info
