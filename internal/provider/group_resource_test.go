@@ -33,7 +33,7 @@ func generateSimpleOpalGroupConfig(baseName string, resourceName string) OpalGro
 	return OpalGroupConfig{
 		ResourceName:       resourceName,
 		Name:               baseName,
-		Description:        "Test description",
+		Description:        "Test description 2",
 		AppID:              knownOpalAppID,
 		GroupType:          "OPAL_GROUP",
 		AdminOwnerID:       knownOpalAppAdminOwnerID,
