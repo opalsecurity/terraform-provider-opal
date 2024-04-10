@@ -48,7 +48,7 @@ func (r *ResourceTagsDataSource) Schema(ctx context.Context, req datasource.Sche
 				Required:    true,
 				Description: `The ID of the resource whose tags to return.`,
 			},
-			"tags": schema.ListNestedAttribute{
+			"tags": schema.SetNestedAttribute{
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

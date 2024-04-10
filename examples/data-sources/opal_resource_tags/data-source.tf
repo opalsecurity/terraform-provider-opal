@@ -1,3 +1,3 @@
 data "opal_resource_tags" "my_resourcetags" {
-  resource_id = "337bd569-600e-4d43-99a9-2039280c1b7e"
+  resource_id = "a3ac72a6-9898-45c2-8c74-d03f5dc7ff87"
 }

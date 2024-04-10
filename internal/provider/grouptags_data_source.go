@@ -48,7 +48,7 @@ func (r *GroupTagsDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Required:    true,
 				Description: `The ID of the group whose tags to return.`,
 			},
-			"tags": schema.ListNestedAttribute{
+			"tags": schema.SetNestedAttribute{
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

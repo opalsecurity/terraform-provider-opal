@@ -28,7 +28,7 @@ type Group struct {
 	// The name of the remote.
 	RemoteName *string `json:"remote_name,omitempty"`
 	// A list of request configurations for this group.
-	RequestConfigurations []RequestConfiguration `json:"request_configurations,omitempty"`
+	RequestConfigurations *[]RequestConfiguration `json:"request_configurations,omitempty"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this group.
 	RequireMfaToApprove *bool `json:"require_mfa_to_approve,omitempty"`
 }
@@ -96,7 +96,7 @@ func (o *Group) GetRemoteName() *string {
 	return o.RemoteName
 }
 
-func (o *Group) GetRequestConfigurations() []RequestConfiguration {
+func (o *Group) GetRequestConfigurations() *[]RequestConfiguration {
 	if o == nil {
 		return nil
 	}

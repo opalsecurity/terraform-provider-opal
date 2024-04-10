@@ -426,7 +426,7 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Computed:    true,
 				Description: `The name of the resource on the remote system.`,
 			},
-			"request_configurations": schema.ListNestedAttribute{
+			"request_configurations": schema.SetNestedAttribute{
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

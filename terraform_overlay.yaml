@@ -2,6 +2,7 @@ overlay: 1.0.0
 info:
   title: Overlay ./openapi_original.yaml => ./openapi.yaml
   version: 0.0.0
+extends: file:///Users/andrewsy/src/terraform-provider-opal/openapi_original.yaml
 actions:
   - target: $["servers"][0]
     update:
@@ -800,6 +801,9 @@ actions:
   - target: $["components"]["schemas"]["UserList"]
     update:
       x-speakeasy-entity: OwnerUsers
+  - target: $["components"]["schemas"]["UserIDList"]["properties"]["user_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["UserIDList"]
     update:
       x-speakeasy-entity: Owner
@@ -865,6 +869,9 @@ actions:
   - target: $["components"]["schemas"]["Group"]["properties"]["is_requestable"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["request_configurations"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["Group"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
@@ -933,6 +940,9 @@ actions:
       x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_configurations"]
     update:
+      format: set
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_configurations"]
+    update:
       x-speakeasy-plan-validators: RequestConfigurations
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_configuration_list"]
     update:
@@ -970,14 +980,23 @@ actions:
     update:
       x-speakeasy-plan-validators:
         - VisibilityInfo
+  - target: $["components"]["schemas"]["MessageChannelIDList"]["properties"]["message_channel_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["MessageChannelIDList"]
     update:
       x-speakeasy-entity:
         - GroupsMessageChannels
         - ResourceMessageChannels
+  - target: $["components"]["schemas"]["OnCallScheduleIDList"]["properties"]["on_call_schedule_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["OnCallScheduleIDList"]
     update:
       x-speakeasy-entity: GroupOnCallSchedule
+  - target: $["components"]["schemas"]["ReviewerIDList"]["properties"]["reviewer_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["ReviewerIDList"]
     update:
       x-speakeasy-entity:
@@ -1272,6 +1291,9 @@ actions:
   - target: $["components"]["schemas"]["Resource"]["properties"]["configuration_template_id"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["request_configurations"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["Resource"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
@@ -1323,6 +1345,9 @@ actions:
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_configurations"]
     update:
       x-speakeasy-plan-validators: RequestConfigurations
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_configurations"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
@@ -1335,6 +1360,9 @@ actions:
   - target: $["components"]["schemas"]["PaginatedTagsList"]
     update:
       x-speakeasy-entity: Tags_list
+  - target: $["components"]["schemas"]["TagsList"]["properties"]["tags"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["TagsList"]
     update:
       x-speakeasy-entity:
@@ -1370,6 +1398,9 @@ actions:
       x-speakeasy-entity:
         - Owner
         - OwnerFromName
+  - target: $["components"]["schemas"]["CreateOwnerInfo"]["properties"]["user_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["CreateOwnerInfo"]
     update:
       x-speakeasy-entity: Owner

@@ -36,7 +36,7 @@ type Resource struct {
 	// The name of the resource on the remote system.
 	RemoteResourceName *string `json:"remote_resource_name,omitempty"`
 	// A list of configurations for requests to this resource.
-	RequestConfigurations []RequestConfiguration `json:"request_configurations,omitempty"`
+	RequestConfigurations *[]RequestConfiguration `json:"request_configurations,omitempty"`
 	// The ID of the associated request template.
 	RequestTemplateID *string `json:"request_template_id,omitempty"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
@@ -142,7 +142,7 @@ func (o *Resource) GetRemoteResourceName() *string {
 	return o.RemoteResourceName
 }
 
-func (o *Resource) GetRequestConfigurations() []RequestConfiguration {
+func (o *Resource) GetRequestConfigurations() *[]RequestConfiguration {
 	if o == nil {
 		return nil
 	}

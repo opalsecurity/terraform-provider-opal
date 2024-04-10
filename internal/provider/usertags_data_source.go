@@ -44,7 +44,7 @@ func (r *UserTagsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 		MarkdownDescription: "UserTags DataSource",
 
 		Attributes: map[string]schema.Attribute{
-			"tags": schema.ListNestedAttribute{
+			"tags": schema.SetNestedAttribute{
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

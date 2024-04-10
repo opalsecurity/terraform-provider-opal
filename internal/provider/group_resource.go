@@ -26,8 +26,8 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/boolvalidators"
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/internal/validators/int64validators"
-	custom_listvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/listvalidators"
 	speakeasy_listvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/listvalidators"
+	custom_setvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/setvalidators"
 	speakeasy_stringvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/stringvalidators"
 )
 
@@ -129,7 +129,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 				Description: `The ID of the group.`,
 			},
-			"message_channel_ids": schema.ListAttribute{
+			"message_channel_ids": schema.SetAttribute{
 				Required:    true,
 				ElementType: types.StringType,
 			},
@@ -196,7 +196,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Required:    true,
 				Description: `The name of the remote group.`,
 			},
-			"on_call_schedule_ids": schema.ListAttribute{
+			"on_call_schedule_ids": schema.SetAttribute{
 				Required:    true,
 				ElementType: types.StringType,
 			},
@@ -468,7 +468,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 				Description: `The name of the remote.`,
 			},
-			"request_configurations": schema.ListNestedAttribute{
+			"request_configurations": schema.SetNestedAttribute{
 				Required: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -589,8 +589,8 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					},
 				},
 				Description: `The request configuration list of the configuration template. If not provided, the default request configuration will be used.`,
-				Validators: []validator.List{
-					custom_listvalidators.RequestConfigurations(),
+				Validators: []validator.Set{
+					custom_setvalidators.RequestConfigurations(),
 				},
 			},
 			"require_mfa_to_approve": schema.BoolAttribute{

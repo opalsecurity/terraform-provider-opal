@@ -197,7 +197,7 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							Computed:    true,
 							Description: `The name of the remote.`,
 						},
-						"request_configurations": schema.ListNestedAttribute{
+						"request_configurations": schema.SetNestedAttribute{
 							Computed: true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
