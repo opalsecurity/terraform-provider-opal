@@ -14,8 +14,8 @@ User DataSource
 
 ```terraform
 data "opal_user" "my_user" {
-  email = "Dan32@yahoo.com"
-  id    = "f59182ce-94a6-41d7-a2da-dcd9e9ac2563"
+  email = "Sid_Paucek@gmail.com"
+  id    = "b435d404-f97f-41fa-9d5b-eb08764d4cef"
 }
 ```
 
