@@ -4,5 +4,5 @@ data "opal_group_list" "my_group_list" {
   ]
   group_name        = "...my_group_name..."
   group_type_filter = "OPAL_GROUP"
-  page_size         = 5
+  page_size         = 9
 }

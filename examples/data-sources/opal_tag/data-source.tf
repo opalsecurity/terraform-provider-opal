@@ -1,3 +1,3 @@
 data "opal_tag" "my_tag" {
-  id = "9d146487-1c94-462c-86fc-90b6e9f803e4"
+  id = "337bd569-600e-4d43-99a9-2039280c1b7e"
 }

@@ -1,12 +1,21 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
+<<<<<<< HEAD
   docChecksum: d70ce3912833731a29b768ef9c6f3089
   docVersion: "1.0"
   speakeasyVersion: 1.246.1
   generationVersion: 2.302.1
   releaseVersion: 0.17.0
   configChecksum: 0fc24a6ef059f58ec509584af17468d4
+=======
+  docChecksum: dd6a51af2e68bf69aa23af12a4c9c6e2
+  docVersion: "1.0"
+  speakeasyVersion: 1.228.1
+  generationVersion: 2.292.0
+  releaseVersion: 0.16.4
+  configChecksum: c3cc629d20fc09e5248581804df68d8d
+>>>>>>> 62e2f5c (set idlists and req configs to sets)
   repoURL: https://github.com/speakeasy-sdks/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -14,12 +23,16 @@ features:
   terraform:
     additionalProperties: 0.1.2
     constsAndDefaults: 0.1.4
+<<<<<<< HEAD
     core: 3.17.3
+=======
+    core: 3.12.1
+>>>>>>> 62e2f5c (set idlists and req configs to sets)
     deprecations: 2.81.1
     globalSecurity: 2.81.6
     globalServerURLs: 2.82.1
     ignores: 2.81.1
-    nameOverrides: 2.81.2
+    nameOverrides: 2.81.1
     retries: 2.81.1
     serverIDs: 2.81.1
     unions: 2.81.12

@@ -3484,6 +3484,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
             type: object
             required:
                 - user_ids
@@ -3933,6 +3934,7 @@ components:
                     items:
                         $ref: "#/components/schemas/RequestConfiguration"
                     description: The request configuration list of the configuration template. If not provided, the default request configuration will be used.
+                    format: set
                     x-speakeasy-plan-validators: RequestConfigurations
                 request_configuration_list:
                     description: The request configuration list of the configuration template. If not provided, the default request configuration will be used. Deprecated in favor of `request_configurations`.
@@ -4172,6 +4174,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
             type: object
             required:
                 - message_channel_ids
@@ -4190,6 +4193,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
             type: object
             required:
                 - on_call_schedule_ids
@@ -4206,6 +4210,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
             type: object
             required:
                 - reviewer_ids
@@ -5843,6 +5848,7 @@ components:
                         $ref: "#/components/schemas/RequestConfiguration"
                     description: A list of configurations for requests to this resource. If not provided, the default request configuration will be used.
                     x-speakeasy-plan-validators: RequestConfigurations
+                    format: set
                 request_configuration_list:
                     description: A list of configurations for requests to this resource. If not provided, the default request configuration will be used. Deprecated in favor of `request_configurations`.
                     $ref: "#/components/schemas/CreateRequestConfigurationInfoList"
@@ -5948,6 +5954,7 @@ components:
                     items:
                         $ref: "#/components/schemas/Tag"
                     type: array
+                    format: set
             required:
                 - tags
             type: object

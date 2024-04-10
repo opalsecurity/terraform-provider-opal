@@ -2,6 +2,10 @@ overlay: 1.0.0
 info:
   title: Overlay ./openapi_original.yaml => ./openapi.yaml
   version: 0.0.0
+<<<<<<< HEAD
+=======
+extends: file:///Users/andrewsy/src/terraform-provider-opal/openapi_original.yaml
+>>>>>>> 62e2f5c (set idlists and req configs to sets)
 actions:
   - target: $["servers"][0]
     update:
@@ -800,6 +804,9 @@ actions:
   - target: $["components"]["schemas"]["UserList"]
     update:
       x-speakeasy-entity: OwnerUsers
+  - target: $["components"]["schemas"]["UserIDList"]["properties"]["user_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["UserIDList"]
     update:
       x-speakeasy-entity: Owner
@@ -933,6 +940,9 @@ actions:
       x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_configurations"]
     update:
+      format: set
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_configurations"]
+    update:
       x-speakeasy-plan-validators: RequestConfigurations
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_configuration_list"]
     update:
@@ -970,14 +980,23 @@ actions:
     update:
       x-speakeasy-plan-validators:
         - VisibilityInfo
+  - target: $["components"]["schemas"]["MessageChannelIDList"]["properties"]["message_channel_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["MessageChannelIDList"]
     update:
       x-speakeasy-entity:
         - GroupsMessageChannels
         - ResourceMessageChannels
+  - target: $["components"]["schemas"]["OnCallScheduleIDList"]["properties"]["on_call_schedule_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["OnCallScheduleIDList"]
     update:
       x-speakeasy-entity: GroupOnCallSchedule
+  - target: $["components"]["schemas"]["ReviewerIDList"]["properties"]["reviewer_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["ReviewerIDList"]
     update:
       x-speakeasy-entity:
@@ -1323,9 +1342,15 @@ actions:
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_configurations"]
     update:
       x-speakeasy-plan-validators: RequestConfigurations
+<<<<<<< HEAD
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
+=======
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_configurations"]
+    update:
+      format: set
+>>>>>>> 62e2f5c (set idlists and req configs to sets)
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["required"]
     update:
       - request_configurations
@@ -1335,6 +1360,9 @@ actions:
   - target: $["components"]["schemas"]["PaginatedTagsList"]
     update:
       x-speakeasy-entity: Tags_list
+  - target: $["components"]["schemas"]["TagsList"]["properties"]["tags"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["TagsList"]
     update:
       x-speakeasy-entity:

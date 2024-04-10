@@ -15,8 +15,8 @@ ResourcesList DataSource
 ```terraform
 data "opal_resources_list" "my_resources_list" {
   cursor             = "...my_cursor..."
-  page_size          = 0
-  parent_resource_id = "4d5afe1a-d084-4b03-a516-169f5fefbfba"
+  page_size          = 2
+  parent_resource_id = "84eea2a3-bbb6-402f-9dbd-edaf753fdfec"
   resource_ids = [
     "1b978423-db0a-4037-a4cf-f79c60cb67b3",
   ]

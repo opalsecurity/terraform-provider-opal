@@ -14,7 +14,7 @@ ResourceMessageChannelList DataSource
 
 ```terraform
 data "opal_resource_message_channel_list" "my_resourcemessagechannellist" {
-  resource_id = "c263d66a-3b2a-4081-9dc2-811838b263dd"
+  resource_id = "d64fc1e4-6ed0-4867-ba25-6ac5d88fc9db"
 }
 ```
 
