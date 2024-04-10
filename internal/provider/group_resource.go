@@ -5,7 +5,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -18,7 +17,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	speakeasy_boolplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/boolplanmodifier"
-	speakeasy_int64planmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/int64planmodifier"
 	speakeasy_listplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/listplanmodifier"
 	speakeasy_objectplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/objectplanmodifier"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
@@ -48,33 +46,23 @@ type GroupResource struct {
 
 // GroupResourceModel describes the resource data model.
 type GroupResourceModel struct {
-	AdminOwnerID                 types.String                                `tfsdk:"admin_owner_id"`
-	AppID                        types.String                                `tfsdk:"app_id"`
-	AutoApproval                 types.Bool                                  `tfsdk:"auto_approval"`
-	Description                  types.String                                `tfsdk:"description"`
-	GroupBindingID               types.String                                `tfsdk:"group_binding_id"`
-	GroupType                    types.String                                `tfsdk:"group_type"`
-	ID                           types.String                                `tfsdk:"id"`
-	IsRequestable                types.Bool                                  `tfsdk:"is_requestable"`
-	MaxDuration                  types.Int64                                 `tfsdk:"max_duration"`
-	MessageChannels              tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
-	MessageChannelIds            []types.String                              `tfsdk:"message_channel_ids"`
-	Name                         types.String                                `tfsdk:"name"`
-	OncallSchedules              tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"oncall_schedules"`
-	OnCallScheduleIds            []types.String                              `tfsdk:"on_call_schedule_ids"`
-	RecommendedDuration          types.Int64                                 `tfsdk:"recommended_duration"`
-	RemoteID                     types.String                                `tfsdk:"remote_id"`
-	RemoteInfo                   *tfTypes.GroupRemoteInfo                    `tfsdk:"remote_info"`
-	RemoteName                   types.String                                `tfsdk:"remote_name"`
-	RequestConfigurationListData []tfTypes.RequestConfiguration              `tfsdk:"request_configuration_list_data"`
-	RequestTemplateID            types.String                                `tfsdk:"request_template_id"`
-	RequestConfigurations        []tfTypes.RequestConfiguration              `tfsdk:"request_configurations"`
-	RequireMfaToRequest          types.Bool                                  `tfsdk:"require_mfa_to_request"`
-	RequireSupportTicket         types.Bool                                  `tfsdk:"require_support_ticket"`
-	RequireMfaToApprove          types.Bool                                  `tfsdk:"require_mfa_to_approve"`
-	Visibility                   types.String                                `tfsdk:"visibility"`
-	VisibilityInfo               tfTypes.VisibilityInfo                      `tfsdk:"visibility_info"`
-	VisibilityGroupIds           []types.String                              `tfsdk:"visibility_group_ids"`
+	AdminOwnerID          types.String                                `tfsdk:"admin_owner_id"`
+	AppID                 types.String                                `tfsdk:"app_id"`
+	Description           types.String                                `tfsdk:"description"`
+	GroupBindingID        types.String                                `tfsdk:"group_binding_id"`
+	GroupType             types.String                                `tfsdk:"group_type"`
+	ID                    types.String                                `tfsdk:"id"`
+	MessageChannelIds     []types.String                              `tfsdk:"message_channel_ids"`
+	MessageChannels       tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
+	Name                  types.String                                `tfsdk:"name"`
+	OnCallScheduleIds     []types.String                              `tfsdk:"on_call_schedule_ids"`
+	OncallSchedules       tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"oncall_schedules"`
+	RemoteInfo            *tfTypes.GroupRemoteInfo                    `tfsdk:"remote_info"`
+	RemoteName            types.String                                `tfsdk:"remote_name"`
+	RequestConfigurations []tfTypes.RequestConfiguration              `tfsdk:"request_configurations"`
+	RequireMfaToApprove   types.Bool                                  `tfsdk:"require_mfa_to_approve"`
+	Visibility            types.String                                `tfsdk:"visibility"`
+	VisibilityGroupIds    []types.String                              `tfsdk:"visibility_group_ids"`
 }
 
 func (r *GroupResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -99,17 +87,16 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Required:    true,
 				Description: `The ID of the app for the group. Requires replacement if changed. `,
 			},
-			"auto_approval": schema.BoolAttribute{
-				Computed:    true,
-				Description: `A bool representing whether or not to automatically approve requests to this group.`,
-			},
 			"description": schema.StringAttribute{
 				Computed:    true,
 				Optional:    true,
 				Description: `A description of the remote group.`,
 			},
 			"group_binding_id": schema.StringAttribute{
-				Computed:    true,
+				Computed: true,
+				PlanModifiers: []planmodifier.String{
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
 				Description: `The ID of the associated group binding.`,
 			},
 			"group_type": schema.StringAttribute{
@@ -142,19 +129,21 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 				Description: `The ID of the group.`,
 			},
-			"is_requestable": schema.BoolAttribute{
-				Computed:    true,
-				Description: `A bool representing whether or not to allow access requests to this group.`,
-			},
-			"max_duration": schema.Int64Attribute{
-				Computed:    true,
-				Description: `The maximum duration for which the group can be requested (in minutes).`,
+			"message_channel_ids": schema.ListAttribute{
+				Required:    true,
+				ElementType: types.StringType,
 			},
 			"message_channels": schema.SingleNestedAttribute{
 				Computed: true,
+				PlanModifiers: []planmodifier.Object{
+					speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+				},
 				Attributes: map[string]schema.Attribute{
 					"channels": schema.ListNestedAttribute{
 						Computed: true,
+						PlanModifiers: []planmodifier.List{
+							speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
+						},
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{
 								"id": schema.StringAttribute{
@@ -165,11 +154,17 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 									Description: `The ID of the message channel.`,
 								},
 								"is_private": schema.BoolAttribute{
-									Computed:    true,
+									Computed: true,
+									PlanModifiers: []planmodifier.Bool{
+										speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+									},
 									Description: `A bool representing whether or not the message channel is private.`,
 								},
 								"name": schema.StringAttribute{
-									Computed:    true,
+									Computed: true,
+									PlanModifiers: []planmodifier.String{
+										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+									},
 									Description: `The name of the message channel.`,
 								},
 								"remote_id": schema.StringAttribute{
@@ -180,7 +175,10 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 									Description: `The remote ID of the message channel`,
 								},
 								"third_party_provider": schema.StringAttribute{
-									Computed:    true,
+									Computed: true,
+									PlanModifiers: []planmodifier.String{
+										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+									},
 									Description: `The third party provider of the message channel. must be one of ["SLACK"]`,
 									Validators: []validator.String{
 										stringvalidator.OneOf(
@@ -194,13 +192,13 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 				Description: `The audit and reviewer message channels attached to the group.`,
 			},
-			"message_channel_ids": schema.ListAttribute{
-				Required:    true,
-				ElementType: types.StringType,
-			},
 			"name": schema.StringAttribute{
 				Required:    true,
 				Description: `The name of the remote group.`,
+			},
+			"on_call_schedule_ids": schema.ListAttribute{
+				Required:    true,
+				ElementType: types.StringType,
 			},
 			"oncall_schedules": schema.SingleNestedAttribute{
 				Computed: true,
@@ -244,18 +242,6 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					},
 				},
 				Description: `The on call schedules attached to the group.`,
-			},
-			"on_call_schedule_ids": schema.ListAttribute{
-				Required:    true,
-				ElementType: types.StringType,
-			},
-			"recommended_duration": schema.Int64Attribute{
-				Computed:    true,
-				Description: `The recommended duration for which the group should be requested (in minutes). -1 represents an indefinite duration.`,
-			},
-			"remote_id": schema.StringAttribute{
-				Computed:    true,
-				Description: `The ID of the remote.`,
 			},
 			"remote_info": schema.SingleNestedAttribute{
 				Computed: true,
@@ -476,144 +462,11 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Description: `Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed. `,
 			},
 			"remote_name": schema.StringAttribute{
-				Computed:    true,
-				Description: `The name of the remote.`,
-			},
-			"request_configuration_list_data": schema.ListNestedAttribute{
 				Computed: true,
-				PlanModifiers: []planmodifier.List{
-					speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
+				PlanModifiers: []planmodifier.String{
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"allow_requests": schema.BoolAttribute{
-							Computed: true,
-							PlanModifiers: []planmodifier.Bool{
-								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
-							},
-							Description: `A bool representing whether or not to allow requests for this resource.`,
-						},
-						"auto_approval": schema.BoolAttribute{
-							Computed: true,
-							PlanModifiers: []planmodifier.Bool{
-								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
-							},
-							Description: `A bool representing whether or not to automatically approve requests for this resource.`,
-						},
-						"condition": schema.SingleNestedAttribute{
-							Computed: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
-							},
-							Attributes: map[string]schema.Attribute{
-								"group_ids": schema.ListAttribute{
-									Computed: true,
-									PlanModifiers: []planmodifier.List{
-										speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
-									},
-									ElementType: types.StringType,
-									Description: `The list of group IDs to match.`,
-								},
-								"role_remote_ids": schema.ListAttribute{
-									Computed: true,
-									PlanModifiers: []planmodifier.List{
-										speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
-									},
-									ElementType: types.StringType,
-									Description: `The list of role remote IDs to match.`,
-								},
-							},
-						},
-						"max_duration": schema.Int64Attribute{
-							Computed: true,
-							PlanModifiers: []planmodifier.Int64{
-								speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
-							},
-							Description: `The maximum duration for which the resource can be requested (in minutes).`,
-						},
-						"priority": schema.Int64Attribute{
-							Computed: true,
-							PlanModifiers: []planmodifier.Int64{
-								speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
-							},
-							Description: `The priority of the request configuration.`,
-						},
-						"recommended_duration": schema.Int64Attribute{
-							Computed: true,
-							PlanModifiers: []planmodifier.Int64{
-								speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
-							},
-							Description: `The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.`,
-						},
-						"request_template_id": schema.StringAttribute{
-							Computed: true,
-							PlanModifiers: []planmodifier.String{
-								speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-							},
-							Description: `The ID of the associated request template.`,
-						},
-						"require_mfa_to_request": schema.BoolAttribute{
-							Computed: true,
-							PlanModifiers: []planmodifier.Bool{
-								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
-							},
-							Description: `A bool representing whether or not to require MFA for requesting access to this resource.`,
-						},
-						"require_support_ticket": schema.BoolAttribute{
-							Computed: true,
-							PlanModifiers: []planmodifier.Bool{
-								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
-							},
-							Description: `A bool representing whether or not access requests to the resource require an access ticket.`,
-						},
-						"reviewer_stages": schema.ListNestedAttribute{
-							Computed: true,
-							PlanModifiers: []planmodifier.List{
-								speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
-							},
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{
-									"operator": schema.StringAttribute{
-										Computed: true,
-										PlanModifiers: []planmodifier.String{
-											speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-										},
-										Description: `The operator of the reviewer stage. must be one of ["AND", "OR"]`,
-										Validators: []validator.String{
-											stringvalidator.OneOf(
-												"AND",
-												"OR",
-											),
-										},
-									},
-									"owner_ids": schema.ListAttribute{
-										Computed: true,
-										PlanModifiers: []planmodifier.List{
-											speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
-										},
-										ElementType: types.StringType,
-									},
-									"require_manager_approval": schema.BoolAttribute{
-										Computed: true,
-										PlanModifiers: []planmodifier.Bool{
-											speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
-										},
-										Description: `Whether this reviewer stage should require manager approval.`,
-									},
-								},
-							},
-							Description: `The list of reviewer stages for the request configuration.`,
-						},
-					},
-				},
-				Description: `A list of request configurations for this group. Deprecated in favor of ` + "`" + `request_configurations` + "`" + `.`,
-				Validators: []validator.List{
-					listvalidator.SizeAtLeast(1),
-				},
-			},
-			"request_template_id": schema.StringAttribute{
-				Computed:    true,
-				Description: `The ID of the associated request template.`,
+				Description: `The name of the remote.`,
 			},
 			"request_configurations": schema.ListNestedAttribute{
 				Required: true,
@@ -740,14 +593,6 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					custom_listvalidators.RequestConfigurations(),
 				},
 			},
-			"require_mfa_to_request": schema.BoolAttribute{
-				Computed:    true,
-				Description: `A bool representing whether or not to require MFA for requesting access to this group.`,
-			},
-			"require_support_ticket": schema.BoolAttribute{
-				Computed:    true,
-				Description: `A bool representing whether or not access requests to the group require an access ticket.`,
-			},
 			"require_mfa_to_approve": schema.BoolAttribute{
 				Computed:    true,
 				Optional:    true,
@@ -763,27 +608,8 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					),
 				},
 			},
-			"visibility_info": schema.SingleNestedAttribute{
-				Computed: true,
-				Attributes: map[string]schema.Attribute{
-					"visibility": schema.StringAttribute{
-						Computed:    true,
-						Description: `The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]`,
-						Validators: []validator.String{
-							stringvalidator.OneOf(
-								"GLOBAL",
-								"LIMITED",
-							),
-						},
-					},
-					"visibility_group_ids": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-				},
-				Description: `Visibility infomation of an entity.`,
-			},
 			"visibility_group_ids": schema.ListAttribute{
+				Computed:    true,
 				Optional:    true,
 				ElementType: types.StringType,
 			},
@@ -1096,6 +922,10 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
+		return
+	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -1119,6 +949,10 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 	}
 	if res1 == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
+		return
+	}
+	if res1.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res1.StatusCode != 200 {
@@ -1146,6 +980,10 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res2))
 		return
 	}
+	if res2.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
+		return
+	}
 	if res2.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
 		return
@@ -1168,6 +1006,10 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 	}
 	if res3 == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res3))
+		return
+	}
+	if res3.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res3.StatusCode != 200 {

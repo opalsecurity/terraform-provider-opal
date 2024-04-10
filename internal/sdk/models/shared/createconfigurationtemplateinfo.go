@@ -19,25 +19,6 @@ type CreateConfigurationTemplateInfo struct {
 	MemberOncallScheduleIds []string `json:"member_oncall_schedule_ids,omitempty"`
 	// The name of the configuration template.
 	Name string `json:"name"`
-	// # CreateRequestConfigurationInfoList Object
-	// ### Description
-	// The `CreateRequestConfigurationInfoList` object is used as an input to the CreateRequestConfigurations API.
-	//
-	// ### Formatting Requirements
-	// The `CreateRequestConfigurationInfoList` object must contain a list of `RequestConfiguration` objects.
-	// Exactly one default `RequestConfiguration` must be provided.  A default `RequestConfiguration` is one with a `condition` of `null`
-	// and a `priority` of `0`.  The default `RequestConfiguration` will be used when no other `RequestConfiguration` matches the request.
-	//
-	// Only one `RequestConfiguration` may be provided for each priority, and the priorities must be contiguous.  For example, if there are
-	// two `RequestConfigurations` with priorities 0 and 2, there must be a `RequestConfiguration` with priority 1.
-	//
-	// To use the `condition` field, the `condition` must be a valid JSON object.
-	//
-	// The `condition` must be a JSON object with the key `group_ids` (more options may be added in the future), whose value is a list of
-	// group IDs.
-	// The `condition` will match if the user requesting access is a member of any of the groups in the list. Currently, we only support
-	// using a single group as a condition.
-	RequestConfigurationList *CreateRequestConfigurationInfoList `json:"request_configuration_list,omitempty"`
 	// The request configuration list of the configuration template. If not provided, the default request configuration will be used.
 	RequestConfigurations []RequestConfiguration `json:"request_configurations,omitempty"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template.
@@ -81,13 +62,6 @@ func (o *CreateConfigurationTemplateInfo) GetName() string {
 		return ""
 	}
 	return o.Name
-}
-
-func (o *CreateConfigurationTemplateInfo) GetRequestConfigurationList() *CreateRequestConfigurationInfoList {
-	if o == nil {
-		return nil
-	}
-	return o.RequestConfigurationList
 }
 
 func (o *CreateConfigurationTemplateInfo) GetRequestConfigurations() []RequestConfiguration {

@@ -35,8 +35,8 @@ type UarDataSourceModel struct {
 	SelfReviewAllowed                  types.Bool        `tfsdk:"self_review_allowed"`
 	SendReviewerAssignmentNotification types.Bool        `tfsdk:"send_reviewer_assignment_notification"`
 	TimeZone                           types.String      `tfsdk:"time_zone"`
-	UarScope                           *tfTypes.UARScope `tfsdk:"uar_scope"`
 	UarID                              types.String      `tfsdk:"uar_id"`
+	UarScope                           *tfTypes.UARScope `tfsdk:"uar_scope"`
 }
 
 // Metadata returns the data source type name.
@@ -74,6 +74,10 @@ func (r *UarDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 				Computed:    true,
 				Description: `The time zone name (as defined by the IANA Time Zone database) used in the access review deadline and exported audit report. Default is America/Los_Angeles.`,
 			},
+			"uar_id": schema.StringAttribute{
+				Required:    true,
+				Description: `The ID of the UAR.`,
+			},
 			"uar_scope": schema.SingleNestedAttribute{
 				Computed: true,
 				Attributes: map[string]schema.Attribute{
@@ -105,10 +109,6 @@ func (r *UarDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 					},
 				},
 				Description: `If set, the access review will only contain resources and groups that match at least one of the filters in scope.`,
-			},
-			"uar_id": schema.StringAttribute{
-				Required:    true,
-				Description: `The ID of the UAR.`,
 			},
 		},
 	}
@@ -166,6 +166,10 @@ func (r *UarDataSource) Read(ctx context.Context, req datasource.ReadRequest, re
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

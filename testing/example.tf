@@ -135,19 +135,33 @@ resource "opal_group" "okta" {
 
 resource "opal_group" "foobarbaz" {
   name = "foobarbaz"
+  description = ""
   app_id = data.opal_app.okta.id
   group_type = "OKTA_GROUP"
   admin_owner_id = opal_owner.security.id
-  message_channel_ids = [] # [opal_message_channel.my_messagechannel.id]
+  message_channel_ids = [opal_message_channel.my_messagechannel.id]
   on_call_schedule_ids = []
-  visibility = "GLOBAL"
+  visibility = "LIMITED"
   visibility_group_ids = []
   remote_info = {
     okta_group = {
       group_id = "dummy value #2"
     }
   }
-  request_configurations=[]
+  require_mfa_to_approve = false
+  request_configurations=[
+    {
+      allow_requests= true
+      auto_approval = true
+      max_duration = 10
+      priority = 0
+      recommended_duration = 15
+      request_template_id = "57fb47fa-afe3-4a4d-9d40-a644ca8279d3"
+      require_mfa_to_request =true
+      require_support_ticket = true
+      reviewer_stages = []
+    }
+  ]
 }
 
 resource "opal_resource" "another_one" {

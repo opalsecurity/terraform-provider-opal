@@ -29,29 +29,21 @@ type GroupDataSource struct {
 
 // GroupDataSourceModel describes the data model.
 type GroupDataSourceModel struct {
-	AdminOwnerID                 types.String                                `tfsdk:"admin_owner_id"`
-	AppID                        types.String                                `tfsdk:"app_id"`
-	AutoApproval                 types.Bool                                  `tfsdk:"auto_approval"`
-	Description                  types.String                                `tfsdk:"description"`
-	GroupBindingID               types.String                                `tfsdk:"group_binding_id"`
-	GroupType                    types.String                                `tfsdk:"group_type"`
-	ID                           types.String                                `tfsdk:"id"`
-	IsRequestable                types.Bool                                  `tfsdk:"is_requestable"`
-	MaxDuration                  types.Int64                                 `tfsdk:"max_duration"`
-	MessageChannels              tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
-	Name                         types.String                                `tfsdk:"name"`
-	OncallSchedules              tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"oncall_schedules"`
-	RecommendedDuration          types.Int64                                 `tfsdk:"recommended_duration"`
-	RemoteID                     types.String                                `tfsdk:"remote_id"`
-	RemoteInfo                   *tfTypes.GroupRemoteInfo                    `tfsdk:"remote_info"`
-	RemoteName                   types.String                                `tfsdk:"remote_name"`
-	RequestConfigurationListData []tfTypes.RequestConfiguration              `tfsdk:"request_configuration_list_data"`
-	RequestConfigurations        []tfTypes.RequestConfiguration              `tfsdk:"request_configurations"`
-	RequestTemplateID            types.String                                `tfsdk:"request_template_id"`
-	RequireMfaToApprove          types.Bool                                  `tfsdk:"require_mfa_to_approve"`
-	RequireMfaToRequest          types.Bool                                  `tfsdk:"require_mfa_to_request"`
-	RequireSupportTicket         types.Bool                                  `tfsdk:"require_support_ticket"`
-	VisibilityInfo               tfTypes.VisibilityInfo                      `tfsdk:"visibility_info"`
+	AdminOwnerID          types.String                                `tfsdk:"admin_owner_id"`
+	AppID                 types.String                                `tfsdk:"app_id"`
+	Description           types.String                                `tfsdk:"description"`
+	GroupBindingID        types.String                                `tfsdk:"group_binding_id"`
+	GroupType             types.String                                `tfsdk:"group_type"`
+	ID                    types.String                                `tfsdk:"id"`
+	MessageChannels       tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
+	Name                  types.String                                `tfsdk:"name"`
+	OncallSchedules       tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"oncall_schedules"`
+	RemoteInfo            *tfTypes.GroupRemoteInfo                    `tfsdk:"remote_info"`
+	RemoteName            types.String                                `tfsdk:"remote_name"`
+	RequestConfigurations []tfTypes.RequestConfiguration              `tfsdk:"request_configurations"`
+	RequireMfaToApprove   types.Bool                                  `tfsdk:"require_mfa_to_approve"`
+	Visibility            types.String                                `tfsdk:"visibility"`
+	VisibilityGroupIds    []types.String                              `tfsdk:"visibility_group_ids"`
 }
 
 // Metadata returns the data source type name.
@@ -73,10 +65,6 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Computed:    true,
 				Description: `The ID of the group's app.`,
 			},
-			"auto_approval": schema.BoolAttribute{
-				Computed:    true,
-				Description: `A bool representing whether or not to automatically approve requests to this group.`,
-			},
 			"description": schema.StringAttribute{
 				Computed:    true,
 				Description: `A description of the group.`,
@@ -92,14 +80,6 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			"id": schema.StringAttribute{
 				Required:    true,
 				Description: `The ID of the group.`,
-			},
-			"is_requestable": schema.BoolAttribute{
-				Computed:    true,
-				Description: `A bool representing whether or not to allow access requests to this group.`,
-			},
-			"max_duration": schema.Int64Attribute{
-				Computed:    true,
-				Description: `The maximum duration for which the group can be requested (in minutes).`,
 			},
 			"message_channels": schema.SingleNestedAttribute{
 				Computed: true,
@@ -159,14 +139,6 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 					},
 				},
 				Description: `The on call schedules attached to the group.`,
-			},
-			"recommended_duration": schema.Int64Attribute{
-				Computed:    true,
-				Description: `The recommended duration for which the group should be requested (in minutes). -1 represents an indefinite duration.`,
-			},
-			"remote_id": schema.StringAttribute{
-				Computed:    true,
-				Description: `The ID of the remote.`,
 			},
 			"remote_info": schema.SingleNestedAttribute{
 				Computed: true,
@@ -268,81 +240,6 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Computed:    true,
 				Description: `The name of the remote.`,
 			},
-			"request_configuration_list_data": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"allow_requests": schema.BoolAttribute{
-							Computed:    true,
-							Description: `A bool representing whether or not to allow requests for this resource.`,
-						},
-						"auto_approval": schema.BoolAttribute{
-							Computed:    true,
-							Description: `A bool representing whether or not to automatically approve requests for this resource.`,
-						},
-						"condition": schema.SingleNestedAttribute{
-							Computed: true,
-							Attributes: map[string]schema.Attribute{
-								"group_ids": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
-									Description: `The list of group IDs to match.`,
-								},
-								"role_remote_ids": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
-									Description: `The list of role remote IDs to match.`,
-								},
-							},
-						},
-						"max_duration": schema.Int64Attribute{
-							Computed:    true,
-							Description: `The maximum duration for which the resource can be requested (in minutes).`,
-						},
-						"priority": schema.Int64Attribute{
-							Computed:    true,
-							Description: `The priority of the request configuration.`,
-						},
-						"recommended_duration": schema.Int64Attribute{
-							Computed:    true,
-							Description: `The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.`,
-						},
-						"request_template_id": schema.StringAttribute{
-							Computed:    true,
-							Description: `The ID of the associated request template.`,
-						},
-						"require_mfa_to_request": schema.BoolAttribute{
-							Computed:    true,
-							Description: `A bool representing whether or not to require MFA for requesting access to this resource.`,
-						},
-						"require_support_ticket": schema.BoolAttribute{
-							Computed:    true,
-							Description: `A bool representing whether or not access requests to the resource require an access ticket.`,
-						},
-						"reviewer_stages": schema.ListNestedAttribute{
-							Computed: true,
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{
-									"operator": schema.StringAttribute{
-										Computed:    true,
-										Description: `The operator of the reviewer stage. must be one of ["AND", "OR"]`,
-									},
-									"owner_ids": schema.ListAttribute{
-										Computed:    true,
-										ElementType: types.StringType,
-									},
-									"require_manager_approval": schema.BoolAttribute{
-										Computed:    true,
-										Description: `Whether this reviewer stage should require manager approval.`,
-									},
-								},
-							},
-							Description: `The list of reviewer stages for the request configuration.`,
-						},
-					},
-				},
-				Description: `A list of request configurations for this group. Deprecated in favor of ` + "`" + `request_configurations` + "`" + `.`,
-			},
 			"request_configurations": schema.ListNestedAttribute{
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
@@ -418,35 +315,17 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				},
 				Description: `A list of request configurations for this group.`,
 			},
-			"request_template_id": schema.StringAttribute{
-				Computed:    true,
-				Description: `The ID of the associated request template.`,
-			},
 			"require_mfa_to_approve": schema.BoolAttribute{
 				Computed:    true,
 				Description: `A bool representing whether or not to require MFA for reviewers to approve requests for this group.`,
 			},
-			"require_mfa_to_request": schema.BoolAttribute{
+			"visibility": schema.StringAttribute{
 				Computed:    true,
-				Description: `A bool representing whether or not to require MFA for requesting access to this group.`,
+				Description: `The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]`,
 			},
-			"require_support_ticket": schema.BoolAttribute{
+			"visibility_group_ids": schema.ListAttribute{
 				Computed:    true,
-				Description: `A bool representing whether or not access requests to the group require an access ticket.`,
-			},
-			"visibility_info": schema.SingleNestedAttribute{
-				Computed: true,
-				Attributes: map[string]schema.Attribute{
-					"visibility": schema.StringAttribute{
-						Computed:    true,
-						Description: `The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]`,
-					},
-					"visibility_group_ids": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-				},
-				Description: `Visibility infomation of an entity.`,
+				ElementType: types.StringType,
 			},
 		},
 	}
@@ -506,6 +385,10 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
+		return
+	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -529,6 +412,10 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	}
 	if res1 == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
+		return
+	}
+	if res1.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res1.StatusCode != 200 {
@@ -556,6 +443,10 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res2))
 		return
 	}
+	if res2.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
+		return
+	}
 	if res2.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
 		return
@@ -578,6 +469,10 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	}
 	if res3 == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res3))
+		return
+	}
+	if res3.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res3.StatusCode != 200 {

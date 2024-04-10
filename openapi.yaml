@@ -444,6 +444,7 @@ paths:
                                 allOf:
                                     - $ref: "#/components/schemas/MessageChannelList"
                                     - x-speakeasy-wrapped-attribute: "message_channels"
+                                    - x-speakeasy-param-suppress-computed-diff: true
                     description: The audit and reviewer message channels attached to the group.
             security:
                 - BearerAuth: []
@@ -476,7 +477,7 @@ paths:
                 "200":
                     content:
                         application/json:
-                            x-speakeasy-terraform-ignore: true
+                            x-speakeasy-ignore: true
                     description: The updated audit message channel IDs for the group.
             security:
                 - BearerAuth: []
@@ -542,7 +543,7 @@ paths:
                 "200":
                     content:
                         application/json:
-                            x-speakeasy-terraform-ignore: true
+                            x-speakeasy-ignore: true
                     description: The updated on call schedule IDs for the group.
             security:
                 - BearerAuth: []
@@ -692,7 +693,7 @@ paths:
                             schema:
                                 allOf:
                                     - $ref: "#/components/schemas/VisibilityInfo"
-                                    - x-speakeasy-wrapped-attribute: "visibility_info"
+                                      # - x-speakeasy-wrapped-attribute: "visibility_info"
                     description: The visibility info of this group.
             security:
                 - BearerAuth: []
@@ -725,7 +726,7 @@ paths:
                 "200":
                     content:
                         application/json:
-                            x-speakeasy-terraform-ignore: true
+                            x-speakeasy-ignore: true
                     description: The visibility info of this group.
             security:
                 - BearerAuth: []
@@ -963,6 +964,7 @@ paths:
                     type: string
                   style: form
                   deprecated: true
+                  x-speakeasy-ignore: true
             requestBody:
                 required: true
                 content:
@@ -1813,7 +1815,7 @@ paths:
                 - BearerAuth: []
             tags:
                 - resources
-            x-speakeasy-terraform-ignore: true
+            x-speakeasy-ignore: true
         put:
             description: Sets the list of reviewer stages for a resource.
             operationId: updateResourceReviewerStages
@@ -1849,7 +1851,7 @@ paths:
                 - BearerAuth: []
             tags:
                 - resources
-            x-speakeasy-terraform-ignore: true
+            x-speakeasy-ignore: true
     /resources/{resource_id}/users:
         get:
             description: Gets the list of users for this resource.
@@ -3578,7 +3580,6 @@ components:
                 remote_name: Finance Team
                 description: This group represents Active Directory group "Payments Production Admin". We use this AD group to facilitate staging deployments and qualifying new releases.
                 admin_owner_id: 7c86c85d-0651-43e2-a748-d69d658418e8
-                max_duration: 120
                 require_manager_approval: False
                 require_support_ticket: False
             properties:
@@ -3612,10 +3613,12 @@ components:
                     description: The ID of the remote.
                     example: google-group-group:037m2jsg218b2wb
                     type: string
+                    x-speakeasy-ignore: true # deprecated for the remote_info object
                 remote_name:
                     description: The name of the remote.
                     example: Finance team
                     type: string
+                    x-speakeasy-param-suppress-computed-diff: true # cannot set this it's derived on the backend
                 group_type:
                     $ref: "#/components/schemas/GroupTypeEnum"
                     x-speakeasy-param-force-new: true
@@ -3623,10 +3626,12 @@ components:
                     description: The maximum duration for which the group can be requested (in minutes).
                     type: integer
                     example: 120
+                    x-speakeasy-ignore: true
                 recommended_duration:
                     description: The recommended duration for which the group should be requested (in minutes). -1 represents an indefinite duration.
                     type: integer
                     example: 120
+                    x-speakeasy-ignore: true
                 require_manager_approval:
                     description: A bool representing whether or not access requests to the group require manager approval.
                     example: False
@@ -3637,6 +3642,7 @@ components:
                     description: A bool representing whether or not access requests to the group require an access ticket.
                     example: False
                     type: boolean
+                    x-speakeasy-ignore: true
                 require_mfa_to_approve:
                     description: A bool representing whether or not to require MFA for reviewers to approve requests for this group.
                     example: False
@@ -3645,30 +3651,35 @@ components:
                     description: A bool representing whether or not to require MFA for requesting access to this group.
                     example: False
                     type: boolean
+                    x-speakeasy-ignore: true
                 auto_approval:
                     description: A bool representing whether or not to automatically approve requests to this group.
                     example: False
                     type: boolean
+                    x-speakeasy-ignore: true
                 request_template_id:
                     description: The ID of the associated request template.
                     example: 06851574-e50d-40ca-8c78-f72ae6ab4304
                     format: uuid
                     type: string
+                    x-speakeasy-ignore: true
                 configuration_template_id:
                     description: The ID of the associated configuration template.
                     example: 06851574-e50d-40ca-8c78-f72ae6ab4304
                     format: uuid
                     type: string
-                    x-speakeasy-terraform-ignore: true
+                    x-speakeasy-ignore: true
                 group_binding_id:
                     description: The ID of the associated group binding.
                     example: 06851574-e50d-40ca-8c78-f72ae6ab4304
                     format: uuid
                     type: string
+                    x-speakeasy-param-suppress-computed-diff: true # there's no way to set this through this resource in tf
                 is_requestable:
                     description: A bool representing whether or not to allow access requests to this group.
                     example: False
                     type: boolean
+                    x-speakeasy-ignore: true
                 request_configurations:
                     description: A list of request configurations for this group.
                     example: []
@@ -3682,8 +3693,7 @@ components:
                     type: array
                     items:
                         $ref: "#/components/schemas/RequestConfiguration"
-                    x-speakeasy-name-override: request_configuration_list_data
-                    x-speakeasy-param-suppress-computed-diff: true
+                    x-speakeasy-ignore: true
                     minItems: 1
                 metadata:
                     description: JSON metadata about the remote group. Only set for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/end-system-objects) for details.
@@ -3802,14 +3812,12 @@ components:
                       description: This group represents Active Directory group "Payments Production Admin". We use this AD group to facilitate staging deployments and qualifying new releases.
                       name: api-group
                       admin_owner_id: 7c86c85d-0651-43e2-a748-d69d658418e8
-                      max_duration: 120
                       require_manager_approval: False
                       require_support_ticket: False
                     - group_id: 99d0b81d-14be-4cf6-bd27-348b4af1d11b
                       description: Manages the Integrations Team on-call privileged resources. This group is automatically synced with the on-call rotation defined in PagerDuty.
                       name: on-call-integrations
                       admin_owner_id: 4220bc12-ab8a-4b5d-be7b-f6bbcf9159f3
-                      max_duration: 360
                       require_manager_approval: False
                       require_support_ticket: True
             properties:
@@ -3831,7 +3839,6 @@ components:
                 description: This group represents Active Directory group "Payments Production Admin". We use this AD group to facilitate staging deployments and qualifying new releases.
                 name: api-group
                 admin_owner_id: 7c86c85d-0651-43e2-a748-d69d658418e8
-                max_duration: 120
                 require_manager_approval: False
                 require_support_ticket: False
             properties:
@@ -3907,7 +3914,7 @@ components:
                     example: 06851574-e50d-40ca-8c78-f72ae6ab4304
                     format: uuid
                     type: string
-                    x-speakeasy-terraform-ignore: true
+                    x-speakeasy-ignore: true
                 request_template_id:
                     description: The ID of the associated request template. Deprecated in favor of `request_configurations`.
                     example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -5647,7 +5654,7 @@ components:
                     example: 06851574-e50d-40ca-8c78-f72ae6ab4304
                     format: uuid
                     type: string
-                    x-speakeasy-terraform-ignore: true
+                    x-speakeasy-ignore: true
                 request_configurations:
                     type: array
                     items:
@@ -5816,7 +5823,7 @@ components:
                     example: 06851574-e50d-40ca-8c78-f72ae6ab4304
                     format: uuid
                     type: string
-                    x-speakeasy-terraform-ignore: true
+                    x-speakeasy-ignore: true
                 request_template_id:
                     description: The ID of the associated request template. Deprecated in favor of `request_configurations`.
                     example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -5875,6 +5882,7 @@ components:
                                     - 37cb7e41-12ba-46da-92ff-030abe0450b2
                                   stage: 1
                               priority: 1
+                    x-speakeasy-ignore: true
             required:
                 - resource_id
                 - request_configurations
@@ -6585,7 +6593,7 @@ components:
             type: object
             required:
                 - request_configurations
-            x-speakeasy-terraform-ignore: true
+            x-speakeasy-ignore: true
         CreateConfigurationTemplateInfo:
             description: |-
                 # CreateConfigurationTemplateInfo Object
@@ -6709,6 +6717,7 @@ components:
                                     - 37cb7e41-12ba-46da-92ff-030abe0450b2
                                   stage: 1
                               priority: 1
+                    x-speakeasy-ignore: true
             x-speakeasy-entity: ConfigurationTemplate
         ConfigurationTemplate:
             description: |-
@@ -6896,6 +6905,7 @@ components:
                                     - 37cb7e41-12ba-46da-92ff-030abe0450b2
                                   stage: 1
                               priority: 1
+                    x-speakeasy-ignore: true
                 member_oncall_schedule_ids:
                     description: The IDs of the on-call schedules linked to the configuration template.
                     example:

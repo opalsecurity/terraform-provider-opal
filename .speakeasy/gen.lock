@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 1d617dd833bfb0bf0a651185559a7217
+  docChecksum: d70ce3912833731a29b768ef9c6f3089
   docVersion: "1.0"
-  speakeasyVersion: 1.237.0
-  generationVersion: 2.298.2
-  releaseVersion: 0.16.3
-  configChecksum: 6a8b2b02af73585f48bb13d31e810467
+  speakeasyVersion: 1.246.1
+  generationVersion: 2.302.1
+  releaseVersion: 0.17.0
+  configChecksum: 0fc24a6ef059f58ec509584af17468d4
   repoURL: https://github.com/speakeasy-sdks/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -14,7 +14,7 @@ features:
   terraform:
     additionalProperties: 0.1.2
     constsAndDefaults: 0.1.4
-    core: 3.13.0
+    core: 3.17.3
     deprecations: 2.81.1
     globalSecurity: 2.81.6
     globalServerURLs: 2.82.1
@@ -22,7 +22,7 @@ features:
     nameOverrides: 2.81.2
     retries: 2.81.1
     serverIDs: 2.81.1
-    unions: 2.81.10
+    unions: 2.81.12
 generatedFiles:
   - internal/sdk/apps.go
   - internal/sdk/configurationtemplates.go
@@ -103,7 +103,6 @@ generatedFiles:
   - internal/sdk/models/operations/createresource.go
   - internal/sdk/models/operations/deleteresource.go
   - internal/sdk/models/operations/getresources.go
-  - internal/sdk/models/operations/getresourcereviewerstages.go
   - internal/sdk/models/operations/getresourceuseraccessstatus.go
   - internal/sdk/models/operations/getresourceid.go
   - internal/sdk/models/operations/getresourcemessagechannels.go
@@ -112,7 +111,6 @@ generatedFiles:
   - internal/sdk/models/operations/getresourceusers.go
   - internal/sdk/models/operations/getresourcevisibility.go
   - internal/sdk/models/operations/updateresources.go
-  - internal/sdk/models/operations/updateresourcereviewerstages.go
   - internal/sdk/models/operations/updateresourcemessagechannels.go
   - internal/sdk/models/operations/updateresourcereviewers.go
   - internal/sdk/models/operations/updateresourcevisibility.go
@@ -142,7 +140,6 @@ generatedFiles:
   - internal/sdk/models/shared/requestconfiguration.go
   - internal/sdk/models/shared/reviewerstage.go
   - internal/sdk/models/shared/condition.go
-  - internal/sdk/models/shared/createrequestconfigurationinfolist.go
   - internal/sdk/models/shared/paginatedconfigurationtemplatelist.go
   - internal/sdk/models/shared/updateconfigurationtemplateinfo.go
   - internal/sdk/models/shared/paginatedeventlist.go

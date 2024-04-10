@@ -30,8 +30,8 @@ type GroupResourceListResource struct {
 
 // GroupResourceListResourceModel describes the resource data model.
 type GroupResourceListResourceModel struct {
-	GroupResources []tfTypes.GroupResource1          `tfsdk:"group_resources"`
 	GroupID        types.String                      `tfsdk:"group_id"`
+	GroupResources []tfTypes.GroupResource1          `tfsdk:"group_resources"`
 	Resources      []tfTypes.ResourceWithAccessLevel `tfsdk:"resources"`
 }
 
@@ -44,6 +44,10 @@ func (r *GroupResourceListResource) Schema(ctx context.Context, req resource.Sch
 		MarkdownDescription: "GroupResourceList Resource",
 
 		Attributes: map[string]schema.Attribute{
+			"group_id": schema.StringAttribute{
+				Required:    true,
+				Description: `The ID of the group.`,
+			},
 			"group_resources": schema.ListNestedAttribute{
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
@@ -78,10 +82,6 @@ func (r *GroupResourceListResource) Schema(ctx context.Context, req resource.Sch
 						},
 					},
 				},
-			},
-			"group_id": schema.StringAttribute{
-				Required:    true,
-				Description: `The ID of the group.`,
 			},
 			"resources": schema.ListNestedAttribute{
 				Required: true,
@@ -226,6 +226,10 @@ func (r *GroupResourceListResource) Read(ctx context.Context, req resource.ReadR
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

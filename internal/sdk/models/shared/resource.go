@@ -15,8 +15,6 @@ type Resource struct {
 	AppID *string `json:"app_id,omitempty"`
 	// A bool representing whether or not to automatically approve requests to this resource.
 	AutoApproval *bool `json:"auto_approval,omitempty"`
-	// The ID of the associated configuration template.
-	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
 	// A description of the resource.
 	Description *string `json:"description,omitempty"`
 	// The ID of the resource.
@@ -72,13 +70,6 @@ func (o *Resource) GetAutoApproval() *bool {
 		return nil
 	}
 	return o.AutoApproval
-}
-
-func (o *Resource) GetConfigurationTemplateID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ConfigurationTemplateID
 }
 
 func (o *Resource) GetDescription() *string {

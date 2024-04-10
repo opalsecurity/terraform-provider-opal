@@ -69,10 +69,6 @@ func (o *CreateGroupUserRequestBody) GetDurationMinutes() *DurationMinutes {
 
 type CreateGroupUserRequest struct {
 	RequestBody CreateGroupUserRequestBody `request:"mediaType=application/json"`
-	// The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used.
-	//
-	// Deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
-	AccessLevelRemoteID *string `queryParam:"style=form,explode=true,name=access_level_remote_id"`
 	// The ID of the group.
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
 	// The ID of the user to add.
@@ -84,13 +80,6 @@ func (o *CreateGroupUserRequest) GetRequestBody() CreateGroupUserRequestBody {
 		return CreateGroupUserRequestBody{}
 	}
 	return o.RequestBody
-}
-
-func (o *CreateGroupUserRequest) GetAccessLevelRemoteID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.AccessLevelRemoteID
 }
 
 func (o *CreateGroupUserRequest) GetGroupID() string {

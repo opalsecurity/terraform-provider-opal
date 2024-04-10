@@ -77,10 +77,6 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							Computed:    true,
 							Description: `The ID of the group's app.`,
 						},
-						"auto_approval": schema.BoolAttribute{
-							Computed:    true,
-							Description: `A bool representing whether or not to automatically approve requests to this group.`,
-						},
 						"description": schema.StringAttribute{
 							Computed:    true,
 							Description: `A description of the group.`,
@@ -97,25 +93,9 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							Computed:    true,
 							Description: `The ID of the group.`,
 						},
-						"is_requestable": schema.BoolAttribute{
-							Computed:    true,
-							Description: `A bool representing whether or not to allow access requests to this group.`,
-						},
-						"max_duration": schema.Int64Attribute{
-							Computed:    true,
-							Description: `The maximum duration for which the group can be requested (in minutes).`,
-						},
 						"name": schema.StringAttribute{
 							Computed:    true,
 							Description: `The name of the group.`,
-						},
-						"recommended_duration": schema.Int64Attribute{
-							Computed:    true,
-							Description: `The recommended duration for which the group should be requested (in minutes). -1 represents an indefinite duration.`,
-						},
-						"remote_id": schema.StringAttribute{
-							Computed:    true,
-							Description: `The ID of the remote.`,
 						},
 						"remote_info": schema.SingleNestedAttribute{
 							Computed: true,
@@ -217,81 +197,6 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							Computed:    true,
 							Description: `The name of the remote.`,
 						},
-						"request_configuration_list_data": schema.ListNestedAttribute{
-							Computed: true,
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{
-									"allow_requests": schema.BoolAttribute{
-										Computed:    true,
-										Description: `A bool representing whether or not to allow requests for this resource.`,
-									},
-									"auto_approval": schema.BoolAttribute{
-										Computed:    true,
-										Description: `A bool representing whether or not to automatically approve requests for this resource.`,
-									},
-									"condition": schema.SingleNestedAttribute{
-										Computed: true,
-										Attributes: map[string]schema.Attribute{
-											"group_ids": schema.ListAttribute{
-												Computed:    true,
-												ElementType: types.StringType,
-												Description: `The list of group IDs to match.`,
-											},
-											"role_remote_ids": schema.ListAttribute{
-												Computed:    true,
-												ElementType: types.StringType,
-												Description: `The list of role remote IDs to match.`,
-											},
-										},
-									},
-									"max_duration": schema.Int64Attribute{
-										Computed:    true,
-										Description: `The maximum duration for which the resource can be requested (in minutes).`,
-									},
-									"priority": schema.Int64Attribute{
-										Computed:    true,
-										Description: `The priority of the request configuration.`,
-									},
-									"recommended_duration": schema.Int64Attribute{
-										Computed:    true,
-										Description: `The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.`,
-									},
-									"request_template_id": schema.StringAttribute{
-										Computed:    true,
-										Description: `The ID of the associated request template.`,
-									},
-									"require_mfa_to_request": schema.BoolAttribute{
-										Computed:    true,
-										Description: `A bool representing whether or not to require MFA for requesting access to this resource.`,
-									},
-									"require_support_ticket": schema.BoolAttribute{
-										Computed:    true,
-										Description: `A bool representing whether or not access requests to the resource require an access ticket.`,
-									},
-									"reviewer_stages": schema.ListNestedAttribute{
-										Computed: true,
-										NestedObject: schema.NestedAttributeObject{
-											Attributes: map[string]schema.Attribute{
-												"operator": schema.StringAttribute{
-													Computed:    true,
-													Description: `The operator of the reviewer stage. must be one of ["AND", "OR"]`,
-												},
-												"owner_ids": schema.ListAttribute{
-													Computed:    true,
-													ElementType: types.StringType,
-												},
-												"require_manager_approval": schema.BoolAttribute{
-													Computed:    true,
-													Description: `Whether this reviewer stage should require manager approval.`,
-												},
-											},
-										},
-										Description: `The list of reviewer stages for the request configuration.`,
-									},
-								},
-							},
-							Description: `A list of request configurations for this group. Deprecated in favor of ` + "`" + `request_configurations` + "`" + `.`,
-						},
 						"request_configurations": schema.ListNestedAttribute{
 							Computed: true,
 							NestedObject: schema.NestedAttributeObject{
@@ -367,21 +272,9 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							},
 							Description: `A list of request configurations for this group.`,
 						},
-						"request_template_id": schema.StringAttribute{
-							Computed:    true,
-							Description: `The ID of the associated request template.`,
-						},
 						"require_mfa_to_approve": schema.BoolAttribute{
 							Computed:    true,
 							Description: `A bool representing whether or not to require MFA for reviewers to approve requests for this group.`,
-						},
-						"require_mfa_to_request": schema.BoolAttribute{
-							Computed:    true,
-							Description: `A bool representing whether or not to require MFA for requesting access to this group.`,
-						},
-						"require_support_ticket": schema.BoolAttribute{
-							Computed:    true,
-							Description: `A bool representing whether or not access requests to the group require an access ticket.`,
 						},
 					},
 				},
@@ -466,6 +359,10 @@ func (r *GroupListDataSource) Read(ctx context.Context, req datasource.ReadReque
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {
