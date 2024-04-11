@@ -472,6 +472,11 @@ actions:
   - target: $["paths"]["/resources/{resource_id}/visibility"]["put"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
+  - target: $["paths"]["/resources/{resource_id}/visibility"]["put"]["responses"]["200"]["content"]["application/json"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["paths"]["/resources/{resource_id}/visibility"]["put"]["responses"]["200"]["content"]["application/json"]["schema"]
+    remove: true
   - target: $["paths"]["/resources/{resource_id}/visibility"]["put"]
     update:
       x-speakeasy-name-override: update_visibility
@@ -1254,6 +1259,16 @@ actions:
   - target: $["components"]["schemas"]["RequestList"]
     update:
       type: object
+  - target: $["components"]["schemas"]["Resource"]["example"]["remote_id"]
+    remove: true
+  - target: $["components"]["schemas"]["Resource"]["example"]["remote_name"]
+    remove: true
+  - target: $["components"]["schemas"]["Resource"]["example"]["max_duration"]
+    remove: true
+  - target: $["components"]["schemas"]["Resource"]["example"]["require_manager_approval"]
+    remove: true
+  - target: $["components"]["schemas"]["Resource"]["example"]["require_support_ticket"]
+    remove: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["resource_id"]
     update:
       x-speakeasy-name-override: id
@@ -1263,12 +1278,42 @@ actions:
   - target: $["components"]["schemas"]["Resource"]["properties"]["app_id"]
     update:
       x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["remote_resource_id"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["remote_resource_name"]
+    update:
+      x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["resource_type"]
     update:
       x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["max_duration"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["recommended_duration"]
+    update:
+      x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["require_manager_approval"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["require_support_ticket"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["require_mfa_to_request"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["auto_approval"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["request_template_id"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["is_requestable"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["parent_resource_id"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["configuration_template_id"]
     update:
       x-speakeasy-ignore: true
@@ -1284,6 +1329,24 @@ actions:
   - target: $["components"]["schemas"]["Resource"]
     update:
       x-speakeasy-entity: Resource
+  - target: $["components"]["schemas"]["UpdateResourceInfoList"]["example"]["resources"][0]["max_duration"]
+    remove: true
+  - target: $["components"]["schemas"]["UpdateResourceInfoList"]["example"]["resources"][0]["require_manager_approval"]
+    remove: true
+  - target: $["components"]["schemas"]["UpdateResourceInfoList"]["example"]["resources"][0]["require_support_ticket"]
+    remove: true
+  - target: $["components"]["schemas"]["UpdateResourceInfoList"]["example"]["resources"][1]["max_duration"]
+    remove: true
+  - target: $["components"]["schemas"]["UpdateResourceInfoList"]["example"]["resources"][1]["require_manager_approval"]
+    remove: true
+  - target: $["components"]["schemas"]["UpdateResourceInfoList"]["example"]["resources"][1]["require_support_ticket"]
+    remove: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["example"]["max_duration"]
+    remove: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["example"]["require_manager_approval"]
+    remove: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["example"]["require_support_ticket"]
+    remove: true
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["resource_id"]
     update:
       x-speakeasy-param-readonly: true

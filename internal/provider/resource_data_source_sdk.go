@@ -12,14 +12,10 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(resp *shared.Resourc
 	if resp != nil {
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 		r.AppID = types.StringPointerValue(resp.AppID)
-		r.AutoApproval = types.BoolPointerValue(resp.AutoApproval)
 		r.Description = types.StringPointerValue(resp.Description)
 		r.ID = types.StringPointerValue(resp.ID)
-		r.IsRequestable = types.BoolPointerValue(resp.IsRequestable)
-		r.MaxDuration = types.Int64PointerValue(resp.MaxDuration)
 		r.Name = types.StringPointerValue(resp.Name)
 		r.ParentResourceID = types.StringPointerValue(resp.ParentResourceID)
-		r.RecommendedDuration = types.Int64PointerValue(resp.RecommendedDuration)
 		if resp.RemoteInfo == nil {
 			r.RemoteInfo = nil
 		} else {
@@ -190,8 +186,6 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(resp *shared.Resourc
 				r.RemoteInfo.TeleportRole.RoleName = types.StringValue(resp.RemoteInfo.TeleportRole.RoleName)
 			}
 		}
-		r.RemoteResourceID = types.StringPointerValue(resp.RemoteResourceID)
-		r.RemoteResourceName = types.StringPointerValue(resp.RemoteResourceName)
 		if len(r.RequestConfigurations) > len(resp.RequestConfigurations) {
 			r.RequestConfigurations = r.RequestConfigurations[:len(resp.RequestConfigurations)]
 		}
@@ -253,11 +247,8 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(resp *shared.Resourc
 				r.RequestConfigurations[requestConfigurationsCount].ReviewerStages = requestConfigurations1.ReviewerStages
 			}
 		}
-		r.RequestTemplateID = types.StringPointerValue(resp.RequestTemplateID)
 		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
 		r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
-		r.RequireMfaToRequest = types.BoolPointerValue(resp.RequireMfaToRequest)
-		r.RequireSupportTicket = types.BoolPointerValue(resp.RequireSupportTicket)
 		if resp.ResourceType != nil {
 			r.ResourceType = types.StringValue(string(*resp.ResourceType))
 		} else {

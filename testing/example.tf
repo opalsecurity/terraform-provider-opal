@@ -171,7 +171,7 @@ resource "opal_resource" "another_one" {
   resource_type = "AWS_EC2_INSTANCE"
   app_id = data.opal_app.aws.id
   visibility = "LIMITED"
-  # visibility_group_ids = ["c95394cf-e1e8-4baa-b850-ab5fd27335dc"]
+  visibility_group_ids = [opal_group.foobarbaz.id]
   remote_info = {
     aws_ec2_instance = {
       account_id = "123456789012"
@@ -181,10 +181,17 @@ resource "opal_resource" "another_one" {
   }
   require_mfa_to_approve = false
   require_mfa_to_connect = false
-  request_configurations=[]
-  # admin_owner_id = opal_owner.security.id
-  # visibility = "LIMITED"
-  # visibility_group_ids=["c95394cf-e1e8-4baa-b850-ab5fd27335dc"]
+  request_configurations=[
+    {
+      is_requestable=true
+      allow_requests= true
+      auto_approval = true
+      priority = 0
+      require_mfa_to_request =false
+      require_support_ticket = false
+      reviewer_stages = []
+    }
+  ]
 }
 
 resource "opal_group_user" "my_groupsuser" {

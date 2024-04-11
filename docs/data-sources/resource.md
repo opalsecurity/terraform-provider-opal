@@ -14,7 +14,7 @@ Resource DataSource
 
 ```terraform
 data "opal_resource" "my_resource" {
-  id = "484eea2a-3bbb-4602-bddb-dedaf753fdfe"
+  id = "3364a897-5f5e-489b-bb2a-71c0e74e016d"
 }
 ```
 
@@ -29,22 +29,13 @@ data "opal_resource" "my_resource" {
 
 - `admin_owner_id` (String) The ID of the owner of the resource.
 - `app_id` (String) The ID of the app.
-- `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests to this resource.
 - `description` (String) A description of the resource.
-- `is_requestable` (Boolean) A bool representing whether or not to allow access requests to this resource.
-- `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
 - `name` (String) The name of the resource.
 - `parent_resource_id` (String) The ID of the parent resource.
-- `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
 - `remote_info` (Attributes) Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields. (see [below for nested schema](#nestedatt--remote_info))
-- `remote_resource_id` (String) The ID of the resource on the remote system.
-- `remote_resource_name` (String) The name of the resource on the remote system.
 - `request_configurations` (Attributes List) A list of configurations for requests to this resource. (see [below for nested schema](#nestedatt--request_configurations))
-- `request_template_id` (String) The ID of the associated request template.
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to this resource.
-- `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this resource.
-- `require_support_ticket` (Boolean) A bool representing whether or not access requests to the resource require an access ticket.
 - `resource_type` (String) The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "CUSTOM", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GIT_HUB_REPO", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "TELEPORT_ROLE"]
 
 <a id="nestedatt--remote_info"></a>

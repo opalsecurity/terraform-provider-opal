@@ -34,8 +34,6 @@ type UpdateResourceVisibilityResponse struct {
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	// The visibility info of this resource.
-	VisibilityInfo *shared.VisibilityInfo
 }
 
 func (o *UpdateResourceVisibilityResponse) GetContentType() string {
@@ -57,11 +55,4 @@ func (o *UpdateResourceVisibilityResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return o.RawResponse
-}
-
-func (o *UpdateResourceVisibilityResponse) GetVisibilityInfo() *shared.VisibilityInfo {
-	if o == nil {
-		return nil
-	}
-	return o.VisibilityInfo
 }

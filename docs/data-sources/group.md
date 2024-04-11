@@ -14,7 +14,7 @@ Group DataSource
 
 ```terraform
 data "opal_group" "my_group" {
-  id = "60c1ba08-b7f3-4a3e-a16b-6f0baa3e2cf5"
+  id = "137cf6fe-2c7c-4194-9042-95311709f016"
 }
 ```
 

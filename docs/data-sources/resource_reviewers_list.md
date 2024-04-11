@@ -14,7 +14,7 @@ ResourceReviewersList DataSource
 
 ```terraform
 data "opal_resource_reviewers_list" "my_resourcereviewerslist" {
-  resource_id = "6c13d19c-3371-4396-b9ea-63f8e7f6d3e2"
+  resource_id = "6b9881a6-b52c-41c9-b4d2-5038b6404764"
 }
 ```
 

@@ -19,14 +19,10 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 			var results1 tfTypes.Resource
 			results1.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
 			results1.AppID = types.StringPointerValue(resultsItem.AppID)
-			results1.AutoApproval = types.BoolPointerValue(resultsItem.AutoApproval)
 			results1.Description = types.StringPointerValue(resultsItem.Description)
 			results1.ID = types.StringPointerValue(resultsItem.ID)
-			results1.IsRequestable = types.BoolPointerValue(resultsItem.IsRequestable)
-			results1.MaxDuration = types.Int64PointerValue(resultsItem.MaxDuration)
 			results1.Name = types.StringPointerValue(resultsItem.Name)
 			results1.ParentResourceID = types.StringPointerValue(resultsItem.ParentResourceID)
-			results1.RecommendedDuration = types.Int64PointerValue(resultsItem.RecommendedDuration)
 			if resultsItem.RemoteInfo == nil {
 				results1.RemoteInfo = nil
 			} else {
@@ -197,8 +193,6 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 					results1.RemoteInfo.TeleportRole.RoleName = types.StringValue(resultsItem.RemoteInfo.TeleportRole.RoleName)
 				}
 			}
-			results1.RemoteResourceID = types.StringPointerValue(resultsItem.RemoteResourceID)
-			results1.RemoteResourceName = types.StringPointerValue(resultsItem.RemoteResourceName)
 			for requestConfigurationsCount, requestConfigurationsItem := range resultsItem.RequestConfigurations {
 				var requestConfigurations1 tfTypes.RequestConfiguration
 				requestConfigurations1.AllowRequests = types.BoolValue(requestConfigurationsItem.AllowRequests)
@@ -257,11 +251,8 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 					results1.RequestConfigurations[requestConfigurationsCount].ReviewerStages = requestConfigurations1.ReviewerStages
 				}
 			}
-			results1.RequestTemplateID = types.StringPointerValue(resultsItem.RequestTemplateID)
 			results1.RequireMfaToApprove = types.BoolPointerValue(resultsItem.RequireMfaToApprove)
 			results1.RequireMfaToConnect = types.BoolPointerValue(resultsItem.RequireMfaToConnect)
-			results1.RequireMfaToRequest = types.BoolPointerValue(resultsItem.RequireMfaToRequest)
-			results1.RequireSupportTicket = types.BoolPointerValue(resultsItem.RequireSupportTicket)
 			if resultsItem.ResourceType != nil {
 				results1.ResourceType = types.StringValue(string(*resultsItem.ResourceType))
 			} else {
@@ -272,23 +263,14 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 			} else {
 				r.Results[resultsCount].AdminOwnerID = results1.AdminOwnerID
 				r.Results[resultsCount].AppID = results1.AppID
-				r.Results[resultsCount].AutoApproval = results1.AutoApproval
 				r.Results[resultsCount].Description = results1.Description
 				r.Results[resultsCount].ID = results1.ID
-				r.Results[resultsCount].IsRequestable = results1.IsRequestable
-				r.Results[resultsCount].MaxDuration = results1.MaxDuration
 				r.Results[resultsCount].Name = results1.Name
 				r.Results[resultsCount].ParentResourceID = results1.ParentResourceID
-				r.Results[resultsCount].RecommendedDuration = results1.RecommendedDuration
 				r.Results[resultsCount].RemoteInfo = results1.RemoteInfo
-				r.Results[resultsCount].RemoteResourceID = results1.RemoteResourceID
-				r.Results[resultsCount].RemoteResourceName = results1.RemoteResourceName
 				r.Results[resultsCount].RequestConfigurations = results1.RequestConfigurations
-				r.Results[resultsCount].RequestTemplateID = results1.RequestTemplateID
 				r.Results[resultsCount].RequireMfaToApprove = results1.RequireMfaToApprove
 				r.Results[resultsCount].RequireMfaToConnect = results1.RequireMfaToConnect
-				r.Results[resultsCount].RequireMfaToRequest = results1.RequireMfaToRequest
-				r.Results[resultsCount].RequireSupportTicket = results1.RequireSupportTicket
 				r.Results[resultsCount].ResourceType = results1.ResourceType
 			}
 		}

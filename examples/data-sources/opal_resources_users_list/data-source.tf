@@ -1,4 +1,4 @@
 data "opal_resources_users_list" "my_resourcesusers_list" {
-  limit       = 4
-  resource_id = "b9c12805-779f-4076-a60b-81a19e052a61"
+  limit       = 7
+  resource_id = "3ac72a69-8985-4c24-874d-03f5dc7ff873"
 }
