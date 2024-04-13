@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	tfprotov6 "github.com/hashicorp/terraform-plugin-go/tfprotov6"
 )
 
 func init() {
@@ -47,7 +48,7 @@ resource "opal_resource" "%s" {
 
 // testAccProviders is a map of Terraform providers for the test cases
 var testAccProviders = map[string]func() provider.Provider{
-	"opal": New,
+	"opal": New("").Provider,
 }
 
 // checkResourceExists simulates checking if a resource exists in the backend
@@ -92,7 +93,9 @@ func TestAccResource_Update(t *testing.T) {
 	baseName, resourceName := generateBaseNameAndResourceName()
 
 	resource.Test(t, resource.TestCase{
-		ProtoV6ProviderFactories: testAccProviders,
+		ProtoV6ProviderFactories: map[string]func() (tfprotov6.ProviderServer, error){
+			"opal": func() (tfprotov6.ProviderServer, error) { return New("").GRPCProvider, nil },
+		},
 		PreCheck:                 func() { testAccPreCheck(t) },
 		CheckDestroy:             testAccCheckResourceDestroy,
 		Steps: []resource.TestStep{
@@ -120,7 +123,9 @@ func TestAccResource_Delete(t *testing.T) {
 	baseName, resourceName := generateBaseNameAndResourceName()
 
 	resource.Test(t, resource.TestCase{
-		ProtoV6ProviderFactories: testAccProviders,
+		ProtoV6ProviderFactories: map[string]func() (tfprotov6.ProviderServer, error){
+			"opal": func() (tfprotov6.ProviderServer, error) { return New("").GRPCProvider, nil },
+		},
 		PreCheck:                 func() { testAccPreCheck(t) },
 		CheckDestroy:             testAccCheckResourceDestroy,
 		Steps: []resource.TestStep{
