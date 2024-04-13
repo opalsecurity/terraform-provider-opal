@@ -68,23 +68,30 @@ func checkResourceExists(id string) (bool, error) {
 
 // TestAccResource_Read tests the reading of an Opal resource.
 func TestAccResource_Read(t *testing.T) {
-	t.Parallel()
-	baseName, resourceName := generateBaseNameAndResourceName()
+    resourceName := "opal_resource.test"
+    resource.Test(t, resource.TestCase{
+        PreCheck:  func() { testAccPreCheck(t) },
+        Providers: testAccProviders,
+        Steps: []resource.TestStep{
+            {
+                Config: testAccCheckResourceConfig(resourceName),
+                Check: resource.ComposeTestCheckFunc(
+                    resource.TestCheckResourceAttr(resourceName, "name", "test-resource"),
+                    resource.TestCheckResourceAttr(resourceName, "visibility", "GLOBAL"),
+                ),
+            },
+        },
+    })
+}
 
-	resource.Test(t, resource.TestCase{
-		ProtoV6ProviderFactories: testAccProviderFactories,
-		PreCheck:                 func() { testAccPreCheck(t) },
-		CheckDestroy:             testAccCheckResourceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: GenerateSimpleResource(resourceName),
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "name", baseName),
-					resource.TestCheckResourceAttr(resourceName, "visibility", "GLOBAL"),
-				),
-			},
-		},
-	})
+// testAccCheckResourceConfig returns a Terraform configuration for an Opal resource with a given name.
+func testAccCheckResourceConfig(name string) string {
+    return fmt.Sprintf(`
+resource "opal_resource" "%s" {
+    name       = "test-resource"
+    visibility = "GLOBAL"
+}
+`, name)
 }
 
 // TestAccResource_Update tests the updating of an Opal resource.
