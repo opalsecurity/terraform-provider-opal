@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
@@ -47,7 +48,7 @@ resource "opal_resource" "%s" {
 // testAccProviders is a map of Terraform providers for the test cases
 var testAccProviders = map[string]func() (*schema.Provider, error){
 	"opal": func() (*schema.Provider, error) {
-		return provider.Provider(), nil
+		return Provider(), nil
 	},
 }
 
@@ -61,28 +62,28 @@ func checkResourceExists(id string) (bool, error) {
 
 // TestAccResource_Read tests the reading of an Opal resource.
 func TestAccResource_Read(t *testing.T) {
-    resourceName := "opal_resource.test"
-    resource.Test(t, resource.TestCase{
-        PreCheck:  func() { testAccPreCheck(t) },
-        Providers: testAccProviders,
-        Steps: []resource.TestStep{
-            {
-                Config: testAccCheckResourceConfig(resourceName),
-                Check: resource.ComposeTestCheckFunc(
-                    resource.TestCheckResourceAttr(resourceName, "name", "test-resource"),
-                    resource.TestCheckResourceAttr(resourceName, "visibility", "GLOBAL"),
-                ),
-            },
-        },
-    })
+	resourceName := "opal_resource.test"
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCheckResourceConfig(resourceName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", "test-resource"),
+					resource.TestCheckResourceAttr(resourceName, "visibility", "GLOBAL"),
+				),
+			},
+		},
+	})
 }
 
 // testAccCheckResourceConfig returns a Terraform configuration for an Opal resource with a given name.
 func testAccCheckResourceConfig(name string) string {
-    return fmt.Sprintf(`
+	return fmt.Sprintf(`
 resource "opal_resource" "%s" {
-    name       = "test-resource"
-    visibility = "GLOBAL"
+	name       = "test-resource"
+	visibility = "GLOBAL"
 }
 `, name)
 }
