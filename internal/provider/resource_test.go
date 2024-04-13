@@ -1,3 +1,5 @@
+package provider
+
 // TestAccResource_Read tests the reading of an Opal resource.
 func TestAccResource_Read(t *testing.T) {
 	t.Parallel()
