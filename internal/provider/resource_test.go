@@ -3,7 +3,6 @@ package provider
 import (
 	"fmt"
 	"math/rand"
-	"os"
 	"testing"
 	"time"
 
@@ -45,17 +44,12 @@ resource "opal_resource" "%s" {
 `, resourceName, resourceName)
 }
 
-// generateBaseNameAndResourceName generates a random base name and resource name for test resources.
-func generateBaseNameAndResourceName() (string, string) {
-	baseName := fmt.Sprintf("test-%d", rand.Intn(1000000))
-	resourceName := "opal_resource." + baseName
-	return baseName, resourceName
+// testAccProviders is a map of Terraform providers for the test cases
+var testAccProviders = map[string]func() (*schema.Provider, error){
+	"opal": func() (*schema.Provider, error) {
+		return provider.Provider(), nil
+	},
 }
-
-// testAccProviderFactories and testAccPreCheck should be defined here to configure the provider and pre-checks before running the tests.
-// Placeholder for actual implementation
-var testAccProviderFactories map[string]func() (*terraform.Provider, error)
-var testAccPreCheck func(t *testing.T)
 
 // checkResourceExists simulates checking if a resource exists in the backend
 // Placeholder for actual API call
