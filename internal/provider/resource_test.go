@@ -9,7 +9,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	opal "github.com/opalsecurity/terraform-provider-opal/opal" // This is a hypothetical import path for the Opal provider
 )
 
 func init() {
