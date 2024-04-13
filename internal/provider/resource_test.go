@@ -9,7 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	// Removed unnecessary import of the opal package
 )
 
 func init() {
@@ -48,7 +47,7 @@ resource "opal_resource" "%s" {
 
 // testAccProviders is a map of Terraform providers for the test cases
 var testAccProviders = map[string]*schema.Provider{
-	"opal": opal.Provider().(*schema.Provider),
+	"opal": Provider().(*schema.Provider),
 }
 
 // checkResourceExists simulates checking if a resource exists in the backend
