@@ -12,6 +12,7 @@ require (
 	github.com/hashicorp/terraform-plugin-framework-validators v0.10.0
 	github.com/hashicorp/terraform-plugin-go v0.22.1
 	github.com/hashicorp/terraform-plugin-testing v1.7.0
+	github.com/opalsecurity/terraform-provider-opal/opal v0.0.0
 )
 
 require (
