@@ -45,7 +45,7 @@ resource "opal_resource" "%s" {
 }
 
 // testAccProviders is a map of Terraform providers for the test cases
-var testAccProviders = map[string]func() Provider{
+var testAccProviders = map[string]func() *OpalProvider{
 	"opal": New,
 }
 
