@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
@@ -45,7 +46,7 @@ resource "opal_resource" "%s" {
 }
 
 // testAccProviders is a map of Terraform providers for the test cases
-var testAccProviders = map[string]func() *OpalProvider{
+var testAccProviders = map[string]func() provider.Provider{
 	"opal": New,
 }
 
@@ -91,7 +92,7 @@ func TestAccResource_Update(t *testing.T) {
 	baseName, resourceName := generateBaseNameAndResourceName()
 
 	resource.Test(t, resource.TestCase{
-		ProtoV6ProviderFactories: testAccProviderFactories,
+		ProtoV6ProviderFactories: testAccProviders,
 		PreCheck:                 func() { testAccPreCheck(t) },
 		CheckDestroy:             testAccCheckResourceDestroy,
 		Steps: []resource.TestStep{
@@ -119,7 +120,7 @@ func TestAccResource_Delete(t *testing.T) {
 	baseName, resourceName := generateBaseNameAndResourceName()
 
 	resource.Test(t, resource.TestCase{
-		ProtoV6ProviderFactories: testAccProviderFactories,
+		ProtoV6ProviderFactories: testAccProviders,
 		PreCheck:                 func() { testAccPreCheck(t) },
 		CheckDestroy:             testAccCheckResourceDestroy,
 		Steps: []resource.TestStep{
