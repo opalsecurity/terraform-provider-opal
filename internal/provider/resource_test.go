@@ -46,8 +46,8 @@ resource "opal_resource" "%s" {
 }
 
 // testAccProviders is a map of Terraform providers for the test cases
-var testAccProviders = map[string]func() *schema.Provider{
-	"opal": New("version"),
+var testAccProviders = map[string]*schema.Provider{
+	"opal": New("version").(*schema.Provider),
 }
 
 // checkResourceExists simulates checking if a resource exists in the backend
