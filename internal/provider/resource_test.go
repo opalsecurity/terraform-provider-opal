@@ -47,8 +47,10 @@ resource "opal_resource" "%s" {
 }
 
 // testAccProviders is a map of Terraform providers for the test cases
-var testAccProviders = map[string]provider.Provider{
-	"opal": New("").GRPCProvider,
+var testAccProviders = map[string]func() (tfprotov6.ProviderServer, error){
+	"opal": func() (tfprotov6.ProviderServer, error) {
+		return New("").GRPCProvider()
+	},
 }
 
 // checkResourceExists simulates checking if a resource exists in the backend
@@ -93,15 +95,7 @@ func TestAccResource_Update(t *testing.T) {
 	baseName, resourceName := generateBaseNameAndResourceName()
 
 	resource.Test(t, resource.TestCase{
-		ProtoV6ProviderFactories: map[string]func() (tfprotov6.ProviderServer, error){
-			"opal": func() (tfprotov6.ProviderServer, error) {
-				p, err := New("").GRPCProvider()
-				if err != nil {
-					return nil, err
-				}
-				return p, nil
-			},
-		},
+		ProtoV6ProviderFactories: testAccProviders,
 		PreCheck:                 func() { testAccPreCheck(t) },
 		CheckDestroy:             testAccCheckResourceDestroy,
 		Steps: []resource.TestStep{
@@ -129,15 +123,7 @@ func TestAccResource_Delete(t *testing.T) {
 	baseName, resourceName := generateBaseNameAndResourceName()
 
 	resource.Test(t, resource.TestCase{
-		ProtoV6ProviderFactories: map[string]func() (tfprotov6.ProviderServer, error){
-			"opal": func() (tfprotov6.ProviderServer, error) {
-				p, err := New("").GRPCProvider()
-				if err != nil {
-					return nil, err
-				}
-				return p, nil
-			},
-		},
+		ProtoV6ProviderFactories: testAccProviders,
 		PreCheck:                 func() { testAccPreCheck(t) },
 		CheckDestroy:             testAccCheckResourceDestroy,
 		Steps: []resource.TestStep{
