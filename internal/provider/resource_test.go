@@ -8,7 +8,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
 )
 
@@ -52,11 +51,9 @@ var testAccProviders = map[string]func() (tfprotov6.ProviderServer, error){
 }
 
 func ProviderFactory() (tfprotov6.ProviderServer, error) {
-	// Instantiate the provider using the New function
-	provider, err := New()
-	if err != nil {
-		return nil, err
-	}
+	// Instantiate the provider using the New function with a version string
+	providerFactory := New("v1.0.0") // Assuming "v1.0.0" is the correct version
+	provider := providerFactory()
 
 	// Convert the provider to the tfprotov6.ProviderServer interface
 	providerServer, ok := provider.(tfprotov6.ProviderServer)
