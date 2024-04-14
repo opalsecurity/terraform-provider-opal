@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	tfprotov6 "github.com/hashicorp/terraform-plugin-sdk/v2/proto/v6"
 )
 
 func init() {
@@ -45,9 +46,15 @@ resource "opal_resource" "%s" {
 `, resourceName, resourceName)
 }
 
-// testAccProviders is a map of Terraform providers for the test cases
-var testAccProviders = map[string]*schema.Provider{
-	"opal": Provider(),
+var testAccProviders = map[string]func() (tfprotov6.ProviderServer, error){
+	"opal": func() (tfprotov6.ProviderServer, error) {
+		// Initialize provider
+		p := Provider()
+		// Convert *schema.Provider to tfprotov6.ProviderServer
+		return tfprotov6.NewServer(tfprotov6.ServerConfig{
+			ProviderFunc: p.GRPCProvider,
+		}), nil
+	},
 }
 
 func Provider() *schema.Provider {
