@@ -51,7 +51,12 @@ var testAccProviders = map[string]func() (tfprotov6.ProviderServer, error){
 }
 
 func ProviderFactory() (tfprotov6.ProviderServer, error) {
-	return New("v1.0.0")(), nil
+	// Assuming `New` returns a `*Provider` that implements `tfprotov6.ProviderServer`
+	provider, err := New("v1.0.0")
+	if err != nil {
+		return nil, err
+	}
+	return provider, nil
 }
 
 // checkResourceExists simulates checking if a resource exists in the backend
