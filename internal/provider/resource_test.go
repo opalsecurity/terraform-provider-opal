@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
 )
@@ -46,22 +47,14 @@ resource "opal_resource" "%s" {
 }
 
 // testAccProviders is a map of Terraform providers for the test cases
-var testAccProviders = map[string]func() (tfprotov6.ProviderServer, error){
-	"opal": ProviderFactory,
+var testAccProviders = map[string]*schema.Provider{
+	"opal": Provider(),
 }
 
-func ProviderFactory() (tfprotov6.ProviderServer, error) {
-	// Instantiate the provider using the New function with a version string
-	providerFactory := New("v1.0.0") // Assuming "v1.0.0" is the correct version
-	provider := providerFactory()
-
-	// Convert the provider to the tfprotov6.ProviderServer interface
-	providerServer, ok := provider.(tfprotov6.ProviderServer)
-	if !ok {
-		return nil, fmt.Errorf("the provider does not implement tfprotov6.ProviderServer")
+func Provider() *schema.Provider {
+	return &schema.Provider{
+		// Define the provider's resources and data sources
 	}
-
-	return providerServer, nil
 }
 
 // checkResourceExists simulates checking if a resource exists in the backend
