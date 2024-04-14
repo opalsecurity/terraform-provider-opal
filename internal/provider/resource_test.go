@@ -9,7 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tfprotov6 "github.com/hashicorp/terraform-plugin-go/tfprotov6"
 )
 
 func init() {
@@ -47,18 +46,18 @@ resource "opal_resource" "%s" {
 }
 
 // testAccProviders is a map of Terraform providers for the test cases
-var testAccProviders = map[string]*schema.Provider{
+var testAccProviders = map[string]func() (*schema.Provider, error){
 	"opal": ProviderFactory,
 }
 
-func ProviderFactory() (tfprotov6.ProviderServer, error) {
+func ProviderFactory() (*schema.Provider, error) {
 	// Instantiate the provider using the New function
-	provider := New("v1.0.0")
+	provider := Provider()
 
-	// Convert the provider to the tfprotov6.ProviderServer interface
-	providerServer, ok := provider.(tfprotov6.ProviderServer)
+	// Convert the provider to the *schema.Provider interface
+	providerServer, ok := provider.(*schema.Provider)
 	if !ok {
-		return nil, fmt.Errorf("the provider does not implement tfprotov6.ProviderServer")
+		return nil, fmt.Errorf("the provider does not implement *schema.Provider")
 	}
 
 	return providerServer, nil
