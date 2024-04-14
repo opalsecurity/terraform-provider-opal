@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
 )
 
 func init() {
@@ -59,6 +59,12 @@ func Provider() *schema.Provider {
 				// Define data sources if any
 			},
 		}
+}
+
+func resourceOpalResource() *schema.Resource {
+	return &schema.Resource{
+		// Define the schema and operations for the opal_resource
+	}
 }
 
 // checkResourceExists simulates checking if a resource exists in the backend
