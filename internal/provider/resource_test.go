@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
 )
@@ -53,8 +52,13 @@ var testAccProviders = map[string]*schema.Provider{
 
 func Provider() *schema.Provider {
 	return &schema.Provider{
-		// Define the provider's resources and data sources
-	}
+			ResourcesMap: map[string]*schema.Resource{
+				"opal_resource": resourceOpalResource(),
+			},
+			DataSourcesMap: map[string]*schema.Resource{
+				// Define data sources if any
+			},
+		}
 }
 
 // checkResourceExists simulates checking if a resource exists in the backend
