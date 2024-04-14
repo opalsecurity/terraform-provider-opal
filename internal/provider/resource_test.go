@@ -51,7 +51,7 @@ var testAccProviders = map[string]func() (tfprotov6.ProviderServer, error){
 }
 
 func ProviderFactory() (tfprotov6.ProviderServer, error) {
-	return New("v1.0.0").GRPCProvider, nil
+	return New("v1.0.0")(), nil
 }
 
 // checkResourceExists simulates checking if a resource exists in the backend
