@@ -8,7 +8,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	tfprotov6 "github.com/hashicorp/terraform-plugin-go/tfprotov6"
 )
 
 func init() {
@@ -51,7 +50,7 @@ var testAccProviders = map[string]func() provider.Provider{
 }
 
 func ProviderFactory() provider.Provider {
-	return New("") // Assuming New returns a provider.Provider
+	return New("v1.0.0") // Assuming New returns a provider.Provider
 }
 
 // checkResourceExists simulates checking if a resource exists in the backend
