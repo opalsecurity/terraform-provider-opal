@@ -1,0 +1,13 @@
+workflowVersion: 1.0.0
+sources:
+    opal-terraform-provider:
+        inputs:
+            - location: openapi_original.yaml
+        overlays:
+            - location: terraform_overlay.yaml
+        output: openapi.yaml
+targets:
+    terraform:
+        target: terraform
+        source: opal-terraform-provider
+        output: .
