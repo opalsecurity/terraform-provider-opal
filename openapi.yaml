@@ -5692,6 +5692,7 @@ components:
                 - resource_id
             type: object
             x-speakeasy-entity: Resource
+            x-speakeasy-entity-version: 3
         AwsPermissionSetMetadata:
             description: Metadata for AWS Identity Center permission set.
             properties:

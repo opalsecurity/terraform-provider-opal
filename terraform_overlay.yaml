@@ -1333,6 +1333,9 @@ actions:
   - target: $["components"]["schemas"]["Resource"]
     update:
       x-speakeasy-entity: Resource
+  - target: $["components"]["schemas"]["Resource"]
+    update:
+      x-speakeasy-entity-version: 3
   - target: $["components"]["schemas"]["UpdateResourceInfoList"]["example"]["resources"][0]["max_duration"]
     remove: true
   - target: $["components"]["schemas"]["UpdateResourceInfoList"]["example"]["resources"][0]["require_manager_approval"]
