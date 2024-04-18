@@ -9,7 +9,7 @@ import (
 )
 
 func (r *GroupResourceListResourceModel) ToSharedUpdateGroupResourcesInfo() *shared.UpdateGroupResourcesInfo {
-	var resources []shared.ResourceWithAccessLevel = nil
+	var resources []shared.ResourceWithAccessLevel = []shared.ResourceWithAccessLevel{}
 	for _, resourcesItem := range r.Resources {
 		accessLevelRemoteID := new(string)
 		if !resourcesItem.AccessLevelRemoteID.IsUnknown() && !resourcesItem.AccessLevelRemoteID.IsNull() {

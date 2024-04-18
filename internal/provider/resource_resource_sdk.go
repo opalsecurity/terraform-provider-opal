@@ -557,17 +557,17 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo() *shared.UpdateResou
 	} else {
 		name = nil
 	}
-	var requestConfigurations []shared.RequestConfiguration = nil
+	var requestConfigurations []shared.RequestConfiguration = []shared.RequestConfiguration{}
 	for _, requestConfigurationsItem := range r.RequestConfigurations {
 		allowRequests := requestConfigurationsItem.AllowRequests.ValueBool()
 		autoApproval := requestConfigurationsItem.AutoApproval.ValueBool()
 		var condition *shared.Condition
 		if requestConfigurationsItem.Condition != nil {
-			var groupIds []string = nil
+			var groupIds []string = []string{}
 			for _, groupIdsItem := range requestConfigurationsItem.Condition.GroupIds {
 				groupIds = append(groupIds, groupIdsItem.ValueString())
 			}
-			var roleRemoteIds []string = nil
+			var roleRemoteIds []string = []string{}
 			for _, roleRemoteIdsItem := range requestConfigurationsItem.Condition.RoleRemoteIds {
 				roleRemoteIds = append(roleRemoteIds, roleRemoteIdsItem.ValueString())
 			}
@@ -597,7 +597,7 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo() *shared.UpdateResou
 		}
 		requireMfaToRequest := requestConfigurationsItem.RequireMfaToRequest.ValueBool()
 		requireSupportTicket := requestConfigurationsItem.RequireSupportTicket.ValueBool()
-		var reviewerStages []shared.ReviewerStage = nil
+		var reviewerStages []shared.ReviewerStage = []shared.ReviewerStage{}
 		for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 			operator := new(shared.Operator)
 			if !reviewerStagesItem.Operator.IsUnknown() && !reviewerStagesItem.Operator.IsNull() {
@@ -605,7 +605,7 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo() *shared.UpdateResou
 			} else {
 				operator = nil
 			}
-			var ownerIds []string = nil
+			var ownerIds []string = []string{}
 			for _, ownerIdsItem := range reviewerStagesItem.OwnerIds {
 				ownerIds = append(ownerIds, ownerIdsItem.ValueString())
 			}
@@ -725,7 +725,7 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(resp shared.
 
 func (r *ResourceResourceModel) ToSharedVisibilityInfo() *shared.VisibilityInfo {
 	visibility := shared.VisibilityTypeEnum(r.Visibility.ValueString())
-	var visibilityGroupIds []string = nil
+	var visibilityGroupIds []string = []string{}
 	for _, visibilityGroupIdsItem := range r.VisibilityGroupIds {
 		visibilityGroupIds = append(visibilityGroupIds, visibilityGroupIdsItem.ValueString())
 	}

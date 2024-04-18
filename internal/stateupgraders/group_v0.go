@@ -13,7 +13,6 @@ import (
 )
 
 func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest, resp *resource.UpgradeStateResponse) {
-	resp.Diagnostics.AddWarning("GroupStateUpgraderV0", "This is a placeholder state upgrader that does nothing.")
 	GroupV0 := tftypes.Object{
 		AttributeTypes: map[string]tftypes.Type{
 			"id":                 tftypes.String,
@@ -130,7 +129,7 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"require_mfa_to_approve": tftypes.Bool,
 			"remote_info": remoteInfoType,
 			"visibility": tftypes.String,
-			"visibility_group_ids": tftypes.List{ElementType: tftypes.String},
+			"visibility_group_ids": tftypes.Set{ElementType: tftypes.String},
 			"message_channel_ids": tftypes.List{ElementType:  tftypes.String},
 			"message_channels": messageChannelsType,
 			"on_call_schedule_ids": tftypes.List{ElementType:  tftypes.String},
@@ -228,32 +227,39 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			return
 		}
 	}
-
-	// var visibilityGroupValues []tftype.Value
-	// if err := oldRawState["visibility_group"].As(&visibilityGroupValues); err != nil {
-	// 	resp.Diagnostics.AddAttributeError(
-	// 		path.Root("visibility_group"),
-	// 		"Unable to Convert Prior State",
-	// 		err.Error(),
-	// 	)
-	// 	return
-	// }
-
-	var remoteInfos []tftypes.Value
-	// var remoteInfo tftypes.Value
-	if err := oldRawState["remote_info"].As(&remoteInfos); err != nil {
-		resp.Diagnostics.AddAttributeError(
-			path.Root("remoteInfos"),
-			"Unable to Convert Prior State",
-			err.Error(),
-		)
+	var visibilityGroupObjects []tftypes.Value
+	var visibilityGroupIDs []tftypes.Value
+	if !oldRawState["visibility_group"].IsNull() {
+		oldRawState["visibility_group"].As(&visibilityGroupObjects)
+		for _, groupObject := range visibilityGroupObjects {
+			var objSchema map[string]tftypes.Value
+			groupObject.As(&objSchema)
+			visibilityGroupIDs = append(visibilityGroupIDs, objSchema["id"])
+		}
 	}
-	if len(remoteInfos) > 0 {
-		// There should be at most one
-		// remoteInfo = remoteInfos[0]
+
+	var auditMessageChannelObjects []tftypes.Value
+	var auditMessageChannelIDs []tftypes.Value
+	if !oldRawState["audit_message_channel"].IsNull() {
+		oldRawState["audit_message_channel"].As(&auditMessageChannelObjects)
+		for _, channelObject := range auditMessageChannelObjects {
+			var objSchema map[string]tftypes.Value
+			channelObject.As(&objSchema)
+			auditMessageChannelIDs = append(auditMessageChannelIDs, objSchema["id"])
+		}
 	}
-	
-	
+
+	var oncallScheduleObjects []tftypes.Value
+	var oncallScheduleIDs []tftypes.Value
+	if !oldRawState["on_call_schedule"].IsNull() {
+		oldRawState["on_call_schedule"].As(&oncallScheduleObjects)
+		for _, oncallObject := range oncallScheduleObjects {
+			var objSchema map[string]tftypes.Value
+			oncallObject.As(&objSchema)
+			oncallScheduleIDs = append(oncallScheduleIDs, objSchema["id"])
+		}
+	}
+
 	var requestConfigurationsValue []tftypes.Value
 	if err = oldRawState["request_configuration"].As(&requestConfigurationsValue); err != nil {
 		resp.Diagnostics.AddAttributeError(
@@ -275,13 +281,13 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"app_id": tftypes.NewValue(tftypes.String, app_id),
 			"admin_owner_id": tftypes.NewValue(tftypes.String, admin_owner_id),
 			"require_mfa_to_approve": tftypes.NewValue(tftypes.Bool, require_mfa_to_approve),
-			"remote_info": tftypes.NewValue(remoteInfoType, nil),
+			"remote_info": tftypes.NewValue(remoteInfoType, nil), // Will be populated on a state refresh
 			"remote_name": tftypes.NewValue(tftypes.String, nil), // read only field to be filled in by refresh
 			"visibility": tftypes.NewValue(tftypes.String, visibility),
-			"visibility_group_ids":tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, nil), // Will be populated by first terraform apply
-			"message_channel_ids": tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, nil), // Will be populated by first terraform apply
+			"visibility_group_ids":tftypes.NewValue(tftypes.Set{ElementType: tftypes.String}, visibilityGroupIDs),
+			"message_channel_ids": tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, auditMessageChannelIDs),
 			"message_channels": tftypes.NewValue(messageChannelsType, nil), // Will be populated on a state refresh
-			"on_call_schedule_ids": tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, nil), // Will be populated by first terraform apply
+			"on_call_schedule_ids": tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, oncallScheduleIDs),
 			"oncall_schedules": tftypes.NewValue(oncallSchedulesType, nil), // Will be populated on a state refresh
 			"request_configurations": tftypes.NewValue(requestConfigurationsType, nil), // Will be populated on a state refresh
 		}),

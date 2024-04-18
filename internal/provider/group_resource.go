@@ -729,7 +729,7 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		return
 	}
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	var onCallScheduleIds []string = nil
+	var onCallScheduleIds []string = []string{}
 	for _, onCallScheduleIdsItem := range data.OnCallScheduleIds {
 		onCallScheduleIds = append(onCallScheduleIds, onCallScheduleIdsItem.ValueString())
 	}
@@ -1091,7 +1091,7 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		return
 	}
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	var onCallScheduleIds []string = nil
+	var onCallScheduleIds []string = []string{}
 	for _, onCallScheduleIdsItem := range data.OnCallScheduleIds {
 		onCallScheduleIds = append(onCallScheduleIds, onCallScheduleIdsItem.ValueString())
 	}
