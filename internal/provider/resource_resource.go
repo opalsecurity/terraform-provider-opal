@@ -67,7 +67,7 @@ func (r *ResourceResource) Metadata(ctx context.Context, req resource.MetadataRe
 func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Resource Resource",
-		Version:             3,
+		Version:             1,
 		Attributes: map[string]schema.Attribute{
 			"admin_owner_id": schema.StringAttribute{
 				Computed:    true,
@@ -1393,7 +1393,5 @@ func (r *ResourceResource) ImportState(ctx context.Context, req resource.ImportS
 func (r *ResourceResource) UpgradeState(ctx context.Context) map[int64]resource.StateUpgrader {
 	return map[int64]resource.StateUpgrader{
 		0: {StateUpgrader: stateupgraders.ResourceStateUpgraderV0},
-		1: {StateUpgrader: stateupgraders.ResourceStateUpgraderV1},
-		2: {StateUpgrader: stateupgraders.ResourceStateUpgraderV2},
 	}
 }

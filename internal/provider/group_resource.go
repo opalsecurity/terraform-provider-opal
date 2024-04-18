@@ -73,7 +73,7 @@ func (r *GroupResource) Metadata(ctx context.Context, req resource.MetadataReque
 func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Group Resource",
-		Version:             3,
+		Version:             1,
 		Attributes: map[string]schema.Attribute{
 			"admin_owner_id": schema.StringAttribute{
 				Computed:    true,
@@ -1299,7 +1299,5 @@ func (r *GroupResource) ImportState(ctx context.Context, req resource.ImportStat
 func (r *GroupResource) UpgradeState(ctx context.Context) map[int64]resource.StateUpgrader {
 	return map[int64]resource.StateUpgrader{
 		0: {StateUpgrader: stateupgraders.GroupStateUpgraderV0},
-		1: {StateUpgrader: stateupgraders.GroupStateUpgraderV1},
-		2: {StateUpgrader: stateupgraders.GroupStateUpgraderV2},
 	}
 }
