@@ -52,7 +52,6 @@ func (r *ConfigurationTemplateResource) Metadata(ctx context.Context, req resour
 func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "ConfigurationTemplate Resource",
-
 		Attributes: map[string]schema.Attribute{
 			"admin_owner_id": schema.StringAttribute{
 				Required:    true,

@@ -41,7 +41,6 @@ func (r *TagUserResource) Metadata(ctx context.Context, req resource.MetadataReq
 func (r *TagUserResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "TagUser Resource",
-
 		Attributes: map[string]schema.Attribute{
 			"tag_id": schema.StringAttribute{
 				PlanModifiers: []planmodifier.String{

@@ -3708,6 +3708,7 @@ components:
                 - group_id
             type: object
             x-speakeasy-entity: Group
+            x-speakeasy-entity-version: 3
         GroupUserList:
             example:
                 results:

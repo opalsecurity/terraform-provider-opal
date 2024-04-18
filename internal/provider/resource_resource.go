@@ -66,7 +66,6 @@ func (r *ResourceResource) Metadata(ctx context.Context, req resource.MetadataRe
 func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Resource Resource",
-
 		Attributes: map[string]schema.Attribute{
 			"admin_owner_id": schema.StringAttribute{
 				Computed:    true,

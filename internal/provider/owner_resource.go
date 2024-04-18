@@ -48,7 +48,6 @@ func (r *OwnerResource) Metadata(ctx context.Context, req resource.MetadataReque
 func (r *OwnerResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Owner Resource",
-
 		Attributes: map[string]schema.Attribute{
 			"access_request_escalation_period": schema.Int64Attribute{
 				Computed:    true,
