@@ -124,7 +124,7 @@ func (r *AppsDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 		return
 	}
 
-	var appTypeFilter []shared.AppTypeEnum = nil
+	var appTypeFilter []shared.AppTypeEnum = []shared.AppTypeEnum{}
 	for _, appTypeFilterItem := range data.AppTypeFilter {
 		appTypeFilter = append(appTypeFilter, shared.AppTypeEnum(appTypeFilterItem.ValueString()))
 	}

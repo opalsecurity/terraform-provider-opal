@@ -22,6 +22,7 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
+	stateupgraders "github.com/opalsecurity/terraform-provider-opal/internal/stateupgraders"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/boolvalidators"
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/internal/validators/int64validators"
 	custom_listvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/listvalidators"
@@ -31,7 +32,7 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ resource.Resource = &ResourceResource{}
-var _ resource.ResourceWithImportState = &ResourceResource{}
+var _ resource.ResourceWithUpgradeState = &ResourceResource{}
 
 func NewResourceResource() resource.Resource {
 	return &ResourceResource{}
@@ -66,7 +67,7 @@ func (r *ResourceResource) Metadata(ctx context.Context, req resource.MetadataRe
 func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Resource Resource",
-
+		Version:             1,
 		Attributes: map[string]schema.Attribute{
 			"admin_owner_id": schema.StringAttribute{
 				Computed:    true,
@@ -1387,4 +1388,10 @@ func (r *ResourceResource) Delete(ctx context.Context, req resource.DeleteReques
 
 func (r *ResourceResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), req.ID)...)
+}
+
+func (r *ResourceResource) UpgradeState(ctx context.Context) map[int64]resource.StateUpgrader {
+	return map[int64]resource.StateUpgrader{
+		0: {StateUpgrader: stateupgraders.ResourceStateUpgraderV0},
+	}
 }

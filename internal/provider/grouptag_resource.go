@@ -41,7 +41,6 @@ func (r *GroupTagResource) Metadata(ctx context.Context, req resource.MetadataRe
 func (r *GroupTagResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "GroupTag Resource",
-
 		Attributes: map[string]schema.Attribute{
 			"group_id": schema.StringAttribute{
 				PlanModifiers: []planmodifier.String{

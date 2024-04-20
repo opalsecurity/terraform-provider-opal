@@ -9,3 +9,4 @@ dev/
 .envrc.local
 .envrc.prod
 .idea
+.vscode/launch.json
