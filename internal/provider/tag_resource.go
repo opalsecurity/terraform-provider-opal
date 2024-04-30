@@ -49,7 +49,6 @@ func (r *TagResource) Metadata(ctx context.Context, req resource.MetadataRequest
 func (r *TagResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Tag Resource",
-
 		Attributes: map[string]schema.Attribute{
 			"created_at": schema.StringAttribute{
 				Computed:    true,

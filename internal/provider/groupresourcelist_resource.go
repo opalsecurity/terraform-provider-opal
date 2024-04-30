@@ -42,7 +42,6 @@ func (r *GroupResourceListResource) Metadata(ctx context.Context, req resource.M
 func (r *GroupResourceListResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "GroupResourceList Resource",
-
 		Attributes: map[string]schema.Attribute{
 			"group_id": schema.StringAttribute{
 				Required:    true,

@@ -24,6 +24,7 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
+	stateupgraders "github.com/opalsecurity/terraform-provider-opal/internal/stateupgraders"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/boolvalidators"
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/internal/validators/int64validators"
 	custom_listvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/listvalidators"
@@ -33,7 +34,7 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ resource.Resource = &GroupResource{}
-var _ resource.ResourceWithImportState = &GroupResource{}
+var _ resource.ResourceWithUpgradeState = &GroupResource{}
 
 func NewGroupResource() resource.Resource {
 	return &GroupResource{}
@@ -72,7 +73,7 @@ func (r *GroupResource) Metadata(ctx context.Context, req resource.MetadataReque
 func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Group Resource",
-
+		Version:             1,
 		Attributes: map[string]schema.Attribute{
 			"admin_owner_id": schema.StringAttribute{
 				Computed:    true,
@@ -728,7 +729,7 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		return
 	}
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	var onCallScheduleIds []string = nil
+	var onCallScheduleIds []string = []string{}
 	for _, onCallScheduleIdsItem := range data.OnCallScheduleIds {
 		onCallScheduleIds = append(onCallScheduleIds, onCallScheduleIdsItem.ValueString())
 	}
@@ -1090,7 +1091,7 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		return
 	}
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	var onCallScheduleIds []string = nil
+	var onCallScheduleIds []string = []string{}
 	for _, onCallScheduleIdsItem := range data.OnCallScheduleIds {
 		onCallScheduleIds = append(onCallScheduleIds, onCallScheduleIdsItem.ValueString())
 	}
@@ -1293,4 +1294,10 @@ func (r *GroupResource) Delete(ctx context.Context, req resource.DeleteRequest, 
 
 func (r *GroupResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), req.ID)...)
+}
+
+func (r *GroupResource) UpgradeState(ctx context.Context) map[int64]resource.StateUpgrader {
+	return map[int64]resource.StateUpgrader{
+		0: {StateUpgrader: stateupgraders.GroupStateUpgraderV0},
+	}
 }

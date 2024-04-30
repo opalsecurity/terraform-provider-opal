@@ -54,7 +54,6 @@ func (r *GroupUserResource) Metadata(ctx context.Context, req resource.MetadataR
 func (r *GroupUserResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "GroupUser Resource",
-
 		Attributes: map[string]schema.Attribute{
 			"access_level": schema.SingleNestedAttribute{
 				Computed: true,

@@ -9,30 +9,30 @@ import (
 
 func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplateInfo() *shared.CreateConfigurationTemplateInfo {
 	adminOwnerID := r.AdminOwnerID.ValueString()
-	var breakGlassUserIds []string = nil
+	var breakGlassUserIds []string = []string{}
 	for _, breakGlassUserIdsItem := range r.BreakGlassUserIds {
 		breakGlassUserIds = append(breakGlassUserIds, breakGlassUserIdsItem.ValueString())
 	}
-	var linkedAuditMessageChannelIds []string = nil
+	var linkedAuditMessageChannelIds []string = []string{}
 	for _, linkedAuditMessageChannelIdsItem := range r.LinkedAuditMessageChannelIds {
 		linkedAuditMessageChannelIds = append(linkedAuditMessageChannelIds, linkedAuditMessageChannelIdsItem.ValueString())
 	}
-	var memberOncallScheduleIds []string = nil
+	var memberOncallScheduleIds []string = []string{}
 	for _, memberOncallScheduleIdsItem := range r.MemberOncallScheduleIds {
 		memberOncallScheduleIds = append(memberOncallScheduleIds, memberOncallScheduleIdsItem.ValueString())
 	}
 	name := r.Name.ValueString()
-	var requestConfigurations []shared.RequestConfiguration = nil
+	var requestConfigurations []shared.RequestConfiguration = []shared.RequestConfiguration{}
 	for _, requestConfigurationsItem := range r.RequestConfigurations {
 		allowRequests := requestConfigurationsItem.AllowRequests.ValueBool()
 		autoApproval := requestConfigurationsItem.AutoApproval.ValueBool()
 		var condition *shared.Condition
 		if requestConfigurationsItem.Condition != nil {
-			var groupIds []string = nil
+			var groupIds []string = []string{}
 			for _, groupIdsItem := range requestConfigurationsItem.Condition.GroupIds {
 				groupIds = append(groupIds, groupIdsItem.ValueString())
 			}
-			var roleRemoteIds []string = nil
+			var roleRemoteIds []string = []string{}
 			for _, roleRemoteIdsItem := range requestConfigurationsItem.Condition.RoleRemoteIds {
 				roleRemoteIds = append(roleRemoteIds, roleRemoteIdsItem.ValueString())
 			}
@@ -62,7 +62,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 		}
 		requireMfaToRequest := requestConfigurationsItem.RequireMfaToRequest.ValueBool()
 		requireSupportTicket := requestConfigurationsItem.RequireSupportTicket.ValueBool()
-		var reviewerStages []shared.ReviewerStage = nil
+		var reviewerStages []shared.ReviewerStage = []shared.ReviewerStage{}
 		for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 			operator := new(shared.Operator)
 			if !reviewerStagesItem.Operator.IsUnknown() && !reviewerStagesItem.Operator.IsNull() {
@@ -70,7 +70,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 			} else {
 				operator = nil
 			}
-			var ownerIds []string = nil
+			var ownerIds []string = []string{}
 			for _, ownerIdsItem := range reviewerStagesItem.OwnerIds {
 				ownerIds = append(ownerIds, ownerIdsItem.ValueString())
 			}
@@ -97,7 +97,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 	requireMfaToApprove := r.RequireMfaToApprove.ValueBool()
 	requireMfaToConnect := r.RequireMfaToConnect.ValueBool()
 	visibility1 := shared.VisibilityTypeEnum(r.Visibility.Visibility.ValueString())
-	var visibilityGroupIds []string = nil
+	var visibilityGroupIds []string = []string{}
 	for _, visibilityGroupIdsItem := range r.Visibility.VisibilityGroupIds {
 		visibilityGroupIds = append(visibilityGroupIds, visibilityGroupIdsItem.ValueString())
 	}
@@ -156,16 +156,16 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 	} else {
 		adminOwnerID = nil
 	}
-	var breakGlassUserIds []string = nil
+	var breakGlassUserIds []string = []string{}
 	for _, breakGlassUserIdsItem := range r.BreakGlassUserIds {
 		breakGlassUserIds = append(breakGlassUserIds, breakGlassUserIdsItem.ValueString())
 	}
 	configurationTemplateID := r.ConfigurationTemplateID.ValueString()
-	var linkedAuditMessageChannelIds []string = nil
+	var linkedAuditMessageChannelIds []string = []string{}
 	for _, linkedAuditMessageChannelIdsItem := range r.LinkedAuditMessageChannelIds {
 		linkedAuditMessageChannelIds = append(linkedAuditMessageChannelIds, linkedAuditMessageChannelIdsItem.ValueString())
 	}
-	var memberOncallScheduleIds []string = nil
+	var memberOncallScheduleIds []string = []string{}
 	for _, memberOncallScheduleIdsItem := range r.MemberOncallScheduleIds {
 		memberOncallScheduleIds = append(memberOncallScheduleIds, memberOncallScheduleIdsItem.ValueString())
 	}
@@ -175,17 +175,17 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 	} else {
 		name = nil
 	}
-	var requestConfigurations []shared.RequestConfiguration = nil
+	var requestConfigurations []shared.RequestConfiguration = []shared.RequestConfiguration{}
 	for _, requestConfigurationsItem := range r.RequestConfigurations {
 		allowRequests := requestConfigurationsItem.AllowRequests.ValueBool()
 		autoApproval := requestConfigurationsItem.AutoApproval.ValueBool()
 		var condition *shared.Condition
 		if requestConfigurationsItem.Condition != nil {
-			var groupIds []string = nil
+			var groupIds []string = []string{}
 			for _, groupIdsItem := range requestConfigurationsItem.Condition.GroupIds {
 				groupIds = append(groupIds, groupIdsItem.ValueString())
 			}
-			var roleRemoteIds []string = nil
+			var roleRemoteIds []string = []string{}
 			for _, roleRemoteIdsItem := range requestConfigurationsItem.Condition.RoleRemoteIds {
 				roleRemoteIds = append(roleRemoteIds, roleRemoteIdsItem.ValueString())
 			}
@@ -215,7 +215,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 		}
 		requireMfaToRequest := requestConfigurationsItem.RequireMfaToRequest.ValueBool()
 		requireSupportTicket := requestConfigurationsItem.RequireSupportTicket.ValueBool()
-		var reviewerStages []shared.ReviewerStage = nil
+		var reviewerStages []shared.ReviewerStage = []shared.ReviewerStage{}
 		for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 			operator := new(shared.Operator)
 			if !reviewerStagesItem.Operator.IsUnknown() && !reviewerStagesItem.Operator.IsNull() {
@@ -223,7 +223,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 			} else {
 				operator = nil
 			}
-			var ownerIds []string = nil
+			var ownerIds []string = []string{}
 			for _, ownerIdsItem := range reviewerStagesItem.OwnerIds {
 				ownerIds = append(ownerIds, ownerIdsItem.ValueString())
 			}
@@ -261,7 +261,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 	}
 	var visibility *shared.VisibilityInfo
 	visibility1 := shared.VisibilityTypeEnum(r.Visibility.Visibility.ValueString())
-	var visibilityGroupIds []string = nil
+	var visibilityGroupIds []string = []string{}
 	for _, visibilityGroupIdsItem := range r.Visibility.VisibilityGroupIds {
 		visibilityGroupIds = append(visibilityGroupIds, visibilityGroupIdsItem.ValueString())
 	}

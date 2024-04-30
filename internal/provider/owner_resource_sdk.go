@@ -33,7 +33,7 @@ func (r *OwnerResourceModel) ToSharedCreateOwnerInfo() *shared.CreateOwnerInfo {
 	} else {
 		sourceGroupID = nil
 	}
-	var userIds []string = nil
+	var userIds []string = []string{}
 	for _, userIdsItem := range r.UserIds {
 		userIds = append(userIds, userIdsItem.ValueString())
 	}
@@ -117,7 +117,7 @@ func (r *OwnerResourceModel) RefreshFromSharedUpdateOwnerInfo(resp shared.Update
 }
 
 func (r *OwnerResourceModel) ToSharedUserIDList() *shared.UserIDList {
-	var userIds []string = nil
+	var userIds []string = []string{}
 	for _, userIdsItem := range r.UserIds {
 		userIds = append(userIds, userIdsItem.ValueString())
 	}

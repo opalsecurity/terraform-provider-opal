@@ -3708,6 +3708,7 @@ components:
                 - group_id
             type: object
             x-speakeasy-entity: Group
+            x-speakeasy-entity-version: 1
         GroupUserList:
             example:
                 results:
@@ -5691,6 +5692,7 @@ components:
                 - resource_id
             type: object
             x-speakeasy-entity: Resource
+            x-speakeasy-entity-version: 1
         AwsPermissionSetMetadata:
             description: Metadata for AWS Identity Center permission set.
             properties:

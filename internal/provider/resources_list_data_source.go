@@ -579,7 +579,7 @@ func (r *ResourcesListDataSource) Read(ctx context.Context, req datasource.ReadR
 	} else {
 		parentResourceID = nil
 	}
-	var resourceIds []string = nil
+	var resourceIds []string = []string{}
 	for _, resourceIdsItem := range data.ResourceIds {
 		resourceIds = append(resourceIds, resourceIdsItem.ValueString())
 	}

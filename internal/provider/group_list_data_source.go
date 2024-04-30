@@ -321,7 +321,7 @@ func (r *GroupListDataSource) Read(ctx context.Context, req datasource.ReadReque
 		return
 	}
 
-	var groupIds []string = nil
+	var groupIds []string = []string{}
 	for _, groupIdsItem := range data.GroupIds {
 		groupIds = append(groupIds, groupIdsItem.ValueString())
 	}

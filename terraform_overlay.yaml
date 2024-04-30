@@ -2,6 +2,7 @@ overlay: 1.0.0
 info:
   title: Overlay ./openapi_original.yaml => ./openapi.yaml
   version: 0.0.0
+extends: file:///Users/amruthvenkatraman/src/terraform-provider-opal/openapi_original.yaml
 actions:
   - target: $["servers"][0]
     update:
@@ -885,6 +886,9 @@ actions:
   - target: $["components"]["schemas"]["Group"]
     update:
       x-speakeasy-entity: Group
+  - target: $["components"]["schemas"]["Group"]
+    update:
+      x-speakeasy-entity-version: 1
   - target: $["components"]["schemas"]["GroupUserList"]
     update:
       x-speakeasy-entity: GroupUsers
@@ -1329,6 +1333,9 @@ actions:
   - target: $["components"]["schemas"]["Resource"]
     update:
       x-speakeasy-entity: Resource
+  - target: $["components"]["schemas"]["Resource"]
+    update:
+      x-speakeasy-entity-version: 1
   - target: $["components"]["schemas"]["UpdateResourceInfoList"]["example"]["resources"][0]["max_duration"]
     remove: true
   - target: $["components"]["schemas"]["UpdateResourceInfoList"]["example"]["resources"][0]["require_manager_approval"]
