@@ -19,6 +19,10 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 			results1.AppID = types.StringPointerValue(resultsItem.AppID)
 			results1.Description = types.StringPointerValue(resultsItem.Description)
 			results1.GroupBindingID = types.StringPointerValue(resultsItem.GroupBindingID)
+			results1.GroupLeaderUserIds = []types.String{}
+			for _, v := range resultsItem.GroupLeaderUserIds {
+				results1.GroupLeaderUserIds = append(results1.GroupLeaderUserIds, types.StringValue(v))
+			}
 			if resultsItem.GroupType != nil {
 				results1.GroupType = types.StringValue(string(*resultsItem.GroupType))
 			} else {
@@ -152,6 +156,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 				r.Results[resultsCount].AppID = results1.AppID
 				r.Results[resultsCount].Description = results1.Description
 				r.Results[resultsCount].GroupBindingID = results1.GroupBindingID
+				r.Results[resultsCount].GroupLeaderUserIds = results1.GroupLeaderUserIds
 				r.Results[resultsCount].GroupType = results1.GroupType
 				r.Results[resultsCount].ID = results1.ID
 				r.Results[resultsCount].Name = results1.Name

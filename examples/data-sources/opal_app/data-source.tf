@@ -1,3 +1,3 @@
 data "opal_app" "my_app" {
-  id = "dbb0d5f3-dec6-4379-a1a5-f422d4f1a434"
+  id = "e45912c1-1553-4e8e-b4cf-56bf9ec06486"
 }

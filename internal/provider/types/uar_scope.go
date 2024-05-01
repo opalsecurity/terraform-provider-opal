@@ -5,7 +5,15 @@ package types
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type UARScope struct {
-	Admins []types.String `tfsdk:"admins"`
-	Names  []types.String `tfsdk:"names"`
-	Tags   []TagFilter    `tfsdk:"tags"`
+	Admins               []types.String `tfsdk:"admins"`
+	Apps                 []types.String `tfsdk:"apps"`
+	Entities             []types.String `tfsdk:"entities"`
+	FilterOperator       types.String   `tfsdk:"filter_operator"`
+	GroupTypes           []types.String `tfsdk:"group_types"`
+	GroupVisibility      types.String   `tfsdk:"group_visibility"`
+	IncludeGroupBindings types.Bool     `tfsdk:"include_group_bindings"`
+	Names                []types.String `tfsdk:"names"`
+	ResourceTypes        []types.String `tfsdk:"resource_types"`
+	Tags                 []TagFilter    `tfsdk:"tags"`
+	Users                []types.String `tfsdk:"users"`
 }

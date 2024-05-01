@@ -58,7 +58,8 @@ func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(resp *shared.Requ
 			}
 			requests1.RequesterID = types.StringValue(requestsItem.RequesterID)
 			requests1.Status = types.StringValue(string(requestsItem.Status))
-			requests1.TargetUserID = types.StringValue(requestsItem.TargetUserID)
+			requests1.TargetGroupID = types.StringPointerValue(requestsItem.TargetGroupID)
+			requests1.TargetUserID = types.StringPointerValue(requestsItem.TargetUserID)
 			requests1.UpdatedAt = types.StringValue(requestsItem.UpdatedAt.Format(time.RFC3339Nano))
 			if requestsCount+1 > len(r.Requests) {
 				r.Requests = append(r.Requests, requests1)
@@ -71,6 +72,7 @@ func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(resp *shared.Requ
 				r.Requests[requestsCount].RequestedItemsList = requests1.RequestedItemsList
 				r.Requests[requestsCount].RequesterID = requests1.RequesterID
 				r.Requests[requestsCount].Status = requests1.Status
+				r.Requests[requestsCount].TargetGroupID = requests1.TargetGroupID
 				r.Requests[requestsCount].TargetUserID = requests1.TargetUserID
 				r.Requests[requestsCount].UpdatedAt = requests1.UpdatedAt
 			}

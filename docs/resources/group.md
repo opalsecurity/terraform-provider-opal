@@ -76,6 +76,7 @@ resource "opal_group" "my_group" {
 
 - `admin_owner_id` (String) The ID of the owner of the group.
 - `description` (String) A description of the remote group.
+- `group_leader_user_ids` (List of String) A list of User IDs for the group leaders of the group
 - `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this group.
 - `visibility_group_ids` (List of String)

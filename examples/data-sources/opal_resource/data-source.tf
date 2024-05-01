@@ -1,3 +1,3 @@
 data "opal_resource" "my_resource" {
-  id = "3364a897-5f5e-489b-bb2a-71c0e74e016d"
+  id = "f3f73461-0ff5-491a-b30b-da337271b9e6"
 }

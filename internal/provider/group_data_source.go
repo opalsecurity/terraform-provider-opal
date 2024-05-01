@@ -33,6 +33,7 @@ type GroupDataSourceModel struct {
 	AppID                 types.String                                `tfsdk:"app_id"`
 	Description           types.String                                `tfsdk:"description"`
 	GroupBindingID        types.String                                `tfsdk:"group_binding_id"`
+	GroupLeaderUserIds    []types.String                              `tfsdk:"group_leader_user_ids"`
 	GroupType             types.String                                `tfsdk:"group_type"`
 	ID                    types.String                                `tfsdk:"id"`
 	MessageChannels       tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
@@ -72,6 +73,11 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			"group_binding_id": schema.StringAttribute{
 				Computed:    true,
 				Description: `The ID of the associated group binding.`,
+			},
+			"group_leader_user_ids": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
+				Description: `A list of User IDs for the group leaders of the group`,
 			},
 			"group_type": schema.StringAttribute{
 				Computed:    true,

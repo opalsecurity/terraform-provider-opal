@@ -25,9 +25,36 @@ func (r *UarDataSourceModel) RefreshFromSharedUar(resp *shared.Uar) {
 			for _, v := range resp.UarScope.Admins {
 				r.UarScope.Admins = append(r.UarScope.Admins, types.StringValue(v))
 			}
+			r.UarScope.Apps = []types.String{}
+			for _, v := range resp.UarScope.Apps {
+				r.UarScope.Apps = append(r.UarScope.Apps, types.StringValue(v))
+			}
+			r.UarScope.Entities = []types.String{}
+			for _, v := range resp.UarScope.Entities {
+				r.UarScope.Entities = append(r.UarScope.Entities, types.StringValue(v))
+			}
+			if resp.UarScope.FilterOperator != nil {
+				r.UarScope.FilterOperator = types.StringValue(string(*resp.UarScope.FilterOperator))
+			} else {
+				r.UarScope.FilterOperator = types.StringNull()
+			}
+			r.UarScope.GroupTypes = []types.String{}
+			for _, v := range resp.UarScope.GroupTypes {
+				r.UarScope.GroupTypes = append(r.UarScope.GroupTypes, types.StringValue(string(v)))
+			}
+			if resp.UarScope.GroupVisibility != nil {
+				r.UarScope.GroupVisibility = types.StringValue(string(*resp.UarScope.GroupVisibility))
+			} else {
+				r.UarScope.GroupVisibility = types.StringNull()
+			}
+			r.UarScope.IncludeGroupBindings = types.BoolPointerValue(resp.UarScope.IncludeGroupBindings)
 			r.UarScope.Names = []types.String{}
 			for _, v := range resp.UarScope.Names {
 				r.UarScope.Names = append(r.UarScope.Names, types.StringValue(v))
+			}
+			r.UarScope.ResourceTypes = []types.String{}
+			for _, v := range resp.UarScope.ResourceTypes {
+				r.UarScope.ResourceTypes = append(r.UarScope.ResourceTypes, types.StringValue(string(v)))
 			}
 			if len(r.UarScope.Tags) > len(resp.UarScope.Tags) {
 				r.UarScope.Tags = r.UarScope.Tags[:len(resp.UarScope.Tags)]
@@ -42,6 +69,10 @@ func (r *UarDataSourceModel) RefreshFromSharedUar(resp *shared.Uar) {
 					r.UarScope.Tags[tagsCount].Key = tags1.Key
 					r.UarScope.Tags[tagsCount].Value = tags1.Value
 				}
+			}
+			r.UarScope.Users = []types.String{}
+			for _, v := range resp.UarScope.Users {
+				r.UarScope.Users = append(r.UarScope.Users, types.StringValue(v))
 			}
 		}
 		r.UarID = types.StringValue(resp.UarID)

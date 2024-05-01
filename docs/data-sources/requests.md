@@ -15,7 +15,7 @@ Requests DataSource
 ```terraform
 data "opal_requests" "my_requests" {
   cursor            = "...my_cursor..."
-  page_size         = 4
+  page_size         = 5
   show_pending_only = false
 }
 ```
@@ -52,6 +52,7 @@ The `RequestStatus` enum is used to represent the status of a request.
 ### Usage Example
 Returned from the `GET Requests` endpoint.
 must be one of ["pending", "approved", "denied", "canceled"]
+- `target_group_id` (String) The unique identifier of the group who is the target of the request.
 - `target_user_id` (String) The unique identifier of the user who is the target of the request.
 - `updated_at` (String) The date and time the request was last updated.
 

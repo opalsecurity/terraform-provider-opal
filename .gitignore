@@ -10,3 +10,4 @@ dev/
 .envrc.prod
 .idea
 .vscode/launch.json
+.speakeasy/temp

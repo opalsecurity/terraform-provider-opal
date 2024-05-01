@@ -9,6 +9,7 @@ type Group struct {
 	AppID                 types.String           `tfsdk:"app_id"`
 	Description           types.String           `tfsdk:"description"`
 	GroupBindingID        types.String           `tfsdk:"group_binding_id"`
+	GroupLeaderUserIds    []types.String         `tfsdk:"group_leader_user_ids"`
 	GroupType             types.String           `tfsdk:"group_type"`
 	ID                    types.String           `tfsdk:"id"`
 	Name                  types.String           `tfsdk:"name"`

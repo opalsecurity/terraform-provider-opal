@@ -10,6 +10,8 @@ type UpdateGroupInfo struct {
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
 	// A description of the group.
 	Description *string `json:"description,omitempty"`
+	// A list of User IDs for the group leaders of the group
+	GroupLeaderUserIds []string `json:"group_leader_user_ids,omitempty"`
 	// The ID of the group.
 	ID *string `json:"group_id,omitempty"`
 	// The name of the group.
@@ -32,6 +34,13 @@ func (o *UpdateGroupInfo) GetDescription() *string {
 		return nil
 	}
 	return o.Description
+}
+
+func (o *UpdateGroupInfo) GetGroupLeaderUserIds() []string {
+	if o == nil {
+		return nil
+	}
+	return o.GroupLeaderUserIds
 }
 
 func (o *UpdateGroupInfo) GetID() *string {

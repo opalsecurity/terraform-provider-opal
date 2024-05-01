@@ -14,7 +14,7 @@ Group DataSource
 
 ```terraform
 data "opal_group" "my_group" {
-  id = "137cf6fe-2c7c-4194-9042-95311709f016"
+  id = "b101a076-42ba-438b-8737-d2bdc6d83a7c"
 }
 ```
 
@@ -31,6 +31,7 @@ data "opal_group" "my_group" {
 - `app_id` (String) The ID of the group's app.
 - `description` (String) A description of the group.
 - `group_binding_id` (String) The ID of the associated group binding.
+- `group_leader_user_ids` (List of String) A list of User IDs for the group leaders of the group
 - `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OPAL_GROUP", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP"]
 - `message_channels` (Attributes) The audit and reviewer message channels attached to the group. (see [below for nested schema](#nestedatt--message_channels))
 - `name` (String) The name of the group.

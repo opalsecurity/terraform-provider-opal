@@ -12,7 +12,9 @@ type CreateUARInfo struct {
 	// The last day for reviewers to complete their access reviews.
 	Deadline time.Time `json:"deadline"`
 	// The name of the UAR.
-	Name string `json:"name"`
+	Name                   string  `json:"name"`
+	ReminderIncludeManager *bool   `json:"reminder_include_manager,omitempty"`
+	ReminderSchedule       []int64 `json:"reminder_schedule,omitempty"`
 	// A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually.
 	ReviewerAssignmentPolicy UARReviewerAssignmentPolicyEnum `json:"reviewer_assignment_policy"`
 	// A bool representing whether to present a warning when a user is the only reviewer for themself. Default is False.
@@ -48,6 +50,20 @@ func (o *CreateUARInfo) GetName() string {
 		return ""
 	}
 	return o.Name
+}
+
+func (o *CreateUARInfo) GetReminderIncludeManager() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.ReminderIncludeManager
+}
+
+func (o *CreateUARInfo) GetReminderSchedule() []int64 {
+	if o == nil {
+		return nil
+	}
+	return o.ReminderSchedule
 }
 
 func (o *CreateUARInfo) GetReviewerAssignmentPolicy() UARReviewerAssignmentPolicyEnum {

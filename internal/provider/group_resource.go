@@ -51,6 +51,7 @@ type GroupResourceModel struct {
 	AppID                 types.String                                `tfsdk:"app_id"`
 	Description           types.String                                `tfsdk:"description"`
 	GroupBindingID        types.String                                `tfsdk:"group_binding_id"`
+	GroupLeaderUserIds    []types.String                              `tfsdk:"group_leader_user_ids"`
 	GroupType             types.String                                `tfsdk:"group_type"`
 	ID                    types.String                                `tfsdk:"id"`
 	MessageChannelIds     []types.String                              `tfsdk:"message_channel_ids"`
@@ -99,6 +100,12 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 				Description: `The ID of the associated group binding.`,
+			},
+			"group_leader_user_ids": schema.ListAttribute{
+				Computed:    true,
+				Optional:    true,
+				ElementType: types.StringType,
+				Description: `A list of User IDs for the group leaders of the group`,
 			},
 			"group_type": schema.StringAttribute{
 				PlanModifiers: []planmodifier.String{

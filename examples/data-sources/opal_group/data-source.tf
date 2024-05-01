@@ -1,3 +1,3 @@
 data "opal_group" "my_group" {
-  id = "137cf6fe-2c7c-4194-9042-95311709f016"
+  id = "b101a076-42ba-438b-8737-d2bdc6d83a7c"
 }
