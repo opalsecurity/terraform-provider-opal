@@ -8,14 +8,14 @@ import (
 
 type DeleteTagByIDRequest struct {
 	// The tag ID
-	TagID string `pathParam:"style=simple,explode=false,name=tag_id"`
+	ID string `pathParam:"style=simple,explode=false,name=tag_id"`
 }
 
-func (o *DeleteTagByIDRequest) GetTagID() string {
+func (o *DeleteTagByIDRequest) GetID() string {
 	if o == nil {
 		return ""
 	}
-	return o.TagID
+	return o.ID
 }
 
 type DeleteTagByIDResponse struct {
