@@ -1,8 +1,7 @@
 overlay: 1.0.0
 info:
-  title: Overlay ./openapi_original.yaml => ./openapi.yaml
+  title: Overlay .speakeasy/temp/remote_openapi.yaml => ./openapi.yaml
   version: 0.0.0
-extends: file:///Users/amruthvenkatraman/src/terraform-provider-opal/openapi_original.yaml
 actions:
   - target: $["servers"][0]
     update:
@@ -581,12 +580,18 @@ actions:
   - target: $["paths"]["/users/{user_id}/tags"]["get"]
     update:
       x-speakeasy-entity-operation: UserTags#get
-  - target: $["paths"]["/tag/{tag_id}"]["get"]
-    update:
-      x-speakeasy-entity-operation: Tag#get
   - target: $["paths"]["/tag/{tag_id}"]["get"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
+  - target: $["paths"]["/tag/{tag_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: Tag#read
+  - target: $["paths"]["/tag/{tag_id}"]["delete"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/tag/{tag_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: Tag#delete
   - target: $["paths"]["/tag"]["post"]["operationId"]
     update: createTag
   - target: $["paths"]["/tag"]["post"]["requestBody"]["required"]

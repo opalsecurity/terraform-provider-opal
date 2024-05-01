@@ -2174,7 +2174,7 @@ paths:
                 - BearerAuth: []
             tags:
                 - tags
-            x-speakeasy-entity-operation: Tag#get
+            x-speakeasy-entity-operation: Tag#read
         delete:
             description: UNSTABLE. May be removed at any time. Deletes a tag with the given id.
             operationId: delete_tag_by_ID
@@ -2189,6 +2189,7 @@ paths:
                     type: string
                     format: uuid
                   style: simple
+                  x-speakeasy-name-override: id
             responses:
                 "200":
                     description: Tag was deleted.
@@ -2196,6 +2197,7 @@ paths:
                 - BearerAuth: []
             tags:
                 - tags
+            x-speakeasy-entity-operation: Tag#delete
     /tag:
         post:
             description: Creates a tag with the given key and value.

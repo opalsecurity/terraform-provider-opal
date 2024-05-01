@@ -14,6 +14,12 @@ speakeasy: check-speakeasy openapi.yaml
 speakeasy-validate: check-speakeasy
 	speakeasy validate openapi -s ./openapi.yaml
 
+remote-terraform_overlay.yaml: check-speakeasy
+	mkdir -p .speakeasy/temp
+	curl https://app.opal.dev/openapi.yaml > .speakeasy/temp/remote_openapi.yaml
+	speakeasy overlay compare -s .speakeasy/temp/remote_openapi.yaml -s ./openapi.yaml > ./terraform_overlay.yaml
+	rm -r .speakeasy/temp/remote_openapi.yaml
+
 terraform_overlay.yaml: check-speakeasy
 	speakeasy overlay compare -s ./openapi_original.yaml -s ./openapi.yaml > ./terraform_overlay.yaml
 
