@@ -9,7 +9,7 @@ resource "opal_resource" "my_resource" {
       auto_approval  = false
       condition = {
         group_ids = [
-          "b32b9f65-3f84-49e2-bffa-28b2affecaf8",
+          "baed1f8f-1d89-435b-b4fe-c8046cdd06b0",
         ]
         role_remote_ids = [
           "...",
@@ -25,7 +25,7 @@ resource "opal_resource" "my_resource" {
         {
           operator = "AND"
           owner_ids = [
-            "fb82a285-fd0c-4387-b2b3-1cd922ce15f9",
+            "c57b8161-728c-4d36-87b3-ad9a192be13a",
           ]
           require_manager_approval = false
         },
@@ -37,6 +37,6 @@ resource "opal_resource" "my_resource" {
   resource_type          = "AWS_IAM_ROLE"
   visibility             = "GLOBAL"
   visibility_group_ids = [
-    "66c2bdfc-b3e7-4464-ae94-bc89fbd03a92",
+    "2a285fd0-c387-4f2b-b1cd-922ce15f9509",
   ]
 }

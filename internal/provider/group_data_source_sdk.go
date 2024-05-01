@@ -15,6 +15,10 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 		r.AppID = types.StringPointerValue(resp.AppID)
 		r.Description = types.StringPointerValue(resp.Description)
 		r.GroupBindingID = types.StringPointerValue(resp.GroupBindingID)
+		r.GroupLeaderUserIds = []types.String{}
+		for _, v := range resp.GroupLeaderUserIds {
+			r.GroupLeaderUserIds = append(r.GroupLeaderUserIds, types.StringValue(v))
+		}
 		if resp.GroupType != nil {
 			r.GroupType = types.StringValue(string(*resp.GroupType))
 		} else {

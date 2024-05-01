@@ -143,6 +143,10 @@ func (r *RequestsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 								`Returned from the ` + "`" + `GET Requests` + "`" + ` endpoint.` + "\n" +
 								`must be one of ["pending", "approved", "denied", "canceled"]`,
 						},
+						"target_group_id": schema.StringAttribute{
+							Computed:    true,
+							Description: `The unique identifier of the group who is the target of the request.`,
+						},
 						"target_user_id": schema.StringAttribute{
 							Computed:    true,
 							Description: `The unique identifier of the user who is the target of the request.`,

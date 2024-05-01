@@ -13,6 +13,7 @@ type Request struct {
 	RequestedItemsList    []RequestedItem              `tfsdk:"requested_items_list"`
 	RequesterID           types.String                 `tfsdk:"requester_id"`
 	Status                types.String                 `tfsdk:"status"`
+	TargetGroupID         types.String                 `tfsdk:"target_group_id"`
 	TargetUserID          types.String                 `tfsdk:"target_user_id"`
 	UpdatedAt             types.String                 `tfsdk:"updated_at"`
 }

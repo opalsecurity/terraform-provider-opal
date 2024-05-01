@@ -103,10 +103,41 @@ func (r *UARSListDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 									ElementType: types.StringType,
 									Description: `This access review will include resources and groups who are owned by one of the owners corresponding to the given IDs.`,
 								},
+								"apps": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+									Description: `This access review will include items in the specified applications`,
+								},
+								"entities": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+									Description: `This access review will include resources and groups with ids in the given strings.`,
+								},
+								"filter_operator": schema.StringAttribute{
+									Computed:    true,
+									Description: `Specifies whether entities must match all (AND) or any (OR) of the filters. must be one of ["ANY", "ALL"]`,
+								},
+								"group_types": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+									Description: `This access review will include items of the specified group types`,
+								},
+								"group_visibility": schema.StringAttribute{
+									Computed:    true,
+									Description: `Specifies what users can see during an Access Review. must be one of ["STRICT", "VIEW_VISIBLE_AND_ASSIGNED", "VIEW_ALL"]`,
+								},
+								"include_group_bindings": schema.BoolAttribute{
+									Computed: true,
+								},
 								"names": schema.ListAttribute{
 									Computed:    true,
 									ElementType: types.StringType,
 									Description: `This access review will include resources and groups whose name contains one of the given strings.`,
+								},
+								"resource_types": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+									Description: `This access review will include items of the specified resource types`,
 								},
 								"tags": schema.ListNestedAttribute{
 									Computed: true,
@@ -123,6 +154,11 @@ func (r *UARSListDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 										},
 									},
 									Description: `This access review will include resources and groups who are tagged with one of the given tags.`,
+								},
+								"users": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+									Description: `The access review will only include the following users. If any users are selected, any entity filters will be applied to only the entities that the selected users have access to.`,
 								},
 							},
 							Description: `If set, the access review will only contain resources and groups that match at least one of the filters in scope.`,

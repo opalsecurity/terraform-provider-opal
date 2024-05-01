@@ -33,9 +33,36 @@ func (r *UARSListDataSourceModel) RefreshFromSharedPaginatedUARsList(resp *share
 				for _, v := range resultsItem.UarScope.Admins {
 					results1.UarScope.Admins = append(results1.UarScope.Admins, types.StringValue(v))
 				}
+				results1.UarScope.Apps = []types.String{}
+				for _, v := range resultsItem.UarScope.Apps {
+					results1.UarScope.Apps = append(results1.UarScope.Apps, types.StringValue(v))
+				}
+				results1.UarScope.Entities = []types.String{}
+				for _, v := range resultsItem.UarScope.Entities {
+					results1.UarScope.Entities = append(results1.UarScope.Entities, types.StringValue(v))
+				}
+				if resultsItem.UarScope.FilterOperator != nil {
+					results1.UarScope.FilterOperator = types.StringValue(string(*resultsItem.UarScope.FilterOperator))
+				} else {
+					results1.UarScope.FilterOperator = types.StringNull()
+				}
+				results1.UarScope.GroupTypes = []types.String{}
+				for _, v := range resultsItem.UarScope.GroupTypes {
+					results1.UarScope.GroupTypes = append(results1.UarScope.GroupTypes, types.StringValue(string(v)))
+				}
+				if resultsItem.UarScope.GroupVisibility != nil {
+					results1.UarScope.GroupVisibility = types.StringValue(string(*resultsItem.UarScope.GroupVisibility))
+				} else {
+					results1.UarScope.GroupVisibility = types.StringNull()
+				}
+				results1.UarScope.IncludeGroupBindings = types.BoolPointerValue(resultsItem.UarScope.IncludeGroupBindings)
 				results1.UarScope.Names = []types.String{}
 				for _, v := range resultsItem.UarScope.Names {
 					results1.UarScope.Names = append(results1.UarScope.Names, types.StringValue(v))
+				}
+				results1.UarScope.ResourceTypes = []types.String{}
+				for _, v := range resultsItem.UarScope.ResourceTypes {
+					results1.UarScope.ResourceTypes = append(results1.UarScope.ResourceTypes, types.StringValue(string(v)))
 				}
 				for tagsCount, tagsItem := range resultsItem.UarScope.Tags {
 					var tags1 tfTypes.TagFilter
@@ -47,6 +74,10 @@ func (r *UARSListDataSourceModel) RefreshFromSharedPaginatedUARsList(resp *share
 						results1.UarScope.Tags[tagsCount].Key = tags1.Key
 						results1.UarScope.Tags[tagsCount].Value = tags1.Value
 					}
+				}
+				results1.UarScope.Users = []types.String{}
+				for _, v := range resultsItem.UarScope.Users {
+					results1.UarScope.Users = append(results1.UarScope.Users, types.StringValue(v))
 				}
 			}
 			if resultsCount+1 > len(r.Results) {

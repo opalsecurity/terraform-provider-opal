@@ -1,52 +1,7 @@
 # Terraform provider for Opal
 
-<!-- Start SDK SDK Installation -->
-## SDK Installation
-
-To install this provider, copy and paste this code into your Terraform configuration. Then, run `terraform init`.
-
-```hcl
-terraform {
-  required_providers {
-    opal = {
-      source  = "opalsecurity/opal"
-    }
-  }
-}
-
-provider "opal" {
-  # Configuration options
-}
-```
-<!-- End SDK SDK Installation -->
-
-## SDK Example Usage
-
-<!-- Start SDK SDK Example Usage -->
-### Testing the provider locally
-
-Should you want to validate a change locally, the `--debug` flag allows you to execute the provider against a terraform instance locally.
-
-This also allows for debuggers (e.g. delve) to be attached to the provider.
-
-### Example
-
-```sh
-go run main.go --debug
-# Copy the TF_REATTACH_PROVIDERS env var
-# In a new terminal
-cd examples/your-example
-TF_REATTACH_PROVIDERS=... terraform init
-TF_REATTACH_PROVIDERS=... terraform apply
-```
-<!-- End SDK SDK Example Usage -->
-
-
-<!-- Start SDK SDK Available Operations -->
-
-<!-- End SDK SDK Available Operations -->
-
-
+## SDK Generation
+Generate the new SDK using `speakeasy run`. This pulls the remote spec specified in `.speakeasy/workflow.yaml#6` and applies the overrides in `terraform_overlay.yaml`. Note the Makefile is only useful if you want to do development with a local OpenAPI spec and update the Speakeasy workflow config to reference that OpenAPI spec.
 
 <!-- Start SDK Installation [installation] -->
 ## SDK Installation
@@ -58,7 +13,7 @@ terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "0.18.3"
+      version = "0.18.4"
     }
   }
 }

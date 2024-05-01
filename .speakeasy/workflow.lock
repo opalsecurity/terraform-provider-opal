@@ -1,0 +1,32 @@
+speakeasyVersion: 1.277.4
+sources:
+    opal-terraform-provider:
+        sourceNamespace: opal-terraform-provider
+        sourceRevisionDigest: sha256:eb4fbb0399154029de223125965aacb82632d587900246d96736c8a50041af99
+        sourceBlobDigest: sha256:a0314c19e972c3144e901e1e8cc2501ec961ec74796378d549a1dae84e5695e9
+        tags:
+            - latest
+targets:
+    terraform:
+        source: opal-terraform-provider
+        sourceNamespace: opal-terraform-provider
+        sourceRevisionDigest: sha256:eb4fbb0399154029de223125965aacb82632d587900246d96736c8a50041af99
+        sourceBlobDigest: sha256:a0314c19e972c3144e901e1e8cc2501ec961ec74796378d549a1dae84e5695e9
+        outLocation: .
+workflow:
+    workflowVersion: 1.0.0
+    speakeasyVersion: v1.277.4
+    sources:
+        opal-terraform-provider:
+            inputs:
+                - location: https://app.opal.dev/openapi.yaml
+            overlays:
+                - location: terraform_overlay.yaml
+            output: openapi.yaml
+            registry:
+                location: registry.speakeasyapi.dev/opal/opal/opal-terraform-provider
+    targets:
+        terraform:
+            target: terraform
+            source: opal-terraform-provider
+            output: .

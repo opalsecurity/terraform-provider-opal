@@ -14,7 +14,7 @@ UserTags DataSource
 
 ```terraform
 data "opal_user_tags" "my_usertags" {
-  user_id = "c9462c46-fc90-4b6e-9f80-3e49f3cbe343"
+  user_id = "7c2c4cbd-9998-48ac-a51f-e0f19d146487"
 }
 ```
 

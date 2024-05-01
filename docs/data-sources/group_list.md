@@ -19,7 +19,7 @@ data "opal_group_list" "my_group_list" {
   ]
   group_name        = "...my_group_name..."
   group_type_filter = "OPAL_GROUP"
-  page_size         = 4
+  page_size         = 3
 }
 ```
 
@@ -46,6 +46,7 @@ Read-Only:
 - `app_id` (String) The ID of the group's app.
 - `description` (String) A description of the group.
 - `group_binding_id` (String) The ID of the associated group binding.
+- `group_leader_user_ids` (List of String) A list of User IDs for the group leaders of the group
 - `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OPAL_GROUP", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP"]
 - `id` (String) The ID of the group.
 - `name` (String) The name of the group.

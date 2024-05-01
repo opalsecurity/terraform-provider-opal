@@ -14,7 +14,7 @@ Uar DataSource
 
 ```terraform
 data "opal_uar" "my_uar" {
-  uar_id = "83615f59-182c-4e94-a61d-7e2dadcd9e9a"
+  uar_id = "37bd5696-00ed-4435-9a92-039280c1b7e2"
 }
 ```
 
@@ -41,8 +41,16 @@ data "opal_uar" "my_uar" {
 Read-Only:
 
 - `admins` (List of String) This access review will include resources and groups who are owned by one of the owners corresponding to the given IDs.
+- `apps` (List of String) This access review will include items in the specified applications
+- `entities` (List of String) This access review will include resources and groups with ids in the given strings.
+- `filter_operator` (String) Specifies whether entities must match all (AND) or any (OR) of the filters. must be one of ["ANY", "ALL"]
+- `group_types` (List of String) This access review will include items of the specified group types
+- `group_visibility` (String) Specifies what users can see during an Access Review. must be one of ["STRICT", "VIEW_VISIBLE_AND_ASSIGNED", "VIEW_ALL"]
+- `include_group_bindings` (Boolean)
 - `names` (List of String) This access review will include resources and groups whose name contains one of the given strings.
+- `resource_types` (List of String) This access review will include items of the specified resource types
 - `tags` (Attributes List) This access review will include resources and groups who are tagged with one of the given tags. (see [below for nested schema](#nestedatt--uar_scope--tags))
+- `users` (List of String) The access review will only include the following users. If any users are selected, any entity filters will be applied to only the entities that the selected users have access to.
 
 <a id="nestedatt--uar_scope--tags"></a>
 ### Nested Schema for `uar_scope.tags`

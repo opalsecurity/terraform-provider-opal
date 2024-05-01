@@ -35,8 +35,10 @@ type Request struct {
 	// ### Usage Example
 	// Returned from the `GET Requests` endpoint.
 	Status RequestStatusEnum `json:"status"`
+	// The unique identifier of the group who is the target of the request.
+	TargetGroupID *string `json:"target_group_id,omitempty"`
 	// The unique identifier of the user who is the target of the request.
-	TargetUserID string `json:"target_user_id"`
+	TargetUserID *string `json:"target_user_id,omitempty"`
 	// The date and time the request was last updated.
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -108,9 +110,16 @@ func (o *Request) GetStatus() RequestStatusEnum {
 	return o.Status
 }
 
-func (o *Request) GetTargetUserID() string {
+func (o *Request) GetTargetGroupID() *string {
 	if o == nil {
-		return ""
+		return nil
+	}
+	return o.TargetGroupID
+}
+
+func (o *Request) GetTargetUserID() *string {
+	if o == nil {
+		return nil
 	}
 	return o.TargetUserID
 }

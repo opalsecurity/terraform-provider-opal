@@ -117,6 +117,10 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 		} else {
 			r.GroupType = types.StringNull()
 		}
+		r.GroupLeaderUserIds = []types.String{}
+		for _, v := range resp.GroupLeaderUserIds {
+			r.GroupLeaderUserIds = append(r.GroupLeaderUserIds, types.StringValue(v))
+		}
 		r.ID = types.StringPointerValue(resp.ID)
 		r.Name = types.StringPointerValue(resp.Name)
 		if resp.RemoteInfo == nil {
@@ -257,6 +261,10 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo() *shared.UpdateGroupInfo {
 	} else {
 		description = nil
 	}
+	var groupLeaderUserIds []string = []string{}
+	for _, groupLeaderUserIdsItem := range r.GroupLeaderUserIds {
+		groupLeaderUserIds = append(groupLeaderUserIds, groupLeaderUserIdsItem.ValueString())
+	}
 	id := new(string)
 	if !r.ID.IsUnknown() && !r.ID.IsNull() {
 		*id = r.ID.ValueString()
@@ -350,6 +358,7 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo() *shared.UpdateGroupInfo {
 	out := shared.UpdateGroupInfo{
 		AdminOwnerID:          adminOwnerID,
 		Description:           description,
+		GroupLeaderUserIds:    groupLeaderUserIds,
 		ID:                    id,
 		Name:                  name,
 		RequestConfigurations: requestConfigurations,
@@ -361,6 +370,10 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo() *shared.UpdateGroupInfo {
 func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(resp shared.UpdateGroupInfo) {
 	r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 	r.Description = types.StringPointerValue(resp.Description)
+	r.GroupLeaderUserIds = []types.String{}
+	for _, v := range resp.GroupLeaderUserIds {
+		r.GroupLeaderUserIds = append(r.GroupLeaderUserIds, types.StringValue(v))
+	}
 	r.ID = types.StringPointerValue(resp.ID)
 	r.Name = types.StringPointerValue(resp.Name)
 	if len(r.RequestConfigurations) > len(resp.RequestConfigurations) {

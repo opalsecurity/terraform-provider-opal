@@ -14,7 +14,7 @@ OnCallSchedule DataSource
 
 ```terraform
 data "opal_on_call_schedule" "my_oncallschedule" {
-  id = "574fcbeb-f589-4458-9a59-48e1c8a39c4c"
+  id = "985c85ff-2575-4a98-9c8e-2bbbd9fd7583"
 }
 ```
 

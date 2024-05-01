@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: bb60c86b7fda92cdc2bc3c7237fdde54
+  docChecksum: b208d6215c6fcf638dbba9b2f7f921f5
   docVersion: "1.0"
-  speakeasyVersion: 1.260.6
-  generationVersion: 2.311.1
-  releaseVersion: 0.18.3
-  configChecksum: e68ca9c40825069aab9e32b407f9602a
+  speakeasyVersion: 1.277.4
+  generationVersion: 2.318.3
+  releaseVersion: 0.18.4
+  configChecksum: 913839293b66954833e161e27768aa80
   repoURL: https://github.com/speakeasy-sdks/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -99,6 +99,7 @@ generatedFiles:
   - internal/sdk/models/operations/getownerid.go
   - internal/sdk/models/operations/updateowners.go
   - internal/sdk/models/operations/updateownerusers.go
+  - internal/sdk/models/operations/createrequest.go
   - internal/sdk/models/operations/getrequests.go
   - internal/sdk/models/operations/createresource.go
   - internal/sdk/models/operations/deleteresource.go
@@ -122,6 +123,7 @@ generatedFiles:
   - internal/sdk/models/operations/deleteusertag.go
   - internal/sdk/models/operations/deletegrouptag.go
   - internal/sdk/models/operations/deleteresourcetag.go
+  - internal/sdk/models/operations/deletetagbyid.go
   - internal/sdk/models/operations/gettagbyid.go
   - internal/sdk/models/operations/gettags.go
   - internal/sdk/models/operations/createuar.go
@@ -188,12 +190,14 @@ generatedFiles:
   - internal/sdk/models/shared/user.go
   - internal/sdk/models/shared/userhridpstatusenum.go
   - internal/sdk/models/shared/useridlist.go
+  - internal/sdk/models/shared/createrequestinfo.go
+  - internal/sdk/models/shared/ticketingproviderenum.go
+  - internal/sdk/models/shared/requesttemplatecustomfieldtypeenum.go
   - internal/sdk/models/shared/requestlist.go
   - internal/sdk/models/shared/request.go
   - internal/sdk/models/shared/requeststatusenum.go
   - internal/sdk/models/shared/requesteditem.go
   - internal/sdk/models/shared/requestcustomfieldresponse.go
-  - internal/sdk/models/shared/requesttemplatecustomfieldtypeenum.go
   - internal/sdk/models/shared/resource.go
   - internal/sdk/models/shared/resourcetypeenum.go
   - internal/sdk/models/shared/resourceremoteinfo.go
