@@ -3,18 +3,18 @@ id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
   docChecksum: 8d443ba0f378ba5051124f87d114509f
   docVersion: "1.0"
-  speakeasyVersion: 1.277.4
-  generationVersion: 2.318.3
-  releaseVersion: 0.18.5
-  configChecksum: 93ccc60ff470ade3985c3bc03d7c8103
-  repoURL: https://github.com/speakeasy-sdks/terraform-provider-opal.git
+  speakeasyVersion: 1.277.8
+  generationVersion: 2.319.10
+  releaseVersion: 0.18.6
+  configChecksum: 22ff649ef9b46319e15d007d5d095d99
+  repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
 features:
   terraform:
     additionalProperties: 0.1.2
     constsAndDefaults: 0.1.4
-    core: 3.18.3
+    core: 3.18.4
     deprecations: 2.81.1
     globalSecurity: 2.81.6
     globalServerURLs: 2.82.1
