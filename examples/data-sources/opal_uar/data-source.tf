@@ -1,3 +1,3 @@
 data "opal_uar" "my_uar" {
-  uar_id = "37bd5696-00ed-4435-9a92-039280c1b7e2"
+  uar_id = "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
 }

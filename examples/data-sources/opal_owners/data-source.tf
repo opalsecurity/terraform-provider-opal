@@ -1,5 +1,5 @@
 data "opal_owners" "my_owners" {
-  cursor    = "...my_cursor..."
-  name      = "Kendra Thiel"
-  page_size = 7
+  cursor    = "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+  name      = 200
+  page_size = 200
 }

@@ -3,10 +3,10 @@ id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
   docChecksum: 8d443ba0f378ba5051124f87d114509f
   docVersion: "1.0"
-  speakeasyVersion: 1.277.8
-  generationVersion: 2.319.10
-  releaseVersion: 0.18.6
-  configChecksum: 22ff649ef9b46319e15d007d5d095d99
+  speakeasyVersion: 1.279.0
+  generationVersion: 2.322.5
+  releaseVersion: 0.19.0
+  configChecksum: 23db1129ef05428558b694e0ef44a97a
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -14,7 +14,7 @@ features:
   terraform:
     additionalProperties: 0.1.2
     constsAndDefaults: 0.1.4
-    core: 3.18.4
+    core: 3.19.1
     deprecations: 2.81.1
     globalSecurity: 2.81.6
     globalServerURLs: 2.82.1
@@ -331,9 +331,11 @@ generatedFiles:
   - internal/provider/configurationtemplate_resource.go
   - internal/provider/configurationtemplate_resource_sdk.go
   - examples/resources/opal_configuration_template/resource.tf
+  - examples/resources/opal_group/import.sh
   - internal/provider/group_resource.go
   - internal/provider/group_resource_sdk.go
   - examples/resources/opal_group/resource.tf
+  - examples/resources/opal_group_resource_list/import.sh
   - internal/provider/groupresourcelist_resource.go
   - internal/provider/groupresourcelist_resource_sdk.go
   - examples/resources/opal_group_resource_list/resource.tf
@@ -343,21 +345,26 @@ generatedFiles:
   - internal/provider/groupuser_resource.go
   - internal/provider/groupuser_resource_sdk.go
   - examples/resources/opal_group_user/resource.tf
+  - examples/resources/opal_message_channel/import.sh
   - internal/provider/messagechannel_resource.go
   - internal/provider/messagechannel_resource_sdk.go
   - examples/resources/opal_message_channel/resource.tf
+  - examples/resources/opal_on_call_schedule/import.sh
   - internal/provider/oncallschedule_resource.go
   - internal/provider/oncallschedule_resource_sdk.go
   - examples/resources/opal_on_call_schedule/resource.tf
+  - examples/resources/opal_owner/import.sh
   - internal/provider/owner_resource.go
   - internal/provider/owner_resource_sdk.go
   - examples/resources/opal_owner/resource.tf
+  - examples/resources/opal_resource/import.sh
   - internal/provider/resource_resource.go
   - internal/provider/resource_resource_sdk.go
   - examples/resources/opal_resource/resource.tf
   - internal/provider/resourcetag_resource.go
   - internal/provider/resourcetag_resource_sdk.go
   - examples/resources/opal_resource_tag/resource.tf
+  - examples/resources/opal_tag/import.sh
   - internal/provider/tag_resource.go
   - internal/provider/tag_resource_sdk.go
   - examples/resources/opal_tag/resource.tf

@@ -1,3 +1,3 @@
 data "opal_group_tags" "my_grouptags" {
-  group_id = "48df6c7e-f0f7-414d-9610-63a76d6e7aa7"
+  group_id = "1b978423-db0a-4037-a4cf-f79c60cb67b3"
 }

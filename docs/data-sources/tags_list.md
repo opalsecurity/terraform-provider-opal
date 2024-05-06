@@ -14,8 +14,8 @@ TagsList DataSource
 
 ```terraform
 data "opal_tags_list" "my_tags_list" {
-  cursor    = "...my_cursor..."
-  page_size = 2
+  cursor    = "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+  page_size = 200
 }
 ```
 

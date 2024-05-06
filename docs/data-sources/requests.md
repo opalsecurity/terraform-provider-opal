@@ -14,8 +14,8 @@ Requests DataSource
 
 ```terraform
 data "opal_requests" "my_requests" {
-  cursor            = "...my_cursor..."
-  page_size         = 5
+  cursor            = "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+  page_size         = 200
   show_pending_only = false
 }
 ```

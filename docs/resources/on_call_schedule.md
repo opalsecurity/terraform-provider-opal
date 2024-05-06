@@ -32,4 +32,10 @@ resource "opal_on_call_schedule" "my_oncallschedule" {
 - `id` (String) The ID of the on-call schedule.
 - `name` (String) The name of the on call schedule.
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import opal_on_call_schedule.my_opal_on_call_schedule "9546209c-42c2-4801-96d7-9ec42df0f59c"
+```

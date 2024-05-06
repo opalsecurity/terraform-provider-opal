@@ -363,4 +363,10 @@ Optional:
 
 - `role_name` (String) The name role. Requires replacement if changed. ; Not Null
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import opal_resource.my_opal_resource "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+```
