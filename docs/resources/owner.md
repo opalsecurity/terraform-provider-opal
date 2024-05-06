@@ -44,4 +44,10 @@ resource "opal_owner" "my_owner" {
 
 - `id` (String) The ID of the owner.
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import opal_owner.my_opal_owner "32acc112-21ff-4669-91c2-21e27683eaa1"
+```

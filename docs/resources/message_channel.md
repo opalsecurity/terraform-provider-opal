@@ -33,4 +33,10 @@ resource "opal_message_channel" "my_messagechannel" {
 - `is_private` (Boolean) A bool representing whether or not the message channel is private.
 - `name` (String) The name of the message channel.
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import opal_message_channel.my_opal_message_channel "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+```

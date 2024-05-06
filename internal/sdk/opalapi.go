@@ -178,8 +178,8 @@ func New(opts ...SDKOption) *OpalAPI {
 			Language:          "go",
 			OpenAPIDocVersion: "1.0",
 			SDKVersion:        "0.0.1",
-			GenVersion:        "2.319.10",
-			UserAgent:         "speakeasy-sdk/go 0.0.1 2.319.10 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
+			GenVersion:        "2.322.5",
+			UserAgent:         "speakeasy-sdk/go 0.0.1 2.322.5 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
 			Hooks:             hooks.New(),
 		},
 	}

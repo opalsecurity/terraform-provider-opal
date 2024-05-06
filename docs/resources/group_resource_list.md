@@ -14,7 +14,7 @@ GroupResourceList Resource
 
 ```terraform
 resource "opal_group_resource_list" "my_groupresourcelist" {
-  group_id = "d5bf1886-9ae7-426c-8cc0-18ec506c2a39"
+  group_id = "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
   resources = [
     {
       access_level_remote_id = "write"
@@ -71,4 +71,10 @@ Read-Only:
 - `access_level_name` (String) The human-readable name of the access level.
 - `access_level_remote_id` (String) The machine-readable identifier of the access level.
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import opal_group_resource_list.my_opal_group_resource_list "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+```

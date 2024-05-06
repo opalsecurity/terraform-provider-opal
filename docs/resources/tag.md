@@ -34,4 +34,10 @@ resource "opal_tag" "my_tag" {
 - `updated_at` (String) The date the tag was last updated.
 - `user_creator_id` (String) The ID of the user that created the tag.
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import opal_tag.my_opal_tag "1b978423-db0a-4037-a4cf-f79c60cb67b3"
+```

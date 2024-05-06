@@ -243,4 +243,10 @@ Read-Only:
 - `remote_id` (String) The remote ID of the on call schedule
 - `third_party_provider` (String) The third party provider of the on call schedule. must be one of ["OPSGENIE", "PAGER_DUTY"]
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import opal_group.my_opal_group "32acc112-21ff-4669-91c2-21e27683eaa1"
+```

@@ -14,7 +14,7 @@ GroupUsers DataSource
 
 ```terraform
 data "opal_group_users" "my_groupusers" {
-  group_id = "7d67425f-3719-4b93-8678-5f0be613b6b8"
+  group_id = "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
 }
 ```
 
