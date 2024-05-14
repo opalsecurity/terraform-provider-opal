@@ -3597,6 +3597,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
             type: object
             required:
                 - user_ids
@@ -3728,6 +3729,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 remote_id:
                     description: The ID of the remote.
                     example: google-group-group:037m2jsg218b2wb
@@ -4054,6 +4056,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 request_configurations:
                     type: array
                     items:
@@ -4278,6 +4281,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
             type: object
             required:
                 - visibility
@@ -4298,6 +4302,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
             type: object
             required:
                 - message_channel_ids
@@ -4316,6 +4321,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
             type: object
             required:
                 - on_call_schedule_ids
@@ -4332,6 +4338,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
             type: object
             required:
                 - reviewer_ids
@@ -4374,6 +4381,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
             type: object
             required:
                 - operator
@@ -6495,6 +6503,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 reviewer_message_channel_id:
                     description: The message channel id for the reviewer channel.
                     example: 37cb7e41-12ba-46da-92ff-030abe0450b1
@@ -6585,11 +6594,13 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 role_remote_ids:
                     description: The list of role remote IDs to match.
                     example:
                         - arn:aws:iam::590304332660:role/AdministratorAccess
                     type: array
+                    format: set
                     items:
                         type: string
         RequestConfiguration:
