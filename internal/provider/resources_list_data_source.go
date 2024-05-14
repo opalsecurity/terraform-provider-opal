@@ -444,12 +444,12 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 									"condition": schema.SingleNestedAttribute{
 										Computed: true,
 										Attributes: map[string]schema.Attribute{
-											"group_ids": schema.ListAttribute{
+											"group_ids": schema.SetAttribute{
 												Computed:    true,
 												ElementType: types.StringType,
 												Description: `The list of group IDs to match.`,
 											},
-											"role_remote_ids": schema.ListAttribute{
+											"role_remote_ids": schema.SetAttribute{
 												Computed:    true,
 												ElementType: types.StringType,
 												Description: `The list of role remote IDs to match.`,
@@ -488,7 +488,7 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 													Computed:    true,
 													Description: `The operator of the reviewer stage. must be one of ["AND", "OR"]`,
 												},
-												"owner_ids": schema.ListAttribute{
+												"owner_ids": schema.SetAttribute{
 													Computed:    true,
 													ElementType: types.StringType,
 												},

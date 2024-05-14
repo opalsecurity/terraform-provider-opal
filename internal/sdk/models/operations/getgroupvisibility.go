@@ -23,7 +23,7 @@ func (o *GetGroupVisibilityRequest) GetID() string {
 type GetGroupVisibilityResponseBody struct {
 	// The visibility level of the entity.
 	Visibility         shared.VisibilityTypeEnum `json:"visibility"`
-	VisibilityGroupIds []string                  `json:"visibility_group_ids,omitempty"`
+	VisibilityGroupIds *[]string                 `json:"visibility_group_ids,omitempty"`
 }
 
 func (o *GetGroupVisibilityResponseBody) GetVisibility() shared.VisibilityTypeEnum {
@@ -33,7 +33,7 @@ func (o *GetGroupVisibilityResponseBody) GetVisibility() shared.VisibilityTypeEn
 	return o.Visibility
 }
 
-func (o *GetGroupVisibilityResponseBody) GetVisibilityGroupIds() []string {
+func (o *GetGroupVisibilityResponseBody) GetVisibilityGroupIds() *[]string {
 	if o == nil {
 		return nil
 	}

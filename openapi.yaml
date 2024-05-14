@@ -6600,9 +6600,9 @@ components:
                     example:
                         - arn:aws:iam::590304332660:role/AdministratorAccess
                     type: array
-                    format: set
                     items:
                         type: string
+                    format: set
         RequestConfiguration:
             description: |-
                 # Request Configuration Object

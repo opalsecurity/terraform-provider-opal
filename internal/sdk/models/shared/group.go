@@ -18,7 +18,7 @@ type Group struct {
 	// The ID of the associated group binding.
 	GroupBindingID *string `json:"group_binding_id,omitempty"`
 	// A list of User IDs for the group leaders of the group
-	GroupLeaderUserIds []string `json:"group_leader_user_ids,omitempty"`
+	GroupLeaderUserIds *[]string `json:"group_leader_user_ids,omitempty"`
 	// The type of the group.
 	GroupType *GroupTypeEnum `json:"group_type,omitempty"`
 	// The ID of the group.
@@ -63,7 +63,7 @@ func (o *Group) GetGroupBindingID() *string {
 	return o.GroupBindingID
 }
 
-func (o *Group) GetGroupLeaderUserIds() []string {
+func (o *Group) GetGroupLeaderUserIds() *[]string {
 	if o == nil {
 		return nil
 	}

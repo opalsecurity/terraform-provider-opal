@@ -102,12 +102,12 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 						"condition": schema.SingleNestedAttribute{
 							Optional: true,
 							Attributes: map[string]schema.Attribute{
-								"group_ids": schema.ListAttribute{
+								"group_ids": schema.SetAttribute{
 									Optional:    true,
 									ElementType: types.StringType,
 									Description: `The list of group IDs to match.`,
 								},
-								"role_remote_ids": schema.ListAttribute{
+								"role_remote_ids": schema.SetAttribute{
 									Optional:    true,
 									ElementType: types.StringType,
 									Description: `The list of role remote IDs to match.`,
@@ -154,7 +154,7 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 											),
 										},
 									},
-									"owner_ids": schema.ListAttribute{
+									"owner_ids": schema.SetAttribute{
 										Required:    true,
 										ElementType: types.StringType,
 									},
@@ -191,7 +191,7 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 							),
 						},
 					},
-					"visibility_group_ids": schema.ListAttribute{
+					"visibility_group_ids": schema.SetAttribute{
 						Computed:    true,
 						Optional:    true,
 						ElementType: types.StringType,

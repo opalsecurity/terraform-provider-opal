@@ -74,7 +74,7 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Computed:    true,
 				Description: `The ID of the associated group binding.`,
 			},
-			"group_leader_user_ids": schema.ListAttribute{
+			"group_leader_user_ids": schema.SetAttribute{
 				Computed:    true,
 				ElementType: types.StringType,
 				Description: `A list of User IDs for the group leaders of the group`,
@@ -261,12 +261,12 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						"condition": schema.SingleNestedAttribute{
 							Computed: true,
 							Attributes: map[string]schema.Attribute{
-								"group_ids": schema.ListAttribute{
+								"group_ids": schema.SetAttribute{
 									Computed:    true,
 									ElementType: types.StringType,
 									Description: `The list of group IDs to match.`,
 								},
-								"role_remote_ids": schema.ListAttribute{
+								"role_remote_ids": schema.SetAttribute{
 									Computed:    true,
 									ElementType: types.StringType,
 									Description: `The list of role remote IDs to match.`,
@@ -305,7 +305,7 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 										Computed:    true,
 										Description: `The operator of the reviewer stage. must be one of ["AND", "OR"]`,
 									},
-									"owner_ids": schema.ListAttribute{
+									"owner_ids": schema.SetAttribute{
 										Computed:    true,
 										ElementType: types.StringType,
 									},
@@ -329,7 +329,7 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Computed:    true,
 				Description: `The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]`,
 			},
-			"visibility_group_ids": schema.ListAttribute{
+			"visibility_group_ids": schema.SetAttribute{
 				Computed:    true,
 				ElementType: types.StringType,
 			},

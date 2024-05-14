@@ -92,7 +92,7 @@ func (r *ConfigurationTemplateListDataSource) Schema(ctx context.Context, req da
 									Computed:    true,
 									Description: `The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]`,
 								},
-								"visibility_group_ids": schema.ListAttribute{
+								"visibility_group_ids": schema.SetAttribute{
 									Computed:    true,
 									ElementType: types.StringType,
 								},
