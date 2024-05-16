@@ -52,7 +52,7 @@ func (r *GroupReviewersStagesListDataSource) Schema(ctx context.Context, req dat
 							Computed:    true,
 							Description: `The operator of the reviewer stage. must be one of ["AND", "OR"]`,
 						},
-						"owner_ids": schema.ListAttribute{
+						"owner_ids": schema.SetAttribute{
 							Computed:    true,
 							ElementType: types.StringType,
 						},

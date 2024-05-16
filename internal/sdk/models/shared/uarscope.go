@@ -18,7 +18,6 @@ const (
 func (e FilterOperator) ToPointer() *FilterOperator {
 	return &e
 }
-
 func (e *FilterOperator) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
@@ -47,7 +46,6 @@ const (
 func (e GroupVisibility) ToPointer() *GroupVisibility {
 	return &e
 }
-
 func (e *GroupVisibility) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {

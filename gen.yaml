@@ -12,8 +12,12 @@ generation:
   baseServerURL: ""
   flattenGlobalSecurity: true
 terraform:
-  version: 0.19.0
+  version: 0.20.0
+  additionalDataSources: []
+  additionalDependencies: {}
+  additionalResources: []
   author: opalsecurity
+  environmentVariables: []
   imports:
     option: openapi
     paths:

@@ -57,7 +57,7 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 				Required:    true,
 				Description: `The ID of the owner of the configuration template.`,
 			},
-			"break_glass_user_ids": schema.ListAttribute{
+			"break_glass_user_ids": schema.SetAttribute{
 				Computed:    true,
 				Optional:    true,
 				ElementType: types.StringType,
@@ -67,13 +67,13 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 				Computed:    true,
 				Description: `The ID of the configuration template.`,
 			},
-			"linked_audit_message_channel_ids": schema.ListAttribute{
+			"linked_audit_message_channel_ids": schema.SetAttribute{
 				Computed:    true,
 				Optional:    true,
 				ElementType: types.StringType,
 				Description: `The IDs of the audit message channels linked to the configuration template.`,
 			},
-			"member_oncall_schedule_ids": schema.ListAttribute{
+			"member_oncall_schedule_ids": schema.SetAttribute{
 				Computed:    true,
 				Optional:    true,
 				ElementType: types.StringType,
@@ -102,12 +102,12 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 						"condition": schema.SingleNestedAttribute{
 							Optional: true,
 							Attributes: map[string]schema.Attribute{
-								"group_ids": schema.ListAttribute{
+								"group_ids": schema.SetAttribute{
 									Optional:    true,
 									ElementType: types.StringType,
 									Description: `The list of group IDs to match.`,
 								},
-								"role_remote_ids": schema.ListAttribute{
+								"role_remote_ids": schema.SetAttribute{
 									Optional:    true,
 									ElementType: types.StringType,
 									Description: `The list of role remote IDs to match.`,
@@ -154,7 +154,7 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 											),
 										},
 									},
-									"owner_ids": schema.ListAttribute{
+									"owner_ids": schema.SetAttribute{
 										Required:    true,
 										ElementType: types.StringType,
 									},
@@ -191,7 +191,7 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 							),
 						},
 					},
-					"visibility_group_ids": schema.ListAttribute{
+					"visibility_group_ids": schema.SetAttribute{
 						Computed:    true,
 						Optional:    true,
 						ElementType: types.StringType,

@@ -46,7 +46,7 @@ Read-Only:
 - `app_id` (String) The ID of the group's app.
 - `description` (String) A description of the group.
 - `group_binding_id` (String) The ID of the associated group binding.
-- `group_leader_user_ids` (List of String) A list of User IDs for the group leaders of the group
+- `group_leader_user_ids` (Set of String) A list of User IDs for the group leaders of the group
 - `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OPAL_GROUP", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP"]
 - `id` (String) The ID of the group.
 - `name` (String) The name of the group.
@@ -164,8 +164,8 @@ Read-Only:
 
 Read-Only:
 
-- `group_ids` (List of String) The list of group IDs to match.
-- `role_remote_ids` (List of String) The list of role remote IDs to match.
+- `group_ids` (Set of String) The list of group IDs to match.
+- `role_remote_ids` (Set of String) The list of role remote IDs to match.
 
 
 <a id="nestedatt--results--request_configurations--reviewer_stages"></a>
@@ -174,7 +174,7 @@ Read-Only:
 Read-Only:
 
 - `operator` (String) The operator of the reviewer stage. must be one of ["AND", "OR"]
-- `owner_ids` (List of String)
+- `owner_ids` (Set of String)
 - `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval.
 
 

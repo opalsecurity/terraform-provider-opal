@@ -19,7 +19,6 @@ const (
 func (e ResourceUserAccessStatusEnum) ToPointer() *ResourceUserAccessStatusEnum {
 	return &e
 }
-
 func (e *ResourceUserAccessStatusEnum) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {

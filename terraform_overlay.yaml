@@ -814,6 +814,9 @@ actions:
   - target: $["components"]["schemas"]["UserList"]
     update:
       x-speakeasy-entity: OwnerUsers
+  - target: $["components"]["schemas"]["UserIDList"]["properties"]["user_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["UserIDList"]
     update:
       x-speakeasy-entity: Owner
@@ -840,6 +843,9 @@ actions:
   - target: $["components"]["schemas"]["Group"]["properties"]["app_id"]
     update:
       x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["group_leader_user_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["Group"]["properties"]["remote_id"]
     update:
       x-speakeasy-ignore: true # deprecated for the remote_info object
@@ -948,6 +954,9 @@ actions:
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["is_requestable"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["group_leader_user_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_configurations"]
     update:
       x-speakeasy-plan-validators: RequestConfigurations
@@ -978,6 +987,9 @@ actions:
   - target: $["components"]["schemas"]["OnCallScheduleList"]
     update:
       x-speakeasy-entity: OnCallSchedule_list
+  - target: $["components"]["schemas"]["VisibilityInfo"]["properties"]["visibility_group_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["VisibilityInfo"]
     update:
       x-speakeasy-entity:
@@ -987,14 +999,23 @@ actions:
     update:
       x-speakeasy-plan-validators:
         - VisibilityInfo
+  - target: $["components"]["schemas"]["MessageChannelIDList"]["properties"]["message_channel_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["MessageChannelIDList"]
     update:
       x-speakeasy-entity:
         - GroupsMessageChannels
         - ResourceMessageChannels
+  - target: $["components"]["schemas"]["OnCallScheduleIDList"]["properties"]["on_call_schedule_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["OnCallScheduleIDList"]
     update:
       x-speakeasy-entity: GroupOnCallSchedule
+  - target: $["components"]["schemas"]["ReviewerIDList"]["properties"]["reviewer_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["ReviewerIDList"]
     update:
       x-speakeasy-entity:
@@ -1007,6 +1028,9 @@ actions:
   - target: $["components"]["schemas"]["ReviewerStage"]["properties"]["operator"]
     update:
       default: AND
+  - target: $["components"]["schemas"]["ReviewerStage"]["properties"]["owner_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["MessageChannel"]["properties"]["message_channel_id"]
     update:
       x-speakeasy-name-override: id
@@ -1448,6 +1472,9 @@ actions:
       x-speakeasy-entity:
         - Owner
         - OwnerFromName
+  - target: $["components"]["schemas"]["CreateOwnerInfo"]["properties"]["user_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["CreateOwnerInfo"]
     update:
       x-speakeasy-entity: Owner
@@ -1457,6 +1484,12 @@ actions:
   - target: $["components"]["schemas"]["UpdateOwnerInfo"]
     update:
       x-speakeasy-entity: Owner
+  - target: $["components"]["schemas"]["Condition"]["properties"]["group_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["Condition"]["properties"]["role_remote_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["Condition"]["description"]
     remove: true
   - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["max_duration_minutes"]
@@ -1471,6 +1504,15 @@ actions:
   - target: $["components"]["schemas"]["CreateRequestConfigurationInfoList"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["linked_audit_message_channel_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["member_oncall_schedule_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["break_glass_user_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
@@ -1481,12 +1523,30 @@ actions:
     update:
       # Special case : because there's no "DELETE" or "GET" request attribute we can't derive this as an ID
       x-speakeasy-param-readonly: true
+  - target: $["components"]["schemas"]["ConfigurationTemplate"]["properties"]["linked_audit_message_channel_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["ConfigurationTemplate"]["properties"]["member_oncall_schedule_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["ConfigurationTemplate"]["properties"]["break_glass_user_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["ConfigurationTemplate"]
     update:
       x-speakeasy-entity: ConfigurationTemplate
+  - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]["properties"]["linked_audit_message_channel_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]["properties"]["member_oncall_schedule_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]["properties"]["break_glass_user_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]
     update:
       x-speakeasy-entity: ConfigurationTemplate

@@ -27,6 +27,7 @@ import (
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/internal/validators/int64validators"
 	custom_listvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/listvalidators"
 	speakeasy_listvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/listvalidators"
+	speakeasy_setvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/setvalidators"
 	speakeasy_stringvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/stringvalidators"
 )
 
@@ -883,13 +884,13 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 							Computed: true,
 							Optional: true,
 							Attributes: map[string]schema.Attribute{
-								"group_ids": schema.ListAttribute{
+								"group_ids": schema.SetAttribute{
 									Computed:    true,
 									Optional:    true,
 									ElementType: types.StringType,
 									Description: `The list of group IDs to match.`,
 								},
-								"role_remote_ids": schema.ListAttribute{
+								"role_remote_ids": schema.SetAttribute{
 									Computed:    true,
 									Optional:    true,
 									ElementType: types.StringType,
@@ -953,13 +954,13 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 											),
 										},
 									},
-									"owner_ids": schema.ListAttribute{
+									"owner_ids": schema.SetAttribute{
 										Computed:    true,
 										Optional:    true,
 										ElementType: types.StringType,
 										Description: `Not Null`,
-										Validators: []validator.List{
-											speakeasy_listvalidators.NotNull(),
+										Validators: []validator.Set{
+											speakeasy_setvalidators.NotNull(),
 										},
 									},
 									"require_manager_approval": schema.BoolAttribute{
@@ -1048,7 +1049,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 					),
 				},
 			},
-			"visibility_group_ids": schema.ListAttribute{
+			"visibility_group_ids": schema.SetAttribute{
 				Optional:    true,
 				ElementType: types.StringType,
 			},

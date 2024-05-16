@@ -41,14 +41,14 @@ func CreateFieldValueBoolean(boolean bool) FieldValue {
 
 func (u *FieldValue) UnmarshalJSON(data []byte) error {
 
-	str := ""
+	var str string = ""
 	if err := utils.UnmarshalJSON(data, &str, "", true, true); err == nil {
 		u.Str = &str
 		u.Type = FieldValueTypeStr
 		return nil
 	}
 
-	boolean := false
+	var boolean bool = false
 	if err := utils.UnmarshalJSON(data, &boolean, "", true, true); err == nil {
 		u.Boolean = &boolean
 		u.Type = FieldValueTypeBoolean
