@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 3e4fd6a1db57c42af2fdd116cbd00c5f
+  docChecksum: dec72fba4fe6175c2117fbbd96e6deff
   docVersion: "1.0"
-  speakeasyVersion: 1.292.0
+  speakeasyVersion: 1.292.1
   generationVersion: 2.332.4
-  releaseVersion: 0.20.0
-  configChecksum: e2a3b0913e1cd47cf4cc1f7788a9b852
+  releaseVersion: 0.20.1
+  configChecksum: 1730f3139c9a3ce5063c57da32d96cc6
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -61,6 +61,7 @@ generatedFiles:
   - internal/sdk/models/operations/getapps.go
   - internal/sdk/models/operations/getappid.go
   - internal/sdk/models/operations/createconfigurationtemplate.go
+  - internal/sdk/models/operations/deleteconfigurationtemplate.go
   - internal/sdk/models/operations/getconfigurationtemplates.go
   - internal/sdk/models/operations/updateconfigurationtemplate.go
   - internal/sdk/models/operations/getevents.go

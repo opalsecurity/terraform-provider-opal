@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	custom_objectvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/objectvalidators"
 )
 
@@ -356,7 +357,27 @@ func (r *ConfigurationTemplateResource) Delete(ctx context.Context, req resource
 		return
 	}
 
-	// Not Implemented; entity does not have a configured DELETE operation
+	configurationTemplateID := data.ConfigurationTemplateID.ValueString()
+	request := operations.DeleteConfigurationTemplateRequest{
+		ConfigurationTemplateID: configurationTemplateID,
+	}
+	res, err := r.client.ConfigurationTemplates.Delete(ctx, request)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res != nil && res.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+		}
+		return
+	}
+	if res == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
+		return
+	}
+
 }
 
 func (r *ConfigurationTemplateResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {

@@ -2684,6 +2684,30 @@ paths:
                 - uars
             x-speakeasy-name-override: get_id
             x-speakeasy-entity-operation: UAR#get
+    /configuration-templates/{configuration_template_id}:
+        delete:
+            description: Deletes a configuration template.
+            operationId: deleteConfigurationTemplate
+            parameters:
+                - description: The ID of the configuration template.
+                  example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+                  explode: false
+                  in: path
+                  name: configuration_template_id
+                  required: true
+                  schema:
+                    format: uuid
+                    type: string
+                  style: simple
+            responses:
+                "200":
+                    description: The configuration template was successfully deleted.
+            security:
+                - BearerAuth: []
+            tags:
+                - configuration-templates
+            x-speakeasy-name-override: delete
+            x-speakeasy-entity-operation: ConfigurationTemplate#delete
 components:
     schemas:
         UARScope:
