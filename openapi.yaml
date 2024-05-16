@@ -6799,6 +6799,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 member_oncall_schedule_ids:
                     description: The IDs of the on-call schedules linked to the configuration template.
                     example:
@@ -6808,6 +6809,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 break_glass_user_ids:
                     description: The IDs of the break glass users linked to the configuration template.
                     example:
@@ -6817,6 +6819,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 require_mfa_to_approve:
                     description: A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template.
                     example: False
@@ -6930,6 +6933,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 request_configuration_id:
                     description: The ID of the request configuration linked to the configuration template.
                     example: 7c86c85d-0651-43e2-a748-d69d658418e8
@@ -6944,6 +6948,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 break_glass_user_ids:
                     description: The IDs of the break glass users linked to the configuration template.
                     example:
@@ -6953,6 +6958,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 require_mfa_to_approve:
                     description: A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template.
                     example: False
@@ -7017,6 +7023,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 request_configurations:
                     type: array
                     items:
@@ -7071,6 +7078,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 break_glass_user_ids:
                     description: The IDs of the break glass users linked to the configuration template.
                     example:
@@ -7080,6 +7088,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 require_mfa_to_approve:
                     description: A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template.
                     example: False

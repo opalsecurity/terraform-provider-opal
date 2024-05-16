@@ -12,13 +12,13 @@ type UpdateConfigurationTemplateInfo struct {
 	// The ID of the owner of the configuration template.
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
 	// The IDs of the break glass users linked to the configuration template.
-	BreakGlassUserIds []string `json:"break_glass_user_ids,omitempty"`
+	BreakGlassUserIds *[]string `json:"break_glass_user_ids,omitempty"`
 	// The ID of the configuration template.
 	ConfigurationTemplateID string `json:"configuration_template_id"`
 	// The IDs of the audit message channels linked to the configuration template.
-	LinkedAuditMessageChannelIds []string `json:"linked_audit_message_channel_ids,omitempty"`
+	LinkedAuditMessageChannelIds *[]string `json:"linked_audit_message_channel_ids,omitempty"`
 	// The IDs of the on-call schedules linked to the configuration template.
-	MemberOncallScheduleIds []string `json:"member_oncall_schedule_ids,omitempty"`
+	MemberOncallScheduleIds *[]string `json:"member_oncall_schedule_ids,omitempty"`
 	// The name of the configuration template.
 	Name *string `json:"name,omitempty"`
 	// The request configuration list linked to the configuration template.
@@ -38,7 +38,7 @@ func (o *UpdateConfigurationTemplateInfo) GetAdminOwnerID() *string {
 	return o.AdminOwnerID
 }
 
-func (o *UpdateConfigurationTemplateInfo) GetBreakGlassUserIds() []string {
+func (o *UpdateConfigurationTemplateInfo) GetBreakGlassUserIds() *[]string {
 	if o == nil {
 		return nil
 	}
@@ -52,14 +52,14 @@ func (o *UpdateConfigurationTemplateInfo) GetConfigurationTemplateID() string {
 	return o.ConfigurationTemplateID
 }
 
-func (o *UpdateConfigurationTemplateInfo) GetLinkedAuditMessageChannelIds() []string {
+func (o *UpdateConfigurationTemplateInfo) GetLinkedAuditMessageChannelIds() *[]string {
 	if o == nil {
 		return nil
 	}
 	return o.LinkedAuditMessageChannelIds
 }
 
-func (o *UpdateConfigurationTemplateInfo) GetMemberOncallScheduleIds() []string {
+func (o *UpdateConfigurationTemplateInfo) GetMemberOncallScheduleIds() *[]string {
 	if o == nil {
 		return nil
 	}

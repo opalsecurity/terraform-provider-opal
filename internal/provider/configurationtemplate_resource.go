@@ -57,7 +57,7 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 				Required:    true,
 				Description: `The ID of the owner of the configuration template.`,
 			},
-			"break_glass_user_ids": schema.ListAttribute{
+			"break_glass_user_ids": schema.SetAttribute{
 				Computed:    true,
 				Optional:    true,
 				ElementType: types.StringType,
@@ -67,13 +67,13 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 				Computed:    true,
 				Description: `The ID of the configuration template.`,
 			},
-			"linked_audit_message_channel_ids": schema.ListAttribute{
+			"linked_audit_message_channel_ids": schema.SetAttribute{
 				Computed:    true,
 				Optional:    true,
 				ElementType: types.StringType,
 				Description: `The IDs of the audit message channels linked to the configuration template.`,
 			},
-			"member_oncall_schedule_ids": schema.ListAttribute{
+			"member_oncall_schedule_ids": schema.SetAttribute{
 				Computed:    true,
 				Optional:    true,
 				ElementType: types.StringType,

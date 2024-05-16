@@ -2,7 +2,6 @@ overlay: 1.0.0
 info:
   title: Overlay .speakeasy/temp/remote_openapi.yaml => ./openapi.yaml
   version: 0.0.0
-extends: file:///Users/andrewsy/src/terraform-provider-opal/.speakeasy/temp/remote_openapi.yaml
 actions:
   - target: $["servers"][0]
     update:
@@ -1505,6 +1504,15 @@ actions:
   - target: $["components"]["schemas"]["CreateRequestConfigurationInfoList"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["linked_audit_message_channel_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["member_oncall_schedule_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["break_glass_user_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
@@ -1515,12 +1523,30 @@ actions:
     update:
       # Special case : because there's no "DELETE" or "GET" request attribute we can't derive this as an ID
       x-speakeasy-param-readonly: true
+  - target: $["components"]["schemas"]["ConfigurationTemplate"]["properties"]["linked_audit_message_channel_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["ConfigurationTemplate"]["properties"]["member_oncall_schedule_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["ConfigurationTemplate"]["properties"]["break_glass_user_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["ConfigurationTemplate"]
     update:
       x-speakeasy-entity: ConfigurationTemplate
+  - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]["properties"]["linked_audit_message_channel_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]["properties"]["member_oncall_schedule_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]["properties"]["break_glass_user_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]
     update:
       x-speakeasy-entity: ConfigurationTemplate
