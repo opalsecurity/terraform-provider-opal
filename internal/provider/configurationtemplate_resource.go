@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	custom_objectvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/objectvalidators"
 )
 
@@ -146,7 +147,7 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 										Computed:    true,
 										Optional:    true,
 										Default:     stringdefault.StaticString("AND"),
-										Description: `The operator of the reviewer stage. must be one of ["AND", "OR"]; Default: "AND"`,
+										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]; Default: "AND"`,
 										Validators: []validator.String{
 											stringvalidator.OneOf(
 												"AND",
@@ -157,6 +158,10 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 									"owner_ids": schema.SetAttribute{
 										Required:    true,
 										ElementType: types.StringType,
+									},
+									"require_admin_approval": schema.BoolAttribute{
+										Optional:    true,
+										Description: `Whether this reviewer stage should require admin approval.`,
 									},
 									"require_manager_approval": schema.BoolAttribute{
 										Required:    true,
@@ -356,7 +361,27 @@ func (r *ConfigurationTemplateResource) Delete(ctx context.Context, req resource
 		return
 	}
 
-	// Not Implemented; entity does not have a configured DELETE operation
+	configurationTemplateID := data.ConfigurationTemplateID.ValueString()
+	request := operations.DeleteConfigurationTemplateRequest{
+		ConfigurationTemplateID: configurationTemplateID,
+	}
+	res, err := r.client.ConfigurationTemplates.Delete(ctx, request)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res != nil && res.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+		}
+		return
+	}
+	if res == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
+		return
+	}
+
 }
 
 func (r *ConfigurationTemplateResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {

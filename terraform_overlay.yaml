@@ -41,6 +41,12 @@ actions:
   - target: $["paths"]["/configuration-templates"]["put"]
     update:
       x-speakeasy-entity-operation: ConfigurationTemplate#update
+  - target: $["paths"]["/configuration-templates/{configuration_template_id}"]["delete"]
+    update:
+      x-speakeasy-name-override: delete
+  - target: $["paths"]["/configuration-templates/{configuration_template_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: ConfigurationTemplate#delete
   - target: $["paths"]["/events"]["get"]["operationId"]
     update: getEvents
   - target: $["paths"]["/events"]["get"]

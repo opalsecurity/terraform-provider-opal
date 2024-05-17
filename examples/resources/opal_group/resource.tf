@@ -4,11 +4,11 @@ resource "opal_group" "my_group" {
             description = "Engineering team Okta group."
             group_type = "OPAL_GROUP"
             message_channel_ids = {
-        "e931861e-f161-4b54-bb18-98e51c0009dd",
+        "931861ef-161b-454f-b189-8e51c0009dd6",
     }
             name = "mongo-db-prod"
             on_call_schedule_ids = {
-        "10c42893-326c-48d3-b654-3ad1053f385d",
+        "c4289332-6c8d-43b6-943a-d1053f385d17",
     }
             request_configurations = [
         {
@@ -16,7 +16,7 @@ resource "opal_group" "my_group" {
             auto_approval = false
             condition = {
                 group_ids = {
-                    "ce27d58f-2561-447d-92ea-246933c124e1",
+                    "27d58f25-6147-4d92-aa24-6933c124e146",
                 }
                 role_remote_ids = {
                     "...",
@@ -32,8 +32,9 @@ resource "opal_group" "my_group" {
                 {
                     operator = "AND"
                     owner_ids = {
-                        "53ec25e2-8706-4e50-ad65-59d94490f519",
+                        "ec25e287-06e5-40ad-a559-d94490f51937",
                     }
+                    require_admin_approval = false
                     require_manager_approval = false
                 },
             ]

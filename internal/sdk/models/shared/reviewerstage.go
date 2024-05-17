@@ -8,7 +8,7 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
 )
 
-// Operator - The operator of the reviewer stage.
+// Operator - The operator of the reviewer stage. Admin and manager approval are also treated as reviewers.
 type Operator string
 
 const (
@@ -37,9 +37,11 @@ func (e *Operator) UnmarshalJSON(data []byte) error {
 
 // ReviewerStage - A reviewer stage.
 type ReviewerStage struct {
-	// The operator of the reviewer stage.
+	// The operator of the reviewer stage. Admin and manager approval are also treated as reviewers.
 	Operator *Operator `default:"AND" json:"operator"`
 	OwnerIds []string  `json:"owner_ids"`
+	// Whether this reviewer stage should require admin approval.
+	RequireAdminApproval *bool `json:"require_admin_approval,omitempty"`
 	// Whether this reviewer stage should require manager approval.
 	RequireManagerApproval bool `json:"require_manager_approval"`
 }
@@ -67,6 +69,13 @@ func (o *ReviewerStage) GetOwnerIds() []string {
 		return []string{}
 	}
 	return o.OwnerIds
+}
+
+func (o *ReviewerStage) GetRequireAdminApproval() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.RequireAdminApproval
 }
 
 func (o *ReviewerStage) GetRequireManagerApproval() bool {

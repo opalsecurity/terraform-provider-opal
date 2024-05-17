@@ -946,7 +946,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 										Computed:    true,
 										Optional:    true,
 										Default:     stringdefault.StaticString("AND"),
-										Description: `The operator of the reviewer stage. must be one of ["AND", "OR"]; Default: "AND"`,
+										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]; Default: "AND"`,
 										Validators: []validator.String{
 											stringvalidator.OneOf(
 												"AND",
@@ -962,6 +962,11 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 										Validators: []validator.Set{
 											speakeasy_setvalidators.NotNull(),
 										},
+									},
+									"require_admin_approval": schema.BoolAttribute{
+										Computed:    true,
+										Optional:    true,
+										Description: `Whether this reviewer stage should require admin approval.`,
 									},
 									"require_manager_approval": schema.BoolAttribute{
 										Computed:    true,

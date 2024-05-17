@@ -450,11 +450,15 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 								Attributes: map[string]schema.Attribute{
 									"operator": schema.StringAttribute{
 										Computed:    true,
-										Description: `The operator of the reviewer stage. must be one of ["AND", "OR"]`,
+										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]`,
 									},
 									"owner_ids": schema.SetAttribute{
 										Computed:    true,
 										ElementType: types.StringType,
+									},
+									"require_admin_approval": schema.BoolAttribute{
+										Computed:    true,
+										Description: `Whether this reviewer stage should require admin approval.`,
 									},
 									"require_manager_approval": schema.BoolAttribute{
 										Computed:    true,

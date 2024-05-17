@@ -220,12 +220,14 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 				for _, v := range reviewerStagesItem.OwnerIds {
 					reviewerStages1.OwnerIds = append(reviewerStages1.OwnerIds, types.StringValue(v))
 				}
+				reviewerStages1.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
 				reviewerStages1.RequireManagerApproval = types.BoolValue(reviewerStagesItem.RequireManagerApproval)
 				if reviewerStagesCount+1 > len(requestConfigurations1.ReviewerStages) {
 					requestConfigurations1.ReviewerStages = append(requestConfigurations1.ReviewerStages, reviewerStages1)
 				} else {
 					requestConfigurations1.ReviewerStages[reviewerStagesCount].Operator = reviewerStages1.Operator
 					requestConfigurations1.ReviewerStages[reviewerStagesCount].OwnerIds = reviewerStages1.OwnerIds
+					requestConfigurations1.ReviewerStages[reviewerStagesCount].RequireAdminApproval = reviewerStages1.RequireAdminApproval
 					requestConfigurations1.ReviewerStages[reviewerStagesCount].RequireManagerApproval = reviewerStages1.RequireManagerApproval
 				}
 			}
@@ -329,10 +331,17 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo() *shared.UpdateGroupInfo {
 			for _, ownerIdsItem := range reviewerStagesItem.OwnerIds {
 				ownerIds = append(ownerIds, ownerIdsItem.ValueString())
 			}
+			requireAdminApproval := new(bool)
+			if !reviewerStagesItem.RequireAdminApproval.IsUnknown() && !reviewerStagesItem.RequireAdminApproval.IsNull() {
+				*requireAdminApproval = reviewerStagesItem.RequireAdminApproval.ValueBool()
+			} else {
+				requireAdminApproval = nil
+			}
 			requireManagerApproval := reviewerStagesItem.RequireManagerApproval.ValueBool()
 			reviewerStages = append(reviewerStages, shared.ReviewerStage{
 				Operator:               operator,
 				OwnerIds:               ownerIds,
+				RequireAdminApproval:   requireAdminApproval,
 				RequireManagerApproval: requireManagerApproval,
 			})
 		}
@@ -413,12 +422,14 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(resp shared.Update
 			for _, v := range reviewerStagesItem.OwnerIds {
 				reviewerStages1.OwnerIds = append(reviewerStages1.OwnerIds, types.StringValue(v))
 			}
+			reviewerStages1.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
 			reviewerStages1.RequireManagerApproval = types.BoolValue(reviewerStagesItem.RequireManagerApproval)
 			if reviewerStagesCount+1 > len(requestConfigurations1.ReviewerStages) {
 				requestConfigurations1.ReviewerStages = append(requestConfigurations1.ReviewerStages, reviewerStages1)
 			} else {
 				requestConfigurations1.ReviewerStages[reviewerStagesCount].Operator = reviewerStages1.Operator
 				requestConfigurations1.ReviewerStages[reviewerStagesCount].OwnerIds = reviewerStages1.OwnerIds
+				requestConfigurations1.ReviewerStages[reviewerStagesCount].RequireAdminApproval = reviewerStages1.RequireAdminApproval
 				requestConfigurations1.ReviewerStages[reviewerStagesCount].RequireManagerApproval = reviewerStages1.RequireManagerApproval
 			}
 		}

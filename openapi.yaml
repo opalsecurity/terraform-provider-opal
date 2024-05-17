@@ -144,6 +144,30 @@ paths:
                 - configuration-templates
             x-speakeasy-name-override: update
             x-speakeasy-entity-operation: ConfigurationTemplate#update
+    /configuration-templates/{configuration_template_id}:
+        delete:
+            description: Deletes a configuration template.
+            operationId: deleteConfigurationTemplate
+            parameters:
+                - description: The ID of the configuration template.
+                  example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+                  explode: false
+                  in: path
+                  name: configuration_template_id
+                  required: true
+                  schema:
+                    format: uuid
+                    type: string
+                  style: simple
+            responses:
+                "200":
+                    description: The configuration template was successfully deleted.
+            security:
+                - BearerAuth: []
+            tags:
+                - configuration-templates
+            x-speakeasy-name-override: delete
+            x-speakeasy-entity-operation: ConfigurationTemplate#delete
     /events:
         get:
             description: Returns a list of `Event` objects.
@@ -4368,8 +4392,12 @@ components:
                     description: Whether this reviewer stage should require manager approval.
                     example: False
                     type: boolean
+                require_admin_approval:
+                    description: Whether this reviewer stage should require admin approval.
+                    example: False
+                    type: boolean
                 operator:
-                    description: The operator of the reviewer stage.
+                    description: The operator of the reviewer stage. Admin and manager approval are also treated as reviewers.
                     enum:
                         - AND
                         - OR

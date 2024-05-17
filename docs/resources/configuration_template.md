@@ -40,6 +40,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
                     owner_ids = {
                         "49098c56-2b97-4419-b360-edc1d66b24bf",
                     }
+                    require_admin_approval = false
                     require_manager_approval = false
                 },
             ]
@@ -50,7 +51,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
             visibility = {
         visibility = "GLOBAL"
         visibility_group_ids = {
-            "b72161b2-4a4a-45fe-89a5-b24ee84a3fbf",
+            "72161b24-a4a5-4fe0-9a5b-24ee84a3fbf4",
         }
     }
         }
@@ -120,7 +121,8 @@ Required:
 
 Optional:
 
-- `operator` (String) The operator of the reviewer stage. must be one of ["AND", "OR"]; Default: "AND"
+- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]; Default: "AND"
+- `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval.
 
 
 <a id="nestedatt--request_configurations--condition"></a>
