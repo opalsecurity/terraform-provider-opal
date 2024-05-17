@@ -162,8 +162,8 @@ func (s *ConfigurationTemplates) Create(ctx context.Context, request shared.Crea
 	return res, nil
 }
 
-// DeleteConfigurationTemplate - Deletes a configuration template.
-func (s *ConfigurationTemplates) DeleteConfigurationTemplate(ctx context.Context, request operations.DeleteConfigurationTemplateRequest, opts ...operations.Option) (*operations.DeleteConfigurationTemplateResponse, error) {
+// Delete - Deletes a configuration template.
+func (s *ConfigurationTemplates) Delete(ctx context.Context, request operations.DeleteConfigurationTemplateRequest, opts ...operations.Option) (*operations.DeleteConfigurationTemplateResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
 		OperationID:    "deleteConfigurationTemplate",

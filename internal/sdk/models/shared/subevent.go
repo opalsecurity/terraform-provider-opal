@@ -13,7 +13,7 @@ import (
 // ### Usage Example
 // Fetch from the `LIST Events` endpoint.
 type SubEvent struct {
-	AdditionalProperties interface{} `additionalProperties:"true" json:"-"`
+	AdditionalProperties any `additionalProperties:"true" json:"-"`
 	// The subevent type.
 	SubEventType string `json:"sub_event_type"`
 }
@@ -29,7 +29,7 @@ func (s *SubEvent) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *SubEvent) GetAdditionalProperties() interface{} {
+func (o *SubEvent) GetAdditionalProperties() any {
 	if o == nil {
 		return nil
 	}

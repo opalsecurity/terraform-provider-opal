@@ -27,7 +27,6 @@ const (
 func (e GroupTypeEnum) ToPointer() *GroupTypeEnum {
 	return &e
 }
-
 func (e *GroupTypeEnum) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {

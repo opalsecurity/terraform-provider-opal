@@ -29,6 +29,7 @@ import (
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/internal/validators/int64validators"
 	custom_listvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/listvalidators"
 	speakeasy_listvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/listvalidators"
+	speakeasy_setvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/setvalidators"
 	speakeasy_stringvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/stringvalidators"
 )
 
@@ -101,7 +102,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 				Description: `The ID of the associated group binding.`,
 			},
-			"group_leader_user_ids": schema.ListAttribute{
+			"group_leader_user_ids": schema.SetAttribute{
 				Computed:    true,
 				Optional:    true,
 				ElementType: types.StringType,
@@ -137,7 +138,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 				Description: `The ID of the group.`,
 			},
-			"message_channel_ids": schema.ListAttribute{
+			"message_channel_ids": schema.SetAttribute{
 				Required:    true,
 				ElementType: types.StringType,
 			},
@@ -204,15 +205,12 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Required:    true,
 				Description: `The name of the remote group.`,
 			},
-			"on_call_schedule_ids": schema.ListAttribute{
+			"on_call_schedule_ids": schema.SetAttribute{
 				Required:    true,
 				ElementType: types.StringType,
 			},
 			"oncall_schedules": schema.SingleNestedAttribute{
 				Computed: true,
-				PlanModifiers: []planmodifier.Object{
-					speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
-				},
 				Attributes: map[string]schema.Attribute{
 					"id": schema.StringAttribute{
 						Computed: true,
@@ -222,10 +220,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						Description: `The ID of the on-call schedule.`,
 					},
 					"name": schema.StringAttribute{
-						Computed: true,
-						PlanModifiers: []planmodifier.String{
-							speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-						},
+						Computed:    true,
 						Description: `The name of the on call schedule.`,
 					},
 					"remote_id": schema.StringAttribute{
@@ -236,10 +231,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						Description: `The remote ID of the on call schedule`,
 					},
 					"third_party_provider": schema.StringAttribute{
-						Computed: true,
-						PlanModifiers: []planmodifier.String{
-							speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-						},
+						Computed:    true,
 						Description: `The third party provider of the on call schedule. must be one of ["OPSGENIE", "PAGER_DUTY"]`,
 						Validators: []validator.String{
 							stringvalidator.OneOf(
@@ -500,13 +492,13 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							Computed: true,
 							Optional: true,
 							Attributes: map[string]schema.Attribute{
-								"group_ids": schema.ListAttribute{
+								"group_ids": schema.SetAttribute{
 									Computed:    true,
 									Optional:    true,
 									ElementType: types.StringType,
 									Description: `The list of group IDs to match.`,
 								},
-								"role_remote_ids": schema.ListAttribute{
+								"role_remote_ids": schema.SetAttribute{
 									Computed:    true,
 									Optional:    true,
 									ElementType: types.StringType,
@@ -562,7 +554,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 										Computed:    true,
 										Optional:    true,
 										Default:     stringdefault.StaticString("AND"),
-										Description: `The operator of the reviewer stage. must be one of ["AND", "OR"]; Default: "AND"`,
+										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]; Default: "AND"`,
 										Validators: []validator.String{
 											stringvalidator.OneOf(
 												"AND",
@@ -570,14 +562,19 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 											),
 										},
 									},
-									"owner_ids": schema.ListAttribute{
+									"owner_ids": schema.SetAttribute{
 										Computed:    true,
 										Optional:    true,
 										ElementType: types.StringType,
 										Description: `Not Null`,
-										Validators: []validator.List{
-											speakeasy_listvalidators.NotNull(),
+										Validators: []validator.Set{
+											speakeasy_setvalidators.NotNull(),
 										},
+									},
+									"require_admin_approval": schema.BoolAttribute{
+										Computed:    true,
+										Optional:    true,
+										Description: `Whether this reviewer stage should require admin approval.`,
 									},
 									"require_manager_approval": schema.BoolAttribute{
 										Computed:    true,
@@ -616,7 +613,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					),
 				},
 			},
-			"visibility_group_ids": schema.ListAttribute{
+			"visibility_group_ids": schema.SetAttribute{
 				Computed:    true,
 				Optional:    true,
 				ElementType: types.StringType,

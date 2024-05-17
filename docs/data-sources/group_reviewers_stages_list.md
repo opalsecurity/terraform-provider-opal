@@ -34,8 +34,9 @@ data "opal_group_reviewers_stages_list" "my_groupreviewersstageslist" {
 
 Read-Only:
 
-- `operator` (String) The operator of the reviewer stage. must be one of ["AND", "OR"]
-- `owner_ids` (List of String)
+- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]
+- `owner_ids` (Set of String)
+- `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval.
 - `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval.
 
 

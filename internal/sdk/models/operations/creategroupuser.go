@@ -20,7 +20,6 @@ const (
 func (e DurationMinutes) ToPointer() *DurationMinutes {
 	return &e
 }
-
 func (e *DurationMinutes) UnmarshalJSON(data []byte) error {
 	var v int64
 	if err := json.Unmarshal(data, &v); err != nil {

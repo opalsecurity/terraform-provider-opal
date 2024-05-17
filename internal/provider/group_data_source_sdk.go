@@ -123,12 +123,14 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 				for _, v := range reviewerStagesItem.OwnerIds {
 					reviewerStages1.OwnerIds = append(reviewerStages1.OwnerIds, types.StringValue(v))
 				}
+				reviewerStages1.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
 				reviewerStages1.RequireManagerApproval = types.BoolValue(reviewerStagesItem.RequireManagerApproval)
 				if reviewerStagesCount+1 > len(requestConfigurations1.ReviewerStages) {
 					requestConfigurations1.ReviewerStages = append(requestConfigurations1.ReviewerStages, reviewerStages1)
 				} else {
 					requestConfigurations1.ReviewerStages[reviewerStagesCount].Operator = reviewerStages1.Operator
 					requestConfigurations1.ReviewerStages[reviewerStagesCount].OwnerIds = reviewerStages1.OwnerIds
+					requestConfigurations1.ReviewerStages[reviewerStagesCount].RequireAdminApproval = reviewerStages1.RequireAdminApproval
 					requestConfigurations1.ReviewerStages[reviewerStagesCount].RequireManagerApproval = reviewerStages1.RequireManagerApproval
 				}
 			}

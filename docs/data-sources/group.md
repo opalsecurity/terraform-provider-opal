@@ -31,7 +31,7 @@ data "opal_group" "my_group" {
 - `app_id` (String) The ID of the group's app.
 - `description` (String) A description of the group.
 - `group_binding_id` (String) The ID of the associated group binding.
-- `group_leader_user_ids` (List of String) A list of User IDs for the group leaders of the group
+- `group_leader_user_ids` (Set of String) A list of User IDs for the group leaders of the group
 - `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OPAL_GROUP", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP"]
 - `message_channels` (Attributes) The audit and reviewer message channels attached to the group. (see [below for nested schema](#nestedatt--message_channels))
 - `name` (String) The name of the group.
@@ -41,7 +41,7 @@ data "opal_group" "my_group" {
 - `request_configurations` (Attributes List) A list of request configurations for this group. (see [below for nested schema](#nestedatt--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this group.
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
-- `visibility_group_ids` (List of String)
+- `visibility_group_ids` (Set of String)
 
 <a id="nestedatt--message_channels"></a>
 ### Nested Schema for `message_channels`
@@ -183,8 +183,8 @@ Read-Only:
 
 Read-Only:
 
-- `group_ids` (List of String) The list of group IDs to match.
-- `role_remote_ids` (List of String) The list of role remote IDs to match.
+- `group_ids` (Set of String) The list of group IDs to match.
+- `role_remote_ids` (Set of String) The list of role remote IDs to match.
 
 
 <a id="nestedatt--request_configurations--reviewer_stages"></a>
@@ -192,8 +192,9 @@ Read-Only:
 
 Read-Only:
 
-- `operator` (String) The operator of the reviewer stage. must be one of ["AND", "OR"]
-- `owner_ids` (List of String)
+- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]
+- `owner_ids` (Set of String)
+- `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval.
 - `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval.
 
 

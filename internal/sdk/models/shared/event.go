@@ -19,7 +19,7 @@ type Event struct {
 	// The IP address of the event actor.
 	ActorIPAddress *string `json:"actor_ip_address,omitempty"`
 	// The name of the actor user.
-	ActorName interface{} `json:"actor_name"`
+	ActorName any `json:"actor_name"`
 	// The ID of the actor user.
 	ActorUserID string `json:"actor_user_id"`
 	// The name of the API token used to create the event.
@@ -60,7 +60,7 @@ func (o *Event) GetActorIPAddress() *string {
 	return o.ActorIPAddress
 }
 
-func (o *Event) GetActorName() interface{} {
+func (o *Event) GetActorName() any {
 	if o == nil {
 		return nil
 	}

@@ -166,6 +166,8 @@ paths:
                 - BearerAuth: []
             tags:
                 - configuration-templates
+            x-speakeasy-name-override: delete
+            x-speakeasy-entity-operation: ConfigurationTemplate#delete
     /events:
         get:
             description: Returns a list of `Event` objects.
@@ -3619,6 +3621,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
             type: object
             required:
                 - user_ids
@@ -3750,6 +3753,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 remote_id:
                     description: The ID of the remote.
                     example: google-group-group:037m2jsg218b2wb
@@ -4076,6 +4080,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 request_configurations:
                     type: array
                     items:
@@ -4300,6 +4305,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
             type: object
             required:
                 - visibility
@@ -4320,6 +4326,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
             type: object
             required:
                 - message_channel_ids
@@ -4338,6 +4345,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
             type: object
             required:
                 - on_call_schedule_ids
@@ -4354,6 +4362,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
             type: object
             required:
                 - reviewer_ids
@@ -4383,8 +4392,12 @@ components:
                     description: Whether this reviewer stage should require manager approval.
                     example: False
                     type: boolean
+                require_admin_approval:
+                    description: Whether this reviewer stage should require admin approval.
+                    example: False
+                    type: boolean
                 operator:
-                    description: The operator of the reviewer stage.
+                    description: The operator of the reviewer stage. Admin and manager approval are also treated as reviewers.
                     enum:
                         - AND
                         - OR
@@ -4396,6 +4409,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
             type: object
             required:
                 - operator
@@ -6517,6 +6531,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 reviewer_message_channel_id:
                     description: The message channel id for the reviewer channel.
                     example: 37cb7e41-12ba-46da-92ff-030abe0450b1
@@ -6607,6 +6622,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 role_remote_ids:
                     description: The list of role remote IDs to match.
                     example:
@@ -6614,6 +6630,7 @@ components:
                     type: array
                     items:
                         type: string
+                    format: set
         RequestConfiguration:
             description: |-
                 # Request Configuration Object
@@ -6810,6 +6827,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 member_oncall_schedule_ids:
                     description: The IDs of the on-call schedules linked to the configuration template.
                     example:
@@ -6819,6 +6837,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 break_glass_user_ids:
                     description: The IDs of the break glass users linked to the configuration template.
                     example:
@@ -6828,6 +6847,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 require_mfa_to_approve:
                     description: A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template.
                     example: False
@@ -6941,6 +6961,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 request_configuration_id:
                     description: The ID of the request configuration linked to the configuration template.
                     example: 7c86c85d-0651-43e2-a748-d69d658418e8
@@ -6955,6 +6976,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 break_glass_user_ids:
                     description: The IDs of the break glass users linked to the configuration template.
                     example:
@@ -6964,6 +6986,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 require_mfa_to_approve:
                     description: A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template.
                     example: False
@@ -7028,6 +7051,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 request_configurations:
                     type: array
                     items:
@@ -7082,6 +7106,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 break_glass_user_ids:
                     description: The IDs of the break glass users linked to the configuration template.
                     example:
@@ -7091,6 +7116,7 @@ components:
                         type: string
                         format: uuid
                     type: array
+                    format: set
                 require_mfa_to_approve:
                     description: A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template.
                     example: False

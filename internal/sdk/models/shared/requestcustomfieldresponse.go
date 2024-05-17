@@ -4,6 +4,7 @@ package shared
 
 import (
 	"errors"
+	"fmt"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
 )
 
@@ -41,21 +42,21 @@ func CreateFieldValueBoolean(boolean bool) FieldValue {
 
 func (u *FieldValue) UnmarshalJSON(data []byte) error {
 
-	str := ""
+	var str string = ""
 	if err := utils.UnmarshalJSON(data, &str, "", true, true); err == nil {
 		u.Str = &str
 		u.Type = FieldValueTypeStr
 		return nil
 	}
 
-	boolean := false
+	var boolean bool = false
 	if err := utils.UnmarshalJSON(data, &boolean, "", true, true); err == nil {
 		u.Boolean = &boolean
 		u.Type = FieldValueTypeBoolean
 		return nil
 	}
 
-	return errors.New("could not unmarshal into supported union types")
+	return fmt.Errorf("could not unmarshal `%s` into any supported union types for FieldValue", string(data))
 }
 
 func (u FieldValue) MarshalJSON() ([]byte, error) {
@@ -67,7 +68,7 @@ func (u FieldValue) MarshalJSON() ([]byte, error) {
 		return utils.MarshalJSON(u.Boolean, "", true)
 	}
 
-	return nil, errors.New("could not marshal union type: all fields are null")
+	return nil, errors.New("could not marshal union type FieldValue: all fields are null")
 }
 
 type RequestCustomFieldResponse struct {

@@ -30,10 +30,10 @@ data "opal_configuration_template_list" "my_configurationtemplatelist" {
 Read-Only:
 
 - `admin_owner_id` (String) The ID of the owner of the configuration template.
-- `break_glass_user_ids` (List of String) The IDs of the break glass users linked to the configuration template.
+- `break_glass_user_ids` (Set of String) The IDs of the break glass users linked to the configuration template.
 - `configuration_template_id` (String) The ID of the configuration template.
-- `linked_audit_message_channel_ids` (List of String) The IDs of the audit message channels linked to the configuration template.
-- `member_oncall_schedule_ids` (List of String) The IDs of the on-call schedules linked to the configuration template.
+- `linked_audit_message_channel_ids` (Set of String) The IDs of the audit message channels linked to the configuration template.
+- `member_oncall_schedule_ids` (Set of String) The IDs of the on-call schedules linked to the configuration template.
 - `name` (String) The name of the configuration template.
 - `request_configuration_id` (String) The ID of the request configuration linked to the configuration template.
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template.
@@ -46,6 +46,6 @@ Read-Only:
 Read-Only:
 
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
-- `visibility_group_ids` (List of String)
+- `visibility_group_ids` (Set of String)
 
 

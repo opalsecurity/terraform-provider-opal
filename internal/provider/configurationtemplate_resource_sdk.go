@@ -74,10 +74,17 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 			for _, ownerIdsItem := range reviewerStagesItem.OwnerIds {
 				ownerIds = append(ownerIds, ownerIdsItem.ValueString())
 			}
+			requireAdminApproval := new(bool)
+			if !reviewerStagesItem.RequireAdminApproval.IsUnknown() && !reviewerStagesItem.RequireAdminApproval.IsNull() {
+				*requireAdminApproval = reviewerStagesItem.RequireAdminApproval.ValueBool()
+			} else {
+				requireAdminApproval = nil
+			}
 			requireManagerApproval := reviewerStagesItem.RequireManagerApproval.ValueBool()
 			reviewerStages = append(reviewerStages, shared.ReviewerStage{
 				Operator:               operator,
 				OwnerIds:               ownerIds,
+				RequireAdminApproval:   requireAdminApproval,
 				RequireManagerApproval: requireManagerApproval,
 			})
 		}
@@ -227,10 +234,17 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 			for _, ownerIdsItem := range reviewerStagesItem.OwnerIds {
 				ownerIds = append(ownerIds, ownerIdsItem.ValueString())
 			}
+			requireAdminApproval := new(bool)
+			if !reviewerStagesItem.RequireAdminApproval.IsUnknown() && !reviewerStagesItem.RequireAdminApproval.IsNull() {
+				*requireAdminApproval = reviewerStagesItem.RequireAdminApproval.ValueBool()
+			} else {
+				requireAdminApproval = nil
+			}
 			requireManagerApproval := reviewerStagesItem.RequireManagerApproval.ValueBool()
 			reviewerStages = append(reviewerStages, shared.ReviewerStage{
 				Operator:               operator,
 				OwnerIds:               ownerIds,
+				RequireAdminApproval:   requireAdminApproval,
 				RequireManagerApproval: requireManagerApproval,
 			})
 		}

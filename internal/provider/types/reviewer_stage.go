@@ -7,5 +7,6 @@ import "github.com/hashicorp/terraform-plugin-framework/types"
 type ReviewerStage struct {
 	Operator               types.String   `tfsdk:"operator"`
 	OwnerIds               []types.String `tfsdk:"owner_ids"`
+	RequireAdminApproval   types.Bool     `tfsdk:"require_admin_approval"`
 	RequireManagerApproval types.Bool     `tfsdk:"require_manager_approval"`
 }

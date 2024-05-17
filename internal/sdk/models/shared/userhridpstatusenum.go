@@ -21,7 +21,6 @@ const (
 func (e UserHrIdpStatusEnum) ToPointer() *UserHrIdpStatusEnum {
 	return &e
 }
-
 func (e *UserHrIdpStatusEnum) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {

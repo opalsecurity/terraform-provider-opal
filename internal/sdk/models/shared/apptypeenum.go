@@ -39,7 +39,6 @@ const (
 func (e AppTypeEnum) ToPointer() *AppTypeEnum {
 	return &e
 }
-
 func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {

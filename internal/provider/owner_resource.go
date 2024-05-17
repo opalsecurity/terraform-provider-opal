@@ -80,7 +80,7 @@ func (r *OwnerResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Optional:    true,
 				Description: `Sync this owner's user list with a source group.`,
 			},
-			"user_ids": schema.ListAttribute{
+			"user_ids": schema.SetAttribute{
 				Required:    true,
 				ElementType: types.StringType,
 				Description: `Users to add to the created owner. If setting a source_group_id this list must be empty.`,
