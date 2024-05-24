@@ -160,6 +160,7 @@ func (s *Groups) Create(ctx context.Context, request shared.CreateGroupInfo, opt
 	}
 
 	return res, nil
+
 }
 
 // CreateResources - Adds a resource to a group.
@@ -298,6 +299,7 @@ func (s *Groups) CreateResources(ctx context.Context, request operations.CreateG
 	}
 
 	return res, nil
+
 }
 
 // CreateUser - Adds a user to this group.
@@ -432,6 +434,7 @@ func (s *Groups) CreateUser(ctx context.Context, request operations.CreateGroupU
 	}
 
 	return res, nil
+
 }
 
 // Delete - Deletes a group.
@@ -549,6 +552,7 @@ func (s *Groups) Delete(ctx context.Context, request operations.DeleteGroupReque
 	}
 
 	return res, nil
+
 }
 
 // DeleteUser - Removes a user's access from this group.
@@ -666,6 +670,7 @@ func (s *Groups) DeleteUser(ctx context.Context, request operations.DeleteGroupU
 	}
 
 	return res, nil
+
 }
 
 // GetGroup - Returns a `Group` object.
@@ -794,6 +799,7 @@ func (s *Groups) GetGroup(ctx context.Context, request operations.GetGroupReques
 	}
 
 	return res, nil
+
 }
 
 // GetMessageChannels - Gets the list of audit and reviewer message channels attached to a group.
@@ -922,6 +928,7 @@ func (s *Groups) GetMessageChannels(ctx context.Context, request operations.GetG
 	}
 
 	return res, nil
+
 }
 
 // GetOnCallSchedule - Gets the list of on call schedules attached to a group.
@@ -1050,6 +1057,7 @@ func (s *Groups) GetOnCallSchedule(ctx context.Context, request operations.GetGr
 	}
 
 	return res, nil
+
 }
 
 // GetResources - Gets the list of resources that the group gives access to.
@@ -1178,6 +1186,7 @@ func (s *Groups) GetResources(ctx context.Context, request operations.GetGroupRe
 	}
 
 	return res, nil
+
 }
 
 // GetReviewersStages - Gets the list of reviewer stages for a group.
@@ -1306,6 +1315,7 @@ func (s *Groups) GetReviewersStages(ctx context.Context, request operations.GetG
 	}
 
 	return res, nil
+
 }
 
 // GetTags - Returns all tags applied to the group.
@@ -1434,6 +1444,7 @@ func (s *Groups) GetTags(ctx context.Context, request operations.GetGroupTagsReq
 	}
 
 	return res, nil
+
 }
 
 // GetUsers - Gets the list of users for this group.
@@ -1562,6 +1573,7 @@ func (s *Groups) GetUsers(ctx context.Context, request operations.GetGroupUsersR
 	}
 
 	return res, nil
+
 }
 
 // GetVisibility - Gets the visibility of this group.
@@ -1690,6 +1702,7 @@ func (s *Groups) GetVisibility(ctx context.Context, request operations.GetGroupV
 	}
 
 	return res, nil
+
 }
 
 // List - Returns a list of groups for your organization.
@@ -1822,6 +1835,7 @@ func (s *Groups) List(ctx context.Context, request operations.GetGroupsRequest, 
 	}
 
 	return res, nil
+
 }
 
 // Update - Bulk updates a list of groups.
@@ -1956,6 +1970,7 @@ func (s *Groups) Update(ctx context.Context, request shared.UpdateGroupInfoList,
 	}
 
 	return res, nil
+
 }
 
 // UpdateMessageChannels - Sets the list of audit message channels attached to a group.
@@ -2079,6 +2094,7 @@ func (s *Groups) UpdateMessageChannels(ctx context.Context, request operations.U
 	}
 
 	return res, nil
+
 }
 
 // UpdateOnCallSchedule - Sets the list of on call schedules attached to a group.
@@ -2202,6 +2218,7 @@ func (s *Groups) UpdateOnCallSchedule(ctx context.Context, request operations.Up
 	}
 
 	return res, nil
+
 }
 
 // UpdateResources - Sets the list of resources that the group gives access to.
@@ -2325,6 +2342,7 @@ func (s *Groups) UpdateResources(ctx context.Context, request operations.UpdateG
 	}
 
 	return res, nil
+
 }
 
 // UpdateReviewersStages - Sets the list of reviewer stages for a group.
@@ -2459,6 +2477,7 @@ func (s *Groups) UpdateReviewersStages(ctx context.Context, request operations.U
 	}
 
 	return res, nil
+
 }
 
 // UpdateVisibility - Sets the visibility of this group.
@@ -2582,4 +2601,5 @@ func (s *Groups) UpdateVisibility(ctx context.Context, request operations.Update
 	}
 
 	return res, nil
+
 }

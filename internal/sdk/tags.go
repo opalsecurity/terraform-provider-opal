@@ -160,6 +160,7 @@ func (s *Tags) CreateTag(ctx context.Context, request shared.CreateTagInfo, opts
 	}
 
 	return res, nil
+
 }
 
 // CreateGroup - Applies a tag to a group.
@@ -277,6 +278,7 @@ func (s *Tags) CreateGroup(ctx context.Context, request operations.CreateGroupTa
 	}
 
 	return res, nil
+
 }
 
 // CreateResource - Applies a tag to a resource.
@@ -394,6 +396,7 @@ func (s *Tags) CreateResource(ctx context.Context, request operations.CreateReso
 	}
 
 	return res, nil
+
 }
 
 // CreateUser - Applies a tag to a user.
@@ -511,6 +514,7 @@ func (s *Tags) CreateUser(ctx context.Context, request operations.CreateUserTagR
 	}
 
 	return res, nil
+
 }
 
 // Delete - Removes a tag from a user.
@@ -628,6 +632,7 @@ func (s *Tags) Delete(ctx context.Context, request operations.DeleteUserTagReque
 	}
 
 	return res, nil
+
 }
 
 // DeleteGroup - Removes a tag from a group.
@@ -745,6 +750,7 @@ func (s *Tags) DeleteGroup(ctx context.Context, request operations.DeleteGroupTa
 	}
 
 	return res, nil
+
 }
 
 // DeleteResource - Removes a tag from a resource.
@@ -862,6 +868,7 @@ func (s *Tags) DeleteResource(ctx context.Context, request operations.DeleteReso
 	}
 
 	return res, nil
+
 }
 
 // DeleteTagByID - UNSTABLE. May be removed at any time. Deletes a tag with the given id.
@@ -979,6 +986,7 @@ func (s *Tags) DeleteTagByID(ctx context.Context, request operations.DeleteTagBy
 	}
 
 	return res, nil
+
 }
 
 // GetTagByID - UNSTABLE. May be removed at any time. Gets a tag with the given id.
@@ -1107,6 +1115,7 @@ func (s *Tags) GetTagByID(ctx context.Context, request operations.GetTagByIDRequ
 	}
 
 	return res, nil
+
 }
 
 // GetTags - Returns a list of tags created by your organization.
@@ -1239,4 +1248,5 @@ func (s *Tags) GetTags(ctx context.Context, request operations.GetTagsRequest, o
 	}
 
 	return res, nil
+
 }

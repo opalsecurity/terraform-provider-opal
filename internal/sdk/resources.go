@@ -160,6 +160,7 @@ func (s *Resources) Create(ctx context.Context, request shared.CreateResourceInf
 	}
 
 	return res, nil
+
 }
 
 // Delete - Deletes a resource.
@@ -277,6 +278,7 @@ func (s *Resources) Delete(ctx context.Context, request operations.DeleteResourc
 	}
 
 	return res, nil
+
 }
 
 // Get - Returns a list of resources for your organization.
@@ -409,6 +411,7 @@ func (s *Resources) Get(ctx context.Context, request operations.GetResourcesRequ
 	}
 
 	return res, nil
+
 }
 
 // GetAccessStatus - Get user's access status to a resource.
@@ -541,6 +544,7 @@ func (s *Resources) GetAccessStatus(ctx context.Context, request operations.GetR
 	}
 
 	return res, nil
+
 }
 
 // GetID - Retrieves a resource.
@@ -669,6 +673,7 @@ func (s *Resources) GetID(ctx context.Context, request operations.GetResourceIDR
 	}
 
 	return res, nil
+
 }
 
 // GetMessageChannels - Gets the list of audit message channels attached to a resource.
@@ -797,6 +802,7 @@ func (s *Resources) GetMessageChannels(ctx context.Context, request operations.G
 	}
 
 	return res, nil
+
 }
 
 // GetReviewers - Gets the list of owner IDs of the reviewers for a resource.
@@ -925,6 +931,7 @@ func (s *Resources) GetReviewers(ctx context.Context, request operations.GetReso
 	}
 
 	return res, nil
+
 }
 
 // GetTags - Returns all tags applied to the resource.
@@ -1053,6 +1060,7 @@ func (s *Resources) GetTags(ctx context.Context, request operations.GetResourceT
 	}
 
 	return res, nil
+
 }
 
 // GetUsers - Gets the list of users for this resource.
@@ -1185,6 +1193,7 @@ func (s *Resources) GetUsers(ctx context.Context, request operations.GetResource
 	}
 
 	return res, nil
+
 }
 
 // GetVisibility - Gets the visibility of this resource.
@@ -1313,6 +1322,7 @@ func (s *Resources) GetVisibility(ctx context.Context, request operations.GetRes
 	}
 
 	return res, nil
+
 }
 
 // Update - Bulk updates a list of resources.
@@ -1447,6 +1457,7 @@ func (s *Resources) Update(ctx context.Context, request shared.UpdateResourceInf
 	}
 
 	return res, nil
+
 }
 
 // UpdateMessageChannels - Sets the list of audit message channels attached to a resource.
@@ -1581,6 +1592,7 @@ func (s *Resources) UpdateMessageChannels(ctx context.Context, request operation
 	}
 
 	return res, nil
+
 }
 
 // UpdateReviewers - Sets the list of reviewers for a resource.
@@ -1715,6 +1727,7 @@ func (s *Resources) UpdateReviewers(ctx context.Context, request operations.Upda
 	}
 
 	return res, nil
+
 }
 
 // UpdateVisibility - Sets the visibility of this resource.
@@ -1838,4 +1851,5 @@ func (s *Resources) UpdateVisibility(ctx context.Context, request operations.Upd
 	}
 
 	return res, nil
+
 }

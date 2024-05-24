@@ -676,11 +676,18 @@ paths:
                         schema:
                             example:
                                 access_level_remote_id: arn:aws:iam::590304332660:role/AdministratorAccess
+                                duration_minutes: 60
                             properties:
                                 access_level_remote_id:
                                     description: The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used.
                                     example: arn:aws:iam::590304332660:role/AdministratorAccess
                                     type: string
+                                duration_minutes:
+                                    description: The duration for which the resource can be accessed (in minutes). Use 0 to set to indefinite.
+                                    example: 60
+                                    type: integer
+                                    maximum: 525960 # One year
+                                    minimum: 0
                             type: object
             responses:
                 "200":
@@ -7246,7 +7253,6 @@ components:
                             - type
                             - value
             required:
-                - user_id
                 - reason
                 - duration_minutes
                 - resources

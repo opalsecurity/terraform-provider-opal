@@ -158,6 +158,7 @@ func (s *Users) Get(ctx context.Context, request operations.GetUserRequest, opts
 	}
 
 	return res, nil
+
 }
 
 // GetUserTags - Returns all tags applied to the user.
@@ -286,6 +287,7 @@ func (s *Users) GetUserTags(ctx context.Context, request operations.GetUserTagsR
 	}
 
 	return res, nil
+
 }
 
 // GetUsers - Returns a list of users for your organization.
@@ -418,4 +420,5 @@ func (s *Users) GetUsers(ctx context.Context, request operations.GetUsersRequest
 	}
 
 	return res, nil
+
 }

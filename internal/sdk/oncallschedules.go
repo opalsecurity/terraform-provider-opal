@@ -160,6 +160,7 @@ func (s *OnCallSchedules) Create(ctx context.Context, request shared.CreateOnCal
 	}
 
 	return res, nil
+
 }
 
 // Get - Returns a list of `OnCallSchedule` objects.
@@ -288,6 +289,7 @@ func (s *OnCallSchedules) Get(ctx context.Context, opts ...operations.Option) (*
 	}
 
 	return res, nil
+
 }
 
 // GetID - Gets a `OnCallSchedule` object.
@@ -416,4 +418,5 @@ func (s *OnCallSchedules) GetID(ctx context.Context, request operations.GetOnCal
 	}
 
 	return res, nil
+
 }
