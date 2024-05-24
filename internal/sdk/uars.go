@@ -160,6 +160,7 @@ func (s *Uars) Create(ctx context.Context, request shared.CreateUARInfo, opts ..
 	}
 
 	return res, nil
+
 }
 
 // Get - Returns a list of `UAR` objects.
@@ -292,6 +293,7 @@ func (s *Uars) Get(ctx context.Context, request operations.GetUARsRequest, opts 
 	}
 
 	return res, nil
+
 }
 
 // GetID - Retrieves a specific UAR.
@@ -420,4 +422,5 @@ func (s *Uars) GetID(ctx context.Context, request operations.GetUARIDRequest, op
 	}
 
 	return res, nil
+
 }

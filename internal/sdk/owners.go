@@ -160,6 +160,7 @@ func (s *Owners) Create(ctx context.Context, request shared.CreateOwnerInfo, opt
 	}
 
 	return res, nil
+
 }
 
 // Delete - Deletes an owner.
@@ -277,6 +278,7 @@ func (s *Owners) Delete(ctx context.Context, request operations.DeleteOwnerReque
 	}
 
 	return res, nil
+
 }
 
 // Get - Returns a list of `Owner` objects.
@@ -409,6 +411,7 @@ func (s *Owners) Get(ctx context.Context, request operations.GetOwnersRequest, o
 	}
 
 	return res, nil
+
 }
 
 // GetFromName - Returns an `Owner` object. Does not support owners with `/` in their name, use /owners?name=... instead.
@@ -537,6 +540,7 @@ func (s *Owners) GetFromName(ctx context.Context, request operations.GetOwnerFro
 	}
 
 	return res, nil
+
 }
 
 // GetID - Returns an `Owner` object.
@@ -665,6 +669,7 @@ func (s *Owners) GetID(ctx context.Context, request operations.GetOwnerIDRequest
 	}
 
 	return res, nil
+
 }
 
 // Update - Bulk updates a list of owners.
@@ -799,6 +804,7 @@ func (s *Owners) Update(ctx context.Context, request shared.UpdateOwnerInfoList,
 	}
 
 	return res, nil
+
 }
 
 // UpdateUsers - Sets the list of users for this owner. If escalation is enabled, the order of this list is the escalation priority order of the users. If the owner has a source group, adding or removing users from this list won't be possible.
@@ -933,4 +939,5 @@ func (s *Owners) UpdateUsers(ctx context.Context, request operations.UpdateOwner
 	}
 
 	return res, nil
+
 }

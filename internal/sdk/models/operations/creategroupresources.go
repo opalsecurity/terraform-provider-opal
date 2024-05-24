@@ -10,6 +10,8 @@ import (
 type CreateGroupResourcesRequestBody struct {
 	// The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used.
 	AccessLevelRemoteID *string `json:"access_level_remote_id,omitempty"`
+	// The duration for which the resource can be accessed (in minutes). Use 0 to set to indefinite.
+	DurationMinutes *int64 `json:"duration_minutes,omitempty"`
 }
 
 func (o *CreateGroupResourcesRequestBody) GetAccessLevelRemoteID() *string {
@@ -17,6 +19,13 @@ func (o *CreateGroupResourcesRequestBody) GetAccessLevelRemoteID() *string {
 		return nil
 	}
 	return o.AccessLevelRemoteID
+}
+
+func (o *CreateGroupResourcesRequestBody) GetDurationMinutes() *int64 {
+	if o == nil {
+		return nil
+	}
+	return o.DurationMinutes
 }
 
 type CreateGroupResourcesRequest struct {

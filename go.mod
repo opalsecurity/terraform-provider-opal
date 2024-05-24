@@ -2,7 +2,7 @@ module github.com/opalsecurity/terraform-provider-opal
 
 go 1.21
 
-toolchain go1.21.1
+toolchain go1.21.10
 
 require (
 	github.com/cenkalti/backoff/v4 v4.2.0

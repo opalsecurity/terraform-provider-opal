@@ -158,4 +158,5 @@ func (s *Sessions) Get(ctx context.Context, request operations.GetSessionsReques
 	}
 
 	return res, nil
+
 }

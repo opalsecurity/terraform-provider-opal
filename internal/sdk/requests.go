@@ -160,6 +160,7 @@ func (s *Requests) CreateRequest(ctx context.Context, request shared.CreateReque
 	}
 
 	return res, nil
+
 }
 
 // Get - Returns a list of requests for your organization that is visible by the admin.
@@ -292,4 +293,5 @@ func (s *Requests) Get(ctx context.Context, request operations.GetRequestsReques
 	}
 
 	return res, nil
+
 }

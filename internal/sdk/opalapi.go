@@ -143,16 +143,10 @@ func WithClient(client HTTPClient) SDKOption {
 	}
 }
 
-func withSecurity(security interface{}) func(context.Context) (interface{}, error) {
-	return func(context.Context) (interface{}, error) {
-		return security, nil
-	}
-}
-
 // WithSecurity configures the SDK to use the provided security details
 func WithSecurity(security shared.Security) SDKOption {
 	return func(sdk *OpalAPI) {
-		sdk.sdkConfiguration.Security = withSecurity(security)
+		sdk.sdkConfiguration.Security = utils.AsSecuritySource(security)
 	}
 }
 
@@ -178,8 +172,8 @@ func New(opts ...SDKOption) *OpalAPI {
 			Language:          "go",
 			OpenAPIDocVersion: "1.0",
 			SDKVersion:        "0.0.1",
-			GenVersion:        "2.333.3",
-			UserAgent:         "speakeasy-sdk/go 0.0.1 2.333.3 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
+			GenVersion:        "2.335.5",
+			UserAgent:         "speakeasy-sdk/go 0.0.1 2.335.5 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
 			Hooks:             hooks.New(),
 		},
 	}

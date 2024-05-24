@@ -160,6 +160,7 @@ func (s *ConfigurationTemplates) Create(ctx context.Context, request shared.Crea
 	}
 
 	return res, nil
+
 }
 
 // Delete - Deletes a configuration template.
@@ -277,6 +278,7 @@ func (s *ConfigurationTemplates) Delete(ctx context.Context, request operations.
 	}
 
 	return res, nil
+
 }
 
 // Get - Returns a list of `ConfigurationTemplate` objects.
@@ -405,6 +407,7 @@ func (s *ConfigurationTemplates) Get(ctx context.Context, opts ...operations.Opt
 	}
 
 	return res, nil
+
 }
 
 // Update a configuration template.
@@ -539,4 +542,5 @@ func (s *ConfigurationTemplates) Update(ctx context.Context, request shared.Upda
 	}
 
 	return res, nil
+
 }

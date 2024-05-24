@@ -158,6 +158,7 @@ func (s *Apps) Get(ctx context.Context, request operations.GetAppsRequest, opts 
 	}
 
 	return res, nil
+
 }
 
 // GetID - Returns an `App` object.
@@ -286,4 +287,5 @@ func (s *Apps) GetID(ctx context.Context, request operations.GetAppIDRequest, op
 	}
 
 	return res, nil
+
 }

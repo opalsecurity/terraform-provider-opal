@@ -158,4 +158,5 @@ func (s *Events) Get(ctx context.Context, request operations.GetEventsRequest, o
 	}
 
 	return res, nil
+
 }

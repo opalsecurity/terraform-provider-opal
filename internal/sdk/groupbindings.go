@@ -159,6 +159,7 @@ func (s *GroupBindings) CreateGroupBinding(ctx context.Context, request shared.C
 	}
 
 	return res, nil
+
 }
 
 // DeleteGroupBinding - Deletes a group binding.
@@ -276,6 +277,7 @@ func (s *GroupBindings) DeleteGroupBinding(ctx context.Context, request operatio
 	}
 
 	return res, nil
+
 }
 
 // GetGroupBinding - Returns a `GroupBinding` object.
@@ -404,6 +406,7 @@ func (s *GroupBindings) GetGroupBinding(ctx context.Context, request operations.
 	}
 
 	return res, nil
+
 }
 
 // GetGroupBindings - Returns a list of `GroupBinding` objects.
@@ -536,6 +539,7 @@ func (s *GroupBindings) GetGroupBindings(ctx context.Context, request operations
 	}
 
 	return res, nil
+
 }
 
 // UpdateGroupBindings - Bulk updates a list of group bindings.
@@ -659,4 +663,5 @@ func (s *GroupBindings) UpdateGroupBindings(ctx context.Context, request shared.
 	}
 
 	return res, nil
+
 }

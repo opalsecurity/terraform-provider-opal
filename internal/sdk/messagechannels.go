@@ -160,6 +160,7 @@ func (s *MessageChannels) Create(ctx context.Context, request shared.CreateMessa
 	}
 
 	return res, nil
+
 }
 
 // Get - Returns a list of `MessageChannel` objects.
@@ -288,6 +289,7 @@ func (s *MessageChannels) Get(ctx context.Context, opts ...operations.Option) (*
 	}
 
 	return res, nil
+
 }
 
 // GetID - Gets a `MessageChannel` object.
@@ -416,4 +418,5 @@ func (s *MessageChannels) GetID(ctx context.Context, request operations.GetMessa
 	}
 
 	return res, nil
+
 }
