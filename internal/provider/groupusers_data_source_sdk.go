@@ -11,6 +11,7 @@ import (
 
 func (r *GroupUsersDataSourceModel) RefreshFromSharedGroupUserList(resp *shared.GroupUserList) {
 	if resp != nil {
+		r.Results = []tfTypes.GroupUser{}
 		if len(r.Results) > len(resp.Results) {
 			r.Results = r.Results[:len(resp.Results)]
 		}

@@ -10,6 +10,7 @@ import (
 
 func (r *OnCallScheduleListDataSourceModel) RefreshFromSharedOnCallScheduleList(resp *shared.OnCallScheduleList) {
 	if resp != nil {
+		r.OnCallSchedules = []tfTypes.GetGroupOnCallSchedulesResponseBody{}
 		if len(r.OnCallSchedules) > len(resp.OnCallSchedules) {
 			r.OnCallSchedules = r.OnCallSchedules[:len(resp.OnCallSchedules)]
 		}

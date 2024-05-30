@@ -9,6 +9,7 @@ import (
 )
 
 func (r *GroupReviewersStagesListDataSourceModel) RefreshFromSharedReviewerStage(resp []shared.ReviewerStage) {
+	r.Data = []tfTypes.ReviewerStage{}
 	if len(r.Data) > len(resp) {
 		r.Data = r.Data[:len(resp)]
 	}

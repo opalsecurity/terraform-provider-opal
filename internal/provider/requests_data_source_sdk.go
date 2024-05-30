@@ -12,12 +12,14 @@ import (
 func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(resp *shared.RequestList) {
 	if resp != nil {
 		r.Cursor = types.StringPointerValue(resp.Cursor)
+		r.Requests = []tfTypes.Request{}
 		if len(r.Requests) > len(resp.Requests) {
 			r.Requests = r.Requests[:len(resp.Requests)]
 		}
 		for requestsCount, requestsItem := range resp.Requests {
 			var requests1 tfTypes.Request
 			requests1.CreatedAt = types.StringValue(requestsItem.CreatedAt.Format(time.RFC3339Nano))
+			requests1.CustomFieldsResponses = []tfTypes.RequestCustomFieldResponse{}
 			for customFieldsResponsesCount, customFieldsResponsesItem := range requestsItem.CustomFieldsResponses {
 				var customFieldsResponses1 tfTypes.RequestCustomFieldResponse
 				customFieldsResponses1.FieldName = types.StringValue(customFieldsResponsesItem.FieldName)
@@ -39,6 +41,7 @@ func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(resp *shared.Requ
 			requests1.DurationMinutes = types.Int64PointerValue(requestsItem.DurationMinutes)
 			requests1.ID = types.StringValue(requestsItem.ID)
 			requests1.Reason = types.StringValue(requestsItem.Reason)
+			requests1.RequestedItemsList = []tfTypes.RequestedItem{}
 			for requestedItemsListCount, requestedItemsListItem := range requestsItem.RequestedItemsList {
 				var requestedItemsList1 tfTypes.RequestedItem
 				requestedItemsList1.AccessLevelName = types.StringPointerValue(requestedItemsListItem.AccessLevelName)

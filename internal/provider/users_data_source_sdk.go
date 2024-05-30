@@ -12,6 +12,7 @@ func (r *UsersDataSourceModel) RefreshFromSharedPaginatedUsersList(resp *shared.
 	if resp != nil {
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
+		r.Results = []tfTypes.User{}
 		if len(r.Results) > len(resp.Results) {
 			r.Results = r.Results[:len(resp.Results)]
 		}

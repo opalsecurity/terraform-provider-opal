@@ -10,6 +10,7 @@ import (
 
 func (r *GroupResourceListDataSourceModel) RefreshFromSharedGroupResourceList(resp *shared.GroupResourceList) {
 	if resp != nil {
+		r.GroupResources = []tfTypes.GroupResource1{}
 		if len(r.GroupResources) > len(resp.GroupResources) {
 			r.GroupResources = r.GroupResources[:len(resp.GroupResources)]
 		}

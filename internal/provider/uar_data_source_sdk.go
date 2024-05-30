@@ -56,6 +56,7 @@ func (r *UarDataSourceModel) RefreshFromSharedUar(resp *shared.Uar) {
 			for _, v := range resp.UarScope.ResourceTypes {
 				r.UarScope.ResourceTypes = append(r.UarScope.ResourceTypes, types.StringValue(string(v)))
 			}
+			r.UarScope.Tags = []tfTypes.TagFilter{}
 			if len(r.UarScope.Tags) > len(resp.UarScope.Tags) {
 				r.UarScope.Tags = r.UarScope.Tags[:len(resp.UarScope.Tags)]
 			}

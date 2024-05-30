@@ -12,6 +12,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 	if resp != nil {
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
+		r.Results = []tfTypes.Resource{}
 		if len(r.Results) > len(resp.Results) {
 			r.Results = r.Results[:len(resp.Results)]
 		}
@@ -193,6 +194,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 					results1.RemoteInfo.TeleportRole.RoleName = types.StringValue(resultsItem.RemoteInfo.TeleportRole.RoleName)
 				}
 			}
+			results1.RequestConfigurations = []tfTypes.RequestConfiguration{}
 			for requestConfigurationsCount, requestConfigurationsItem := range resultsItem.RequestConfigurations {
 				var requestConfigurations1 tfTypes.RequestConfiguration
 				requestConfigurations1.AllowRequests = types.BoolValue(requestConfigurationsItem.AllowRequests)
@@ -216,6 +218,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 				requestConfigurations1.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
 				requestConfigurations1.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
 				requestConfigurations1.RequireSupportTicket = types.BoolValue(requestConfigurationsItem.RequireSupportTicket)
+				requestConfigurations1.ReviewerStages = []tfTypes.ReviewerStage{}
 				for reviewerStagesCount, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 					var reviewerStages1 tfTypes.ReviewerStage
 					if reviewerStagesItem.Operator != nil {

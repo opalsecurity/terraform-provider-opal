@@ -13,6 +13,7 @@ func (r *SessionsDataSourceModel) RefreshFromSharedSessionsList(resp *shared.Ses
 	if resp != nil {
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
+		r.Results = []tfTypes.Session{}
 		if len(r.Results) > len(resp.Results) {
 			r.Results = r.Results[:len(resp.Results)]
 		}

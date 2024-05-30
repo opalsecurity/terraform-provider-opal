@@ -13,6 +13,7 @@ func (r *UARSListDataSourceModel) RefreshFromSharedPaginatedUARsList(resp *share
 	if resp != nil {
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
+		r.Results = []tfTypes.Uar{}
 		if len(r.Results) > len(resp.Results) {
 			r.Results = r.Results[:len(resp.Results)]
 		}
@@ -64,6 +65,7 @@ func (r *UARSListDataSourceModel) RefreshFromSharedPaginatedUARsList(resp *share
 				for _, v := range resultsItem.UarScope.ResourceTypes {
 					results1.UarScope.ResourceTypes = append(results1.UarScope.ResourceTypes, types.StringValue(string(v)))
 				}
+				results1.UarScope.Tags = []tfTypes.TagFilter{}
 				for tagsCount, tagsItem := range resultsItem.UarScope.Tags {
 					var tags1 tfTypes.TagFilter
 					tags1.Key = types.StringValue(tagsItem.Key)

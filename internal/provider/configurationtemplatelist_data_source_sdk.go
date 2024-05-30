@@ -10,6 +10,7 @@ import (
 
 func (r *ConfigurationTemplateListDataSourceModel) RefreshFromSharedPaginatedConfigurationTemplateList(resp *shared.PaginatedConfigurationTemplateList) {
 	if resp != nil {
+		r.Results = []tfTypes.ConfigurationTemplate{}
 		if len(r.Results) > len(resp.Results) {
 			r.Results = r.Results[:len(resp.Results)]
 		}
