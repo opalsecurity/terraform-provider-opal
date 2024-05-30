@@ -14,6 +14,7 @@ func (r *EventsDataSourceModel) RefreshFromSharedPaginatedEventList(resp *shared
 	if resp != nil {
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
+		r.Results = []tfTypes.Event{}
 		if len(r.Results) > len(resp.Results) {
 			r.Results = r.Results[:len(resp.Results)]
 		}
@@ -29,6 +30,7 @@ func (r *EventsDataSourceModel) RefreshFromSharedPaginatedEventList(resp *shared
 			results1.CreatedAt = types.StringValue(resultsItem.CreatedAt.Format(time.RFC3339Nano))
 			results1.EventID = types.StringValue(resultsItem.EventID)
 			results1.EventType = types.StringValue(resultsItem.EventType)
+			results1.SubEvents = []tfTypes.SubEvent{}
 			for subEventsCount, subEventsItem := range resultsItem.SubEvents {
 				var subEvents1 tfTypes.SubEvent
 				if subEventsItem.AdditionalProperties == nil {

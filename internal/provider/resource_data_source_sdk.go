@@ -186,6 +186,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(resp *shared.Resourc
 				r.RemoteInfo.TeleportRole.RoleName = types.StringValue(resp.RemoteInfo.TeleportRole.RoleName)
 			}
 		}
+		r.RequestConfigurations = []tfTypes.RequestConfiguration{}
 		if len(r.RequestConfigurations) > len(resp.RequestConfigurations) {
 			r.RequestConfigurations = r.RequestConfigurations[:len(resp.RequestConfigurations)]
 		}
@@ -212,6 +213,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(resp *shared.Resourc
 			requestConfigurations1.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
 			requestConfigurations1.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
 			requestConfigurations1.RequireSupportTicket = types.BoolValue(requestConfigurationsItem.RequireSupportTicket)
+			requestConfigurations1.ReviewerStages = []tfTypes.ReviewerStage{}
 			for reviewerStagesCount, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 				var reviewerStages1 tfTypes.ReviewerStage
 				if reviewerStagesItem.Operator != nil {

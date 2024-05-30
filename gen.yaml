@@ -12,7 +12,7 @@ generation:
   baseServerURL: ""
   flattenGlobalSecurity: true
 terraform:
-  version: 0.20.3
+  version: 0.20.4
   additionalDataSources: []
   additionalDependencies: {}
   additionalResources: []

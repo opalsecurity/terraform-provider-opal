@@ -11,6 +11,7 @@ import (
 
 func (r *ResourcesUsersListDataSourceModel) RefreshFromSharedResourceAccessUserList(resp *shared.ResourceAccessUserList) {
 	if resp != nil {
+		r.Results = []tfTypes.ResourceAccessUser{}
 		if len(r.Results) > len(resp.Results) {
 			r.Results = r.Results[:len(resp.Results)]
 		}

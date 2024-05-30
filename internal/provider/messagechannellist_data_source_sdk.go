@@ -10,6 +10,7 @@ import (
 
 func (r *MessageChannelListDataSourceModel) RefreshFromSharedMessageChannelList(resp *shared.MessageChannelList) {
 	if resp != nil {
+		r.Channels = []tfTypes.MessageChannel{}
 		if len(r.Channels) > len(resp.Channels) {
 			r.Channels = r.Channels[:len(resp.Channels)]
 		}

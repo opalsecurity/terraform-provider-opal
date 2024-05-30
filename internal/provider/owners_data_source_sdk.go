@@ -12,6 +12,7 @@ func (r *OwnersDataSourceModel) RefreshFromSharedPaginatedOwnersList(resp *share
 	if resp != nil {
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
+		r.Results = []tfTypes.Owner{}
 		if len(r.Results) > len(resp.Results) {
 			r.Results = r.Results[:len(resp.Results)]
 		}

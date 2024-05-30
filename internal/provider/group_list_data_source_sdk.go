@@ -10,6 +10,7 @@ import (
 
 func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *shared.PaginatedGroupsList) {
 	if resp != nil {
+		r.Results = []tfTypes.Group{}
 		if len(r.Results) > len(resp.Results) {
 			r.Results = r.Results[:len(resp.Results)]
 		}
@@ -90,6 +91,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 				}
 			}
 			results1.RemoteName = types.StringPointerValue(resultsItem.RemoteName)
+			results1.RequestConfigurations = []tfTypes.RequestConfiguration{}
 			for requestConfigurationsCount, requestConfigurationsItem := range resultsItem.RequestConfigurations {
 				var requestConfigurations1 tfTypes.RequestConfiguration
 				requestConfigurations1.AllowRequests = types.BoolValue(requestConfigurationsItem.AllowRequests)
@@ -113,6 +115,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 				requestConfigurations1.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
 				requestConfigurations1.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
 				requestConfigurations1.RequireSupportTicket = types.BoolValue(requestConfigurationsItem.RequireSupportTicket)
+				requestConfigurations1.ReviewerStages = []tfTypes.ReviewerStage{}
 				for reviewerStagesCount, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 					var reviewerStages1 tfTypes.ReviewerStage
 					if reviewerStagesItem.Operator != nil {

@@ -10,6 +10,7 @@ import (
 
 func (r *AppsDataSourceModel) RefreshFromSharedAppsList(resp *shared.AppsList) {
 	if resp != nil {
+		r.Apps = []tfTypes.App{}
 		if len(r.Apps) > len(resp.Apps) {
 			r.Apps = r.Apps[:len(resp.Apps)]
 		}

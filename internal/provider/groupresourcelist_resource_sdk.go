@@ -31,6 +31,7 @@ func (r *GroupResourceListResourceModel) ToSharedUpdateGroupResourcesInfo() *sha
 
 func (r *GroupResourceListResourceModel) RefreshFromSharedGroupResourceList(resp *shared.GroupResourceList) {
 	if resp != nil {
+		r.GroupResources = []tfTypes.GroupResource1{}
 		if len(r.GroupResources) > len(resp.GroupResources) {
 			r.GroupResources = r.GroupResources[:len(resp.GroupResources)]
 		}

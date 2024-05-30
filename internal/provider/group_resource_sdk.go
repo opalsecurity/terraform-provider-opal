@@ -183,6 +183,7 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 			}
 		}
 		r.RemoteName = types.StringPointerValue(resp.RemoteName)
+		r.RequestConfigurations = []tfTypes.RequestConfiguration{}
 		if len(r.RequestConfigurations) > len(resp.RequestConfigurations) {
 			r.RequestConfigurations = r.RequestConfigurations[:len(resp.RequestConfigurations)]
 		}
@@ -209,6 +210,7 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 			requestConfigurations1.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
 			requestConfigurations1.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
 			requestConfigurations1.RequireSupportTicket = types.BoolValue(requestConfigurationsItem.RequireSupportTicket)
+			requestConfigurations1.ReviewerStages = []tfTypes.ReviewerStage{}
 			for reviewerStagesCount, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 				var reviewerStages1 tfTypes.ReviewerStage
 				if reviewerStagesItem.Operator != nil {
@@ -385,6 +387,7 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(resp shared.Update
 	}
 	r.ID = types.StringPointerValue(resp.ID)
 	r.Name = types.StringPointerValue(resp.Name)
+	r.RequestConfigurations = []tfTypes.RequestConfiguration{}
 	if len(r.RequestConfigurations) > len(resp.RequestConfigurations) {
 		r.RequestConfigurations = r.RequestConfigurations[:len(resp.RequestConfigurations)]
 	}
@@ -411,6 +414,7 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(resp shared.Update
 		requestConfigurations1.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
 		requestConfigurations1.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
 		requestConfigurations1.RequireSupportTicket = types.BoolValue(requestConfigurationsItem.RequireSupportTicket)
+		requestConfigurations1.ReviewerStages = []tfTypes.ReviewerStage{}
 		for reviewerStagesCount, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 			var reviewerStages1 tfTypes.ReviewerStage
 			if reviewerStagesItem.Operator != nil {
@@ -477,6 +481,7 @@ func (r *GroupResourceModel) ToSharedVisibilityInfo() *shared.VisibilityInfo {
 
 func (r *GroupResourceModel) RefreshFromOperationsGetGroupMessageChannelsResponseBody(resp *operations.GetGroupMessageChannelsResponseBody) {
 	if resp != nil {
+		r.MessageChannels.Channels = []tfTypes.MessageChannel{}
 		if len(r.MessageChannels.Channels) > len(resp.Channels) {
 			r.MessageChannels.Channels = r.MessageChannels.Channels[:len(resp.Channels)]
 		}

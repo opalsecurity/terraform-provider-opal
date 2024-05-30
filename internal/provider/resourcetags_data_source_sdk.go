@@ -11,6 +11,7 @@ import (
 
 func (r *ResourceTagsDataSourceModel) RefreshFromSharedTagsList(resp *shared.TagsList) {
 	if resp != nil {
+		r.Tags = []tfTypes.Tag{}
 		if len(r.Tags) > len(resp.Tags) {
 			r.Tags = r.Tags[:len(resp.Tags)]
 		}
