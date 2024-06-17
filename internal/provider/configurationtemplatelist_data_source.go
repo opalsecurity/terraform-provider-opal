@@ -164,8 +164,8 @@ func (r *ConfigurationTemplateListDataSource) Read(ctx context.Context, req data
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.PaginatedConfigurationTemplateList == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.PaginatedConfigurationTemplateList != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedPaginatedConfigurationTemplateList(res.PaginatedConfigurationTemplateList)

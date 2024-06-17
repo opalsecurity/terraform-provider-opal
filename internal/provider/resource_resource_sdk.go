@@ -664,7 +664,7 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo() *shared.UpdateResou
 	return &out
 }
 
-func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(resp shared.UpdateResourceInfo) {
+func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(resp *shared.UpdateResourceInfo) {
 	r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 	r.Description = types.StringPointerValue(resp.Description)
 	r.ID = types.StringPointerValue(resp.ID)

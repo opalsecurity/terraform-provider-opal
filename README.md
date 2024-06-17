@@ -4,22 +4,35 @@
 Generate the new SDK using `speakeasy run`. This pulls the remote spec specified in `.speakeasy/workflow.yaml#6` and applies the overrides in `terraform_overlay.yaml`. Note the Makefile is only useful if you want to do development with a local OpenAPI spec and update the Speakeasy workflow config to reference that OpenAPI spec.
 
 <!-- Start SDK Installation [installation] -->
-## SDK Installation
+## Provider Usage
 
-To install this provider, copy and paste this code into your Terraform configuration. Then, run `terraform init`.
+To install this provider, copy and paste the code below into your Terraform configuration and run `terraform init`.
+
+**Note:** Do not commit your auth tokens directly! Use environment variables or secrets management systems to store your credentials.
+
+To inject your auth token and server URL, use [Terraform's environment variable injection process](https://developer.hashicorp.com/terraform/cli/config/environment-variables#tf_var_name).
+
+```sh
+export TF_VAR_auth_token="your_secret_auth_token"
+export TF_VAR_server_url="https://your.server.url"
+```
 
 ```hcl
 terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "0.20.4"
+      version = "3.0.0"
     }
   }
 }
 
+variable "auth_token" {}
+variable "server_url" {}
+
 provider "opal" {
-  # Configuration options
+  bearer_auth = var.auth_token
+  server_url  = var.server_url
 }
 ```
 <!-- End SDK Installation [installation] -->

@@ -378,7 +378,7 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo() *shared.UpdateGroupInfo {
 	return &out
 }
 
-func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(resp shared.UpdateGroupInfo) {
+func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(resp *shared.UpdateGroupInfo) {
 	r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 	r.Description = types.StringPointerValue(resp.Description)
 	r.GroupLeaderUserIds = []types.String{}

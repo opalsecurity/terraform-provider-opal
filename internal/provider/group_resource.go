@@ -677,8 +677,8 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.Group == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.Group != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedGroup(res.Group)
@@ -704,11 +704,11 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if res1.UpdateGroupInfoList == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res1.RawResponse))
+	if !(res1.UpdateGroupInfoList != nil && len(res1.UpdateGroupInfoList.Groups) > 0) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedUpdateGroupInfo(res1.UpdateGroupInfoList.Groups[0])
+	data.RefreshFromSharedUpdateGroupInfo(&res1.UpdateGroupInfoList.Groups[0])
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	messageChannelIDList := *data.ToSharedMessageChannelIDList()
 	id := data.ID.ValueString()
@@ -805,8 +805,8 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res5.StatusCode), debugResponse(res5.RawResponse))
 		return
 	}
-	if res5.Group == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res5.RawResponse))
+	if !(res5.Group != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res5.RawResponse))
 		return
 	}
 	data.RefreshFromSharedGroup(res5.Group)
@@ -831,8 +831,8 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res6.StatusCode), debugResponse(res6.RawResponse))
 		return
 	}
-	if res6.Object == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res6.RawResponse))
+	if !(res6.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res6.RawResponse))
 		return
 	}
 	data.RefreshFromOperationsGetGroupMessageChannelsResponseBody(res6.Object)
@@ -857,10 +857,6 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res7.StatusCode), debugResponse(res7.RawResponse))
 		return
 	}
-	if res7.Object == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res7.RawResponse))
-		return
-	}
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	id6 := data.ID.ValueString()
 	request8 := operations.GetGroupVisibilityRequest{
@@ -882,8 +878,8 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res8.StatusCode), debugResponse(res8.RawResponse))
 		return
 	}
-	if res8.Object == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res8.RawResponse))
+	if !(res8.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res8.RawResponse))
 		return
 	}
 	data.RefreshFromOperationsGetGroupVisibilityResponseBody(res8.Object)
@@ -935,8 +931,8 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.Group == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.Group != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedGroup(res.Group)
@@ -964,8 +960,8 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if res1.Object == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res1.RawResponse))
+	if !(res1.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
 	data.RefreshFromOperationsGetGroupMessageChannelsResponseBody(res1.Object)
@@ -993,10 +989,6 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
 		return
 	}
-	if res2.Object == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res2.RawResponse))
-		return
-	}
 	id3 := data.ID.ValueString()
 	request3 := operations.GetGroupVisibilityRequest{
 		ID: id3,
@@ -1021,8 +1013,8 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res3.StatusCode), debugResponse(res3.RawResponse))
 		return
 	}
-	if res3.Object == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res3.RawResponse))
+	if !(res3.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res3.RawResponse))
 		return
 	}
 	data.RefreshFromOperationsGetGroupVisibilityResponseBody(res3.Object)
@@ -1066,11 +1058,11 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.UpdateGroupInfoList == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.UpdateGroupInfoList != nil && len(res.UpdateGroupInfoList.Groups) > 0) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedUpdateGroupInfo(res.UpdateGroupInfoList.Groups[0])
+	data.RefreshFromSharedUpdateGroupInfo(&res.UpdateGroupInfoList.Groups[0])
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	messageChannelIDList := *data.ToSharedMessageChannelIDList()
 	id := data.ID.ValueString()
@@ -1167,8 +1159,8 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res4.StatusCode), debugResponse(res4.RawResponse))
 		return
 	}
-	if res4.Group == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res4.RawResponse))
+	if !(res4.Group != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res4.RawResponse))
 		return
 	}
 	data.RefreshFromSharedGroup(res4.Group)
@@ -1193,8 +1185,8 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res5.StatusCode), debugResponse(res5.RawResponse))
 		return
 	}
-	if res5.Object == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res5.RawResponse))
+	if !(res5.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res5.RawResponse))
 		return
 	}
 	data.RefreshFromOperationsGetGroupMessageChannelsResponseBody(res5.Object)
@@ -1219,10 +1211,6 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res6.StatusCode), debugResponse(res6.RawResponse))
 		return
 	}
-	if res6.Object == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res6.RawResponse))
-		return
-	}
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	id6 := data.ID.ValueString()
 	request7 := operations.GetGroupVisibilityRequest{
@@ -1244,8 +1232,8 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res7.StatusCode), debugResponse(res7.RawResponse))
 		return
 	}
-	if res7.Object == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res7.RawResponse))
+	if !(res7.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res7.RawResponse))
 		return
 	}
 	data.RefreshFromOperationsGetGroupVisibilityResponseBody(res7.Object)
