@@ -107,7 +107,7 @@ func (r *OwnerResourceModel) ToSharedUpdateOwnerInfo() *shared.UpdateOwnerInfo {
 	return &out
 }
 
-func (r *OwnerResourceModel) RefreshFromSharedUpdateOwnerInfo(resp shared.UpdateOwnerInfo) {
+func (r *OwnerResourceModel) RefreshFromSharedUpdateOwnerInfo(resp *shared.UpdateOwnerInfo) {
 	r.AccessRequestEscalationPeriod = types.Int64PointerValue(resp.AccessRequestEscalationPeriod)
 	r.Description = types.StringPointerValue(resp.Description)
 	r.ID = types.StringPointerValue(resp.ID)
