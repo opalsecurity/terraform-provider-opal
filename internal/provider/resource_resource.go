@@ -1117,8 +1117,8 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.Resource == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.Resource != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedResource(res.Resource)
@@ -1144,11 +1144,11 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if res1.UpdateResourceInfoList == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res1.RawResponse))
+	if !(res1.UpdateResourceInfoList != nil && len(res1.UpdateResourceInfoList.Resources) > 0) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedUpdateResourceInfo(res1.UpdateResourceInfoList.Resources[0])
+	data.RefreshFromSharedUpdateResourceInfo(&res1.UpdateResourceInfoList.Resources[0])
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	visibilityInfo := *data.ToSharedVisibilityInfo()
 	id := data.ID.ValueString()
@@ -1193,8 +1193,8 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res3.StatusCode), debugResponse(res3.RawResponse))
 		return
 	}
-	if res3.Resource == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res3.RawResponse))
+	if !(res3.Resource != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res3.RawResponse))
 		return
 	}
 	data.RefreshFromSharedResource(res3.Resource)
@@ -1246,8 +1246,8 @@ func (r *ResourceResource) Read(ctx context.Context, req resource.ReadRequest, r
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.Resource == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.Resource != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedResource(res.Resource)
@@ -1291,11 +1291,11 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.UpdateResourceInfoList == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.UpdateResourceInfoList != nil && len(res.UpdateResourceInfoList.Resources) > 0) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedUpdateResourceInfo(res.UpdateResourceInfoList.Resources[0])
+	data.RefreshFromSharedUpdateResourceInfo(&res.UpdateResourceInfoList.Resources[0])
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	visibilityInfo := *data.ToSharedVisibilityInfo()
 	id := data.ID.ValueString()
@@ -1340,8 +1340,8 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
 		return
 	}
-	if res2.Resource == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res2.RawResponse))
+	if !(res2.Resource != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res2.RawResponse))
 		return
 	}
 	data.RefreshFromSharedResource(res2.Resource)

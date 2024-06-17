@@ -182,8 +182,8 @@ func (r *GroupResourceListResource) Create(ctx context.Context, req resource.Cre
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if res1.GroupResourceList == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res1.RawResponse))
+	if !(res1.GroupResourceList != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
 	data.RefreshFromSharedGroupResourceList(res1.GroupResourceList)
@@ -235,8 +235,8 @@ func (r *GroupResourceListResource) Read(ctx context.Context, req resource.ReadR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.GroupResourceList == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.GroupResourceList != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedGroupResourceList(res.GroupResourceList)
@@ -302,8 +302,8 @@ func (r *GroupResourceListResource) Update(ctx context.Context, req resource.Upd
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if res1.GroupResourceList == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res1.RawResponse))
+	if !(res1.GroupResourceList != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
 	data.RefreshFromSharedGroupResourceList(res1.GroupResourceList)

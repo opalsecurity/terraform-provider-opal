@@ -144,8 +144,8 @@ func (r *OwnerResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.Owner == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.Owner != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedOwner(res.Owner)
@@ -170,8 +170,8 @@ func (r *OwnerResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if res1.Owner == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res1.RawResponse))
+	if !(res1.Owner != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
 	data.RefreshFromSharedOwner(res1.Owner)
@@ -223,8 +223,8 @@ func (r *OwnerResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.Owner == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.Owner != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedOwner(res.Owner)
@@ -268,11 +268,11 @@ func (r *OwnerResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.UpdateOwnerInfoList == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.UpdateOwnerInfoList != nil && len(res.UpdateOwnerInfoList.Owners) > 0) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedUpdateOwnerInfo(res.UpdateOwnerInfoList.Owners[0])
+	data.RefreshFromSharedUpdateOwnerInfo(&res.UpdateOwnerInfoList.Owners[0])
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	userIDList := *data.ToSharedUserIDList()
 	id := data.ID.ValueString()
@@ -296,10 +296,6 @@ func (r *OwnerResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if res1.UserList == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res1.RawResponse))
-		return
-	}
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 	id1 := data.ID.ValueString()
 	request2 := operations.GetOwnerIDRequest{
@@ -321,8 +317,8 @@ func (r *OwnerResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
 		return
 	}
-	if res2.Owner == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res2.RawResponse))
+	if !(res2.Owner != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res2.RawResponse))
 		return
 	}
 	data.RefreshFromSharedOwner(res2.Owner)
