@@ -17,6 +17,7 @@ func (r *UarDataSourceModel) RefreshFromSharedUar(resp *shared.Uar) {
 		r.SelfReviewAllowed = types.BoolValue(resp.SelfReviewAllowed)
 		r.SendReviewerAssignmentNotification = types.BoolValue(resp.SendReviewerAssignmentNotification)
 		r.TimeZone = types.StringValue(resp.TimeZone)
+		r.UarID = types.StringValue(resp.UarID)
 		if resp.UarScope == nil {
 			r.UarScope = nil
 		} else {
@@ -76,6 +77,5 @@ func (r *UarDataSourceModel) RefreshFromSharedUar(resp *shared.Uar) {
 				r.UarScope.Users = append(r.UarScope.Users, types.StringValue(v))
 			}
 		}
-		r.UarID = types.StringValue(resp.UarID)
 	}
 }

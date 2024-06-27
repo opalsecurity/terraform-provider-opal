@@ -22,13 +22,17 @@ terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "3.0.0"
+      version = "3.0.1"
     }
   }
 }
 
-variable "auth_token" {}
-variable "server_url" {}
+variable "auth_token" {
+  type = string
+}
+variable "server_url" {
+  type = string
+}
 
 provider "opal" {
   bearer_auth = var.auth_token
