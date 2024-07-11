@@ -91,6 +91,15 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 		}}},
 	}}}
 
+	var ticketPropagationType = tftypes.Object{
+		AttributeTypes: map[string]tftypes.Type{
+			"enabled_on_grant":      tftypes.Bool,
+			"enabled_on_revocation": tftypes.Bool,
+			"ticket_project_id":     tftypes.String,
+			"ticket_provider":       tftypes.String,
+		},
+	}
+
 	var ResourceV3 = tftypes.Object{
 		AttributeTypes: map[string]tftypes.Type{
 			"id":                 tftypes.String,
@@ -106,6 +115,7 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 			"visibility": tftypes.String,
 			"visibility_group_ids": tftypes.List{ElementType: tftypes.String},
 			"request_configurations": requestConfigurationsType,
+			"ticket_propagation": ticketPropagationType,
 		},
 	}
 	
@@ -208,8 +218,6 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 		)
 		return
 	}
-	x:=oldRawState["parent_resource_id"]
-	x.IsFullyKnown()
 
 	dynamicValue, err := tfprotov6.NewDynamicValue(
 		ResourceV3,
@@ -227,6 +235,7 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 			"visibility": tftypes.NewValue(tftypes.String, visibility), // Will be populated on a state refresh
 			"visibility_group_ids":tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, visibilityGroupIDs), // Will be populated by first terraform apply
 			"request_configurations": tftypes.NewValue(requestConfigurationsType, nil), // Will be populated on a state refresh
+			"ticket_propagation": tftypes.NewValue(ticketPropagationType, nil), // cannot have been set in the prior version
 		}),
 	)
 
