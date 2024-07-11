@@ -74,6 +74,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
 - `linked_audit_message_channel_ids` (Set of String) The IDs of the audit message channels linked to the configuration template.
 - `member_oncall_schedule_ids` (Set of String) The IDs of the on-call schedules linked to the configuration template.
 - `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
+- `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--ticket_propagation))
 
 ### Read-Only
 
@@ -132,5 +133,17 @@ Optional:
 
 - `group_ids` (Set of String) The list of group IDs to match.
 - `role_remote_ids` (Set of String) The list of role remote IDs to match.
+
+
+
+<a id="nestedatt--ticket_propagation"></a>
+### Nested Schema for `ticket_propagation`
+
+Optional:
+
+- `enabled_on_grant` (Boolean) Not Null
+- `enabled_on_revocation` (Boolean) Not Null
+- `ticket_project_id` (String)
+- `ticket_provider` (String) The third party ticketing platform provider. must be one of ["JIRA", "LINEAR", "SERVICE_NOW"]
 
 

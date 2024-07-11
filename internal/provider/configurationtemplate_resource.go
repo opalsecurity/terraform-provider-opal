@@ -15,6 +15,7 @@ import (
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
+	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/boolvalidators"
 	custom_objectvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/objectvalidators"
 )
 
@@ -33,17 +34,18 @@ type ConfigurationTemplateResource struct {
 
 // ConfigurationTemplateResourceModel describes the resource data model.
 type ConfigurationTemplateResourceModel struct {
-	AdminOwnerID                 types.String                   `tfsdk:"admin_owner_id"`
-	BreakGlassUserIds            []types.String                 `tfsdk:"break_glass_user_ids"`
-	ConfigurationTemplateID      types.String                   `tfsdk:"configuration_template_id"`
-	LinkedAuditMessageChannelIds []types.String                 `tfsdk:"linked_audit_message_channel_ids"`
-	MemberOncallScheduleIds      []types.String                 `tfsdk:"member_oncall_schedule_ids"`
-	Name                         types.String                   `tfsdk:"name"`
-	RequestConfigurationID       types.String                   `tfsdk:"request_configuration_id"`
-	RequestConfigurations        []tfTypes.RequestConfiguration `tfsdk:"request_configurations"`
-	RequireMfaToApprove          types.Bool                     `tfsdk:"require_mfa_to_approve"`
-	RequireMfaToConnect          types.Bool                     `tfsdk:"require_mfa_to_connect"`
-	Visibility                   tfTypes.VisibilityInfo         `tfsdk:"visibility"`
+	AdminOwnerID                 types.String                            `tfsdk:"admin_owner_id"`
+	BreakGlassUserIds            []types.String                          `tfsdk:"break_glass_user_ids"`
+	ConfigurationTemplateID      types.String                            `tfsdk:"configuration_template_id"`
+	LinkedAuditMessageChannelIds []types.String                          `tfsdk:"linked_audit_message_channel_ids"`
+	MemberOncallScheduleIds      []types.String                          `tfsdk:"member_oncall_schedule_ids"`
+	Name                         types.String                            `tfsdk:"name"`
+	RequestConfigurationID       types.String                            `tfsdk:"request_configuration_id"`
+	RequestConfigurations        []tfTypes.RequestConfiguration          `tfsdk:"request_configurations"`
+	RequireMfaToApprove          types.Bool                              `tfsdk:"require_mfa_to_approve"`
+	RequireMfaToConnect          types.Bool                              `tfsdk:"require_mfa_to_connect"`
+	TicketPropagation            *tfTypes.TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
+	Visibility                   tfTypes.VisibilityInfo                  `tfsdk:"visibility"`
 }
 
 func (r *ConfigurationTemplateResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -182,6 +184,45 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 			"require_mfa_to_connect": schema.BoolAttribute{
 				Required:    true,
 				Description: `A bool representing whether or not to require MFA to connect to resources associated with this configuration template.`,
+			},
+			"ticket_propagation": schema.SingleNestedAttribute{
+				Computed: true,
+				Optional: true,
+				Attributes: map[string]schema.Attribute{
+					"enabled_on_grant": schema.BoolAttribute{
+						Computed:    true,
+						Optional:    true,
+						Description: `Not Null`,
+						Validators: []validator.Bool{
+							speakeasy_boolvalidators.NotNull(),
+						},
+					},
+					"enabled_on_revocation": schema.BoolAttribute{
+						Computed:    true,
+						Optional:    true,
+						Description: `Not Null`,
+						Validators: []validator.Bool{
+							speakeasy_boolvalidators.NotNull(),
+						},
+					},
+					"ticket_project_id": schema.StringAttribute{
+						Computed: true,
+						Optional: true,
+					},
+					"ticket_provider": schema.StringAttribute{
+						Computed:    true,
+						Optional:    true,
+						Description: `The third party ticketing platform provider. must be one of ["JIRA", "LINEAR", "SERVICE_NOW"]`,
+						Validators: []validator.String{
+							stringvalidator.OneOf(
+								"JIRA",
+								"LINEAR",
+								"SERVICE_NOW",
+							),
+						},
+					},
+				},
+				Description: `Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.`,
 			},
 			"visibility": schema.SingleNestedAttribute{
 				Required: true,

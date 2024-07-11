@@ -4,6 +4,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
@@ -103,6 +104,29 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 	}
 	requireMfaToApprove := r.RequireMfaToApprove.ValueBool()
 	requireMfaToConnect := r.RequireMfaToConnect.ValueBool()
+	var ticketPropagation *shared.TicketPropagationConfiguration
+	if r.TicketPropagation != nil {
+		enabledOnGrant := r.TicketPropagation.EnabledOnGrant.ValueBool()
+		enabledOnRevocation := r.TicketPropagation.EnabledOnRevocation.ValueBool()
+		ticketProjectID := new(string)
+		if !r.TicketPropagation.TicketProjectID.IsUnknown() && !r.TicketPropagation.TicketProjectID.IsNull() {
+			*ticketProjectID = r.TicketPropagation.TicketProjectID.ValueString()
+		} else {
+			ticketProjectID = nil
+		}
+		ticketProvider := new(shared.TicketingProviderEnum)
+		if !r.TicketPropagation.TicketProvider.IsUnknown() && !r.TicketPropagation.TicketProvider.IsNull() {
+			*ticketProvider = shared.TicketingProviderEnum(r.TicketPropagation.TicketProvider.ValueString())
+		} else {
+			ticketProvider = nil
+		}
+		ticketPropagation = &shared.TicketPropagationConfiguration{
+			EnabledOnGrant:      enabledOnGrant,
+			EnabledOnRevocation: enabledOnRevocation,
+			TicketProjectID:     ticketProjectID,
+			TicketProvider:      ticketProvider,
+		}
+	}
 	visibility1 := shared.VisibilityTypeEnum(r.Visibility.Visibility.ValueString())
 	var visibilityGroupIds []string = []string{}
 	for _, visibilityGroupIdsItem := range r.Visibility.VisibilityGroupIds {
@@ -121,6 +145,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 		RequestConfigurations:        requestConfigurations,
 		RequireMfaToApprove:          requireMfaToApprove,
 		RequireMfaToConnect:          requireMfaToConnect,
+		TicketPropagation:            ticketPropagation,
 		Visibility:                   visibility,
 	}
 	return &out
@@ -146,6 +171,19 @@ func (r *ConfigurationTemplateResourceModel) RefreshFromSharedConfigurationTempl
 		r.RequestConfigurationID = types.StringPointerValue(resp.RequestConfigurationID)
 		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
 		r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
+		if resp.TicketPropagation == nil {
+			r.TicketPropagation = nil
+		} else {
+			r.TicketPropagation = &tfTypes.TicketPropagationConfiguration{}
+			r.TicketPropagation.EnabledOnGrant = types.BoolValue(resp.TicketPropagation.EnabledOnGrant)
+			r.TicketPropagation.EnabledOnRevocation = types.BoolValue(resp.TicketPropagation.EnabledOnRevocation)
+			r.TicketPropagation.TicketProjectID = types.StringPointerValue(resp.TicketPropagation.TicketProjectID)
+			if resp.TicketPropagation.TicketProvider != nil {
+				r.TicketPropagation.TicketProvider = types.StringValue(string(*resp.TicketPropagation.TicketProvider))
+			} else {
+				r.TicketPropagation.TicketProvider = types.StringNull()
+			}
+		}
 		if resp.Visibility != nil {
 			r.Visibility.Visibility = types.StringValue(string(resp.Visibility.Visibility))
 			r.Visibility.VisibilityGroupIds = []types.String{}
@@ -273,6 +311,29 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 	} else {
 		requireMfaToConnect = nil
 	}
+	var ticketPropagation *shared.TicketPropagationConfiguration
+	if r.TicketPropagation != nil {
+		enabledOnGrant := r.TicketPropagation.EnabledOnGrant.ValueBool()
+		enabledOnRevocation := r.TicketPropagation.EnabledOnRevocation.ValueBool()
+		ticketProjectID := new(string)
+		if !r.TicketPropagation.TicketProjectID.IsUnknown() && !r.TicketPropagation.TicketProjectID.IsNull() {
+			*ticketProjectID = r.TicketPropagation.TicketProjectID.ValueString()
+		} else {
+			ticketProjectID = nil
+		}
+		ticketProvider := new(shared.TicketingProviderEnum)
+		if !r.TicketPropagation.TicketProvider.IsUnknown() && !r.TicketPropagation.TicketProvider.IsNull() {
+			*ticketProvider = shared.TicketingProviderEnum(r.TicketPropagation.TicketProvider.ValueString())
+		} else {
+			ticketProvider = nil
+		}
+		ticketPropagation = &shared.TicketPropagationConfiguration{
+			EnabledOnGrant:      enabledOnGrant,
+			EnabledOnRevocation: enabledOnRevocation,
+			TicketProjectID:     ticketProjectID,
+			TicketProvider:      ticketProvider,
+		}
+	}
 	var visibility *shared.VisibilityInfo
 	visibility1 := shared.VisibilityTypeEnum(r.Visibility.Visibility.ValueString())
 	var visibilityGroupIds []string = []string{}
@@ -293,6 +354,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 		RequestConfigurations:        requestConfigurations,
 		RequireMfaToApprove:          requireMfaToApprove,
 		RequireMfaToConnect:          requireMfaToConnect,
+		TicketPropagation:            ticketPropagation,
 		Visibility:                   visibility,
 	}
 	return &out

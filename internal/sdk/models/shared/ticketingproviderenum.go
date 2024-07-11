@@ -11,18 +11,9 @@ import (
 type TicketingProviderEnum string
 
 const (
-	TicketingProviderEnumAuth0            TicketingProviderEnum = "AUTH0"
-	TicketingProviderEnumMerge            TicketingProviderEnum = "MERGE"
-	TicketingProviderEnumSlack            TicketingProviderEnum = "SLACK"
-	TicketingProviderEnumJira             TicketingProviderEnum = "JIRA"
-	TicketingProviderEnumLinear           TicketingProviderEnum = "LINEAR"
-	TicketingProviderEnumServiceNow       TicketingProviderEnum = "SERVICE_NOW"
-	TicketingProviderEnumPagerDuty        TicketingProviderEnum = "PAGER_DUTY"
-	TicketingProviderEnumOpsgenie         TicketingProviderEnum = "OPSGENIE"
-	TicketingProviderEnumGitHub           TicketingProviderEnum = "GIT_HUB"
-	TicketingProviderEnumGitLab           TicketingProviderEnum = "GIT_LAB"
-	TicketingProviderEnumGitLabConnection TicketingProviderEnum = "GIT_LAB_CONNECTION"
-	TicketingProviderEnumTeleport         TicketingProviderEnum = "TELEPORT"
+	TicketingProviderEnumJira       TicketingProviderEnum = "JIRA"
+	TicketingProviderEnumLinear     TicketingProviderEnum = "LINEAR"
+	TicketingProviderEnumServiceNow TicketingProviderEnum = "SERVICE_NOW"
 )
 
 func (e TicketingProviderEnum) ToPointer() *TicketingProviderEnum {
@@ -34,29 +25,11 @@ func (e *TicketingProviderEnum) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	switch v {
-	case "AUTH0":
-		fallthrough
-	case "MERGE":
-		fallthrough
-	case "SLACK":
-		fallthrough
 	case "JIRA":
 		fallthrough
 	case "LINEAR":
 		fallthrough
 	case "SERVICE_NOW":
-		fallthrough
-	case "PAGER_DUTY":
-		fallthrough
-	case "OPSGENIE":
-		fallthrough
-	case "GIT_HUB":
-		fallthrough
-	case "GIT_LAB":
-		fallthrough
-	case "GIT_LAB_CONNECTION":
-		fallthrough
-	case "TELEPORT":
 		*e = TicketingProviderEnum(v)
 		return nil
 	default:
