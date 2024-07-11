@@ -29,17 +29,18 @@ type ResourceDataSource struct {
 
 // ResourceDataSourceModel describes the data model.
 type ResourceDataSourceModel struct {
-	AdminOwnerID          types.String                   `tfsdk:"admin_owner_id"`
-	AppID                 types.String                   `tfsdk:"app_id"`
-	Description           types.String                   `tfsdk:"description"`
-	ID                    types.String                   `tfsdk:"id"`
-	Name                  types.String                   `tfsdk:"name"`
-	ParentResourceID      types.String                   `tfsdk:"parent_resource_id"`
-	RemoteInfo            *tfTypes.ResourceRemoteInfo    `tfsdk:"remote_info"`
-	RequestConfigurations []tfTypes.RequestConfiguration `tfsdk:"request_configurations"`
-	RequireMfaToApprove   types.Bool                     `tfsdk:"require_mfa_to_approve"`
-	RequireMfaToConnect   types.Bool                     `tfsdk:"require_mfa_to_connect"`
-	ResourceType          types.String                   `tfsdk:"resource_type"`
+	AdminOwnerID          types.String                            `tfsdk:"admin_owner_id"`
+	AppID                 types.String                            `tfsdk:"app_id"`
+	Description           types.String                            `tfsdk:"description"`
+	ID                    types.String                            `tfsdk:"id"`
+	Name                  types.String                            `tfsdk:"name"`
+	ParentResourceID      types.String                            `tfsdk:"parent_resource_id"`
+	RemoteInfo            *tfTypes.ResourceRemoteInfo             `tfsdk:"remote_info"`
+	RequestConfigurations []tfTypes.RequestConfiguration          `tfsdk:"request_configurations"`
+	RequireMfaToApprove   types.Bool                              `tfsdk:"require_mfa_to_approve"`
+	RequireMfaToConnect   types.Bool                              `tfsdk:"require_mfa_to_connect"`
+	ResourceType          types.String                            `tfsdk:"resource_type"`
+	TicketPropagation     *tfTypes.TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
 }
 
 // Metadata returns the data source type name.
@@ -483,6 +484,25 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"resource_type": schema.StringAttribute{
 				Computed:    true,
 				Description: `The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "CUSTOM", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GIT_HUB_REPO", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "TELEPORT_ROLE"]`,
+			},
+			"ticket_propagation": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"enabled_on_grant": schema.BoolAttribute{
+						Computed: true,
+					},
+					"enabled_on_revocation": schema.BoolAttribute{
+						Computed: true,
+					},
+					"ticket_project_id": schema.StringAttribute{
+						Computed: true,
+					},
+					"ticket_provider": schema.StringAttribute{
+						Computed:    true,
+						Description: `The third party ticketing platform provider. must be one of ["JIRA", "LINEAR", "SERVICE_NOW"]`,
+					},
+				},
+				Description: `Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.`,
 			},
 		},
 	}

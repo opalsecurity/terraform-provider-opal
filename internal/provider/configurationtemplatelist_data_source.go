@@ -85,6 +85,25 @@ func (r *ConfigurationTemplateListDataSource) Schema(ctx context.Context, req da
 							Computed:    true,
 							Description: `A bool representing whether or not to require MFA to connect to resources associated with this configuration template.`,
 						},
+						"ticket_propagation": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"enabled_on_grant": schema.BoolAttribute{
+									Computed: true,
+								},
+								"enabled_on_revocation": schema.BoolAttribute{
+									Computed: true,
+								},
+								"ticket_project_id": schema.StringAttribute{
+									Computed: true,
+								},
+								"ticket_provider": schema.StringAttribute{
+									Computed:    true,
+									Description: `The third party ticketing platform provider. must be one of ["JIRA", "LINEAR", "SERVICE_NOW"]`,
+								},
+							},
+							Description: `Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.`,
+						},
 						"visibility": schema.SingleNestedAttribute{
 							Computed: true,
 							Attributes: map[string]schema.Attribute{

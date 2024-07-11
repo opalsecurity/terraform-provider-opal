@@ -80,8 +80,8 @@ Read-Only:
 Read-Only:
 
 - `active_directory_group` (Attributes) Remote info for Active Directory group. (see [below for nested schema](#nestedatt--remote_info--active_directory_group))
-- `azure_ad_microsoft_365_group` (Attributes) Remote info for Azure AD Microsoft 365 group. (see [below for nested schema](#nestedatt--remote_info--azure_ad_microsoft_365_group))
-- `azure_ad_security_group` (Attributes) Remote info for Azure AD Security group. (see [below for nested schema](#nestedatt--remote_info--azure_ad_security_group))
+- `azure_ad_microsoft_365_group` (Attributes) Remote info for Microsoft Entra ID Microsoft 365 group. (see [below for nested schema](#nestedatt--remote_info--azure_ad_microsoft_365_group))
+- `azure_ad_security_group` (Attributes) Remote info for Microsoft Entra ID Security group. (see [below for nested schema](#nestedatt--remote_info--azure_ad_security_group))
 - `duo_group` (Attributes) Remote info for Duo Security group. (see [below for nested schema](#nestedatt--remote_info--duo_group))
 - `github_team` (Attributes) Remote info for GitHub team. (see [below for nested schema](#nestedatt--remote_info--github_team))
 - `gitlab_group` (Attributes) Remote info for Gitlab group. (see [below for nested schema](#nestedatt--remote_info--gitlab_group))
@@ -102,7 +102,7 @@ Read-Only:
 
 Read-Only:
 
-- `group_id` (String) The id of the Azure AD Microsoft 365 group.
+- `group_id` (String) The id of the Microsoft Entra ID Microsoft 365 group.
 
 
 <a id="nestedatt--remote_info--azure_ad_security_group"></a>
@@ -110,7 +110,7 @@ Read-Only:
 
 Read-Only:
 
-- `group_id` (String) The id of the Azure AD Security group.
+- `group_id` (String) The id of the Microsoft Entra ID Security group.
 
 
 <a id="nestedatt--remote_info--duo_group"></a>

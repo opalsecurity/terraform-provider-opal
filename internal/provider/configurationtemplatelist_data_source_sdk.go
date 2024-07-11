@@ -34,6 +34,19 @@ func (r *ConfigurationTemplateListDataSourceModel) RefreshFromSharedPaginatedCon
 			results1.RequestConfigurationID = types.StringPointerValue(resultsItem.RequestConfigurationID)
 			results1.RequireMfaToApprove = types.BoolPointerValue(resultsItem.RequireMfaToApprove)
 			results1.RequireMfaToConnect = types.BoolPointerValue(resultsItem.RequireMfaToConnect)
+			if resultsItem.TicketPropagation == nil {
+				results1.TicketPropagation = nil
+			} else {
+				results1.TicketPropagation = &tfTypes.TicketPropagationConfiguration{}
+				results1.TicketPropagation.EnabledOnGrant = types.BoolValue(resultsItem.TicketPropagation.EnabledOnGrant)
+				results1.TicketPropagation.EnabledOnRevocation = types.BoolValue(resultsItem.TicketPropagation.EnabledOnRevocation)
+				results1.TicketPropagation.TicketProjectID = types.StringPointerValue(resultsItem.TicketPropagation.TicketProjectID)
+				if resultsItem.TicketPropagation.TicketProvider != nil {
+					results1.TicketPropagation.TicketProvider = types.StringValue(string(*resultsItem.TicketPropagation.TicketProvider))
+				} else {
+					results1.TicketPropagation.TicketProvider = types.StringNull()
+				}
+			}
 			if resultsItem.Visibility == nil {
 				results1.Visibility = nil
 			} else {
@@ -56,6 +69,7 @@ func (r *ConfigurationTemplateListDataSourceModel) RefreshFromSharedPaginatedCon
 				r.Results[resultsCount].RequestConfigurationID = results1.RequestConfigurationID
 				r.Results[resultsCount].RequireMfaToApprove = results1.RequireMfaToApprove
 				r.Results[resultsCount].RequireMfaToConnect = results1.RequireMfaToConnect
+				r.Results[resultsCount].TicketPropagation = results1.TicketPropagation
 				r.Results[resultsCount].Visibility = results1.Visibility
 			}
 		}

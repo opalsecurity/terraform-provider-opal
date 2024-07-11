@@ -38,7 +38,19 @@ Read-Only:
 - `request_configuration_id` (String) The ID of the request configuration linked to the configuration template.
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template.
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to resources associated with this configuration template.
+- `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--results--ticket_propagation))
 - `visibility` (Attributes) Visibility infomation of an entity. (see [below for nested schema](#nestedatt--results--visibility))
+
+<a id="nestedatt--results--ticket_propagation"></a>
+### Nested Schema for `results.ticket_propagation`
+
+Read-Only:
+
+- `enabled_on_grant` (Boolean)
+- `enabled_on_revocation` (Boolean)
+- `ticket_project_id` (String)
+- `ticket_provider` (String) The third party ticketing platform provider. must be one of ["JIRA", "LINEAR", "SERVICE_NOW"]
+
 
 <a id="nestedatt--results--visibility"></a>
 ### Nested Schema for `results.visibility`

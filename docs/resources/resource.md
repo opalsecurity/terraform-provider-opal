@@ -76,6 +76,7 @@ resource "opal_resource" "my_resource" {
 - `remote_info` (Attributes) Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to this resource.
+- `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--ticket_propagation))
 - `visibility_group_ids` (Set of String)
 
 ### Read-Only
@@ -364,6 +365,18 @@ Optional:
 Optional:
 
 - `role_name` (String) The name role. Requires replacement if changed. ; Not Null
+
+
+
+<a id="nestedatt--ticket_propagation"></a>
+### Nested Schema for `ticket_propagation`
+
+Optional:
+
+- `enabled_on_grant` (Boolean) Not Null
+- `enabled_on_revocation` (Boolean) Not Null
+- `ticket_project_id` (String)
+- `ticket_provider` (String) The third party ticketing platform provider. must be one of ["JIRA", "LINEAR", "SERVICE_NOW"]
 
 ## Import
 

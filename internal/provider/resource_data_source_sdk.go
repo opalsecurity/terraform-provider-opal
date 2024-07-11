@@ -258,5 +258,18 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(resp *shared.Resourc
 		} else {
 			r.ResourceType = types.StringNull()
 		}
+		if resp.TicketPropagation == nil {
+			r.TicketPropagation = nil
+		} else {
+			r.TicketPropagation = &tfTypes.TicketPropagationConfiguration{}
+			r.TicketPropagation.EnabledOnGrant = types.BoolValue(resp.TicketPropagation.EnabledOnGrant)
+			r.TicketPropagation.EnabledOnRevocation = types.BoolValue(resp.TicketPropagation.EnabledOnRevocation)
+			r.TicketPropagation.TicketProjectID = types.StringPointerValue(resp.TicketPropagation.TicketProjectID)
+			if resp.TicketPropagation.TicketProvider != nil {
+				r.TicketPropagation.TicketProvider = types.StringValue(string(*resp.TicketPropagation.TicketProvider))
+			} else {
+				r.TicketPropagation.TicketProvider = types.StringNull()
+			}
+		}
 	}
 }

@@ -12,6 +12,7 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/errors"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/retry"
 	"io"
 	"net/http"
 	"net/url"
@@ -40,6 +41,7 @@ func (s *Owners) Create(ctx context.Context, request shared.CreateOwnerInfo, opt
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
+		operations.SupportedOptionTimeout,
 	}
 
 	for _, opt := range opts {
@@ -47,6 +49,7 @@ func (s *Owners) Create(ctx context.Context, request shared.CreateOwnerInfo, opt
 			return nil, fmt.Errorf("error applying option: %w", err)
 		}
 	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := url.JoinPath(baseURL, "/owners")
 	if err != nil {
@@ -56,6 +59,17 @@ func (s *Owners) Create(ctx context.Context, request shared.CreateOwnerInfo, opt
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "POST", opURL, bodyReader)
@@ -73,10 +87,11 @@ func (s *Owners) Create(ctx context.Context, request shared.CreateOwnerInfo, opt
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
 	retryConfig := o.Retries
 	if retryConfig == nil {
-		if globalRetryConfig == nil {
-			retryConfig = &utils.RetryConfig{
-				Strategy: "backoff",
-				Backoff: &utils.BackoffStrategy{
+		if globalRetryConfig != nil {
+			retryConfig = globalRetryConfig
+		} else {
+			retryConfig = &retry.Config{
+				Strategy: "backoff", Backoff: &retry.BackoffStrategy{
 					InitialInterval: 1000,
 					MaxInterval:     60000,
 					Exponent:        1.5,
@@ -84,31 +99,58 @@ func (s *Owners) Create(ctx context.Context, request shared.CreateOwnerInfo, opt
 				},
 				RetryConnectionErrors: true,
 			}
-		} else {
-			retryConfig = globalRetryConfig
 		}
 	}
 
-	httpRes, err := utils.Retry(ctx, utils.Retries{
-		Config: retryConfig,
-		StatusCodes: []string{
-			"429",
-		},
-	}, func() (*http.Response, error) {
-		if req.Body != nil {
-			copyBody, err := req.GetBody()
+	var httpRes *http.Response
+	if retryConfig != nil {
+		httpRes, err = utils.Retry(ctx, utils.Retries{
+			Config: retryConfig,
+			StatusCodes: []string{
+				"429",
+			},
+		}, func() (*http.Response, error) {
+			if req.Body != nil {
+				copyBody, err := req.GetBody()
+				if err != nil {
+					return nil, err
+				}
+				req.Body = copyBody
+			}
+
+			req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
+			if err != nil {
+				return nil, backoff.Permanent(err)
+			}
+
+			httpRes, err := s.sdkConfiguration.Client.Do(req)
+			if err != nil || httpRes == nil {
+				if err != nil {
+					err = fmt.Errorf("error sending request: %w", err)
+				} else {
+					err = fmt.Errorf("error sending request: no response")
+				}
+
+				_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
+			}
+			return httpRes, err
+		})
+
+		if err != nil {
+			return nil, err
+		} else {
+			httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
 			if err != nil {
 				return nil, err
 			}
-			req.Body = copyBody
 		}
-
+	} else {
 		req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
 		if err != nil {
-			return nil, backoff.Permanent(err)
+			return nil, err
 		}
 
-		httpRes, err := s.sdkConfiguration.Client.Do(req)
+		httpRes, err = s.sdkConfiguration.Client.Do(req)
 		if err != nil || httpRes == nil {
 			if err != nil {
 				err = fmt.Errorf("error sending request: %w", err)
@@ -117,15 +159,19 @@ func (s *Owners) Create(ctx context.Context, request shared.CreateOwnerInfo, opt
 			}
 
 			_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
-		}
-		return httpRes, err
-	})
-	if err != nil {
-		return nil, err
-	} else {
-		httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
-		if err != nil {
 			return nil, err
+		} else if utils.MatchStatusCodes([]string{}, httpRes.StatusCode) {
+			_httpRes, err := s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, httpRes, nil)
+			if err != nil {
+				return nil, err
+			} else if _httpRes != nil {
+				httpRes = _httpRes
+			}
+		} else {
+			httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
@@ -175,6 +221,7 @@ func (s *Owners) Delete(ctx context.Context, request operations.DeleteOwnerReque
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
+		operations.SupportedOptionTimeout,
 	}
 
 	for _, opt := range opts {
@@ -182,10 +229,22 @@ func (s *Owners) Delete(ctx context.Context, request operations.DeleteOwnerReque
 			return nil, fmt.Errorf("error applying option: %w", err)
 		}
 	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/owners/{owner_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "DELETE", opURL, nil)
@@ -202,10 +261,11 @@ func (s *Owners) Delete(ctx context.Context, request operations.DeleteOwnerReque
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
 	retryConfig := o.Retries
 	if retryConfig == nil {
-		if globalRetryConfig == nil {
-			retryConfig = &utils.RetryConfig{
-				Strategy: "backoff",
-				Backoff: &utils.BackoffStrategy{
+		if globalRetryConfig != nil {
+			retryConfig = globalRetryConfig
+		} else {
+			retryConfig = &retry.Config{
+				Strategy: "backoff", Backoff: &retry.BackoffStrategy{
 					InitialInterval: 1000,
 					MaxInterval:     60000,
 					Exponent:        1.5,
@@ -213,31 +273,58 @@ func (s *Owners) Delete(ctx context.Context, request operations.DeleteOwnerReque
 				},
 				RetryConnectionErrors: true,
 			}
-		} else {
-			retryConfig = globalRetryConfig
 		}
 	}
 
-	httpRes, err := utils.Retry(ctx, utils.Retries{
-		Config: retryConfig,
-		StatusCodes: []string{
-			"429",
-		},
-	}, func() (*http.Response, error) {
-		if req.Body != nil {
-			copyBody, err := req.GetBody()
+	var httpRes *http.Response
+	if retryConfig != nil {
+		httpRes, err = utils.Retry(ctx, utils.Retries{
+			Config: retryConfig,
+			StatusCodes: []string{
+				"429",
+			},
+		}, func() (*http.Response, error) {
+			if req.Body != nil {
+				copyBody, err := req.GetBody()
+				if err != nil {
+					return nil, err
+				}
+				req.Body = copyBody
+			}
+
+			req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
+			if err != nil {
+				return nil, backoff.Permanent(err)
+			}
+
+			httpRes, err := s.sdkConfiguration.Client.Do(req)
+			if err != nil || httpRes == nil {
+				if err != nil {
+					err = fmt.Errorf("error sending request: %w", err)
+				} else {
+					err = fmt.Errorf("error sending request: no response")
+				}
+
+				_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
+			}
+			return httpRes, err
+		})
+
+		if err != nil {
+			return nil, err
+		} else {
+			httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
 			if err != nil {
 				return nil, err
 			}
-			req.Body = copyBody
 		}
-
+	} else {
 		req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
 		if err != nil {
-			return nil, backoff.Permanent(err)
+			return nil, err
 		}
 
-		httpRes, err := s.sdkConfiguration.Client.Do(req)
+		httpRes, err = s.sdkConfiguration.Client.Do(req)
 		if err != nil || httpRes == nil {
 			if err != nil {
 				err = fmt.Errorf("error sending request: %w", err)
@@ -246,15 +333,19 @@ func (s *Owners) Delete(ctx context.Context, request operations.DeleteOwnerReque
 			}
 
 			_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
-		}
-		return httpRes, err
-	})
-	if err != nil {
-		return nil, err
-	} else {
-		httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
-		if err != nil {
 			return nil, err
+		} else if utils.MatchStatusCodes([]string{}, httpRes.StatusCode) {
+			_httpRes, err := s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, httpRes, nil)
+			if err != nil {
+				return nil, err
+			} else if _httpRes != nil {
+				httpRes = _httpRes
+			}
+		} else {
+			httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
@@ -293,6 +384,7 @@ func (s *Owners) Get(ctx context.Context, request operations.GetOwnersRequest, o
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
+		operations.SupportedOptionTimeout,
 	}
 
 	for _, opt := range opts {
@@ -300,10 +392,22 @@ func (s *Owners) Get(ctx context.Context, request operations.GetOwnersRequest, o
 			return nil, fmt.Errorf("error applying option: %w", err)
 		}
 	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := url.JoinPath(baseURL, "/owners")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "GET", opURL, nil)
@@ -324,10 +428,11 @@ func (s *Owners) Get(ctx context.Context, request operations.GetOwnersRequest, o
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
 	retryConfig := o.Retries
 	if retryConfig == nil {
-		if globalRetryConfig == nil {
-			retryConfig = &utils.RetryConfig{
-				Strategy: "backoff",
-				Backoff: &utils.BackoffStrategy{
+		if globalRetryConfig != nil {
+			retryConfig = globalRetryConfig
+		} else {
+			retryConfig = &retry.Config{
+				Strategy: "backoff", Backoff: &retry.BackoffStrategy{
 					InitialInterval: 1000,
 					MaxInterval:     60000,
 					Exponent:        1.5,
@@ -335,31 +440,58 @@ func (s *Owners) Get(ctx context.Context, request operations.GetOwnersRequest, o
 				},
 				RetryConnectionErrors: true,
 			}
-		} else {
-			retryConfig = globalRetryConfig
 		}
 	}
 
-	httpRes, err := utils.Retry(ctx, utils.Retries{
-		Config: retryConfig,
-		StatusCodes: []string{
-			"429",
-		},
-	}, func() (*http.Response, error) {
-		if req.Body != nil {
-			copyBody, err := req.GetBody()
+	var httpRes *http.Response
+	if retryConfig != nil {
+		httpRes, err = utils.Retry(ctx, utils.Retries{
+			Config: retryConfig,
+			StatusCodes: []string{
+				"429",
+			},
+		}, func() (*http.Response, error) {
+			if req.Body != nil {
+				copyBody, err := req.GetBody()
+				if err != nil {
+					return nil, err
+				}
+				req.Body = copyBody
+			}
+
+			req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
+			if err != nil {
+				return nil, backoff.Permanent(err)
+			}
+
+			httpRes, err := s.sdkConfiguration.Client.Do(req)
+			if err != nil || httpRes == nil {
+				if err != nil {
+					err = fmt.Errorf("error sending request: %w", err)
+				} else {
+					err = fmt.Errorf("error sending request: no response")
+				}
+
+				_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
+			}
+			return httpRes, err
+		})
+
+		if err != nil {
+			return nil, err
+		} else {
+			httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
 			if err != nil {
 				return nil, err
 			}
-			req.Body = copyBody
 		}
-
+	} else {
 		req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
 		if err != nil {
-			return nil, backoff.Permanent(err)
+			return nil, err
 		}
 
-		httpRes, err := s.sdkConfiguration.Client.Do(req)
+		httpRes, err = s.sdkConfiguration.Client.Do(req)
 		if err != nil || httpRes == nil {
 			if err != nil {
 				err = fmt.Errorf("error sending request: %w", err)
@@ -368,15 +500,19 @@ func (s *Owners) Get(ctx context.Context, request operations.GetOwnersRequest, o
 			}
 
 			_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
-		}
-		return httpRes, err
-	})
-	if err != nil {
-		return nil, err
-	} else {
-		httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
-		if err != nil {
 			return nil, err
+		} else if utils.MatchStatusCodes([]string{}, httpRes.StatusCode) {
+			_httpRes, err := s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, httpRes, nil)
+			if err != nil {
+				return nil, err
+			} else if _httpRes != nil {
+				httpRes = _httpRes
+			}
+		} else {
+			httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
@@ -426,6 +562,7 @@ func (s *Owners) GetFromName(ctx context.Context, request operations.GetOwnerFro
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
+		operations.SupportedOptionTimeout,
 	}
 
 	for _, opt := range opts {
@@ -433,10 +570,22 @@ func (s *Owners) GetFromName(ctx context.Context, request operations.GetOwnerFro
 			return nil, fmt.Errorf("error applying option: %w", err)
 		}
 	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/owners/name/{owner_name}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "GET", opURL, nil)
@@ -453,10 +602,11 @@ func (s *Owners) GetFromName(ctx context.Context, request operations.GetOwnerFro
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
 	retryConfig := o.Retries
 	if retryConfig == nil {
-		if globalRetryConfig == nil {
-			retryConfig = &utils.RetryConfig{
-				Strategy: "backoff",
-				Backoff: &utils.BackoffStrategy{
+		if globalRetryConfig != nil {
+			retryConfig = globalRetryConfig
+		} else {
+			retryConfig = &retry.Config{
+				Strategy: "backoff", Backoff: &retry.BackoffStrategy{
 					InitialInterval: 1000,
 					MaxInterval:     60000,
 					Exponent:        1.5,
@@ -464,31 +614,58 @@ func (s *Owners) GetFromName(ctx context.Context, request operations.GetOwnerFro
 				},
 				RetryConnectionErrors: true,
 			}
-		} else {
-			retryConfig = globalRetryConfig
 		}
 	}
 
-	httpRes, err := utils.Retry(ctx, utils.Retries{
-		Config: retryConfig,
-		StatusCodes: []string{
-			"429",
-		},
-	}, func() (*http.Response, error) {
-		if req.Body != nil {
-			copyBody, err := req.GetBody()
+	var httpRes *http.Response
+	if retryConfig != nil {
+		httpRes, err = utils.Retry(ctx, utils.Retries{
+			Config: retryConfig,
+			StatusCodes: []string{
+				"429",
+			},
+		}, func() (*http.Response, error) {
+			if req.Body != nil {
+				copyBody, err := req.GetBody()
+				if err != nil {
+					return nil, err
+				}
+				req.Body = copyBody
+			}
+
+			req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
+			if err != nil {
+				return nil, backoff.Permanent(err)
+			}
+
+			httpRes, err := s.sdkConfiguration.Client.Do(req)
+			if err != nil || httpRes == nil {
+				if err != nil {
+					err = fmt.Errorf("error sending request: %w", err)
+				} else {
+					err = fmt.Errorf("error sending request: no response")
+				}
+
+				_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
+			}
+			return httpRes, err
+		})
+
+		if err != nil {
+			return nil, err
+		} else {
+			httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
 			if err != nil {
 				return nil, err
 			}
-			req.Body = copyBody
 		}
-
+	} else {
 		req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
 		if err != nil {
-			return nil, backoff.Permanent(err)
+			return nil, err
 		}
 
-		httpRes, err := s.sdkConfiguration.Client.Do(req)
+		httpRes, err = s.sdkConfiguration.Client.Do(req)
 		if err != nil || httpRes == nil {
 			if err != nil {
 				err = fmt.Errorf("error sending request: %w", err)
@@ -497,15 +674,19 @@ func (s *Owners) GetFromName(ctx context.Context, request operations.GetOwnerFro
 			}
 
 			_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
-		}
-		return httpRes, err
-	})
-	if err != nil {
-		return nil, err
-	} else {
-		httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
-		if err != nil {
 			return nil, err
+		} else if utils.MatchStatusCodes([]string{}, httpRes.StatusCode) {
+			_httpRes, err := s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, httpRes, nil)
+			if err != nil {
+				return nil, err
+			} else if _httpRes != nil {
+				httpRes = _httpRes
+			}
+		} else {
+			httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
@@ -555,6 +736,7 @@ func (s *Owners) GetID(ctx context.Context, request operations.GetOwnerIDRequest
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
+		operations.SupportedOptionTimeout,
 	}
 
 	for _, opt := range opts {
@@ -562,10 +744,22 @@ func (s *Owners) GetID(ctx context.Context, request operations.GetOwnerIDRequest
 			return nil, fmt.Errorf("error applying option: %w", err)
 		}
 	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/owners/{owner_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "GET", opURL, nil)
@@ -582,10 +776,11 @@ func (s *Owners) GetID(ctx context.Context, request operations.GetOwnerIDRequest
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
 	retryConfig := o.Retries
 	if retryConfig == nil {
-		if globalRetryConfig == nil {
-			retryConfig = &utils.RetryConfig{
-				Strategy: "backoff",
-				Backoff: &utils.BackoffStrategy{
+		if globalRetryConfig != nil {
+			retryConfig = globalRetryConfig
+		} else {
+			retryConfig = &retry.Config{
+				Strategy: "backoff", Backoff: &retry.BackoffStrategy{
 					InitialInterval: 1000,
 					MaxInterval:     60000,
 					Exponent:        1.5,
@@ -593,31 +788,58 @@ func (s *Owners) GetID(ctx context.Context, request operations.GetOwnerIDRequest
 				},
 				RetryConnectionErrors: true,
 			}
-		} else {
-			retryConfig = globalRetryConfig
 		}
 	}
 
-	httpRes, err := utils.Retry(ctx, utils.Retries{
-		Config: retryConfig,
-		StatusCodes: []string{
-			"429",
-		},
-	}, func() (*http.Response, error) {
-		if req.Body != nil {
-			copyBody, err := req.GetBody()
+	var httpRes *http.Response
+	if retryConfig != nil {
+		httpRes, err = utils.Retry(ctx, utils.Retries{
+			Config: retryConfig,
+			StatusCodes: []string{
+				"429",
+			},
+		}, func() (*http.Response, error) {
+			if req.Body != nil {
+				copyBody, err := req.GetBody()
+				if err != nil {
+					return nil, err
+				}
+				req.Body = copyBody
+			}
+
+			req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
+			if err != nil {
+				return nil, backoff.Permanent(err)
+			}
+
+			httpRes, err := s.sdkConfiguration.Client.Do(req)
+			if err != nil || httpRes == nil {
+				if err != nil {
+					err = fmt.Errorf("error sending request: %w", err)
+				} else {
+					err = fmt.Errorf("error sending request: no response")
+				}
+
+				_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
+			}
+			return httpRes, err
+		})
+
+		if err != nil {
+			return nil, err
+		} else {
+			httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
 			if err != nil {
 				return nil, err
 			}
-			req.Body = copyBody
 		}
-
+	} else {
 		req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
 		if err != nil {
-			return nil, backoff.Permanent(err)
+			return nil, err
 		}
 
-		httpRes, err := s.sdkConfiguration.Client.Do(req)
+		httpRes, err = s.sdkConfiguration.Client.Do(req)
 		if err != nil || httpRes == nil {
 			if err != nil {
 				err = fmt.Errorf("error sending request: %w", err)
@@ -626,15 +848,19 @@ func (s *Owners) GetID(ctx context.Context, request operations.GetOwnerIDRequest
 			}
 
 			_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
-		}
-		return httpRes, err
-	})
-	if err != nil {
-		return nil, err
-	} else {
-		httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
-		if err != nil {
 			return nil, err
+		} else if utils.MatchStatusCodes([]string{}, httpRes.StatusCode) {
+			_httpRes, err := s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, httpRes, nil)
+			if err != nil {
+				return nil, err
+			} else if _httpRes != nil {
+				httpRes = _httpRes
+			}
+		} else {
+			httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
@@ -684,6 +910,7 @@ func (s *Owners) Update(ctx context.Context, request shared.UpdateOwnerInfoList,
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
+		operations.SupportedOptionTimeout,
 	}
 
 	for _, opt := range opts {
@@ -691,6 +918,7 @@ func (s *Owners) Update(ctx context.Context, request shared.UpdateOwnerInfoList,
 			return nil, fmt.Errorf("error applying option: %w", err)
 		}
 	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := url.JoinPath(baseURL, "/owners")
 	if err != nil {
@@ -700,6 +928,17 @@ func (s *Owners) Update(ctx context.Context, request shared.UpdateOwnerInfoList,
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "PUT", opURL, bodyReader)
@@ -717,10 +956,11 @@ func (s *Owners) Update(ctx context.Context, request shared.UpdateOwnerInfoList,
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
 	retryConfig := o.Retries
 	if retryConfig == nil {
-		if globalRetryConfig == nil {
-			retryConfig = &utils.RetryConfig{
-				Strategy: "backoff",
-				Backoff: &utils.BackoffStrategy{
+		if globalRetryConfig != nil {
+			retryConfig = globalRetryConfig
+		} else {
+			retryConfig = &retry.Config{
+				Strategy: "backoff", Backoff: &retry.BackoffStrategy{
 					InitialInterval: 1000,
 					MaxInterval:     60000,
 					Exponent:        1.5,
@@ -728,31 +968,58 @@ func (s *Owners) Update(ctx context.Context, request shared.UpdateOwnerInfoList,
 				},
 				RetryConnectionErrors: true,
 			}
-		} else {
-			retryConfig = globalRetryConfig
 		}
 	}
 
-	httpRes, err := utils.Retry(ctx, utils.Retries{
-		Config: retryConfig,
-		StatusCodes: []string{
-			"429",
-		},
-	}, func() (*http.Response, error) {
-		if req.Body != nil {
-			copyBody, err := req.GetBody()
+	var httpRes *http.Response
+	if retryConfig != nil {
+		httpRes, err = utils.Retry(ctx, utils.Retries{
+			Config: retryConfig,
+			StatusCodes: []string{
+				"429",
+			},
+		}, func() (*http.Response, error) {
+			if req.Body != nil {
+				copyBody, err := req.GetBody()
+				if err != nil {
+					return nil, err
+				}
+				req.Body = copyBody
+			}
+
+			req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
+			if err != nil {
+				return nil, backoff.Permanent(err)
+			}
+
+			httpRes, err := s.sdkConfiguration.Client.Do(req)
+			if err != nil || httpRes == nil {
+				if err != nil {
+					err = fmt.Errorf("error sending request: %w", err)
+				} else {
+					err = fmt.Errorf("error sending request: no response")
+				}
+
+				_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
+			}
+			return httpRes, err
+		})
+
+		if err != nil {
+			return nil, err
+		} else {
+			httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
 			if err != nil {
 				return nil, err
 			}
-			req.Body = copyBody
 		}
-
+	} else {
 		req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
 		if err != nil {
-			return nil, backoff.Permanent(err)
+			return nil, err
 		}
 
-		httpRes, err := s.sdkConfiguration.Client.Do(req)
+		httpRes, err = s.sdkConfiguration.Client.Do(req)
 		if err != nil || httpRes == nil {
 			if err != nil {
 				err = fmt.Errorf("error sending request: %w", err)
@@ -761,15 +1028,19 @@ func (s *Owners) Update(ctx context.Context, request shared.UpdateOwnerInfoList,
 			}
 
 			_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
-		}
-		return httpRes, err
-	})
-	if err != nil {
-		return nil, err
-	} else {
-		httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
-		if err != nil {
 			return nil, err
+		} else if utils.MatchStatusCodes([]string{}, httpRes.StatusCode) {
+			_httpRes, err := s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, httpRes, nil)
+			if err != nil {
+				return nil, err
+			} else if _httpRes != nil {
+				httpRes = _httpRes
+			}
+		} else {
+			httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
@@ -819,6 +1090,7 @@ func (s *Owners) UpdateUsers(ctx context.Context, request operations.UpdateOwner
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
+		operations.SupportedOptionTimeout,
 	}
 
 	for _, opt := range opts {
@@ -826,6 +1098,7 @@ func (s *Owners) UpdateUsers(ctx context.Context, request operations.UpdateOwner
 			return nil, fmt.Errorf("error applying option: %w", err)
 		}
 	}
+
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/owners/{owner_id}/users", request, nil)
 	if err != nil {
@@ -835,6 +1108,17 @@ func (s *Owners) UpdateUsers(ctx context.Context, request operations.UpdateOwner
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "UserIDList", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "PUT", opURL, bodyReader)
@@ -852,10 +1136,11 @@ func (s *Owners) UpdateUsers(ctx context.Context, request operations.UpdateOwner
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
 	retryConfig := o.Retries
 	if retryConfig == nil {
-		if globalRetryConfig == nil {
-			retryConfig = &utils.RetryConfig{
-				Strategy: "backoff",
-				Backoff: &utils.BackoffStrategy{
+		if globalRetryConfig != nil {
+			retryConfig = globalRetryConfig
+		} else {
+			retryConfig = &retry.Config{
+				Strategy: "backoff", Backoff: &retry.BackoffStrategy{
 					InitialInterval: 1000,
 					MaxInterval:     60000,
 					Exponent:        1.5,
@@ -863,31 +1148,58 @@ func (s *Owners) UpdateUsers(ctx context.Context, request operations.UpdateOwner
 				},
 				RetryConnectionErrors: true,
 			}
-		} else {
-			retryConfig = globalRetryConfig
 		}
 	}
 
-	httpRes, err := utils.Retry(ctx, utils.Retries{
-		Config: retryConfig,
-		StatusCodes: []string{
-			"429",
-		},
-	}, func() (*http.Response, error) {
-		if req.Body != nil {
-			copyBody, err := req.GetBody()
+	var httpRes *http.Response
+	if retryConfig != nil {
+		httpRes, err = utils.Retry(ctx, utils.Retries{
+			Config: retryConfig,
+			StatusCodes: []string{
+				"429",
+			},
+		}, func() (*http.Response, error) {
+			if req.Body != nil {
+				copyBody, err := req.GetBody()
+				if err != nil {
+					return nil, err
+				}
+				req.Body = copyBody
+			}
+
+			req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
+			if err != nil {
+				return nil, backoff.Permanent(err)
+			}
+
+			httpRes, err := s.sdkConfiguration.Client.Do(req)
+			if err != nil || httpRes == nil {
+				if err != nil {
+					err = fmt.Errorf("error sending request: %w", err)
+				} else {
+					err = fmt.Errorf("error sending request: no response")
+				}
+
+				_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
+			}
+			return httpRes, err
+		})
+
+		if err != nil {
+			return nil, err
+		} else {
+			httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
 			if err != nil {
 				return nil, err
 			}
-			req.Body = copyBody
 		}
-
+	} else {
 		req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
 		if err != nil {
-			return nil, backoff.Permanent(err)
+			return nil, err
 		}
 
-		httpRes, err := s.sdkConfiguration.Client.Do(req)
+		httpRes, err = s.sdkConfiguration.Client.Do(req)
 		if err != nil || httpRes == nil {
 			if err != nil {
 				err = fmt.Errorf("error sending request: %w", err)
@@ -896,15 +1208,19 @@ func (s *Owners) UpdateUsers(ctx context.Context, request operations.UpdateOwner
 			}
 
 			_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
-		}
-		return httpRes, err
-	})
-	if err != nil {
-		return nil, err
-	} else {
-		httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
-		if err != nil {
 			return nil, err
+		} else if utils.MatchStatusCodes([]string{}, httpRes.StatusCode) {
+			_httpRes, err := s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, httpRes, nil)
+			if err != nil {
+				return nil, err
+			} else if _httpRes != nil {
+				httpRes = _httpRes
+			}
+		} else {
+			httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 

@@ -27,6 +27,8 @@ type UpdateConfigurationTemplateInfo struct {
 	RequireMfaToApprove *bool `json:"require_mfa_to_approve,omitempty"`
 	// A bool representing whether or not to require MFA to connect to resources associated with this configuration template.
 	RequireMfaToConnect *bool `json:"require_mfa_to_connect,omitempty"`
+	// Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.
+	TicketPropagation *TicketPropagationConfiguration `json:"ticket_propagation,omitempty"`
 	// Visibility infomation of an entity.
 	Visibility *VisibilityInfo `json:"visibility,omitempty"`
 }
@@ -92,6 +94,13 @@ func (o *UpdateConfigurationTemplateInfo) GetRequireMfaToConnect() *bool {
 		return nil
 	}
 	return o.RequireMfaToConnect
+}
+
+func (o *UpdateConfigurationTemplateInfo) GetTicketPropagation() *TicketPropagationConfiguration {
+	if o == nil {
+		return nil
+	}
+	return o.TicketPropagation
 }
 
 func (o *UpdateConfigurationTemplateInfo) GetVisibility() *VisibilityInfo {

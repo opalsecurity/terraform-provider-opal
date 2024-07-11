@@ -15,9 +15,9 @@ func (o *ActiveDirectoryGroup) GetGroupID() string {
 	return o.GroupID
 }
 
-// AzureAdMicrosoft365Group - Remote info for Azure AD Microsoft 365 group.
+// AzureAdMicrosoft365Group - Remote info for Microsoft Entra ID Microsoft 365 group.
 type AzureAdMicrosoft365Group struct {
-	// The id of the Azure AD Microsoft 365 group.
+	// The id of the Microsoft Entra ID Microsoft 365 group.
 	GroupID string `json:"group_id"`
 }
 
@@ -28,9 +28,9 @@ func (o *AzureAdMicrosoft365Group) GetGroupID() string {
 	return o.GroupID
 }
 
-// AzureAdSecurityGroup - Remote info for Azure AD Security group.
+// AzureAdSecurityGroup - Remote info for Microsoft Entra ID Security group.
 type AzureAdSecurityGroup struct {
-	// The id of the Azure AD Security group.
+	// The id of the Microsoft Entra ID Security group.
 	GroupID string `json:"group_id"`
 }
 
@@ -123,9 +123,9 @@ func (o *OktaGroup) GetGroupID() string {
 type GroupRemoteInfo struct {
 	// Remote info for Active Directory group.
 	ActiveDirectoryGroup *ActiveDirectoryGroup `json:"active_directory_group,omitempty"`
-	// Remote info for Azure AD Microsoft 365 group.
+	// Remote info for Microsoft Entra ID Microsoft 365 group.
 	AzureAdMicrosoft365Group *AzureAdMicrosoft365Group `json:"azure_ad_microsoft_365_group,omitempty"`
-	// Remote info for Azure AD Security group.
+	// Remote info for Microsoft Entra ID Security group.
 	AzureAdSecurityGroup *AzureAdSecurityGroup `json:"azure_ad_security_group,omitempty"`
 	// Remote info for Duo Security group.
 	DuoGroup *DuoGroup `json:"duo_group,omitempty"`

@@ -31,6 +31,8 @@ type Resource struct {
 	RequireMfaToConnect *bool `json:"require_mfa_to_connect,omitempty"`
 	// The type of the resource.
 	ResourceType *ResourceTypeEnum `json:"resource_type,omitempty"`
+	// Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.
+	TicketPropagation *TicketPropagationConfiguration `json:"ticket_propagation,omitempty"`
 }
 
 func (o *Resource) GetAdminOwnerID() *string {
@@ -108,4 +110,11 @@ func (o *Resource) GetResourceType() *ResourceTypeEnum {
 		return nil
 	}
 	return o.ResourceType
+}
+
+func (o *Resource) GetTicketPropagation() *TicketPropagationConfiguration {
+	if o == nil {
+		return nil
+	}
+	return o.TicketPropagation
 }

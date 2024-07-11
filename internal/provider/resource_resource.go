@@ -46,19 +46,20 @@ type ResourceResource struct {
 
 // ResourceResourceModel describes the resource data model.
 type ResourceResourceModel struct {
-	AdminOwnerID          types.String                   `tfsdk:"admin_owner_id"`
-	AppID                 types.String                   `tfsdk:"app_id"`
-	Description           types.String                   `tfsdk:"description"`
-	ID                    types.String                   `tfsdk:"id"`
-	Name                  types.String                   `tfsdk:"name"`
-	ParentResourceID      types.String                   `tfsdk:"parent_resource_id"`
-	RemoteInfo            *tfTypes.ResourceRemoteInfo    `tfsdk:"remote_info"`
-	RequestConfigurations []tfTypes.RequestConfiguration `tfsdk:"request_configurations"`
-	RequireMfaToApprove   types.Bool                     `tfsdk:"require_mfa_to_approve"`
-	RequireMfaToConnect   types.Bool                     `tfsdk:"require_mfa_to_connect"`
-	ResourceType          types.String                   `tfsdk:"resource_type"`
-	Visibility            types.String                   `tfsdk:"visibility"`
-	VisibilityGroupIds    []types.String                 `tfsdk:"visibility_group_ids"`
+	AdminOwnerID          types.String                            `tfsdk:"admin_owner_id"`
+	AppID                 types.String                            `tfsdk:"app_id"`
+	Description           types.String                            `tfsdk:"description"`
+	ID                    types.String                            `tfsdk:"id"`
+	Name                  types.String                            `tfsdk:"name"`
+	ParentResourceID      types.String                            `tfsdk:"parent_resource_id"`
+	RemoteInfo            *tfTypes.ResourceRemoteInfo             `tfsdk:"remote_info"`
+	RequestConfigurations []tfTypes.RequestConfiguration          `tfsdk:"request_configurations"`
+	RequireMfaToApprove   types.Bool                              `tfsdk:"require_mfa_to_approve"`
+	RequireMfaToConnect   types.Bool                              `tfsdk:"require_mfa_to_connect"`
+	ResourceType          types.String                            `tfsdk:"resource_type"`
+	TicketPropagation     *tfTypes.TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
+	Visibility            types.String                            `tfsdk:"visibility"`
+	VisibilityGroupIds    []types.String                          `tfsdk:"visibility_group_ids"`
 }
 
 func (r *ResourceResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -1043,6 +1044,45 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						"TELEPORT_ROLE",
 					),
 				},
+			},
+			"ticket_propagation": schema.SingleNestedAttribute{
+				Computed: true,
+				Optional: true,
+				Attributes: map[string]schema.Attribute{
+					"enabled_on_grant": schema.BoolAttribute{
+						Computed:    true,
+						Optional:    true,
+						Description: `Not Null`,
+						Validators: []validator.Bool{
+							speakeasy_boolvalidators.NotNull(),
+						},
+					},
+					"enabled_on_revocation": schema.BoolAttribute{
+						Computed:    true,
+						Optional:    true,
+						Description: `Not Null`,
+						Validators: []validator.Bool{
+							speakeasy_boolvalidators.NotNull(),
+						},
+					},
+					"ticket_project_id": schema.StringAttribute{
+						Computed: true,
+						Optional: true,
+					},
+					"ticket_provider": schema.StringAttribute{
+						Computed:    true,
+						Optional:    true,
+						Description: `The third party ticketing platform provider. must be one of ["JIRA", "LINEAR", "SERVICE_NOW"]`,
+						Validators: []validator.String{
+							stringvalidator.OneOf(
+								"JIRA",
+								"LINEAR",
+								"SERVICE_NOW",
+							),
+						},
+					},
+				},
+				Description: `Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.`,
 			},
 			"visibility": schema.StringAttribute{
 				Required:    true,

@@ -120,20 +120,20 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 									Attributes: map[string]schema.Attribute{
 										"group_id": schema.StringAttribute{
 											Computed:    true,
-											Description: `The id of the Azure AD Microsoft 365 group.`,
+											Description: `The id of the Microsoft Entra ID Microsoft 365 group.`,
 										},
 									},
-									Description: `Remote info for Azure AD Microsoft 365 group.`,
+									Description: `Remote info for Microsoft Entra ID Microsoft 365 group.`,
 								},
 								"azure_ad_security_group": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
 										"group_id": schema.StringAttribute{
 											Computed:    true,
-											Description: `The id of the Azure AD Security group.`,
+											Description: `The id of the Microsoft Entra ID Security group.`,
 										},
 									},
-									Description: `Remote info for Azure AD Security group.`,
+									Description: `Remote info for Microsoft Entra ID Security group.`,
 								},
 								"duo_group": schema.SingleNestedAttribute{
 									Computed: true,

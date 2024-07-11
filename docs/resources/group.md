@@ -133,8 +133,8 @@ Optional:
 Optional:
 
 - `active_directory_group` (Attributes) Remote info for Active Directory group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--active_directory_group))
-- `azure_ad_microsoft_365_group` (Attributes) Remote info for Azure AD Microsoft 365 group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_ad_microsoft_365_group))
-- `azure_ad_security_group` (Attributes) Remote info for Azure AD Security group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_ad_security_group))
+- `azure_ad_microsoft_365_group` (Attributes) Remote info for Microsoft Entra ID Microsoft 365 group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_ad_microsoft_365_group))
+- `azure_ad_security_group` (Attributes) Remote info for Microsoft Entra ID Security group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_ad_security_group))
 - `duo_group` (Attributes) Remote info for Duo Security group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--duo_group))
 - `github_team` (Attributes) Remote info for GitHub team. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--github_team))
 - `gitlab_group` (Attributes) Remote info for Gitlab group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gitlab_group))
@@ -155,7 +155,7 @@ Optional:
 
 Optional:
 
-- `group_id` (String) The id of the Azure AD Microsoft 365 group. Requires replacement if changed. ; Not Null
+- `group_id` (String) The id of the Microsoft Entra ID Microsoft 365 group. Requires replacement if changed. ; Not Null
 
 
 <a id="nestedatt--remote_info--azure_ad_security_group"></a>
@@ -163,7 +163,7 @@ Optional:
 
 Optional:
 
-- `group_id` (String) The id of the Azure AD Security group. Requires replacement if changed. ; Not Null
+- `group_id` (String) The id of the Microsoft Entra ID Security group. Requires replacement if changed. ; Not Null
 
 
 <a id="nestedatt--remote_info--duo_group"></a>

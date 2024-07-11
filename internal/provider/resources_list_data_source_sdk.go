@@ -263,6 +263,19 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 			} else {
 				results1.ResourceType = types.StringNull()
 			}
+			if resultsItem.TicketPropagation == nil {
+				results1.TicketPropagation = nil
+			} else {
+				results1.TicketPropagation = &tfTypes.TicketPropagationConfiguration{}
+				results1.TicketPropagation.EnabledOnGrant = types.BoolValue(resultsItem.TicketPropagation.EnabledOnGrant)
+				results1.TicketPropagation.EnabledOnRevocation = types.BoolValue(resultsItem.TicketPropagation.EnabledOnRevocation)
+				results1.TicketPropagation.TicketProjectID = types.StringPointerValue(resultsItem.TicketPropagation.TicketProjectID)
+				if resultsItem.TicketPropagation.TicketProvider != nil {
+					results1.TicketPropagation.TicketProvider = types.StringValue(string(*resultsItem.TicketPropagation.TicketProvider))
+				} else {
+					results1.TicketPropagation.TicketProvider = types.StringNull()
+				}
+			}
 			if resultsCount+1 > len(r.Results) {
 				r.Results = append(r.Results, results1)
 			} else {
@@ -277,6 +290,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 				r.Results[resultsCount].RequireMfaToApprove = results1.RequireMfaToApprove
 				r.Results[resultsCount].RequireMfaToConnect = results1.RequireMfaToConnect
 				r.Results[resultsCount].ResourceType = results1.ResourceType
+				r.Results[resultsCount].TicketPropagation = results1.TicketPropagation
 			}
 		}
 	}
