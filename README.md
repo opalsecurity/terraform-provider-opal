@@ -4,78 +4,62 @@
 Generate the new SDK using `speakeasy run`. This pulls the remote spec specified in `.speakeasy/workflow.yaml#6` and applies the overrides in `terraform_overlay.yaml`. Note the Makefile is only useful if you want to do development with a local OpenAPI spec and update the Speakeasy workflow config to reference that OpenAPI spec.
 
 <!-- Start SDK Installation [installation] -->
-## SDK Installation
+## Using the SDK
 
-To install this provider, copy and paste this code into your Terraform configuration. Then, run `terraform init`.
+To install this provider in your Terraform usage, copy and paste this code into your Terraform configuration files. Then, run `terraform init`.
 
 ```hcl
 terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "0.22.0"
+      version = "3.0.1"  # or other later version
     }
   }
 }
 
 provider "opal" {
-  # Configuration options
+  bearer_auth = <auth-token>
+  server_url = "https://api.opal.dev/v1"
 }
 ```
-<!-- End SDK Installation [installation] -->
 
+<!-- End SDK Installation [installation] -->
 
 
 <!-- Start SDK Example Usage [usage] -->
 ## SDK Example Usage
 
 ### Testing the provider locally
-
-Should you want to validate a change locally, the `--debug` flag allows you to execute the provider against a terraform instance locally.
-
-This also allows for debuggers (e.g. delve) to be attached to the provider.
-
-### Example
+If you want to test the provider using a development version of this provider, you can run this provider locally by simply running
 
 ```sh
 go run main.go --debug
-# Copy the TF_REATTACH_PROVIDERS env var
-# In a new terminal
-cd examples/your-example
-TF_REATTACH_PROVIDERS=... terraform init
-TF_REATTACH_PROVIDERS=... terraform apply
 ```
-<!-- End SDK Example Usage [usage] -->
-
-
-
-<!-- Start Available Resources and Operations [operations] -->
-## Available Resources and Operations
-
-
-<!-- End Available Resources and Operations [operations] -->
-
-<!-- Placeholder for Future Speakeasy SDK Sections -->
-
-Terraform allows you to use local provider builds by setting a `dev_overrides` block in a configuration file called `.terraformrc`. This block overrides all other configured installation methods.
-
-Terraform searches for the `.terraformrc` file in your home directory and applies any configuration settings you set.
-
+This command should output a log line that looks like
+```sh
+TF_REATTACH_PROVIDERS='{"registry.terraform.io/opalsecurity/opal":{"Protocol":"grpc","ProtocolVersion":6,"Pid":55387,"Test":true,"Addr":{"Network":"unix","String":"/var/folders/rw/nppqqcz93r11_b8n3_q1tzsr0000gn/T/plugin2970912145"}}}'
 ```
-provider_installation {
+This logline tells you the value of the environment variable to set wherever you invoke your Terraform operations (e.g. `plan`, `apply`, etc). You can either export `TF_REATTACH_PROVIDERS` or just prefix your commands with the envar.
 
-  dev_overrides {
-      "registry.terraform.io/github.com/opal-dev/terraform-provider-opal/scaffolding" = "<PATH>"
-  }
-
-  # For all other providers, install them directly from their origin provider
-  # registries as normal. If you omit this, Terraform will _only_ use
-  # the dev_overrides block, and so no other providers will be available.
-  direct {}
+If you would like to enable IDE debugging in VScode you can add the following launch profile.
+```
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/main.go",
+            "args": ["--debug"],
+        }
+    ]
 }
 ```
+For the IDE to trigger any breakpoints you must run the debug process _within_ VSCode instead of a standalone terminal (e.g. Terminal, ITerm, etc). Take the `TF_REATTACH_PROVIDERS` like before and use it while applying the Terraform operations.
 
-Your `<PATH>` may vary depending on how your Go environment variables are configured. Execute `go env GOBIN` to set it, then set the `<PATH>` to the value returned. If nothing is returned, set it to the default location, `$HOME/go/bin`.
 
 ### Contributions
 
