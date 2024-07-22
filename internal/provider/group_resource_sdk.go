@@ -121,7 +121,7 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 		} else {
 			r.GroupType = types.StringNull()
 		}
-		r.ID = types.StringPointerValue(resp.ID)
+		r.ID = types.StringValue(resp.ID)
 		r.Name = types.StringPointerValue(resp.Name)
 		if resp.RemoteInfo == nil {
 			r.RemoteInfo = nil
@@ -269,12 +269,7 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo() *shared.UpdateGroupInfo {
 	for _, groupLeaderUserIdsItem := range r.GroupLeaderUserIds {
 		groupLeaderUserIds = append(groupLeaderUserIds, groupLeaderUserIdsItem.ValueString())
 	}
-	id := new(string)
-	if !r.ID.IsUnknown() && !r.ID.IsNull() {
-		*id = r.ID.ValueString()
-	} else {
-		id = nil
-	}
+	id := r.ID.ValueString()
 	name := new(string)
 	if !r.Name.IsUnknown() && !r.Name.IsNull() {
 		*name = r.Name.ValueString()
@@ -385,7 +380,7 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(resp *shared.Updat
 	for _, v := range resp.GroupLeaderUserIds {
 		r.GroupLeaderUserIds = append(r.GroupLeaderUserIds, types.StringValue(v))
 	}
-	r.ID = types.StringPointerValue(resp.ID)
+	r.ID = types.StringValue(resp.ID)
 	r.Name = types.StringPointerValue(resp.Name)
 	r.RequestConfigurations = []tfTypes.RequestConfiguration{}
 	if len(r.RequestConfigurations) > len(resp.RequestConfigurations) {
@@ -487,7 +482,7 @@ func (r *GroupResourceModel) RefreshFromOperationsGetGroupMessageChannelsRespons
 		}
 		for channelsCount, channelsItem := range resp.Channels {
 			var channels1 tfTypes.MessageChannel
-			channels1.ID = types.StringPointerValue(channelsItem.ID)
+			channels1.ID = types.StringValue(channelsItem.ID)
 			channels1.IsPrivate = types.BoolPointerValue(channelsItem.IsPrivate)
 			channels1.Name = types.StringPointerValue(channelsItem.Name)
 			channels1.RemoteID = types.StringPointerValue(channelsItem.RemoteID)

@@ -10,7 +10,7 @@ package shared
 // Update a groups message channel from the `UPDATE Groups` endpoint.
 type MessageChannel struct {
 	// The ID of the message channel.
-	ID *string `json:"message_channel_id,omitempty"`
+	ID string `json:"message_channel_id"`
 	// A bool representing whether or not the message channel is private.
 	IsPrivate *bool `json:"is_private,omitempty"`
 	// The name of the message channel.
@@ -21,9 +21,9 @@ type MessageChannel struct {
 	ThirdPartyProvider *MessageChannelProviderEnum `json:"third_party_provider,omitempty"`
 }
 
-func (o *MessageChannel) GetID() *string {
+func (o *MessageChannel) GetID() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.ID
 }

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
@@ -15,6 +14,7 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
+	"github.com/pkg/errors"
 )
 
 var knownOpalAppID = os.Getenv("OPAL_TEST_KNOWN_OPAL_APP_ID")
@@ -397,14 +397,12 @@ func testAccCheckGroupDestroy(s *terraform.State) error {
 				ID: rs.Primary.ID,
 			},
 		)
-		if err == nil {
-			if group != nil {
-				return fmt.Errorf("Group %s still exists", rs.Primary.ID)
-			}
+		if err != nil {
+			return errors.Wrapf(err, "unexpected error while checking status of Terraform resource %v.", rs.Primary.ID)
 		}
 
-		if !strings.Contains(err.Error(), "404") {
-			return err
+		if group.StatusCode != 404 {
+			return fmt.Errorf("Expected 404 after destorying the group but got %d", group.StatusCode)
 		}
 	}
 

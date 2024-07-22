@@ -14,11 +14,11 @@ type App struct {
 	// A description of the app.
 	Description string `json:"description"`
 	// The ID of the app.
-	ID *string `json:"app_id,omitempty"`
+	ID string `json:"app_id"`
 	// The name of the app.
 	Name string `json:"name"`
 	// The type of an app.
-	Type *string `json:"app_type,omitempty"`
+	Type string `json:"app_type"`
 }
 
 func (o *App) GetAdminOwnerID() string {
@@ -35,9 +35,9 @@ func (o *App) GetDescription() string {
 	return o.Description
 }
 
-func (o *App) GetID() *string {
+func (o *App) GetID() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.ID
 }
@@ -49,9 +49,9 @@ func (o *App) GetName() string {
 	return o.Name
 }
 
-func (o *App) GetType() *string {
+func (o *App) GetType() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.Type
 }

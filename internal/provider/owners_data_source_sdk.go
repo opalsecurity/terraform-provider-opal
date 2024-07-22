@@ -20,7 +20,7 @@ func (r *OwnersDataSourceModel) RefreshFromSharedPaginatedOwnersList(resp *share
 			var results1 tfTypes.Owner
 			results1.AccessRequestEscalationPeriod = types.Int64PointerValue(resultsItem.AccessRequestEscalationPeriod)
 			results1.Description = types.StringPointerValue(resultsItem.Description)
-			results1.ID = types.StringPointerValue(resultsItem.ID)
+			results1.ID = types.StringValue(resultsItem.ID)
 			results1.Name = types.StringPointerValue(resultsItem.Name)
 			results1.ReviewerMessageChannelID = types.StringPointerValue(resultsItem.ReviewerMessageChannelID)
 			results1.SourceGroupID = types.StringPointerValue(resultsItem.SourceGroupID)

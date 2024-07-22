@@ -11,7 +11,7 @@ type Owner struct {
 	// A description of the owner.
 	Description *string `json:"description,omitempty"`
 	// The ID of the owner.
-	ID *string `json:"owner_id,omitempty"`
+	ID string `json:"owner_id"`
 	// The name of the owner.
 	Name                     *string `json:"name,omitempty"`
 	ReviewerMessageChannelID *string `json:"reviewer_message_channel_id,omitempty"`
@@ -32,9 +32,9 @@ func (o *Owner) GetDescription() *string {
 	return o.Description
 }
 
-func (o *Owner) GetID() *string {
+func (o *Owner) GetID() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.ID
 }

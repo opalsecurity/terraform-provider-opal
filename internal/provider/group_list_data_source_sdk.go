@@ -29,7 +29,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 			} else {
 				results1.GroupType = types.StringNull()
 			}
-			results1.ID = types.StringPointerValue(resultsItem.ID)
+			results1.ID = types.StringValue(resultsItem.ID)
 			results1.Name = types.StringPointerValue(resultsItem.Name)
 			if resultsItem.RemoteInfo == nil {
 				results1.RemoteInfo = nil

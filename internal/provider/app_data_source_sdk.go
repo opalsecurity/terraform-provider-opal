@@ -11,8 +11,8 @@ func (r *AppDataSourceModel) RefreshFromSharedApp(resp *shared.App) {
 	if resp != nil {
 		r.AdminOwnerID = types.StringValue(resp.AdminOwnerID)
 		r.Description = types.StringValue(resp.Description)
-		r.ID = types.StringPointerValue(resp.ID)
+		r.ID = types.StringValue(resp.ID)
 		r.Name = types.StringValue(resp.Name)
-		r.Type = types.StringPointerValue(resp.Type)
+		r.Type = types.StringValue(resp.Type)
 	}
 }

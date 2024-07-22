@@ -24,7 +24,7 @@ func (r *TagsListDataSourceModel) RefreshFromSharedPaginatedTagsList(resp *share
 			} else {
 				results1.CreatedAt = types.StringNull()
 			}
-			results1.ID = types.StringPointerValue(resultsItem.ID)
+			results1.ID = types.StringValue(resultsItem.ID)
 			results1.Key = types.StringPointerValue(resultsItem.Key)
 			if resultsItem.UpdatedAt != nil {
 				results1.UpdatedAt = types.StringValue(resultsItem.UpdatedAt.Format(time.RFC3339Nano))

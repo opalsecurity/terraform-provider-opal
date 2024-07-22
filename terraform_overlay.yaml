@@ -738,6 +738,10 @@ actions:
       x-speakeasy-entity-operation: UAR#get
   - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]
     remove: true
+  - target: $["paths"][*]["get"]["responses"]
+    update:
+      "404":
+        description: Not Found
   - target: $["components"]["schemas"]["PaginatedUARsList"]
     update:
       x-speakeasy-entity: UARS_list

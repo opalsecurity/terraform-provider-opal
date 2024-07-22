@@ -11,7 +11,7 @@ type UpdateOwnerInfo struct {
 	// A description of the owner.
 	Description *string `json:"description,omitempty"`
 	// The ID of the owner.
-	ID *string `json:"owner_id,omitempty"`
+	ID string `json:"owner_id"`
 	// The name of the owner.
 	Name *string `json:"name,omitempty"`
 	// The message channel id for the reviewer channel. Use "" to remove an existing message channel.
@@ -34,9 +34,9 @@ func (o *UpdateOwnerInfo) GetDescription() *string {
 	return o.Description
 }
 
-func (o *UpdateOwnerInfo) GetID() *string {
+func (o *UpdateOwnerInfo) GetID() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.ID
 }

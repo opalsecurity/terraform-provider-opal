@@ -16,7 +16,7 @@ type Resource struct {
 	// A description of the resource.
 	Description *string `json:"description,omitempty"`
 	// The ID of the resource.
-	ID *string `json:"resource_id,omitempty"`
+	ID string `json:"resource_id"`
 	// The name of the resource.
 	Name *string `json:"name,omitempty"`
 	// The ID of the parent resource.
@@ -56,9 +56,9 @@ func (o *Resource) GetDescription() *string {
 	return o.Description
 }
 
-func (o *Resource) GetID() *string {
+func (o *Resource) GetID() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.ID
 }

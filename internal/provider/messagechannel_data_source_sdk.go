@@ -9,7 +9,7 @@ import (
 
 func (r *MessageChannelDataSourceModel) RefreshFromSharedMessageChannel(resp *shared.MessageChannel) {
 	if resp != nil {
-		r.ID = types.StringPointerValue(resp.ID)
+		r.ID = types.StringValue(resp.ID)
 		r.IsPrivate = types.BoolPointerValue(resp.IsPrivate)
 		r.Name = types.StringPointerValue(resp.Name)
 		r.RemoteID = types.StringPointerValue(resp.RemoteID)

@@ -16,9 +16,9 @@ func (r *UserDataSourceModel) RefreshFromSharedUser(resp *shared.User) {
 		} else {
 			r.HrIdpStatus = types.StringNull()
 		}
-		r.ID = types.StringPointerValue(resp.ID)
+		r.ID = types.StringValue(resp.ID)
 		r.LastName = types.StringValue(resp.LastName)
-		r.Name = types.StringPointerValue(resp.Name)
+		r.Name = types.StringValue(resp.Name)
 		r.Position = types.StringValue(resp.Position)
 	}
 }

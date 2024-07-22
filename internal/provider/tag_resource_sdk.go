@@ -9,12 +9,7 @@ import (
 )
 
 func (r *TagResourceModel) ToSharedCreateTagInfo() *shared.CreateTagInfo {
-	key := new(string)
-	if !r.Key.IsUnknown() && !r.Key.IsNull() {
-		*key = r.Key.ValueString()
-	} else {
-		key = nil
-	}
+	key := r.Key.ValueString()
 	value := new(string)
 	if !r.Value.IsUnknown() && !r.Value.IsNull() {
 		*value = r.Value.ValueString()
@@ -35,7 +30,7 @@ func (r *TagResourceModel) RefreshFromSharedTag(resp *shared.Tag) {
 		} else {
 			r.CreatedAt = types.StringNull()
 		}
-		r.ID = types.StringPointerValue(resp.ID)
+		r.ID = types.StringValue(resp.ID)
 		r.Key = types.StringPointerValue(resp.Key)
 		if resp.UpdatedAt != nil {
 			r.UpdatedAt = types.StringValue(resp.UpdatedAt.Format(time.RFC3339Nano))

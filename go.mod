@@ -2,7 +2,7 @@ module github.com/opalsecurity/terraform-provider-opal
 
 go 1.21
 
-toolchain go1.21.10
+toolchain go1.21.12
 
 require (
 	github.com/cenkalti/backoff/v4 v4.2.0
@@ -58,6 +58,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/oklog/run v1.0.0 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/posener/complete v1.2.3 // indirect
 	github.com/russross/blackfriday v1.6.0 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
