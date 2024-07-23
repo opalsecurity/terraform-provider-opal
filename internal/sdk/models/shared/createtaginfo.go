@@ -10,14 +10,14 @@ package shared
 // Use in the `POST Tag` endpoint.
 type CreateTagInfo struct {
 	// The key of the tag to create.
-	Key *string `json:"tag_key,omitempty"`
+	Key string `json:"tag_key"`
 	// The value of the tag to create.
 	Value *string `json:"tag_value,omitempty"`
 }
 
-func (o *CreateTagInfo) GetKey() *string {
+func (o *CreateTagInfo) GetKey() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.Key
 }

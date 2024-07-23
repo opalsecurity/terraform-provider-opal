@@ -16,11 +16,11 @@ type User struct {
 	// User status pulled from an HR/IDP provider.
 	HrIdpStatus *UserHrIdpStatusEnum `json:"hr_idp_status,omitempty"`
 	// The ID of the user.
-	ID *string `json:"user_id,omitempty"`
+	ID string `json:"user_id"`
 	// The last name of the user.
 	LastName string `json:"last_name"`
 	// The full name of the user.
-	Name *string `json:"full_name,omitempty"`
+	Name string `json:"full_name"`
 	// The user's position.
 	Position string `json:"position"`
 }
@@ -46,9 +46,9 @@ func (o *User) GetHrIdpStatus() *UserHrIdpStatusEnum {
 	return o.HrIdpStatus
 }
 
-func (o *User) GetID() *string {
+func (o *User) GetID() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.ID
 }
@@ -60,9 +60,9 @@ func (o *User) GetLastName() string {
 	return o.LastName
 }
 
-func (o *User) GetName() *string {
+func (o *User) GetName() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.Name
 }

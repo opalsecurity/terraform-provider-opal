@@ -22,7 +22,7 @@ func (r *GroupTagsDataSourceModel) RefreshFromSharedTagsList(resp *shared.TagsLi
 			} else {
 				tags1.CreatedAt = types.StringNull()
 			}
-			tags1.ID = types.StringPointerValue(tagsItem.ID)
+			tags1.ID = types.StringValue(tagsItem.ID)
 			tags1.Key = types.StringPointerValue(tagsItem.Key)
 			if tagsItem.UpdatedAt != nil {
 				tags1.UpdatedAt = types.StringValue(tagsItem.UpdatedAt.Format(time.RFC3339Nano))

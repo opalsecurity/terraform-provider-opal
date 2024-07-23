@@ -16,7 +16,7 @@ func (r *MessageChannelListDataSourceModel) RefreshFromSharedMessageChannelList(
 		}
 		for channelsCount, channelsItem := range resp.Channels {
 			var channels1 tfTypes.MessageChannel
-			channels1.ID = types.StringPointerValue(channelsItem.ID)
+			channels1.ID = types.StringValue(channelsItem.ID)
 			channels1.IsPrivate = types.BoolPointerValue(channelsItem.IsPrivate)
 			channels1.Name = types.StringPointerValue(channelsItem.Name)
 			channels1.RemoteID = types.StringPointerValue(channelsItem.RemoteID)

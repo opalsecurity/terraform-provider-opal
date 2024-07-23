@@ -11,7 +11,7 @@ func (r *OwnerFromNameDataSourceModel) RefreshFromSharedOwner(resp *shared.Owner
 	if resp != nil {
 		r.AccessRequestEscalationPeriod = types.Int64PointerValue(resp.AccessRequestEscalationPeriod)
 		r.Description = types.StringPointerValue(resp.Description)
-		r.ID = types.StringPointerValue(resp.ID)
+		r.ID = types.StringValue(resp.ID)
 		r.Name = types.StringPointerValue(resp.Name)
 		r.ReviewerMessageChannelID = types.StringPointerValue(resp.ReviewerMessageChannelID)
 		r.SourceGroupID = types.StringPointerValue(resp.SourceGroupID)

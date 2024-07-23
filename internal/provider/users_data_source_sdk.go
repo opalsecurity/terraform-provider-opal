@@ -25,9 +25,9 @@ func (r *UsersDataSourceModel) RefreshFromSharedPaginatedUsersList(resp *shared.
 			} else {
 				results1.HrIdpStatus = types.StringNull()
 			}
-			results1.ID = types.StringPointerValue(resultsItem.ID)
+			results1.ID = types.StringValue(resultsItem.ID)
 			results1.LastName = types.StringValue(resultsItem.LastName)
-			results1.Name = types.StringPointerValue(resultsItem.Name)
+			results1.Name = types.StringValue(resultsItem.Name)
 			results1.Position = types.StringValue(resultsItem.Position)
 			if resultsCount+1 > len(r.Results) {
 				r.Results = append(r.Results, results1)

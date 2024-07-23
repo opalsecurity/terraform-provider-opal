@@ -13,7 +13,7 @@ type UpdateGroupInfo struct {
 	// A list of User IDs for the group leaders of the group
 	GroupLeaderUserIds []string `json:"group_leader_user_ids,omitempty"`
 	// The ID of the group.
-	ID *string `json:"group_id,omitempty"`
+	ID string `json:"group_id"`
 	// The name of the group.
 	Name *string `json:"name,omitempty"`
 	// The request configuration list of the configuration template. If not provided, the default request configuration will be used.
@@ -43,9 +43,9 @@ func (o *UpdateGroupInfo) GetGroupLeaderUserIds() []string {
 	return o.GroupLeaderUserIds
 }
 
-func (o *UpdateGroupInfo) GetID() *string {
+func (o *UpdateGroupInfo) GetID() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.ID
 }

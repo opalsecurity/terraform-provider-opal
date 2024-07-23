@@ -17,7 +17,7 @@ type Tag struct {
 	// The date the tag was created.
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// The ID of the tag.
-	ID *string `json:"tag_id,omitempty"`
+	ID string `json:"tag_id"`
 	// The key of the tag.
 	Key *string `json:"key,omitempty"`
 	// The date the tag was last updated.
@@ -46,9 +46,9 @@ func (o *Tag) GetCreatedAt() *time.Time {
 	return o.CreatedAt
 }
 
-func (o *Tag) GetID() *string {
+func (o *Tag) GetID() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.ID
 }

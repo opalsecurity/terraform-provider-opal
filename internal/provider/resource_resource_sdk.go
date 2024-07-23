@@ -288,7 +288,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(resp *shared.Resource)
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 		r.AppID = types.StringPointerValue(resp.AppID)
 		r.Description = types.StringPointerValue(resp.Description)
-		r.ID = types.StringPointerValue(resp.ID)
+		r.ID = types.StringValue(resp.ID)
 		r.Name = types.StringPointerValue(resp.Name)
 		r.ParentResourceID = types.StringPointerValue(resp.ParentResourceID)
 		if resp.RemoteInfo == nil {
@@ -562,12 +562,7 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo() *shared.UpdateResou
 	} else {
 		description = nil
 	}
-	id := new(string)
-	if !r.ID.IsUnknown() && !r.ID.IsNull() {
-		*id = r.ID.ValueString()
-	} else {
-		id = nil
-	}
+	id := r.ID.ValueString()
 	name := new(string)
 	if !r.Name.IsUnknown() && !r.Name.IsNull() {
 		*name = r.Name.ValueString()
@@ -704,7 +699,7 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo() *shared.UpdateResou
 func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(resp *shared.UpdateResourceInfo) {
 	r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 	r.Description = types.StringPointerValue(resp.Description)
-	r.ID = types.StringPointerValue(resp.ID)
+	r.ID = types.StringValue(resp.ID)
 	r.Name = types.StringPointerValue(resp.Name)
 	r.RequestConfigurations = []tfTypes.RequestConfiguration{}
 	if len(r.RequestConfigurations) > len(resp.RequestConfigurations) {

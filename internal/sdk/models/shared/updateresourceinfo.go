@@ -11,7 +11,7 @@ type UpdateResourceInfo struct {
 	// A description of the resource.
 	Description *string `json:"description,omitempty"`
 	// The ID of the resource.
-	ID *string `json:"resource_id,omitempty"`
+	ID string `json:"resource_id"`
 	// The name of the resource.
 	Name *string `json:"name,omitempty"`
 	// A list of configurations for requests to this resource. If not provided, the default request configuration will be used.
@@ -38,9 +38,9 @@ func (o *UpdateResourceInfo) GetDescription() *string {
 	return o.Description
 }
 
-func (o *UpdateResourceInfo) GetID() *string {
+func (o *UpdateResourceInfo) GetID() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.ID
 }

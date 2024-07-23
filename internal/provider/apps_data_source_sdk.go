@@ -18,9 +18,9 @@ func (r *AppsDataSourceModel) RefreshFromSharedAppsList(resp *shared.AppsList) {
 			var apps1 tfTypes.App
 			apps1.AdminOwnerID = types.StringValue(appsItem.AdminOwnerID)
 			apps1.Description = types.StringValue(appsItem.Description)
-			apps1.ID = types.StringPointerValue(appsItem.ID)
+			apps1.ID = types.StringValue(appsItem.ID)
 			apps1.Name = types.StringValue(appsItem.Name)
-			apps1.Type = types.StringPointerValue(appsItem.Type)
+			apps1.Type = types.StringValue(appsItem.Type)
 			if appsCount+1 > len(r.Apps) {
 				r.Apps = append(r.Apps, apps1)
 			} else {

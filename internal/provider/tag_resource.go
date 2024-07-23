@@ -65,12 +65,11 @@ func (r *TagResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 				Description: `The tag ID`,
 			},
 			"key": schema.StringAttribute{
-				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Optional:    true,
+				Required:    true,
 				Description: `The key of the tag to create. Requires replacement if changed. `,
 			},
 			"updated_at": schema.StringAttribute{

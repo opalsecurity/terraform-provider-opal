@@ -21,7 +21,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 			results1.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
 			results1.AppID = types.StringPointerValue(resultsItem.AppID)
 			results1.Description = types.StringPointerValue(resultsItem.Description)
-			results1.ID = types.StringPointerValue(resultsItem.ID)
+			results1.ID = types.StringValue(resultsItem.ID)
 			results1.Name = types.StringPointerValue(resultsItem.Name)
 			results1.ParentResourceID = types.StringPointerValue(resultsItem.ParentResourceID)
 			if resultsItem.RemoteInfo == nil {

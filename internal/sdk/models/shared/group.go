@@ -22,7 +22,7 @@ type Group struct {
 	// The type of the group.
 	GroupType *GroupTypeEnum `json:"group_type,omitempty"`
 	// The ID of the group.
-	ID *string `json:"group_id,omitempty"`
+	ID string `json:"group_id"`
 	// The name of the group.
 	Name *string `json:"name,omitempty"`
 	// Information that defines the remote group. This replaces the deprecated remote_id and metadata fields.
@@ -77,9 +77,9 @@ func (o *Group) GetGroupType() *GroupTypeEnum {
 	return o.GroupType
 }
 
-func (o *Group) GetID() *string {
+func (o *Group) GetID() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.ID
 }

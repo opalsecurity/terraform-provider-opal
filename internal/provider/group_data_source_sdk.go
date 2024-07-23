@@ -24,7 +24,7 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 		} else {
 			r.GroupType = types.StringNull()
 		}
-		r.ID = types.StringPointerValue(resp.ID)
+		r.ID = types.StringValue(resp.ID)
 		r.Name = types.StringPointerValue(resp.Name)
 		if resp.RemoteInfo == nil {
 			r.RemoteInfo = nil
@@ -163,7 +163,7 @@ func (r *GroupDataSourceModel) RefreshFromOperationsGetGroupMessageChannelsRespo
 		}
 		for channelsCount, channelsItem := range resp.Channels {
 			var channels1 tfTypes.MessageChannel
-			channels1.ID = types.StringPointerValue(channelsItem.ID)
+			channels1.ID = types.StringValue(channelsItem.ID)
 			channels1.IsPrivate = types.BoolPointerValue(channelsItem.IsPrivate)
 			channels1.Name = types.StringPointerValue(channelsItem.Name)
 			channels1.RemoteID = types.StringPointerValue(channelsItem.RemoteID)

@@ -15,7 +15,7 @@ func (r *TagDataSourceModel) RefreshFromSharedTag(resp *shared.Tag) {
 		} else {
 			r.CreatedAt = types.StringNull()
 		}
-		r.ID = types.StringPointerValue(resp.ID)
+		r.ID = types.StringValue(resp.ID)
 		r.Key = types.StringPointerValue(resp.Key)
 		if resp.UpdatedAt != nil {
 			r.UpdatedAt = types.StringValue(resp.UpdatedAt.Format(time.RFC3339Nano))
