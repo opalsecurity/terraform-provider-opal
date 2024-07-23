@@ -12,6 +12,7 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 	"net/http"
+	"os"
 )
 
 var _ provider.Provider = &OpalProvider{}
@@ -70,7 +71,11 @@ func (p *OpalProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 	if !data.BearerAuth.IsUnknown() && !data.BearerAuth.IsNull() {
 		*bearerAuth = data.BearerAuth.ValueString()
 	} else {
-		bearerAuth = nil
+		if len(os.Getenv("OPAL_AUTH_TOKEN")) > 0 {
+			*bearerAuth = os.Getenv("OPAL_AUTH_TOKEN")
+		} else {
+			bearerAuth = nil
+		}
 	}
 	security := shared.Security{
 		BearerAuth: bearerAuth,
