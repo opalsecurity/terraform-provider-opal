@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.0.2
+- No longer need to explicitly pass the auth token to the Opal provider. The provider will look for the OPAL_AUTH_TOKEN envar and use it if set.
+- 404s on refreshing state for Terrafpr, resources will result in the resource being recreated on a subsequent apply rather than erroring.
+
 ## v3.0.0
 
 *Compared to 2.0.2*
