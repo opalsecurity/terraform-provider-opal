@@ -3920,6 +3920,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/RequestConfiguration"
+          format: set
         request_configuration_list:
           description: A list of request configurations for this group. Deprecated in favor of `request_configurations`.
           deprecated: true
@@ -4175,6 +4176,7 @@ components:
           items:
             $ref: "#/components/schemas/RequestConfiguration"
           description: The request configuration list of the configuration template. If not provided, the default request configuration will be used.
+          format: set
           x-speakeasy-plan-validators: RequestConfigurations
         request_configuration_list:
           description: The request configuration list of the configuration template. If not provided, the default request configuration will be used. Deprecated in favor of `request_configurations`.
@@ -5931,6 +5933,7 @@ components:
           items:
             $ref: "#/components/schemas/RequestConfiguration"
           description: A list of configurations for requests to this resource.
+          format: set
         request_configuration_list:
           description: A list of configurations for requests to this resource. Deprecated in favor of `request_configurations`.
           deprecated: true
@@ -6109,6 +6112,7 @@ components:
           items:
             $ref: "#/components/schemas/RequestConfiguration"
           description: A list of configurations for requests to this resource. If not provided, the default request configuration will be used.
+          format: set
           x-speakeasy-plan-validators: RequestConfigurations
         request_configuration_list:
           description: A list of configurations for requests to this resource. If not provided, the default request configuration will be used. Deprecated in favor of `request_configurations`.
@@ -6707,6 +6711,7 @@ components:
             format: uuid
           type: array
           format: set
+          x-speakeasy-param-suppress-computed-diff: true
         role_remote_ids:
           description: The list of role remote IDs to match.
           example:
@@ -6715,6 +6720,7 @@ components:
           items:
             type: string
           format: set
+          x-speakeasy-param-suppress-computed-diff: true
     RequestConfiguration:
       description: |-
         # Request Configuration Object
@@ -6748,6 +6754,7 @@ components:
         condition:
           description: The condition for the request configuration.
           $ref: "#/components/schemas/Condition"
+          x-speakeasy-param-suppress-computed-diff: true
         allow_requests:
           description: A bool representing whether or not to allow requests for this resource.
           example: True
@@ -6779,11 +6786,13 @@ components:
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
+          x-speakeasy-param-suppress-computed-diff: true
         reviewer_stages:
           description: The list of reviewer stages for the request configuration.
           items:
             $ref: "#/components/schemas/ReviewerStage"
           type: array
+          x-speakeasy-param-suppress-computed-diff: true
         priority:
           description: The priority of the request configuration.
           example: 1
@@ -6794,7 +6803,6 @@ components:
         - auto_approval
         - require_mfa_to_request
         - require_support_ticket
-        - reviewer_stages
         - priority
       x-speakeasy-entity: Requests
     CreateRequestConfigurationInfoList:
@@ -6858,6 +6866,7 @@ components:
           items:
             $ref: "#/components/schemas/RequestConfiguration"
           type: array
+          format: set
       type: object
       required:
         - request_configurations
@@ -6949,6 +6958,7 @@ components:
           items:
             $ref: "#/components/schemas/RequestConfiguration"
           description: The request configuration list of the configuration template. If not provided, the default request configuration will be used.
+          format: set
         request_configuration_list:
           description: The request configuration list of the configuration template. If not provided, the default request configuration will be used. Deprecated in favor of `request_configurations`.
           $ref: "#/components/schemas/CreateRequestConfigurationInfoList"
@@ -7160,6 +7170,7 @@ components:
           items:
             $ref: "#/components/schemas/RequestConfiguration"
           description: The request configuration list linked to the configuration template.
+          format: set
         request_configuration_list:
           description: The request configuration list linked to the configuration template. Deprecated in favor of `request_configurations`.
           $ref: "#/components/schemas/CreateRequestConfigurationInfoList"

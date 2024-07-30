@@ -59,5 +59,3 @@ Read-Only:
 
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 - `visibility_group_ids` (Set of String)
-
-

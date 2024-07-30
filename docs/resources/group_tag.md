@@ -26,5 +26,3 @@ resource "opal_group_tag" "my_grouptag" {
 
 - `group_id` (String) The ID of the group to apply the tag to. Requires replacement if changed.
 - `tag_id` (String) The ID of the tag to apply. Requires replacement if changed.
-
-

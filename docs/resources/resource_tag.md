@@ -26,5 +26,3 @@ resource "opal_resource_tag" "my_resourcetag" {
 
 - `resource_id` (String) The ID of the resource to apply the tag to. Requires replacement if changed.
 - `tag_id` (String) The ID of the tag to apply. Requires replacement if changed.
-
-

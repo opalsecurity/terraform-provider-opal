@@ -90,7 +90,7 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 				Computed:    true,
 				Description: `The ID of the request configuration linked to the configuration template.`,
 			},
-			"request_configurations": schema.ListNestedAttribute{
+			"request_configurations": schema.SetNestedAttribute{
 				Optional: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -142,7 +142,7 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 							Description: `A bool representing whether or not access requests to the resource require an access ticket.`,
 						},
 						"reviewer_stages": schema.ListNestedAttribute{
-							Required: true,
+							Optional: true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"operator": schema.StringAttribute{

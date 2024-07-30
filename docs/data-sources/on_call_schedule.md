@@ -30,5 +30,3 @@ data "opal_on_call_schedule" "my_oncallschedule" {
 - `name` (String) The name of the on call schedule.
 - `remote_id` (String) The remote ID of the on call schedule
 - `third_party_provider` (String) The third party provider of the on call schedule. must be one of ["OPSGENIE", "PAGER_DUTY"]
-
-

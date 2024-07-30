@@ -10,7 +10,7 @@ resource "opal_group" "my_group" {
             on_call_schedule_ids = {
         "c4289332-6c8d-43b6-943a-d1053f385d17",
     }
-            request_configurations = [
+            request_configurations = {
         {
             allow_requests = true
             auto_approval = false
@@ -39,7 +39,7 @@ resource "opal_group" "my_group" {
                 },
             ]
         },
-    ]
+    }
             require_mfa_to_approve = false
             visibility = "GLOBAL"
         }

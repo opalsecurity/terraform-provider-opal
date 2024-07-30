@@ -18,7 +18,7 @@ resource "opal_resource" "my_resource" {
             app_id = "f454d283-ca87-4a8a-bdbb-df212eca5353"
             description = "Engineering team Okta role."
             name = "mongo-db-prod"
-            request_configurations = [
+            request_configurations = {
         {
             allow_requests = true
             auto_approval = false
@@ -47,7 +47,7 @@ resource "opal_resource" "my_resource" {
                 },
             ]
         },
-    ]
+    }
             require_mfa_to_approve = false
             require_mfa_to_connect = false
             resource_type = "AWS_IAM_ROLE"
@@ -65,7 +65,7 @@ resource "opal_resource" "my_resource" {
 
 - `app_id` (String) The ID of the app for the resource. Requires replacement if changed.
 - `name` (String) The name of the remote resource.
-- `request_configurations` (Attributes List) A list of configurations for requests to this resource. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
+- `request_configurations` (Attributes Set) A list of configurations for requests to this resource. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `resource_type` (String) The type of the resource. Requires replacement if changed. ; must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "CUSTOM", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GIT_HUB_REPO", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "TELEPORT_ROLE"]
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 
@@ -98,7 +98,7 @@ Optional:
 - `request_template_id` (String) The ID of the associated request template.
 - `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this resource. Not Null
 - `require_support_ticket` (Boolean) A bool representing whether or not access requests to the resource require an access ticket. Not Null
-- `reviewer_stages` (Attributes List) The list of reviewer stages for the request configuration. Not Null (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages))
+- `reviewer_stages` (Attributes List) The list of reviewer stages for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages))
 
 <a id="nestedatt--request_configurations--condition"></a>
 ### Nested Schema for `request_configurations.condition`

@@ -31,5 +31,3 @@ data "opal_app" "my_app" {
 - `description` (String) A description of the app.
 - `name` (String) The name of the app.
 - `type` (String) The type of an app.
-
-

@@ -85,5 +85,3 @@ Read-Only:
 - `group_id` (String) The ID of the group requested.
 - `name` (String) The name of the target.
 - `resource_id` (String) The ID of the resource requested.
-
-

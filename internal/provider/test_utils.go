@@ -94,9 +94,9 @@ func GenerateRequestConfigurations(requestConfigurations []RequestConfigurationC
 			`{
 				allow_requests = %t
 				auto_approval = %t
-				max_duration = "%d"
+				max_duration = %d
 				priority = %d
-				recommended_duration = "%d"
+				recommended_duration = %d
 				require_mfa_to_request = %t
 				require_support_ticket = %t
 				%s
