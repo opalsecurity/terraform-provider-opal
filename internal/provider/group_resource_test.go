@@ -291,6 +291,11 @@ func TestAccGroup_RequestConfigurations(t *testing.T) {
 			AutoApproval: false,
 			Priority:     2,
 		},
+		{
+			IsRequestable: true,
+			AutoApproval:  true,
+			Priority:      3,
+		},
 	}
 	invalidSequentialPriorityConfigString := GenerateGroupResource(&config)
 

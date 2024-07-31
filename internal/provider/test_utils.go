@@ -56,6 +56,10 @@ func GenerateErrorMessageRegexp(message string) *regexp.Regexp {
 }
 
 func GenerateReviewerStages(reviewerStages []ReviewerStageConfig) string {
+	if len(reviewerStages) == 0 {
+		return ""
+	}
+
 	reviewerStagesStr := "reviewer_stages = ["
 	for _, reviewerStage := range reviewerStages {
 		reviewerStagesStr += fmt.Sprintf(
