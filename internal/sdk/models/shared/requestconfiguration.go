@@ -27,7 +27,7 @@ type RequestConfiguration struct {
 	// A bool representing whether or not access requests to the resource require an access ticket.
 	RequireSupportTicket bool `json:"require_support_ticket"`
 	// The list of reviewer stages for the request configuration.
-	ReviewerStages []ReviewerStage `json:"reviewer_stages,omitempty"`
+	ReviewerStages []ReviewerStage `json:"reviewer_stages"`
 }
 
 func (o *RequestConfiguration) GetAllowRequests() bool {
@@ -95,7 +95,7 @@ func (o *RequestConfiguration) GetRequireSupportTicket() bool {
 
 func (o *RequestConfiguration) GetReviewerStages() []ReviewerStage {
 	if o == nil {
-		return nil
+		return []ReviewerStage{}
 	}
 	return o.ReviewerStages
 }

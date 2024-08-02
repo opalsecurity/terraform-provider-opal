@@ -3,7 +3,7 @@ resource "opal_resource" "my_resource" {
             app_id = "f454d283-ca87-4a8a-bdbb-df212eca5353"
             description = "Engineering team Okta role."
             name = "mongo-db-prod"
-            request_configurations = {
+            request_configurations = [
         {
             allow_requests = true
             auto_approval = false
@@ -32,7 +32,7 @@ resource "opal_resource" "my_resource" {
                 },
             ]
         },
-    }
+    ]
             require_mfa_to_approve = false
             require_mfa_to_connect = false
             resource_type = "AWS_IAM_ROLE"

@@ -19,7 +19,6 @@ import (
 	speakeasy_boolplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/boolplanmodifier"
 	speakeasy_listplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/listplanmodifier"
 	speakeasy_objectplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/objectplanmodifier"
-	speakeasy_setplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/setplanmodifier"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
@@ -28,7 +27,8 @@ import (
 	stateupgraders "github.com/opalsecurity/terraform-provider-opal/internal/stateupgraders"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/boolvalidators"
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/internal/validators/int64validators"
-	custom_setvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/setvalidators"
+	custom_listvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/listvalidators"
+	speakeasy_listvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/listvalidators"
 	speakeasy_setvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/setvalidators"
 	speakeasy_stringvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/stringvalidators"
 )
@@ -468,7 +468,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 				Description: `The name of the remote.`,
 			},
-			"request_configurations": schema.SetNestedAttribute{
+			"request_configurations": schema.ListNestedAttribute{
 				Required: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -493,19 +493,13 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							Optional: true,
 							Attributes: map[string]schema.Attribute{
 								"group_ids": schema.SetAttribute{
-									Computed: true,
-									PlanModifiers: []planmodifier.Set{
-										speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
-									},
+									Computed:    true,
 									Optional:    true,
 									ElementType: types.StringType,
 									Description: `The list of group IDs to match.`,
 								},
 								"role_remote_ids": schema.SetAttribute{
-									Computed: true,
-									PlanModifiers: []planmodifier.Set{
-										speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
-									},
+									Computed:    true,
 									Optional:    true,
 									ElementType: types.StringType,
 									Description: `The list of role remote IDs to match.`,
@@ -531,10 +525,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							Description: `The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.`,
 						},
 						"request_template_id": schema.StringAttribute{
-							Computed: true,
-							PlanModifiers: []planmodifier.String{
-								speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-							},
+							Computed:    true,
 							Optional:    true,
 							Description: `The ID of the associated request template.`,
 						},
@@ -556,17 +547,11 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						},
 						"reviewer_stages": schema.ListNestedAttribute{
 							Computed: true,
-							PlanModifiers: []planmodifier.List{
-								speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
-							},
 							Optional: true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"operator": schema.StringAttribute{
-										Computed: true,
-										PlanModifiers: []planmodifier.String{
-											speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-										},
+										Computed:    true,
 										Optional:    true,
 										Default:     stringdefault.StaticString("AND"),
 										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]; Default: "AND"`,
@@ -578,10 +563,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 										},
 									},
 									"owner_ids": schema.SetAttribute{
-										Computed: true,
-										PlanModifiers: []planmodifier.Set{
-											speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
-										},
+										Computed:    true,
 										Optional:    true,
 										ElementType: types.StringType,
 										Description: `Not Null`,
@@ -590,18 +572,12 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 										},
 									},
 									"require_admin_approval": schema.BoolAttribute{
-										Computed: true,
-										PlanModifiers: []planmodifier.Bool{
-											speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
-										},
+										Computed:    true,
 										Optional:    true,
 										Description: `Whether this reviewer stage should require admin approval.`,
 									},
 									"require_manager_approval": schema.BoolAttribute{
-										Computed: true,
-										PlanModifiers: []planmodifier.Bool{
-											speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
-										},
+										Computed:    true,
 										Optional:    true,
 										Description: `Whether this reviewer stage should require manager approval. Not Null`,
 										Validators: []validator.Bool{
@@ -610,13 +586,16 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 									},
 								},
 							},
-							Description: `The list of reviewer stages for the request configuration.`,
+							Description: `The list of reviewer stages for the request configuration. Not Null`,
+							Validators: []validator.List{
+								speakeasy_listvalidators.NotNull(),
+							},
 						},
 					},
 				},
 				Description: `The request configuration list of the configuration template. If not provided, the default request configuration will be used.`,
-				Validators: []validator.Set{
-					custom_setvalidators.RequestConfigurations(),
+				Validators: []validator.List{
+					custom_listvalidators.RequestConfigurations(),
 				},
 			},
 			"require_mfa_to_approve": schema.BoolAttribute{

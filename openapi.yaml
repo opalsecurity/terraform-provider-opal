@@ -47,6 +47,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/AppsList"
           description: A list of apps for your organization.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -76,6 +78,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/App"
           description: The requested `App`.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -93,6 +97,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/PaginatedConfigurationTemplateList"
           description: One page worth of configuration templates for your organization.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -267,6 +273,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/PaginatedEventList"
           description: One page worth of events with the appropriate filters applied.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -338,6 +346,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/PaginatedGroupsList"
           description: One page worth groups associated with your organization.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -415,6 +425,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Group"
           description: The requested `Group`.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -470,6 +482,8 @@ paths:
                   - x-speakeasy-wrapped-attribute: "message_channels"
                   - x-speakeasy-param-suppress-computed-diff: true
           description: The audit and reviewer message channels attached to the group.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -536,6 +550,8 @@ paths:
                   - $ref: "#/components/schemas/OnCallScheduleList"
                   - x-speakeasy-wrapped-attribute: "oncall_schedules"
           description: The on call schedules attached to the group.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -599,6 +615,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/GroupResourceList"
           description: The resources that the group gives access to to.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -726,6 +744,8 @@ paths:
                   - $ref: "#/components/schemas/VisibilityInfo"
                     # - x-speakeasy-wrapped-attribute: "visibility_info"
           description: The visibility info of this group.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -794,6 +814,8 @@ paths:
                   type: string
                 type: array
           description: The IDs of owners that are reviewers for this group.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -862,6 +884,8 @@ paths:
                 type: array
                 x-speakeasy-entity: GroupReviewersStagesList
           description: The reviewer stages for this group.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -926,6 +950,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/TagsList"
           description: The tags applied to the group.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -954,6 +980,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/GroupUserList"
           description: List of users with access to this group.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -1094,6 +1122,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/PaginatedGroupBindingsList"
           description: One page worth of group bindings for your organization.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -1157,6 +1187,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/GroupBinding"
           description: The requested `GroupBinding`.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -1222,6 +1254,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/PaginatedOwnersList"
           description: One page worth of owners in your organization.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -1296,6 +1330,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Owner"
           description: The owner object associated with the passed-in ID.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -1347,6 +1383,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Owner"
           description: The owner object associated with the passed-in name.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -1428,6 +1466,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/RequestList"
           description: The list of requests.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -1534,6 +1574,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/PaginatedResourcesList"
           description: One page worth resources associated with your organization.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -1610,6 +1652,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Resource"
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -1662,6 +1706,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/MessageChannelList"
           description: The audit message channels attached to the resource.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -1728,6 +1774,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/VisibilityInfo"
           description: The visibility info of this resource.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -1796,6 +1844,8 @@ paths:
                 type: array
                 x-speakeasy-entity: ResourceReviewersList
           description: The IDs of owners that are reviewers for this resource.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -1866,6 +1916,8 @@ paths:
                 type: array
                 x-speakeasy-entity: ResourceReviewersStagesList
           description: The reviewer stages for this resource.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -1938,6 +1990,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ResourceAccessUserList"
           description: List of users with access to this resource.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -2004,6 +2058,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ResourceUserAccessStatus"
           description: The access status reflecting the user's access to the resource.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -2032,6 +2088,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/TagsList"
           description: The tags applied to the resource.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -2069,6 +2127,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/SessionsList"
           description: The sessions associated with a resource.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -2107,6 +2167,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/User"
           description: The user object associated with the passed-in email or ID.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -2144,6 +2206,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/PaginatedUsersList"
           description: One page worth users in your organization.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -2172,6 +2236,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/TagsList"
           description: The tags applied to the user.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -2201,6 +2267,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/Tag"
           description: The tag requested.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -2282,6 +2350,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/PaginatedTagsList"
           description: A list of tags created by your organization.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -2500,6 +2570,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/MessageChannelList"
           description: A list of message channels for your organization.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -2552,6 +2624,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/MessageChannel"
           description: The requested message channel.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -2569,6 +2643,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/OnCallScheduleList"
           description: A list of on call schedules for your organization.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -2621,6 +2697,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/OnCallSchedule"
           description: The requested on call schedule.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -2658,6 +2736,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/PaginatedUARsList"
           description: A list of UARs for your organization.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -2709,6 +2789,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/UAR"
           description: The UAR that was requested.
+        "404":
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
@@ -3838,7 +3920,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/RequestConfiguration"
-          format: set
         request_configuration_list:
           description: A list of request configurations for this group. Deprecated in favor of `request_configurations`.
           deprecated: true
@@ -4094,7 +4175,6 @@ components:
           items:
             $ref: "#/components/schemas/RequestConfiguration"
           description: The request configuration list of the configuration template. If not provided, the default request configuration will be used.
-          format: set
           x-speakeasy-plan-validators: RequestConfigurations
         request_configuration_list:
           description: The request configuration list of the configuration template. If not provided, the default request configuration will be used. Deprecated in favor of `request_configurations`.
@@ -5851,7 +5931,6 @@ components:
           items:
             $ref: "#/components/schemas/RequestConfiguration"
           description: A list of configurations for requests to this resource.
-          format: set
         request_configuration_list:
           description: A list of configurations for requests to this resource. Deprecated in favor of `request_configurations`.
           deprecated: true
@@ -6030,7 +6109,6 @@ components:
           items:
             $ref: "#/components/schemas/RequestConfiguration"
           description: A list of configurations for requests to this resource. If not provided, the default request configuration will be used.
-          format: set
           x-speakeasy-plan-validators: RequestConfigurations
         request_configuration_list:
           description: A list of configurations for requests to this resource. If not provided, the default request configuration will be used. Deprecated in favor of `request_configurations`.
@@ -6629,7 +6707,6 @@ components:
             format: uuid
           type: array
           format: set
-          x-speakeasy-param-suppress-computed-diff: true
         role_remote_ids:
           description: The list of role remote IDs to match.
           example:
@@ -6638,7 +6715,6 @@ components:
           items:
             type: string
           format: set
-          x-speakeasy-param-suppress-computed-diff: true
     RequestConfiguration:
       description: |-
         # Request Configuration Object
@@ -6672,7 +6748,6 @@ components:
         condition:
           description: The condition for the request configuration.
           $ref: "#/components/schemas/Condition"
-          x-speakeasy-param-suppress-computed-diff: true
         allow_requests:
           description: A bool representing whether or not to allow requests for this resource.
           example: True
@@ -6704,13 +6779,11 @@ components:
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
-          x-speakeasy-param-suppress-computed-diff: true
         reviewer_stages:
           description: The list of reviewer stages for the request configuration.
           items:
             $ref: "#/components/schemas/ReviewerStage"
           type: array
-          x-speakeasy-param-suppress-computed-diff: true
         priority:
           description: The priority of the request configuration.
           example: 1
@@ -6721,6 +6794,7 @@ components:
         - auto_approval
         - require_mfa_to_request
         - require_support_ticket
+        - reviewer_stages
         - priority
       x-speakeasy-entity: Requests
     CreateRequestConfigurationInfoList:
@@ -6784,7 +6858,6 @@ components:
           items:
             $ref: "#/components/schemas/RequestConfiguration"
           type: array
-          format: set
       type: object
       required:
         - request_configurations
@@ -6876,7 +6949,6 @@ components:
           items:
             $ref: "#/components/schemas/RequestConfiguration"
           description: The request configuration list of the configuration template. If not provided, the default request configuration will be used.
-          format: set
         request_configuration_list:
           description: The request configuration list of the configuration template. If not provided, the default request configuration will be used. Deprecated in favor of `request_configurations`.
           $ref: "#/components/schemas/CreateRequestConfigurationInfoList"
@@ -7088,7 +7160,6 @@ components:
           items:
             $ref: "#/components/schemas/RequestConfiguration"
           description: The request configuration list linked to the configuration template.
-          format: set
         request_configuration_list:
           description: The request configuration list linked to the configuration template. Deprecated in favor of `request_configurations`.
           $ref: "#/components/schemas/CreateRequestConfigurationInfoList"

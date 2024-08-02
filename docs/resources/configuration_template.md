@@ -16,7 +16,7 @@ ConfigurationTemplate Resource
 resource "opal_configuration_template" "my_configurationtemplate" {
     admin_owner_id = "7c86c85d-0651-43e2-a748-d69d658418e8"
             name = "Prod AWS Template"
-            request_configurations = {
+            request_configurations = [
         {
             allow_requests = true
             auto_approval = false
@@ -45,7 +45,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
                 },
             ]
         },
-    }
+    ]
             require_mfa_to_approve = false
             require_mfa_to_connect = false
             visibility = {
@@ -73,7 +73,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
 - `break_glass_user_ids` (Set of String) The IDs of the break glass users linked to the configuration template.
 - `linked_audit_message_channel_ids` (Set of String) The IDs of the audit message channels linked to the configuration template.
 - `member_oncall_schedule_ids` (Set of String) The IDs of the on-call schedules linked to the configuration template.
-- `request_configurations` (Attributes Set) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
+- `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--ticket_propagation))
 
 ### Read-Only
@@ -103,6 +103,7 @@ Required:
 - `priority` (Number) The priority of the request configuration.
 - `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this resource.
 - `require_support_ticket` (Boolean) A bool representing whether or not access requests to the resource require an access ticket.
+- `reviewer_stages` (Attributes List) The list of reviewer stages for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages))
 
 Optional:
 
@@ -110,16 +111,6 @@ Optional:
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
 - `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
 - `request_template_id` (String) The ID of the associated request template.
-- `reviewer_stages` (Attributes List) The list of reviewer stages for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages))
-
-<a id="nestedatt--request_configurations--condition"></a>
-### Nested Schema for `request_configurations.condition`
-
-Optional:
-
-- `group_ids` (Set of String) The list of group IDs to match.
-- `role_remote_ids` (Set of String) The list of role remote IDs to match.
-
 
 <a id="nestedatt--request_configurations--reviewer_stages"></a>
 ### Nested Schema for `request_configurations.reviewer_stages`
@@ -133,6 +124,15 @@ Optional:
 
 - `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]; Default: "AND"
 - `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval.
+
+
+<a id="nestedatt--request_configurations--condition"></a>
+### Nested Schema for `request_configurations.condition`
+
+Optional:
+
+- `group_ids` (Set of String) The list of group IDs to match.
+- `role_remote_ids` (Set of String) The list of role remote IDs to match.
 
 
 

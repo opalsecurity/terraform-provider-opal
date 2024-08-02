@@ -738,6 +738,10 @@ actions:
       x-speakeasy-entity-operation: UAR#get
   - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]
     remove: true
+  - target: $["paths"][*]["get"]["responses"]
+    update:
+      "404":
+        description: Not Found
   - target: $["components"]["schemas"]["PaginatedUARsList"]
     update:
       x-speakeasy-entity: UARS_list
@@ -891,9 +895,6 @@ actions:
   - target: $["components"]["schemas"]["Group"]["properties"]["is_requestable"]
     update:
       x-speakeasy-ignore: true
-  - target: $["components"]["schemas"]["Group"]["properties"]["request_configurations"]
-    update:
-      format: set
   - target: $["components"]["schemas"]["Group"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
@@ -964,9 +965,6 @@ actions:
     update:
       x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["group_leader_user_ids"]
-    update:
-      format: set
-  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_configurations"]
     update:
       format: set
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_configurations"]
@@ -1365,9 +1363,6 @@ actions:
   - target: $["components"]["schemas"]["Resource"]["properties"]["configuration_template_id"]
     update:
       x-speakeasy-ignore: true
-  - target: $["components"]["schemas"]["Resource"]["properties"]["request_configurations"]
-    update:
-      format: set
   - target: $["components"]["schemas"]["Resource"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
@@ -1439,9 +1434,6 @@ actions:
       x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_configurations"]
     update:
-      format: set
-  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_configurations"]
-    update:
       x-speakeasy-plan-validators: RequestConfigurations
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_configuration_list"]
     update:
@@ -1505,48 +1497,20 @@ actions:
   - target: $["components"]["schemas"]["Condition"]["properties"]["group_ids"]
     update:
       format: set
-  - target: $["components"]["schemas"]["Condition"]["properties"]["group_ids"]
-    update:
-      x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["Condition"]["properties"]["role_remote_ids"]
     update:
       format: set
-  - target: $["components"]["schemas"]["Condition"]["properties"]["role_remote_ids"]
-    update:
-      x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["Condition"]["description"]
     remove: true
-  - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["condition"]
-    update:
-      x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["max_duration_minutes"]
     update:
       x-speakeasy-name-override: max_duration
   - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["recommended_duration_minutes"]
     update:
       x-speakeasy-name-override: recommended_duration
-  - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["request_template_id"]
-    update:
-      x-speakeasy-param-suppress-computed-diff: true
-  - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["reviewer_stages"]
-    update:
-      x-speakeasy-param-suppress-computed-diff: true
-  - target: $["components"]["schemas"]["RequestConfiguration"]["required"][*]
-    remove: true
-  - target: $["components"]["schemas"]["RequestConfiguration"]["required"]
-    update:
-      - organization_id
-      - allow_requests
-      - auto_approval
-      - require_mfa_to_request
-      - require_support_ticket
-      - priority
   - target: $["components"]["schemas"]["RequestConfiguration"]
     update:
       x-speakeasy-entity: Requests
-  - target: $["components"]["schemas"]["CreateRequestConfigurationInfoList"]["properties"]["request_configurations"]
-    update:
-      format: set
   - target: $["components"]["schemas"]["CreateRequestConfigurationInfoList"]
     update:
       x-speakeasy-ignore: true
@@ -1557,9 +1521,6 @@ actions:
     update:
       format: set
   - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["break_glass_user_ids"]
-    update:
-      format: set
-  - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["request_configurations"]
     update:
       format: set
   - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["request_configuration_list"]
@@ -1585,9 +1546,6 @@ actions:
     update:
       x-speakeasy-entity: ConfigurationTemplate
   - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]["properties"]["linked_audit_message_channel_ids"]
-    update:
-      format: set
-  - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]["properties"]["request_configurations"]
     update:
       format: set
   - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]["properties"]["request_configuration_list"]

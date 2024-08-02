@@ -1,7 +1,7 @@
 resource "opal_configuration_template" "my_configurationtemplate" {
     admin_owner_id = "7c86c85d-0651-43e2-a748-d69d658418e8"
             name = "Prod AWS Template"
-            request_configurations = {
+            request_configurations = [
         {
             allow_requests = true
             auto_approval = false
@@ -30,7 +30,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
                 },
             ]
         },
-    }
+    ]
             require_mfa_to_approve = false
             require_mfa_to_connect = false
             visibility = {
