@@ -6,10 +6,6 @@ actions:
   - target: $["servers"][0]
     update:
       x-speakeasy-server-id: prod
-  - target: $["paths"]["/apps"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/apps"]["get"]
     update:
       x-speakeasy-name-override: get
@@ -21,20 +17,12 @@ actions:
   - target: $["paths"]["/apps/{app_id}"]["get"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
-  - target: $["paths"]["/apps/{app_id}"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/apps/{app_id}"]["get"]
     update:
       x-speakeasy-name-override: get_id
   - target: $["paths"]["/apps/{app_id}"]["get"]
     update:
       x-speakeasy-entity-operation: App#get
-  - target: $["paths"]["/configuration-templates"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/configuration-templates"]["get"]
     update:
       x-speakeasy-name-override: get
@@ -61,10 +49,6 @@ actions:
       x-speakeasy-entity-operation: ConfigurationTemplate#delete
   - target: $["paths"]["/events"]["get"]["operationId"]
     update: getEvents
-  - target: $["paths"]["/events"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/events"]["get"]
     update:
       x-speakeasy-name-override: get
@@ -74,10 +58,6 @@ actions:
   - target: $["paths"]["/groups"]["get"]["parameters"][0]
     update:
       x-speakeasy-ignore: true
-  - target: $["paths"]["/groups"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/groups"]["get"]
     update:
       x-speakeasy-name-override: list
@@ -102,10 +82,6 @@ actions:
   - target: $["paths"]["/groups/{group_id}"]["get"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
-  - target: $["paths"]["/groups/{group_id}"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/groups/{group_id}"]["get"]
     update:
       x-speakeasy-entity-operation: Group#read
@@ -133,10 +109,6 @@ actions:
         - x-speakeasy-param-suppress-computed-diff: true
   - target: $["paths"]["/groups/{group_id}/message-channels"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]["$ref"]
     remove: true
-  - target: $["paths"]["/groups/{group_id}/message-channels"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/groups/{group_id}/message-channels"]["get"]
     update:
       x-speakeasy-name-override: get_message_channels
@@ -173,10 +145,6 @@ actions:
         - x-speakeasy-wrapped-attribute: "oncall_schedules"
   - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]["$ref"]
     remove: true
-  - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["get"]
     update:
       x-speakeasy-name-override: get_on_call_schedule
@@ -203,10 +171,6 @@ actions:
         - Group#update#3
   - target: $["paths"]["/groups/{group_id}/resources"]["get"]["operationId"]
     update: getGroupResources
-  - target: $["paths"]["/groups/{group_id}/resources"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/groups/{group_id}/resources"]["get"]
     update:
       x-speakeasy-name-override: get_resources
@@ -238,10 +202,6 @@ actions:
           # - x-speakeasy-wrapped-attribute: "visibility_info"
   - target: $["paths"]["/groups/{group_id}/visibility"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]["$ref"]
     remove: true
-  - target: $["paths"]["/groups/{group_id}/visibility"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/groups/{group_id}/visibility"]["get"]
     update:
       x-speakeasy-name-override: get_visibility
@@ -268,10 +228,6 @@ actions:
         - Group#update#4
   - target: $["paths"]["/groups/{group_id}/reviewers"]["get"]["operationId"]
     update: getGroupReviewers
-  - target: $["paths"]["/groups/{group_id}/reviewers"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/groups/{group_id}/reviewers"]["get"]
     update:
       x-speakeasy-ignore: true
@@ -285,10 +241,6 @@ actions:
   - target: $["paths"]["/groups/{group_id}/reviewer-stages"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]
     update:
       x-speakeasy-entity: GroupReviewersStagesList
-  - target: $["paths"]["/groups/{group_id}/reviewer-stages"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/groups/{group_id}/reviewer-stages"]["get"]
     update:
       x-speakeasy-name-override: get_reviewers_stages
@@ -305,10 +257,6 @@ actions:
       x-speakeasy-entity-operation: GroupsReviewersStages#update
   - target: $["paths"]["/groups/{group_id}/tags"]["get"]["operationId"]
     update: getGroupTags
-  - target: $["paths"]["/groups/{group_id}/tags"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/groups/{group_id}/tags"]["get"]
     update:
       x-speakeasy-name-override: get_tags
@@ -317,10 +265,6 @@ actions:
       x-speakeasy-entity-operation: GroupTags#get
   - target: $["paths"]["/groups/{group_id}/users"]["get"]["operationId"]
     update: getGroupUsers
-  - target: $["paths"]["/groups/{group_id}/users"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/groups/{group_id}/users"]["get"]
     update:
       x-speakeasy-name-override: get_users
@@ -390,20 +334,8 @@ actions:
   - target: $["paths"]["/groups/{group_id}/users/{user_id}"]["delete"]
     update:
       x-speakeasy-entity-operation: GroupUser#delete
-  - target: $["paths"]["/group-bindings"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
-  - target: $["paths"]["/group-bindings/{group_binding_id}"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/owners"]["get"]["operationId"]
     update: getOwners
-  - target: $["paths"]["/owners"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/owners"]["get"]
     update:
       x-speakeasy-name-override: get
@@ -427,10 +359,6 @@ actions:
   - target: $["paths"]["/owners/{owner_id}"]["get"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
-  - target: $["paths"]["/owners/{owner_id}"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/owners/{owner_id}"]["get"]
     update:
       x-speakeasy-name-override: get_id
@@ -448,10 +376,6 @@ actions:
   - target: $["paths"]["/owners/{owner_id}"]["delete"]
     update:
       x-speakeasy-entity-operation: Owner#delete
-  - target: $["paths"]["/owners/name/{owner_name}"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/owners/name/{owner_name}"]["get"]
     update:
       x-speakeasy-name-override: get_from_name
@@ -474,20 +398,12 @@ actions:
       x-speakeasy-entity-operation: Owner#update#2
   - target: $["paths"]["/owners/{owner_id}/users"]["get"]
     remove: true
-  - target: $["paths"]["/requests"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/requests"]["get"]
     update:
       x-speakeasy-name-override: get
   - target: $["paths"]["/requests"]["get"]
     update:
       x-speakeasy-entity-operation: Requests#get
-  - target: $["paths"]["/resources"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/resources"]["get"]
     update:
       x-speakeasy-name-override: get
@@ -513,10 +429,6 @@ actions:
   - target: $["paths"]["/resources/{resource_id}"]["get"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
-  - target: $["paths"]["/resources/{resource_id}"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/resources/{resource_id}"]["get"]
     update:
       x-speakeasy-name-override: get_id
@@ -536,10 +448,6 @@ actions:
       x-speakeasy-entity-operation: Resource#delete
   - target: $["paths"]["/resources/{resource_id}/message-channels"]["get"]["operationId"]
     update: getResourceMessageChannels
-  - target: $["paths"]["/resources/{resource_id}/message-channels"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/resources/{resource_id}/message-channels"]["get"]
     update:
       x-speakeasy-name-override: get_message_channels
@@ -559,10 +467,6 @@ actions:
   - target: $["paths"]["/resources/{resource_id}/visibility"]["get"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
-  - target: $["paths"]["/resources/{resource_id}/visibility"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/resources/{resource_id}/visibility"]["get"]
     update:
       x-speakeasy-name-override: get_visibility
@@ -592,10 +496,6 @@ actions:
   - target: $["paths"]["/resources/{resource_id}/reviewers"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]
     update:
       x-speakeasy-entity: ResourceReviewersList
-  - target: $["paths"]["/resources/{resource_id}/reviewers"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/resources/{resource_id}/reviewers"]["get"]
     update:
       x-speakeasy-name-override: get_reviewers
@@ -618,10 +518,6 @@ actions:
   - target: $["paths"]["/resources/{resource_id}/reviewer-stages"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]
     update:
       x-speakeasy-entity: ResourceReviewersStagesList
-  - target: $["paths"]["/resources/{resource_id}/reviewer-stages"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/resources/{resource_id}/reviewer-stages"]["get"]
     update:
       x-speakeasy-ignore: true
@@ -635,10 +531,6 @@ actions:
       x-speakeasy-ignore: true
   - target: $["paths"]["/resources/{resource_id}/users"]["get"]["operationId"]
     update: getResourceUsers
-  - target: $["paths"]["/resources/{resource_id}/users"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/resources/{resource_id}/users"]["get"]
     update:
       x-speakeasy-name-override: get_users
@@ -647,10 +539,6 @@ actions:
       x-speakeasy-entity-operation: ResourcesUsers_list#get
   - target: $["paths"]["/resource-user-access-status/{resource_id}/{user_id}"]["get"]["operationId"]
     update: getResourceUserAccessStatus
-  - target: $["paths"]["/resource-user-access-status/{resource_id}/{user_id}"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/resource-user-access-status/{resource_id}/{user_id}"]["get"]
     update:
       x-speakeasy-name-override: get_access_status
@@ -659,10 +547,6 @@ actions:
       x-speakeasy-entity-operation: ResourcesAccessStatus#get
   - target: $["paths"]["/resources/{resource_id}/tags"]["get"]["operationId"]
     update: getResourceTags
-  - target: $["paths"]["/resources/{resource_id}/tags"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/resources/{resource_id}/tags"]["get"]
     update:
       x-speakeasy-name-override: get_tags
@@ -671,10 +555,6 @@ actions:
       x-speakeasy-entity-operation: ResourceTags#get
   - target: $["paths"]["/sessions"]["get"]["operationId"]
     update: getSessions
-  - target: $["paths"]["/sessions"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/sessions"]["get"]
     update:
       x-speakeasy-name-override: get
@@ -686,20 +566,12 @@ actions:
   - target: $["paths"]["/user"]["get"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
-  - target: $["paths"]["/user"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/user"]["get"]
     update:
       x-speakeasy-name-override: get
   - target: $["paths"]["/user"]["get"]
     update:
       x-speakeasy-entity-operation: User#get
-  - target: $["paths"]["/users"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/users"]["get"]
     update:
       x-speakeasy-name-override: get_users
@@ -708,10 +580,6 @@ actions:
       x-speakeasy-entity-operation: Users#get
   - target: $["paths"]["/users/{user_id}/tags"]["get"]["operationId"]
     update: getUserTags
-  - target: $["paths"]["/users/{user_id}/tags"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/users/{user_id}/tags"]["get"]
     update:
       x-speakeasy-name-override: get_user_tags
@@ -721,10 +589,6 @@ actions:
   - target: $["paths"]["/tag/{tag_id}"]["get"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
-  - target: $["paths"]["/tag/{tag_id}"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/tag/{tag_id}"]["get"]
     update:
       x-speakeasy-entity-operation: Tag#read
@@ -745,10 +609,6 @@ actions:
     remove: true
   - target: $["paths"]["/tag"]["get"]
     remove: true
-  - target: $["paths"]["/tags"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/tags"]["get"]
     update:
       x-speakeasy-name-override: get_tags
@@ -805,10 +665,6 @@ actions:
       x-speakeasy-entity-operation: ResourceTag#delete
   - target: $["paths"]["/message-channels"]["get"]["operationId"]
     update: getMessageChannels
-  - target: $["paths"]["/message-channels"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/message-channels"]["get"]
     update:
       x-speakeasy-name-override: get
@@ -828,10 +684,6 @@ actions:
   - target: $["paths"]["/message-channels/{message_channel_id}"]["get"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
-  - target: $["paths"]["/message-channels/{message_channel_id}"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/message-channels/{message_channel_id}"]["get"]
     update:
       x-speakeasy-name-override: get_id
@@ -840,10 +692,6 @@ actions:
       x-speakeasy-entity-operation: MessageChannel#get
   - target: $["paths"]["/on-call-schedules"]["get"]["operationId"]
     update: getOnCallSchedule
-  - target: $["paths"]["/on-call-schedules"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/on-call-schedules"]["get"]
     update:
       x-speakeasy-name-override: get
@@ -863,20 +711,12 @@ actions:
   - target: $["paths"]["/on-call-schedules/{on_call_schedule_id}"]["get"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
-  - target: $["paths"]["/on-call-schedules/{on_call_schedule_id}"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/on-call-schedules/{on_call_schedule_id}"]["get"]
     update:
       x-speakeasy-name-override: get_id
   - target: $["paths"]["/on-call-schedules/{on_call_schedule_id}"]["get"]
     update:
       x-speakeasy-entity-operation: OnCallSchedule#get
-  - target: $["paths"]["/uars"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/uars"]["get"]
     update:
       x-speakeasy-name-override: get
@@ -890,10 +730,6 @@ actions:
       x-speakeasy-name-override: create
   - target: $["paths"]["/uar/{uar_id}"]["get"]["operationId"]
     update: getUARID
-  - target: $["paths"]["/uar/{uar_id}"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
   - target: $["paths"]["/uar/{uar_id}"]["get"]
     update:
       x-speakeasy-name-override: get_id
