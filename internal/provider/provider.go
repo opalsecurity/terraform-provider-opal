@@ -45,8 +45,8 @@ func (p *OpalProvider) Schema(ctx context.Context, req provider.SchemaRequest, r
 				Required:            false,
 			},
 			"bearer_auth": schema.StringAttribute{
-				Optional:  true,
 				Sensitive: true,
+				Required:  true,
 			},
 		},
 	}
@@ -67,16 +67,13 @@ func (p *OpalProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 		ServerURL = "https://api.opal.dev/v1"
 	}
 
-	bearerAuth := new(string)
-	if !data.BearerAuth.IsUnknown() && !data.BearerAuth.IsNull() {
-		*bearerAuth = data.BearerAuth.ValueString()
+	var bearerAuth string
+	if len(os.Getenv("OPAL_AUTH_TOKEN")) > 0 {
+		bearerAuth = os.Getenv("OPAL_AUTH_TOKEN")
 	} else {
-		if len(os.Getenv("OPAL_AUTH_TOKEN")) > 0 {
-			*bearerAuth = os.Getenv("OPAL_AUTH_TOKEN")
-		} else {
-			bearerAuth = nil
-		}
+		bearerAuth = data.BearerAuth.ValueString()
 	}
+
 	security := shared.Security{
 		BearerAuth: bearerAuth,
 	}
