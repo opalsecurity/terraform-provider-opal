@@ -45,5 +45,3 @@ Read-Only:
 - `last_name` (String) The last name of the user.
 - `name` (String) The full name of the user.
 - `position` (String) The user's position.
-
-

@@ -32,5 +32,3 @@ data "opal_tag" "my_tag" {
 - `updated_at` (String) The date the tag was last updated.
 - `user_creator_id` (String) The ID of the user that created the tag.
 - `value` (String) The value of the tag.
-
-

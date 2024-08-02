@@ -29,5 +29,3 @@ data "opal_resource_visibility" "my_resourcevisibility" {
 
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 - `visibility_group_ids` (Set of String)
-
-

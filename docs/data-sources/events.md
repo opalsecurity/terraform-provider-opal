@@ -68,5 +68,3 @@ Read-Only:
 
 - `additional_properties` (String) Parsed as JSON.
 - `sub_event_type` (String) The subevent type.
-
-

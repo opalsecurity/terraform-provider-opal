@@ -11,3 +11,4 @@ dev/
 .idea
 .vscode/launch.json
 .speakeasy/temp
+demo/*

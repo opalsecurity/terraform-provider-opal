@@ -55,5 +55,3 @@ Read-Only:
 
 - `access_level_name` (String) The human-readable name of the access level.
 - `access_level_remote_id` (String) The machine-readable identifier of the access level.
-
-

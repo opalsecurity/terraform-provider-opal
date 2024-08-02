@@ -46,5 +46,3 @@ Read-Only:
 - `name` (String) The name of the owner.
 - `reviewer_message_channel_id` (String)
 - `source_group_id` (String)
-
-

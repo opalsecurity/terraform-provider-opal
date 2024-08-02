@@ -31,5 +31,3 @@ data "opal_message_channel" "my_messagechannel" {
 - `name` (String) The name of the message channel.
 - `remote_id` (String) The remote ID of the message channel
 - `third_party_provider` (String) The third party provider of the message channel. must be one of ["SLACK"]
-
-

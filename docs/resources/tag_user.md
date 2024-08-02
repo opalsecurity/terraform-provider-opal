@@ -26,5 +26,3 @@ resource "opal_tag_user" "my_taguser" {
 
 - `tag_id` (String) The ID of the tag to apply. Requires replacement if changed.
 - `user_id` (String) The ID of the user to apply the tag to. Requires replacement if changed.
-
-

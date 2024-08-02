@@ -291,6 +291,11 @@ func TestAccGroup_RequestConfigurations(t *testing.T) {
 			AutoApproval: false,
 			Priority:     2,
 		},
+		{
+			IsRequestable: true,
+			AutoApproval:  true,
+			Priority:      3,
+		},
 	}
 	invalidSequentialPriorityConfigString := GenerateGroupResource(&config)
 
@@ -326,8 +331,7 @@ func TestAccGroup_RequestConfigurations(t *testing.T) {
 				ExpectError: GenerateErrorMessageRegexp("Invalid Attribute Type"),
 			},
 			{
-				Config:             sequentialPriorityConfigString,
-				ExpectNonEmptyPlan: true,
+				Config: sequentialPriorityConfigString,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "request_configurations.#", "2"),
 				),
@@ -383,7 +387,7 @@ func testAccCheckGroupDestroy(s *terraform.State) error {
 		}
 
 		security := shared.Security{
-			BearerAuth: &opalToken,
+			BearerAuth: opalToken,
 		}
 		opts := []sdk.SDKOption{
 			sdk.WithServerURL(opalBaseURL),

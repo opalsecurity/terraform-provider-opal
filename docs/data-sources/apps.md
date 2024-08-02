@@ -43,5 +43,3 @@ Read-Only:
 - `id` (String) The ID of the app.
 - `name` (String) The name of the app.
 - `type` (String) The type of an app.
-
-

@@ -3,10 +3,10 @@ id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
   docChecksum: a107ffd47833df714c17fbb8f44eb9c0
   docVersion: "1.0"
-  speakeasyVersion: 1.345.3
-  generationVersion: 2.378.3
-  releaseVersion: 0.23.1
-  configChecksum: b6a0270266465815fae95e0a1038eca3
+  speakeasyVersion: 1.352.0
+  generationVersion: 2.384.4
+  releaseVersion: 0.23.7
+  configChecksum: f6814dfdacb389e0eddca61bb7c19067
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -15,7 +15,7 @@ features:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.2
     constsAndDefaults: 0.1.4
-    core: 3.24.2
+    core: 3.24.6
     deprecations: 2.81.1
     globalSecurity: 2.81.6
     globalServerURLs: 2.82.1
@@ -231,7 +231,6 @@ generatedFiles:
   - internal/sdk/.gitignore
   - internal/sdk/models/operations/options.go
   - internal/sdk/.gitattributes
-  - internal/sdk/internal/hooks/registration.go
   - internal/sdk/internal/hooks/hooks.go
   - examples/README.md
   - go.mod

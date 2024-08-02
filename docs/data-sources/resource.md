@@ -332,5 +332,3 @@ Read-Only:
 - `enabled_on_revocation` (Boolean)
 - `ticket_project_id` (String)
 - `ticket_provider` (String) The third party ticketing platform provider. must be one of ["JIRA", "LINEAR", "SERVICE_NOW"]
-
-

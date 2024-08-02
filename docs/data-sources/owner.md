@@ -32,5 +32,3 @@ data "opal_owner" "my_owner" {
 - `name` (String) The name of the owner.
 - `reviewer_message_channel_id` (String)
 - `source_group_id` (String)
-
-
