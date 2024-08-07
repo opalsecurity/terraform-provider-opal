@@ -1,15 +1,15 @@
 resource "opal_resource" "my_resource" {
     admin_owner_id = "7c86c85d-0651-43e2-a748-d69d658418e8"
             app_id = "f454d283-ca87-4a8a-bdbb-df212eca5353"
-            description = "Engineering team Okta role."
-            name = "mongo-db-prod"
+            description = "This resource represents AWS IAM role \"SupportUser\"."
+            name = "my-mongo-db"
             request_configurations = [
         {
             allow_requests = true
             auto_approval = false
             condition = {
                 group_ids = {
-                    "ed1f8f1d-8935-4bb4-bec8-046cdd06b0b3",
+                    "caf8a4c7-ec57-4b81-a172-8cd3687b3ad9",
                 }
                 role_remote_ids = {
                     "...",
@@ -25,7 +25,7 @@ resource "opal_resource" "my_resource" {
                 {
                     operator = "AND"
                     owner_ids = {
-                        "7b816172-8cd3-4687-b3ad-9a192be13afb",
+                        "66c2bdfc-b3e7-4464-ae94-bc89fbd03a92",
                     }
                     require_admin_approval = false
                     require_manager_approval = false
@@ -38,6 +38,6 @@ resource "opal_resource" "my_resource" {
             resource_type = "AWS_IAM_ROLE"
             visibility = "GLOBAL"
             visibility_group_ids = {
-        "85fd0c38-7f2b-431c-9922-ce15f950966c",
+        "dda2041a-0d76-41a9-b988-b1ee194539e3",
     }
         }

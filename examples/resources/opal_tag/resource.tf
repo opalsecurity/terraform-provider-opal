@@ -1,4 +1,4 @@
 resource "opal_tag" "my_tag" {
-  key   = "api-scope"
-  value = "production"
+  key   = "database-name"
+  value = "redis_db"
 }

@@ -143,6 +143,7 @@ actions:
       allOf:
         - $ref: "#/components/schemas/OnCallScheduleList"
         - x-speakeasy-wrapped-attribute: "oncall_schedules"
+        - x-speakeasy-param-suppress-computed-diff: true
   - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]["$ref"]
     remove: true
   - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["get"]
