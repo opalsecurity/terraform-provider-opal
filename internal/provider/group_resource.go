@@ -211,6 +211,9 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 			},
 			"oncall_schedules": schema.SingleNestedAttribute{
 				Computed: true,
+				PlanModifiers: []planmodifier.Object{
+					speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+				},
 				Attributes: map[string]schema.Attribute{
 					"id": schema.StringAttribute{
 						Computed: true,
@@ -220,7 +223,10 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						Description: `The ID of the on-call schedule.`,
 					},
 					"name": schema.StringAttribute{
-						Computed:    true,
+						Computed: true,
+						PlanModifiers: []planmodifier.String{
+							speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+						},
 						Description: `The name of the on call schedule.`,
 					},
 					"remote_id": schema.StringAttribute{
@@ -231,7 +237,10 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						Description: `The remote ID of the on call schedule`,
 					},
 					"third_party_provider": schema.StringAttribute{
-						Computed:    true,
+						Computed: true,
+						PlanModifiers: []planmodifier.String{
+							speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+						},
 						Description: `The third party provider of the on call schedule. must be one of ["OPSGENIE", "PAGER_DUTY"]`,
 						Validators: []validator.String{
 							stringvalidator.OneOf(

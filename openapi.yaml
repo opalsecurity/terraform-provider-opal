@@ -549,6 +549,7 @@ paths:
                 allOf:
                   - $ref: "#/components/schemas/OnCallScheduleList"
                   - x-speakeasy-wrapped-attribute: "oncall_schedules"
+                  - x-speakeasy-param-suppress-computed-diff: true
           description: The on call schedules attached to the group.
         "404":
           description: Not Found

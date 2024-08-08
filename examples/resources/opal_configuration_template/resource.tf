@@ -7,7 +7,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
             auto_approval = false
             condition = {
                 group_ids = {
-                    "bc928154-552e-430c-848b-8c2b5ed5f0cf",
+                    "8154552e-30c0-448b-8c2b-5ed5f0cf07c6",
                 }
                 role_remote_ids = {
                     "...",
@@ -23,7 +23,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
                 {
                     operator = "AND"
                     owner_ids = {
-                        "49098c56-2b97-4419-b360-edc1d66b24bf",
+                        "7419b360-edc1-4d66-b24b-f8cfb72161b2",
                     }
                     require_admin_approval = false
                     require_manager_approval = false
@@ -36,7 +36,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
             visibility = {
         visibility = "GLOBAL"
         visibility_group_ids = {
-            "72161b24-a4a5-4fe0-9a5b-24ee84a3fbf4",
+            "a5b24ee8-4a3f-4bf4-9cbc-cae3a741f65f",
         }
     }
         }

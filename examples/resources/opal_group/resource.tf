@@ -1,14 +1,14 @@
 resource "opal_group" "my_group" {
     admin_owner_id = "7c86c85d-0651-43e2-a748-d69d658418e8"
             app_id = "f454d283-ca87-4a8a-bdbb-df212eca5353"
-            description = "Engineering team Okta group."
+            description = "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases."
             group_type = "OPAL_GROUP"
             message_channel_ids = {
-        "931861ef-161b-454f-b189-8e51c0009dd6",
+        "e51c0009-dd65-4b4e-90c4-2893326c8d3b",
     }
-            name = "mongo-db-prod"
+            name = "api-group"
             on_call_schedule_ids = {
-        "c4289332-6c8d-43b6-943a-d1053f385d17",
+        "1053f385-d17c-4e27-958f-256147d92ea2",
     }
             request_configurations = [
         {
@@ -16,7 +16,7 @@ resource "opal_group" "my_group" {
             auto_approval = false
             condition = {
                 group_ids = {
-                    "27d58f25-6147-4d92-aa24-6933c124e146",
+                    "3c124e14-6eb0-45cd-86c1-6b8673554554",
                 }
                 role_remote_ids = {
                     "...",
@@ -32,7 +32,7 @@ resource "opal_group" "my_group" {
                 {
                     operator = "AND"
                     owner_ids = {
-                        "ec25e287-06e5-40ad-a559-d94490f51937",
+                        "37d5bf18-869a-4e72-ac0c-c018ec506c2a",
                     }
                     require_admin_approval = false
                     require_manager_approval = false
