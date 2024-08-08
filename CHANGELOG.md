@@ -1,5 +1,8 @@
 # Changelog
 
+## v3.0.4
+- Suppress "known after apply" output for optional fields on groups (visibility_group_ids, description, admin_owner_id, group_leader_user_ids, and oncall_schedules)
+
 ## v3.0.3
 - Fix various bugs in request configuration validation leading to spurious changes and errors
 
