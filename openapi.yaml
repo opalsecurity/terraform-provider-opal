@@ -743,7 +743,6 @@ paths:
               schema:
                 allOf:
                   - $ref: "#/components/schemas/VisibilityInfo"
-                    # - x-speakeasy-wrapped-attribute: "visibility_info"
           description: The visibility info of this group.
         "404":
           description: Not Found
@@ -4399,6 +4398,7 @@ components:
             format: uuid
           type: array
           format: set
+          x-speakeasy-param-suppress-computed-diff: true
       type: object
       required:
         - visibility

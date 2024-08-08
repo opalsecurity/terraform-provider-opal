@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: c526a5c16371a9fbee904b84c7f529df
+  docChecksum: 566c7094b91b4157f60932e21989a753
   docVersion: "1.0"
   speakeasyVersion: 1.357.4
   generationVersion: 2.390.6
-  releaseVersion: 0.24.2
-  configChecksum: 640ca66da959ad667e6f475206a8907d
+  releaseVersion: 0.24.3
+  configChecksum: 3506768c881a76f07146b4202083b72f
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
