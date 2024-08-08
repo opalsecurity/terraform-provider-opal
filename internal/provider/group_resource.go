@@ -19,6 +19,7 @@ import (
 	speakeasy_boolplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/boolplanmodifier"
 	speakeasy_listplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/listplanmodifier"
 	speakeasy_objectplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/objectplanmodifier"
+	speakeasy_setplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/setplanmodifier"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
@@ -78,7 +79,10 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 		Version:             1,
 		Attributes: map[string]schema.Attribute{
 			"admin_owner_id": schema.StringAttribute{
-				Computed:    true,
+				Computed: true,
+				PlanModifiers: []planmodifier.String{
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
 				Optional:    true,
 				Description: `The ID of the owner of the group.`,
 			},
@@ -91,7 +95,10 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Description: `The ID of the app for the group. Requires replacement if changed. `,
 			},
 			"description": schema.StringAttribute{
-				Computed:    true,
+				Computed: true,
+				PlanModifiers: []planmodifier.String{
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
 				Optional:    true,
 				Description: `A description of the remote group.`,
 			},
@@ -103,7 +110,10 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Description: `The ID of the associated group binding.`,
 			},
 			"group_leader_user_ids": schema.SetAttribute{
-				Computed:    true,
+				Computed: true,
+				PlanModifiers: []planmodifier.Set{
+					speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
+				},
 				Optional:    true,
 				ElementType: types.StringType,
 				Description: `A list of User IDs for the group leaders of the group`,

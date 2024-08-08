@@ -1564,6 +1564,15 @@ actions:
   - target: $["components"]["schemas"]["PaginatedConfigurationTemplateList"]
     update:
       x-speakeasy-entity: ConfigurationTemplateList
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["admin_owner_id"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["description"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["group_leader_user_ids"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
   - target: $
     update:
       x-speakeasy-retries:

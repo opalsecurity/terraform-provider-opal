@@ -4093,11 +4093,13 @@ components:
           description: A description of the group.
           example: This group represents Active Directory group "Payments Production Admin". We use this AD group to facilitate staging deployments and qualifying new releases.
           type: string
+          x-speakeasy-param-suppress-computed-diff: true
         admin_owner_id:
           description: The ID of the owner of the group.
           example: 7c86c85d-0651-43e2-a748-d69d658418e8
           format: uuid
           type: string
+          x-speakeasy-param-suppress-computed-diff: true
         max_duration:
           description: The maximum duration for which the group can be requested (in minutes). Use -1 to set to indefinite. Deprecated in favor of `request_configurations`.
           type: integer
@@ -4171,6 +4173,7 @@ components:
             format: uuid
           type: array
           format: set
+          x-speakeasy-param-suppress-computed-diff: true
         request_configurations:
           type: array
           items:
