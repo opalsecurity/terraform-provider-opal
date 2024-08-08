@@ -633,7 +633,10 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 			},
 			"visibility_group_ids": schema.SetAttribute{
-				Computed:    true,
+				Computed: true,
+				PlanModifiers: []planmodifier.Set{
+					speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
+				},
 				Optional:    true,
 				ElementType: types.StringType,
 			},

@@ -8,10 +8,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	speakeasy_setplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/setplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
@@ -238,7 +240,10 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 						},
 					},
 					"visibility_group_ids": schema.SetAttribute{
-						Computed:    true,
+						Computed: true,
+						PlanModifiers: []planmodifier.Set{
+							speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
+						},
 						Optional:    true,
 						ElementType: types.StringType,
 					},

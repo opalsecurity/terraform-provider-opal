@@ -200,7 +200,6 @@ actions:
     update:
       allOf:
         - $ref: "#/components/schemas/VisibilityInfo"
-          # - x-speakeasy-wrapped-attribute: "visibility_info"
   - target: $["paths"]["/groups/{group_id}/visibility"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]["$ref"]
     remove: true
   - target: $["paths"]["/groups/{group_id}/visibility"]["get"]
@@ -1001,6 +1000,7 @@ actions:
   - target: $["components"]["schemas"]["VisibilityInfo"]["properties"]["visibility_group_ids"]
     update:
       format: set
+      x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["VisibilityInfo"]
     update:
       x-speakeasy-entity:
