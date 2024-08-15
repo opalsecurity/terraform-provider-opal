@@ -103,7 +103,6 @@ Required:
 - `priority` (Number) The priority of the request configuration.
 - `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this resource.
 - `require_support_ticket` (Boolean) A bool representing whether or not access requests to the resource require an access ticket.
-- `reviewer_stages` (Attributes List) The list of reviewer stages for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages))
 
 Optional:
 
@@ -111,6 +110,16 @@ Optional:
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
 - `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
 - `request_template_id` (String) The ID of the associated request template.
+- `reviewer_stages` (Attributes List) The list of reviewer stages for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages))
+
+<a id="nestedatt--request_configurations--condition"></a>
+### Nested Schema for `request_configurations.condition`
+
+Optional:
+
+- `group_ids` (Set of String) The list of group IDs to match.
+- `role_remote_ids` (Set of String) The list of role remote IDs to match.
+
 
 <a id="nestedatt--request_configurations--reviewer_stages"></a>
 ### Nested Schema for `request_configurations.reviewer_stages`
@@ -124,15 +133,6 @@ Optional:
 
 - `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]; Default: "AND"
 - `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval.
-
-
-<a id="nestedatt--request_configurations--condition"></a>
-### Nested Schema for `request_configurations.condition`
-
-Optional:
-
-- `group_ids` (Set of String) The list of group IDs to match.
-- `role_remote_ids` (Set of String) The list of role remote IDs to match.
 
 
 

@@ -28,8 +28,7 @@ import (
 	stateupgraders "github.com/opalsecurity/terraform-provider-opal/internal/stateupgraders"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/boolvalidators"
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/internal/validators/int64validators"
-	custom_listvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/listvalidators"
-	speakeasy_listvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/listvalidators"
+	custom_setvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/setvalidators"
 	speakeasy_setvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/setvalidators"
 	speakeasy_stringvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/stringvalidators"
 )
@@ -487,7 +486,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 				Description: `The name of the remote.`,
 			},
-			"request_configurations": schema.ListNestedAttribute{
+			"request_configurations": schema.SetNestedAttribute{
 				Required: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -605,16 +604,13 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 									},
 								},
 							},
-							Description: `The list of reviewer stages for the request configuration. Not Null`,
-							Validators: []validator.List{
-								speakeasy_listvalidators.NotNull(),
-							},
+							Description: `The list of reviewer stages for the request configuration.`,
 						},
 					},
 				},
 				Description: `The request configuration list of the configuration template. If not provided, the default request configuration will be used.`,
-				Validators: []validator.List{
-					custom_listvalidators.RequestConfigurations(),
+				Validators: []validator.Set{
+					custom_setvalidators.RequestConfigurations(),
 				},
 			},
 			"require_mfa_to_approve": schema.BoolAttribute{

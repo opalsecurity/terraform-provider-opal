@@ -331,7 +331,8 @@ func TestAccGroup_RequestConfigurations(t *testing.T) {
 				ExpectError: GenerateErrorMessageRegexp("Invalid Attribute Type"),
 			},
 			{
-				Config: sequentialPriorityConfigString,
+				Config:             sequentialPriorityConfigString,
+				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "request_configurations.#", "2"),
 				),
