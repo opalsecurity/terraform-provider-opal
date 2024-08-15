@@ -25,7 +25,7 @@ resource "opal_group" "my_group" {
             on_call_schedule_ids = {
         "1053f385-d17c-4e27-958f-256147d92ea2",
     }
-            request_configurations = [
+            request_configurations = {
         {
             allow_requests = true
             auto_approval = false
@@ -54,7 +54,7 @@ resource "opal_group" "my_group" {
                 },
             ]
         },
-    ]
+    }
             require_mfa_to_approve = false
             visibility = "GLOBAL"
         }
@@ -70,7 +70,7 @@ resource "opal_group" "my_group" {
 - `message_channel_ids` (Set of String)
 - `name` (String) The name of the remote group.
 - `on_call_schedule_ids` (Set of String)
-- `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
+- `request_configurations` (Attributes Set) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 
 ### Optional
@@ -104,7 +104,7 @@ Optional:
 - `request_template_id` (String) The ID of the associated request template.
 - `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this resource. Not Null
 - `require_support_ticket` (Boolean) A bool representing whether or not access requests to the resource require an access ticket. Not Null
-- `reviewer_stages` (Attributes List) The list of reviewer stages for the request configuration. Not Null (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages))
+- `reviewer_stages` (Attributes List) The list of reviewer stages for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages))
 
 <a id="nestedatt--request_configurations--condition"></a>
 ### Nested Schema for `request_configurations.condition`

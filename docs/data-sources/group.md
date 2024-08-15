@@ -38,7 +38,7 @@ data "opal_group" "my_group" {
 - `oncall_schedules` (Attributes) The on call schedules attached to the group. (see [below for nested schema](#nestedatt--oncall_schedules))
 - `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. (see [below for nested schema](#nestedatt--remote_info))
 - `remote_name` (String) The name of the remote.
-- `request_configurations` (Attributes List) A list of request configurations for this group. (see [below for nested schema](#nestedatt--request_configurations))
+- `request_configurations` (Attributes Set) A list of request configurations for this group. (see [below for nested schema](#nestedatt--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this group.
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 - `visibility_group_ids` (Set of String)

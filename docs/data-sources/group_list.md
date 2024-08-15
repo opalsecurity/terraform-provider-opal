@@ -52,7 +52,7 @@ Read-Only:
 - `name` (String) The name of the group.
 - `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. (see [below for nested schema](#nestedatt--results--remote_info))
 - `remote_name` (String) The name of the remote.
-- `request_configurations` (Attributes List) A list of request configurations for this group. (see [below for nested schema](#nestedatt--results--request_configurations))
+- `request_configurations` (Attributes Set) A list of request configurations for this group. (see [below for nested schema](#nestedatt--results--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this group.
 
 <a id="nestedatt--results--remote_info"></a>

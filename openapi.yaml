@@ -3920,6 +3920,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/RequestConfiguration"
+          format: set
         request_configuration_list:
           description: A list of request configurations for this group. Deprecated in favor of `request_configurations`.
           deprecated: true
@@ -4179,6 +4180,7 @@ components:
             $ref: "#/components/schemas/RequestConfiguration"
           description: The request configuration list of the configuration template. If not provided, the default request configuration will be used.
           x-speakeasy-plan-validators: RequestConfigurations
+          format: set
         request_configuration_list:
           description: The request configuration list of the configuration template. If not provided, the default request configuration will be used. Deprecated in favor of `request_configurations`.
           $ref: "#/components/schemas/CreateRequestConfigurationInfoList"
@@ -5935,6 +5937,7 @@ components:
           items:
             $ref: "#/components/schemas/RequestConfiguration"
           description: A list of configurations for requests to this resource.
+          format: set
         request_configuration_list:
           description: A list of configurations for requests to this resource. Deprecated in favor of `request_configurations`.
           deprecated: true
@@ -6114,6 +6117,7 @@ components:
             $ref: "#/components/schemas/RequestConfiguration"
           description: A list of configurations for requests to this resource. If not provided, the default request configuration will be used.
           x-speakeasy-plan-validators: RequestConfigurations
+          format: set
         request_configuration_list:
           description: A list of configurations for requests to this resource. If not provided, the default request configuration will be used. Deprecated in favor of `request_configurations`.
           $ref: "#/components/schemas/CreateRequestConfigurationInfoList"
@@ -6798,7 +6802,6 @@ components:
         - auto_approval
         - require_mfa_to_request
         - require_support_ticket
-        - reviewer_stages
         - priority
       x-speakeasy-entity: Requests
     CreateRequestConfigurationInfoList:

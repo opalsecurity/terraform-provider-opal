@@ -895,6 +895,9 @@ actions:
   - target: $["components"]["schemas"]["Group"]["properties"]["is_requestable"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["request_configurations"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["Group"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
@@ -970,6 +973,9 @@ actions:
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_configurations"]
     update:
       x-speakeasy-plan-validators: RequestConfigurations
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_configurations"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
@@ -1364,6 +1370,9 @@ actions:
   - target: $["components"]["schemas"]["Resource"]["properties"]["configuration_template_id"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["request_configurations"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["Resource"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
@@ -1436,6 +1445,9 @@ actions:
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_configurations"]
     update:
       x-speakeasy-plan-validators: RequestConfigurations
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_configurations"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
@@ -1509,6 +1521,16 @@ actions:
   - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["recommended_duration_minutes"]
     update:
       x-speakeasy-name-override: recommended_duration
+  - target: $["components"]["schemas"]["RequestConfiguration"]["required"][*]
+    remove: true
+  - target: $["components"]["schemas"]["RequestConfiguration"]["required"]
+    update:
+      - organization_id
+      - allow_requests
+      - auto_approval
+      - require_mfa_to_request
+      - require_support_ticket
+      - priority
   - target: $["components"]["schemas"]["RequestConfiguration"]
     update:
       x-speakeasy-entity: Requests
