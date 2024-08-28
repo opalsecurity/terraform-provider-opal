@@ -64,11 +64,11 @@ func (r *ResourcesAccessStatusDataSource) Schema(ctx context.Context, req dataso
 				},
 				MarkdownDescription: `# Access Level Object` + "\n" +
 					`### Description` + "\n" +
-					`The ` + "`" + `ResourceAccessLevel` + "`" + ` object is used to represent the level of access that a user has to a resource or a resource has to a group. The "default" access` + "\n" +
-					`level is a ` + "`" + `ResourceAccessLevel` + "`" + ` object whose fields are all empty strings.` + "\n" +
+					`The ` + "`" + `AccessLevel` + "`" + ` object is used to represent the level of access that a principal has. The "default" access` + "\n" +
+					`level is a ` + "`" + `AccessLevel` + "`" + ` object whose fields are all empty strings.` + "\n" +
 					`` + "\n" +
 					`### Usage Example` + "\n" +
-					`View the ` + "`" + `ResourceAccessLevel` + "`" + ` of a resource/user or resource/group pair to see the level of access granted to the resource.`,
+					`View the ` + "`" + `AccessLevel` + "`" + ` of a resource/user or resource/group pair to see the level of access granted to the resource.`,
 			},
 			"access_level_remote_id": schema.StringAttribute{
 				Optional:    true,

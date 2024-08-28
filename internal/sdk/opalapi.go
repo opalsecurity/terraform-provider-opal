@@ -85,7 +85,8 @@ type OpalAPI struct {
 	// Operations related to groups
 	Groups *Groups
 	// Operations related to message channels
-	MessageChannels *MessageChannels
+	MessageChannels    *MessageChannels
+	NonHumanIdentities *NonHumanIdentities
 	// Operations related to on-call schedules
 	OnCallSchedules *OnCallSchedules
 	// Operations related to owners
@@ -181,8 +182,8 @@ func New(opts ...SDKOption) *OpalAPI {
 			Language:          "go",
 			OpenAPIDocVersion: "1.0",
 			SDKVersion:        "0.0.1",
-			GenVersion:        "2.399.0",
-			UserAgent:         "speakeasy-sdk/go 0.0.1 2.399.0 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
+			GenVersion:        "2.404.9",
+			UserAgent:         "speakeasy-sdk/go 0.0.1 2.404.9 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
 			Hooks:             hooks.New(),
 		},
 	}
@@ -213,6 +214,8 @@ func New(opts ...SDKOption) *OpalAPI {
 	sdk.Groups = newGroups(sdk.sdkConfiguration)
 
 	sdk.MessageChannels = newMessageChannels(sdk.sdkConfiguration)
+
+	sdk.NonHumanIdentities = newNonHumanIdentities(sdk.sdkConfiguration)
 
 	sdk.OnCallSchedules = newOnCallSchedules(sdk.sdkConfiguration)
 

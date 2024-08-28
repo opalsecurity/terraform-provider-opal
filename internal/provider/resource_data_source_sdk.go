@@ -117,6 +117,14 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(resp *shared.Resourc
 				r.RemoteInfo.GcpProject = &tfTypes.GcpProject{}
 				r.RemoteInfo.GcpProject.ProjectID = types.StringValue(resp.RemoteInfo.GcpProject.ProjectID)
 			}
+			if resp.RemoteInfo.GcpServiceAccount == nil {
+				r.RemoteInfo.GcpServiceAccount = nil
+			} else {
+				r.RemoteInfo.GcpServiceAccount = &tfTypes.GcpServiceAccount{}
+				r.RemoteInfo.GcpServiceAccount.Email = types.StringValue(resp.RemoteInfo.GcpServiceAccount.Email)
+				r.RemoteInfo.GcpServiceAccount.ProjectID = types.StringValue(resp.RemoteInfo.GcpServiceAccount.ProjectID)
+				r.RemoteInfo.GcpServiceAccount.ServiceAccountID = types.StringValue(resp.RemoteInfo.GcpServiceAccount.ServiceAccountID)
+			}
 			if resp.RemoteInfo.GcpSQLInstance == nil {
 				r.RemoteInfo.GcpSQLInstance = nil
 			} else {
