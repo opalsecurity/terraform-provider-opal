@@ -580,6 +580,53 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						},
 						Description: `Remote info for GCP project. Requires replacement if changed. `,
 					},
+					"gcp_service_account": schema.SingleNestedAttribute{
+						Computed: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Optional: true,
+						Attributes: map[string]schema.Attribute{
+							"email": schema.StringAttribute{
+								Computed: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Optional:    true,
+								Description: `The email of the service account. Requires replacement if changed. ; Not Null`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+							"project_id": schema.StringAttribute{
+								Computed: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Optional:    true,
+								Description: `The id of the project the service account is in. Requires replacement if changed. ; Not Null`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+							"service_account_id": schema.StringAttribute{
+								Computed: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Optional:    true,
+								Description: `The id of the service account. Requires replacement if changed. ; Not Null`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for a GCP service account. Requires replacement if changed. `,
+					},
 					"gcp_sql_instance": schema.SingleNestedAttribute{
 						Computed: true,
 						PlanModifiers: []planmodifier.Object{
@@ -1003,7 +1050,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 				Required:    true,
-				Description: `The type of the resource. Requires replacement if changed. ; must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "CUSTOM", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GIT_HUB_REPO", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "TELEPORT_ROLE"]`,
+				Description: `The type of the resource. Requires replacement if changed. ; must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "CUSTOM", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "TELEPORT_ROLE"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"AWS_IAM_ROLE",
@@ -1014,6 +1061,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						"AWS_ACCOUNT",
 						"AWS_SSO_PERMISSION_SET",
 						"CUSTOM",
+						"GCP_ORGANIZATION",
 						"GCP_BUCKET",
 						"GCP_COMPUTE_INSTANCE",
 						"GCP_FOLDER",
@@ -1021,6 +1069,9 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						"GCP_PROJECT",
 						"GCP_CLOUD_SQL_POSTGRES_INSTANCE",
 						"GCP_CLOUD_SQL_MYSQL_INSTANCE",
+						"GCP_BIG_QUERY_DATASET",
+						"GCP_BIG_QUERY_TABLE",
+						"GCP_SERVICE_ACCOUNT",
 						"GIT_HUB_REPO",
 						"GIT_LAB_PROJECT",
 						"GOOGLE_WORKSPACE_ROLE",

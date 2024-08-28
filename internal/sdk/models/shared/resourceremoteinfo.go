@@ -301,6 +301,37 @@ func (o *GcpProject) GetProjectID() string {
 	return o.ProjectID
 }
 
+// GcpServiceAccount - Remote info for a GCP service account.
+type GcpServiceAccount struct {
+	// The email of the service account.
+	Email string `json:"email"`
+	// The id of the project the service account is in.
+	ProjectID string `json:"project_id"`
+	// The id of the service account.
+	ServiceAccountID string `json:"service_account_id"`
+}
+
+func (o *GcpServiceAccount) GetEmail() string {
+	if o == nil {
+		return ""
+	}
+	return o.Email
+}
+
+func (o *GcpServiceAccount) GetProjectID() string {
+	if o == nil {
+		return ""
+	}
+	return o.ProjectID
+}
+
+func (o *GcpServiceAccount) GetServiceAccountID() string {
+	if o == nil {
+		return ""
+	}
+	return o.ServiceAccountID
+}
+
 // GcpSQLInstance - Remote info for GCP SQL instance.
 type GcpSQLInstance struct {
 	// The id of the SQL instance.
@@ -492,6 +523,8 @@ type ResourceRemoteInfo struct {
 	GcpOrganization *GcpOrganization `json:"gcp_organization,omitempty"`
 	// Remote info for GCP project.
 	GcpProject *GcpProject `json:"gcp_project,omitempty"`
+	// Remote info for a GCP service account.
+	GcpServiceAccount *GcpServiceAccount `json:"gcp_service_account,omitempty"`
 	// Remote info for GCP SQL instance.
 	GcpSQLInstance *GcpSQLInstance `json:"gcp_sql_instance,omitempty"`
 	// Remote info for GitHub repository.
@@ -612,6 +645,13 @@ func (o *ResourceRemoteInfo) GetGcpProject() *GcpProject {
 		return nil
 	}
 	return o.GcpProject
+}
+
+func (o *ResourceRemoteInfo) GetGcpServiceAccount() *GcpServiceAccount {
+	if o == nil {
+		return nil
+	}
+	return o.GcpServiceAccount
 }
 
 func (o *ResourceRemoteInfo) GetGcpSQLInstance() *GcpSQLInstance {

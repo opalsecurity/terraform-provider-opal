@@ -1959,6 +1959,80 @@ paths:
       tags:
         - resources
       x-speakeasy-ignore: true
+  /non-human-identities:
+    get:
+      description: Returns a list of non-human identities for your organization.
+      operationId: get_nhis
+      parameters:
+        - description: The pagination cursor value.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          explode: true
+          in: query
+          name: cursor
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: Number of results to return per page. Default is 200.
+          example: 200
+          explode: true
+          in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedResourcesList"
+          description: One page worth non-human identities in your organization.
+        "404":
+          description: Not Found
+      security:
+        - BearerAuth: []
+      tags:
+        - non-human-identities
+  /resources/{resource_id}/non-human-identities:
+    get:
+      description: Gets the list of non-human identities with access to this resource.
+      operationId: get_resource_nhis
+      parameters:
+        - description: The ID of the resource.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: resource_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: Limit the number of results returned.
+          example: 200
+          explode: true
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessList"
+          description: List of non-human identities with access to this resource.
+        "404":
+          description: Not Found
+      security:
+        - BearerAuth: []
+      tags:
+        - resources
   /resources/{resource_id}/users:
     get:
       description: Gets the list of users for this resource.
@@ -1998,6 +2072,103 @@ paths:
         - resources
       x-speakeasy-name-override: get_users
       x-speakeasy-entity-operation: ResourcesUsers_list#get
+  /resources/{resource_id}/non-human-identities/{non_human_identity_id}:
+    post:
+      description: Gives a non-human identity access to this resource.
+      operationId: add_resource_nhi
+      parameters:
+        - description: The ID of the resource.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: resource_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The resource ID of the non-human identity to add.
+          example: f92aa855-cea9-4814-b9d8-f2a60d3e4a06
+          explode: false
+          in: path
+          name: non_human_identity_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              example:
+                duration_minutes: 60
+                access_level_remote_id: roles/cloudsql.instanceUser
+              properties:
+                duration_minutes:
+                  description: The duration for which the resource can be accessed (in minutes). Use 0 to set to indefinite.
+                  example: 60
+                  type: integer
+                  maximum: 525960 # One year
+                access_level_remote_id:
+                  description: The remote ID of the access level to grant. If omitted, the default access level remote ID value (empty string) is used.
+                  example: roles/cloudsql.instanceUser
+                  type: string
+              required:
+                - duration_minutes
+              type: object
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceNHI"
+          description: Details about the access that the non-human identity was granted to the resource.
+      security:
+        - BearerAuth: []
+      tags:
+        - resources
+    delete:
+      description: Removes a non-human identity's direct access from this resource.
+      operationId: delete_resource_nhi
+      parameters:
+        - description: The ID of the resource.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: resource_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The resource ID of the non-human identity to remove from this resource.
+          example: f92aa855-cea9-4814-b9d8-f2a60d3e4a06
+          explode: false
+          in: path
+          name: non_human_identity_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The remote ID of the access level for which this non-human identity has direct access. If omitted, the default access level remote ID value (empty string) is assumed.
+          example: roles/cloudsql.instanceUser
+          explode: true
+          in: query
+          name: access_level_remote_id
+          required: false
+          schema:
+            type: string
+          style: form
+      responses:
+        "200":
+          description: This non-human identity's access was successfully removed from this resource.
+      security:
+        - BearerAuth: []
+      tags:
+        - resources
   /resource-user-access-status/{resource_id}/{user_id}:
     get:
       description: Get user's access status to a resource.
@@ -3347,11 +3518,11 @@ components:
       description: |-
         # Access Level Object
         ### Description
-        The `ResourceAccessLevel` object is used to represent the level of access that a user has to a resource or a resource has to a group. The "default" access
-        level is a `ResourceAccessLevel` object whose fields are all empty strings.
+        The `AccessLevel` object is used to represent the level of access that a principal has. The "default" access
+        level is a `AccessLevel` object whose fields are all empty strings.
 
         ### Usage Example
-        View the `ResourceAccessLevel` of a resource/user or resource/group pair to see the level of access granted to the resource.
+        View the `AccessLevel` of a resource/user or resource/group pair to see the level of access granted to the resource.
       example:
         access_level_name: AdminRole
         access_level_remote_id: arn:aws:iam::590304332660:role/AdministratorAccess
@@ -3524,6 +3695,119 @@ components:
         - access_level
         - has_direct_access
         - num_access_paths
+      type: object
+    AccessList:
+      example:
+        results:
+          - principal_id: 74908af0-9383-4feb-b7ea-8b305d737338
+            principal_type: RESOURCE
+            entity_id: db04925a-635d-4764-870e-500b9b035c8e
+            entity_type: RESOURCE
+            expiration_date: 2022-01-23T04:56:07Z
+            has_direct_access: true
+            num_access_paths: 3
+          - principal_id: d940df34-726a-4403-864e-16cb2a0d6793
+            principal_type: RESOURCE
+            entity_id: c26cd16c-a3fa-4b82-96b1-32177f8b8f59
+            entity_type: RESOURCE
+            expiration_date: 2022-01-23T04:56:07Z
+            has_direct_access: true
+            num_access_paths: 3
+      properties:
+        results:
+          items:
+            $ref: "#/components/schemas/Access"
+          type: array
+      type: object
+    Access:
+      description: |-
+        # Access Object
+        ### Description
+        The `Access` object is used to represent a principal's access to an entity, either directly or inherited.
+
+        ### Usage Example
+        Fetch from the `LIST ResourceNonHumanIdentities` endpoint.
+      example:
+        principal_id: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+        principal_type: RESOURCE
+        entity_id: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+        entity_type: RESOURCE
+        expiration_date: 2022-01-23T04:56:07Z
+        has_direct_access: true
+        num_access_paths: 3
+      properties:
+        principal_id:
+          description: The ID of the principal with access.
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          format: uuid
+          type: string
+        principal_type:
+          $ref: "#/components/schemas/EntityTypeEnum"
+        entity_id:
+          description: The ID of the entity being accessed.
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          format: uuid
+          type: string
+        entity_type:
+          $ref: "#/components/schemas/EntityTypeEnum"
+        access_level:
+          $ref: "#/components/schemas/ResourceAccessLevel"
+        expiration_date:
+          description: The day and time the principal's access will expire.
+          example: 2022-01-23T04:56:07Z
+          format: date-time
+          nullable: true
+          type: string
+        has_direct_access:
+          description: The principal has direct access to this entity (vs. inherited access).
+          example: true
+          type: boolean
+        num_access_paths:
+          description: The number of ways in which the principal has access to this entity (directly and inherited).
+          example: 3
+          format: int32
+          type: integer
+      required:
+        - principal_id
+        - principal_type
+        - entity_id
+        - entity_type
+        - expiration_date
+        - has_direct_access
+        - num_access_paths
+      type: object
+    ResourceNHI:
+      description: |-
+        # Resource Non-Human Identity Direct Access Object
+        ### Description
+        This object is used to represent a non-human identity with direct access to a resource.
+      example:
+        non_human_identity_id: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+        resource_id: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+        expiration_date: 2022-01-23T04:56:07Z
+      properties:
+        resource_id:
+          description: The ID of the resource.
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          format: uuid
+          type: string
+        non_human_identity_id:
+          description: The resource ID of the non-human identity.
+          example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+          format: uuid
+          type: string
+        access_level:
+          $ref: "#/components/schemas/ResourceAccessLevel"
+        expiration_date:
+          description: The day and time the non-human identity's access will expire.
+          example: 2022-01-23T04:56:07Z
+          format: date-time
+          nullable: true
+          type: string
+      required:
+        - resource_id
+        - non_human_identity_id
+        - expiration_date
       type: object
     SessionsList:
       example:
@@ -4253,6 +4537,7 @@ components:
         - AWS_ACCOUNT
         - AWS_SSO_PERMISSION_SET
         - CUSTOM
+        - GCP_ORGANIZATION
         - GCP_BUCKET
         - GCP_COMPUTE_INSTANCE
         - GCP_FOLDER
@@ -4260,6 +4545,9 @@ components:
         - GCP_PROJECT
         - GCP_CLOUD_SQL_POSTGRES_INSTANCE
         - GCP_CLOUD_SQL_MYSQL_INSTANCE
+        - GCP_BIG_QUERY_DATASET
+        - GCP_BIG_QUERY_TABLE
+        - GCP_SERVICE_ACCOUNT
         - GIT_HUB_REPO
         - GIT_LAB_PROJECT
         - GOOGLE_WORKSPACE_ROLE
@@ -5010,6 +5298,26 @@ components:
           type: object
           required:
             - instance_id
+            - project_id
+        gcp_service_account:
+          description: Remote info for a GCP service account.
+          properties:
+            email:
+              description: The email of the service account.
+              example: production@project.iam.gserviceaccount.com
+              type: string
+            service_account_id:
+              description: The id of the service account.
+              example: 103561576023829463298
+              type: string
+            project_id:
+              description: The id of the project the service account is in.
+              example: example-project-898931321
+              type: string
+          type: object
+          required:
+            - email
+            - service_account_id
             - project_id
         github_repo:
           description: Remote info for GitHub repository.

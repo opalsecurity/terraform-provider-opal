@@ -125,6 +125,14 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 					results1.RemoteInfo.GcpProject = &tfTypes.GcpProject{}
 					results1.RemoteInfo.GcpProject.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpProject.ProjectID)
 				}
+				if resultsItem.RemoteInfo.GcpServiceAccount == nil {
+					results1.RemoteInfo.GcpServiceAccount = nil
+				} else {
+					results1.RemoteInfo.GcpServiceAccount = &tfTypes.GcpServiceAccount{}
+					results1.RemoteInfo.GcpServiceAccount.Email = types.StringValue(resultsItem.RemoteInfo.GcpServiceAccount.Email)
+					results1.RemoteInfo.GcpServiceAccount.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpServiceAccount.ProjectID)
+					results1.RemoteInfo.GcpServiceAccount.ServiceAccountID = types.StringValue(resultsItem.RemoteInfo.GcpServiceAccount.ServiceAccountID)
+				}
 				if resultsItem.RemoteInfo.GcpSQLInstance == nil {
 					results1.RemoteInfo.GcpSQLInstance = nil
 				} else {

@@ -17,6 +17,7 @@ type ResourceRemoteInfo struct {
 	GcpGkeCluster           *GcpGkeCluster           `tfsdk:"gcp_gke_cluster"`
 	GcpOrganization         *GcpOrganization         `tfsdk:"gcp_organization"`
 	GcpProject              *GcpProject              `tfsdk:"gcp_project"`
+	GcpServiceAccount       *GcpServiceAccount       `tfsdk:"gcp_service_account"`
 	GcpSQLInstance          *GcpSQLInstance          `tfsdk:"gcp_sql_instance"`
 	GithubRepo              *GithubRepo              `tfsdk:"github_repo"`
 	GitlabProject           *GcpProject              `tfsdk:"gitlab_project"`

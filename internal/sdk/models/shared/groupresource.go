@@ -8,11 +8,11 @@ package shared
 type GroupResource struct {
 	// # Access Level Object
 	// ### Description
-	// The `ResourceAccessLevel` object is used to represent the level of access that a user has to a resource or a resource has to a group. The "default" access
-	// level is a `ResourceAccessLevel` object whose fields are all empty strings.
+	// The `AccessLevel` object is used to represent the level of access that a principal has. The "default" access
+	// level is a `AccessLevel` object whose fields are all empty strings.
 	//
 	// ### Usage Example
-	// View the `ResourceAccessLevel` of a resource/user or resource/group pair to see the level of access granted to the resource.
+	// View the `AccessLevel` of a resource/user or resource/group pair to see the level of access granted to the resource.
 	AccessLevel ResourceAccessLevel `json:"access_level"`
 	// The ID of the group.
 	GroupID string `json:"group_id"`

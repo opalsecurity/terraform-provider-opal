@@ -19,6 +19,7 @@ const (
 	ResourceTypeEnumAwsAccount                  ResourceTypeEnum = "AWS_ACCOUNT"
 	ResourceTypeEnumAwsSsoPermissionSet         ResourceTypeEnum = "AWS_SSO_PERMISSION_SET"
 	ResourceTypeEnumCustom                      ResourceTypeEnum = "CUSTOM"
+	ResourceTypeEnumGcpOrganization             ResourceTypeEnum = "GCP_ORGANIZATION"
 	ResourceTypeEnumGcpBucket                   ResourceTypeEnum = "GCP_BUCKET"
 	ResourceTypeEnumGcpComputeInstance          ResourceTypeEnum = "GCP_COMPUTE_INSTANCE"
 	ResourceTypeEnumGcpFolder                   ResourceTypeEnum = "GCP_FOLDER"
@@ -26,6 +27,9 @@ const (
 	ResourceTypeEnumGcpProject                  ResourceTypeEnum = "GCP_PROJECT"
 	ResourceTypeEnumGcpCloudSQLPostgresInstance ResourceTypeEnum = "GCP_CLOUD_SQL_POSTGRES_INSTANCE"
 	ResourceTypeEnumGcpCloudSQLMysqlInstance    ResourceTypeEnum = "GCP_CLOUD_SQL_MYSQL_INSTANCE"
+	ResourceTypeEnumGcpBigQueryDataset          ResourceTypeEnum = "GCP_BIG_QUERY_DATASET"
+	ResourceTypeEnumGcpBigQueryTable            ResourceTypeEnum = "GCP_BIG_QUERY_TABLE"
+	ResourceTypeEnumGcpServiceAccount           ResourceTypeEnum = "GCP_SERVICE_ACCOUNT"
 	ResourceTypeEnumGitHubRepo                  ResourceTypeEnum = "GIT_HUB_REPO"
 	ResourceTypeEnumGitLabProject               ResourceTypeEnum = "GIT_LAB_PROJECT"
 	ResourceTypeEnumGoogleWorkspaceRole         ResourceTypeEnum = "GOOGLE_WORKSPACE_ROLE"
@@ -70,6 +74,8 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "CUSTOM":
 		fallthrough
+	case "GCP_ORGANIZATION":
+		fallthrough
 	case "GCP_BUCKET":
 		fallthrough
 	case "GCP_COMPUTE_INSTANCE":
@@ -83,6 +89,12 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "GCP_CLOUD_SQL_POSTGRES_INSTANCE":
 		fallthrough
 	case "GCP_CLOUD_SQL_MYSQL_INSTANCE":
+		fallthrough
+	case "GCP_BIG_QUERY_DATASET":
+		fallthrough
+	case "GCP_BIG_QUERY_TABLE":
+		fallthrough
+	case "GCP_SERVICE_ACCOUNT":
 		fallthrough
 	case "GIT_HUB_REPO":
 		fallthrough

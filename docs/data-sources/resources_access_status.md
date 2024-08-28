@@ -40,11 +40,11 @@ data "opal_resources_access_status" "my_resourcesaccessstatus" {
 
 - `access_level` (Attributes) # Access Level Object
 ### Description
-The `ResourceAccessLevel` object is used to represent the level of access that a user has to a resource or a resource has to a group. The "default" access
-level is a `ResourceAccessLevel` object whose fields are all empty strings.
+The `AccessLevel` object is used to represent the level of access that a principal has. The "default" access
+level is a `AccessLevel` object whose fields are all empty strings.
 
 ### Usage Example
-View the `ResourceAccessLevel` of a resource/user or resource/group pair to see the level of access granted to the resource. (see [below for nested schema](#nestedatt--access_level))
+View the `AccessLevel` of a resource/user or resource/group pair to see the level of access granted to the resource. (see [below for nested schema](#nestedatt--access_level))
 - `expiration_date` (String) The day and time the user's access will expire.
 - `status` (String) The status of the user's access to the resource. must be one of ["AUTHORIZED", "REQUESTED", "UNAUTHORIZED"]
 

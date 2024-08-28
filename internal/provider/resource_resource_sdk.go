@@ -213,17 +213,34 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo() *shared.CreateResou
 				ProjectID: projectId3,
 			}
 		}
+		var gcpServiceAccount *shared.GcpServiceAccount
+		if r.RemoteInfo.GcpServiceAccount != nil {
+			var email string
+			email = r.RemoteInfo.GcpServiceAccount.Email.ValueString()
+
+			var projectId4 string
+			projectId4 = r.RemoteInfo.GcpServiceAccount.ProjectID.ValueString()
+
+			var serviceAccountID string
+			serviceAccountID = r.RemoteInfo.GcpServiceAccount.ServiceAccountID.ValueString()
+
+			gcpServiceAccount = &shared.GcpServiceAccount{
+				Email:            email,
+				ProjectID:        projectId4,
+				ServiceAccountID: serviceAccountID,
+			}
+		}
 		var gcpSQLInstance *shared.GcpSQLInstance
 		if r.RemoteInfo.GcpSQLInstance != nil {
 			var instanceId3 string
 			instanceId3 = r.RemoteInfo.GcpSQLInstance.InstanceID.ValueString()
 
-			var projectId4 string
-			projectId4 = r.RemoteInfo.GcpSQLInstance.ProjectID.ValueString()
+			var projectId5 string
+			projectId5 = r.RemoteInfo.GcpSQLInstance.ProjectID.ValueString()
 
 			gcpSQLInstance = &shared.GcpSQLInstance{
 				InstanceID: instanceId3,
-				ProjectID:  projectId4,
+				ProjectID:  projectId5,
 			}
 		}
 		var githubRepo *shared.GithubRepo
@@ -237,11 +254,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo() *shared.CreateResou
 		}
 		var gitlabProject *shared.GitlabProject
 		if r.RemoteInfo.GitlabProject != nil {
-			var projectId5 string
-			projectId5 = r.RemoteInfo.GitlabProject.ProjectID.ValueString()
+			var projectId6 string
+			projectId6 = r.RemoteInfo.GitlabProject.ProjectID.ValueString()
 
 			gitlabProject = &shared.GitlabProject{
-				ProjectID: projectId5,
+				ProjectID: projectId6,
 			}
 		}
 		var oktaApp *shared.OktaApp
@@ -335,6 +352,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo() *shared.CreateResou
 			GcpGkeCluster:           gcpGkeCluster,
 			GcpOrganization:         gcpOrganization,
 			GcpProject:              gcpProject,
+			GcpServiceAccount:       gcpServiceAccount,
 			GcpSQLInstance:          gcpSQLInstance,
 			GithubRepo:              githubRepo,
 			GitlabProject:           gitlabProject,
@@ -467,6 +485,14 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(resp *shared.Resource)
 			} else {
 				r.RemoteInfo.GcpProject = &tfTypes.GcpProject{}
 				r.RemoteInfo.GcpProject.ProjectID = types.StringValue(resp.RemoteInfo.GcpProject.ProjectID)
+			}
+			if resp.RemoteInfo.GcpServiceAccount == nil {
+				r.RemoteInfo.GcpServiceAccount = nil
+			} else {
+				r.RemoteInfo.GcpServiceAccount = &tfTypes.GcpServiceAccount{}
+				r.RemoteInfo.GcpServiceAccount.Email = types.StringValue(resp.RemoteInfo.GcpServiceAccount.Email)
+				r.RemoteInfo.GcpServiceAccount.ProjectID = types.StringValue(resp.RemoteInfo.GcpServiceAccount.ProjectID)
+				r.RemoteInfo.GcpServiceAccount.ServiceAccountID = types.StringValue(resp.RemoteInfo.GcpServiceAccount.ServiceAccountID)
 			}
 			if resp.RemoteInfo.GcpSQLInstance == nil {
 				r.RemoteInfo.GcpSQLInstance = nil
