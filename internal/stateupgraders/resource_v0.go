@@ -70,6 +70,7 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 					"require_manager_approval": tftypes.Bool,
 					"reviewer": tftypes.Set{ElementType: tftypes.Object{AttributeTypes: map[string]tftypes.Type{"id": tftypes.String}}},
 				}}},
+				"custom_request_notification": tftypes.String,
 			}}},
 		},
 	}
@@ -89,6 +90,7 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 			"require_manager_approval": tftypes.Bool,
 			"reviewer": tftypes.Set{ElementType: tftypes.Object{AttributeTypes: map[string]tftypes.Type{"id": tftypes.String}}},
 		}}},
+		"custom_request_notification": tftypes.String,
 	}}}
 
 	var ticketPropagationType = tftypes.Object{
