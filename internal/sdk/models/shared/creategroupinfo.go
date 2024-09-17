@@ -11,6 +11,8 @@ package shared
 type CreateGroupInfo struct {
 	// The ID of the app for the group.
 	AppID string `json:"app_id"`
+	// Custom request notification sent upon request approval for this configuration template.
+	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the remote group.
 	Description *string `json:"description,omitempty"`
 	// The type of the group.
@@ -26,6 +28,13 @@ func (o *CreateGroupInfo) GetAppID() string {
 		return ""
 	}
 	return o.AppID
+}
+
+func (o *CreateGroupInfo) GetCustomRequestNotification() *string {
+	if o == nil {
+		return nil
+	}
+	return o.CustomRequestNotification
 }
 
 func (o *CreateGroupInfo) GetDescription() *string {

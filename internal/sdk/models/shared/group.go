@@ -13,6 +13,8 @@ type Group struct {
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
 	// The ID of the group's app.
 	AppID *string `json:"app_id,omitempty"`
+	// Custom request notification sent upon request approval for this configuration template.
+	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the group.
 	Description *string `json:"description,omitempty"`
 	// The ID of the associated group binding.
@@ -47,6 +49,13 @@ func (o *Group) GetAppID() *string {
 		return nil
 	}
 	return o.AppID
+}
+
+func (o *Group) GetCustomRequestNotification() *string {
+	if o == nil {
+		return nil
+	}
+	return o.CustomRequestNotification
 }
 
 func (o *Group) GetDescription() *string {

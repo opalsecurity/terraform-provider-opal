@@ -15,6 +15,8 @@ type UpdateConfigurationTemplateInfo struct {
 	BreakGlassUserIds []string `json:"break_glass_user_ids,omitempty"`
 	// The ID of the configuration template.
 	ConfigurationTemplateID string `json:"configuration_template_id"`
+	// Custom request notification sent upon request approval for this configuration template.
+	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// The IDs of the audit message channels linked to the configuration template.
 	LinkedAuditMessageChannelIds []string `json:"linked_audit_message_channel_ids,omitempty"`
 	// The IDs of the on-call schedules linked to the configuration template.
@@ -52,6 +54,13 @@ func (o *UpdateConfigurationTemplateInfo) GetConfigurationTemplateID() string {
 		return ""
 	}
 	return o.ConfigurationTemplateID
+}
+
+func (o *UpdateConfigurationTemplateInfo) GetCustomRequestNotification() *string {
+	if o == nil {
+		return nil
+	}
+	return o.CustomRequestNotification
 }
 
 func (o *UpdateConfigurationTemplateInfo) GetLinkedAuditMessageChannelIds() []string {

@@ -13,6 +13,12 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo() *shared.CreateGroupInfo {
 	var appID string
 	appID = r.AppID.ValueString()
 
+	customRequestNotification := new(string)
+	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
+		*customRequestNotification = r.CustomRequestNotification.ValueString()
+	} else {
+		customRequestNotification = nil
+	}
 	description := new(string)
 	if !r.Description.IsUnknown() && !r.Description.IsNull() {
 		*description = r.Description.ValueString()
@@ -119,11 +125,12 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo() *shared.CreateGroupInfo {
 		}
 	}
 	out := shared.CreateGroupInfo{
-		AppID:       appID,
-		Description: description,
-		GroupType:   groupType,
-		Name:        name,
-		RemoteInfo:  remoteInfo,
+		AppID:                     appID,
+		CustomRequestNotification: customRequestNotification,
+		Description:               description,
+		GroupType:                 groupType,
+		Name:                      name,
+		RemoteInfo:                remoteInfo,
 	}
 	return &out
 }
@@ -132,6 +139,7 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 	if resp != nil {
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 		r.AppID = types.StringPointerValue(resp.AppID)
+		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.Description = types.StringPointerValue(resp.Description)
 		r.GroupBindingID = types.StringPointerValue(resp.GroupBindingID)
 		r.GroupLeaderUserIds = []types.String{}
@@ -281,6 +289,12 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo() *shared.UpdateGroupInfo {
 	} else {
 		adminOwnerID = nil
 	}
+	customRequestNotification := new(string)
+	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
+		*customRequestNotification = r.CustomRequestNotification.ValueString()
+	} else {
+		customRequestNotification = nil
+	}
 	description := new(string)
 	if !r.Description.IsUnknown() && !r.Description.IsNull() {
 		*description = r.Description.ValueString()
@@ -398,19 +412,21 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo() *shared.UpdateGroupInfo {
 		requireMfaToApprove = nil
 	}
 	out := shared.UpdateGroupInfo{
-		AdminOwnerID:          adminOwnerID,
-		Description:           description,
-		GroupLeaderUserIds:    groupLeaderUserIds,
-		ID:                    id,
-		Name:                  name,
-		RequestConfigurations: requestConfigurations,
-		RequireMfaToApprove:   requireMfaToApprove,
+		AdminOwnerID:              adminOwnerID,
+		CustomRequestNotification: customRequestNotification,
+		Description:               description,
+		GroupLeaderUserIds:        groupLeaderUserIds,
+		ID:                        id,
+		Name:                      name,
+		RequestConfigurations:     requestConfigurations,
+		RequireMfaToApprove:       requireMfaToApprove,
 	}
 	return &out
 }
 
 func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(resp *shared.UpdateGroupInfo) {
 	r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
+	r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 	r.Description = types.StringPointerValue(resp.Description)
 	r.GroupLeaderUserIds = []types.String{}
 	for _, v := range resp.GroupLeaderUserIds {

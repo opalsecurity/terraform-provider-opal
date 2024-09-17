@@ -16,6 +16,12 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 	for _, breakGlassUserIdsItem := range r.BreakGlassUserIds {
 		breakGlassUserIds = append(breakGlassUserIds, breakGlassUserIdsItem.ValueString())
 	}
+	customRequestNotification := new(string)
+	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
+		*customRequestNotification = r.CustomRequestNotification.ValueString()
+	} else {
+		customRequestNotification = nil
+	}
 	var linkedAuditMessageChannelIds []string = []string{}
 	for _, linkedAuditMessageChannelIdsItem := range r.LinkedAuditMessageChannelIds {
 		linkedAuditMessageChannelIds = append(linkedAuditMessageChannelIds, linkedAuditMessageChannelIdsItem.ValueString())
@@ -163,6 +169,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 	out := shared.CreateConfigurationTemplateInfo{
 		AdminOwnerID:                 adminOwnerID,
 		BreakGlassUserIds:            breakGlassUserIds,
+		CustomRequestNotification:    customRequestNotification,
 		LinkedAuditMessageChannelIds: linkedAuditMessageChannelIds,
 		MemberOncallScheduleIds:      memberOncallScheduleIds,
 		Name:                         name,
@@ -183,6 +190,7 @@ func (r *ConfigurationTemplateResourceModel) RefreshFromSharedConfigurationTempl
 			r.BreakGlassUserIds = append(r.BreakGlassUserIds, types.StringValue(v))
 		}
 		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
+		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.LinkedAuditMessageChannelIds = []types.String{}
 		for _, v := range resp.LinkedAuditMessageChannelIds {
 			r.LinkedAuditMessageChannelIds = append(r.LinkedAuditMessageChannelIds, types.StringValue(v))
@@ -232,6 +240,12 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 	var configurationTemplateID string
 	configurationTemplateID = r.ConfigurationTemplateID.ValueString()
 
+	customRequestNotification := new(string)
+	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
+		*customRequestNotification = r.CustomRequestNotification.ValueString()
+	} else {
+		customRequestNotification = nil
+	}
 	var linkedAuditMessageChannelIds []string = []string{}
 	for _, linkedAuditMessageChannelIdsItem := range r.LinkedAuditMessageChannelIds {
 		linkedAuditMessageChannelIds = append(linkedAuditMessageChannelIds, linkedAuditMessageChannelIdsItem.ValueString())
@@ -390,6 +404,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 		AdminOwnerID:                 adminOwnerID,
 		BreakGlassUserIds:            breakGlassUserIds,
 		ConfigurationTemplateID:      configurationTemplateID,
+		CustomRequestNotification:    customRequestNotification,
 		LinkedAuditMessageChannelIds: linkedAuditMessageChannelIds,
 		MemberOncallScheduleIds:      memberOncallScheduleIds,
 		Name:                         name,

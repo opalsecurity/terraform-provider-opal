@@ -11,6 +11,8 @@ package shared
 type CreateResourceInfo struct {
 	// The ID of the app for the resource.
 	AppID string `json:"app_id"`
+	// Custom request notification sent upon request approval for this configuration template.
+	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the remote resource.
 	Description *string `json:"description,omitempty"`
 	// The name of the remote resource.
@@ -26,6 +28,13 @@ func (o *CreateResourceInfo) GetAppID() string {
 		return ""
 	}
 	return o.AppID
+}
+
+func (o *CreateResourceInfo) GetCustomRequestNotification() *string {
+	if o == nil {
+		return nil
+	}
+	return o.CustomRequestNotification
 }
 
 func (o *CreateResourceInfo) GetDescription() *string {

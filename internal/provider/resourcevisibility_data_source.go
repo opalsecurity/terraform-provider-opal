@@ -50,7 +50,7 @@ func (r *ResourceVisibilityDataSource) Schema(ctx context.Context, req datasourc
 			},
 			"visibility": schema.StringAttribute{
 				Computed:    true,
-				Description: `The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]`,
+				Description: `The visibility level of the entity.`,
 			},
 			"visibility_group_ids": schema.SetAttribute{
 				Computed:    true,

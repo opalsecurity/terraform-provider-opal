@@ -46,7 +46,6 @@ func (r *ResourceReviewersListDataSource) Schema(ctx context.Context, req dataso
 			"data": schema.ListAttribute{
 				Computed:    true,
 				ElementType: types.StringType,
-				Description: `The IDs of owners that are reviewers for this resource.`,
 			},
 			"resource_id": schema.StringAttribute{
 				Required:    true,

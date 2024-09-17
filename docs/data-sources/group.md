@@ -14,7 +14,7 @@ Group DataSource
 
 ```terraform
 data "opal_group" "my_group" {
-  id = "f454d283-ca87-4a8a-bdbb-df212eca5353"
+  id = "32acc112-21ff-4669-91c2-21e27683eaa1"
 }
 ```
 
@@ -29,18 +29,19 @@ data "opal_group" "my_group" {
 
 - `admin_owner_id` (String) The ID of the owner of the group.
 - `app_id` (String) The ID of the group's app.
+- `custom_request_notification` (String) Custom request notification sent upon request approval for this configuration template.
 - `description` (String) A description of the group.
 - `group_binding_id` (String) The ID of the associated group binding.
 - `group_leader_user_ids` (Set of String) A list of User IDs for the group leaders of the group
-- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OPAL_GROUP", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP"]
-- `message_channels` (Attributes) The audit and reviewer message channels attached to the group. (see [below for nested schema](#nestedatt--message_channels))
+- `group_type` (String) The type of the group.
+- `message_channels` (Attributes) (see [below for nested schema](#nestedatt--message_channels))
 - `name` (String) The name of the group.
-- `oncall_schedules` (Attributes) The on call schedules attached to the group. (see [below for nested schema](#nestedatt--oncall_schedules))
+- `oncall_schedules` (Attributes) (see [below for nested schema](#nestedatt--oncall_schedules))
 - `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. (see [below for nested schema](#nestedatt--remote_info))
 - `remote_name` (String) The name of the remote.
 - `request_configurations` (Attributes Set) A list of request configurations for this group. (see [below for nested schema](#nestedatt--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this group.
-- `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
+- `visibility` (String) The visibility level of the entity.
 - `visibility_group_ids` (Set of String)
 
 <a id="nestedatt--message_channels"></a>
@@ -59,7 +60,7 @@ Read-Only:
 - `is_private` (Boolean) A bool representing whether or not the message channel is private.
 - `name` (String) The name of the message channel.
 - `remote_id` (String) The remote ID of the message channel
-- `third_party_provider` (String) The third party provider of the message channel. must be one of ["SLACK"]
+- `third_party_provider` (String) The third party provider of the message channel.
 
 
 
@@ -71,7 +72,7 @@ Read-Only:
 - `id` (String) The ID of the on-call schedule.
 - `name` (String) The name of the on call schedule.
 - `remote_id` (String) The remote ID of the on call schedule
-- `third_party_provider` (String) The third party provider of the on call schedule. must be one of ["OPSGENIE", "PAGER_DUTY"]
+- `third_party_provider` (String) The third party provider of the on call schedule.
 
 
 <a id="nestedatt--remote_info"></a>
@@ -192,7 +193,7 @@ Read-Only:
 
 Read-Only:
 
-- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]
+- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers.
 - `owner_ids` (Set of String)
 - `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval.
 - `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval.

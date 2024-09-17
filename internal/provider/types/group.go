@@ -5,16 +5,17 @@ package types
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type Group struct {
-	AdminOwnerID          types.String           `tfsdk:"admin_owner_id"`
-	AppID                 types.String           `tfsdk:"app_id"`
-	Description           types.String           `tfsdk:"description"`
-	GroupBindingID        types.String           `tfsdk:"group_binding_id"`
-	GroupLeaderUserIds    []types.String         `tfsdk:"group_leader_user_ids"`
-	GroupType             types.String           `tfsdk:"group_type"`
-	ID                    types.String           `tfsdk:"id"`
-	Name                  types.String           `tfsdk:"name"`
-	RemoteInfo            *GroupRemoteInfo       `tfsdk:"remote_info"`
-	RemoteName            types.String           `tfsdk:"remote_name"`
-	RequestConfigurations []RequestConfiguration `tfsdk:"request_configurations"`
-	RequireMfaToApprove   types.Bool             `tfsdk:"require_mfa_to_approve"`
+	AdminOwnerID              types.String           `tfsdk:"admin_owner_id"`
+	AppID                     types.String           `tfsdk:"app_id"`
+	CustomRequestNotification types.String           `tfsdk:"custom_request_notification"`
+	Description               types.String           `tfsdk:"description"`
+	GroupBindingID            types.String           `tfsdk:"group_binding_id"`
+	GroupLeaderUserIds        []types.String         `tfsdk:"group_leader_user_ids"`
+	GroupType                 types.String           `tfsdk:"group_type"`
+	ID                        types.String           `tfsdk:"id"`
+	Name                      types.String           `tfsdk:"name"`
+	RemoteInfo                *GroupRemoteInfo       `tfsdk:"remote_info"`
+	RemoteName                types.String           `tfsdk:"remote_name"`
+	RequestConfigurations     []RequestConfiguration `tfsdk:"request_configurations"`
+	RequireMfaToApprove       types.Bool             `tfsdk:"require_mfa_to_approve"`
 }

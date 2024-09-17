@@ -59,6 +59,10 @@ func (r *ConfigurationTemplateListDataSource) Schema(ctx context.Context, req da
 							Computed:    true,
 							Description: `The ID of the configuration template.`,
 						},
+						"custom_request_notification": schema.StringAttribute{
+							Computed:    true,
+							Description: `Custom request notification sent upon request approval for this configuration template.`,
+						},
 						"linked_audit_message_channel_ids": schema.SetAttribute{
 							Computed:    true,
 							ElementType: types.StringType,
@@ -99,7 +103,7 @@ func (r *ConfigurationTemplateListDataSource) Schema(ctx context.Context, req da
 								},
 								"ticket_provider": schema.StringAttribute{
 									Computed:    true,
-									Description: `The third party ticketing platform provider. must be one of ["JIRA", "LINEAR", "SERVICE_NOW"]`,
+									Description: `The third party ticketing platform provider.`,
 								},
 							},
 							Description: `Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.`,
@@ -109,7 +113,7 @@ func (r *ConfigurationTemplateListDataSource) Schema(ctx context.Context, req da
 							Attributes: map[string]schema.Attribute{
 								"visibility": schema.StringAttribute{
 									Computed:    true,
-									Description: `The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]`,
+									Description: `The visibility level of the entity.`,
 								},
 								"visibility_group_ids": schema.SetAttribute{
 									Computed:    true,

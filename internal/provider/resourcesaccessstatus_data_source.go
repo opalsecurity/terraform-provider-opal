@@ -92,7 +92,7 @@ func (r *ResourcesAccessStatusDataSource) Schema(ctx context.Context, req dataso
 			},
 			"status": schema.StringAttribute{
 				Computed:    true,
-				Description: `The status of the user's access to the resource. must be one of ["AUTHORIZED", "REQUESTED", "UNAUTHORIZED"]`,
+				Description: `The status of the user's access to the resource.`,
 			},
 			"user_id": schema.StringAttribute{
 				Required:    true,

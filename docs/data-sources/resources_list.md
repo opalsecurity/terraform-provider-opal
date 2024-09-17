@@ -18,7 +18,7 @@ data "opal_resources_list" "my_resources_list" {
   page_size          = 200
   parent_resource_id = ["4baf8423-db0a-4037-a4cf-f79c60cb67a5"]
   resource_ids = [
-    "1b978423-db0a-4037-a4cf-f79c60cb67b3",
+    "1b978423-db0a-4037-a4cf-f79c60cb67b3"
   ]
   resource_name        = "example-name"
   resource_type_filter = "AWS_IAM_ROLE"
@@ -35,7 +35,7 @@ data "opal_resources_list" "my_resources_list" {
 - `parent_resource_id` (String) The parent resource id to filter by.
 - `resource_ids` (List of String) The resource ids to filter by.
 - `resource_name` (String) Resource name.
-- `resource_type_filter` (String) The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "CUSTOM", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "TELEPORT_ROLE"]
+- `resource_type_filter` (String) The resource type to filter by.
 
 ### Read-Only
 
@@ -50,6 +50,7 @@ Read-Only:
 
 - `admin_owner_id` (String) The ID of the owner of the resource.
 - `app_id` (String) The ID of the app.
+- `custom_request_notification` (String) Custom request notification sent upon request approval for this configuration template.
 - `description` (String) A description of the resource.
 - `id` (String) The ID of the resource.
 - `name` (String) The name of the resource.
@@ -58,7 +59,7 @@ Read-Only:
 - `request_configurations` (Attributes Set) A list of configurations for requests to this resource. (see [below for nested schema](#nestedatt--results--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to this resource.
-- `resource_type` (String) The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "CUSTOM", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "TELEPORT_ROLE"]
+- `resource_type` (String) The type of the resource.
 - `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--results--ticket_propagation))
 
 <a id="nestedatt--results--remote_info"></a>
@@ -349,7 +350,7 @@ Read-Only:
 
 Read-Only:
 
-- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]
+- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers.
 - `owner_ids` (Set of String)
 - `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval.
 - `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval.
@@ -364,4 +365,4 @@ Read-Only:
 - `enabled_on_grant` (Boolean)
 - `enabled_on_revocation` (Boolean)
 - `ticket_project_id` (String)
-- `ticket_provider` (String) The third party ticketing platform provider. must be one of ["JIRA", "LINEAR", "SERVICE_NOW"]
+- `ticket_provider` (String) The third party ticketing platform provider.

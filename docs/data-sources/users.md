@@ -40,7 +40,7 @@ Read-Only:
 
 - `email` (String) The email of the user.
 - `first_name` (String) The first name of the user.
-- `hr_idp_status` (String) User status pulled from an HR/IDP provider. must be one of ["ACTIVE", "SUSPENDED", "DEPROVISIONED", "DELETED", "NOT_FOUND"]
+- `hr_idp_status` (String) User status pulled from an HR/IDP provider.
 - `id` (String) The ID of the user.
 - `last_name` (String) The last name of the user.
 - `name` (String) The full name of the user.

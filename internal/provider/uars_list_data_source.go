@@ -77,7 +77,7 @@ func (r *UARSListDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						"reviewer_assignment_policy": schema.StringAttribute{
 							Computed:    true,
-							Description: `A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually. must be one of ["MANUALLY", "BY_OWNING_TEAM_ADMIN", "BY_MANAGER"]`,
+							Description: `A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually.`,
 						},
 						"self_review_allowed": schema.BoolAttribute{
 							Computed:    true,
@@ -115,7 +115,7 @@ func (r *UARSListDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 								},
 								"filter_operator": schema.StringAttribute{
 									Computed:    true,
-									Description: `Specifies whether entities must match all (AND) or any (OR) of the filters. must be one of ["ANY", "ALL"]`,
+									Description: `Specifies whether entities must match all (AND) or any (OR) of the filters.`,
 								},
 								"group_types": schema.ListAttribute{
 									Computed:    true,
@@ -124,7 +124,7 @@ func (r *UARSListDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 								},
 								"group_visibility": schema.StringAttribute{
 									Computed:    true,
-									Description: `Specifies what users can see during an Access Review. must be one of ["STRICT", "VIEW_VISIBLE_AND_ASSIGNED", "VIEW_ALL"]`,
+									Description: `Specifies what users can see during an Access Review`,
 								},
 								"include_group_bindings": schema.BoolAttribute{
 									Computed: true,

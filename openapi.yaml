@@ -4224,6 +4224,12 @@ components:
         remote_info:
           $ref: "#/components/schemas/GroupRemoteInfo"
           x-speakeasy-param-force-new: true
+        custom_request_notification:
+          description: Custom request notification sent upon request approval for this configuration template.
+          type: string
+          maxLength: 800
+          nullable: true
+          example: "Check your email to register your account."
       required:
         - group_id
       type: object
@@ -4505,6 +4511,12 @@ components:
                     stage: 1
                 priority: 1
           x-speakeasy-ignore: true
+        custom_request_notification:
+          description: Custom request notification sent upon request approval for this configuration template.
+          type: string
+          maxLength: 800
+          nullable: true
+          example: "Check your email to register your account."
       required:
         - group_id
         - request_configurations
@@ -5725,6 +5737,12 @@ components:
             }
           type: string
           x-speakeasy-ignore: true
+        custom_request_notification:
+          description: Custom request notification sent upon request approval for this configuration template.
+          type: string
+          maxLength: 800
+          nullable: true
+          example: "Check your email to register your account."
       required:
         - name
         - resource_type
@@ -5869,6 +5887,12 @@ components:
             { "okta_directory_group": { "group_id": "00g4bs66kwtpe1g12345" } }
           type: string
           x-speakeasy-ignore: true
+        custom_request_notification:
+          description: Custom request notification sent upon request approval for this configuration template.
+          type: string
+          maxLength: 800
+          nullable: true
+          example: "Check your email to register your account."
       required:
         - name
         - group_type
@@ -6255,6 +6279,11 @@ components:
           x-speakeasy-ignore: true
         ticket_propagation:
           $ref: "#/components/schemas/TicketPropagationConfiguration"
+        custom_request_notification:
+          description: Custom request notification sent upon request approval for this configuration template.
+          type: string
+          maxLength: 800
+          nullable: true
         metadata:
           description: JSON metadata about the remote resource. Only set for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/end-system-objects) for details.
           deprecated: true
@@ -6400,6 +6429,12 @@ components:
           x-speakeasy-ignore: true
         ticket_propagation:
           $ref: "#/components/schemas/TicketPropagationConfiguration"
+        custom_request_notification:
+          description: Custom request notification sent upon request approval for this configuration template.
+          type: string
+          maxLength: 800
+          nullable: true
+          example: "Check your email to register your account."
         configuration_template_id:
           description: The ID of the associated configuration template.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -7306,6 +7341,12 @@ components:
           x-speakeasy-ignore: true
         ticket_propagation:
           $ref: "#/components/schemas/TicketPropagationConfiguration"
+        custom_request_notification:
+          description: Custom request notification sent upon request approval for this configuration template.
+          type: string
+          maxLength: 800
+          nullable: true
+          example: "Check your email to register your account."
       x-speakeasy-entity: ConfigurationTemplate
     ConfigurationTemplate:
       description: |-
@@ -7398,6 +7439,12 @@ components:
           type: boolean
         ticket_propagation:
           $ref: "#/components/schemas/TicketPropagationConfiguration"
+        custom_request_notification:
+          description: Custom request notification sent upon request approval for this configuration template.
+          type: string
+          maxLength: 800
+          nullable: true
+          example: "Check your email to register your account."
       x-speakeasy-entity: ConfigurationTemplate
     TicketPropagationConfiguration:
       description: Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.
@@ -7545,6 +7592,12 @@ components:
           type: boolean
         ticket_propagation:
           $ref: "#/components/schemas/TicketPropagationConfiguration"
+        custom_request_notification:
+          description: Custom request notification sent upon request approval for this configuration template.
+          type: string
+          maxLength: 800
+          nullable: true
+          example: "Check your email to register your account."
       x-speakeasy-entity: ConfigurationTemplate
     PaginatedConfigurationTemplateList:
       description: |-

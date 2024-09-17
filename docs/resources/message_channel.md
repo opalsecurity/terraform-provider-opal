@@ -25,7 +25,7 @@ resource "opal_message_channel" "my_messagechannel" {
 ### Required
 
 - `remote_id` (String) The remote ID of the message channel. Requires replacement if changed.
-- `third_party_provider` (String) The third party provider of the message channel. Requires replacement if changed. ; must be one of ["SLACK"]
+- `third_party_provider` (String) The third party provider of the message channel. must be "SLACK"; Requires replacement if changed.
 
 ### Read-Only
 

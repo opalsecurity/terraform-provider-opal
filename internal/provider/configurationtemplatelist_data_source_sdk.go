@@ -22,6 +22,7 @@ func (r *ConfigurationTemplateListDataSourceModel) RefreshFromSharedPaginatedCon
 				results1.BreakGlassUserIds = append(results1.BreakGlassUserIds, types.StringValue(v))
 			}
 			results1.ConfigurationTemplateID = types.StringPointerValue(resultsItem.ConfigurationTemplateID)
+			results1.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
 			results1.LinkedAuditMessageChannelIds = []types.String{}
 			for _, v := range resultsItem.LinkedAuditMessageChannelIds {
 				results1.LinkedAuditMessageChannelIds = append(results1.LinkedAuditMessageChannelIds, types.StringValue(v))
@@ -63,6 +64,7 @@ func (r *ConfigurationTemplateListDataSourceModel) RefreshFromSharedPaginatedCon
 				r.Results[resultsCount].AdminOwnerID = results1.AdminOwnerID
 				r.Results[resultsCount].BreakGlassUserIds = results1.BreakGlassUserIds
 				r.Results[resultsCount].ConfigurationTemplateID = results1.ConfigurationTemplateID
+				r.Results[resultsCount].CustomRequestNotification = results1.CustomRequestNotification
 				r.Results[resultsCount].LinkedAuditMessageChannelIds = results1.LinkedAuditMessageChannelIds
 				r.Results[resultsCount].MemberOncallScheduleIds = results1.MemberOncallScheduleIds
 				r.Results[resultsCount].Name = results1.Name

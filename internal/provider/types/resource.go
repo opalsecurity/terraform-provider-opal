@@ -5,16 +5,17 @@ package types
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type Resource struct {
-	AdminOwnerID          types.String                    `tfsdk:"admin_owner_id"`
-	AppID                 types.String                    `tfsdk:"app_id"`
-	Description           types.String                    `tfsdk:"description"`
-	ID                    types.String                    `tfsdk:"id"`
-	Name                  types.String                    `tfsdk:"name"`
-	ParentResourceID      types.String                    `tfsdk:"parent_resource_id"`
-	RemoteInfo            *ResourceRemoteInfo             `tfsdk:"remote_info"`
-	RequestConfigurations []RequestConfiguration          `tfsdk:"request_configurations"`
-	RequireMfaToApprove   types.Bool                      `tfsdk:"require_mfa_to_approve"`
-	RequireMfaToConnect   types.Bool                      `tfsdk:"require_mfa_to_connect"`
-	ResourceType          types.String                    `tfsdk:"resource_type"`
-	TicketPropagation     *TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
+	AdminOwnerID              types.String                    `tfsdk:"admin_owner_id"`
+	AppID                     types.String                    `tfsdk:"app_id"`
+	CustomRequestNotification types.String                    `tfsdk:"custom_request_notification"`
+	Description               types.String                    `tfsdk:"description"`
+	ID                        types.String                    `tfsdk:"id"`
+	Name                      types.String                    `tfsdk:"name"`
+	ParentResourceID          types.String                    `tfsdk:"parent_resource_id"`
+	RemoteInfo                *ResourceRemoteInfo             `tfsdk:"remote_info"`
+	RequestConfigurations     []RequestConfiguration          `tfsdk:"request_configurations"`
+	RequireMfaToApprove       types.Bool                      `tfsdk:"require_mfa_to_approve"`
+	RequireMfaToConnect       types.Bool                      `tfsdk:"require_mfa_to_connect"`
+	ResourceType              types.String                    `tfsdk:"resource_type"`
+	TicketPropagation         *TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
 }

@@ -72,15 +72,15 @@ func (r *RequestsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 									},
 									"field_type": schema.StringAttribute{
 										Computed:    true,
-										Description: `The type of the custom request field. must be one of ["SHORT_TEXT", "LONG_TEXT", "BOOLEAN", "MULTI_CHOICE"]`,
+										Description: `The type of the custom request field.`,
 									},
 									"field_value": schema.SingleNestedAttribute{
 										Computed: true,
 										Attributes: map[string]schema.Attribute{
-											"str": schema.StringAttribute{
+											"boolean": schema.BoolAttribute{
 												Computed: true,
 											},
-											"boolean": schema.BoolAttribute{
+											"str": schema.StringAttribute{
 												Computed: true,
 											},
 										},
@@ -140,8 +140,7 @@ func (r *RequestsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 								`The ` + "`" + `RequestStatus` + "`" + ` enum is used to represent the status of a request.` + "\n" +
 								`` + "\n" +
 								`### Usage Example` + "\n" +
-								`Returned from the ` + "`" + `GET Requests` + "`" + ` endpoint.` + "\n" +
-								`must be one of ["pending", "approved", "denied", "canceled"]`,
+								`Returned from the ` + "`" + `GET Requests` + "`" + ` endpoint.`,
 						},
 						"target_group_id": schema.StringAttribute{
 							Computed:    true,

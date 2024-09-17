@@ -15,7 +15,7 @@ GroupList DataSource
 ```terraform
 data "opal_group_list" "my_group_list" {
   group_ids = [
-    "1b978423-db0a-4037-a4cf-f79c60cb67b3",
+    "1b978423-db0a-4037-a4cf-f79c60cb67b3"
   ]
   group_name        = "example-name"
   group_type_filter = "OPAL_GROUP"
@@ -30,7 +30,7 @@ data "opal_group_list" "my_group_list" {
 
 - `group_ids` (List of String) The group ids to filter by.
 - `group_name` (String) Group name.
-- `group_type_filter` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OPAL_GROUP", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP"]
+- `group_type_filter` (String) The group type to filter by.
 - `page_size` (Number) Number of results to return per page. Default is 200.
 
 ### Read-Only
@@ -44,10 +44,11 @@ Read-Only:
 
 - `admin_owner_id` (String) The ID of the owner of the group.
 - `app_id` (String) The ID of the group's app.
+- `custom_request_notification` (String) Custom request notification sent upon request approval for this configuration template.
 - `description` (String) A description of the group.
 - `group_binding_id` (String) The ID of the associated group binding.
 - `group_leader_user_ids` (Set of String) A list of User IDs for the group leaders of the group
-- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OPAL_GROUP", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP"]
+- `group_type` (String) The type of the group.
 - `id` (String) The ID of the group.
 - `name` (String) The name of the group.
 - `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. (see [below for nested schema](#nestedatt--results--remote_info))
@@ -173,7 +174,7 @@ Read-Only:
 
 Read-Only:
 
-- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]
+- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers.
 - `owner_ids` (Set of String)
 - `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval.
 - `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval.

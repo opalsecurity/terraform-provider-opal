@@ -12,6 +12,12 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo() *shared.CreateResou
 	var appID string
 	appID = r.AppID.ValueString()
 
+	customRequestNotification := new(string)
+	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
+		*customRequestNotification = r.CustomRequestNotification.ValueString()
+	} else {
+		customRequestNotification = nil
+	}
 	description := new(string)
 	if !r.Description.IsUnknown() && !r.Description.IsNull() {
 		*description = r.Description.ValueString()
@@ -368,11 +374,12 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo() *shared.CreateResou
 	}
 	resourceType := shared.ResourceTypeEnum(r.ResourceType.ValueString())
 	out := shared.CreateResourceInfo{
-		AppID:        appID,
-		Description:  description,
-		Name:         name,
-		RemoteInfo:   remoteInfo,
-		ResourceType: resourceType,
+		AppID:                     appID,
+		CustomRequestNotification: customRequestNotification,
+		Description:               description,
+		Name:                      name,
+		RemoteInfo:                remoteInfo,
+		ResourceType:              resourceType,
 	}
 	return &out
 }
@@ -381,6 +388,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(resp *shared.Resource)
 	if resp != nil {
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 		r.AppID = types.StringPointerValue(resp.AppID)
+		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.Description = types.StringPointerValue(resp.Description)
 		r.ID = types.StringValue(resp.ID)
 		r.Name = types.StringPointerValue(resp.Name)
@@ -658,6 +666,12 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo() *shared.UpdateResou
 	} else {
 		adminOwnerID = nil
 	}
+	customRequestNotification := new(string)
+	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
+		*customRequestNotification = r.CustomRequestNotification.ValueString()
+	} else {
+		customRequestNotification = nil
+	}
 	description := new(string)
 	if !r.Description.IsUnknown() && !r.Description.IsNull() {
 		*description = r.Description.ValueString()
@@ -804,20 +818,22 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo() *shared.UpdateResou
 		}
 	}
 	out := shared.UpdateResourceInfo{
-		AdminOwnerID:          adminOwnerID,
-		Description:           description,
-		ID:                    id,
-		Name:                  name,
-		RequestConfigurations: requestConfigurations,
-		RequireMfaToApprove:   requireMfaToApprove,
-		RequireMfaToConnect:   requireMfaToConnect,
-		TicketPropagation:     ticketPropagation,
+		AdminOwnerID:              adminOwnerID,
+		CustomRequestNotification: customRequestNotification,
+		Description:               description,
+		ID:                        id,
+		Name:                      name,
+		RequestConfigurations:     requestConfigurations,
+		RequireMfaToApprove:       requireMfaToApprove,
+		RequireMfaToConnect:       requireMfaToConnect,
+		TicketPropagation:         ticketPropagation,
 	}
 	return &out
 }
 
 func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(resp *shared.UpdateResourceInfo) {
 	r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
+	r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 	r.Description = types.StringPointerValue(resp.Description)
 	r.ID = types.StringValue(resp.ID)
 	r.Name = types.StringPointerValue(resp.Name)

@@ -66,7 +66,7 @@ func (r *ResourceMessageChannelListDataSource) Schema(ctx context.Context, req d
 						},
 						"third_party_provider": schema.StringAttribute{
 							Computed:    true,
-							Description: `The third party provider of the message channel. must be one of ["SLACK"]`,
+							Description: `The third party provider of the message channel.`,
 						},
 					},
 				},

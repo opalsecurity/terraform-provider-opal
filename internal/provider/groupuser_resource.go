@@ -76,26 +76,22 @@ func (r *GroupUserResource) Schema(ctx context.Context, req resource.SchemaReque
 					`View the ` + "`" + `GroupAccessLevel` + "`" + ` of a group/user or group/group pair to see the level of access granted to the group.`,
 			},
 			"access_level_remote_id": schema.StringAttribute{
+				Optional: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 				},
-				Optional:    true,
-				Description: `The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used. Requires replacement if changed. `,
+				Description: `The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used. Requires replacement if changed.`,
 			},
 			"duration_minutes": schema.Int64Attribute{
 				Computed: true,
+				Optional: true,
+				Default:  int64default.StaticInt64(0),
 				PlanModifiers: []planmodifier.Int64{
 					int64planmodifier.RequiresReplaceIfConfigured(),
 				},
-				Optional:    true,
-				Default:     int64default.StaticInt64(0),
-				Description: `Must be set to 0. Any nonzerovalue in terraform does not make sense. Requires replacement if changed. ; must be one of ["0"]; Default: 0`,
+				Description: `Must be set to 0. Any nonzerovalue in terraform does not make sense. Default: 0; must be "0"; Requires replacement if changed.`,
 				Validators: []validator.Int64{
-					int64validator.OneOf(
-						[]int64{
-							0,
-						}...,
-					),
+					int64validator.OneOf(0),
 				},
 			},
 			"email": schema.StringAttribute{
@@ -114,20 +110,20 @@ func (r *GroupUserResource) Schema(ctx context.Context, req resource.SchemaReque
 				Description: `The user's full name.`,
 			},
 			"group_id": schema.StringAttribute{
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Required:    true,
-				Description: `The ID of the group. Requires replacement if changed. `,
+				Description: `The ID of the group. Requires replacement if changed.`,
 			},
 			"user_id": schema.StringAttribute{
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Required:    true,
-				Description: `The ID of the user to add. Requires replacement if changed. `,
+				Description: `The ID of the user to add. Requires replacement if changed.`,
 			},
 		},
 	}

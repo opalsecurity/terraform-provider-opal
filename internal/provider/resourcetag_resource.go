@@ -43,18 +43,18 @@ func (r *ResourceTagResource) Schema(ctx context.Context, req resource.SchemaReq
 		MarkdownDescription: "ResourceTag Resource",
 		Attributes: map[string]schema.Attribute{
 			"resource_id": schema.StringAttribute{
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 				},
-				Required:    true,
-				Description: `The ID of the resource to apply the tag to. Requires replacement if changed. `,
+				Description: `The ID of the resource to apply the tag to. Requires replacement if changed.`,
 			},
 			"tag_id": schema.StringAttribute{
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 				},
-				Required:    true,
-				Description: `The ID of the tag to apply. Requires replacement if changed. `,
+				Description: `The ID of the tag to apply. Requires replacement if changed.`,
 			},
 		},
 	}

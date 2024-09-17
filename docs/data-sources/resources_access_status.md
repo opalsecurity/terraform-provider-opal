@@ -46,7 +46,7 @@ level is a `AccessLevel` object whose fields are all empty strings.
 ### Usage Example
 View the `AccessLevel` of a resource/user or resource/group pair to see the level of access granted to the resource. (see [below for nested schema](#nestedatt--access_level))
 - `expiration_date` (String) The day and time the user's access will expire.
-- `status` (String) The status of the user's access to the resource. must be one of ["AUTHORIZED", "REQUESTED", "UNAUTHORIZED"]
+- `status` (String) The status of the user's access to the resource.
 
 <a id="nestedatt--access_level"></a>
 ### Nested Schema for `access_level`

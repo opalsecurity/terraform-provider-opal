@@ -8,6 +8,8 @@ package shared
 type UpdateGroupInfo struct {
 	// The ID of the owner of the group.
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
+	// Custom request notification sent upon request approval for this configuration template.
+	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the group.
 	Description *string `json:"description,omitempty"`
 	// A list of User IDs for the group leaders of the group
@@ -27,6 +29,13 @@ func (o *UpdateGroupInfo) GetAdminOwnerID() *string {
 		return nil
 	}
 	return o.AdminOwnerID
+}
+
+func (o *UpdateGroupInfo) GetCustomRequestNotification() *string {
+	if o == nil {
+		return nil
+	}
+	return o.CustomRequestNotification
 }
 
 func (o *UpdateGroupInfo) GetDescription() *string {

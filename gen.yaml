@@ -11,7 +11,7 @@ generation:
     oAuth2ClientCredentialsEnabled: false
   flattenGlobalSecurity: true
 terraform:
-  version: 0.24.6
+  version: 0.24.7
   additionalDataSources: []
   additionalDependencies: {}
   additionalResources: []

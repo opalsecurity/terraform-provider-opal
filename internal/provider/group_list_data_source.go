@@ -59,7 +59,7 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 			},
 			"group_type_filter": schema.StringAttribute{
 				Optional:    true,
-				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OPAL_GROUP", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP"]`,
+				Description: `The group type to filter by.`,
 			},
 			"page_size": schema.Int64Attribute{
 				Optional:    true,
@@ -77,6 +77,10 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							Computed:    true,
 							Description: `The ID of the group's app.`,
 						},
+						"custom_request_notification": schema.StringAttribute{
+							Computed:    true,
+							Description: `Custom request notification sent upon request approval for this configuration template.`,
+						},
 						"description": schema.StringAttribute{
 							Computed:    true,
 							Description: `A description of the group.`,
@@ -92,7 +96,7 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 						},
 						"group_type": schema.StringAttribute{
 							Computed:    true,
-							Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OPAL_GROUP", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP"]`,
+							Description: `The type of the group.`,
 						},
 						"id": schema.StringAttribute{
 							Computed:    true,
@@ -259,7 +263,7 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 											Attributes: map[string]schema.Attribute{
 												"operator": schema.StringAttribute{
 													Computed:    true,
-													Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]`,
+													Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers.`,
 												},
 												"owner_ids": schema.SetAttribute{
 													Computed:    true,

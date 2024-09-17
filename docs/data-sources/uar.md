@@ -14,7 +14,7 @@ Uar DataSource
 
 ```terraform
 data "opal_uar" "my_uar" {
-  uar_id = "f454d283-ca87-4a8a-bdbb-df212eca5353"
+  uar_id = "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
 }
 ```
 
@@ -29,7 +29,7 @@ data "opal_uar" "my_uar" {
 
 - `deadline` (String) The last day for reviewers to complete their access reviews.
 - `name` (String) The name of the UAR.
-- `reviewer_assignment_policy` (String) A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually. must be one of ["MANUALLY", "BY_OWNING_TEAM_ADMIN", "BY_MANAGER"]
+- `reviewer_assignment_policy` (String) A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually.
 - `self_review_allowed` (Boolean) A bool representing whether to present a warning when a user is the only reviewer for themself. Default is False.
 - `send_reviewer_assignment_notification` (Boolean) A bool representing whether to send a notification to reviewers when they're assigned a new review. Default is False.
 - `time_zone` (String) The time zone name (as defined by the IANA Time Zone database) used in the access review deadline and exported audit report. Default is America/Los_Angeles.
@@ -43,9 +43,9 @@ Read-Only:
 - `admins` (List of String) This access review will include resources and groups who are owned by one of the owners corresponding to the given IDs.
 - `apps` (List of String) This access review will include items in the specified applications
 - `entities` (List of String) This access review will include resources and groups with ids in the given strings.
-- `filter_operator` (String) Specifies whether entities must match all (AND) or any (OR) of the filters. must be one of ["ANY", "ALL"]
+- `filter_operator` (String) Specifies whether entities must match all (AND) or any (OR) of the filters.
 - `group_types` (List of String) This access review will include items of the specified group types
-- `group_visibility` (String) Specifies what users can see during an Access Review. must be one of ["STRICT", "VIEW_VISIBLE_AND_ASSIGNED", "VIEW_ALL"]
+- `group_visibility` (String) Specifies what users can see during an Access Review
 - `include_group_bindings` (Boolean)
 - `names` (List of String) This access review will include resources and groups whose name contains one of the given strings.
 - `resource_types` (List of String) This access review will include items of the specified resource types

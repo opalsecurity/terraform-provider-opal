@@ -20,6 +20,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 			var results1 tfTypes.Resource
 			results1.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
 			results1.AppID = types.StringPointerValue(resultsItem.AppID)
+			results1.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
 			results1.Description = types.StringPointerValue(resultsItem.Description)
 			results1.ID = types.StringValue(resultsItem.ID)
 			results1.Name = types.StringPointerValue(resultsItem.Name)
@@ -289,6 +290,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 			} else {
 				r.Results[resultsCount].AdminOwnerID = results1.AdminOwnerID
 				r.Results[resultsCount].AppID = results1.AppID
+				r.Results[resultsCount].CustomRequestNotification = results1.CustomRequestNotification
 				r.Results[resultsCount].Description = results1.Description
 				r.Results[resultsCount].ID = results1.ID
 				r.Results[resultsCount].Name = results1.Name

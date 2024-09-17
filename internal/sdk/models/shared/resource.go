@@ -13,6 +13,8 @@ type Resource struct {
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
 	// The ID of the app.
 	AppID *string `json:"app_id,omitempty"`
+	// Custom request notification sent upon request approval for this configuration template.
+	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the resource.
 	Description *string `json:"description,omitempty"`
 	// The ID of the resource.
@@ -47,6 +49,13 @@ func (o *Resource) GetAppID() *string {
 		return nil
 	}
 	return o.AppID
+}
+
+func (o *Resource) GetCustomRequestNotification() *string {
+	if o == nil {
+		return nil
+	}
+	return o.CustomRequestNotification
 }
 
 func (o *Resource) GetDescription() *string {

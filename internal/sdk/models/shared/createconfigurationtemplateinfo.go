@@ -13,6 +13,8 @@ type CreateConfigurationTemplateInfo struct {
 	AdminOwnerID string `json:"admin_owner_id"`
 	// The IDs of the break glass users linked to the configuration template.
 	BreakGlassUserIds []string `json:"break_glass_user_ids,omitempty"`
+	// Custom request notification sent upon request approval for this configuration template.
+	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// The IDs of the audit message channels linked to the configuration template.
 	LinkedAuditMessageChannelIds []string `json:"linked_audit_message_channel_ids,omitempty"`
 	// The IDs of the on-call schedules linked to the configuration template.
@@ -43,6 +45,13 @@ func (o *CreateConfigurationTemplateInfo) GetBreakGlassUserIds() []string {
 		return nil
 	}
 	return o.BreakGlassUserIds
+}
+
+func (o *CreateConfigurationTemplateInfo) GetCustomRequestNotification() *string {
+	if o == nil {
+		return nil
+	}
+	return o.CustomRequestNotification
 }
 
 func (o *CreateConfigurationTemplateInfo) GetLinkedAuditMessageChannelIds() []string {

@@ -8,6 +8,8 @@ package shared
 type UpdateResourceInfo struct {
 	// The ID of the owner of the resource.
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
+	// Custom request notification sent upon request approval for this configuration template.
+	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the resource.
 	Description *string `json:"description,omitempty"`
 	// The ID of the resource.
@@ -29,6 +31,13 @@ func (o *UpdateResourceInfo) GetAdminOwnerID() *string {
 		return nil
 	}
 	return o.AdminOwnerID
+}
+
+func (o *UpdateResourceInfo) GetCustomRequestNotification() *string {
+	if o == nil {
+		return nil
+	}
+	return o.CustomRequestNotification
 }
 
 func (o *UpdateResourceInfo) GetDescription() *string {

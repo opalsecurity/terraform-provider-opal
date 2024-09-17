@@ -62,15 +62,15 @@ func (r *TagResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 				PlanModifiers: []planmodifier.String{
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The tag ID`,
+				Description: `The ID of the tag.`,
 			},
 			"key": schema.StringAttribute{
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Required:    true,
-				Description: `The key of the tag to create. Requires replacement if changed. `,
+				Description: `The key of the tag to create. Requires replacement if changed.`,
 			},
 			"updated_at": schema.StringAttribute{
 				Computed:    true,
@@ -85,12 +85,12 @@ func (r *TagResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 			},
 			"value": schema.StringAttribute{
 				Computed: true,
+				Optional: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Optional:    true,
-				Description: `The value of the tag to create. Requires replacement if changed. `,
+				Description: `The value of the tag to create. Requires replacement if changed.`,
 			},
 		},
 	}
