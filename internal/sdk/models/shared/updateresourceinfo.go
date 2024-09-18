@@ -8,7 +8,7 @@ package shared
 type UpdateResourceInfo struct {
 	// The ID of the owner of the resource.
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
-	// Custom request notification sent upon request approval for this configuration template.
+	// Custom request notification sent upon request approval.
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the resource.
 	Description *string `json:"description,omitempty"`

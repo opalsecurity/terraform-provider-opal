@@ -112,7 +112,7 @@ resource "opal_group" "my_group" {
 ### Optional
 
 - `admin_owner_id` (String) The ID of the owner of the group.
-- `custom_request_notification` (String) Custom request notification sent upon request approval for this configuration template.
+- `custom_request_notification` (String) Custom request notification sent upon request approval.
 - `description` (String) A description of the remote group.
 - `group_leader_user_ids` (Set of String) A list of User IDs for the group leaders of the group
 - `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info))

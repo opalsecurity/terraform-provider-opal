@@ -69,7 +69,7 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			},
 			"custom_request_notification": schema.StringAttribute{
 				Computed:    true,
-				Description: `Custom request notification sent upon request approval for this configuration template.`,
+				Description: `Custom request notification sent to the requester when the request is approved.`,
 			},
 			"description": schema.StringAttribute{
 				Computed:    true,

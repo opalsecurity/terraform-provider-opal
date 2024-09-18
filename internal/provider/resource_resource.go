@@ -5,6 +5,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -88,7 +89,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 			"custom_request_notification": schema.StringAttribute{
 				Computed:    true,
 				Optional:    true,
-				Description: `Custom request notification sent upon request approval for this configuration template.`,
+				Description: `Custom request notification sent upon request approval.`,
 				Validators: []validator.String{
 					stringvalidator.UTF8LengthAtMost(800),
 				},
@@ -1047,6 +1048,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				},
 				Description: `A list of configurations for requests to this resource. If not provided, the default request configuration will be used.`,
 				Validators: []validator.Set{
+					setvalidator.SizeAtLeast(1),
 					custom_setvalidators.RequestConfigurations(),
 				},
 			},

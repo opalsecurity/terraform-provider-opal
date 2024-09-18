@@ -99,7 +99,7 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 						},
 						"custom_request_notification": schema.StringAttribute{
 							Computed:    true,
-							Description: `Custom request notification sent upon request approval for this configuration template.`,
+							Description: `Custom request notification sent upon request approval.`,
 						},
 						"description": schema.StringAttribute{
 							Computed:    true,

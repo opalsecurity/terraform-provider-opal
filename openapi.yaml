@@ -4205,6 +4205,7 @@ components:
           items:
             $ref: "#/components/schemas/RequestConfiguration"
           format: set
+          minItems: 1
         request_configuration_list:
           description: A list of request configurations for this group. Deprecated in favor of `request_configurations`.
           deprecated: true
@@ -4225,7 +4226,7 @@ components:
           $ref: "#/components/schemas/GroupRemoteInfo"
           x-speakeasy-param-force-new: true
         custom_request_notification:
-          description: Custom request notification sent upon request approval for this configuration template.
+          description: Custom request notification sent to the requester when the request is approved.
           type: string
           maxLength: 800
           nullable: true
@@ -4512,7 +4513,7 @@ components:
                 priority: 1
           x-speakeasy-ignore: true
         custom_request_notification:
-          description: Custom request notification sent upon request approval for this configuration template.
+          description: Custom request notification sent to the requester when the request is approved.
           type: string
           maxLength: 800
           nullable: true
@@ -5738,7 +5739,7 @@ components:
           type: string
           x-speakeasy-ignore: true
         custom_request_notification:
-          description: Custom request notification sent upon request approval for this configuration template.
+          description: Custom request notification sent upon request approval.
           type: string
           maxLength: 800
           nullable: true
@@ -5888,7 +5889,7 @@ components:
           type: string
           x-speakeasy-ignore: true
         custom_request_notification:
-          description: Custom request notification sent upon request approval for this configuration template.
+          description: Custom request notification sent upon request approval.
           type: string
           maxLength: 800
           nullable: true
@@ -6270,6 +6271,7 @@ components:
             $ref: "#/components/schemas/RequestConfiguration"
           description: A list of configurations for requests to this resource.
           format: set
+          minItems: 1
         request_configuration_list:
           description: A list of configurations for requests to this resource. Deprecated in favor of `request_configurations`.
           deprecated: true
@@ -6280,7 +6282,7 @@ components:
         ticket_propagation:
           $ref: "#/components/schemas/TicketPropagationConfiguration"
         custom_request_notification:
-          description: Custom request notification sent upon request approval for this configuration template.
+          description: Custom request notification sent upon request approval.
           type: string
           maxLength: 800
           nullable: true
@@ -6430,7 +6432,7 @@ components:
         ticket_propagation:
           $ref: "#/components/schemas/TicketPropagationConfiguration"
         custom_request_notification:
-          description: Custom request notification sent upon request approval for this configuration template.
+          description: Custom request notification sent upon request approval.
           type: string
           maxLength: 800
           nullable: true

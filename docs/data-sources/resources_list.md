@@ -50,7 +50,7 @@ Read-Only:
 
 - `admin_owner_id` (String) The ID of the owner of the resource.
 - `app_id` (String) The ID of the app.
-- `custom_request_notification` (String) Custom request notification sent upon request approval for this configuration template.
+- `custom_request_notification` (String) Custom request notification sent upon request approval.
 - `description` (String) A description of the resource.
 - `id` (String) The ID of the resource.
 - `name` (String) The name of the resource.

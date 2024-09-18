@@ -13,7 +13,7 @@ type Resource struct {
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
 	// The ID of the app.
 	AppID *string `json:"app_id,omitempty"`
-	// Custom request notification sent upon request approval for this configuration template.
+	// Custom request notification sent upon request approval.
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the resource.
 	Description *string `json:"description,omitempty"`

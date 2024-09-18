@@ -11,7 +11,7 @@ package shared
 type CreateGroupInfo struct {
 	// The ID of the app for the group.
 	AppID string `json:"app_id"`
-	// Custom request notification sent upon request approval for this configuration template.
+	// Custom request notification sent upon request approval.
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the remote group.
 	Description *string `json:"description,omitempty"`

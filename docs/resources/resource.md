@@ -176,7 +176,7 @@ resource "opal_resource" "my_resource" {
 ### Optional
 
 - `admin_owner_id` (String) The ID of the owner of the resource.
-- `custom_request_notification` (String) Custom request notification sent upon request approval for this configuration template.
+- `custom_request_notification` (String) Custom request notification sent upon request approval.
 - `description` (String) A description of the remote resource.
 - `remote_info` (Attributes) Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
