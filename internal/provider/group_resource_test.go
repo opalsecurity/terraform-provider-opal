@@ -299,6 +299,10 @@ func TestAccGroup_RequestConfigurations(t *testing.T) {
 	}
 	invalidSequentialPriorityConfigString := GenerateGroupResource(&config)
 
+	emptyRequestConfigurationsConfig := []RequestConfigurationConfig{}
+	config.RequestConfigurations = emptyRequestConfigurationsConfig
+	emptyRequestConfigurationsConfigString := GenerateGroupResource(&config)
+
 	resource.Test(t, resource.TestCase{
 		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
 			tfversion.SkipBelow(tfversion.Version1_0_0),
@@ -329,6 +333,10 @@ func TestAccGroup_RequestConfigurations(t *testing.T) {
 			{
 				Config:      invalidSequentialPriorityConfigString,
 				ExpectError: GenerateErrorMessageRegexp("Invalid Attribute Type"),
+			},
+			{
+				Config:      emptyRequestConfigurationsConfigString,
+				ExpectError: GenerateErrorMessageRegexp("Invalid Attribute Value"),
 			},
 			{
 				Config:             sequentialPriorityConfigString,
