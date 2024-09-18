@@ -18,6 +18,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 			var results1 tfTypes.Group
 			results1.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
 			results1.AppID = types.StringPointerValue(resultsItem.AppID)
+			results1.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
 			results1.Description = types.StringPointerValue(resultsItem.Description)
 			results1.GroupBindingID = types.StringPointerValue(resultsItem.GroupBindingID)
 			results1.GroupLeaderUserIds = []types.String{}
@@ -159,6 +160,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 			} else {
 				r.Results[resultsCount].AdminOwnerID = results1.AdminOwnerID
 				r.Results[resultsCount].AppID = results1.AppID
+				r.Results[resultsCount].CustomRequestNotification = results1.CustomRequestNotification
 				r.Results[resultsCount].Description = results1.Description
 				r.Results[resultsCount].GroupBindingID = results1.GroupBindingID
 				r.Results[resultsCount].GroupLeaderUserIds = results1.GroupLeaderUserIds

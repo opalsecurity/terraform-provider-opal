@@ -14,7 +14,7 @@ OnCallSchedule Resource
 
 ```terraform
 resource "opal_on_call_schedule" "my_oncallschedule" {
-  remote_id            = "P7OWH2R"
+  remote_id            = "PNZNINN"
   third_party_provider = "PAGER_DUTY"
 }
 ```
@@ -25,7 +25,7 @@ resource "opal_on_call_schedule" "my_oncallschedule" {
 ### Required
 
 - `remote_id` (String) The remote ID of the on call schedule. Requires replacement if changed.
-- `third_party_provider` (String) The third party provider of the on call schedule. Requires replacement if changed. ; must be one of ["OPSGENIE", "PAGER_DUTY"]
+- `third_party_provider` (String) The third party provider of the on call schedule. must be one of ["OPSGENIE", "PAGER_DUTY"]; Requires replacement if changed.
 
 ### Read-Only
 

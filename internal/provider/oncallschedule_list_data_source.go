@@ -60,7 +60,7 @@ func (r *OnCallScheduleListDataSource) Schema(ctx context.Context, req datasourc
 						},
 						"third_party_provider": schema.StringAttribute{
 							Computed:    true,
-							Description: `The third party provider of the on call schedule. must be one of ["OPSGENIE", "PAGER_DUTY"]`,
+							Description: `The third party provider of the on call schedule.`,
 						},
 					},
 				},

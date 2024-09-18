@@ -5,6 +5,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -28,6 +29,7 @@ import (
 	stateupgraders "github.com/opalsecurity/terraform-provider-opal/internal/stateupgraders"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/boolvalidators"
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/internal/validators/int64validators"
+	speakeasy_objectvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/objectvalidators"
 	custom_setvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/setvalidators"
 	speakeasy_setvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/setvalidators"
 	speakeasy_stringvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/stringvalidators"
@@ -48,24 +50,25 @@ type GroupResource struct {
 
 // GroupResourceModel describes the resource data model.
 type GroupResourceModel struct {
-	AdminOwnerID          types.String                                `tfsdk:"admin_owner_id"`
-	AppID                 types.String                                `tfsdk:"app_id"`
-	Description           types.String                                `tfsdk:"description"`
-	GroupBindingID        types.String                                `tfsdk:"group_binding_id"`
-	GroupLeaderUserIds    []types.String                              `tfsdk:"group_leader_user_ids"`
-	GroupType             types.String                                `tfsdk:"group_type"`
-	ID                    types.String                                `tfsdk:"id"`
-	MessageChannelIds     []types.String                              `tfsdk:"message_channel_ids"`
-	MessageChannels       tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
-	Name                  types.String                                `tfsdk:"name"`
-	OnCallScheduleIds     []types.String                              `tfsdk:"on_call_schedule_ids"`
-	OncallSchedules       tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"oncall_schedules"`
-	RemoteInfo            *tfTypes.GroupRemoteInfo                    `tfsdk:"remote_info"`
-	RemoteName            types.String                                `tfsdk:"remote_name"`
-	RequestConfigurations []tfTypes.RequestConfiguration              `tfsdk:"request_configurations"`
-	RequireMfaToApprove   types.Bool                                  `tfsdk:"require_mfa_to_approve"`
-	Visibility            types.String                                `tfsdk:"visibility"`
-	VisibilityGroupIds    []types.String                              `tfsdk:"visibility_group_ids"`
+	AdminOwnerID              types.String                                `tfsdk:"admin_owner_id"`
+	AppID                     types.String                                `tfsdk:"app_id"`
+	CustomRequestNotification types.String                                `tfsdk:"custom_request_notification"`
+	Description               types.String                                `tfsdk:"description"`
+	GroupBindingID            types.String                                `tfsdk:"group_binding_id"`
+	GroupLeaderUserIds        []types.String                              `tfsdk:"group_leader_user_ids"`
+	GroupType                 types.String                                `tfsdk:"group_type"`
+	ID                        types.String                                `tfsdk:"id"`
+	MessageChannelIds         []types.String                              `tfsdk:"message_channel_ids"`
+	MessageChannels           tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
+	Name                      types.String                                `tfsdk:"name"`
+	OnCallScheduleIds         []types.String                              `tfsdk:"on_call_schedule_ids"`
+	OncallSchedules           tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"oncall_schedules"`
+	RemoteInfo                *tfTypes.GroupRemoteInfo                    `tfsdk:"remote_info"`
+	RemoteName                types.String                                `tfsdk:"remote_name"`
+	RequestConfigurations     []tfTypes.RequestConfiguration              `tfsdk:"request_configurations"`
+	RequireMfaToApprove       types.Bool                                  `tfsdk:"require_mfa_to_approve"`
+	Visibility                types.String                                `tfsdk:"visibility"`
+	VisibilityGroupIds        []types.String                              `tfsdk:"visibility_group_ids"`
 }
 
 func (r *GroupResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -79,26 +82,34 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 		Attributes: map[string]schema.Attribute{
 			"admin_owner_id": schema.StringAttribute{
 				Computed: true,
+				Optional: true,
 				PlanModifiers: []planmodifier.String{
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Optional:    true,
 				Description: `The ID of the owner of the group.`,
 			},
 			"app_id": schema.StringAttribute{
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Required:    true,
-				Description: `The ID of the app for the group. Requires replacement if changed. `,
+				Description: `The ID of the app for the group. Requires replacement if changed.`,
+			},
+			"custom_request_notification": schema.StringAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `Custom request notification sent upon request approval.`,
+				Validators: []validator.String{
+					stringvalidator.UTF8LengthAtMost(800),
+				},
 			},
 			"description": schema.StringAttribute{
 				Computed: true,
+				Optional: true,
 				PlanModifiers: []planmodifier.String{
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Optional:    true,
 				Description: `A description of the remote group.`,
 			},
 			"group_binding_id": schema.StringAttribute{
@@ -110,20 +121,20 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 			},
 			"group_leader_user_ids": schema.SetAttribute{
 				Computed: true,
+				Optional: true,
 				PlanModifiers: []planmodifier.Set{
 					speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
 				},
-				Optional:    true,
 				ElementType: types.StringType,
 				Description: `A list of User IDs for the group leaders of the group`,
 			},
 			"group_type": schema.StringAttribute{
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Required:    true,
-				Description: `The type of the group. Requires replacement if changed. ; must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OPAL_GROUP", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP"]`,
+				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OPAL_GROUP", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"ACTIVE_DIRECTORY_GROUP",
@@ -163,6 +174,9 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
 						},
 						NestedObject: schema.NestedAttributeObject{
+							PlanModifiers: []planmodifier.Object{
+								speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+							},
 							Attributes: map[string]schema.Attribute{
 								"id": schema.StringAttribute{
 									Computed: true,
@@ -197,18 +211,15 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 									PlanModifiers: []planmodifier.String{
 										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 									},
-									Description: `The third party provider of the message channel. must be one of ["SLACK"]`,
+									Description: `The third party provider of the message channel. must be "SLACK"`,
 									Validators: []validator.String{
-										stringvalidator.OneOf(
-											"SLACK",
-										),
+										stringvalidator.OneOf("SLACK"),
 									},
 								},
 							},
 						},
 					},
 				},
-				Description: `The audit and reviewer message channels attached to the group.`,
 			},
 			"name": schema.StringAttribute{
 				Required:    true,
@@ -259,225 +270,224 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						},
 					},
 				},
-				Description: `The on call schedules attached to the group.`,
 			},
 			"remote_info": schema.SingleNestedAttribute{
 				Computed: true,
+				Optional: true,
 				PlanModifiers: []planmodifier.Object{
 					objectplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 				},
-				Optional: true,
 				Attributes: map[string]schema.Attribute{
 					"active_directory_group": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"group_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the Google group. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the Google group. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for Active Directory group. Requires replacement if changed. `,
+						Description: `Remote info for Active Directory group. Requires replacement if changed.`,
 					},
 					"azure_ad_microsoft_365_group": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"group_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the Microsoft Entra ID Microsoft 365 group. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the Microsoft Entra ID Microsoft 365 group. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for Microsoft Entra ID Microsoft 365 group. Requires replacement if changed. `,
+						Description: `Remote info for Microsoft Entra ID Microsoft 365 group. Requires replacement if changed.`,
 					},
 					"azure_ad_security_group": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"group_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the Microsoft Entra ID Security group. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the Microsoft Entra ID Security group. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for Microsoft Entra ID Security group. Requires replacement if changed. `,
+						Description: `Remote info for Microsoft Entra ID Security group. Requires replacement if changed.`,
 					},
 					"duo_group": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"group_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the Duo Security group. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the Duo Security group. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for Duo Security group. Requires replacement if changed. `,
+						Description: `Remote info for Duo Security group. Requires replacement if changed.`,
 					},
 					"github_team": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"team_slug": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The slug of the GitHub team. Requires replacement if changed. ; Not Null`,
+								Description: `The slug of the GitHub team. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for GitHub team. Requires replacement if changed. `,
+						Description: `Remote info for GitHub team. Requires replacement if changed.`,
 					},
 					"gitlab_group": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"group_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the Gitlab group. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the Gitlab group. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for Gitlab group. Requires replacement if changed. `,
+						Description: `Remote info for Gitlab group. Requires replacement if changed.`,
 					},
 					"google_group": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"group_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the Google group. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the Google group. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for Google group. Requires replacement if changed. `,
+						Description: `Remote info for Google group. Requires replacement if changed.`,
 					},
 					"ldap_group": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"group_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the LDAP group. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the LDAP group. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for LDAP group. Requires replacement if changed. `,
+						Description: `Remote info for LDAP group. Requires replacement if changed.`,
 					},
 					"okta_group": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"group_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the Okta Directory group. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the Okta Directory group. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for Okta Directory group. Requires replacement if changed. `,
+						Description: `Remote info for Okta Directory group. Requires replacement if changed.`,
 					},
 				},
-				Description: `Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed. `,
+				Description: `Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed.`,
 			},
 			"remote_name": schema.StringAttribute{
 				Computed: true,
@@ -489,6 +499,9 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 			"request_configurations": schema.SetNestedAttribute{
 				Required: true,
 				NestedObject: schema.NestedAttributeObject{
+					Validators: []validator.Object{
+						speakeasy_objectvalidators.NotNull(),
+					},
 					Attributes: map[string]schema.Attribute{
 						"allow_requests": schema.BoolAttribute{
 							Computed:    true,
@@ -567,12 +580,15 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							Computed: true,
 							Optional: true,
 							NestedObject: schema.NestedAttributeObject{
+								Validators: []validator.Object{
+									speakeasy_objectvalidators.NotNull(),
+								},
 								Attributes: map[string]schema.Attribute{
 									"operator": schema.StringAttribute{
 										Computed:    true,
 										Optional:    true,
 										Default:     stringdefault.StaticString("AND"),
-										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]; Default: "AND"`,
+										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. Default: "AND"; must be one of ["AND", "OR"]`,
 										Validators: []validator.String{
 											stringvalidator.OneOf(
 												"AND",
@@ -610,6 +626,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 				Description: `The request configuration list of the configuration template. If not provided, the default request configuration will be used.`,
 				Validators: []validator.Set{
+					setvalidator.SizeAtLeast(1),
 					custom_setvalidators.RequestConfigurations(),
 				},
 			},
@@ -630,10 +647,10 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 			},
 			"visibility_group_ids": schema.SetAttribute{
 				Computed: true,
+				Optional: true,
 				PlanModifiers: []planmodifier.Set{
 					speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
 				},
-				Optional:    true,
 				ElementType: types.StringType,
 			},
 		},

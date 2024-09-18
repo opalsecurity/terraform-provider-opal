@@ -59,7 +59,7 @@ func (r *UserDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 			},
 			"hr_idp_status": schema.StringAttribute{
 				Computed:    true,
-				Description: `User status pulled from an HR/IDP provider. must be one of ["ACTIVE", "SUSPENDED", "DEPROVISIONED", "DELETED", "NOT_FOUND"]`,
+				Description: `User status pulled from an HR/IDP provider.`,
 			},
 			"id": schema.StringAttribute{
 				Computed:    true,

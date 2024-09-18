@@ -14,9 +14,9 @@ Requests DataSource
 
 ```terraform
 data "opal_requests" "my_requests" {
-  cursor            = "eyJjcmVhdGVkX2F0IjoiMjAyMS0wMS0wNlQyMDo0NzowMFoiLCJ2YWx1ZSI6ImFkbWluIn0="
+  cursor            = "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
   page_size         = 200
-  show_pending_only = false
+  show_pending_only = true
 }
 ```
 
@@ -51,7 +51,6 @@ The `RequestStatus` enum is used to represent the status of a request.
 
 ### Usage Example
 Returned from the `GET Requests` endpoint.
-must be one of ["pending", "approved", "denied", "canceled"]
 - `target_group_id` (String) The unique identifier of the group who is the target of the request.
 - `target_user_id` (String) The unique identifier of the user who is the target of the request.
 - `updated_at` (String) The date and time the request was last updated.
@@ -62,7 +61,7 @@ must be one of ["pending", "approved", "denied", "canceled"]
 Read-Only:
 
 - `field_name` (String)
-- `field_type` (String) The type of the custom request field. must be one of ["SHORT_TEXT", "LONG_TEXT", "BOOLEAN", "MULTI_CHOICE"]
+- `field_type` (String) The type of the custom request field.
 - `field_value` (Attributes) (see [below for nested schema](#nestedatt--requests--custom_fields_responses--field_value))
 
 <a id="nestedatt--requests--custom_fields_responses--field_value"></a>

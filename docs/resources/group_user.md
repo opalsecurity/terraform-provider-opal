@@ -15,7 +15,7 @@ GroupUser Resource
 ```terraform
 resource "opal_group_user" "my_groupuser" {
   access_level_remote_id = "arn:aws:iam::590304332660:role/AdministratorAccess"
-  duration_minutes       = "0"
+  duration_minutes       = 0
   group_id               = "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
   user_id                = "f92aa855-cea9-4814-b9d8-f2a60d3e4a06"
 }
@@ -32,7 +32,7 @@ resource "opal_group_user" "my_groupuser" {
 ### Optional
 
 - `access_level_remote_id` (String) The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used. Requires replacement if changed.
-- `duration_minutes` (Number) Must be set to 0. Any nonzerovalue in terraform does not make sense. Requires replacement if changed. ; must be one of ["0"]; Default: 0
+- `duration_minutes` (Number) Must be set to 0. Any nonzerovalue in terraform does not make sense. Default: 0; must be "0"; Requires replacement if changed.
 
 ### Read-Only
 

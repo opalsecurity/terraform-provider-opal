@@ -65,24 +65,22 @@ func (r *MessageChannelResource) Schema(ctx context.Context, req resource.Schema
 				Description: `The name of the message channel.`,
 			},
 			"remote_id": schema.StringAttribute{
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Required:    true,
-				Description: `The remote ID of the message channel. Requires replacement if changed. `,
+				Description: `The remote ID of the message channel. Requires replacement if changed.`,
 			},
 			"third_party_provider": schema.StringAttribute{
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Required:    true,
-				Description: `The third party provider of the message channel. Requires replacement if changed. ; must be one of ["SLACK"]`,
+				Description: `The third party provider of the message channel. must be "SLACK"; Requires replacement if changed.`,
 				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"SLACK",
-					),
+					stringvalidator.OneOf("SLACK"),
 				},
 			},
 		},

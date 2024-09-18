@@ -43,18 +43,18 @@ func (r *GroupTagResource) Schema(ctx context.Context, req resource.SchemaReques
 		MarkdownDescription: "GroupTag Resource",
 		Attributes: map[string]schema.Attribute{
 			"group_id": schema.StringAttribute{
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 				},
-				Required:    true,
-				Description: `The ID of the group to apply the tag to. Requires replacement if changed. `,
+				Description: `The ID of the group to apply the tag to. Requires replacement if changed.`,
 			},
 			"tag_id": schema.StringAttribute{
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 				},
-				Required:    true,
-				Description: `The ID of the tag to apply. Requires replacement if changed. `,
+				Description: `The ID of the tag to apply. Requires replacement if changed.`,
 			},
 		},
 	}

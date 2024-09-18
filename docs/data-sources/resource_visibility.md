@@ -27,5 +27,5 @@ data "opal_resource_visibility" "my_resourcevisibility" {
 
 ### Read-Only
 
-- `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
+- `visibility` (String) The visibility level of the entity.
 - `visibility_group_ids` (Set of String)

@@ -8,6 +8,7 @@ type ConfigurationTemplate struct {
 	AdminOwnerID                 types.String                    `tfsdk:"admin_owner_id"`
 	BreakGlassUserIds            []types.String                  `tfsdk:"break_glass_user_ids"`
 	ConfigurationTemplateID      types.String                    `tfsdk:"configuration_template_id"`
+	CustomRequestNotification    types.String                    `tfsdk:"custom_request_notification"`
 	LinkedAuditMessageChannelIds []types.String                  `tfsdk:"linked_audit_message_channel_ids"`
 	MemberOncallScheduleIds      []types.String                  `tfsdk:"member_oncall_schedule_ids"`
 	Name                         types.String                    `tfsdk:"name"`

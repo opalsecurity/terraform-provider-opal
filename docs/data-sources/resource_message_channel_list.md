@@ -38,4 +38,4 @@ Read-Only:
 - `is_private` (Boolean) A bool representing whether or not the message channel is private.
 - `name` (String) The name of the message channel.
 - `remote_id` (String) The remote ID of the message channel
-- `third_party_provider` (String) The third party provider of the message channel. must be one of ["SLACK"]
+- `third_party_provider` (String) The third party provider of the message channel.

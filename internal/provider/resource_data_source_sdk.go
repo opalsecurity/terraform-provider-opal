@@ -12,6 +12,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(resp *shared.Resourc
 	if resp != nil {
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 		r.AppID = types.StringPointerValue(resp.AppID)
+		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.Description = types.StringPointerValue(resp.Description)
 		r.ID = types.StringValue(resp.ID)
 		r.Name = types.StringPointerValue(resp.Name)

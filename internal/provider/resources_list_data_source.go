@@ -83,7 +83,7 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 			},
 			"resource_type_filter": schema.StringAttribute{
 				Optional:    true,
-				Description: `The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "CUSTOM", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "TELEPORT_ROLE"]`,
+				Description: `The resource type to filter by.`,
 			},
 			"results": schema.ListNestedAttribute{
 				Computed: true,
@@ -96,6 +96,10 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 						"app_id": schema.StringAttribute{
 							Computed:    true,
 							Description: `The ID of the app.`,
+						},
+						"custom_request_notification": schema.StringAttribute{
+							Computed:    true,
+							Description: `Custom request notification sent upon request approval.`,
 						},
 						"description": schema.StringAttribute{
 							Computed:    true,
@@ -504,7 +508,7 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 											Attributes: map[string]schema.Attribute{
 												"operator": schema.StringAttribute{
 													Computed:    true,
-													Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]`,
+													Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers.`,
 												},
 												"owner_ids": schema.SetAttribute{
 													Computed:    true,
@@ -536,7 +540,7 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 						},
 						"resource_type": schema.StringAttribute{
 							Computed:    true,
-							Description: `The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "CUSTOM", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "TELEPORT_ROLE"]`,
+							Description: `The type of the resource.`,
 						},
 						"ticket_propagation": schema.SingleNestedAttribute{
 							Computed: true,
@@ -552,7 +556,7 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 								},
 								"ticket_provider": schema.StringAttribute{
 									Computed:    true,
-									Description: `The third party ticketing platform provider. must be one of ["JIRA", "LINEAR", "SERVICE_NOW"]`,
+									Description: `The third party ticketing platform provider.`,
 								},
 							},
 							Description: `Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.`,

@@ -39,6 +39,7 @@ type ConfigurationTemplateResourceModel struct {
 	AdminOwnerID                 types.String                            `tfsdk:"admin_owner_id"`
 	BreakGlassUserIds            []types.String                          `tfsdk:"break_glass_user_ids"`
 	ConfigurationTemplateID      types.String                            `tfsdk:"configuration_template_id"`
+	CustomRequestNotification    types.String                            `tfsdk:"custom_request_notification"`
 	LinkedAuditMessageChannelIds []types.String                          `tfsdk:"linked_audit_message_channel_ids"`
 	MemberOncallScheduleIds      []types.String                          `tfsdk:"member_oncall_schedule_ids"`
 	Name                         types.String                            `tfsdk:"name"`
@@ -71,6 +72,14 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 			"configuration_template_id": schema.StringAttribute{
 				Computed:    true,
 				Description: `The ID of the configuration template.`,
+			},
+			"custom_request_notification": schema.StringAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `Custom request notification sent upon request approval for this configuration template.`,
+				Validators: []validator.String{
+					stringvalidator.UTF8LengthAtMost(800),
+				},
 			},
 			"linked_audit_message_channel_ids": schema.SetAttribute{
 				Computed:    true,
@@ -151,7 +160,7 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 										Computed:    true,
 										Optional:    true,
 										Default:     stringdefault.StaticString("AND"),
-										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]; Default: "AND"`,
+										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. Default: "AND"; must be one of ["AND", "OR"]`,
 										Validators: []validator.String{
 											stringvalidator.OneOf(
 												"AND",
@@ -241,10 +250,10 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 					},
 					"visibility_group_ids": schema.SetAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Set{
 							speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
 						},
-						Optional:    true,
 						ElementType: types.StringType,
 					},
 				},

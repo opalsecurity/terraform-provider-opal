@@ -27,14 +27,14 @@ data "opal_group_reviewers_stages_list" "my_groupreviewersstageslist" {
 
 ### Read-Only
 
-- `data` (Attributes List) The reviewer stages for this group. (see [below for nested schema](#nestedatt--data))
+- `data` (Attributes List) (see [below for nested schema](#nestedatt--data))
 
 <a id="nestedatt--data"></a>
 ### Nested Schema for `data`
 
 Read-Only:
 
-- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]
+- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers.
 - `owner_ids` (Set of String)
 - `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval.
 - `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval.

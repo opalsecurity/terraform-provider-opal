@@ -50,7 +50,7 @@ func (r *GroupReviewersStagesListDataSource) Schema(ctx context.Context, req dat
 					Attributes: map[string]schema.Attribute{
 						"operator": schema.StringAttribute{
 							Computed:    true,
-							Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]`,
+							Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers.`,
 						},
 						"owner_ids": schema.SetAttribute{
 							Computed:    true,
@@ -66,7 +66,6 @@ func (r *GroupReviewersStagesListDataSource) Schema(ctx context.Context, req dat
 						},
 					},
 				},
-				Description: `The reviewer stages for this group.`,
 			},
 			"group_id": schema.StringAttribute{
 				Required:    true,

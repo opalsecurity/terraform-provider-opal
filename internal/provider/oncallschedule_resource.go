@@ -60,20 +60,20 @@ func (r *OnCallScheduleResource) Schema(ctx context.Context, req resource.Schema
 				Description: `The name of the on call schedule.`,
 			},
 			"remote_id": schema.StringAttribute{
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Required:    true,
-				Description: `The remote ID of the on call schedule. Requires replacement if changed. `,
+				Description: `The remote ID of the on call schedule. Requires replacement if changed.`,
 			},
 			"third_party_provider": schema.StringAttribute{
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Required:    true,
-				Description: `The third party provider of the on call schedule. Requires replacement if changed. ; must be one of ["OPSGENIE", "PAGER_DUTY"]`,
+				Description: `The third party provider of the on call schedule. must be one of ["OPSGENIE", "PAGER_DUTY"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"OPSGENIE",

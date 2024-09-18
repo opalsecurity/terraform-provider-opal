@@ -43,18 +43,18 @@ func (r *TagUserResource) Schema(ctx context.Context, req resource.SchemaRequest
 		MarkdownDescription: "TagUser Resource",
 		Attributes: map[string]schema.Attribute{
 			"tag_id": schema.StringAttribute{
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 				},
-				Required:    true,
-				Description: `The ID of the tag to apply. Requires replacement if changed. `,
+				Description: `The ID of the tag to apply. Requires replacement if changed.`,
 			},
 			"user_id": schema.StringAttribute{
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 				},
-				Required:    true,
-				Description: `The ID of the user to apply the tag to. Requires replacement if changed. `,
+				Description: `The ID of the user to apply the tag to. Requires replacement if changed.`,
 			},
 		},
 	}

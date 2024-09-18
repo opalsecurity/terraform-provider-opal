@@ -14,7 +14,7 @@ MessageChannel DataSource
 
 ```terraform
 data "opal_message_channel" "my_messagechannel" {
-  id = "6670617d-e72a-47f5-a84c-693817ab4860"
+  id = "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
 }
 ```
 
@@ -30,4 +30,4 @@ data "opal_message_channel" "my_messagechannel" {
 - `is_private` (Boolean) A bool representing whether or not the message channel is private.
 - `name` (String) The name of the message channel.
 - `remote_id` (String) The remote ID of the message channel
-- `third_party_provider` (String) The third party provider of the message channel. must be one of ["SLACK"]
+- `third_party_provider` (String) The third party provider of the message channel.

@@ -14,8 +14,8 @@ Tag Resource
 
 ```terraform
 resource "opal_tag" "my_tag" {
-  key   = "database-name"
-  value = "redis_db"
+  key   = "api-scope"
+  value = "production"
 }
 ```
 
@@ -33,7 +33,7 @@ resource "opal_tag" "my_tag" {
 ### Read-Only
 
 - `created_at` (String) The date the tag was created.
-- `id` (String) The tag ID
+- `id` (String) The ID of the tag.
 - `updated_at` (String) The date the tag was last updated.
 - `user_creator_id` (String) The ID of the user that created the tag.
 

@@ -5,6 +5,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -25,6 +26,7 @@ import (
 	stateupgraders "github.com/opalsecurity/terraform-provider-opal/internal/stateupgraders"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/boolvalidators"
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/internal/validators/int64validators"
+	speakeasy_objectvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/objectvalidators"
 	custom_setvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/setvalidators"
 	speakeasy_setvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/setvalidators"
 	speakeasy_stringvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/stringvalidators"
@@ -45,20 +47,21 @@ type ResourceResource struct {
 
 // ResourceResourceModel describes the resource data model.
 type ResourceResourceModel struct {
-	AdminOwnerID          types.String                            `tfsdk:"admin_owner_id"`
-	AppID                 types.String                            `tfsdk:"app_id"`
-	Description           types.String                            `tfsdk:"description"`
-	ID                    types.String                            `tfsdk:"id"`
-	Name                  types.String                            `tfsdk:"name"`
-	ParentResourceID      types.String                            `tfsdk:"parent_resource_id"`
-	RemoteInfo            *tfTypes.ResourceRemoteInfo             `tfsdk:"remote_info"`
-	RequestConfigurations []tfTypes.RequestConfiguration          `tfsdk:"request_configurations"`
-	RequireMfaToApprove   types.Bool                              `tfsdk:"require_mfa_to_approve"`
-	RequireMfaToConnect   types.Bool                              `tfsdk:"require_mfa_to_connect"`
-	ResourceType          types.String                            `tfsdk:"resource_type"`
-	TicketPropagation     *tfTypes.TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
-	Visibility            types.String                            `tfsdk:"visibility"`
-	VisibilityGroupIds    []types.String                          `tfsdk:"visibility_group_ids"`
+	AdminOwnerID              types.String                            `tfsdk:"admin_owner_id"`
+	AppID                     types.String                            `tfsdk:"app_id"`
+	CustomRequestNotification types.String                            `tfsdk:"custom_request_notification"`
+	Description               types.String                            `tfsdk:"description"`
+	ID                        types.String                            `tfsdk:"id"`
+	Name                      types.String                            `tfsdk:"name"`
+	ParentResourceID          types.String                            `tfsdk:"parent_resource_id"`
+	RemoteInfo                *tfTypes.ResourceRemoteInfo             `tfsdk:"remote_info"`
+	RequestConfigurations     []tfTypes.RequestConfiguration          `tfsdk:"request_configurations"`
+	RequireMfaToApprove       types.Bool                              `tfsdk:"require_mfa_to_approve"`
+	RequireMfaToConnect       types.Bool                              `tfsdk:"require_mfa_to_connect"`
+	ResourceType              types.String                            `tfsdk:"resource_type"`
+	TicketPropagation         *tfTypes.TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
+	Visibility                types.String                            `tfsdk:"visibility"`
+	VisibilityGroupIds        []types.String                          `tfsdk:"visibility_group_ids"`
 }
 
 func (r *ResourceResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -76,12 +79,20 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Description: `The ID of the owner of the resource.`,
 			},
 			"app_id": schema.StringAttribute{
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Required:    true,
-				Description: `The ID of the app for the resource. Requires replacement if changed. `,
+				Description: `The ID of the app for the resource. Requires replacement if changed.`,
+			},
+			"custom_request_notification": schema.StringAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `Custom request notification sent upon request approval.`,
+				Validators: []validator.String{
+					stringvalidator.UTF8LengthAtMost(800),
+				},
 			},
 			"description": schema.StringAttribute{
 				Computed:    true,
@@ -108,808 +119,811 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 			},
 			"remote_info": schema.SingleNestedAttribute{
 				Computed: true,
+				Optional: true,
 				PlanModifiers: []planmodifier.Object{
 					objectplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 				},
-				Optional: true,
 				Attributes: map[string]schema.Attribute{
 					"aws_account": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"account_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the AWS account. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the AWS account. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for AWS account. Requires replacement if changed. `,
+						Description: `Remote info for AWS account. Requires replacement if changed.`,
 					},
 					"aws_ec2_instance": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"account_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the AWS account. Required for AWS Organizations. Requires replacement if changed. `,
+								Description: `The id of the AWS account. Required for AWS Organizations. Requires replacement if changed.`,
 							},
 							"instance_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The instanceId of the EC2 instance. Requires replacement if changed. ; Not Null`,
+								Description: `The instanceId of the EC2 instance. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 							"region": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The region of the EC2 instance. Requires replacement if changed. ; Not Null`,
+								Description: `The region of the EC2 instance. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for AWS EC2 instance. Requires replacement if changed. `,
+						Description: `Remote info for AWS EC2 instance. Requires replacement if changed.`,
 					},
 					"aws_eks_cluster": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"account_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the AWS account. Required for AWS Organizations. Requires replacement if changed. `,
+								Description: `The id of the AWS account. Required for AWS Organizations. Requires replacement if changed.`,
 							},
 							"arn": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The ARN of the EKS cluster. Requires replacement if changed. ; Not Null`,
+								Description: `The ARN of the EKS cluster. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for AWS EKS cluster. Requires replacement if changed. `,
+						Description: `Remote info for AWS EKS cluster. Requires replacement if changed.`,
 					},
 					"aws_iam_role": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"account_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the AWS account. Required for AWS Organizations. Requires replacement if changed. `,
+								Description: `The id of the AWS account. Required for AWS Organizations. Requires replacement if changed.`,
 							},
 							"arn": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The ARN of the IAM role. Requires replacement if changed. ; Not Null`,
+								Description: `The ARN of the IAM role. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for AWS IAM role. Requires replacement if changed. `,
+						Description: `Remote info for AWS IAM role. Requires replacement if changed.`,
 					},
 					"aws_permission_set": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"account_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The ID of an AWS account to which this permission set is provisioned. Requires replacement if changed. ; Not Null`,
+								Description: `The ID of an AWS account to which this permission set is provisioned. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 							"arn": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The ARN of the permission set. Requires replacement if changed. ; Not Null`,
+								Description: `The ARN of the permission set. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for AWS Identity Center permission set. Requires replacement if changed. `,
+						Description: `Remote info for AWS Identity Center permission set. Requires replacement if changed.`,
 					},
 					"aws_rds_instance": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"account_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the AWS account. Required for AWS Organizations. Requires replacement if changed. `,
+								Description: `The id of the AWS account. Required for AWS Organizations. Requires replacement if changed.`,
 							},
 							"instance_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The instanceId of the RDS instance. Requires replacement if changed. ; Not Null`,
+								Description: `The instanceId of the RDS instance. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 							"region": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The region of the RDS instance. Requires replacement if changed. ; Not Null`,
+								Description: `The region of the RDS instance. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 							"resource_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The resourceId of the RDS instance. Requires replacement if changed. ; Not Null`,
+								Description: `The resourceId of the RDS instance. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for AWS RDS instance. Requires replacement if changed. `,
+						Description: `Remote info for AWS RDS instance. Requires replacement if changed.`,
 					},
 					"gcp_big_query_dataset": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"dataset_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the dataset. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the dataset. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 							"project_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the project the dataset is in. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the project the dataset is in. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for GCP BigQuery Dataset. Requires replacement if changed. `,
+						Description: `Remote info for GCP BigQuery Dataset. Requires replacement if changed.`,
 					},
 					"gcp_big_query_table": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"dataset_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the dataset the table is in. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the dataset the table is in. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 							"project_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the project the table is in. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the project the table is in. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 							"table_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the table. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the table. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for GCP BigQuery Table. Requires replacement if changed. `,
+						Description: `Remote info for GCP BigQuery Table. Requires replacement if changed.`,
 					},
 					"gcp_bucket": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"bucket_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the bucket. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the bucket. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for GCP bucket. Requires replacement if changed. `,
+						Description: `Remote info for GCP bucket. Requires replacement if changed.`,
 					},
 					"gcp_compute_instance": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"instance_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the instance. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the instance. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 							"project_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the project the instance is in. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the project the instance is in. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 							"zone": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The zone the instance is in. Requires replacement if changed. ; Not Null`,
+								Description: `The zone the instance is in. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for GCP compute instance. Requires replacement if changed. `,
+						Description: `Remote info for GCP compute instance. Requires replacement if changed.`,
 					},
 					"gcp_folder": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"folder_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the folder. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the folder. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for GCP folder. Requires replacement if changed. `,
+						Description: `Remote info for GCP folder. Requires replacement if changed.`,
 					},
 					"gcp_gke_cluster": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"cluster_name": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The name of the GKE cluster. Requires replacement if changed. ; Not Null`,
+								Description: `The name of the GKE cluster. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for GCP GKE cluster. Requires replacement if changed. `,
+						Description: `Remote info for GCP GKE cluster. Requires replacement if changed.`,
 					},
 					"gcp_organization": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"organization_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the organization. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the organization. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for GCP organization. Requires replacement if changed. `,
+						Description: `Remote info for GCP organization. Requires replacement if changed.`,
 					},
 					"gcp_project": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"project_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the project. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the project. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for GCP project. Requires replacement if changed. `,
+						Description: `Remote info for GCP project. Requires replacement if changed.`,
 					},
 					"gcp_service_account": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"email": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The email of the service account. Requires replacement if changed. ; Not Null`,
+								Description: `The email of the service account. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 							"project_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the project the service account is in. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the project the service account is in. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 							"service_account_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the service account. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the service account. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for a GCP service account. Requires replacement if changed. `,
+						Description: `Remote info for a GCP service account. Requires replacement if changed.`,
 					},
 					"gcp_sql_instance": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"instance_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the SQL instance. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the SQL instance. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 							"project_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the project the instance is in. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the project the instance is in. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for GCP SQL instance. Requires replacement if changed. `,
+						Description: `Remote info for GCP SQL instance. Requires replacement if changed.`,
 					},
 					"github_repo": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"repo_name": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The name of the repository. Requires replacement if changed. ; Not Null`,
+								Description: `The name of the repository. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for GitHub repository. Requires replacement if changed. `,
+						Description: `Remote info for GitHub repository. Requires replacement if changed.`,
 					},
 					"gitlab_project": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"project_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the project. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the project. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for Gitlab project. Requires replacement if changed. `,
+						Description: `Remote info for Gitlab project. Requires replacement if changed.`,
 					},
 					"okta_app": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"app_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the app. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the app. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for Okta directory app. Requires replacement if changed. `,
+						Description: `Remote info for Okta directory app. Requires replacement if changed.`,
 					},
 					"okta_custom_role": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"role_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the custom role. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the custom role. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for Okta directory custom role. Requires replacement if changed. `,
+						Description: `Remote info for Okta directory custom role. Requires replacement if changed.`,
 					},
 					"okta_standard_role": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"role_type": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The type of the standard role. Requires replacement if changed. ; Not Null`,
+								Description: `The type of the standard role. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for Okta directory standard role. Requires replacement if changed. `,
+						Description: `Remote info for Okta directory standard role. Requires replacement if changed.`,
 					},
 					"pagerduty_role": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"role_name": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The name of the role. Requires replacement if changed. ; Not Null`,
+								Description: `The name of the role. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for Pagerduty role. Requires replacement if changed. `,
+						Description: `Remote info for Pagerduty role. Requires replacement if changed.`,
 					},
 					"salesforce_permission_set": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"permission_set_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the permission set. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the permission set. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for Salesforce permission set. Requires replacement if changed. `,
+						Description: `Remote info for Salesforce permission set. Requires replacement if changed.`,
 					},
 					"salesforce_profile": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"profile_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the permission set. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the permission set. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 							"user_license_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the user license. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the user license. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for Salesforce profile. Requires replacement if changed. `,
+						Description: `Remote info for Salesforce profile. Requires replacement if changed.`,
 					},
 					"salesforce_role": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"role_id": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The id of the role. Requires replacement if changed. ; Not Null`,
+								Description: `The id of the role. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for Salesforce role. Requires replacement if changed. `,
+						Description: `Remote info for Salesforce role. Requires replacement if changed.`,
 					},
 					"teleport_role": schema.SingleNestedAttribute{
 						Computed: true,
+						Optional: true,
 						PlanModifiers: []planmodifier.Object{
 							objectplanmodifier.RequiresReplaceIfConfigured(),
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
-						Optional: true,
 						Attributes: map[string]schema.Attribute{
 							"role_name": schema.StringAttribute{
 								Computed: true,
+								Optional: true,
 								PlanModifiers: []planmodifier.String{
 									stringplanmodifier.RequiresReplaceIfConfigured(),
 									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 								},
-								Optional:    true,
-								Description: `The name role. Requires replacement if changed. ; Not Null`,
+								Description: `The name role. Not Null; Requires replacement if changed.`,
 								Validators: []validator.String{
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
 						},
-						Description: `Remote info for Teleport role. Requires replacement if changed. `,
+						Description: `Remote info for Teleport role. Requires replacement if changed.`,
 					},
 				},
-				Description: `Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed. `,
+				Description: `Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed.`,
 			},
 			"request_configurations": schema.SetNestedAttribute{
 				Required: true,
 				NestedObject: schema.NestedAttributeObject{
+					Validators: []validator.Object{
+						speakeasy_objectvalidators.NotNull(),
+					},
 					Attributes: map[string]schema.Attribute{
 						"allow_requests": schema.BoolAttribute{
 							Computed:    true,
@@ -988,12 +1002,15 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 							Computed: true,
 							Optional: true,
 							NestedObject: schema.NestedAttributeObject{
+								Validators: []validator.Object{
+									speakeasy_objectvalidators.NotNull(),
+								},
 								Attributes: map[string]schema.Attribute{
 									"operator": schema.StringAttribute{
 										Computed:    true,
 										Optional:    true,
 										Default:     stringdefault.StaticString("AND"),
-										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. must be one of ["AND", "OR"]; Default: "AND"`,
+										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. Default: "AND"; must be one of ["AND", "OR"]`,
 										Validators: []validator.String{
 											stringvalidator.OneOf(
 												"AND",
@@ -1031,6 +1048,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				},
 				Description: `A list of configurations for requests to this resource. If not provided, the default request configuration will be used.`,
 				Validators: []validator.Set{
+					setvalidator.SizeAtLeast(1),
 					custom_setvalidators.RequestConfigurations(),
 				},
 			},
@@ -1045,12 +1063,12 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Description: `A bool representing whether or not to require MFA to connect to this resource.`,
 			},
 			"resource_type": schema.StringAttribute{
+				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Required:    true,
-				Description: `The type of the resource. Requires replacement if changed. ; must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "CUSTOM", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "TELEPORT_ROLE"]`,
+				Description: `The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "CUSTOM", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "TELEPORT_ROLE"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"AWS_IAM_ROLE",
