@@ -107,7 +107,7 @@ resource "opal_resource" "my_resource" {
       auto_approval  = false
       condition = {
         group_ids = [
-          "9fd9b2ef-7450-42b5-921a-c42a65ac9baa"
+          "9dbe7525-2a4a-45cb-9a76-3f3e0873641f"
         ]
         role_remote_ids = [
           "..."
@@ -123,7 +123,7 @@ resource "opal_resource" "my_resource" {
         {
           operator = "AND"
           owner_ids = [
-            "c117f3d8-d7dc-4277-9169-34f44f3229a2"
+            "c1fddd27-1944-4f29-a2c5-cd206276bb44"
           ]
           require_admin_approval   = false
           require_manager_approval = false
@@ -142,6 +142,6 @@ resource "opal_resource" "my_resource" {
   }
   visibility = "GLOBAL"
   visibility_group_ids = [
-    "c4260f5e-1495-4c6c-b58d-78f194b678a9"
+    "c20519cc-5d81-4468-891e-3dd6093e4e5e"
   ]
 }
