@@ -4,15 +4,15 @@ resource "opal_group" "my_group" {
   custom_request_notification = "Check your email to register your account."
   description                 = "Engineering team Okta group."
   group_leader_user_ids = [
-    "2c3ea0cf-9888-42c2-a96f-64f3fe436133"
+    "23ac9822-9f43-4e31-a31d-6a6109f207ae"
   ]
   group_type = "OPAL_GROUP"
   message_channel_ids = [
-    "0610f601-dce1-4a71-b5b2-fde35be7f613"
+    "01f0dea1-52d3-4b76-b362-1ee677e90fd2"
   ]
   name = "mongo-db-prod"
   on_call_schedule_ids = [
-    "64cfce08-523c-4560-a3dd-5aa18aa2ee9b"
+    "6cc05350-3da1-4a2e-bbeb-bd4bc4f9b06b"
   ]
   remote_info = {
     active_directory_group = {
@@ -49,7 +49,7 @@ resource "opal_group" "my_group" {
       auto_approval  = false
       condition = {
         group_ids = [
-          "eda93353-0444-45a7-b67b-40933f2886c8"
+          "ea350457-6b03-4f86-8810-12ec5b59be85"
         ]
         role_remote_ids = [
           "..."
@@ -65,7 +65,7 @@ resource "opal_group" "my_group" {
         {
           operator = "AND"
           owner_ids = [
-            "f161583d-0998-47dc-a5cb-7764b89b1852"
+            "f653097c-5b74-48b8-a26c-33571f9211ff"
           ]
           require_admin_approval   = false
           require_manager_approval = false
@@ -76,6 +76,6 @@ resource "opal_group" "my_group" {
   require_mfa_to_approve = false
   visibility             = "GLOBAL"
   visibility_group_ids = [
-    "efa92f26-fd60-4cff-987f-3db464ae0915"
+    "ea22f6cf-8fd4-44e9-b53d-66a5731ab7da"
   ]
 }
