@@ -4636,6 +4636,7 @@ components:
           items:
             $ref: "#/components/schemas/GroupResource"
           type: array
+          x-speakeasy-param-suppress-computed-diff: true
       type: object
       required:
         - group_resources
