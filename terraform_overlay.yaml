@@ -992,6 +992,9 @@ actions:
   - target: $["components"]["schemas"]["UpdateGroupResourcesInfo"]
     update:
       x-speakeasy-entity: GroupResourceList
+  - target: $["components"]["schemas"]["GroupResourceList"]["properties"]["group_resources"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["GroupResourceList"]
     update:
       x-speakeasy-entity: GroupResourceList
@@ -1638,3 +1641,4 @@ actions:
           description: Operations related to on-call schedules
         - name: uars
           description: Operations related to uars
+          
