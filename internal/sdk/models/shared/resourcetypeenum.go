@@ -11,42 +11,61 @@ import (
 type ResourceTypeEnum string
 
 const (
-	ResourceTypeEnumAwsIamRole                  ResourceTypeEnum = "AWS_IAM_ROLE"
-	ResourceTypeEnumAwsEc2Instance              ResourceTypeEnum = "AWS_EC2_INSTANCE"
-	ResourceTypeEnumAwsEksCluster               ResourceTypeEnum = "AWS_EKS_CLUSTER"
-	ResourceTypeEnumAwsRdsPostgresInstance      ResourceTypeEnum = "AWS_RDS_POSTGRES_INSTANCE"
-	ResourceTypeEnumAwsRdsMysqlInstance         ResourceTypeEnum = "AWS_RDS_MYSQL_INSTANCE"
-	ResourceTypeEnumAwsAccount                  ResourceTypeEnum = "AWS_ACCOUNT"
-	ResourceTypeEnumAwsSsoPermissionSet         ResourceTypeEnum = "AWS_SSO_PERMISSION_SET"
-	ResourceTypeEnumCustom                      ResourceTypeEnum = "CUSTOM"
-	ResourceTypeEnumGcpOrganization             ResourceTypeEnum = "GCP_ORGANIZATION"
-	ResourceTypeEnumGcpBucket                   ResourceTypeEnum = "GCP_BUCKET"
-	ResourceTypeEnumGcpComputeInstance          ResourceTypeEnum = "GCP_COMPUTE_INSTANCE"
-	ResourceTypeEnumGcpFolder                   ResourceTypeEnum = "GCP_FOLDER"
-	ResourceTypeEnumGcpGkeCluster               ResourceTypeEnum = "GCP_GKE_CLUSTER"
-	ResourceTypeEnumGcpProject                  ResourceTypeEnum = "GCP_PROJECT"
-	ResourceTypeEnumGcpCloudSQLPostgresInstance ResourceTypeEnum = "GCP_CLOUD_SQL_POSTGRES_INSTANCE"
-	ResourceTypeEnumGcpCloudSQLMysqlInstance    ResourceTypeEnum = "GCP_CLOUD_SQL_MYSQL_INSTANCE"
-	ResourceTypeEnumGcpBigQueryDataset          ResourceTypeEnum = "GCP_BIG_QUERY_DATASET"
-	ResourceTypeEnumGcpBigQueryTable            ResourceTypeEnum = "GCP_BIG_QUERY_TABLE"
-	ResourceTypeEnumGcpServiceAccount           ResourceTypeEnum = "GCP_SERVICE_ACCOUNT"
-	ResourceTypeEnumGitHubRepo                  ResourceTypeEnum = "GIT_HUB_REPO"
-	ResourceTypeEnumGitLabProject               ResourceTypeEnum = "GIT_LAB_PROJECT"
-	ResourceTypeEnumGoogleWorkspaceRole         ResourceTypeEnum = "GOOGLE_WORKSPACE_ROLE"
-	ResourceTypeEnumMongoInstance               ResourceTypeEnum = "MONGO_INSTANCE"
-	ResourceTypeEnumMongoAtlasInstance          ResourceTypeEnum = "MONGO_ATLAS_INSTANCE"
-	ResourceTypeEnumOktaApp                     ResourceTypeEnum = "OKTA_APP"
-	ResourceTypeEnumOktaRole                    ResourceTypeEnum = "OKTA_ROLE"
-	ResourceTypeEnumOpalRole                    ResourceTypeEnum = "OPAL_ROLE"
-	ResourceTypeEnumPagerdutyRole               ResourceTypeEnum = "PAGERDUTY_ROLE"
-	ResourceTypeEnumTailscaleSSH                ResourceTypeEnum = "TAILSCALE_SSH"
-	ResourceTypeEnumSalesforcePermissionSet     ResourceTypeEnum = "SALESFORCE_PERMISSION_SET"
-	ResourceTypeEnumSalesforceProfile           ResourceTypeEnum = "SALESFORCE_PROFILE"
-	ResourceTypeEnumSalesforceRole              ResourceTypeEnum = "SALESFORCE_ROLE"
-	ResourceTypeEnumWorkdayRole                 ResourceTypeEnum = "WORKDAY_ROLE"
-	ResourceTypeEnumMysqlInstance               ResourceTypeEnum = "MYSQL_INSTANCE"
-	ResourceTypeEnumMariadbInstance             ResourceTypeEnum = "MARIADB_INSTANCE"
-	ResourceTypeEnumTeleportRole                ResourceTypeEnum = "TELEPORT_ROLE"
+	ResourceTypeEnumAwsIamRole                       ResourceTypeEnum = "AWS_IAM_ROLE"
+	ResourceTypeEnumAwsEc2Instance                   ResourceTypeEnum = "AWS_EC2_INSTANCE"
+	ResourceTypeEnumAwsEksCluster                    ResourceTypeEnum = "AWS_EKS_CLUSTER"
+	ResourceTypeEnumAwsRdsPostgresCluster            ResourceTypeEnum = "AWS_RDS_POSTGRES_CLUSTER"
+	ResourceTypeEnumAwsRdsPostgresInstance           ResourceTypeEnum = "AWS_RDS_POSTGRES_INSTANCE"
+	ResourceTypeEnumAwsRdsMysqlCluster               ResourceTypeEnum = "AWS_RDS_MYSQL_CLUSTER"
+	ResourceTypeEnumAwsRdsMysqlInstance              ResourceTypeEnum = "AWS_RDS_MYSQL_INSTANCE"
+	ResourceTypeEnumAwsAccount                       ResourceTypeEnum = "AWS_ACCOUNT"
+	ResourceTypeEnumAwsSsoPermissionSet              ResourceTypeEnum = "AWS_SSO_PERMISSION_SET"
+	ResourceTypeEnumAzureManagementGroup             ResourceTypeEnum = "AZURE_MANAGEMENT_GROUP"
+	ResourceTypeEnumAzureResourceGroup               ResourceTypeEnum = "AZURE_RESOURCE_GROUP"
+	ResourceTypeEnumAzureSubscription                ResourceTypeEnum = "AZURE_SUBSCRIPTION"
+	ResourceTypeEnumAzureVirtualMachine              ResourceTypeEnum = "AZURE_VIRTUAL_MACHINE"
+	ResourceTypeEnumAzureStorageAccount              ResourceTypeEnum = "AZURE_STORAGE_ACCOUNT"
+	ResourceTypeEnumAzureStorageContainer            ResourceTypeEnum = "AZURE_STORAGE_CONTAINER"
+	ResourceTypeEnumAzureSQLServer                   ResourceTypeEnum = "AZURE_SQL_SERVER"
+	ResourceTypeEnumAzureSQLManagedInstance          ResourceTypeEnum = "AZURE_SQL_MANAGED_INSTANCE"
+	ResourceTypeEnumAzureSQLDatabase                 ResourceTypeEnum = "AZURE_SQL_DATABASE"
+	ResourceTypeEnumAzureUserAssignedManagedIdentity ResourceTypeEnum = "AZURE_USER_ASSIGNED_MANAGED_Identity"
+	ResourceTypeEnumAzureEntraIDRole                 ResourceTypeEnum = "AZURE_ENTRA_ID_ROLE"
+	ResourceTypeEnumCustom                           ResourceTypeEnum = "CUSTOM"
+	ResourceTypeEnumCustomConnector                  ResourceTypeEnum = "CUSTOM_CONNECTOR"
+	ResourceTypeEnumGcpOrganization                  ResourceTypeEnum = "GCP_ORGANIZATION"
+	ResourceTypeEnumGcpBucket                        ResourceTypeEnum = "GCP_BUCKET"
+	ResourceTypeEnumGcpComputeInstance               ResourceTypeEnum = "GCP_COMPUTE_INSTANCE"
+	ResourceTypeEnumGcpFolder                        ResourceTypeEnum = "GCP_FOLDER"
+	ResourceTypeEnumGcpGkeCluster                    ResourceTypeEnum = "GCP_GKE_CLUSTER"
+	ResourceTypeEnumGcpProject                       ResourceTypeEnum = "GCP_PROJECT"
+	ResourceTypeEnumGcpCloudSQLPostgresInstance      ResourceTypeEnum = "GCP_CLOUD_SQL_POSTGRES_INSTANCE"
+	ResourceTypeEnumGcpCloudSQLMysqlInstance         ResourceTypeEnum = "GCP_CLOUD_SQL_MYSQL_INSTANCE"
+	ResourceTypeEnumGcpBigQueryDataset               ResourceTypeEnum = "GCP_BIG_QUERY_DATASET"
+	ResourceTypeEnumGcpBigQueryTable                 ResourceTypeEnum = "GCP_BIG_QUERY_TABLE"
+	ResourceTypeEnumGcpServiceAccount                ResourceTypeEnum = "GCP_SERVICE_ACCOUNT"
+	ResourceTypeEnumGitHubRepo                       ResourceTypeEnum = "GIT_HUB_REPO"
+	ResourceTypeEnumGitLabProject                    ResourceTypeEnum = "GIT_LAB_PROJECT"
+	ResourceTypeEnumGoogleWorkspaceRole              ResourceTypeEnum = "GOOGLE_WORKSPACE_ROLE"
+	ResourceTypeEnumMongoInstance                    ResourceTypeEnum = "MONGO_INSTANCE"
+	ResourceTypeEnumMongoAtlasInstance               ResourceTypeEnum = "MONGO_ATLAS_INSTANCE"
+	ResourceTypeEnumOktaApp                          ResourceTypeEnum = "OKTA_APP"
+	ResourceTypeEnumOktaRole                         ResourceTypeEnum = "OKTA_ROLE"
+	ResourceTypeEnumOpalRole                         ResourceTypeEnum = "OPAL_ROLE"
+	ResourceTypeEnumOpalScopedRole                   ResourceTypeEnum = "OPAL_SCOPED_ROLE"
+	ResourceTypeEnumPagerdutyRole                    ResourceTypeEnum = "PAGERDUTY_ROLE"
+	ResourceTypeEnumTailscaleSSH                     ResourceTypeEnum = "TAILSCALE_SSH"
+	ResourceTypeEnumSalesforcePermissionSet          ResourceTypeEnum = "SALESFORCE_PERMISSION_SET"
+	ResourceTypeEnumSalesforceProfile                ResourceTypeEnum = "SALESFORCE_PROFILE"
+	ResourceTypeEnumSalesforceRole                   ResourceTypeEnum = "SALESFORCE_ROLE"
+	ResourceTypeEnumSnowflakeDatabase                ResourceTypeEnum = "SNOWFLAKE_DATABASE"
+	ResourceTypeEnumSnowflakeSchema                  ResourceTypeEnum = "SNOWFLAKE_SCHEMA"
+	ResourceTypeEnumSnowflakeTable                   ResourceTypeEnum = "SNOWFLAKE_TABLE"
+	ResourceTypeEnumWorkdayRole                      ResourceTypeEnum = "WORKDAY_ROLE"
+	ResourceTypeEnumMysqlInstance                    ResourceTypeEnum = "MYSQL_INSTANCE"
+	ResourceTypeEnumMariadbInstance                  ResourceTypeEnum = "MARIADB_INSTANCE"
+	ResourceTypeEnumPostgresInstance                 ResourceTypeEnum = "POSTGRES_INSTANCE"
+	ResourceTypeEnumTeleportRole                     ResourceTypeEnum = "TELEPORT_ROLE"
 )
 
 func (e ResourceTypeEnum) ToPointer() *ResourceTypeEnum {
@@ -64,7 +83,11 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "AWS_EKS_CLUSTER":
 		fallthrough
+	case "AWS_RDS_POSTGRES_CLUSTER":
+		fallthrough
 	case "AWS_RDS_POSTGRES_INSTANCE":
+		fallthrough
+	case "AWS_RDS_MYSQL_CLUSTER":
 		fallthrough
 	case "AWS_RDS_MYSQL_INSTANCE":
 		fallthrough
@@ -72,7 +95,31 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "AWS_SSO_PERMISSION_SET":
 		fallthrough
+	case "AZURE_MANAGEMENT_GROUP":
+		fallthrough
+	case "AZURE_RESOURCE_GROUP":
+		fallthrough
+	case "AZURE_SUBSCRIPTION":
+		fallthrough
+	case "AZURE_VIRTUAL_MACHINE":
+		fallthrough
+	case "AZURE_STORAGE_ACCOUNT":
+		fallthrough
+	case "AZURE_STORAGE_CONTAINER":
+		fallthrough
+	case "AZURE_SQL_SERVER":
+		fallthrough
+	case "AZURE_SQL_MANAGED_INSTANCE":
+		fallthrough
+	case "AZURE_SQL_DATABASE":
+		fallthrough
+	case "AZURE_USER_ASSIGNED_MANAGED_Identity":
+		fallthrough
+	case "AZURE_ENTRA_ID_ROLE":
+		fallthrough
 	case "CUSTOM":
+		fallthrough
+	case "CUSTOM_CONNECTOR":
 		fallthrough
 	case "GCP_ORGANIZATION":
 		fallthrough
@@ -112,6 +159,8 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "OPAL_ROLE":
 		fallthrough
+	case "OPAL_SCOPED_ROLE":
+		fallthrough
 	case "PAGERDUTY_ROLE":
 		fallthrough
 	case "TAILSCALE_SSH":
@@ -122,11 +171,19 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "SALESFORCE_ROLE":
 		fallthrough
+	case "SNOWFLAKE_DATABASE":
+		fallthrough
+	case "SNOWFLAKE_SCHEMA":
+		fallthrough
+	case "SNOWFLAKE_TABLE":
+		fallthrough
 	case "WORKDAY_ROLE":
 		fallthrough
 	case "MYSQL_INSTANCE":
 		fallthrough
 	case "MARIADB_INSTANCE":
+		fallthrough
+	case "POSTGRES_INSTANCE":
 		fallthrough
 	case "TELEPORT_ROLE":
 		*e = ResourceTypeEnum(v)

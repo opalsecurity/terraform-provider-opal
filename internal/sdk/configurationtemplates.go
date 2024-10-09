@@ -13,7 +13,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/retry"
-	"io"
 	"net/http"
 	"net/url"
 )
@@ -181,21 +180,11 @@ func (s *ConfigurationTemplates) Create(ctx context.Context, request shared.Crea
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
@@ -207,19 +196,17 @@ func (s *ConfigurationTemplates) Create(ctx context.Context, request shared.Crea
 
 			res.ConfigurationTemplate = &out
 		default:
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
-
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
@@ -373,24 +360,13 @@ func (s *ConfigurationTemplates) Delete(ctx context.Context, request operations.
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
@@ -544,21 +520,11 @@ func (s *ConfigurationTemplates) Get(ctx context.Context, opts ...operations.Opt
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
@@ -570,20 +536,18 @@ func (s *ConfigurationTemplates) Get(ctx context.Context, opts ...operations.Opt
 
 			res.PaginatedConfigurationTemplateList = &out
 		default:
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
-
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
@@ -743,21 +707,11 @@ func (s *ConfigurationTemplates) Update(ctx context.Context, request shared.Upda
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
@@ -769,19 +723,17 @@ func (s *ConfigurationTemplates) Update(ctx context.Context, request shared.Upda
 
 			res.ConfigurationTemplate = &out
 		default:
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
-
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 

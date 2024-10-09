@@ -13,7 +13,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/retry"
-	"io"
 	"net/http"
 	"net/url"
 )
@@ -181,21 +180,11 @@ func (s *Owners) Create(ctx context.Context, request shared.CreateOwnerInfo, opt
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
@@ -207,19 +196,17 @@ func (s *Owners) Create(ctx context.Context, request shared.CreateOwnerInfo, opt
 
 			res.Owner = &out
 		default:
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
-
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
@@ -373,24 +360,13 @@ func (s *Owners) Delete(ctx context.Context, request operations.DeleteOwnerReque
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
@@ -548,21 +524,11 @@ func (s *Owners) Get(ctx context.Context, request operations.GetOwnersRequest, o
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
@@ -574,20 +540,18 @@ func (s *Owners) Get(ctx context.Context, request operations.GetOwnersRequest, o
 
 			res.PaginatedOwnersList = &out
 		default:
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
-
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
@@ -741,21 +705,11 @@ func (s *Owners) GetFromName(ctx context.Context, request operations.GetOwnerFro
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
@@ -767,20 +721,18 @@ func (s *Owners) GetFromName(ctx context.Context, request operations.GetOwnerFro
 
 			res.Owner = &out
 		default:
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
-
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
@@ -934,21 +886,11 @@ func (s *Owners) GetID(ctx context.Context, request operations.GetOwnerIDRequest
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
@@ -960,20 +902,18 @@ func (s *Owners) GetID(ctx context.Context, request operations.GetOwnerIDRequest
 
 			res.Owner = &out
 		default:
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
-
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
@@ -1133,21 +1073,11 @@ func (s *Owners) Update(ctx context.Context, request shared.UpdateOwnerInfoList,
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
@@ -1159,19 +1089,17 @@ func (s *Owners) Update(ctx context.Context, request shared.UpdateOwnerInfoList,
 
 			res.UpdateOwnerInfoList = &out
 		default:
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
-
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
@@ -1331,21 +1259,11 @@ func (s *Owners) UpdateUsers(ctx context.Context, request operations.UpdateOwner
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
@@ -1357,19 +1275,17 @@ func (s *Owners) UpdateUsers(ctx context.Context, request operations.UpdateOwner
 
 			res.UserList = &out
 		default:
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
-
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 

@@ -13,7 +13,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/retry"
-	"io"
 	"net/http"
 	"net/url"
 )
@@ -181,21 +180,11 @@ func (s *Tags) CreateTag(ctx context.Context, request shared.CreateTagInfo, opts
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
@@ -207,19 +196,17 @@ func (s *Tags) CreateTag(ctx context.Context, request shared.CreateTagInfo, opts
 
 			res.Tag = &out
 		default:
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
-
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
@@ -373,24 +360,13 @@ func (s *Tags) CreateGroup(ctx context.Context, request operations.CreateGroupTa
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
@@ -544,24 +520,13 @@ func (s *Tags) CreateResource(ctx context.Context, request operations.CreateReso
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
@@ -715,24 +680,13 @@ func (s *Tags) CreateUser(ctx context.Context, request operations.CreateUserTagR
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
@@ -886,24 +840,13 @@ func (s *Tags) Delete(ctx context.Context, request operations.DeleteUserTagReque
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
@@ -1057,24 +1000,13 @@ func (s *Tags) DeleteGroup(ctx context.Context, request operations.DeleteGroupTa
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
@@ -1228,24 +1160,13 @@ func (s *Tags) DeleteResource(ctx context.Context, request operations.DeleteReso
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
@@ -1399,24 +1320,13 @@ func (s *Tags) DeleteTagByID(ctx context.Context, request operations.DeleteTagBy
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
@@ -1570,21 +1480,11 @@ func (s *Tags) GetTagByID(ctx context.Context, request operations.GetTagByIDRequ
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
@@ -1596,20 +1496,18 @@ func (s *Tags) GetTagByID(ctx context.Context, request operations.GetTagByIDRequ
 
 			res.Tag = &out
 		default:
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
-
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
@@ -1767,21 +1665,11 @@ func (s *Tags) GetTags(ctx context.Context, request operations.GetTagsRequest, o
 		RawResponse: httpRes,
 	}
 
-	getRawBody := func() ([]byte, error) {
-		rawBody, err := io.ReadAll(httpRes.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error reading response body: %w", err)
-		}
-		httpRes.Body.Close()
-		httpRes.Body = io.NopCloser(bytes.NewBuffer(rawBody))
-		return rawBody, nil
-	}
-
 	switch {
 	case httpRes.StatusCode == 200:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
@@ -1793,20 +1681,18 @@ func (s *Tags) GetTags(ctx context.Context, request operations.GetTagsRequest, o
 
 			res.PaginatedTagsList = &out
 		default:
-			rawBody, err := getRawBody()
+			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
 				return nil, err
 			}
-
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
 	default:
-		rawBody, err := getRawBody()
+		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
 			return nil, err
 		}
-
 		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
 	}
 
