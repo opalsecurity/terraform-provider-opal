@@ -1513,6 +1513,12 @@ actions:
   - target: $["components"]["schemas"]["Resource"]["properties"]["app_id"]
     update:
       x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["description"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["admin_owner_id"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["remote_resource_id"]
     update:
       x-speakeasy-ignore: true
@@ -1537,6 +1543,9 @@ actions:
   - target: $["components"]["schemas"]["Resource"]["properties"]["require_mfa_to_request"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["require_mfa_to_connect"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["auto_approval"]
     update:
       x-speakeasy-ignore: true
@@ -1558,6 +1567,9 @@ actions:
   - target: $["components"]["schemas"]["Resource"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["custom_request_notification"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["metadata"]
     update:
       x-speakeasy-ignore: true
@@ -1771,6 +1783,9 @@ actions:
   - target: $["components"]["schemas"]["ConfigurationTemplate"]
     update:
       x-speakeasy-entity: ConfigurationTemplate
+  - target: $["components"]["schemas"]["TicketPropagationConfiguration"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]["properties"]["linked_audit_message_channel_ids"]
     update:
       format: set

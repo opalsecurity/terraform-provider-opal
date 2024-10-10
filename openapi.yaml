@@ -6204,11 +6204,13 @@ components:
           description: A description of the resource.
           example: This resource represents AWS IAM role "SupportUser".
           type: string
+          x-speakeasy-param-suppress-computed-diff: true
         admin_owner_id:
           description: The ID of the owner of the resource.
           example: 7c86c85d-0651-43e2-a748-d69d658418e8
           format: uuid
           type: string
+          x-speakeasy-param-suppress-computed-diff: true
         remote_resource_id:
           description: The ID of the resource on the remote system.
           example: 318038399
@@ -6256,6 +6258,7 @@ components:
           description: A bool representing whether or not to require MFA to connect to this resource.
           example: False
           type: boolean
+          x-speakeasy-param-suppress-computed-diff: true
         auto_approval:
           description: A bool representing whether or not to automatically approve requests to this resource.
           example: False
@@ -6304,6 +6307,7 @@ components:
           type: string
           maxLength: 800
           nullable: true
+          x-speakeasy-param-suppress-computed-diff: true
         metadata:
           description: JSON metadata about the remote resource. Only set for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/end-system-objects) for details.
           deprecated: true
@@ -7488,6 +7492,7 @@ components:
       required:
         - enabled_on_grant
         - enabled_on_revocation
+      x-speakeasy-param-suppress-computed-diff: true
     UpdateConfigurationTemplateInfo:
       description: |-
         # UpdateConfigurationTemplateInfo Object
