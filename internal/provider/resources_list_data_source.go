@@ -451,7 +451,7 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 							},
 							Description: `Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields.`,
 						},
-						"request_configurations": schema.SetNestedAttribute{
+						"request_configurations": schema.ListNestedAttribute{
 							Computed: true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
