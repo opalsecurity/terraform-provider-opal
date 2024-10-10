@@ -27,7 +27,7 @@ terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "0.25.7"
+      version = "0.25.8"
     }
   }
 }

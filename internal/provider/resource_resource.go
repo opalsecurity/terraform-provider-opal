@@ -78,8 +78,11 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 		Version:             1,
 		Attributes: map[string]schema.Attribute{
 			"admin_owner_id": schema.StringAttribute{
-				Computed:    true,
-				Optional:    true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
 				Description: `The ID of the owner of the resource.`,
 			},
 			"app_id": schema.StringAttribute{
@@ -91,16 +94,22 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Description: `The ID of the app for the resource. Requires replacement if changed.`,
 			},
 			"custom_request_notification": schema.StringAttribute{
-				Computed:    true,
-				Optional:    true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
 				Description: `Custom request notification sent upon request approval.`,
 				Validators: []validator.String{
 					stringvalidator.UTF8LengthAtMost(800),
 				},
 			},
 			"description": schema.StringAttribute{
-				Computed:    true,
-				Optional:    true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
 				Description: `A description of the remote resource.`,
 			},
 			"id": schema.StringAttribute{
@@ -1116,8 +1125,11 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Description: `A bool representing whether or not to require MFA for reviewers to approve requests for this resource.`,
 			},
 			"require_mfa_to_connect": schema.BoolAttribute{
-				Computed:    true,
-				Optional:    true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+				},
 				Description: `A bool representing whether or not to require MFA to connect to this resource.`,
 			},
 			"resource_type": schema.StringAttribute{
@@ -1190,18 +1202,27 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 			"ticket_propagation": schema.SingleNestedAttribute{
 				Computed: true,
 				Optional: true,
+				PlanModifiers: []planmodifier.Object{
+					speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+				},
 				Attributes: map[string]schema.Attribute{
 					"enabled_on_grant": schema.BoolAttribute{
-						Computed:    true,
-						Optional:    true,
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Bool{
+							speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+						},
 						Description: `Not Null`,
 						Validators: []validator.Bool{
 							speakeasy_boolvalidators.NotNull(),
 						},
 					},
 					"enabled_on_revocation": schema.BoolAttribute{
-						Computed:    true,
-						Optional:    true,
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Bool{
+							speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+						},
 						Description: `Not Null`,
 						Validators: []validator.Bool{
 							speakeasy_boolvalidators.NotNull(),
@@ -1210,10 +1231,16 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 					"ticket_project_id": schema.StringAttribute{
 						Computed: true,
 						Optional: true,
+						PlanModifiers: []planmodifier.String{
+							speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+						},
 					},
 					"ticket_provider": schema.StringAttribute{
-						Computed:    true,
-						Optional:    true,
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.String{
+							speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+						},
 						Description: `The third party ticketing platform provider. must be one of ["JIRA", "LINEAR", "SERVICE_NOW"]`,
 						Validators: []validator.String{
 							stringvalidator.OneOf(
