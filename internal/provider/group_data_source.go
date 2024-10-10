@@ -249,7 +249,7 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Computed:    true,
 				Description: `The name of the remote.`,
 			},
-			"request_configurations": schema.SetNestedAttribute{
+			"request_configurations": schema.ListNestedAttribute{
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

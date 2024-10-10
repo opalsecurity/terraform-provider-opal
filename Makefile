@@ -17,14 +17,14 @@ speakeasy-validate: check-speakeasy
 remote-terraform_overlay.yaml: check-speakeasy
 	mkdir -p .speakeasy/temp
 	curl https://app.opal.dev/openapi.yaml > .speakeasy/temp/remote_openapi.yaml
-	speakeasy overlay compare -s .speakeasy/temp/remote_openapi.yaml -s ./openapi.yaml > ./terraform_overlay.yaml
+	speakeasy overlay compare -b .speakeasy/temp/remote_openapi.yaml -a ./openapi.yaml > ./terraform_overlay.yaml
 	rm -r .speakeasy/temp/remote_openapi.yaml
 
 terraform_overlay.yaml: check-speakeasy
-	speakeasy overlay compare -s ./openapi_original.yaml -s ./openapi.yaml > ./terraform_overlay.yaml
+	speakeasy overlay compare -b ./openapi_original.yaml -a ./openapi.yaml > ./terraform_overlay.yaml
 
 openapi.yaml: check-speakeasy
-	speakeasy overlay apply -s ./openapi_original.yaml -o ./terraform_overlay.yaml > ./openapi.yaml
+	speakeasy overlay apply -b ./openapi_original.yaml -a ./terraform_overlay.yaml > ./openapi.yaml
 
 check-speakeasy:
 	@command -v speakeasy >/dev/null 2>&1 || { echo >&2 "speakeasy CLI is not installed. Please install before continuing."; exit 1; }

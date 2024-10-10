@@ -5,7 +5,7 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -17,7 +17,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	speakeasy_boolplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/boolplanmodifier"
+	speakeasy_int64planmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/int64planmodifier"
+	speakeasy_listplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/listplanmodifier"
 	speakeasy_objectplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/objectplanmodifier"
+	speakeasy_setplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/setplanmodifier"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
@@ -26,8 +30,8 @@ import (
 	stateupgraders "github.com/opalsecurity/terraform-provider-opal/internal/stateupgraders"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/boolvalidators"
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/internal/validators/int64validators"
+	custom_listvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/listvalidators"
 	speakeasy_objectvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/objectvalidators"
-	custom_setvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/setvalidators"
 	speakeasy_setvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/setvalidators"
 	speakeasy_stringvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/stringvalidators"
 )
@@ -74,8 +78,11 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 		Version:             1,
 		Attributes: map[string]schema.Attribute{
 			"admin_owner_id": schema.StringAttribute{
-				Computed:    true,
-				Optional:    true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
 				Description: `The ID of the owner of the resource.`,
 			},
 			"app_id": schema.StringAttribute{
@@ -87,16 +94,22 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Description: `The ID of the app for the resource. Requires replacement if changed.`,
 			},
 			"custom_request_notification": schema.StringAttribute{
-				Computed:    true,
-				Optional:    true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
 				Description: `Custom request notification sent upon request approval.`,
 				Validators: []validator.String{
 					stringvalidator.UTF8LengthAtMost(800),
 				},
 			},
 			"description": schema.StringAttribute{
-				Computed:    true,
-				Optional:    true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
 				Description: `A description of the remote resource.`,
 			},
 			"id": schema.StringAttribute{
@@ -918,24 +931,33 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				},
 				Description: `Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed.`,
 			},
-			"request_configurations": schema.SetNestedAttribute{
+			"request_configurations": schema.ListNestedAttribute{
 				Required: true,
 				NestedObject: schema.NestedAttributeObject{
 					Validators: []validator.Object{
 						speakeasy_objectvalidators.NotNull(),
 					},
+					PlanModifiers: []planmodifier.Object{
+						speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+					},
 					Attributes: map[string]schema.Attribute{
 						"allow_requests": schema.BoolAttribute{
-							Computed:    true,
-							Optional:    true,
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Bool{
+								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+							},
 							Description: `A bool representing whether or not to allow requests for this resource. Not Null`,
 							Validators: []validator.Bool{
 								speakeasy_boolvalidators.NotNull(),
 							},
 						},
 						"auto_approval": schema.BoolAttribute{
-							Computed:    true,
-							Optional:    true,
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Bool{
+								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+							},
 							Description: `A bool representing whether or not to automatically approve requests for this resource. Not Null`,
 							Validators: []validator.Bool{
 								speakeasy_boolvalidators.NotNull(),
@@ -944,55 +966,82 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						"condition": schema.SingleNestedAttribute{
 							Computed: true,
 							Optional: true,
+							PlanModifiers: []planmodifier.Object{
+								speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+							},
 							Attributes: map[string]schema.Attribute{
 								"group_ids": schema.SetAttribute{
-									Computed:    true,
-									Optional:    true,
+									Computed: true,
+									Optional: true,
+									PlanModifiers: []planmodifier.Set{
+										speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
+									},
 									ElementType: types.StringType,
 									Description: `The list of group IDs to match.`,
 								},
 								"role_remote_ids": schema.SetAttribute{
-									Computed:    true,
-									Optional:    true,
+									Computed: true,
+									Optional: true,
+									PlanModifiers: []planmodifier.Set{
+										speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
+									},
 									ElementType: types.StringType,
 									Description: `The list of role remote IDs to match.`,
 								},
 							},
 						},
 						"max_duration": schema.Int64Attribute{
-							Computed:    true,
-							Optional:    true,
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Int64{
+								speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
+							},
 							Description: `The maximum duration for which the resource can be requested (in minutes).`,
 						},
 						"priority": schema.Int64Attribute{
-							Computed:    true,
-							Optional:    true,
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Int64{
+								speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
+							},
 							Description: `The priority of the request configuration. Not Null`,
 							Validators: []validator.Int64{
 								speakeasy_int64validators.NotNull(),
 							},
 						},
 						"recommended_duration": schema.Int64Attribute{
-							Computed:    true,
-							Optional:    true,
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Int64{
+								speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
+							},
 							Description: `The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.`,
 						},
 						"request_template_id": schema.StringAttribute{
-							Computed:    true,
-							Optional:    true,
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.String{
+								speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+							},
 							Description: `The ID of the associated request template.`,
 						},
 						"require_mfa_to_request": schema.BoolAttribute{
-							Computed:    true,
-							Optional:    true,
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Bool{
+								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+							},
 							Description: `A bool representing whether or not to require MFA for requesting access to this resource. Not Null`,
 							Validators: []validator.Bool{
 								speakeasy_boolvalidators.NotNull(),
 							},
 						},
 						"require_support_ticket": schema.BoolAttribute{
-							Computed:    true,
-							Optional:    true,
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Bool{
+								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+							},
 							Description: `A bool representing whether or not access requests to the resource require an access ticket. Not Null`,
 							Validators: []validator.Bool{
 								speakeasy_boolvalidators.NotNull(),
@@ -1001,15 +1050,24 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						"reviewer_stages": schema.ListNestedAttribute{
 							Computed: true,
 							Optional: true,
+							PlanModifiers: []planmodifier.List{
+								speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
+							},
 							NestedObject: schema.NestedAttributeObject{
 								Validators: []validator.Object{
 									speakeasy_objectvalidators.NotNull(),
 								},
+								PlanModifiers: []planmodifier.Object{
+									speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+								},
 								Attributes: map[string]schema.Attribute{
 									"operator": schema.StringAttribute{
-										Computed:    true,
-										Optional:    true,
-										Default:     stringdefault.StaticString("AND"),
+										Computed: true,
+										Optional: true,
+										Default:  stringdefault.StaticString("AND"),
+										PlanModifiers: []planmodifier.String{
+											speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+										},
 										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. Default: "AND"; must be one of ["AND", "OR"]`,
 										Validators: []validator.String{
 											stringvalidator.OneOf(
@@ -1019,8 +1077,11 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 										},
 									},
 									"owner_ids": schema.SetAttribute{
-										Computed:    true,
-										Optional:    true,
+										Computed: true,
+										Optional: true,
+										PlanModifiers: []planmodifier.Set{
+											speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
+										},
 										ElementType: types.StringType,
 										Description: `Not Null`,
 										Validators: []validator.Set{
@@ -1028,13 +1089,19 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 										},
 									},
 									"require_admin_approval": schema.BoolAttribute{
-										Computed:    true,
-										Optional:    true,
+										Computed: true,
+										Optional: true,
+										PlanModifiers: []planmodifier.Bool{
+											speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+										},
 										Description: `Whether this reviewer stage should require admin approval.`,
 									},
 									"require_manager_approval": schema.BoolAttribute{
-										Computed:    true,
-										Optional:    true,
+										Computed: true,
+										Optional: true,
+										PlanModifiers: []planmodifier.Bool{
+											speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+										},
 										Description: `Whether this reviewer stage should require manager approval. Not Null`,
 										Validators: []validator.Bool{
 											speakeasy_boolvalidators.NotNull(),
@@ -1047,9 +1114,9 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 					},
 				},
 				Description: `A list of configurations for requests to this resource. If not provided, the default request configuration will be used.`,
-				Validators: []validator.Set{
-					setvalidator.SizeAtLeast(1),
-					custom_setvalidators.RequestConfigurations(),
+				Validators: []validator.List{
+					listvalidator.SizeAtLeast(1),
+					custom_listvalidators.RequestConfigurations(),
 				},
 			},
 			"require_mfa_to_approve": schema.BoolAttribute{
@@ -1058,8 +1125,11 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Description: `A bool representing whether or not to require MFA for reviewers to approve requests for this resource.`,
 			},
 			"require_mfa_to_connect": schema.BoolAttribute{
-				Computed:    true,
-				Optional:    true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+				},
 				Description: `A bool representing whether or not to require MFA to connect to this resource.`,
 			},
 			"resource_type": schema.StringAttribute{
@@ -1132,18 +1202,27 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 			"ticket_propagation": schema.SingleNestedAttribute{
 				Computed: true,
 				Optional: true,
+				PlanModifiers: []planmodifier.Object{
+					speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+				},
 				Attributes: map[string]schema.Attribute{
 					"enabled_on_grant": schema.BoolAttribute{
-						Computed:    true,
-						Optional:    true,
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Bool{
+							speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+						},
 						Description: `Not Null`,
 						Validators: []validator.Bool{
 							speakeasy_boolvalidators.NotNull(),
 						},
 					},
 					"enabled_on_revocation": schema.BoolAttribute{
-						Computed:    true,
-						Optional:    true,
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Bool{
+							speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+						},
 						Description: `Not Null`,
 						Validators: []validator.Bool{
 							speakeasy_boolvalidators.NotNull(),
@@ -1152,10 +1231,16 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 					"ticket_project_id": schema.StringAttribute{
 						Computed: true,
 						Optional: true,
+						PlanModifiers: []planmodifier.String{
+							speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+						},
 					},
 					"ticket_provider": schema.StringAttribute{
-						Computed:    true,
-						Optional:    true,
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.String{
+							speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+						},
 						Description: `The third party ticketing platform provider. must be one of ["JIRA", "LINEAR", "SERVICE_NOW"]`,
 						Validators: []validator.String{
 							stringvalidator.OneOf(
