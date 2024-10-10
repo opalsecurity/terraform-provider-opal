@@ -4204,7 +4204,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/RequestConfiguration"
-          format: set
           minItems: 1
         request_configuration_list:
           description: A list of request configurations for this group. Deprecated in favor of `request_configurations`.
@@ -4471,7 +4470,6 @@ components:
             $ref: "#/components/schemas/RequestConfiguration"
           description: The request configuration list of the configuration template. If not provided, the default request configuration will be used.
           x-speakeasy-plan-validators: RequestConfigurations
-          format: set
         request_configuration_list:
           description: The request configuration list of the configuration template. If not provided, the default request configuration will be used. Deprecated in favor of `request_configurations`.
           $ref: "#/components/schemas/CreateRequestConfigurationInfoList"
@@ -5919,6 +5917,7 @@ components:
           maxLength: 800
           nullable: true
           example: "Check your email to register your account."
+          x-speakeasy-param-suppress-computed-diff: true
       required:
         - name
         - group_type
@@ -6295,7 +6294,6 @@ components:
           items:
             $ref: "#/components/schemas/RequestConfiguration"
           description: A list of configurations for requests to this resource.
-          format: set
           minItems: 1
         request_configuration_list:
           description: A list of configurations for requests to this resource. Deprecated in favor of `request_configurations`.
@@ -6487,7 +6485,6 @@ components:
             $ref: "#/components/schemas/RequestConfiguration"
           description: A list of configurations for requests to this resource. If not provided, the default request configuration will be used.
           x-speakeasy-plan-validators: RequestConfigurations
-          format: set
         request_configuration_list:
           description: A list of configurations for requests to this resource. If not provided, the default request configuration will be used. Deprecated in favor of `request_configurations`.
           $ref: "#/components/schemas/CreateRequestConfigurationInfoList"
@@ -7085,6 +7082,7 @@ components:
             format: uuid
           type: array
           format: set
+          x-speakeasy-param-suppress-computed-diff: true
         role_remote_ids:
           description: The list of role remote IDs to match.
           example:
@@ -7093,6 +7091,7 @@ components:
           items:
             type: string
           format: set
+          x-speakeasy-param-suppress-computed-diff: true
     RequestConfiguration:
       description: |-
         # Request Configuration Object
@@ -7126,6 +7125,7 @@ components:
         condition:
           description: The condition for the request configuration.
           $ref: "#/components/schemas/Condition"
+          x-speakeasy-param-suppress-computed-diff: true
         allow_requests:
           description: A bool representing whether or not to allow requests for this resource.
           example: True
@@ -7143,11 +7143,13 @@ components:
           type: integer
           example: 120
           x-speakeasy-name-override: max_duration
+          x-speakeasy-param-suppress-computed-diff: true
         recommended_duration_minutes:
           description: The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
           type: integer
           example: 120
           x-speakeasy-name-override: recommended_duration
+          x-speakeasy-param-suppress-computed-diff: true
         require_support_ticket:
           description: A bool representing whether or not access requests to the resource require an access ticket.
           example: False
@@ -7157,11 +7159,13 @@ components:
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
+          x-speakeasy-param-suppress-computed-diff: true
         reviewer_stages:
           description: The list of reviewer stages for the request configuration.
           items:
             $ref: "#/components/schemas/ReviewerStage"
           type: array
+          x-speakeasy-param-suppress-computed-diff: true
         priority:
           description: The priority of the request configuration.
           example: 1
@@ -7173,6 +7177,7 @@ components:
         - require_mfa_to_request
         - require_support_ticket
         - priority
+      x-speakeasy-param-suppress-computed-diff: true
       x-speakeasy-entity: Requests
     CreateRequestConfigurationInfoList:
       description: |-
