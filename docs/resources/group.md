@@ -106,7 +106,7 @@ resource "opal_group" "my_group" {
 - `message_channel_ids` (Set of String)
 - `name` (String) The name of the remote group.
 - `on_call_schedule_ids` (Set of String)
-- `request_configurations` (Attributes Set) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
+- `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 
 ### Optional
