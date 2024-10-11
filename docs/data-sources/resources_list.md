@@ -56,7 +56,7 @@ Read-Only:
 - `name` (String) The name of the resource.
 - `parent_resource_id` (String) The ID of the parent resource.
 - `remote_info` (Attributes) Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields. (see [below for nested schema](#nestedatt--results--remote_info))
-- `request_configurations` (Attributes Set) A list of configurations for requests to this resource. (see [below for nested schema](#nestedatt--results--request_configurations))
+- `request_configurations` (Attributes List) A list of configurations for requests to this resource. (see [below for nested schema](#nestedatt--results--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to this resource.
 - `resource_type` (String) The type of the resource.

@@ -1,4 +1,7 @@
 # Changelog
+## v3.0.7
+- Fix bugs in request configuration validation causing spurious changes. Request configurations should be passed in ascending order of priority.
+- Suppress "known after apply" output for optional fields on resources (description, admin_owner_id, ticket_propogation, and require_mfa_to_connect)
 
 ## v3.0.4
 - Suppress "known after apply" output for optional fields on groups (visibility_group_ids, description, admin_owner_id, group_leader_user_ids, and oncall_schedules)

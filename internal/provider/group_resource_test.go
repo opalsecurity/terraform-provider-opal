@@ -9,6 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/hashicorp/terraform-plugin-testing/tfversion"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
@@ -332,15 +333,21 @@ func TestAccGroup_RequestConfigurations(t *testing.T) {
 			},
 			{
 				Config:      invalidSequentialPriorityConfigString,
+				PlanOnly:    true,
 				ExpectError: GenerateErrorMessageRegexp("Invalid Attribute Type"),
 			},
 			{
 				Config:      emptyRequestConfigurationsConfigString,
+				PlanOnly:    true,
 				ExpectError: GenerateErrorMessageRegexp("Invalid Attribute Value"),
 			},
 			{
-				Config:             sequentialPriorityConfigString,
-				ExpectNonEmptyPlan: true,
+				Config: sequentialPriorityConfigString,
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectNonEmptyPlan(),
+					},
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "request_configurations.#", "2"),
 				),
