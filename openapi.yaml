@@ -4532,11 +4532,16 @@ components:
         - GIT_HUB_TEAM
         - GIT_LAB_GROUP
         - GOOGLE_GROUPS_GROUP
+        - GOOGLE_GROUPS_GKE_GROUP
         - LDAP_GROUP
         - OKTA_GROUP
+        - TAILSCALE_GROUP
         - OPAL_GROUP
         - AZURE_AD_SECURITY_GROUP
         - AZURE_AD_MICROSOFT_365_GROUP
+        - CONNECTOR_GROUP
+        - SNOWFLAKE_ROLE
+        - WORKDAY_USER_SECURITY_GROUP
       example: OPAL_GROUP
       type: string
     ResourceTypeEnum:
