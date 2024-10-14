@@ -56,7 +56,6 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 					"require_manager_approval": tftypes.Bool,
 					"reviewer": tftypes.Set{ElementType: tftypes.Object{AttributeTypes: map[string]tftypes.Type{"id": tftypes.String}}},
 				}}},
-				"custom_request_notification": tftypes.String,
 			}}},
 		},
 	}
@@ -116,7 +115,6 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"require_manager_approval": tftypes.Bool,
 			"reviewer": tftypes.Set{ElementType: tftypes.Object{AttributeTypes: map[string]tftypes.Type{"id": tftypes.String}}},
 		}}},
-		"custom_request_notification": tftypes.String,
 	}}}
 
 	var GroupV3 = tftypes.Object{
@@ -139,6 +137,7 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"oncall_schedules": oncallSchedulesType,
 			"remote_name": tftypes.String,
 			"request_configurations": requestConfigurationsType,
+			"custom_request_notification": tftypes.String,
 		},
 	}
 	
@@ -294,6 +293,7 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"on_call_schedule_ids": tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, oncallScheduleIDs),
 			"oncall_schedules": tftypes.NewValue(oncallSchedulesType, nil), // Will be populated on a state refresh
 			"request_configurations": tftypes.NewValue(requestConfigurationsType, nil), // Will be populated on a state refresh
+			"custom_request_notification": tftypes.NewValue(tftypes.String, nil),
 		}),
 	)
 	if err != nil {
