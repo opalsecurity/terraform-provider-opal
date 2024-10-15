@@ -70,7 +70,6 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 					"require_manager_approval": tftypes.Bool,
 					"reviewer": tftypes.Set{ElementType: tftypes.Object{AttributeTypes: map[string]tftypes.Type{"id": tftypes.String}}},
 				}}},
-				"custom_request_notification": tftypes.String,
 			}}},
 		},
 	}
@@ -90,7 +89,6 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 			"require_manager_approval": tftypes.Bool,
 			"reviewer": tftypes.Set{ElementType: tftypes.Object{AttributeTypes: map[string]tftypes.Type{"id": tftypes.String}}},
 		}}},
-		"custom_request_notification": tftypes.String,
 	}}}
 
 	var ticketPropagationType = tftypes.Object{
@@ -118,6 +116,7 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 			"visibility_group_ids": tftypes.List{ElementType: tftypes.String},
 			"request_configurations": requestConfigurationsType,
 			"ticket_propagation": ticketPropagationType,
+			"custom_request_notification": tftypes.String,
 		},
 	}
 	
@@ -238,6 +237,7 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 			"visibility_group_ids":tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, visibilityGroupIDs), // Will be populated by first terraform apply
 			"request_configurations": tftypes.NewValue(requestConfigurationsType, nil), // Will be populated on a state refresh
 			"ticket_propagation": tftypes.NewValue(ticketPropagationType, nil), // cannot have been set in the prior version
+			"custom_request_notification": tftypes.NewValue(tftypes.String, nil),
 		}),
 	)
 
