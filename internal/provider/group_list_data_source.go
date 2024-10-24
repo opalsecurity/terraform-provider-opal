@@ -289,6 +289,18 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							Computed:    true,
 							Description: `A bool representing whether or not to require MFA for reviewers to approve requests for this group.`,
 						},
+						"risk_sensitivity": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"calculated_value": schema.StringAttribute{
+									Computed: true,
+								},
+								"override_value": schema.StringAttribute{
+									Computed: true,
+								},
+							},
+							Description: `Indicates the level of potential impact misuse or unauthorized access may incur.`,
+						},
 					},
 				},
 			},

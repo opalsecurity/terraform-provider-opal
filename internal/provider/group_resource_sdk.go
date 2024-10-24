@@ -124,6 +124,25 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo() *shared.CreateGroupInfo {
 			OktaGroup:                oktaGroup,
 		}
 	}
+	var riskSensitivity *shared.RiskSensitivity
+	if r.RiskSensitivity != nil {
+		calculatedValue := new(shared.RiskSensitivityValue)
+		if !r.RiskSensitivity.CalculatedValue.IsUnknown() && !r.RiskSensitivity.CalculatedValue.IsNull() {
+			*calculatedValue = shared.RiskSensitivityValue(r.RiskSensitivity.CalculatedValue.ValueString())
+		} else {
+			calculatedValue = nil
+		}
+		overrideValue := new(shared.RiskSensitivityValue)
+		if !r.RiskSensitivity.OverrideValue.IsUnknown() && !r.RiskSensitivity.OverrideValue.IsNull() {
+			*overrideValue = shared.RiskSensitivityValue(r.RiskSensitivity.OverrideValue.ValueString())
+		} else {
+			overrideValue = nil
+		}
+		riskSensitivity = &shared.RiskSensitivity{
+			CalculatedValue: calculatedValue,
+			OverrideValue:   overrideValue,
+		}
+	}
 	out := shared.CreateGroupInfo{
 		AppID:                     appID,
 		CustomRequestNotification: customRequestNotification,
@@ -131,6 +150,7 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo() *shared.CreateGroupInfo {
 		GroupType:                 groupType,
 		Name:                      name,
 		RemoteInfo:                remoteInfo,
+		RiskSensitivity:           riskSensitivity,
 	}
 	return &out
 }
@@ -279,6 +299,21 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 			}
 		}
 		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
+		if resp.RiskSensitivity == nil {
+			r.RiskSensitivity = nil
+		} else {
+			r.RiskSensitivity = &tfTypes.RiskSensitivity{}
+			if resp.RiskSensitivity.CalculatedValue != nil {
+				r.RiskSensitivity.CalculatedValue = types.StringValue(string(*resp.RiskSensitivity.CalculatedValue))
+			} else {
+				r.RiskSensitivity.CalculatedValue = types.StringNull()
+			}
+			if resp.RiskSensitivity.OverrideValue != nil {
+				r.RiskSensitivity.OverrideValue = types.StringValue(string(*resp.RiskSensitivity.OverrideValue))
+			} else {
+				r.RiskSensitivity.OverrideValue = types.StringNull()
+			}
+		}
 	}
 }
 
@@ -411,6 +446,25 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo() *shared.UpdateGroupInfo {
 	} else {
 		requireMfaToApprove = nil
 	}
+	var riskSensitivity *shared.RiskSensitivity
+	if r.RiskSensitivity != nil {
+		calculatedValue := new(shared.RiskSensitivityValue)
+		if !r.RiskSensitivity.CalculatedValue.IsUnknown() && !r.RiskSensitivity.CalculatedValue.IsNull() {
+			*calculatedValue = shared.RiskSensitivityValue(r.RiskSensitivity.CalculatedValue.ValueString())
+		} else {
+			calculatedValue = nil
+		}
+		overrideValue := new(shared.RiskSensitivityValue)
+		if !r.RiskSensitivity.OverrideValue.IsUnknown() && !r.RiskSensitivity.OverrideValue.IsNull() {
+			*overrideValue = shared.RiskSensitivityValue(r.RiskSensitivity.OverrideValue.ValueString())
+		} else {
+			overrideValue = nil
+		}
+		riskSensitivity = &shared.RiskSensitivity{
+			CalculatedValue: calculatedValue,
+			OverrideValue:   overrideValue,
+		}
+	}
 	out := shared.UpdateGroupInfo{
 		AdminOwnerID:              adminOwnerID,
 		CustomRequestNotification: customRequestNotification,
@@ -420,6 +474,7 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo() *shared.UpdateGroupInfo {
 		Name:                      name,
 		RequestConfigurations:     requestConfigurations,
 		RequireMfaToApprove:       requireMfaToApprove,
+		RiskSensitivity:           riskSensitivity,
 	}
 	return &out
 }
@@ -500,6 +555,21 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(resp *shared.Updat
 		}
 	}
 	r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
+	if resp.RiskSensitivity == nil {
+		r.RiskSensitivity = nil
+	} else {
+		r.RiskSensitivity = &tfTypes.RiskSensitivity{}
+		if resp.RiskSensitivity.CalculatedValue != nil {
+			r.RiskSensitivity.CalculatedValue = types.StringValue(string(*resp.RiskSensitivity.CalculatedValue))
+		} else {
+			r.RiskSensitivity.CalculatedValue = types.StringNull()
+		}
+		if resp.RiskSensitivity.OverrideValue != nil {
+			r.RiskSensitivity.OverrideValue = types.StringValue(string(*resp.RiskSensitivity.OverrideValue))
+		} else {
+			r.RiskSensitivity.OverrideValue = types.StringNull()
+		}
+	}
 }
 
 func (r *GroupResourceModel) ToSharedMessageChannelIDList() *shared.MessageChannelIDList {

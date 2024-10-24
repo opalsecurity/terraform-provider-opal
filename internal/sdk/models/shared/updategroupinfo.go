@@ -22,6 +22,8 @@ type UpdateGroupInfo struct {
 	RequestConfigurations []RequestConfiguration `json:"request_configurations"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this group.
 	RequireMfaToApprove *bool `json:"require_mfa_to_approve,omitempty"`
+	// Indicates the level of potential impact misuse or unauthorized access may incur.
+	RiskSensitivity *RiskSensitivity `json:"risk_sensitivity,omitempty"`
 }
 
 func (o *UpdateGroupInfo) GetAdminOwnerID() *string {
@@ -78,4 +80,11 @@ func (o *UpdateGroupInfo) GetRequireMfaToApprove() *bool {
 		return nil
 	}
 	return o.RequireMfaToApprove
+}
+
+func (o *UpdateGroupInfo) GetRiskSensitivity() *RiskSensitivity {
+	if o == nil {
+		return nil
+	}
+	return o.RiskSensitivity
 }

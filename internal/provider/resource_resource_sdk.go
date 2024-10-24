@@ -373,6 +373,25 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo() *shared.CreateResou
 		}
 	}
 	resourceType := shared.ResourceTypeEnum(r.ResourceType.ValueString())
+	var riskSensitivity *shared.RiskSensitivity
+	if r.RiskSensitivity != nil {
+		calculatedValue := new(shared.RiskSensitivityValue)
+		if !r.RiskSensitivity.CalculatedValue.IsUnknown() && !r.RiskSensitivity.CalculatedValue.IsNull() {
+			*calculatedValue = shared.RiskSensitivityValue(r.RiskSensitivity.CalculatedValue.ValueString())
+		} else {
+			calculatedValue = nil
+		}
+		overrideValue := new(shared.RiskSensitivityValue)
+		if !r.RiskSensitivity.OverrideValue.IsUnknown() && !r.RiskSensitivity.OverrideValue.IsNull() {
+			*overrideValue = shared.RiskSensitivityValue(r.RiskSensitivity.OverrideValue.ValueString())
+		} else {
+			overrideValue = nil
+		}
+		riskSensitivity = &shared.RiskSensitivity{
+			CalculatedValue: calculatedValue,
+			OverrideValue:   overrideValue,
+		}
+	}
 	out := shared.CreateResourceInfo{
 		AppID:                     appID,
 		CustomRequestNotification: customRequestNotification,
@@ -380,6 +399,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo() *shared.CreateResou
 		Name:                      name,
 		RemoteInfo:                remoteInfo,
 		ResourceType:              resourceType,
+		RiskSensitivity:           riskSensitivity,
 	}
 	return &out
 }
@@ -643,6 +663,21 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(resp *shared.Resource)
 		} else {
 			r.ResourceType = types.StringNull()
 		}
+		if resp.RiskSensitivity == nil {
+			r.RiskSensitivity = nil
+		} else {
+			r.RiskSensitivity = &tfTypes.RiskSensitivity{}
+			if resp.RiskSensitivity.CalculatedValue != nil {
+				r.RiskSensitivity.CalculatedValue = types.StringValue(string(*resp.RiskSensitivity.CalculatedValue))
+			} else {
+				r.RiskSensitivity.CalculatedValue = types.StringNull()
+			}
+			if resp.RiskSensitivity.OverrideValue != nil {
+				r.RiskSensitivity.OverrideValue = types.StringValue(string(*resp.RiskSensitivity.OverrideValue))
+			} else {
+				r.RiskSensitivity.OverrideValue = types.StringNull()
+			}
+		}
 		if resp.TicketPropagation == nil {
 			r.TicketPropagation = nil
 		} else {
@@ -790,6 +825,25 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo() *shared.UpdateResou
 	} else {
 		requireMfaToConnect = nil
 	}
+	var riskSensitivity *shared.RiskSensitivity
+	if r.RiskSensitivity != nil {
+		calculatedValue := new(shared.RiskSensitivityValue)
+		if !r.RiskSensitivity.CalculatedValue.IsUnknown() && !r.RiskSensitivity.CalculatedValue.IsNull() {
+			*calculatedValue = shared.RiskSensitivityValue(r.RiskSensitivity.CalculatedValue.ValueString())
+		} else {
+			calculatedValue = nil
+		}
+		overrideValue := new(shared.RiskSensitivityValue)
+		if !r.RiskSensitivity.OverrideValue.IsUnknown() && !r.RiskSensitivity.OverrideValue.IsNull() {
+			*overrideValue = shared.RiskSensitivityValue(r.RiskSensitivity.OverrideValue.ValueString())
+		} else {
+			overrideValue = nil
+		}
+		riskSensitivity = &shared.RiskSensitivity{
+			CalculatedValue: calculatedValue,
+			OverrideValue:   overrideValue,
+		}
+	}
 	var ticketPropagation *shared.TicketPropagationConfiguration
 	if r.TicketPropagation != nil {
 		var enabledOnGrant bool
@@ -826,6 +880,7 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo() *shared.UpdateResou
 		RequestConfigurations:     requestConfigurations,
 		RequireMfaToApprove:       requireMfaToApprove,
 		RequireMfaToConnect:       requireMfaToConnect,
+		RiskSensitivity:           riskSensitivity,
 		TicketPropagation:         ticketPropagation,
 	}
 	return &out
@@ -904,6 +959,21 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(resp *shared
 	}
 	r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
 	r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
+	if resp.RiskSensitivity == nil {
+		r.RiskSensitivity = nil
+	} else {
+		r.RiskSensitivity = &tfTypes.RiskSensitivity{}
+		if resp.RiskSensitivity.CalculatedValue != nil {
+			r.RiskSensitivity.CalculatedValue = types.StringValue(string(*resp.RiskSensitivity.CalculatedValue))
+		} else {
+			r.RiskSensitivity.CalculatedValue = types.StringNull()
+		}
+		if resp.RiskSensitivity.OverrideValue != nil {
+			r.RiskSensitivity.OverrideValue = types.StringValue(string(*resp.RiskSensitivity.OverrideValue))
+		} else {
+			r.RiskSensitivity.OverrideValue = types.StringNull()
+		}
+	}
 	if resp.TicketPropagation == nil {
 		r.TicketPropagation = nil
 	} else {

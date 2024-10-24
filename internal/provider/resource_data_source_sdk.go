@@ -267,6 +267,21 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(resp *shared.Resourc
 		} else {
 			r.ResourceType = types.StringNull()
 		}
+		if resp.RiskSensitivity == nil {
+			r.RiskSensitivity = nil
+		} else {
+			r.RiskSensitivity = &tfTypes.RiskSensitivity{}
+			if resp.RiskSensitivity.CalculatedValue != nil {
+				r.RiskSensitivity.CalculatedValue = types.StringValue(string(*resp.RiskSensitivity.CalculatedValue))
+			} else {
+				r.RiskSensitivity.CalculatedValue = types.StringNull()
+			}
+			if resp.RiskSensitivity.OverrideValue != nil {
+				r.RiskSensitivity.OverrideValue = types.StringValue(string(*resp.RiskSensitivity.OverrideValue))
+			} else {
+				r.RiskSensitivity.OverrideValue = types.StringNull()
+			}
+		}
 		if resp.TicketPropagation == nil {
 			r.TicketPropagation = nil
 		} else {

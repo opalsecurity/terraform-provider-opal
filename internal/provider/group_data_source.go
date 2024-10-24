@@ -44,6 +44,7 @@ type GroupDataSourceModel struct {
 	RemoteName                types.String                                `tfsdk:"remote_name"`
 	RequestConfigurations     []tfTypes.RequestConfiguration              `tfsdk:"request_configurations"`
 	RequireMfaToApprove       types.Bool                                  `tfsdk:"require_mfa_to_approve"`
+	RiskSensitivity           *tfTypes.RiskSensitivity                    `tfsdk:"risk_sensitivity"`
 	Visibility                types.String                                `tfsdk:"visibility"`
 	VisibilityGroupIds        []types.String                              `tfsdk:"visibility_group_ids"`
 }
@@ -331,6 +332,18 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			"require_mfa_to_approve": schema.BoolAttribute{
 				Computed:    true,
 				Description: `A bool representing whether or not to require MFA for reviewers to approve requests for this group.`,
+			},
+			"risk_sensitivity": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"calculated_value": schema.StringAttribute{
+						Computed: true,
+					},
+					"override_value": schema.StringAttribute{
+						Computed: true,
+					},
+				},
+				Description: `Indicates the level of potential impact misuse or unauthorized access may incur.`,
 			},
 			"visibility": schema.StringAttribute{
 				Computed:    true,

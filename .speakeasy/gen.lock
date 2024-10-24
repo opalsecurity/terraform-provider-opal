@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: eaa7229fee905da061453af21627673e
+  docChecksum: 8e7758576d4fddd3cf106a92121cf2a6
   docVersion: "1.0"
-  speakeasyVersion: 1.417.1
-  generationVersion: 2.438.2
-  releaseVersion: 0.26.0
-  configChecksum: 3f74a2389591ba0d91fdc78576d833f7
+  speakeasyVersion: 1.421.2
+  generationVersion: 2.438.15
+  releaseVersion: 0.26.6
+  configChecksum: 1787d62337256e28dadc2240ce2323dc
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -239,6 +239,7 @@ generatedFiles:
   - internal/provider/types/resource_remote_info.go
   - internal/provider/types/resource_with_access_level.go
   - internal/provider/types/reviewer_stage.go
+  - internal/provider/types/risk_sensitivity.go
   - internal/provider/types/salesforce_permission_set.go
   - internal/provider/types/salesforce_profile.go
   - internal/provider/types/session.go
@@ -431,6 +432,8 @@ generatedFiles:
   - internal/sdk/models/shared/revieweridlist.go
   - internal/sdk/models/shared/reviewerstage.go
   - internal/sdk/models/shared/reviewerstagelist.go
+  - internal/sdk/models/shared/risksensitivity.go
+  - internal/sdk/models/shared/risksensitivityvalue.go
   - internal/sdk/models/shared/security.go
   - internal/sdk/models/shared/session.go
   - internal/sdk/models/shared/sessionslist.go

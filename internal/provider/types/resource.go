@@ -17,5 +17,6 @@ type Resource struct {
 	RequireMfaToApprove       types.Bool                      `tfsdk:"require_mfa_to_approve"`
 	RequireMfaToConnect       types.Bool                      `tfsdk:"require_mfa_to_connect"`
 	ResourceType              types.String                    `tfsdk:"resource_type"`
+	RiskSensitivity           *RiskSensitivity                `tfsdk:"risk_sensitivity"`
 	TicketPropagation         *TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
 }

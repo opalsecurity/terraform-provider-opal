@@ -542,6 +542,18 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 							Computed:    true,
 							Description: `The type of the resource.`,
 						},
+						"risk_sensitivity": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"calculated_value": schema.StringAttribute{
+									Computed: true,
+								},
+								"override_value": schema.StringAttribute{
+									Computed: true,
+								},
+							},
+							Description: `Indicates the level of potential impact misuse or unauthorized access may incur.`,
+						},
 						"ticket_propagation": schema.SingleNestedAttribute{
 							Computed: true,
 							Attributes: map[string]schema.Attribute{

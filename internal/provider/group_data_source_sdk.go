@@ -153,6 +153,21 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 			}
 		}
 		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
+		if resp.RiskSensitivity == nil {
+			r.RiskSensitivity = nil
+		} else {
+			r.RiskSensitivity = &tfTypes.RiskSensitivity{}
+			if resp.RiskSensitivity.CalculatedValue != nil {
+				r.RiskSensitivity.CalculatedValue = types.StringValue(string(*resp.RiskSensitivity.CalculatedValue))
+			} else {
+				r.RiskSensitivity.CalculatedValue = types.StringNull()
+			}
+			if resp.RiskSensitivity.OverrideValue != nil {
+				r.RiskSensitivity.OverrideValue = types.StringValue(string(*resp.RiskSensitivity.OverrideValue))
+			} else {
+				r.RiskSensitivity.OverrideValue = types.StringNull()
+			}
+		}
 	}
 }
 

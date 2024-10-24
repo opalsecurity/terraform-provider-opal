@@ -4230,6 +4230,8 @@ components:
           maxLength: 800
           nullable: true
           example: "Check your email to register your account."
+        risk_sensitivity:
+          $ref: "#/components/schemas/RiskSensitivity"
       required:
         - group_id
       type: object
@@ -4516,6 +4518,8 @@ components:
           maxLength: 800
           nullable: true
           example: "Check your email to register your account."
+        risk_sensitivity:
+          $ref: "#/components/schemas/RiskSensitivity"
       required:
         - group_id
         - request_configurations
@@ -5478,6 +5482,22 @@ components:
           required:
             - role_name
       type: object
+    RiskSensitivityValue:
+      type: string
+      enum: [CRITICAL, HIGH, MEDIUM, LOW, NONE]
+    RiskSensitivity:
+      type: object
+      description: "Indicates the level of potential impact misuse or unauthorized access may incur."
+      properties:
+        calculated_value:
+          type: string
+          description: "The automatically calculated risk sensitivity level."
+          $ref: "#/components/schemas/RiskSensitivityValue"
+          readOnly: true
+        override_value:
+          type: string
+          description: "An optional value provided by the user, which overrides the calculated risk sensitivity level."
+          $ref: "#/components/schemas/RiskSensitivityValue"
     CreateResourceInfo:
       description: |-
         # CreateResourceInfo Object
@@ -5767,6 +5787,8 @@ components:
           maxLength: 800
           nullable: true
           example: "Check your email to register your account."
+        risk_sensitivity:
+          $ref: "#/components/schemas/RiskSensitivity"
       required:
         - name
         - resource_type
@@ -5918,6 +5940,8 @@ components:
           nullable: true
           example: "Check your email to register your account."
           x-speakeasy-param-suppress-computed-diff: true
+        risk_sensitivity:
+          $ref: "#/components/schemas/RiskSensitivity"
       required:
         - name
         - group_type
@@ -6313,6 +6337,8 @@ components:
           maxLength: 800
           nullable: true
           x-speakeasy-param-suppress-computed-diff: true
+        risk_sensitivity:
+          $ref: "#/components/schemas/RiskSensitivity"
         metadata:
           description: JSON metadata about the remote resource. Only set for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/end-system-objects) for details.
           deprecated: true
@@ -6464,6 +6490,8 @@ components:
           maxLength: 800
           nullable: true
           example: "Check your email to register your account."
+        risk_sensitivity:
+          $ref: "#/components/schemas/RiskSensitivity"
         configuration_template_id:
           description: The ID of the associated configuration template.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304

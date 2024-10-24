@@ -63,6 +63,7 @@ type ResourceResourceModel struct {
 	RequireMfaToApprove       types.Bool                              `tfsdk:"require_mfa_to_approve"`
 	RequireMfaToConnect       types.Bool                              `tfsdk:"require_mfa_to_connect"`
 	ResourceType              types.String                            `tfsdk:"resource_type"`
+	RiskSensitivity           *tfTypes.RiskSensitivity                `tfsdk:"risk_sensitivity"`
 	TicketPropagation         *tfTypes.TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
 	Visibility                types.String                            `tfsdk:"visibility"`
 	VisibilityGroupIds        []types.String                          `tfsdk:"visibility_group_ids"`
@@ -1198,6 +1199,41 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						"TELEPORT_ROLE",
 					),
 				},
+			},
+			"risk_sensitivity": schema.SingleNestedAttribute{
+				Computed: true,
+				Optional: true,
+				Attributes: map[string]schema.Attribute{
+					"calculated_value": schema.StringAttribute{
+						Computed:    true,
+						Optional:    true,
+						Description: `must be one of ["CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]`,
+						Validators: []validator.String{
+							stringvalidator.OneOf(
+								"CRITICAL",
+								"HIGH",
+								"MEDIUM",
+								"LOW",
+								"NONE",
+							),
+						},
+					},
+					"override_value": schema.StringAttribute{
+						Computed:    true,
+						Optional:    true,
+						Description: `must be one of ["CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]`,
+						Validators: []validator.String{
+							stringvalidator.OneOf(
+								"CRITICAL",
+								"HIGH",
+								"MEDIUM",
+								"LOW",
+								"NONE",
+							),
+						},
+					},
+				},
+				Description: `Indicates the level of potential impact misuse or unauthorized access may incur.`,
 			},
 			"ticket_propagation": schema.SingleNestedAttribute{
 				Computed: true,

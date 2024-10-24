@@ -134,6 +134,10 @@ resource "opal_resource" "my_resource" {
   require_mfa_to_approve = false
   require_mfa_to_connect = false
   resource_type          = "AWS_IAM_ROLE"
+  risk_sensitivity = {
+    calculated_value = "MEDIUM"
+    override_value   = "LOW"
+  }
   ticket_propagation = {
     enabled_on_grant      = false
     enabled_on_revocation = false

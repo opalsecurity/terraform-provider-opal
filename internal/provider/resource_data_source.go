@@ -41,6 +41,7 @@ type ResourceDataSourceModel struct {
 	RequireMfaToApprove       types.Bool                              `tfsdk:"require_mfa_to_approve"`
 	RequireMfaToConnect       types.Bool                              `tfsdk:"require_mfa_to_connect"`
 	ResourceType              types.String                            `tfsdk:"resource_type"`
+	RiskSensitivity           *tfTypes.RiskSensitivity                `tfsdk:"risk_sensitivity"`
 	TicketPropagation         *tfTypes.TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
 }
 
@@ -507,6 +508,18 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"resource_type": schema.StringAttribute{
 				Computed:    true,
 				Description: `The type of the resource.`,
+			},
+			"risk_sensitivity": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"calculated_value": schema.StringAttribute{
+						Computed: true,
+					},
+					"override_value": schema.StringAttribute{
+						Computed: true,
+					},
+				},
+				Description: `Indicates the level of potential impact misuse or unauthorized access may incur.`,
 			},
 			"ticket_propagation": schema.SingleNestedAttribute{
 				Computed: true,

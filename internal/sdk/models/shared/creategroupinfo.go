@@ -21,6 +21,8 @@ type CreateGroupInfo struct {
 	Name string `json:"name"`
 	// Information that defines the remote group. This replaces the deprecated remote_id and metadata fields.
 	RemoteInfo *GroupRemoteInfo `json:"remote_info,omitempty"`
+	// Indicates the level of potential impact misuse or unauthorized access may incur.
+	RiskSensitivity *RiskSensitivity `json:"risk_sensitivity,omitempty"`
 }
 
 func (o *CreateGroupInfo) GetAppID() string {
@@ -63,4 +65,11 @@ func (o *CreateGroupInfo) GetRemoteInfo() *GroupRemoteInfo {
 		return nil
 	}
 	return o.RemoteInfo
+}
+
+func (o *CreateGroupInfo) GetRiskSensitivity() *RiskSensitivity {
+	if o == nil {
+		return nil
+	}
+	return o.RiskSensitivity
 }
