@@ -5,8 +5,8 @@ management:
   docVersion: "1.0"
   speakeasyVersion: 1.421.2
   generationVersion: 2.438.15
-  releaseVersion: 0.26.6
-  configChecksum: 1787d62337256e28dadc2240ce2323dc
+  releaseVersion: 0.26.7
+  configChecksum: 1fbc56e68c1064da6dd6cc80d4124e1b
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true

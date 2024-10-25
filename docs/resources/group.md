@@ -89,7 +89,11 @@ resource "opal_group" "my_group" {
     }
   ]
   require_mfa_to_approve = false
-  visibility             = "GLOBAL"
+  risk_sensitivity = {
+    calculated_value = "CRITICAL"
+    override_value   = "MEDIUM"
+  }
+  visibility = "GLOBAL"
   visibility_group_ids = [
     "ea22f6cf-8fd4-44e9-b53d-66a5731ab7da"
   ]
@@ -117,6 +121,7 @@ resource "opal_group" "my_group" {
 - `group_leader_user_ids` (Set of String) A list of User IDs for the group leaders of the group
 - `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this group.
+- `risk_sensitivity` (Attributes) Indicates the level of potential impact misuse or unauthorized access may incur. (see [below for nested schema](#nestedatt--risk_sensitivity))
 - `visibility_group_ids` (Set of String)
 
 ### Read-Only
@@ -250,6 +255,15 @@ Optional:
 
 - `group_id` (String) The id of the Okta Directory group. Not Null; Requires replacement if changed.
 
+
+
+<a id="nestedatt--risk_sensitivity"></a>
+### Nested Schema for `risk_sensitivity`
+
+Optional:
+
+- `calculated_value` (String) must be one of ["CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
+- `override_value` (String) must be one of ["CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
 
 
 <a id="nestedatt--message_channels"></a>

@@ -149,6 +149,10 @@ resource "opal_resource" "my_resource" {
   require_mfa_to_approve = false
   require_mfa_to_connect = false
   resource_type          = "AWS_IAM_ROLE"
+  risk_sensitivity = {
+    calculated_value = "MEDIUM"
+    override_value   = "LOW"
+  }
   ticket_propagation = {
     enabled_on_grant      = false
     enabled_on_revocation = false
@@ -181,6 +185,7 @@ resource "opal_resource" "my_resource" {
 - `remote_info` (Attributes) Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to this resource.
+- `risk_sensitivity` (Attributes) Indicates the level of potential impact misuse or unauthorized access may incur. (see [below for nested schema](#nestedatt--risk_sensitivity))
 - `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--ticket_propagation))
 - `visibility_group_ids` (Set of String)
 
@@ -482,6 +487,15 @@ Optional:
 
 - `role_name` (String) The name role. Not Null; Requires replacement if changed.
 
+
+
+<a id="nestedatt--risk_sensitivity"></a>
+### Nested Schema for `risk_sensitivity`
+
+Optional:
+
+- `calculated_value` (String) must be one of ["CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
+- `override_value` (String) must be one of ["CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
 
 
 <a id="nestedatt--ticket_propagation"></a>

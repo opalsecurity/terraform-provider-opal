@@ -60,6 +60,7 @@ Read-Only:
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to this resource.
 - `resource_type` (String) The type of the resource.
+- `risk_sensitivity` (Attributes) Indicates the level of potential impact misuse or unauthorized access may incur. (see [below for nested schema](#nestedatt--results--risk_sensitivity))
 - `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--results--ticket_propagation))
 
 <a id="nestedatt--results--remote_info"></a>
@@ -355,6 +356,15 @@ Read-Only:
 - `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval.
 - `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval.
 
+
+
+<a id="nestedatt--results--risk_sensitivity"></a>
+### Nested Schema for `results.risk_sensitivity`
+
+Read-Only:
+
+- `calculated_value` (String)
+- `override_value` (String)
 
 
 <a id="nestedatt--results--ticket_propagation"></a>
