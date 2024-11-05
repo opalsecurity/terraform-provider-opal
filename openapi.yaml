@@ -615,7 +615,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GroupResourceList"
-          description: The resources that the group gives access to to.
+          description: The resources that the group gives access to.
         "404":
           description: Not Found
       security:
