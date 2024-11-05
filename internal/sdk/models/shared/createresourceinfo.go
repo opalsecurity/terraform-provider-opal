@@ -21,6 +21,8 @@ type CreateResourceInfo struct {
 	RemoteInfo *ResourceRemoteInfo `json:"remote_info,omitempty"`
 	// The type of the resource.
 	ResourceType ResourceTypeEnum `json:"resource_type"`
+	// Indicates the level of potential impact misuse or unauthorized access may incur.
+	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
 }
 
 func (o *CreateResourceInfo) GetAppID() string {
@@ -63,4 +65,11 @@ func (o *CreateResourceInfo) GetResourceType() ResourceTypeEnum {
 		return ResourceTypeEnum("")
 	}
 	return o.ResourceType
+}
+
+func (o *CreateResourceInfo) GetRiskSensitivityOverride() *RiskSensitivityEnum {
+	if o == nil {
+		return nil
+	}
+	return o.RiskSensitivityOverride
 }

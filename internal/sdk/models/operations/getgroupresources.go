@@ -22,7 +22,7 @@ func (o *GetGroupResourcesRequest) GetGroupID() string {
 type GetGroupResourcesResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
-	// The resources that the group gives access to to.
+	// The resources that the group gives access to.
 	GroupResourceList *shared.GroupResourceList
 	// HTTP response status code for this operation
 	StatusCode int

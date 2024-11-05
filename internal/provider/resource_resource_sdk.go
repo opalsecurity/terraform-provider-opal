@@ -373,6 +373,12 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo() *shared.CreateResou
 		}
 	}
 	resourceType := shared.ResourceTypeEnum(r.ResourceType.ValueString())
+	riskSensitivityOverride := new(shared.RiskSensitivityEnum)
+	if !r.RiskSensitivityOverride.IsUnknown() && !r.RiskSensitivityOverride.IsNull() {
+		*riskSensitivityOverride = shared.RiskSensitivityEnum(r.RiskSensitivityOverride.ValueString())
+	} else {
+		riskSensitivityOverride = nil
+	}
 	out := shared.CreateResourceInfo{
 		AppID:                     appID,
 		CustomRequestNotification: customRequestNotification,
@@ -380,6 +386,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo() *shared.CreateResou
 		Name:                      name,
 		RemoteInfo:                remoteInfo,
 		ResourceType:              resourceType,
+		RiskSensitivityOverride:   riskSensitivityOverride,
 	}
 	return &out
 }
@@ -643,6 +650,16 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(resp *shared.Resource)
 		} else {
 			r.ResourceType = types.StringNull()
 		}
+		if resp.RiskSensitivity != nil {
+			r.RiskSensitivity = types.StringValue(string(*resp.RiskSensitivity))
+		} else {
+			r.RiskSensitivity = types.StringNull()
+		}
+		if resp.RiskSensitivityOverride != nil {
+			r.RiskSensitivityOverride = types.StringValue(string(*resp.RiskSensitivityOverride))
+		} else {
+			r.RiskSensitivityOverride = types.StringNull()
+		}
 		if resp.TicketPropagation == nil {
 			r.TicketPropagation = nil
 		} else {
@@ -790,6 +807,12 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo() *shared.UpdateResou
 	} else {
 		requireMfaToConnect = nil
 	}
+	riskSensitivityOverride := new(shared.RiskSensitivityEnum)
+	if !r.RiskSensitivityOverride.IsUnknown() && !r.RiskSensitivityOverride.IsNull() {
+		*riskSensitivityOverride = shared.RiskSensitivityEnum(r.RiskSensitivityOverride.ValueString())
+	} else {
+		riskSensitivityOverride = nil
+	}
 	var ticketPropagation *shared.TicketPropagationConfiguration
 	if r.TicketPropagation != nil {
 		var enabledOnGrant bool
@@ -826,6 +849,7 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo() *shared.UpdateResou
 		RequestConfigurations:     requestConfigurations,
 		RequireMfaToApprove:       requireMfaToApprove,
 		RequireMfaToConnect:       requireMfaToConnect,
+		RiskSensitivityOverride:   riskSensitivityOverride,
 		TicketPropagation:         ticketPropagation,
 	}
 	return &out
@@ -904,6 +928,11 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(resp *shared
 	}
 	r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
 	r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
+	if resp.RiskSensitivityOverride != nil {
+		r.RiskSensitivityOverride = types.StringValue(string(*resp.RiskSensitivityOverride))
+	} else {
+		r.RiskSensitivityOverride = types.StringNull()
+	}
 	if resp.TicketPropagation == nil {
 		r.TicketPropagation = nil
 	} else {

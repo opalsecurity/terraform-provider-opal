@@ -615,7 +615,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GroupResourceList"
-          description: The resources that the group gives access to to.
+          description: The resources that the group gives access to.
         "404":
           description: Not Found
       security:
@@ -4230,6 +4230,13 @@ components:
           maxLength: 800
           nullable: true
           example: "Check your email to register your account."
+        risk_sensitivity:
+          description: The risk sensitivity level for the group. When an override is set, this field will match that.
+          $ref: "#/components/schemas/RiskSensitivityEnum"
+          readOnly: true
+          x-speakeasy-terraform-ignore: true
+        risk_sensitivity_override:
+          $ref: "#/components/schemas/RiskSensitivityEnum"
       required:
         - group_id
       type: object
@@ -4516,6 +4523,8 @@ components:
           maxLength: 800
           nullable: true
           example: "Check your email to register your account."
+        risk_sensitivity_override:
+          $ref: "#/components/schemas/RiskSensitivityEnum"
       required:
         - group_id
         - request_configurations
@@ -5478,6 +5487,10 @@ components:
           required:
             - role_name
       type: object
+    RiskSensitivityEnum:
+      type: string
+      description: "Indicates the level of potential impact misuse or unauthorized access may incur."
+      enum: [UNKNOWN, CRITICAL, HIGH, MEDIUM, LOW, NONE]
     CreateResourceInfo:
       description: |-
         # CreateResourceInfo Object
@@ -5767,6 +5780,8 @@ components:
           maxLength: 800
           nullable: true
           example: "Check your email to register your account."
+        risk_sensitivity_override:
+          $ref: "#/components/schemas/RiskSensitivityEnum"
       required:
         - name
         - resource_type
@@ -5918,6 +5933,8 @@ components:
           nullable: true
           example: "Check your email to register your account."
           x-speakeasy-param-suppress-computed-diff: true
+        risk_sensitivity_override:
+          $ref: "#/components/schemas/RiskSensitivityEnum"
       required:
         - name
         - group_type
@@ -6313,6 +6330,13 @@ components:
           maxLength: 800
           nullable: true
           x-speakeasy-param-suppress-computed-diff: true
+        risk_sensitivity:
+          description: The risk sensitivity level for the resource. When an override is set, this field will match that.
+          readOnly: true
+          $ref: "#/components/schemas/RiskSensitivityEnum"
+          x-speakeasy-terraform-ignore: true
+        risk_sensitivity_override:
+          $ref: "#/components/schemas/RiskSensitivityEnum"
         metadata:
           description: JSON metadata about the remote resource. Only set for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/end-system-objects) for details.
           deprecated: true
@@ -6464,6 +6488,8 @@ components:
           maxLength: 800
           nullable: true
           example: "Check your email to register your account."
+        risk_sensitivity_override:
+          $ref: "#/components/schemas/RiskSensitivityEnum"
         configuration_template_id:
           description: The ID of the associated configuration template.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304

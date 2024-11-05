@@ -63,6 +63,8 @@ type ResourceResourceModel struct {
 	RequireMfaToApprove       types.Bool                              `tfsdk:"require_mfa_to_approve"`
 	RequireMfaToConnect       types.Bool                              `tfsdk:"require_mfa_to_connect"`
 	ResourceType              types.String                            `tfsdk:"resource_type"`
+	RiskSensitivity           types.String                            `tfsdk:"risk_sensitivity"`
+	RiskSensitivityOverride   types.String                            `tfsdk:"risk_sensitivity_override"`
 	TicketPropagation         *tfTypes.TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
 	Visibility                types.String                            `tfsdk:"visibility"`
 	VisibilityGroupIds        []types.String                          `tfsdk:"visibility_group_ids"`
@@ -1196,6 +1198,35 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						"MARIADB_INSTANCE",
 						"POSTGRES_INSTANCE",
 						"TELEPORT_ROLE",
+					),
+				},
+			},
+			"risk_sensitivity": schema.StringAttribute{
+				Computed:    true,
+				Description: `Indicates the level of potential impact misuse or unauthorized access may incur. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]`,
+				Validators: []validator.String{
+					stringvalidator.OneOf(
+						"UNKNOWN",
+						"CRITICAL",
+						"HIGH",
+						"MEDIUM",
+						"LOW",
+						"NONE",
+					),
+				},
+			},
+			"risk_sensitivity_override": schema.StringAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `Indicates the level of potential impact misuse or unauthorized access may incur. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]`,
+				Validators: []validator.String{
+					stringvalidator.OneOf(
+						"UNKNOWN",
+						"CRITICAL",
+						"HIGH",
+						"MEDIUM",
+						"LOW",
+						"NONE",
 					),
 				},
 			},

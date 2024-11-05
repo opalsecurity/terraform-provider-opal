@@ -155,6 +155,16 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 				}
 			}
 			results1.RequireMfaToApprove = types.BoolPointerValue(resultsItem.RequireMfaToApprove)
+			if resultsItem.RiskSensitivity != nil {
+				results1.RiskSensitivity = types.StringValue(string(*resultsItem.RiskSensitivity))
+			} else {
+				results1.RiskSensitivity = types.StringNull()
+			}
+			if resultsItem.RiskSensitivityOverride != nil {
+				results1.RiskSensitivityOverride = types.StringValue(string(*resultsItem.RiskSensitivityOverride))
+			} else {
+				results1.RiskSensitivityOverride = types.StringNull()
+			}
 			if resultsCount+1 > len(r.Results) {
 				r.Results = append(r.Results, results1)
 			} else {
@@ -171,6 +181,8 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 				r.Results[resultsCount].RemoteName = results1.RemoteName
 				r.Results[resultsCount].RequestConfigurations = results1.RequestConfigurations
 				r.Results[resultsCount].RequireMfaToApprove = results1.RequireMfaToApprove
+				r.Results[resultsCount].RiskSensitivity = results1.RiskSensitivity
+				r.Results[resultsCount].RiskSensitivityOverride = results1.RiskSensitivityOverride
 			}
 		}
 	}

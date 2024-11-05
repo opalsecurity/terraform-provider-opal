@@ -272,6 +272,16 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 			} else {
 				results1.ResourceType = types.StringNull()
 			}
+			if resultsItem.RiskSensitivity != nil {
+				results1.RiskSensitivity = types.StringValue(string(*resultsItem.RiskSensitivity))
+			} else {
+				results1.RiskSensitivity = types.StringNull()
+			}
+			if resultsItem.RiskSensitivityOverride != nil {
+				results1.RiskSensitivityOverride = types.StringValue(string(*resultsItem.RiskSensitivityOverride))
+			} else {
+				results1.RiskSensitivityOverride = types.StringNull()
+			}
 			if resultsItem.TicketPropagation == nil {
 				results1.TicketPropagation = nil
 			} else {
@@ -300,6 +310,8 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 				r.Results[resultsCount].RequireMfaToApprove = results1.RequireMfaToApprove
 				r.Results[resultsCount].RequireMfaToConnect = results1.RequireMfaToConnect
 				r.Results[resultsCount].ResourceType = results1.ResourceType
+				r.Results[resultsCount].RiskSensitivity = results1.RiskSensitivity
+				r.Results[resultsCount].RiskSensitivityOverride = results1.RiskSensitivityOverride
 				r.Results[resultsCount].TicketPropagation = results1.TicketPropagation
 			}
 		}

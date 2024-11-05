@@ -1072,6 +1072,9 @@ actions:
   - target: $["components"]["schemas"]["Group"]["properties"]["request_configuration_list"]
     update:
       minItems: 1
+  - target: $["components"]["schemas"]["Group"]["properties"]["risk_sensitivity"]
+    update:
+      x-speakeasy-terraform-ignore: true
   - target: $["components"]["schemas"]["Group"]["properties"]["metadata"]
     update:
       x-speakeasy-ignore: true
@@ -1570,6 +1573,9 @@ actions:
   - target: $["components"]["schemas"]["Resource"]["properties"]["custom_request_notification"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["risk_sensitivity"]
+    update:
+      x-speakeasy-terraform-ignore: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["metadata"]
     update:
       x-speakeasy-ignore: true
