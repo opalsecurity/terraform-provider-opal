@@ -73,8 +73,9 @@ resource "opal_group" "my_group" {
       ]
     }
   ]
-  require_mfa_to_approve = false
-  visibility             = "GLOBAL"
+  require_mfa_to_approve    = false
+  risk_sensitivity_override = "CRITICAL"
+  visibility                = "GLOBAL"
   visibility_group_ids = [
     "ea22f6cf-8fd4-44e9-b53d-66a5731ab7da"
   ]

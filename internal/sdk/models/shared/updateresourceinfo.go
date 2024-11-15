@@ -22,6 +22,8 @@ type UpdateResourceInfo struct {
 	RequireMfaToApprove *bool `json:"require_mfa_to_approve,omitempty"`
 	// A bool representing whether or not to require MFA to connect to this resource.
 	RequireMfaToConnect *bool `json:"require_mfa_to_connect,omitempty"`
+	// Indicates the level of potential impact misuse or unauthorized access may incur.
+	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
 	// Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.
 	TicketPropagation *TicketPropagationConfiguration `json:"ticket_propagation,omitempty"`
 }
@@ -80,6 +82,13 @@ func (o *UpdateResourceInfo) GetRequireMfaToConnect() *bool {
 		return nil
 	}
 	return o.RequireMfaToConnect
+}
+
+func (o *UpdateResourceInfo) GetRiskSensitivityOverride() *RiskSensitivityEnum {
+	if o == nil {
+		return nil
+	}
+	return o.RiskSensitivityOverride
 }
 
 func (o *UpdateResourceInfo) GetTicketPropagation() *TicketPropagationConfiguration {

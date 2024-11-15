@@ -86,7 +86,8 @@ type OpalAPI struct {
 	Events        *Events
 	GroupBindings *GroupBindings
 	// Operations related to groups
-	Groups *Groups
+	Groups           *Groups
+	IdpGroupMappings *IdpGroupMappings
 	// Operations related to message channels
 	MessageChannels    *MessageChannels
 	NonHumanIdentities *NonHumanIdentities
@@ -185,8 +186,8 @@ func New(opts ...SDKOption) *OpalAPI {
 			Language:          "go",
 			OpenAPIDocVersion: "1.0",
 			SDKVersion:        "0.0.1",
-			GenVersion:        "2.446.5",
-			UserAgent:         "speakeasy-sdk/go 0.0.1 2.446.5 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
+			GenVersion:        "2.457.9",
+			UserAgent:         "speakeasy-sdk/go 0.0.1 2.457.9 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
 			Hooks:             hooks.New(),
 		},
 	}
@@ -215,6 +216,8 @@ func New(opts ...SDKOption) *OpalAPI {
 	sdk.GroupBindings = newGroupBindings(sdk.sdkConfiguration)
 
 	sdk.Groups = newGroups(sdk.sdkConfiguration)
+
+	sdk.IdpGroupMappings = newIdpGroupMappings(sdk.sdkConfiguration)
 
 	sdk.MessageChannels = newMessageChannels(sdk.sdkConfiguration)
 

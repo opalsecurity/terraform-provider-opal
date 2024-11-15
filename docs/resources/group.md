@@ -88,8 +88,9 @@ resource "opal_group" "my_group" {
       ]
     }
   ]
-  require_mfa_to_approve = false
-  visibility             = "GLOBAL"
+  require_mfa_to_approve    = false
+  risk_sensitivity_override = "CRITICAL"
+  visibility                = "GLOBAL"
   visibility_group_ids = [
     "ea22f6cf-8fd4-44e9-b53d-66a5731ab7da"
   ]
@@ -117,6 +118,7 @@ resource "opal_group" "my_group" {
 - `group_leader_user_ids` (Set of String) A list of User IDs for the group leaders of the group
 - `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this group.
+- `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
 - `visibility_group_ids` (Set of String)
 
 ### Read-Only
@@ -126,6 +128,7 @@ resource "opal_group" "my_group" {
 - `message_channels` (Attributes) (see [below for nested schema](#nestedatt--message_channels))
 - `oncall_schedules` (Attributes) (see [below for nested schema](#nestedatt--oncall_schedules))
 - `remote_name` (String) The name of the remote.
+- `risk_sensitivity` (String) Indicates the level of potential impact misuse or unauthorized access may incur. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
 
 <a id="nestedatt--request_configurations"></a>
 ### Nested Schema for `request_configurations`

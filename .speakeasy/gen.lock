@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 9a29567fda6023fde1ce41f57b9533f8
+  docChecksum: efa1051df6187b75115471a6ae9449c0
   docVersion: "1.0"
-  speakeasyVersion: 1.426.0
-  generationVersion: 2.446.5
-  releaseVersion: 0.27.0
-  configChecksum: feb2a6ab5400e0ec31bb2e0722e14ae1
+  speakeasyVersion: 1.440.0
+  generationVersion: 2.457.9
+  releaseVersion: 0.28.0
+  configChecksum: 5507aea7ad17460bda4e575bbe4f139c
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -14,8 +14,8 @@ features:
   terraform:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.2
-    constsAndDefaults: 0.1.4
-    core: 3.26.1
+    constsAndDefaults: 0.2.0
+    core: 3.26.3
     deprecations: 2.81.1
     envVarSecurityUsage: 0.1.0
     globalSecurity: 2.81.9
@@ -26,7 +26,7 @@ features:
     retries: 2.81.1
     serverIDs: 2.81.1
     sets: 0.1.2
-    unions: 2.81.16
+    unions: 2.81.17
 generatedFiles:
   - .gitattributes
   - USAGE.md
@@ -268,6 +268,7 @@ generatedFiles:
   - internal/sdk/events.go
   - internal/sdk/groupbindings.go
   - internal/sdk/groups.go
+  - internal/sdk/idpgroupmappings.go
   - internal/sdk/internal/hooks/hooks.go
   - internal/sdk/internal/utils/contenttype.go
   - internal/sdk/internal/utils/form.go
@@ -302,6 +303,7 @@ generatedFiles:
   - internal/sdk/models/operations/deletegroupbinding.go
   - internal/sdk/models/operations/deletegrouptag.go
   - internal/sdk/models/operations/deletegroupuser.go
+  - internal/sdk/models/operations/deleteidpgroupmappingsbyappresourceidgroupid.go
   - internal/sdk/models/operations/deleteowner.go
   - internal/sdk/models/operations/deleteresource.go
   - internal/sdk/models/operations/deleteresourcenhi.go
@@ -323,6 +325,7 @@ generatedFiles:
   - internal/sdk/models/operations/getgrouptags.go
   - internal/sdk/models/operations/getgroupusers.go
   - internal/sdk/models/operations/getgroupvisibility.go
+  - internal/sdk/models/operations/getidpgroupmappings.go
   - internal/sdk/models/operations/getmessagechannelid.go
   - internal/sdk/models/operations/getmessagechannels.go
   - internal/sdk/models/operations/getnhis.go
@@ -358,6 +361,7 @@ generatedFiles:
   - internal/sdk/models/operations/updategroupreviewersstages.go
   - internal/sdk/models/operations/updategroups.go
   - internal/sdk/models/operations/updategroupvisibility.go
+  - internal/sdk/models/operations/updateidpgroupmappings.go
   - internal/sdk/models/operations/updateowners.go
   - internal/sdk/models/operations/updateownerusers.go
   - internal/sdk/models/operations/updateresourcemessagechannels.go
@@ -393,6 +397,8 @@ generatedFiles:
   - internal/sdk/models/shared/grouptypeenum.go
   - internal/sdk/models/shared/groupuser.go
   - internal/sdk/models/shared/groupuserlist.go
+  - internal/sdk/models/shared/idpgroupmapping.go
+  - internal/sdk/models/shared/idpgroupmappinglist.go
   - internal/sdk/models/shared/messagechannel.go
   - internal/sdk/models/shared/messagechannelidlist.go
   - internal/sdk/models/shared/messagechannellist.go
@@ -431,6 +437,7 @@ generatedFiles:
   - internal/sdk/models/shared/revieweridlist.go
   - internal/sdk/models/shared/reviewerstage.go
   - internal/sdk/models/shared/reviewerstagelist.go
+  - internal/sdk/models/shared/risksensitivityenum.go
   - internal/sdk/models/shared/security.go
   - internal/sdk/models/shared/session.go
   - internal/sdk/models/shared/sessionslist.go
@@ -1164,3 +1171,24 @@ examples:
       responses:
         "200":
           application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"email": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "first_name": "John", "hr_idp_status": "ACTIVE", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac", "last_name": "Doe", "full_name": "John Doe", "position": "Senior Engineer"}, {"email": "186511e5-5b5a-4ad7-a4ad-b6c8694a544a", "first_name": "John", "hr_idp_status": "ACTIVE", "user_id": "e8581682-04f7-473a-a419-472f0fb26d46", "last_name": "Doe", "full_name": "Jane Smith", "position": "Product Marketing Lead"}]}
+  delete_idp_group_mappings_by_app_resource_ID_group_ID:
+    "":
+      parameters:
+        path:
+          app_resource_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+          group_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+  getIdpGroupMappings:
+    "":
+      parameters:
+        path:
+          app_resource_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+      responses:
+        "200":
+          application/json: {"idp_group_mappings": [{"alias": "finance-team", "app_resource_id": "6f99639b-7928-4043-8184-47cbc6766145", "group_id": "6f99639b-7928-4043-8184-47cbc6766145", "hidden_from_end_user": false, "id": "7870617d-e72a-47f5-a84c-693817ab4567", "organization_id": "1520617d-e72a-47f5-a84c-693817ab48ad2"}, {"alias": "engineering-team", "app_resource_id": "7870617d-e72a-47f5-a84c-693817ab4567", "group_id": "7870617d-e72a-47f5-a84c-693817ab4567", "hidden_from_end_user": false, "id": "1520617d-e72a-47f5-a84c-693817ab48ad2", "organization_id": "6f99639b-7928-4043-8184-47cbc6766145"}]}
+  updateIdpGroupMappings:
+    "":
+      parameters:
+        path:
+          app_resource_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+      requestBody:
+        application/json: {}
