@@ -701,8 +701,11 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Description: `A bool representing whether or not to require MFA for reviewers to approve requests for this group.`,
 			},
 			"risk_sensitivity": schema.StringAttribute{
-				Computed:    true,
-				Description: `Indicates the level of potential impact misuse or unauthorized access may incur. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]`,
+				Computed: true,
+				PlanModifiers: []planmodifier.String{
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
+				Description: `The risk sensitivity level for the group. When an override is set, this field will match that. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"UNKNOWN",

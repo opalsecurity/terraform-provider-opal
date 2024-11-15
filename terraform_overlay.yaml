@@ -1078,6 +1078,9 @@ actions:
   - target: $["components"]["schemas"]["Group"]["properties"]["remote_info"]
     update:
       x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["risk_sensitivity"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["Group"]
     update:
       x-speakeasy-entity: Group
@@ -1568,6 +1571,9 @@ actions:
     update:
       x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["custom_request_notification"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["risk_sensitivity"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["metadata"]

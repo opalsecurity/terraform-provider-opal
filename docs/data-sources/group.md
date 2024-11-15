@@ -41,7 +41,7 @@ data "opal_group" "my_group" {
 - `remote_name` (String) The name of the remote.
 - `request_configurations` (Attributes List) A list of request configurations for this group. (see [below for nested schema](#nestedatt--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this group.
-- `risk_sensitivity` (String) Indicates the level of potential impact misuse or unauthorized access may incur.
+- `risk_sensitivity` (String) The risk sensitivity level for the group. When an override is set, this field will match that.
 - `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur.
 - `visibility` (String) The visibility level of the entity.
 - `visibility_group_ids` (Set of String)
