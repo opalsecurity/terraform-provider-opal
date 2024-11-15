@@ -35,6 +35,10 @@ type Group struct {
 	RequestConfigurations []RequestConfiguration `json:"request_configurations,omitempty"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this group.
 	RequireMfaToApprove *bool `json:"require_mfa_to_approve,omitempty"`
+	// Indicates the level of potential impact misuse or unauthorized access may incur.
+	RiskSensitivity *RiskSensitivityEnum `json:"risk_sensitivity,omitempty"`
+	// Indicates the level of potential impact misuse or unauthorized access may incur.
+	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
 }
 
 func (o *Group) GetAdminOwnerID() *string {
@@ -126,4 +130,18 @@ func (o *Group) GetRequireMfaToApprove() *bool {
 		return nil
 	}
 	return o.RequireMfaToApprove
+}
+
+func (o *Group) GetRiskSensitivity() *RiskSensitivityEnum {
+	if o == nil {
+		return nil
+	}
+	return o.RiskSensitivity
+}
+
+func (o *Group) GetRiskSensitivityOverride() *RiskSensitivityEnum {
+	if o == nil {
+		return nil
+	}
+	return o.RiskSensitivityOverride
 }

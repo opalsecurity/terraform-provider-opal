@@ -124,6 +124,12 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo() *shared.CreateGroupInfo {
 			OktaGroup:                oktaGroup,
 		}
 	}
+	riskSensitivityOverride := new(shared.RiskSensitivityEnum)
+	if !r.RiskSensitivityOverride.IsUnknown() && !r.RiskSensitivityOverride.IsNull() {
+		*riskSensitivityOverride = shared.RiskSensitivityEnum(r.RiskSensitivityOverride.ValueString())
+	} else {
+		riskSensitivityOverride = nil
+	}
 	out := shared.CreateGroupInfo{
 		AppID:                     appID,
 		CustomRequestNotification: customRequestNotification,
@@ -131,6 +137,7 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo() *shared.CreateGroupInfo {
 		GroupType:                 groupType,
 		Name:                      name,
 		RemoteInfo:                remoteInfo,
+		RiskSensitivityOverride:   riskSensitivityOverride,
 	}
 	return &out
 }
@@ -279,6 +286,16 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 			}
 		}
 		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
+		if resp.RiskSensitivity != nil {
+			r.RiskSensitivity = types.StringValue(string(*resp.RiskSensitivity))
+		} else {
+			r.RiskSensitivity = types.StringNull()
+		}
+		if resp.RiskSensitivityOverride != nil {
+			r.RiskSensitivityOverride = types.StringValue(string(*resp.RiskSensitivityOverride))
+		} else {
+			r.RiskSensitivityOverride = types.StringNull()
+		}
 	}
 }
 
@@ -411,6 +428,12 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo() *shared.UpdateGroupInfo {
 	} else {
 		requireMfaToApprove = nil
 	}
+	riskSensitivityOverride := new(shared.RiskSensitivityEnum)
+	if !r.RiskSensitivityOverride.IsUnknown() && !r.RiskSensitivityOverride.IsNull() {
+		*riskSensitivityOverride = shared.RiskSensitivityEnum(r.RiskSensitivityOverride.ValueString())
+	} else {
+		riskSensitivityOverride = nil
+	}
 	out := shared.UpdateGroupInfo{
 		AdminOwnerID:              adminOwnerID,
 		CustomRequestNotification: customRequestNotification,
@@ -420,6 +443,7 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo() *shared.UpdateGroupInfo {
 		Name:                      name,
 		RequestConfigurations:     requestConfigurations,
 		RequireMfaToApprove:       requireMfaToApprove,
+		RiskSensitivityOverride:   riskSensitivityOverride,
 	}
 	return &out
 }
@@ -500,6 +524,11 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(resp *shared.Updat
 		}
 	}
 	r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
+	if resp.RiskSensitivityOverride != nil {
+		r.RiskSensitivityOverride = types.StringValue(string(*resp.RiskSensitivityOverride))
+	} else {
+		r.RiskSensitivityOverride = types.StringNull()
+	}
 }
 
 func (r *GroupResourceModel) ToSharedMessageChannelIDList() *shared.MessageChannelIDList {

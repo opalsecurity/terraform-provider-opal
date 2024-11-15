@@ -33,6 +33,10 @@ type Resource struct {
 	RequireMfaToConnect *bool `json:"require_mfa_to_connect,omitempty"`
 	// The type of the resource.
 	ResourceType *ResourceTypeEnum `json:"resource_type,omitempty"`
+	// Indicates the level of potential impact misuse or unauthorized access may incur.
+	RiskSensitivity *RiskSensitivityEnum `json:"risk_sensitivity,omitempty"`
+	// Indicates the level of potential impact misuse or unauthorized access may incur.
+	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
 	// Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.
 	TicketPropagation *TicketPropagationConfiguration `json:"ticket_propagation,omitempty"`
 }
@@ -119,6 +123,20 @@ func (o *Resource) GetResourceType() *ResourceTypeEnum {
 		return nil
 	}
 	return o.ResourceType
+}
+
+func (o *Resource) GetRiskSensitivity() *RiskSensitivityEnum {
+	if o == nil {
+		return nil
+	}
+	return o.RiskSensitivity
+}
+
+func (o *Resource) GetRiskSensitivityOverride() *RiskSensitivityEnum {
+	if o == nil {
+		return nil
+	}
+	return o.RiskSensitivityOverride
 }
 
 func (o *Resource) GetTicketPropagation() *TicketPropagationConfiguration {

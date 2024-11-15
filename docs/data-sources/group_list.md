@@ -55,6 +55,8 @@ Read-Only:
 - `remote_name` (String) The name of the remote.
 - `request_configurations` (Attributes List) A list of request configurations for this group. (see [below for nested schema](#nestedatt--results--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this group.
+- `risk_sensitivity` (String) Indicates the level of potential impact misuse or unauthorized access may incur.
+- `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur.
 
 <a id="nestedatt--results--remote_info"></a>
 ### Nested Schema for `results.remote_info`

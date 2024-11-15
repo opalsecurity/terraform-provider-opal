@@ -9,14 +9,16 @@ generation:
     requestResponseComponentNamesFeb2024: false
   auth:
     oAuth2ClientCredentialsEnabled: false
+    oAuth2PasswordEnabled: false
   flattenGlobalSecurity: true
 terraform:
-  version: 0.27.0
+  version: 0.28.0
   additionalDataSources: []
   additionalDependencies: {}
   additionalResources: []
   allowUnknownFieldsInWeakUnions: false
   author: opalsecurity
+  defaultErrorName: SDKError
   environmentVariables:
     - env: OPAL_AUTH_TOKEN
       providerAttribute: bearer_auth

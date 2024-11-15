@@ -29,6 +29,7 @@ const (
 	ResourceTypeEnumAzureSQLServer                   ResourceTypeEnum = "AZURE_SQL_SERVER"
 	ResourceTypeEnumAzureSQLManagedInstance          ResourceTypeEnum = "AZURE_SQL_MANAGED_INSTANCE"
 	ResourceTypeEnumAzureSQLDatabase                 ResourceTypeEnum = "AZURE_SQL_DATABASE"
+	ResourceTypeEnumAzureSQLManagedDatabase          ResourceTypeEnum = "AZURE_SQL_MANAGED_DATABASE"
 	ResourceTypeEnumAzureUserAssignedManagedIdentity ResourceTypeEnum = "AZURE_USER_ASSIGNED_MANAGED_Identity"
 	ResourceTypeEnumAzureEntraIDRole                 ResourceTypeEnum = "AZURE_ENTRA_ID_ROLE"
 	ResourceTypeEnumCustom                           ResourceTypeEnum = "CUSTOM"
@@ -112,6 +113,8 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "AZURE_SQL_MANAGED_INSTANCE":
 		fallthrough
 	case "AZURE_SQL_DATABASE":
+		fallthrough
+	case "AZURE_SQL_MANAGED_DATABASE":
 		fallthrough
 	case "AZURE_USER_ASSIGNED_MANAGED_Identity":
 		fallthrough

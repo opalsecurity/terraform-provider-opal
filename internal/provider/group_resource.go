@@ -68,6 +68,8 @@ type GroupResourceModel struct {
 	RemoteName                types.String                                `tfsdk:"remote_name"`
 	RequestConfigurations     []tfTypes.RequestConfiguration              `tfsdk:"request_configurations"`
 	RequireMfaToApprove       types.Bool                                  `tfsdk:"require_mfa_to_approve"`
+	RiskSensitivity           types.String                                `tfsdk:"risk_sensitivity"`
+	RiskSensitivityOverride   types.String                                `tfsdk:"risk_sensitivity_override"`
 	Visibility                types.String                                `tfsdk:"visibility"`
 	VisibilityGroupIds        []types.String                              `tfsdk:"visibility_group_ids"`
 }
@@ -697,6 +699,35 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Computed:    true,
 				Optional:    true,
 				Description: `A bool representing whether or not to require MFA for reviewers to approve requests for this group.`,
+			},
+			"risk_sensitivity": schema.StringAttribute{
+				Computed:    true,
+				Description: `Indicates the level of potential impact misuse or unauthorized access may incur. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]`,
+				Validators: []validator.String{
+					stringvalidator.OneOf(
+						"UNKNOWN",
+						"CRITICAL",
+						"HIGH",
+						"MEDIUM",
+						"LOW",
+						"NONE",
+					),
+				},
+			},
+			"risk_sensitivity_override": schema.StringAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `Indicates the level of potential impact misuse or unauthorized access may incur. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]`,
+				Validators: []validator.String{
+					stringvalidator.OneOf(
+						"UNKNOWN",
+						"CRITICAL",
+						"HIGH",
+						"MEDIUM",
+						"LOW",
+						"NONE",
+					),
+				},
 			},
 			"visibility": schema.StringAttribute{
 				Required:    true,
