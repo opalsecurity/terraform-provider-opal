@@ -117,6 +117,8 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 			"request_configurations": requestConfigurationsType,
 			"ticket_propagation": ticketPropagationType,
 			"custom_request_notification": tftypes.String,
+			"risk_sensitivity": tftypes.String,
+			"risk_sensitivity_override": tftypes.String,
 		},
 	}
 	
@@ -238,6 +240,8 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 			"request_configurations": tftypes.NewValue(requestConfigurationsType, nil), // Will be populated on a state refresh
 			"ticket_propagation": tftypes.NewValue(ticketPropagationType, nil), // cannot have been set in the prior version
 			"custom_request_notification": tftypes.NewValue(tftypes.String, nil),
+			"risk_sensitivity": tftypes.NewValue(tftypes.String, nil), // read only field
+			"risk_sensitivity_override": tftypes.NewValue(tftypes.String, nil),
 		}),
 	)
 

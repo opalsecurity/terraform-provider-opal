@@ -138,6 +138,8 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"remote_name": tftypes.String,
 			"request_configurations": requestConfigurationsType,
 			"custom_request_notification": tftypes.String,
+			"risk_sensitivity": tftypes.String,
+			"risk_sensitivity_override": tftypes.String,
 		},
 	}
 	
@@ -294,6 +296,8 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"oncall_schedules": tftypes.NewValue(oncallSchedulesType, nil), // Will be populated on a state refresh
 			"request_configurations": tftypes.NewValue(requestConfigurationsType, nil), // Will be populated on a state refresh
 			"custom_request_notification": tftypes.NewValue(tftypes.String, nil),
+			"risk_sensitivity": tftypes.NewValue(tftypes.String, nil), // read only field
+			"risk_sensitivity_override": tftypes.NewValue(tftypes.String, nil),
 		}),
 	)
 	if err != nil {
