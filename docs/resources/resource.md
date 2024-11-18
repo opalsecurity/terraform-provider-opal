@@ -190,7 +190,7 @@ resource "opal_resource" "my_resource" {
 
 - `id` (String) The ID of the resource.
 - `parent_resource_id` (String) The ID of the parent resource.
-- `risk_sensitivity` (String) Indicates the level of potential impact misuse or unauthorized access may incur. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
+- `risk_sensitivity` (String) The risk sensitivity level for the resource. When an override is set, this field will match that. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
 
 <a id="nestedatt--request_configurations"></a>
 ### Nested Schema for `request_configurations`

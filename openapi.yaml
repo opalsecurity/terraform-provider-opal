@@ -4330,8 +4330,9 @@ components:
           example: "Check your email to register your account."
         risk_sensitivity:
           description: The risk sensitivity level for the group. When an override is set, this field will match that.
-          $ref: "#/components/schemas/RiskSensitivityEnum"
           readOnly: true
+          allOf:
+            - $ref: "#/components/schemas/RiskSensitivityEnum"
         risk_sensitivity_override:
           $ref: "#/components/schemas/RiskSensitivityEnum"
       required:
@@ -6499,7 +6500,8 @@ components:
         risk_sensitivity:
           description: The risk sensitivity level for the resource. When an override is set, this field will match that.
           readOnly: true
-          $ref: "#/components/schemas/RiskSensitivityEnum"
+          allOf:
+            - $ref: "#/components/schemas/RiskSensitivityEnum"
         risk_sensitivity_override:
           $ref: "#/components/schemas/RiskSensitivityEnum"
         metadata:

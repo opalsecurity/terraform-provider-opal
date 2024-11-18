@@ -512,7 +512,7 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			},
 			"risk_sensitivity": schema.StringAttribute{
 				Computed:    true,
-				Description: `Indicates the level of potential impact misuse or unauthorized access may incur.`,
+				Description: `The risk sensitivity level for the resource. When an override is set, this field will match that.`,
 			},
 			"risk_sensitivity_override": schema.StringAttribute{
 				Computed:    true,

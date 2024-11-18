@@ -273,3 +273,13 @@ Based on:
 - [terraform v0.28.0] .
 ### Releases
 - [Terraform v0.28.0] https://registry.terraform.io/providers/opalsecurity/opal/0.28.0 - .
+
+## 2024-11-18 00:16:07
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.440.1 (2.460.1) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [terraform v0.28.1] .
+### Releases
+- [Terraform v0.28.1] https://registry.terraform.io/providers/opalsecurity/opal/0.28.1 - .
