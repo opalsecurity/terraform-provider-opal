@@ -2,14 +2,29 @@
 
 package shared
 
+import (
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
+)
+
 // MessageChannelIDList - A list of message channel IDs.
 type MessageChannelIDList struct {
 	MessageChannelIds []string `json:"message_channel_ids"`
 }
 
+func (m MessageChannelIDList) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(m, "", false)
+}
+
+func (m *MessageChannelIDList) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &m, "", false, false); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (o *MessageChannelIDList) GetMessageChannelIds() []string {
 	if o == nil {
-		return []string{}
+		return nil
 	}
 	return o.MessageChannelIds
 }

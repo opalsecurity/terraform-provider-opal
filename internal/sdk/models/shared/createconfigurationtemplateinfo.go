@@ -2,6 +2,10 @@
 
 package shared
 
+import (
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
+)
+
 // # CreateConfigurationTemplateInfo Object
 // ### Description
 // The `CreateConfigurationTemplateInfo` object is used to store creation info for a configuration template.
@@ -18,7 +22,7 @@ type CreateConfigurationTemplateInfo struct {
 	// The IDs of the audit message channels linked to the configuration template.
 	LinkedAuditMessageChannelIds []string `json:"linked_audit_message_channel_ids,omitempty"`
 	// The IDs of the on-call schedules linked to the configuration template.
-	MemberOncallScheduleIds []string `json:"member_oncall_schedule_ids,omitempty"`
+	MemberOncallScheduleIds []string `json:"member_oncall_schedule_ids"`
 	// The name of the configuration template.
 	Name string `json:"name"`
 	// The request configuration list of the configuration template. If not provided, the default request configuration will be used.
@@ -31,6 +35,17 @@ type CreateConfigurationTemplateInfo struct {
 	TicketPropagation *TicketPropagationConfiguration `json:"ticket_propagation,omitempty"`
 	// Visibility infomation of an entity.
 	Visibility VisibilityInfo `json:"visibility"`
+}
+
+func (c CreateConfigurationTemplateInfo) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(c, "", false)
+}
+
+func (c *CreateConfigurationTemplateInfo) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &c, "", false, false); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *CreateConfigurationTemplateInfo) GetAdminOwnerID() string {

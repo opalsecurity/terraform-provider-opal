@@ -1,6 +1,6 @@
 overlay: 1.0.0
 info:
-  title: Overlay .speakeasy/temp/remote_openapi.yaml => ./openapi.yaml
+  title: Overlay ./openapi_original.yaml => ./openapi.yaml
   version: 0.0.0
 actions:
   - target: $["servers"][0]
@@ -1188,6 +1188,9 @@ actions:
       format: set
   - target: $["components"]["schemas"]["VisibilityInfo"]["properties"]["visibility_group_ids"]
     update:
+      default: []
+  - target: $["components"]["schemas"]["VisibilityInfo"]["properties"]["visibility_group_ids"]
+    update:
       x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["VisibilityInfo"]
     update:
@@ -1198,6 +1201,9 @@ actions:
     update:
       x-speakeasy-plan-validators:
         - VisibilityInfo
+  - target: $["components"]["schemas"]["MessageChannelIDList"]["properties"]["message_channel_ids"]
+    update:
+      default: []
   - target: $["components"]["schemas"]["MessageChannelIDList"]["properties"]["message_channel_ids"]
     update:
       format: set
@@ -1764,6 +1770,12 @@ actions:
   - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["member_oncall_schedule_ids"]
     update:
       format: set
+  - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["member_oncall_schedule_ids"]
+    update:
+      default: []
+  - target: $["components"]["schemas"]["OnCallScheduleIDList"]["properties"]["on_call_schedule_ids"]
+    update:
+      default: []
   - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["break_glass_user_ids"]
     update:
       format: set
