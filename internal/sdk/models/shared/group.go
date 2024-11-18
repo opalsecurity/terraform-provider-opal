@@ -2,6 +2,50 @@
 
 package shared
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
+// RiskSensitivity - The risk sensitivity level for the group. When an override is set, this field will match that.
+type RiskSensitivity string
+
+const (
+	RiskSensitivityUnknown  RiskSensitivity = "UNKNOWN"
+	RiskSensitivityCritical RiskSensitivity = "CRITICAL"
+	RiskSensitivityHigh     RiskSensitivity = "HIGH"
+	RiskSensitivityMedium   RiskSensitivity = "MEDIUM"
+	RiskSensitivityLow      RiskSensitivity = "LOW"
+	RiskSensitivityNone     RiskSensitivity = "NONE"
+)
+
+func (e RiskSensitivity) ToPointer() *RiskSensitivity {
+	return &e
+}
+func (e *RiskSensitivity) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "UNKNOWN":
+		fallthrough
+	case "CRITICAL":
+		fallthrough
+	case "HIGH":
+		fallthrough
+	case "MEDIUM":
+		fallthrough
+	case "LOW":
+		fallthrough
+	case "NONE":
+		*e = RiskSensitivity(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for RiskSensitivity: %v", v)
+	}
+}
+
 // # Group Object
 // ### Description
 // The `Group` object is used to represent a group.
@@ -35,8 +79,8 @@ type Group struct {
 	RequestConfigurations []RequestConfiguration `json:"request_configurations,omitempty"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this group.
 	RequireMfaToApprove *bool `json:"require_mfa_to_approve,omitempty"`
-	// Indicates the level of potential impact misuse or unauthorized access may incur.
-	RiskSensitivity *RiskSensitivityEnum `json:"risk_sensitivity,omitempty"`
+	// The risk sensitivity level for the group. When an override is set, this field will match that.
+	RiskSensitivity *RiskSensitivity `json:"risk_sensitivity,omitempty"`
 	// Indicates the level of potential impact misuse or unauthorized access may incur.
 	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
 }
@@ -132,7 +176,7 @@ func (o *Group) GetRequireMfaToApprove() *bool {
 	return o.RequireMfaToApprove
 }
 
-func (o *Group) GetRiskSensitivity() *RiskSensitivityEnum {
+func (o *Group) GetRiskSensitivity() *RiskSensitivity {
 	if o == nil {
 		return nil
 	}

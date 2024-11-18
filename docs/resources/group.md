@@ -128,7 +128,7 @@ resource "opal_group" "my_group" {
 - `message_channels` (Attributes) (see [below for nested schema](#nestedatt--message_channels))
 - `oncall_schedules` (Attributes) (see [below for nested schema](#nestedatt--oncall_schedules))
 - `remote_name` (String) The name of the remote.
-- `risk_sensitivity` (String) Indicates the level of potential impact misuse or unauthorized access may incur. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
+- `risk_sensitivity` (String) The risk sensitivity level for the group. When an override is set, this field will match that. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
 
 <a id="nestedatt--request_configurations"></a>
 ### Nested Schema for `request_configurations`

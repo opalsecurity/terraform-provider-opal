@@ -38,7 +38,7 @@ data "opal_resource" "my_resource" {
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to this resource.
 - `resource_type` (String) The type of the resource.
-- `risk_sensitivity` (String) Indicates the level of potential impact misuse or unauthorized access may incur.
+- `risk_sensitivity` (String) The risk sensitivity level for the resource. When an override is set, this field will match that.
 - `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur.
 - `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--ticket_propagation))
 
