@@ -7,11 +7,13 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -170,7 +172,9 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Description: `The ID of the group.`,
 			},
 			"message_channel_ids": schema.SetAttribute{
-				Required:    true,
+				Computed:    true,
+				Optional:    true,
+				Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 				ElementType: types.StringType,
 			},
 			"message_channels": schema.SingleNestedAttribute{
@@ -237,7 +241,9 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Description: `The name of the remote group.`,
 			},
 			"on_call_schedule_ids": schema.SetAttribute{
-				Required:    true,
+				Computed:    true,
+				Optional:    true,
+				Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 				ElementType: types.StringType,
 			},
 			"oncall_schedules": schema.SingleNestedAttribute{
@@ -745,6 +751,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 			"visibility_group_ids": schema.SetAttribute{
 				Computed: true,
 				Optional: true,
+				Default:  setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 				PlanModifiers: []planmodifier.Set{
 					speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
 				},

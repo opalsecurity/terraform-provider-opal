@@ -3,6 +3,7 @@
 package operations
 
 import (
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 	"net/http"
 )
@@ -23,7 +24,18 @@ func (o *GetGroupVisibilityRequest) GetID() string {
 type GetGroupVisibilityResponseBody struct {
 	// The visibility level of the entity.
 	Visibility         shared.VisibilityTypeEnum `json:"visibility"`
-	VisibilityGroupIds []string                  `json:"visibility_group_ids,omitempty"`
+	VisibilityGroupIds []string                  `json:"visibility_group_ids"`
+}
+
+func (g GetGroupVisibilityResponseBody) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(g, "", false)
+}
+
+func (g *GetGroupVisibilityResponseBody) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &g, "", false, false); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *GetGroupVisibilityResponseBody) GetVisibility() shared.VisibilityTypeEnum {

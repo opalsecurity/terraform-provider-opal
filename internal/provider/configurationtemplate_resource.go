@@ -6,9 +6,11 @@ import (
 	"context"
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -93,6 +95,7 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 			"member_oncall_schedule_ids": schema.SetAttribute{
 				Computed:    true,
 				Optional:    true,
+				Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 				ElementType: types.StringType,
 				Description: `The IDs of the on-call schedules linked to the configuration template.`,
 			},
@@ -269,6 +272,7 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 					"visibility_group_ids": schema.SetAttribute{
 						Computed: true,
 						Optional: true,
+						Default:  setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 						PlanModifiers: []planmodifier.Set{
 							speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
 						},

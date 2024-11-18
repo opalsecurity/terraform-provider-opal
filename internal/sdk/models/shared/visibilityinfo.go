@@ -2,11 +2,26 @@
 
 package shared
 
+import (
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
+)
+
 // VisibilityInfo - Visibility infomation of an entity.
 type VisibilityInfo struct {
 	// The visibility level of the entity.
 	Visibility         VisibilityTypeEnum `json:"visibility"`
-	VisibilityGroupIds []string           `json:"visibility_group_ids,omitempty"`
+	VisibilityGroupIds []string           `json:"visibility_group_ids"`
+}
+
+func (v VisibilityInfo) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(v, "", false)
+}
+
+func (v *VisibilityInfo) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &v, "", false, false); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *VisibilityInfo) GetVisibility() VisibilityTypeEnum {

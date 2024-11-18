@@ -104,9 +104,7 @@ resource "opal_group" "my_group" {
 
 - `app_id` (String) The ID of the app for the group. Requires replacement if changed.
 - `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "TAILSCALE_GROUP", "OPAL_GROUP", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP"]; Requires replacement if changed.
-- `message_channel_ids` (Set of String)
 - `name` (String) The name of the remote group.
-- `on_call_schedule_ids` (Set of String)
 - `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 
@@ -116,6 +114,8 @@ resource "opal_group" "my_group" {
 - `custom_request_notification` (String) Custom request notification sent upon request approval.
 - `description` (String) A description of the remote group.
 - `group_leader_user_ids` (Set of String) A list of User IDs for the group leaders of the group
+- `message_channel_ids` (Set of String)
+- `on_call_schedule_ids` (Set of String)
 - `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this group.
 - `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]

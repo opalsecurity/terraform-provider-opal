@@ -2,14 +2,29 @@
 
 package shared
 
+import (
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
+)
+
 // OnCallScheduleIDList - A list of on call schedule Opal UUIDs. To get the matching remote IDs, use the /on-call-schedules endpoints.
 type OnCallScheduleIDList struct {
 	OnCallScheduleIds []string `json:"on_call_schedule_ids"`
 }
 
+func (o OnCallScheduleIDList) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(o, "", false)
+}
+
+func (o *OnCallScheduleIDList) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &o, "", false, false); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (o *OnCallScheduleIDList) GetOnCallScheduleIds() []string {
 	if o == nil {
-		return []string{}
+		return nil
 	}
 	return o.OnCallScheduleIds
 }

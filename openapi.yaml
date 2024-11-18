@@ -4901,6 +4901,7 @@ components:
             format: uuid
           type: array
           format: set
+          default: []
           x-speakeasy-param-suppress-computed-diff: true
       type: object
       required:
@@ -4922,6 +4923,7 @@ components:
             type: string
             format: uuid
           type: array
+          default: []
           format: set
       type: object
       required:
@@ -4942,6 +4944,7 @@ components:
             format: uuid
           type: array
           format: set
+          default: []
       type: object
       required:
         - on_call_schedule_ids
@@ -7503,6 +7506,7 @@ components:
             format: uuid
           type: array
           format: set
+          default: []
         break_glass_user_ids:
           description: The IDs of the break glass users linked to the configuration template.
           example:
