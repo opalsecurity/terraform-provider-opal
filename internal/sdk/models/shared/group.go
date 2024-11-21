@@ -46,6 +46,45 @@ func (e *RiskSensitivity) UnmarshalJSON(data []byte) error {
 	}
 }
 
+// RiskSensitivityOverride - Indicates the level of potential impact misuse or unauthorized access may incur.
+type RiskSensitivityOverride string
+
+const (
+	RiskSensitivityOverrideUnknown  RiskSensitivityOverride = "UNKNOWN"
+	RiskSensitivityOverrideCritical RiskSensitivityOverride = "CRITICAL"
+	RiskSensitivityOverrideHigh     RiskSensitivityOverride = "HIGH"
+	RiskSensitivityOverrideMedium   RiskSensitivityOverride = "MEDIUM"
+	RiskSensitivityOverrideLow      RiskSensitivityOverride = "LOW"
+	RiskSensitivityOverrideNone     RiskSensitivityOverride = "NONE"
+)
+
+func (e RiskSensitivityOverride) ToPointer() *RiskSensitivityOverride {
+	return &e
+}
+func (e *RiskSensitivityOverride) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "UNKNOWN":
+		fallthrough
+	case "CRITICAL":
+		fallthrough
+	case "HIGH":
+		fallthrough
+	case "MEDIUM":
+		fallthrough
+	case "LOW":
+		fallthrough
+	case "NONE":
+		*e = RiskSensitivityOverride(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for RiskSensitivityOverride: %v", v)
+	}
+}
+
 // # Group Object
 // ### Description
 // The `Group` object is used to represent a group.
@@ -80,9 +119,8 @@ type Group struct {
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this group.
 	RequireMfaToApprove *bool `json:"require_mfa_to_approve,omitempty"`
 	// The risk sensitivity level for the group. When an override is set, this field will match that.
-	RiskSensitivity *RiskSensitivity `json:"risk_sensitivity,omitempty"`
-	// Indicates the level of potential impact misuse or unauthorized access may incur.
-	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
+	RiskSensitivity         *RiskSensitivity         `json:"risk_sensitivity,omitempty"`
+	RiskSensitivityOverride *RiskSensitivityOverride `json:"risk_sensitivity_override,omitempty"`
 }
 
 func (o *Group) GetAdminOwnerID() *string {
@@ -183,7 +221,7 @@ func (o *Group) GetRiskSensitivity() *RiskSensitivity {
 	return o.RiskSensitivity
 }
 
-func (o *Group) GetRiskSensitivityOverride() *RiskSensitivityEnum {
+func (o *Group) GetRiskSensitivityOverride() *RiskSensitivityOverride {
 	if o == nil {
 		return nil
 	}
