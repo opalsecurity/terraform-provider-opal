@@ -21,8 +21,7 @@ type UpdateGroupInfo struct {
 	// The request configuration list of the configuration template. If not provided, the default request configuration will be used.
 	RequestConfigurations []RequestConfiguration `json:"request_configurations"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this group.
-	RequireMfaToApprove *bool `json:"require_mfa_to_approve,omitempty"`
-	// Indicates the level of potential impact misuse or unauthorized access may incur.
+	RequireMfaToApprove     *bool                `json:"require_mfa_to_approve,omitempty"`
 	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
 }
 
