@@ -6,7 +6,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/cenkalti/backoff/v4"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/hooks"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/errors"
@@ -116,7 +115,11 @@ func (s *NonHumanIdentities) GetNhis(ctx context.Context, request operations.Get
 
 			req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
 			if err != nil {
-				return nil, backoff.Permanent(err)
+				if retry.IsPermanentError(err) || retry.IsTemporaryError(err) {
+					return nil, err
+				}
+
+				return nil, retry.Permanent(err)
 			}
 
 			httpRes, err := s.sdkConfiguration.Client.Do(req)
