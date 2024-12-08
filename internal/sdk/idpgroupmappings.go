@@ -6,7 +6,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/cenkalti/backoff/v4"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/hooks"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/errors"
@@ -26,11 +25,11 @@ func newIdpGroupMappings(sdkConfig sdkConfiguration) *IdpGroupMappings {
 	}
 }
 
-// DeleteIdpGroupMappingsByAppResourceIDGroupID - Deletes an `IdpGroupMapping` object.
-func (s *IdpGroupMappings) DeleteIdpGroupMappingsByAppResourceIDGroupID(ctx context.Context, request operations.DeleteIdpGroupMappingsByAppResourceIDGroupIDRequest, opts ...operations.Option) (*operations.DeleteIdpGroupMappingsByAppResourceIDGroupIDResponse, error) {
+// DeleteIdpGroupMappings - Deletes an `IdpGroupMapping` object.
+func (s *IdpGroupMappings) DeleteIdpGroupMappings(ctx context.Context, request operations.DeleteIdpGroupMappingsRequest, opts ...operations.Option) (*operations.DeleteIdpGroupMappingsResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
-		OperationID:    "delete_idp_group_mappings_by_app_resource_ID_group_ID",
+		OperationID:    "delete_idp_group_mappings",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
 	}
@@ -111,7 +110,11 @@ func (s *IdpGroupMappings) DeleteIdpGroupMappingsByAppResourceIDGroupID(ctx cont
 
 			req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
 			if err != nil {
-				return nil, backoff.Permanent(err)
+				if retry.IsPermanentError(err) || retry.IsTemporaryError(err) {
+					return nil, err
+				}
+
+				return nil, retry.Permanent(err)
 			}
 
 			httpRes, err := s.sdkConfiguration.Client.Do(req)
@@ -166,7 +169,7 @@ func (s *IdpGroupMappings) DeleteIdpGroupMappingsByAppResourceIDGroupID(ctx cont
 		}
 	}
 
-	res := &operations.DeleteIdpGroupMappingsByAppResourceIDGroupIDResponse{
+	res := &operations.DeleteIdpGroupMappingsResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,
@@ -271,7 +274,11 @@ func (s *IdpGroupMappings) GetIdpGroupMappings(ctx context.Context, request oper
 
 			req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
 			if err != nil {
-				return nil, backoff.Permanent(err)
+				if retry.IsPermanentError(err) || retry.IsTemporaryError(err) {
+					return nil, err
+				}
+
+				return nil, retry.Permanent(err)
 			}
 
 			httpRes, err := s.sdkConfiguration.Client.Do(req)
@@ -457,7 +464,11 @@ func (s *IdpGroupMappings) UpdateIdpGroupMappings(ctx context.Context, request o
 
 			req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
 			if err != nil {
-				return nil, backoff.Permanent(err)
+				if retry.IsPermanentError(err) || retry.IsTemporaryError(err) {
+					return nil, err
+				}
+
+				return nil, retry.Permanent(err)
 			}
 
 			httpRes, err := s.sdkConfiguration.Client.Do(req)

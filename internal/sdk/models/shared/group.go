@@ -80,8 +80,7 @@ type Group struct {
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this group.
 	RequireMfaToApprove *bool `json:"require_mfa_to_approve,omitempty"`
 	// The risk sensitivity level for the group. When an override is set, this field will match that.
-	RiskSensitivity *RiskSensitivity `json:"risk_sensitivity,omitempty"`
-	// Indicates the level of potential impact misuse or unauthorized access may incur.
+	RiskSensitivity         *RiskSensitivity     `json:"risk_sensitivity,omitempty"`
 	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
 }
 

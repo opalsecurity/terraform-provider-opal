@@ -20,7 +20,7 @@ type ResourceNHI struct {
 	// View the `AccessLevel` of a resource/user or resource/group pair to see the level of access granted to the resource.
 	AccessLevel *ResourceAccessLevel `json:"access_level,omitempty"`
 	// The day and time the non-human identity's access will expire.
-	ExpirationDate *time.Time `json:"expiration_date"`
+	ExpirationDate *time.Time `json:"expiration_date,omitempty"`
 	// The resource ID of the non-human identity.
 	NonHumanIdentityID string `json:"non_human_identity_id"`
 	// The ID of the resource.
