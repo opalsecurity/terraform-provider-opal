@@ -78,9 +78,8 @@ type Resource struct {
 	// The type of the resource.
 	ResourceType *ResourceTypeEnum `json:"resource_type,omitempty"`
 	// The risk sensitivity level for the resource. When an override is set, this field will match that.
-	RiskSensitivity *ResourceRiskSensitivity `json:"risk_sensitivity,omitempty"`
-	// Indicates the level of potential impact misuse or unauthorized access may incur.
-	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
+	RiskSensitivity         *ResourceRiskSensitivity `json:"risk_sensitivity,omitempty"`
+	RiskSensitivityOverride *RiskSensitivityEnum     `json:"risk_sensitivity_override,omitempty"`
 	// Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.
 	TicketPropagation *TicketPropagationConfiguration `json:"ticket_propagation,omitempty"`
 }
