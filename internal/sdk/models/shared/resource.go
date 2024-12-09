@@ -46,6 +46,45 @@ func (e *ResourceRiskSensitivity) UnmarshalJSON(data []byte) error {
 	}
 }
 
+// ResourceRiskSensitivityOverride - Indicates the level of potential impact misuse or unauthorized access may incur.
+type ResourceRiskSensitivityOverride string
+
+const (
+	ResourceRiskSensitivityOverrideUnknown  ResourceRiskSensitivityOverride = "UNKNOWN"
+	ResourceRiskSensitivityOverrideCritical ResourceRiskSensitivityOverride = "CRITICAL"
+	ResourceRiskSensitivityOverrideHigh     ResourceRiskSensitivityOverride = "HIGH"
+	ResourceRiskSensitivityOverrideMedium   ResourceRiskSensitivityOverride = "MEDIUM"
+	ResourceRiskSensitivityOverrideLow      ResourceRiskSensitivityOverride = "LOW"
+	ResourceRiskSensitivityOverrideNone     ResourceRiskSensitivityOverride = "NONE"
+)
+
+func (e ResourceRiskSensitivityOverride) ToPointer() *ResourceRiskSensitivityOverride {
+	return &e
+}
+func (e *ResourceRiskSensitivityOverride) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "UNKNOWN":
+		fallthrough
+	case "CRITICAL":
+		fallthrough
+	case "HIGH":
+		fallthrough
+	case "MEDIUM":
+		fallthrough
+	case "LOW":
+		fallthrough
+	case "NONE":
+		*e = ResourceRiskSensitivityOverride(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for ResourceRiskSensitivityOverride: %v", v)
+	}
+}
+
 // # Resource Object
 // ### Description
 // The `Resource` object is used to represent a resource.
@@ -78,9 +117,8 @@ type Resource struct {
 	// The type of the resource.
 	ResourceType *ResourceTypeEnum `json:"resource_type,omitempty"`
 	// The risk sensitivity level for the resource. When an override is set, this field will match that.
-	RiskSensitivity *ResourceRiskSensitivity `json:"risk_sensitivity,omitempty"`
-	// Indicates the level of potential impact misuse or unauthorized access may incur.
-	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
+	RiskSensitivity         *ResourceRiskSensitivity         `json:"risk_sensitivity,omitempty"`
+	RiskSensitivityOverride *ResourceRiskSensitivityOverride `json:"risk_sensitivity_override,omitempty"`
 	// Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.
 	TicketPropagation *TicketPropagationConfiguration `json:"ticket_propagation,omitempty"`
 }
@@ -176,7 +214,7 @@ func (o *Resource) GetRiskSensitivity() *ResourceRiskSensitivity {
 	return o.RiskSensitivity
 }
 
-func (o *Resource) GetRiskSensitivityOverride() *RiskSensitivityEnum {
+func (o *Resource) GetRiskSensitivityOverride() *ResourceRiskSensitivityOverride {
 	if o == nil {
 		return nil
 	}

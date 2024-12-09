@@ -20,8 +20,7 @@ type CreateResourceInfo struct {
 	// Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields.
 	RemoteInfo *ResourceRemoteInfo `json:"remote_info,omitempty"`
 	// The type of the resource.
-	ResourceType ResourceTypeEnum `json:"resource_type"`
-	// Indicates the level of potential impact misuse or unauthorized access may incur.
+	ResourceType            ResourceTypeEnum     `json:"resource_type"`
 	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
 }
 

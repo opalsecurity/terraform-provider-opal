@@ -4335,7 +4335,9 @@ components:
             - $ref: "#/components/schemas/RiskSensitivityEnum"
           x-speakeasy-param-suppress-computed-diff: true
         risk_sensitivity_override:
-          $ref: "#/components/schemas/RiskSensitivityEnum"
+          allOf:
+            - $ref: "#/components/schemas/RiskSensitivityEnum"
+          x-speakeasy-param-suppress-computed-diff: true
       required:
         - group_id
       type: object
@@ -4623,7 +4625,8 @@ components:
           nullable: true
           example: "Check your email to register your account."
         risk_sensitivity_override:
-          $ref: "#/components/schemas/RiskSensitivityEnum"
+          allOf:
+            - $ref: "#/components/schemas/RiskSensitivityEnum"
       required:
         - group_id
         - request_configurations
@@ -5952,7 +5955,8 @@ components:
           nullable: true
           example: "Check your email to register your account."
         risk_sensitivity_override:
-          $ref: "#/components/schemas/RiskSensitivityEnum"
+          allOf:
+            - $ref: "#/components/schemas/RiskSensitivityEnum"
       required:
         - name
         - resource_type
@@ -6105,7 +6109,8 @@ components:
           example: "Check your email to register your account."
           x-speakeasy-param-suppress-computed-diff: true
         risk_sensitivity_override:
-          $ref: "#/components/schemas/RiskSensitivityEnum"
+          allOf:
+            - $ref: "#/components/schemas/RiskSensitivityEnum"
       required:
         - name
         - group_type
@@ -6508,7 +6513,9 @@ components:
             - $ref: "#/components/schemas/RiskSensitivityEnum"
           x-speakeasy-param-suppress-computed-diff: true
         risk_sensitivity_override:
-          $ref: "#/components/schemas/RiskSensitivityEnum"
+          allOf:
+            - $ref: "#/components/schemas/RiskSensitivityEnum"
+          x-speakeasy-param-suppress-computed-diff: true
         metadata:
           description: JSON metadata about the remote resource. Only set for items linked to remote systems. See [this guide](https://docs.opal.dev/reference/end-system-objects) for details.
           deprecated: true
@@ -6661,7 +6668,8 @@ components:
           nullable: true
           example: "Check your email to register your account."
         risk_sensitivity_override:
-          $ref: "#/components/schemas/RiskSensitivityEnum"
+          allOf:
+            - $ref: "#/components/schemas/RiskSensitivityEnum"
         configuration_template_id:
           description: The ID of the associated configuration template.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304

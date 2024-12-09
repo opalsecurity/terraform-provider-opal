@@ -20,8 +20,7 @@ type CreateGroupInfo struct {
 	// The name of the remote group.
 	Name string `json:"name"`
 	// Information that defines the remote group. This replaces the deprecated remote_id and metadata fields.
-	RemoteInfo *GroupRemoteInfo `json:"remote_info,omitempty"`
-	// Indicates the level of potential impact misuse or unauthorized access may incur.
+	RemoteInfo              *GroupRemoteInfo     `json:"remote_info,omitempty"`
 	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
 }
 
