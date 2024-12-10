@@ -6,28 +6,28 @@ import (
 	"net/http"
 )
 
-type DeleteIdpGroupMappingsByAppResourceIDGroupIDRequest struct {
+type DeleteIdpGroupMappingsRequest struct {
 	// The ID of the Okta app.
 	AppResourceID string `pathParam:"style=simple,explode=false,name=app_resource_id"`
 	// The ID of the group.
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (o *DeleteIdpGroupMappingsByAppResourceIDGroupIDRequest) GetAppResourceID() string {
+func (o *DeleteIdpGroupMappingsRequest) GetAppResourceID() string {
 	if o == nil {
 		return ""
 	}
 	return o.AppResourceID
 }
 
-func (o *DeleteIdpGroupMappingsByAppResourceIDGroupIDRequest) GetGroupID() string {
+func (o *DeleteIdpGroupMappingsRequest) GetGroupID() string {
 	if o == nil {
 		return ""
 	}
 	return o.GroupID
 }
 
-type DeleteIdpGroupMappingsByAppResourceIDGroupIDResponse struct {
+type DeleteIdpGroupMappingsResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
@@ -36,21 +36,21 @@ type DeleteIdpGroupMappingsByAppResourceIDGroupIDResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *DeleteIdpGroupMappingsByAppResourceIDGroupIDResponse) GetContentType() string {
+func (o *DeleteIdpGroupMappingsResponse) GetContentType() string {
 	if o == nil {
 		return ""
 	}
 	return o.ContentType
 }
 
-func (o *DeleteIdpGroupMappingsByAppResourceIDGroupIDResponse) GetStatusCode() int {
+func (o *DeleteIdpGroupMappingsResponse) GetStatusCode() int {
 	if o == nil {
 		return 0
 	}
 	return o.StatusCode
 }
 
-func (o *DeleteIdpGroupMappingsByAppResourceIDGroupIDResponse) GetRawResponse() *http.Response {
+func (o *DeleteIdpGroupMappingsResponse) GetRawResponse() *http.Response {
 	if o == nil {
 		return nil
 	}

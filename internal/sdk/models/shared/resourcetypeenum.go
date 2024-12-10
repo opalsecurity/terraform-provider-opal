@@ -32,6 +32,7 @@ const (
 	ResourceTypeEnumAzureSQLManagedDatabase          ResourceTypeEnum = "AZURE_SQL_MANAGED_DATABASE"
 	ResourceTypeEnumAzureUserAssignedManagedIdentity ResourceTypeEnum = "AZURE_USER_ASSIGNED_MANAGED_Identity"
 	ResourceTypeEnumAzureEntraIDRole                 ResourceTypeEnum = "AZURE_ENTRA_ID_ROLE"
+	ResourceTypeEnumAzureEnterpriseApp               ResourceTypeEnum = "AZURE_ENTERPRISE_APP"
 	ResourceTypeEnumCustom                           ResourceTypeEnum = "CUSTOM"
 	ResourceTypeEnumCustomConnector                  ResourceTypeEnum = "CUSTOM_CONNECTOR"
 	ResourceTypeEnumGcpOrganization                  ResourceTypeEnum = "GCP_ORGANIZATION"
@@ -119,6 +120,8 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "AZURE_USER_ASSIGNED_MANAGED_Identity":
 		fallthrough
 	case "AZURE_ENTRA_ID_ROLE":
+		fallthrough
+	case "AZURE_ENTERPRISE_APP":
 		fallthrough
 	case "CUSTOM":
 		fallthrough
