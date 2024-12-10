@@ -25,11 +25,11 @@ func newIdpGroupMappings(sdkConfig sdkConfiguration) *IdpGroupMappings {
 	}
 }
 
-// DeleteIdpGroupMappingsByAppResourceIDGroupID - Deletes an `IdpGroupMapping` object.
-func (s *IdpGroupMappings) DeleteIdpGroupMappingsByAppResourceIDGroupID(ctx context.Context, request operations.DeleteIdpGroupMappingsByAppResourceIDGroupIDRequest, opts ...operations.Option) (*operations.DeleteIdpGroupMappingsByAppResourceIDGroupIDResponse, error) {
+// DeleteIdpGroupMappings - Deletes an `IdpGroupMapping` object.
+func (s *IdpGroupMappings) DeleteIdpGroupMappings(ctx context.Context, request operations.DeleteIdpGroupMappingsRequest, opts ...operations.Option) (*operations.DeleteIdpGroupMappingsResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
-		OperationID:    "delete_idp_group_mappings_by_app_resource_ID_group_ID",
+		OperationID:    "delete_idp_group_mappings",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
 	}
@@ -169,7 +169,7 @@ func (s *IdpGroupMappings) DeleteIdpGroupMappingsByAppResourceIDGroupID(ctx cont
 		}
 	}
 
-	res := &operations.DeleteIdpGroupMappingsByAppResourceIDGroupIDResponse{
+	res := &operations.DeleteIdpGroupMappingsResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,
