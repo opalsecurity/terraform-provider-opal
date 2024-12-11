@@ -4,7 +4,7 @@ info:
     email: hello@opal.dev
     name: Opal Team
     url: https://www.opal.dev/
-  description: Your Home For Developer Resources.
+  description: The Opal API is a RESTful API that allows you to interact with the Opal Security platform programmatically.
   title: Opal API
   version: "1.0"
 servers:
@@ -1283,7 +1283,7 @@ paths:
   /idp-group-mappings/{app_resource_id}/{group_id}/:
     delete:
       description: Deletes an `IdpGroupMapping` object.
-      operationId: delete_idp_group_mappings_by_app_resource_ID_group_ID
+      operationId: delete_idp_group_mappings
       parameters:
         - description: The ID of the Okta app.
           example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
@@ -3673,7 +3673,6 @@ components:
           nullable: true
           type: string
       required:
-        - expiration_date
         - resource_id
         - status
         - user_id
@@ -3727,7 +3726,6 @@ components:
           type: string
       required:
         - email
-        - expiration_date
         - full_name
         - resource_id
         - user_id
@@ -3786,7 +3784,6 @@ components:
           type: integer
       required:
         - email
-        - expiration_date
         - full_name
         - resource_id
         - user_id
@@ -3870,7 +3867,6 @@ components:
         - principal_type
         - entity_id
         - entity_type
-        - expiration_date
         - has_direct_access
         - num_access_paths
       type: object
@@ -3905,7 +3901,6 @@ components:
       required:
         - resource_id
         - non_human_identity_id
-        - expiration_date
       type: object
     SessionsList:
       example:
@@ -4433,7 +4428,6 @@ components:
           type: string
       required:
         - email
-        - expiration_date
         - full_name
         - group_id
         - user_id
@@ -4646,6 +4640,7 @@ components:
         - OKTA_GROUP
         - TAILSCALE_GROUP
         - OPAL_GROUP
+        - OPAL_ACCESS_RULE
         - AZURE_AD_SECURITY_GROUP
         - AZURE_AD_MICROSOFT_365_GROUP
         - CONNECTOR_GROUP
@@ -4677,6 +4672,7 @@ components:
         - AZURE_SQL_MANAGED_DATABASE
         - AZURE_USER_ASSIGNED_MANAGED_Identity
         - AZURE_ENTRA_ID_ROLE
+        - AZURE_ENTERPRISE_APP
         - CUSTOM
         - CUSTOM_CONNECTOR
         - GCP_ORGANIZATION

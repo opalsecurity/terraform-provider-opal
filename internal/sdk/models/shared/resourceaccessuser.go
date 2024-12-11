@@ -25,7 +25,7 @@ type ResourceAccessUser struct {
 	// The user's email.
 	Email string `json:"email"`
 	// The day and time the user's access will expire.
-	ExpirationDate *time.Time `json:"expiration_date"`
+	ExpirationDate *time.Time `json:"expiration_date,omitempty"`
 	// The user's full name.
 	FullName string `json:"full_name"`
 	// The user has direct access to this resources (vs. indirectly, like through a group).
