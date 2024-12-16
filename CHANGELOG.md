@@ -1,5 +1,8 @@
 # Changelog
 
+## v3.10.0
+- Suppress "known after apply" output for risk_sensitivity fields
+
 ## v3.0.9
 - Add risk sensitivity and overrides
 - Add default empty arrays for a few fields (visibility_group_ids, message_channel_ids, member_oncall_schedule_ids, on_call_schedule_ids)
