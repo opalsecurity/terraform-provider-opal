@@ -1,8 +1,10 @@
 overlay: 1.0.0
 info:
-  title: Overlay ./openapi_original.yaml => ./openapi.yaml
+  title: Overlay .speakeasy/temp/remote_openapi.yaml => ./openapi.yaml
   version: 0.0.0
 actions:
+  - target: $["info"]["description"]
+    update: Your Home For Developer Resources.
   - target: $["servers"][0]
     update:
       x-speakeasy-server-id: prod
@@ -398,6 +400,23 @@ actions:
     update:
       "404":
         description: Not Found
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["get"]
+    update:
+      x-speakeasy-name-override: get
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: IdpGroupMappings#get
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["put"]
+    update:
+      x-speakeasy-name-override: update
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["put"]
+    update:
+      x-speakeasy-entity-operation: IdpGroupMappings#create,update
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}/{group_id}/"]["delete"]["operationId"]
+    update: delete_idp_group_mappings_by_app_resource_ID_group_ID
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}/{group_id}/"]["delete"]
+    update:
+      x-speakeasy-ignore: true
   - target: $["paths"]["/owners"]["get"]["operationId"]
     update: getOwners
   - target: $["paths"]["/owners"]["get"]["responses"]
@@ -910,6 +929,8 @@ actions:
       x-speakeasy-entity-operation: UAR#get
   - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]
     remove: true
+  - target: $["paths"]["/sync_errors"]
+    remove: true
   - target: $["components"]["schemas"]["PaginatedUARsList"]
     update:
       x-speakeasy-entity: UARS_list
@@ -962,12 +983,56 @@ actions:
   - target: $["components"]["schemas"]["ResourceAccessLevel"]
     update:
       x-speakeasy-entity: Resources
+  - target: $["components"]["schemas"]["ResourceUserAccessStatus"]["required"][*]
+    remove: true
+  - target: $["components"]["schemas"]["ResourceUserAccessStatus"]["required"]
+    update:
+      - expiration_date
+      - resource_id
+      - status
+      - user_id
   - target: $["components"]["schemas"]["ResourceUserAccessStatus"]
     update:
       x-speakeasy-entity: ResourcesAccessStatus
+  - target: $["components"]["schemas"]["ResourceUser"]["required"][*]
+    remove: true
+  - target: $["components"]["schemas"]["ResourceUser"]["required"]
+    update:
+      - email
+      - expiration_date
+      - full_name
+      - resource_id
+      - user_id
+      - access_level
   - target: $["components"]["schemas"]["ResourceUser"]
     update:
       x-speakeasy-entity: ResourcesUsers
+  - target: $["components"]["schemas"]["ResourceAccessUser"]["required"][*]
+    remove: true
+  - target: $["components"]["schemas"]["ResourceAccessUser"]["required"]
+    update:
+      - email
+      - expiration_date
+      - full_name
+      - resource_id
+      - user_id
+      - access_level
+      - has_direct_access
+      - num_access_paths
+  - target: $["components"]["schemas"]["Access"]["required"][*]
+    remove: true
+  - target: $["components"]["schemas"]["Access"]["required"]
+    update:
+      - principal_id
+      - principal_type
+      - entity_id
+      - entity_type
+      - expiration_date
+      - has_direct_access
+      - num_access_paths
+  - target: $["components"]["schemas"]["ResourceNHI"]["required"]
+    update:
+      - expiration_date
   - target: $["components"]["schemas"]["SessionsList"]
     update:
       x-speakeasy-entity: Sessions
@@ -1096,6 +1161,15 @@ actions:
   - target: $["components"]["schemas"]["GroupAccessLevel"]
     update:
       x-speakeasy-entity: Groups
+  - target: $["components"]["schemas"]["GroupUser"]["required"][*]
+    remove: true
+  - target: $["components"]["schemas"]["GroupUser"]["required"]
+    update:
+      - email
+      - expiration_date
+      - full_name
+      - group_id
+      - user_id
   - target: $["components"]["schemas"]["GroupUser"]
     update:
       x-speakeasy-entity: GroupUser
@@ -1165,6 +1239,86 @@ actions:
   - target: $["components"]["schemas"]["UpdateGroupInfo"]
     update:
       x-speakeasy-entity: Group
+  - target: $["components"]["schemas"]["GroupTypeEnum"]["enum"][*]
+    remove: true
+  - target: $["components"]["schemas"]["GroupTypeEnum"]["enum"]
+    update:
+      - ACTIVE_DIRECTORY_GROUP
+      - AWS_SSO_GROUP
+      - DUO_GROUP
+      - GIT_HUB_TEAM
+      - GIT_LAB_GROUP
+      - GOOGLE_GROUPS_GROUP
+      - GOOGLE_GROUPS_GKE_GROUP
+      - LDAP_GROUP
+      - OKTA_GROUP
+      - TAILSCALE_GROUP
+      - OPAL_GROUP
+      - AZURE_AD_SECURITY_GROUP
+      - AZURE_AD_MICROSOFT_365_GROUP
+      - CONNECTOR_GROUP
+      - SNOWFLAKE_ROLE
+      - WORKDAY_USER_SECURITY_GROUP
+  - target: $["components"]["schemas"]["ResourceTypeEnum"]["enum"][*]
+    remove: true
+  - target: $["components"]["schemas"]["ResourceTypeEnum"]["enum"]
+    update:
+      - AWS_IAM_ROLE
+      - AWS_EC2_INSTANCE
+      - AWS_EKS_CLUSTER
+      - AWS_RDS_POSTGRES_CLUSTER
+      - AWS_RDS_POSTGRES_INSTANCE
+      - AWS_RDS_MYSQL_CLUSTER
+      - AWS_RDS_MYSQL_INSTANCE
+      - AWS_ACCOUNT
+      - AWS_SSO_PERMISSION_SET
+      - AZURE_MANAGEMENT_GROUP
+      - AZURE_RESOURCE_GROUP
+      - AZURE_SUBSCRIPTION
+      - AZURE_VIRTUAL_MACHINE
+      - AZURE_STORAGE_ACCOUNT
+      - AZURE_STORAGE_CONTAINER
+      - AZURE_SQL_SERVER
+      - AZURE_SQL_MANAGED_INSTANCE
+      - AZURE_SQL_DATABASE
+      - AZURE_SQL_MANAGED_DATABASE
+      - AZURE_USER_ASSIGNED_MANAGED_Identity
+      - AZURE_ENTRA_ID_ROLE
+      - CUSTOM
+      - CUSTOM_CONNECTOR
+      - GCP_ORGANIZATION
+      - GCP_BUCKET
+      - GCP_COMPUTE_INSTANCE
+      - GCP_FOLDER
+      - GCP_GKE_CLUSTER
+      - GCP_PROJECT
+      - GCP_CLOUD_SQL_POSTGRES_INSTANCE
+      - GCP_CLOUD_SQL_MYSQL_INSTANCE
+      - GCP_BIG_QUERY_DATASET
+      - GCP_BIG_QUERY_TABLE
+      - GCP_SERVICE_ACCOUNT
+      - GIT_HUB_REPO
+      - GIT_LAB_PROJECT
+      - GOOGLE_WORKSPACE_ROLE
+      - MONGO_INSTANCE
+      - MONGO_ATLAS_INSTANCE
+      - OKTA_APP
+      - OKTA_ROLE
+      - OPAL_ROLE
+      - OPAL_SCOPED_ROLE
+      - PAGERDUTY_ROLE
+      - TAILSCALE_SSH
+      - SALESFORCE_PERMISSION_SET
+      - SALESFORCE_PROFILE
+      - SALESFORCE_ROLE
+      - SNOWFLAKE_DATABASE
+      - SNOWFLAKE_SCHEMA
+      - SNOWFLAKE_TABLE
+      - WORKDAY_ROLE
+      - MYSQL_INSTANCE
+      - MARIADB_INSTANCE
+      - POSTGRES_INSTANCE
+      - TELEPORT_ROLE
   - target: $["components"]["schemas"]["VisibilityTypeEnum"]
     update:
       x-speakeasy-entity: Groups
@@ -1218,6 +1372,9 @@ actions:
   - target: $["components"]["schemas"]["OnCallScheduleIDList"]["properties"]["on_call_schedule_ids"]
     update:
       format: set
+  - target: $["components"]["schemas"]["OnCallScheduleIDList"]["properties"]["on_call_schedule_ids"]
+    update:
+      default: []
   - target: $["components"]["schemas"]["OnCallScheduleIDList"]
     update:
       x-speakeasy-entity: GroupOnCallSchedule
@@ -1779,9 +1936,6 @@ actions:
   - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["member_oncall_schedule_ids"]
     update:
       default: []
-  - target: $["components"]["schemas"]["OnCallScheduleIDList"]["properties"]["on_call_schedule_ids"]
-    update:
-      default: []
   - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["break_glass_user_ids"]
     update:
       format: set
@@ -1828,6 +1982,10 @@ actions:
   - target: $["components"]["schemas"]["PaginatedConfigurationTemplateList"]
     update:
       x-speakeasy-entity: ConfigurationTemplateList
+  - target: $["components"]["schemas"]["SyncErrorList"]
+    remove: true
+  - target: $["components"]["schemas"]["SyncError"]
+    remove: true
   - target: $
     update:
       x-speakeasy-retries:

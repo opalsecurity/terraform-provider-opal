@@ -48,7 +48,12 @@ func (s *OnCallSchedules) Create(ctx context.Context, request shared.CreateOnCal
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
 	opURL, err := url.JoinPath(baseURL, "/on-call-schedules")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -80,6 +85,10 @@ func (s *OnCallSchedules) Create(ctx context.Context, request shared.CreateOnCal
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err
+	}
+
+	for k, v := range o.SetHeaders {
+		req.Header.Set(k, v)
 	}
 
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
@@ -238,7 +247,12 @@ func (s *OnCallSchedules) Get(ctx context.Context, opts ...operations.Option) (*
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
 	opURL, err := url.JoinPath(baseURL, "/on-call-schedules")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -264,6 +278,10 @@ func (s *OnCallSchedules) Get(ctx context.Context, opts ...operations.Option) (*
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err
+	}
+
+	for k, v := range o.SetHeaders {
+		req.Header.Set(k, v)
 	}
 
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
@@ -423,7 +441,12 @@ func (s *OnCallSchedules) GetID(ctx context.Context, request operations.GetOnCal
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/on-call-schedules/{on_call_schedule_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -449,6 +472,10 @@ func (s *OnCallSchedules) GetID(ctx context.Context, request operations.GetOnCal
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err
+	}
+
+	for k, v := range o.SetHeaders {
+		req.Header.Set(k, v)
 	}
 
 	globalRetryConfig := s.sdkConfiguration.RetryConfig

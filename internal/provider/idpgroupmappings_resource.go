@@ -8,116 +8,85 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	speakeasy_listplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/listplanmodifier"
-	speakeasy_objectplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/objectplanmodifier"
-	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &GroupResourceListResource{}
-var _ resource.ResourceWithImportState = &GroupResourceListResource{}
+var _ resource.Resource = &IdpGroupMappingsResource{}
+var _ resource.ResourceWithImportState = &IdpGroupMappingsResource{}
 
-func NewGroupResourceListResource() resource.Resource {
-	return &GroupResourceListResource{}
+func NewIdpGroupMappingsResource() resource.Resource {
+	return &IdpGroupMappingsResource{}
 }
 
-// GroupResourceListResource defines the resource implementation.
-type GroupResourceListResource struct {
+// IdpGroupMappingsResource defines the resource implementation.
+type IdpGroupMappingsResource struct {
 	client *sdk.OpalAPI
 }
 
-// GroupResourceListResourceModel describes the resource data model.
-type GroupResourceListResourceModel struct {
-	GroupID        types.String                      `tfsdk:"group_id"`
-	GroupResources []tfTypes.GroupResource           `tfsdk:"group_resources"`
-	Resources      []tfTypes.ResourceWithAccessLevel `tfsdk:"resources"`
+// IdpGroupMappingsResourceModel describes the resource data model.
+type IdpGroupMappingsResourceModel struct {
+	AppResourceID    types.String              `tfsdk:"app_resource_id"`
+	IdpGroupMappings []tfTypes.IdpGroupMapping `tfsdk:"idp_group_mappings"`
+	Mappings         []tfTypes.Mappings        `tfsdk:"mappings"`
 }
 
-func (r *GroupResourceListResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_group_resource_list"
+func (r *IdpGroupMappingsResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_idp_group_mappings"
 }
 
-func (r *GroupResourceListResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *IdpGroupMappingsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "GroupResourceList Resource",
+		MarkdownDescription: "IdpGroupMappings Resource",
 		Attributes: map[string]schema.Attribute{
-			"group_id": schema.StringAttribute{
+			"app_resource_id": schema.StringAttribute{
 				Required:    true,
-				Description: `The ID of the group.`,
+				Description: `The ID of the Okta app.`,
 			},
-			"group_resources": schema.ListNestedAttribute{
+			"idp_group_mappings": schema.ListNestedAttribute{
 				Computed: true,
-				PlanModifiers: []planmodifier.List{
-					speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
-				},
 				NestedObject: schema.NestedAttributeObject{
-					PlanModifiers: []planmodifier.Object{
-						speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
-					},
 					Attributes: map[string]schema.Attribute{
-						"access_level": schema.SingleNestedAttribute{
-							Computed: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
-							},
-							Attributes: map[string]schema.Attribute{
-								"access_level_name": schema.StringAttribute{
-									Computed: true,
-									PlanModifiers: []planmodifier.String{
-										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-									},
-									Description: `The human-readable name of the access level.`,
-								},
-								"access_level_remote_id": schema.StringAttribute{
-									Computed: true,
-									PlanModifiers: []planmodifier.String{
-										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-									},
-									Description: `The machine-readable identifier of the access level.`,
-								},
-							},
-							MarkdownDescription: `# Access Level Object` + "\n" +
-								`### Description` + "\n" +
-								`The ` + "`" + `AccessLevel` + "`" + ` object is used to represent the level of access that a principal has. The "default" access` + "\n" +
-								`level is a ` + "`" + `AccessLevel` + "`" + ` object whose fields are all empty strings.` + "\n" +
-								`` + "\n" +
-								`### Usage Example` + "\n" +
-								`View the ` + "`" + `AccessLevel` + "`" + ` of a resource/user or resource/group pair to see the level of access granted to the resource.`,
+						"alias": schema.StringAttribute{
+							Computed:    true,
+							Description: `The alias of the group.`,
+						},
+						"app_resource_id": schema.StringAttribute{
+							Computed:    true,
+							Description: `The ID of the idp app resource.`,
 						},
 						"group_id": schema.StringAttribute{
-							Computed: true,
-							PlanModifiers: []planmodifier.String{
-								speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-							},
+							Computed:    true,
 							Description: `The ID of the group.`,
 						},
-						"resource_id": schema.StringAttribute{
-							Computed: true,
-							PlanModifiers: []planmodifier.String{
-								speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-							},
-							Description: `The ID of the resource.`,
+						"hidden_from_end_user": schema.BoolAttribute{
+							Computed:    true,
+							Description: `A bool representing whether or not the group is hidden from the end user.`,
+						},
+						"id": schema.StringAttribute{
+							Computed:    true,
+							Description: `The ID of the idp group mapping.`,
+						},
+						"organization_id": schema.StringAttribute{
+							Computed:    true,
+							Description: `The ID of the organization.`,
 						},
 					},
 				},
 			},
-			"resources": schema.ListNestedAttribute{
+			"mappings": schema.ListNestedAttribute{
 				Required: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"access_level_remote_id": schema.StringAttribute{
-							Optional:    true,
-							Description: `The ID of the resource.`,
+						"alias": schema.StringAttribute{
+							Optional: true,
 						},
-						"resource_id": schema.StringAttribute{
-							Required:    true,
-							Description: `The ID of the resource.`,
+						"group_id": schema.StringAttribute{
+							Optional: true,
 						},
 					},
 				},
@@ -126,7 +95,7 @@ func (r *GroupResourceListResource) Schema(ctx context.Context, req resource.Sch
 	}
 }
 
-func (r *GroupResourceListResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *IdpGroupMappingsResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -146,8 +115,8 @@ func (r *GroupResourceListResource) Configure(ctx context.Context, req resource.
 	r.client = client
 }
 
-func (r *GroupResourceListResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data *GroupResourceListResourceModel
+func (r *IdpGroupMappingsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var data *IdpGroupMappingsResourceModel
 	var plan types.Object
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
@@ -164,15 +133,15 @@ func (r *GroupResourceListResource) Create(ctx context.Context, req resource.Cre
 		return
 	}
 
-	updateGroupResourcesInfo := *data.ToSharedUpdateGroupResourcesInfo()
-	var groupID string
-	groupID = data.GroupID.ValueString()
+	requestBody := *data.ToOperationsUpdateIdpGroupMappingsRequestBody()
+	var appResourceID string
+	appResourceID = data.AppResourceID.ValueString()
 
-	request := operations.UpdateGroupResourcesRequest{
-		UpdateGroupResourcesInfo: updateGroupResourcesInfo,
-		GroupID:                  groupID,
+	request := operations.UpdateIdpGroupMappingsRequest{
+		RequestBody:   requestBody,
+		AppResourceID: appResourceID,
 	}
-	res, err := r.client.Groups.UpdateResources(ctx, request)
+	res, err := r.client.IdpGroupMappings.Update(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -189,13 +158,13 @@ func (r *GroupResourceListResource) Create(ctx context.Context, req resource.Cre
 		return
 	}
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	var groupId1 string
-	groupId1 = data.GroupID.ValueString()
+	var appResourceId1 string
+	appResourceId1 = data.AppResourceID.ValueString()
 
-	request1 := operations.GetGroupResourcesRequest{
-		GroupID: groupId1,
+	request1 := operations.GetIdpGroupMappingsRequest{
+		AppResourceID: appResourceId1,
 	}
-	res1, err := r.client.Groups.GetResources(ctx, request1)
+	res1, err := r.client.IdpGroupMappings.Get(ctx, request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -211,19 +180,19 @@ func (r *GroupResourceListResource) Create(ctx context.Context, req resource.Cre
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if !(res1.GroupResourceList != nil) {
+	if !(res1.IdpGroupMappingList != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedGroupResourceList(res1.GroupResourceList)
+	data.RefreshFromSharedIdpGroupMappingList(res1.IdpGroupMappingList)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *GroupResourceListResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data *GroupResourceListResourceModel
+func (r *IdpGroupMappingsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var data *IdpGroupMappingsResourceModel
 	var item types.Object
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &item)...)
@@ -240,13 +209,13 @@ func (r *GroupResourceListResource) Read(ctx context.Context, req resource.ReadR
 		return
 	}
 
-	var groupID string
-	groupID = data.GroupID.ValueString()
+	var appResourceID string
+	appResourceID = data.AppResourceID.ValueString()
 
-	request := operations.GetGroupResourcesRequest{
-		GroupID: groupID,
+	request := operations.GetIdpGroupMappingsRequest{
+		AppResourceID: appResourceID,
 	}
-	res, err := r.client.Groups.GetResources(ctx, request)
+	res, err := r.client.IdpGroupMappings.Get(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -266,18 +235,18 @@ func (r *GroupResourceListResource) Read(ctx context.Context, req resource.ReadR
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.GroupResourceList != nil) {
+	if !(res.IdpGroupMappingList != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedGroupResourceList(res.GroupResourceList)
+	data.RefreshFromSharedIdpGroupMappingList(res.IdpGroupMappingList)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *GroupResourceListResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data *GroupResourceListResourceModel
+func (r *IdpGroupMappingsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var data *IdpGroupMappingsResourceModel
 	var plan types.Object
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
@@ -290,15 +259,15 @@ func (r *GroupResourceListResource) Update(ctx context.Context, req resource.Upd
 		return
 	}
 
-	updateGroupResourcesInfo := *data.ToSharedUpdateGroupResourcesInfo()
-	var groupID string
-	groupID = data.GroupID.ValueString()
+	requestBody := *data.ToOperationsUpdateIdpGroupMappingsRequestBody()
+	var appResourceID string
+	appResourceID = data.AppResourceID.ValueString()
 
-	request := operations.UpdateGroupResourcesRequest{
-		UpdateGroupResourcesInfo: updateGroupResourcesInfo,
-		GroupID:                  groupID,
+	request := operations.UpdateIdpGroupMappingsRequest{
+		RequestBody:   requestBody,
+		AppResourceID: appResourceID,
 	}
-	res, err := r.client.Groups.UpdateResources(ctx, request)
+	res, err := r.client.IdpGroupMappings.Update(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -315,13 +284,13 @@ func (r *GroupResourceListResource) Update(ctx context.Context, req resource.Upd
 		return
 	}
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	var groupId1 string
-	groupId1 = data.GroupID.ValueString()
+	var appResourceId1 string
+	appResourceId1 = data.AppResourceID.ValueString()
 
-	request1 := operations.GetGroupResourcesRequest{
-		GroupID: groupId1,
+	request1 := operations.GetIdpGroupMappingsRequest{
+		AppResourceID: appResourceId1,
 	}
-	res1, err := r.client.Groups.GetResources(ctx, request1)
+	res1, err := r.client.IdpGroupMappings.Get(ctx, request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -337,19 +306,19 @@ func (r *GroupResourceListResource) Update(ctx context.Context, req resource.Upd
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if !(res1.GroupResourceList != nil) {
+	if !(res1.IdpGroupMappingList != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedGroupResourceList(res1.GroupResourceList)
+	data.RefreshFromSharedIdpGroupMappingList(res1.IdpGroupMappingList)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *GroupResourceListResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data *GroupResourceListResourceModel
+func (r *IdpGroupMappingsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var data *IdpGroupMappingsResourceModel
 	var item types.Object
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &item)...)
@@ -369,6 +338,6 @@ func (r *GroupResourceListResource) Delete(ctx context.Context, req resource.Del
 	// Not Implemented; entity does not have a configured DELETE operation
 }
 
-func (r *GroupResourceListResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("group_id"), req.ID)...)
+func (r *IdpGroupMappingsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("app_resource_id"), req.ID)...)
 }

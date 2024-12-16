@@ -11,10 +11,13 @@ Opal API: Your Home For Developer Resources.
 
 <!-- Start Table of Contents [toc] -->
 ## Table of Contents
+<!-- $toc-max-depth=2 -->
+* [Terraform provider for Opal](#terraform-provider-for-opal)
+  * [SDK Generation](#sdk-generation)
+  * [Installation](#installation)
+  * [Available Resources and Data Sources](#available-resources-and-data-sources)
+  * [Testing the provider locally](#testing-the-provider-locally)
 
-* [Installation](#installation)
-* [Available Resources and Data Sources](#available-resources-and-data-sources)
-* [Testing the provider locally](#testing-the-provider-locally)
 <!-- End Table of Contents [toc] -->
 
 <!-- Start Installation [installation] -->
@@ -27,7 +30,7 @@ terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "0.28.4"
+      version = "0.29.0"
     }
   }
 }
@@ -49,6 +52,7 @@ provider "opal" {
 * [opal_group_resource_list](docs/resources/group_resource_list.md)
 * [opal_group_tag](docs/resources/group_tag.md)
 * [opal_group_user](docs/resources/group_user.md)
+* [opal_idp_group_mappings](docs/resources/idp_group_mappings.md)
 * [opal_message_channel](docs/resources/message_channel.md)
 * [opal_on_call_schedule](docs/resources/on_call_schedule.md)
 * [opal_owner](docs/resources/owner.md)
@@ -68,6 +72,7 @@ provider "opal" {
 * [opal_group_reviewers_stages_list](docs/data-sources/group_reviewers_stages_list.md)
 * [opal_group_tags](docs/data-sources/group_tags.md)
 * [opal_group_users](docs/data-sources/group_users.md)
+* [opal_idp_group_mappings](docs/data-sources/idp_group_mappings.md)
 * [opal_message_channel](docs/data-sources/message_channel.md)
 * [opal_message_channel_list](docs/data-sources/message_channel_list.md)
 * [opal_on_call_schedule](docs/data-sources/on_call_schedule.md)
