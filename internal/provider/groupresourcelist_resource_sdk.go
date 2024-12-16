@@ -33,12 +33,12 @@ func (r *GroupResourceListResourceModel) ToSharedUpdateGroupResourcesInfo() *sha
 
 func (r *GroupResourceListResourceModel) RefreshFromSharedGroupResourceList(resp *shared.GroupResourceList) {
 	if resp != nil {
-		r.GroupResources = []tfTypes.GroupResource1{}
+		r.GroupResources = []tfTypes.GroupResource{}
 		if len(r.GroupResources) > len(resp.GroupResources) {
 			r.GroupResources = r.GroupResources[:len(resp.GroupResources)]
 		}
 		for groupResourcesCount, groupResourcesItem := range resp.GroupResources {
-			var groupResources1 tfTypes.GroupResource1
+			var groupResources1 tfTypes.GroupResource
 			groupResources1.AccessLevel.AccessLevelName = types.StringValue(groupResourcesItem.AccessLevel.AccessLevelName)
 			groupResources1.AccessLevel.AccessLevelRemoteID = types.StringValue(groupResourcesItem.AccessLevel.AccessLevelRemoteID)
 			groupResources1.GroupID = types.StringValue(groupResourcesItem.GroupID)

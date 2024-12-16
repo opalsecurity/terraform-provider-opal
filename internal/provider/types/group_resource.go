@@ -4,7 +4,7 @@ package types
 
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
-type GroupResource1 struct {
+type GroupResource struct {
 	AccessLevel ResourceAccessLevel `tfsdk:"access_level"`
 	GroupID     types.String        `tfsdk:"group_id"`
 	ResourceID  types.String        `tfsdk:"resource_id"`

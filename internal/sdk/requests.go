@@ -48,7 +48,12 @@ func (s *Requests) CreateRequest(ctx context.Context, request shared.CreateReque
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
 	opURL, err := url.JoinPath(baseURL, "/requests")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -80,6 +85,10 @@ func (s *Requests) CreateRequest(ctx context.Context, request shared.CreateReque
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err
+	}
+
+	for k, v := range o.SetHeaders {
+		req.Header.Set(k, v)
 	}
 
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
@@ -238,7 +247,12 @@ func (s *Requests) Get(ctx context.Context, request operations.GetRequestsReques
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
 	opURL, err := url.JoinPath(baseURL, "/requests")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -268,6 +282,10 @@ func (s *Requests) Get(ctx context.Context, request operations.GetRequestsReques
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err
+	}
+
+	for k, v := range o.SetHeaders {
+		req.Header.Set(k, v)
 	}
 
 	globalRetryConfig := s.sdkConfiguration.RetryConfig

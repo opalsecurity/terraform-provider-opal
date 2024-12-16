@@ -16,8 +16,8 @@ const (
 )
 
 type FieldValue struct {
-	Str     *string
-	Boolean *bool
+	Str     *string `queryParam:"inline"`
+	Boolean *bool   `queryParam:"inline"`
 
 	Type FieldValueType
 }
