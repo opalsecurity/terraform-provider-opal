@@ -141,7 +141,7 @@ func (r *IdpGroupMappingsResource) Create(ctx context.Context, req resource.Crea
 		RequestBody:   requestBody,
 		AppResourceID: appResourceID,
 	}
-	res, err := r.client.IdpGroupMappings.Update(ctx, request)
+	res, err := r.client.IdpGroupMappings.UpdateIdpGroupMappings(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -164,7 +164,7 @@ func (r *IdpGroupMappingsResource) Create(ctx context.Context, req resource.Crea
 	request1 := operations.GetIdpGroupMappingsRequest{
 		AppResourceID: appResourceId1,
 	}
-	res1, err := r.client.IdpGroupMappings.Get(ctx, request1)
+	res1, err := r.client.IdpGroupMappings.GetIdpGroupMappings(ctx, request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -215,7 +215,7 @@ func (r *IdpGroupMappingsResource) Read(ctx context.Context, req resource.ReadRe
 	request := operations.GetIdpGroupMappingsRequest{
 		AppResourceID: appResourceID,
 	}
-	res, err := r.client.IdpGroupMappings.Get(ctx, request)
+	res, err := r.client.IdpGroupMappings.GetIdpGroupMappings(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -267,7 +267,7 @@ func (r *IdpGroupMappingsResource) Update(ctx context.Context, req resource.Upda
 		RequestBody:   requestBody,
 		AppResourceID: appResourceID,
 	}
-	res, err := r.client.IdpGroupMappings.Update(ctx, request)
+	res, err := r.client.IdpGroupMappings.UpdateIdpGroupMappings(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -290,7 +290,7 @@ func (r *IdpGroupMappingsResource) Update(ctx context.Context, req resource.Upda
 	request1 := operations.GetIdpGroupMappingsRequest{
 		AppResourceID: appResourceId1,
 	}
-	res1, err := r.client.IdpGroupMappings.Get(ctx, request1)
+	res1, err := r.client.IdpGroupMappings.GetIdpGroupMappings(ctx, request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {

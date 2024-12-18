@@ -402,21 +402,12 @@ actions:
         description: Not Found
   - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["get"]
     update:
-      x-speakeasy-name-override: get
-  - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["get"]
-    update:
       x-speakeasy-entity-operation: IdpGroupMappings#get
-  - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["put"]
-    update:
-      x-speakeasy-name-override: update
   - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["put"]
     update:
       x-speakeasy-entity-operation: IdpGroupMappings#create,update
   - target: $["paths"]["/idp-group-mappings/{app_resource_id}/{group_id}/"]["delete"]["operationId"]
     update: delete_idp_group_mappings_by_app_resource_ID_group_ID
-  - target: $["paths"]["/idp-group-mappings/{app_resource_id}/{group_id}/"]["delete"]
-    update:
-      x-speakeasy-ignore: true
   - target: $["paths"]["/owners"]["get"]["operationId"]
     update: getOwners
   - target: $["paths"]["/owners"]["get"]["responses"]

@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: ad73f73900353a129fe077d854d3fcdf
+  docChecksum: 8ed0535a1fa7d586e79bf270241a63e1
   docVersion: "1.0"
-  speakeasyVersion: 1.455.7
-  generationVersion: 2.480.1
-  releaseVersion: 0.29.0
-  configChecksum: 3fbd78c5ea08689117350de1fad6e9d1
+  speakeasyVersion: 1.456.0
+  generationVersion: 2.481.0
+  releaseVersion: 0.29.1
+  configChecksum: e29cce70e8d64e3780c56be544a93776
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -313,6 +313,7 @@ generatedFiles:
   - internal/sdk/models/operations/deletegroupbinding.go
   - internal/sdk/models/operations/deletegrouptag.go
   - internal/sdk/models/operations/deletegroupuser.go
+  - internal/sdk/models/operations/deleteidpgroupmappingsbyappresourceidgroupid.go
   - internal/sdk/models/operations/deleteowner.go
   - internal/sdk/models/operations/deleteresource.go
   - internal/sdk/models/operations/deleteresourcenhi.go

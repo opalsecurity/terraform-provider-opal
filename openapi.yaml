@@ -1240,7 +1240,6 @@ paths:
         - BearerAuth: []
       tags:
         - idp-group-mappings
-      x-speakeasy-name-override: get
       x-speakeasy-entity-operation: IdpGroupMappings#get
     put:
       description: Updates the list of available `IdpGroupMapping` objects for an Okta app.
@@ -1282,7 +1281,6 @@ paths:
         - BearerAuth: []
       tags:
         - idp-group-mappings
-      x-speakeasy-name-override: update
       x-speakeasy-entity-operation: IdpGroupMappings#create,update
   /idp-group-mappings/{app_resource_id}/{group_id}/:
     delete:
@@ -1316,7 +1314,6 @@ paths:
         - BearerAuth: []
       tags:
         - idp-group-mappings
-      x-speakeasy-ignore: true
   /owners:
     get:
       description: Returns a list of `Owner` objects.
