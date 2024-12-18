@@ -4,7 +4,7 @@ info:
     email: hello@opal.dev
     name: Opal Team
     url: https://www.opal.dev/
-  description: Your Home For Developer Resources.
+  description: The Opal API is a RESTful API that allows you to interact with the Opal Security platform programmatically.
   title: Opal API
   version: "1.0"
 servers:
@@ -1283,7 +1283,7 @@ paths:
   /idp-group-mappings/{app_resource_id}/{group_id}/:
     delete:
       description: Deletes an `IdpGroupMapping` object.
-      operationId: delete_idp_group_mappings_by_app_resource_ID_group_ID
+      operationId: delete_idp_group_mappings
       parameters:
         - description: The ID of the Okta app.
           example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
@@ -3066,6 +3066,54 @@ paths:
         - uars
       x-speakeasy-name-override: get_id
       x-speakeasy-entity-operation: UAR#get
+  /sync_errors:
+    get:
+      description: Returns a list of recent sync errors that have occurred since the last successful sync.
+      operationId: getSyncErrors
+      parameters:
+        - description: The ID of the app to list sync errors for.
+          example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+          explode: false
+          in: query
+          name: app_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
+        - description: The ID of the resource to list sync errors for.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: query
+          name: resource_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
+        - description: The ID of the group to list sync errors for.
+          example: 9546209c-42c2-4801-96d7-9ec42df0f59c
+          explode: false
+          in: query
+          name: group_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/SyncErrorList"
+                type: array
+          description: A list of sync errors.
+      security:
+        - BearerAuth: []
+      tags:
+        - apps
 components:
   schemas:
     UARScope:
@@ -3673,7 +3721,6 @@ components:
           nullable: true
           type: string
       required:
-        - expiration_date
         - resource_id
         - status
         - user_id
@@ -3727,7 +3774,6 @@ components:
           type: string
       required:
         - email
-        - expiration_date
         - full_name
         - resource_id
         - user_id
@@ -3786,7 +3832,6 @@ components:
           type: integer
       required:
         - email
-        - expiration_date
         - full_name
         - resource_id
         - user_id
@@ -3870,7 +3915,6 @@ components:
         - principal_type
         - entity_id
         - entity_type
-        - expiration_date
         - has_direct_access
         - num_access_paths
       type: object
@@ -3905,7 +3949,6 @@ components:
       required:
         - resource_id
         - non_human_identity_id
-        - expiration_date
       type: object
     SessionsList:
       example:
@@ -4433,7 +4476,6 @@ components:
           type: string
       required:
         - email
-        - expiration_date
         - full_name
         - group_id
         - user_id
@@ -4646,6 +4688,7 @@ components:
         - OKTA_GROUP
         - TAILSCALE_GROUP
         - OPAL_GROUP
+        - OPAL_ACCESS_RULE
         - AZURE_AD_SECURITY_GROUP
         - AZURE_AD_MICROSOFT_365_GROUP
         - CONNECTOR_GROUP
@@ -4677,6 +4720,7 @@ components:
         - AZURE_SQL_MANAGED_DATABASE
         - AZURE_USER_ASSIGNED_MANAGED_Identity
         - AZURE_ENTRA_ID_ROLE
+        - AZURE_ENTERPRISE_APP
         - CUSTOM
         - CUSTOM_CONNECTOR
         - GCP_ORGANIZATION
@@ -7967,6 +8011,63 @@ components:
         - duration_minutes
         - resources
         - groups
+    SyncErrorList:
+      example:
+        sync_errors:
+          - app_id: b5a5ca27-0ea3-4d86-9199-2126d57d1fbd
+            first_seen: 2022-07-14T06:59:59Z
+            last_seen: 2022-08-23T04:32:46Z
+            error_message: Failed to connect to the remote system - insufficient credentials.
+          - app_id: b5a5ca27-0ea3-4d86-9199-2126d57d1fbd
+            first_seen: 2023-04-24T06:59:59Z
+            last_seen: 2024-08-21T04:32:46Z
+            error_message: Resource not found.
+      properties:
+        sync_errors:
+          items:
+            $ref: "#/components/schemas/SyncError"
+          type: array
+      type: object
+      required:
+        - sync_errors
+    SyncError:
+      description: |-
+        # SyncError Object
+        ### Description
+        The `SyncError` object is used to represent a sync error.
+
+        ### Usage Example
+        List from the `GET Sync Errors` endpoint.
+      example:
+        app_id: b5a5ca27-0ea3-4d86-9199-2126d57d1fbd
+        first_seen: 2022-07-14T06:59:59Z
+        last_seen: 2022-08-23T04:32:46Z
+        error_message: Failed to connect to the remote system - insufficient credentials.
+      properties:
+        first_seen:
+          description: The time when this error was first seen.
+          example: 2022-07-14T06:59:59Z
+          type: string
+          format: date-time
+        last_seen:
+          description: The time when this error was most recently seen.
+          example: 2022-07-14T06:59:59Z
+          type: string
+          format: date-time
+        error_message:
+          description: The error message associated with the sync error.
+          example: Failed to connect to the remote system - insufficient credentials.
+          type: string
+        app_id:
+          description: The ID of the app that the error occured for.
+          example: b5a5ca27-0ea3-4d86-9199-2126d57d1fbd
+          format: uuid
+          type: string
+      required:
+        - first_seen
+        - last_seen
+        - error_message
+      type: object
   securitySchemes:
     BearerAuth:
       scheme: bearer

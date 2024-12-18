@@ -27,7 +27,7 @@ type Access struct {
 	// The type of an entity.
 	EntityType EntityTypeEnum `json:"entity_type"`
 	// The day and time the principal's access will expire.
-	ExpirationDate *time.Time `json:"expiration_date"`
+	ExpirationDate *time.Time `json:"expiration_date,omitempty"`
 	// The principal has direct access to this entity (vs. inherited access).
 	HasDirectAccess bool `json:"has_direct_access"`
 	// The number of ways in which the principal has access to this entity (directly and inherited).

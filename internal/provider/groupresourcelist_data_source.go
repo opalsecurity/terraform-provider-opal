@@ -29,8 +29,8 @@ type GroupResourceListDataSource struct {
 
 // GroupResourceListDataSourceModel describes the data model.
 type GroupResourceListDataSourceModel struct {
-	GroupID        types.String             `tfsdk:"group_id"`
-	GroupResources []tfTypes.GroupResource1 `tfsdk:"group_resources"`
+	GroupID        types.String            `tfsdk:"group_id"`
+	GroupResources []tfTypes.GroupResource `tfsdk:"group_resources"`
 }
 
 // Metadata returns the data source type name.
