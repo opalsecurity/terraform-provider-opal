@@ -37,7 +37,7 @@ func (p *OpalProvider) Metadata(ctx context.Context, req provider.MetadataReques
 
 func (p *OpalProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: `Opal API: Your Home For Developer Resources.`,
+		Description: `Opal API: The Opal API is a RESTful API that allows you to interact with the Opal Security platform programmatically.`,
 		Attributes: map[string]schema.Attribute{
 			"server_url": schema.StringAttribute{
 				MarkdownDescription: "Server URL (defaults to https://api.opal.dev/v1)",

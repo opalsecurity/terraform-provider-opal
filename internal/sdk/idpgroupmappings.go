@@ -25,11 +25,11 @@ func newIdpGroupMappings(sdkConfig sdkConfiguration) *IdpGroupMappings {
 	}
 }
 
-// DeleteIdpGroupMappingsByAppResourceIDGroupID - Deletes an `IdpGroupMapping` object.
-func (s *IdpGroupMappings) DeleteIdpGroupMappingsByAppResourceIDGroupID(ctx context.Context, request operations.DeleteIdpGroupMappingsByAppResourceIDGroupIDRequest, opts ...operations.Option) (*operations.DeleteIdpGroupMappingsByAppResourceIDGroupIDResponse, error) {
+// DeleteIdpGroupMappings - Deletes an `IdpGroupMapping` object.
+func (s *IdpGroupMappings) DeleteIdpGroupMappings(ctx context.Context, request operations.DeleteIdpGroupMappingsRequest, opts ...operations.Option) (*operations.DeleteIdpGroupMappingsResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
-		OperationID:    "delete_idp_group_mappings_by_app_resource_ID_group_ID",
+		OperationID:    "delete_idp_group_mappings",
 		OAuth2Scopes:   []string{},
 		SecuritySource: s.sdkConfiguration.Security,
 	}
@@ -46,7 +46,12 @@ func (s *IdpGroupMappings) DeleteIdpGroupMappingsByAppResourceIDGroupID(ctx cont
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/idp-group-mappings/{app_resource_id}/{group_id}/", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -72,6 +77,10 @@ func (s *IdpGroupMappings) DeleteIdpGroupMappingsByAppResourceIDGroupID(ctx cont
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err
+	}
+
+	for k, v := range o.SetHeaders {
+		req.Header.Set(k, v)
 	}
 
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
@@ -169,7 +178,7 @@ func (s *IdpGroupMappings) DeleteIdpGroupMappingsByAppResourceIDGroupID(ctx cont
 		}
 	}
 
-	res := &operations.DeleteIdpGroupMappingsByAppResourceIDGroupIDResponse{
+	res := &operations.DeleteIdpGroupMappingsResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,
@@ -210,7 +219,12 @@ func (s *IdpGroupMappings) GetIdpGroupMappings(ctx context.Context, request oper
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/idp-group-mappings/{app_resource_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -236,6 +250,10 @@ func (s *IdpGroupMappings) GetIdpGroupMappings(ctx context.Context, request oper
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err
+	}
+
+	for k, v := range o.SetHeaders {
+		req.Header.Set(k, v)
 	}
 
 	globalRetryConfig := s.sdkConfiguration.RetryConfig
@@ -394,7 +412,12 @@ func (s *IdpGroupMappings) UpdateIdpGroupMappings(ctx context.Context, request o
 		}
 	}
 
-	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/idp-group-mappings/{app_resource_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
@@ -426,6 +449,10 @@ func (s *IdpGroupMappings) UpdateIdpGroupMappings(ctx context.Context, request o
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err
+	}
+
+	for k, v := range o.SetHeaders {
+		req.Header.Set(k, v)
 	}
 
 	globalRetryConfig := s.sdkConfiguration.RetryConfig

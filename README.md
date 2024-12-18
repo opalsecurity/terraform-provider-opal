@@ -6,15 +6,18 @@ Generate the new SDK using `speakeasy run`. This pulls the remote spec specified
 <!-- Start Summary [summary] -->
 ## Summary
 
-Opal API: Your Home For Developer Resources.
+Opal API: The Opal API is a RESTful API that allows you to interact with the Opal Security platform programmatically.
 <!-- End Summary [summary] -->
 
 <!-- Start Table of Contents [toc] -->
 ## Table of Contents
+<!-- $toc-max-depth=2 -->
+* [Terraform provider for Opal](#terraform-provider-for-opal)
+  * [SDK Generation](#sdk-generation)
+  * [Installation](#installation)
+  * [Available Resources and Data Sources](#available-resources-and-data-sources)
+  * [Testing the provider locally](#testing-the-provider-locally)
 
-* [Installation](#installation)
-* [Available Resources and Data Sources](#available-resources-and-data-sources)
-* [Testing the provider locally](#testing-the-provider-locally)
 <!-- End Table of Contents [toc] -->
 
 <!-- Start Installation [installation] -->
@@ -27,7 +30,7 @@ terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "0.28.4"
+      version = "0.29.0"
     }
   }
 }

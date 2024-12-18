@@ -35,7 +35,7 @@ type GroupResourceListResource struct {
 // GroupResourceListResourceModel describes the resource data model.
 type GroupResourceListResourceModel struct {
 	GroupID        types.String                      `tfsdk:"group_id"`
-	GroupResources []tfTypes.GroupResource1          `tfsdk:"group_resources"`
+	GroupResources []tfTypes.GroupResource           `tfsdk:"group_resources"`
 	Resources      []tfTypes.ResourceWithAccessLevel `tfsdk:"resources"`
 }
 

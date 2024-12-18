@@ -3,12 +3,12 @@
 page_title: "opal Provider"
 subcategory: ""
 description: |-
-  Opal API: Your Home For Developer Resources.
+  Opal API: The Opal API is a RESTful API that allows you to interact with the Opal Security platform programmatically.
 ---
 
 # opal Provider
 
-Opal API: Your Home For Developer Resources.
+Opal API: The Opal API is a RESTful API that allows you to interact with the Opal Security platform programmatically.
 
 ## Example Usage
 
@@ -17,7 +17,7 @@ terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "0.28.4"
+      version = "0.29.0"
     }
   }
 }

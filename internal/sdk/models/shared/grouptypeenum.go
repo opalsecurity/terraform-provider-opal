@@ -22,6 +22,7 @@ const (
 	GroupTypeEnumOktaGroup                GroupTypeEnum = "OKTA_GROUP"
 	GroupTypeEnumTailscaleGroup           GroupTypeEnum = "TAILSCALE_GROUP"
 	GroupTypeEnumOpalGroup                GroupTypeEnum = "OPAL_GROUP"
+	GroupTypeEnumOpalAccessRule           GroupTypeEnum = "OPAL_ACCESS_RULE"
 	GroupTypeEnumAzureAdSecurityGroup     GroupTypeEnum = "AZURE_AD_SECURITY_GROUP"
 	GroupTypeEnumAzureAdMicrosoft365Group GroupTypeEnum = "AZURE_AD_MICROSOFT_365_GROUP"
 	GroupTypeEnumConnectorGroup           GroupTypeEnum = "CONNECTOR_GROUP"
@@ -59,6 +60,8 @@ func (e *GroupTypeEnum) UnmarshalJSON(data []byte) error {
 	case "TAILSCALE_GROUP":
 		fallthrough
 	case "OPAL_GROUP":
+		fallthrough
+	case "OPAL_ACCESS_RULE":
 		fallthrough
 	case "AZURE_AD_SECURITY_GROUP":
 		fallthrough

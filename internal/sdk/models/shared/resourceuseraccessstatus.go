@@ -23,7 +23,7 @@ type ResourceUserAccessStatus struct {
 	// View the `AccessLevel` of a resource/user or resource/group pair to see the level of access granted to the resource.
 	AccessLevel *ResourceAccessLevel `json:"access_level,omitempty"`
 	// The day and time the user's access will expire.
-	ExpirationDate *time.Time `json:"expiration_date"`
+	ExpirationDate *time.Time `json:"expiration_date,omitempty"`
 	// The ID of the resource.
 	ResourceID string `json:"resource_id"`
 	// The status of the user's access to the resource.
