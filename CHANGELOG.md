@@ -1,6 +1,9 @@
 # Changelog
 
-## v3.10.0
+## v3.0.11
+- Allow sending custom HTTP headers on requests to the Opal backend
+
+## v3.0.10
 - Suppress "known after apply" output for risk_sensitivity fields
 
 ## v3.0.9
