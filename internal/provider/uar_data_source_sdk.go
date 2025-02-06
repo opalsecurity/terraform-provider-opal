@@ -22,15 +22,15 @@ func (r *UarDataSourceModel) RefreshFromSharedUar(resp *shared.Uar) {
 			r.UarScope = nil
 		} else {
 			r.UarScope = &tfTypes.UARScope{}
-			r.UarScope.Admins = []types.String{}
+			r.UarScope.Admins = make([]types.String, 0, len(resp.UarScope.Admins))
 			for _, v := range resp.UarScope.Admins {
 				r.UarScope.Admins = append(r.UarScope.Admins, types.StringValue(v))
 			}
-			r.UarScope.Apps = []types.String{}
+			r.UarScope.Apps = make([]types.String, 0, len(resp.UarScope.Apps))
 			for _, v := range resp.UarScope.Apps {
 				r.UarScope.Apps = append(r.UarScope.Apps, types.StringValue(v))
 			}
-			r.UarScope.Entities = []types.String{}
+			r.UarScope.Entities = make([]types.String, 0, len(resp.UarScope.Entities))
 			for _, v := range resp.UarScope.Entities {
 				r.UarScope.Entities = append(r.UarScope.Entities, types.StringValue(v))
 			}
@@ -39,7 +39,7 @@ func (r *UarDataSourceModel) RefreshFromSharedUar(resp *shared.Uar) {
 			} else {
 				r.UarScope.FilterOperator = types.StringNull()
 			}
-			r.UarScope.GroupTypes = []types.String{}
+			r.UarScope.GroupTypes = make([]types.String, 0, len(resp.UarScope.GroupTypes))
 			for _, v := range resp.UarScope.GroupTypes {
 				r.UarScope.GroupTypes = append(r.UarScope.GroupTypes, types.StringValue(string(v)))
 			}
@@ -49,11 +49,11 @@ func (r *UarDataSourceModel) RefreshFromSharedUar(resp *shared.Uar) {
 				r.UarScope.GroupVisibility = types.StringNull()
 			}
 			r.UarScope.IncludeGroupBindings = types.BoolPointerValue(resp.UarScope.IncludeGroupBindings)
-			r.UarScope.Names = []types.String{}
+			r.UarScope.Names = make([]types.String, 0, len(resp.UarScope.Names))
 			for _, v := range resp.UarScope.Names {
 				r.UarScope.Names = append(r.UarScope.Names, types.StringValue(v))
 			}
-			r.UarScope.ResourceTypes = []types.String{}
+			r.UarScope.ResourceTypes = make([]types.String, 0, len(resp.UarScope.ResourceTypes))
 			for _, v := range resp.UarScope.ResourceTypes {
 				r.UarScope.ResourceTypes = append(r.UarScope.ResourceTypes, types.StringValue(string(v)))
 			}
@@ -72,7 +72,7 @@ func (r *UarDataSourceModel) RefreshFromSharedUar(resp *shared.Uar) {
 					r.UarScope.Tags[tagsCount].Value = tags1.Value
 				}
 			}
-			r.UarScope.Users = []types.String{}
+			r.UarScope.Users = make([]types.String, 0, len(resp.UarScope.Users))
 			for _, v := range resp.UarScope.Users {
 				r.UarScope.Users = append(r.UarScope.Users, types.StringValue(v))
 			}

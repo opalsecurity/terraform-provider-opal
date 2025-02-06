@@ -13,6 +13,7 @@ type GroupTypeEnum string
 const (
 	GroupTypeEnumActiveDirectoryGroup     GroupTypeEnum = "ACTIVE_DIRECTORY_GROUP"
 	GroupTypeEnumAwsSsoGroup              GroupTypeEnum = "AWS_SSO_GROUP"
+	GroupTypeEnumDatabricksAccountGroup   GroupTypeEnum = "DATABRICKS_ACCOUNT_GROUP"
 	GroupTypeEnumDuoGroup                 GroupTypeEnum = "DUO_GROUP"
 	GroupTypeEnumGitHubTeam               GroupTypeEnum = "GIT_HUB_TEAM"
 	GroupTypeEnumGitLabGroup              GroupTypeEnum = "GIT_LAB_GROUP"
@@ -20,6 +21,7 @@ const (
 	GroupTypeEnumGoogleGroupsGkeGroup     GroupTypeEnum = "GOOGLE_GROUPS_GKE_GROUP"
 	GroupTypeEnumLdapGroup                GroupTypeEnum = "LDAP_GROUP"
 	GroupTypeEnumOktaGroup                GroupTypeEnum = "OKTA_GROUP"
+	GroupTypeEnumOktaGroupRule            GroupTypeEnum = "OKTA_GROUP_RULE"
 	GroupTypeEnumTailscaleGroup           GroupTypeEnum = "TAILSCALE_GROUP"
 	GroupTypeEnumOpalGroup                GroupTypeEnum = "OPAL_GROUP"
 	GroupTypeEnumOpalAccessRule           GroupTypeEnum = "OPAL_ACCESS_RULE"
@@ -43,6 +45,8 @@ func (e *GroupTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "AWS_SSO_GROUP":
 		fallthrough
+	case "DATABRICKS_ACCOUNT_GROUP":
+		fallthrough
 	case "DUO_GROUP":
 		fallthrough
 	case "GIT_HUB_TEAM":
@@ -56,6 +60,8 @@ func (e *GroupTypeEnum) UnmarshalJSON(data []byte) error {
 	case "LDAP_GROUP":
 		fallthrough
 	case "OKTA_GROUP":
+		fallthrough
+	case "OKTA_GROUP_RULE":
 		fallthrough
 	case "TAILSCALE_GROUP":
 		fallthrough

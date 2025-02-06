@@ -66,6 +66,7 @@ func (r *GroupReviewersStagesListDataSource) Schema(ctx context.Context, req dat
 						},
 					},
 				},
+				Description: `The reviewer stages for this group.`,
 			},
 			"group_id": schema.StringAttribute{
 				Required:    true,

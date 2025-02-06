@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
@@ -28,11 +29,12 @@ type AppDataSource struct {
 
 // AppDataSourceModel describes the data model.
 type AppDataSourceModel struct {
-	AdminOwnerID types.String `tfsdk:"admin_owner_id"`
-	Description  types.String `tfsdk:"description"`
-	ID           types.String `tfsdk:"id"`
-	Name         types.String `tfsdk:"name"`
-	Type         types.String `tfsdk:"type"`
+	AdminOwnerID types.String            `tfsdk:"admin_owner_id"`
+	Description  types.String            `tfsdk:"description"`
+	ID           types.String            `tfsdk:"id"`
+	Name         types.String            `tfsdk:"name"`
+	Type         types.String            `tfsdk:"type"`
+	Validations  []tfTypes.AppValidation `tfsdk:"validations"`
 }
 
 // Metadata returns the data source type name.
@@ -65,6 +67,42 @@ func (r *AppDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 			"type": schema.StringAttribute{
 				Computed:    true,
 				Description: `The type of an app.`,
+			},
+			"validations": schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"details": schema.StringAttribute{
+							Computed:    true,
+							Description: `Extra details regarding the validation. Could be an error message or restrictions on permissions.`,
+						},
+						"key": schema.StringAttribute{
+							Computed:    true,
+							Description: `The key of the app validation. These are not unique IDs between runs.`,
+						},
+						"name": schema.StringAttribute{
+							Computed:    true,
+							Description: `The human-readable description of whether the validation has the permissions. Parsed as JSON.`,
+						},
+						"severity": schema.StringAttribute{
+							Computed:    true,
+							Description: `The severity of an app validation.`,
+						},
+						"status": schema.StringAttribute{
+							Computed:    true,
+							Description: `The status of an app validation.`,
+						},
+						"updated_at": schema.StringAttribute{
+							Computed:    true,
+							Description: `The date and time the app validation was last run.`,
+						},
+						"usage_reason": schema.StringAttribute{
+							Computed:    true,
+							Description: `The reason for needing the validation.`,
+						},
+					},
+				},
+				Description: `Validation checks of an apps' configuration and permissions.`,
 			},
 		},
 	}

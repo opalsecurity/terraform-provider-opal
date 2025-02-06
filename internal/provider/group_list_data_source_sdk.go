@@ -21,7 +21,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 			results1.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
 			results1.Description = types.StringPointerValue(resultsItem.Description)
 			results1.GroupBindingID = types.StringPointerValue(resultsItem.GroupBindingID)
-			results1.GroupLeaderUserIds = []types.String{}
+			results1.GroupLeaderUserIds = make([]types.String, 0, len(resultsItem.GroupLeaderUserIds))
 			for _, v := range resultsItem.GroupLeaderUserIds {
 				results1.GroupLeaderUserIds = append(results1.GroupLeaderUserIds, types.StringValue(v))
 			}
@@ -101,11 +101,11 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 					requestConfigurations1.Condition = nil
 				} else {
 					requestConfigurations1.Condition = &tfTypes.Condition{}
-					requestConfigurations1.Condition.GroupIds = []types.String{}
+					requestConfigurations1.Condition.GroupIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.GroupIds))
 					for _, v := range requestConfigurationsItem.Condition.GroupIds {
 						requestConfigurations1.Condition.GroupIds = append(requestConfigurations1.Condition.GroupIds, types.StringValue(v))
 					}
-					requestConfigurations1.Condition.RoleRemoteIds = []types.String{}
+					requestConfigurations1.Condition.RoleRemoteIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
 					for _, v := range requestConfigurationsItem.Condition.RoleRemoteIds {
 						requestConfigurations1.Condition.RoleRemoteIds = append(requestConfigurations1.Condition.RoleRemoteIds, types.StringValue(v))
 					}
@@ -124,7 +124,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 					} else {
 						reviewerStages1.Operator = types.StringNull()
 					}
-					reviewerStages1.OwnerIds = []types.String{}
+					reviewerStages1.OwnerIds = make([]types.String, 0, len(reviewerStagesItem.OwnerIds))
 					for _, v := range reviewerStagesItem.OwnerIds {
 						reviewerStages1.OwnerIds = append(reviewerStages1.OwnerIds, types.StringValue(v))
 					}

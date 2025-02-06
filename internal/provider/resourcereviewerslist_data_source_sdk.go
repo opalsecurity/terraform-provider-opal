@@ -7,7 +7,7 @@ import (
 )
 
 func (r *ResourceReviewersListDataSourceModel) RefreshFromString(resp []string) {
-	r.Data = []types.String{}
+	r.Data = make([]types.String, 0, len(resp))
 	for _, v := range resp {
 		r.Data = append(r.Data, types.StringValue(v))
 	}

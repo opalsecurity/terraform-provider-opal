@@ -32,6 +32,12 @@ func (r *GroupUsersDataSourceModel) RefreshFromSharedGroupUserList(resp *shared.
 			}
 			results1.FullName = types.StringValue(resultsItem.FullName)
 			results1.GroupID = types.StringValue(resultsItem.GroupID)
+			if resultsItem.PropagationStatus == nil {
+				results1.PropagationStatus = nil
+			} else {
+				results1.PropagationStatus = &tfTypes.PropagationStatus{}
+				results1.PropagationStatus.Status = types.StringValue(string(resultsItem.PropagationStatus.Status))
+			}
 			results1.UserID = types.StringValue(resultsItem.UserID)
 			if resultsCount+1 > len(r.Results) {
 				r.Results = append(r.Results, results1)
@@ -41,6 +47,7 @@ func (r *GroupUsersDataSourceModel) RefreshFromSharedGroupUserList(resp *shared.
 				r.Results[resultsCount].ExpirationDate = results1.ExpirationDate
 				r.Results[resultsCount].FullName = results1.FullName
 				r.Results[resultsCount].GroupID = results1.GroupID
+				r.Results[resultsCount].PropagationStatus = results1.PropagationStatus
 				r.Results[resultsCount].UserID = results1.UserID
 			}
 		}

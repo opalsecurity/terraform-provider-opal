@@ -5,9 +5,10 @@ package types
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type App struct {
-	AdminOwnerID types.String `tfsdk:"admin_owner_id"`
-	Description  types.String `tfsdk:"description"`
-	ID           types.String `tfsdk:"id"`
-	Name         types.String `tfsdk:"name"`
-	Type         types.String `tfsdk:"type"`
+	AdminOwnerID types.String    `tfsdk:"admin_owner_id"`
+	Description  types.String    `tfsdk:"description"`
+	ID           types.String    `tfsdk:"id"`
+	Name         types.String    `tfsdk:"name"`
+	Type         types.String    `tfsdk:"type"`
+	Validations  []AppValidation `tfsdk:"validations"`
 }

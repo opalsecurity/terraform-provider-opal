@@ -860,6 +860,7 @@ paths:
       x-speakeasy-ignore: true
   /groups/{group_id}/reviewer-stages:
     get:
+      deprecated: true
       description: Gets the list of reviewer stages for a group.
       operationId: getGroupReviewersStages
       parameters:
@@ -893,6 +894,7 @@ paths:
       x-speakeasy-name-override: get_reviewers_stages
       x-speakeasy-entity-operation: GroupReviewersStagesList#get
     put:
+      deprecated: true
       description: Sets the list of reviewer stages for a group.
       operationId: updateGroupReviewersStages
       parameters:
@@ -3473,6 +3475,11 @@ components:
             $ref: "#/components/schemas/AppTypeEnum/enum"
           example: OKTA_DIRECTORY
           type: string
+        validations:
+          description: Validation checks of an apps' configuration and permissions.
+          items:
+            $ref: "#/components/schemas/AppValidation"
+          type: array
       required:
         - app_id
         - name
@@ -3582,6 +3589,69 @@ components:
         - created_at
       type: object
       x-speakeasy-entity: Events
+    AppValidation:
+      description: |-
+        # App validation object
+        ### Description
+        The `AppValidation` object is used to represent a validation check of an apps' configuration and permissions.
+
+        ### Usage Example
+        List from the `GET Apps` endpoint.
+      example:
+        key: "iam:GetRole"
+        name: "Opal's service account is missing the 'iam:GetRole' permission."
+        usage_reason: "Opal uses the 'iam:GetRole' permissions to view access to resources."
+        details: "403 Google API Error. Service account is not authorized to access role assignments."
+        severity: HIGH
+        status: FAILED
+        updated_at: 2021-01-06T20:00:00Z
+      properties:
+        key:
+          description: The key of the app validation. These are not unique IDs between runs.
+          example: "iam:GetUser"
+          type: string
+        name:
+          description: The human-readable description of whether the validation has the permissions.
+          example: "Opal's service account is missing the 'iam:GetUser' description."
+        usage_reason:
+          description: The reason for needing the validation.
+          example: Opal uses the 'iam:GetUser' permission to import users.
+          type: string
+        details:
+          description: Extra details regarding the validation. Could be an error message or restrictions on permissions.
+          example: 403 Google API Error. Service account is not authorized to access role assignments.
+          type: string
+        severity:
+          $ref: "#/components/schemas/AppValidationSeverityEnum"
+        status:
+          $ref: "#/components/schemas/AppValidationStatusEnum"
+        updated_at:
+          description: The date and time the app validation was last run.
+          example: 2021-01-06T20:00:00Z
+          format: date-time
+          type: string
+      required:
+        - key
+        - name
+        - status
+        - severity
+        - updated_at
+    AppValidationSeverityEnum:
+      description: The severity of an app validation.
+      enum:
+        - CRITICAL
+        - HIGH
+        - MEDIUM
+        - LOW
+      example: CRITICAL
+      type: string
+    AppValidationStatusEnum:
+      description: The status of an app validation.
+      enum:
+        - SUCCESS
+        - FAILED
+      example: FAILED
+      type: string
     SubEvent:
       description: |-
         # Sub event Object
@@ -3830,6 +3900,8 @@ components:
           example: 3
           format: int32
           type: integer
+        propagation_status:
+          $ref: "#/components/schemas/PropagationStatus"
       required:
         - email
         - full_name
@@ -4474,6 +4546,8 @@ components:
           format: date-time
           nullable: true
           type: string
+        propagation_status:
+          $ref: "#/components/schemas/PropagationStatus"
       required:
         - email
         - full_name
@@ -4481,6 +4555,40 @@ components:
         - user_id
       type: object
       x-speakeasy-entity: GroupUser
+    PropagationStatus:
+      description: The state of whether the push action was propagated to the remote system. If this is null, the access was synced from the remote system.
+      properties:
+        status:
+          $ref: "#/components/schemas/PropagationStatusEnum"
+      required:
+        - status
+    PropagationStatusEnum:
+      description: The status of whether the user has been synced to the group or resource in the remote system.
+      enum:
+        - SUCCESS
+        - ERR_REMOTE_INTERNAL_ERROR
+        - ERR_REMOTE_USER_NOT_FOUND
+        - ERR_REMOTE_USER_NOT_LINKED
+        - ERR_REMOTE_RESOURCE_NOT_FOUND
+        - ERR_REMOTE_THROTTLE
+        - ERR_NOT_AUTHORIZED_TO_QUERY_RESOURCE
+        - ERR_REMOTE_PROVISIONING_VIA_IDP_FAILED
+        - ERR_IDP_EMAIL_UPDATE_CONFLICT
+        - ERR_TIMEOUT
+        - ERR_UNKNOWN
+        - ERR_OPAL_INTERNAL_ERROR
+        - ERR_ORG_READ_ONLY
+        - ERR_OPERATION_UNSUPPORTED
+        - PENDING
+        - PENDING_MANUAL_PROPAGATION
+        - PENDING_TICKET_CREATION
+        - ERR_TICKET_CREATION_SKIPPED
+        - ERR_DRY_RUN_MODE_ENABLED
+        - ERR_HR_IDP_PROVIDER_NOT_LINKED
+        - ERR_REMOTE_UNRECOVERABLE_ERROR
+      example:
+        - SUCCESS
+      type: string
     UpdateGroupInfoList:
       example:
         groups:
@@ -4679,6 +4787,7 @@ components:
       enum:
         - ACTIVE_DIRECTORY_GROUP
         - AWS_SSO_GROUP
+        - DATABRICKS_ACCOUNT_GROUP
         - DUO_GROUP
         - GIT_HUB_TEAM
         - GIT_LAB_GROUP
@@ -4686,6 +4795,7 @@ components:
         - GOOGLE_GROUPS_GKE_GROUP
         - LDAP_GROUP
         - OKTA_GROUP
+        - OKTA_GROUP_RULE
         - TAILSCALE_GROUP
         - OPAL_GROUP
         - OPAL_ACCESS_RULE
@@ -4723,6 +4833,7 @@ components:
         - AZURE_ENTERPRISE_APP
         - CUSTOM
         - CUSTOM_CONNECTOR
+        - DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL
         - GCP_ORGANIZATION
         - GCP_BUCKET
         - GCP_COMPUTE_INSTANCE

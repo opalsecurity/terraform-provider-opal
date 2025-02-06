@@ -43,3 +43,17 @@ Read-Only:
 - `id` (String) The ID of the app.
 - `name` (String) The name of the app.
 - `type` (String) The type of an app.
+- `validations` (Attributes List) Validation checks of an apps' configuration and permissions. (see [below for nested schema](#nestedatt--apps--validations))
+
+<a id="nestedatt--apps--validations"></a>
+### Nested Schema for `apps.validations`
+
+Read-Only:
+
+- `details` (String) Extra details regarding the validation. Could be an error message or restrictions on permissions.
+- `key` (String) The key of the app validation. These are not unique IDs between runs.
+- `name` (String) The human-readable description of whether the validation has the permissions. Parsed as JSON.
+- `severity` (String) The severity of an app validation.
+- `status` (String) The status of an app validation.
+- `updated_at` (String) The date and time the app validation was last run.
+- `usage_reason` (String) The reason for needing the validation.

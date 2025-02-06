@@ -34,9 +34,9 @@ data "opal_group" "my_group" {
 - `group_binding_id` (String) The ID of the associated group binding.
 - `group_leader_user_ids` (Set of String) A list of User IDs for the group leaders of the group
 - `group_type` (String) The type of the group.
-- `message_channels` (Attributes) (see [below for nested schema](#nestedatt--message_channels))
+- `message_channels` (Attributes) The audit and reviewer message channels attached to the group. (see [below for nested schema](#nestedatt--message_channels))
 - `name` (String) The name of the group.
-- `oncall_schedules` (Attributes) (see [below for nested schema](#nestedatt--oncall_schedules))
+- `oncall_schedules` (Attributes) The on call schedules attached to the group. (see [below for nested schema](#nestedatt--oncall_schedules))
 - `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. (see [below for nested schema](#nestedatt--remote_info))
 - `remote_name` (String) The name of the remote.
 - `request_configurations` (Attributes List) A list of request configurations for this group. (see [below for nested schema](#nestedatt--request_configurations))

@@ -27,7 +27,7 @@ data "opal_group_reviewers_stages_list" "my_groupreviewersstageslist" {
 
 ### Read-Only
 
-- `data` (Attributes List) (see [below for nested schema](#nestedatt--data))
+- `data` (Attributes List) The reviewer stages for this group. (see [below for nested schema](#nestedatt--data))
 
 <a id="nestedatt--data"></a>
 ### Nested Schema for `data`

@@ -47,6 +47,12 @@ func (r *GroupUserResourceModel) RefreshFromSharedGroupUser(resp *shared.GroupUs
 		}
 		r.FullName = types.StringValue(resp.FullName)
 		r.GroupID = types.StringValue(resp.GroupID)
+		if resp.PropagationStatus == nil {
+			r.PropagationStatus = nil
+		} else {
+			r.PropagationStatus = &tfTypes.PropagationStatus{}
+			r.PropagationStatus.Status = types.StringValue(string(resp.PropagationStatus.Status))
+		}
 		r.UserID = types.StringValue(resp.UserID)
 	}
 }

@@ -26,8 +26,9 @@ type OpalProvider struct {
 
 // OpalProviderModel describes the provider data model.
 type OpalProviderModel struct {
-	ServerURL  types.String `tfsdk:"server_url"`
-	BearerAuth types.String `tfsdk:"bearer_auth"`
+	BearerAuth  types.String `tfsdk:"bearer_auth"`
+	HTTPHeaders types.Map    `tfsdk:"http_headers"`
+	ServerURL   types.String `tfsdk:"server_url"`
 }
 
 func (p *OpalProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -37,18 +38,22 @@ func (p *OpalProvider) Metadata(ctx context.Context, req provider.MetadataReques
 
 func (p *OpalProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: `Opal API: The Opal API is a RESTful API that allows you to interact with the Opal Security platform programmatically.`,
 		Attributes: map[string]schema.Attribute{
-			"server_url": schema.StringAttribute{
-				MarkdownDescription: "Server URL (defaults to https://api.opal.dev/v1)",
-				Optional:            true,
-				Required:            false,
-			},
 			"bearer_auth": schema.StringAttribute{
-				Sensitive: true,
 				Optional:  true,
+				Sensitive: true,
+			},
+			"http_headers": schema.MapAttribute{
+				Description: `HTTP headers to include in all requests`,
+				ElementType: types.StringType,
+				Optional:    true,
+			},
+			"server_url": schema.StringAttribute{
+				Description: `Server URL (defaults to https://api.opal.dev/v1)`,
+				Optional:    true,
 			},
 		},
+		MarkdownDescription: `Opal API: The Opal API is a RESTful API that allows you to interact with the Opal Security platform programmatically.`,
 	}
 }
 
@@ -81,8 +86,18 @@ func (p *OpalProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 		BearerAuth: bearerAuth,
 	}
 
+	providerHTTPTransportOpts := ProviderHTTPTransportOpts{
+		SetHeaders: make(map[string]string),
+		Transport:  http.DefaultTransport,
+	}
+
+	resp.Diagnostics.Append(data.HTTPHeaders.ElementsAs(ctx, &providerHTTPTransportOpts.SetHeaders, false)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
 	httpClient := http.DefaultClient
-	httpClient.Transport = NewLoggingHTTPTransport(http.DefaultTransport)
+	httpClient.Transport = NewProviderHTTPTransport(providerHTTPTransportOpts)
 
 	opts := []sdk.SDKOption{
 		sdk.WithServerURL(ServerURL),

@@ -19,6 +19,8 @@ type App struct {
 	Name string `json:"name"`
 	// The type of an app.
 	Type string `json:"app_type"`
+	// Validation checks of an apps' configuration and permissions.
+	Validations []AppValidation `json:"validations,omitempty"`
 }
 
 func (o *App) GetAdminOwnerID() string {
@@ -54,4 +56,11 @@ func (o *App) GetType() string {
 		return ""
 	}
 	return o.Type
+}
+
+func (o *App) GetValidations() []AppValidation {
+	if o == nil {
+		return nil
+	}
+	return o.Validations
 }

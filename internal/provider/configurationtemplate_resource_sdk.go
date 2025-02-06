@@ -185,17 +185,17 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 func (r *ConfigurationTemplateResourceModel) RefreshFromSharedConfigurationTemplate(resp *shared.ConfigurationTemplate) {
 	if resp != nil {
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
-		r.BreakGlassUserIds = []types.String{}
+		r.BreakGlassUserIds = make([]types.String, 0, len(resp.BreakGlassUserIds))
 		for _, v := range resp.BreakGlassUserIds {
 			r.BreakGlassUserIds = append(r.BreakGlassUserIds, types.StringValue(v))
 		}
 		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
-		r.LinkedAuditMessageChannelIds = []types.String{}
+		r.LinkedAuditMessageChannelIds = make([]types.String, 0, len(resp.LinkedAuditMessageChannelIds))
 		for _, v := range resp.LinkedAuditMessageChannelIds {
 			r.LinkedAuditMessageChannelIds = append(r.LinkedAuditMessageChannelIds, types.StringValue(v))
 		}
-		r.MemberOncallScheduleIds = []types.String{}
+		r.MemberOncallScheduleIds = make([]types.String, 0, len(resp.MemberOncallScheduleIds))
 		for _, v := range resp.MemberOncallScheduleIds {
 			r.MemberOncallScheduleIds = append(r.MemberOncallScheduleIds, types.StringValue(v))
 		}
@@ -218,7 +218,7 @@ func (r *ConfigurationTemplateResourceModel) RefreshFromSharedConfigurationTempl
 		}
 		if resp.Visibility != nil {
 			r.Visibility.Visibility = types.StringValue(string(resp.Visibility.Visibility))
-			r.Visibility.VisibilityGroupIds = []types.String{}
+			r.Visibility.VisibilityGroupIds = make([]types.String, 0, len(resp.Visibility.VisibilityGroupIds))
 			for _, v := range resp.Visibility.VisibilityGroupIds {
 				r.Visibility.VisibilityGroupIds = append(r.Visibility.VisibilityGroupIds, types.StringValue(v))
 			}
