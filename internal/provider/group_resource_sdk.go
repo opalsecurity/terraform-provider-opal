@@ -149,7 +149,7 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.Description = types.StringPointerValue(resp.Description)
 		r.GroupBindingID = types.StringPointerValue(resp.GroupBindingID)
-		r.GroupLeaderUserIds = []types.String{}
+		r.GroupLeaderUserIds = make([]types.String, 0, len(resp.GroupLeaderUserIds))
 		for _, v := range resp.GroupLeaderUserIds {
 			r.GroupLeaderUserIds = append(r.GroupLeaderUserIds, types.StringValue(v))
 		}
@@ -232,11 +232,11 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 				requestConfigurations1.Condition = nil
 			} else {
 				requestConfigurations1.Condition = &tfTypes.Condition{}
-				requestConfigurations1.Condition.GroupIds = []types.String{}
+				requestConfigurations1.Condition.GroupIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.GroupIds))
 				for _, v := range requestConfigurationsItem.Condition.GroupIds {
 					requestConfigurations1.Condition.GroupIds = append(requestConfigurations1.Condition.GroupIds, types.StringValue(v))
 				}
-				requestConfigurations1.Condition.RoleRemoteIds = []types.String{}
+				requestConfigurations1.Condition.RoleRemoteIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
 				for _, v := range requestConfigurationsItem.Condition.RoleRemoteIds {
 					requestConfigurations1.Condition.RoleRemoteIds = append(requestConfigurations1.Condition.RoleRemoteIds, types.StringValue(v))
 				}
@@ -255,7 +255,7 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 				} else {
 					reviewerStages1.Operator = types.StringNull()
 				}
-				reviewerStages1.OwnerIds = []types.String{}
+				reviewerStages1.OwnerIds = make([]types.String, 0, len(reviewerStagesItem.OwnerIds))
 				for _, v := range reviewerStagesItem.OwnerIds {
 					reviewerStages1.OwnerIds = append(reviewerStages1.OwnerIds, types.StringValue(v))
 				}
@@ -452,7 +452,7 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(resp *shared.Updat
 	r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 	r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 	r.Description = types.StringPointerValue(resp.Description)
-	r.GroupLeaderUserIds = []types.String{}
+	r.GroupLeaderUserIds = make([]types.String, 0, len(resp.GroupLeaderUserIds))
 	for _, v := range resp.GroupLeaderUserIds {
 		r.GroupLeaderUserIds = append(r.GroupLeaderUserIds, types.StringValue(v))
 	}
@@ -470,11 +470,11 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(resp *shared.Updat
 			requestConfigurations1.Condition = nil
 		} else {
 			requestConfigurations1.Condition = &tfTypes.Condition{}
-			requestConfigurations1.Condition.GroupIds = []types.String{}
+			requestConfigurations1.Condition.GroupIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.GroupIds))
 			for _, v := range requestConfigurationsItem.Condition.GroupIds {
 				requestConfigurations1.Condition.GroupIds = append(requestConfigurations1.Condition.GroupIds, types.StringValue(v))
 			}
-			requestConfigurations1.Condition.RoleRemoteIds = []types.String{}
+			requestConfigurations1.Condition.RoleRemoteIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
 			for _, v := range requestConfigurationsItem.Condition.RoleRemoteIds {
 				requestConfigurations1.Condition.RoleRemoteIds = append(requestConfigurations1.Condition.RoleRemoteIds, types.StringValue(v))
 			}
@@ -493,7 +493,7 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(resp *shared.Updat
 			} else {
 				reviewerStages1.Operator = types.StringNull()
 			}
-			reviewerStages1.OwnerIds = []types.String{}
+			reviewerStages1.OwnerIds = make([]types.String, 0, len(reviewerStagesItem.OwnerIds))
 			for _, v := range reviewerStagesItem.OwnerIds {
 				reviewerStages1.OwnerIds = append(reviewerStages1.OwnerIds, types.StringValue(v))
 			}
@@ -588,7 +588,7 @@ func (r *GroupResourceModel) RefreshFromOperationsGetGroupMessageChannelsRespons
 func (r *GroupResourceModel) RefreshFromOperationsGetGroupVisibilityResponseBody(resp *operations.GetGroupVisibilityResponseBody) {
 	if resp != nil {
 		r.Visibility = types.StringValue(string(resp.Visibility))
-		r.VisibilityGroupIds = []types.String{}
+		r.VisibilityGroupIds = make([]types.String, 0, len(resp.VisibilityGroupIds))
 		for _, v := range resp.VisibilityGroupIds {
 			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
 		}

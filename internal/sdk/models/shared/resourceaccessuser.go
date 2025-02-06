@@ -32,6 +32,8 @@ type ResourceAccessUser struct {
 	HasDirectAccess bool `json:"has_direct_access"`
 	// The number of ways in which the user has access through this resource (directly and indirectly).
 	NumAccessPaths int `json:"num_access_paths"`
+	// The state of whether the push action was propagated to the remote system. If this is null, the access was synced from the remote system.
+	PropagationStatus *PropagationStatus `json:"propagation_status,omitempty"`
 	// The ID of the resource.
 	ResourceID string `json:"resource_id"`
 	// The ID of the user.
@@ -89,6 +91,13 @@ func (o *ResourceAccessUser) GetNumAccessPaths() int {
 		return 0
 	}
 	return o.NumAccessPaths
+}
+
+func (o *ResourceAccessUser) GetPropagationStatus() *PropagationStatus {
+	if o == nil {
+		return nil
+	}
+	return o.PropagationStatus
 }
 
 func (o *ResourceAccessUser) GetResourceID() string {

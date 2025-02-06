@@ -81,7 +81,9 @@ func (s *Groups) Create(ctx context.Context, request shared.CreateGroupInfo, opt
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
-	req.Header.Set("Content-Type", reqContentType)
+	if reqContentType != "" {
+		req.Header.Set("Content-Type", reqContentType)
+	}
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err
@@ -280,7 +282,9 @@ func (s *Groups) CreateResources(ctx context.Context, request operations.CreateG
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
-	req.Header.Set("Content-Type", reqContentType)
+	if reqContentType != "" {
+		req.Header.Set("Content-Type", reqContentType)
+	}
 
 	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
 		return nil, fmt.Errorf("error populating query params: %w", err)
@@ -483,7 +487,9 @@ func (s *Groups) CreateUser(ctx context.Context, request operations.CreateGroupU
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
-	req.Header.Set("Content-Type", reqContentType)
+	if reqContentType != "" {
+		req.Header.Set("Content-Type", reqContentType)
+	}
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err
@@ -1751,6 +1757,8 @@ func (s *Groups) GetResources(ctx context.Context, request operations.GetGroupRe
 }
 
 // GetReviewersStages - Gets the list of reviewer stages for a group.
+//
+// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
 func (s *Groups) GetReviewersStages(ctx context.Context, request operations.GetGroupReviewersStagesRequest, opts ...operations.Option) (*operations.GetGroupReviewersStagesResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
@@ -2778,7 +2786,9 @@ func (s *Groups) Update(ctx context.Context, request shared.UpdateGroupInfoList,
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
-	req.Header.Set("Content-Type", reqContentType)
+	if reqContentType != "" {
+		req.Header.Set("Content-Type", reqContentType)
+	}
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err
@@ -2977,7 +2987,9 @@ func (s *Groups) UpdateMessageChannels(ctx context.Context, request operations.U
 	}
 	req.Header.Set("Accept", "*/*")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
-	req.Header.Set("Content-Type", reqContentType)
+	if reqContentType != "" {
+		req.Header.Set("Content-Type", reqContentType)
+	}
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err
@@ -3156,7 +3168,9 @@ func (s *Groups) UpdateOnCallSchedule(ctx context.Context, request operations.Up
 	}
 	req.Header.Set("Accept", "*/*")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
-	req.Header.Set("Content-Type", reqContentType)
+	if reqContentType != "" {
+		req.Header.Set("Content-Type", reqContentType)
+	}
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err
@@ -3335,7 +3349,9 @@ func (s *Groups) UpdateResources(ctx context.Context, request operations.UpdateG
 	}
 	req.Header.Set("Accept", "*/*")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
-	req.Header.Set("Content-Type", reqContentType)
+	if reqContentType != "" {
+		req.Header.Set("Content-Type", reqContentType)
+	}
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err
@@ -3461,6 +3477,8 @@ func (s *Groups) UpdateResources(ctx context.Context, request operations.UpdateG
 }
 
 // UpdateReviewersStages - Sets the list of reviewer stages for a group.
+//
+// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
 func (s *Groups) UpdateReviewersStages(ctx context.Context, request operations.UpdateGroupReviewersStagesRequest, opts ...operations.Option) (*operations.UpdateGroupReviewersStagesResponse, error) {
 	hookCtx := hooks.HookContext{
 		Context:        ctx,
@@ -3514,7 +3532,9 @@ func (s *Groups) UpdateReviewersStages(ctx context.Context, request operations.U
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
-	req.Header.Set("Content-Type", reqContentType)
+	if reqContentType != "" {
+		req.Header.Set("Content-Type", reqContentType)
+	}
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err
@@ -3713,7 +3733,9 @@ func (s *Groups) UpdateVisibility(ctx context.Context, request operations.Update
 	}
 	req.Header.Set("Accept", "*/*")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
-	req.Header.Set("Content-Type", reqContentType)
+	if reqContentType != "" {
+		req.Header.Set("Content-Type", reqContentType)
+	}
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err

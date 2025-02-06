@@ -28,6 +28,12 @@ func (r *ResourcesUsersListDataSourceModel) RefreshFromSharedResourceAccessUserL
 			results1.FullName = types.StringValue(resultsItem.FullName)
 			results1.HasDirectAccess = types.BoolValue(resultsItem.HasDirectAccess)
 			results1.NumAccessPaths = types.Int64Value(int64(resultsItem.NumAccessPaths))
+			if resultsItem.PropagationStatus == nil {
+				results1.PropagationStatus = nil
+			} else {
+				results1.PropagationStatus = &tfTypes.PropagationStatus{}
+				results1.PropagationStatus.Status = types.StringValue(string(resultsItem.PropagationStatus.Status))
+			}
 			results1.ResourceID = types.StringValue(resultsItem.ResourceID)
 			results1.UserID = types.StringValue(resultsItem.UserID)
 			if resultsCount+1 > len(r.Results) {
@@ -39,6 +45,7 @@ func (r *ResourcesUsersListDataSourceModel) RefreshFromSharedResourceAccessUserL
 				r.Results[resultsCount].FullName = results1.FullName
 				r.Results[resultsCount].HasDirectAccess = results1.HasDirectAccess
 				r.Results[resultsCount].NumAccessPaths = results1.NumAccessPaths
+				r.Results[resultsCount].PropagationStatus = results1.PropagationStatus
 				r.Results[resultsCount].ResourceID = results1.ResourceID
 				r.Results[resultsCount].UserID = results1.UserID
 			}

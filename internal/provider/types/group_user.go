@@ -5,10 +5,11 @@ package types
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type GroupUser struct {
-	AccessLevel    *ResourceAccessLevel `tfsdk:"access_level"`
-	Email          types.String         `tfsdk:"email"`
-	ExpirationDate types.String         `tfsdk:"expiration_date"`
-	FullName       types.String         `tfsdk:"full_name"`
-	GroupID        types.String         `tfsdk:"group_id"`
-	UserID         types.String         `tfsdk:"user_id"`
+	AccessLevel       *ResourceAccessLevel `tfsdk:"access_level"`
+	Email             types.String         `tfsdk:"email"`
+	ExpirationDate    types.String         `tfsdk:"expiration_date"`
+	FullName          types.String         `tfsdk:"full_name"`
+	GroupID           types.String         `tfsdk:"group_id"`
+	PropagationStatus *PropagationStatus   `tfsdk:"propagation_status"`
+	UserID            types.String         `tfsdk:"user_id"`
 }

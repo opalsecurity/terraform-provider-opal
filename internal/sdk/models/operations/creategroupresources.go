@@ -32,7 +32,7 @@ type CreateGroupResourcesRequest struct {
 	RequestBody *CreateGroupResourcesRequestBody `request:"mediaType=application/json"`
 	// The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used.
 	//
-	// Deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
 	AccessLevelRemoteID *string `queryParam:"style=form,explode=true,name=access_level_remote_id"`
 	// The ID of the group.
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`

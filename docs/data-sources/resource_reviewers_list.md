@@ -27,4 +27,4 @@ data "opal_resource_reviewers_list" "my_resourcereviewerslist" {
 
 ### Read-Only
 
-- `data` (List of String)
+- `data` (List of String) The IDs of owners that are reviewers for this resource.

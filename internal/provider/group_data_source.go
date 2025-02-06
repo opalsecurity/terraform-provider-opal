@@ -125,6 +125,7 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 					},
 				},
+				Description: `The audit and reviewer message channels attached to the group.`,
 			},
 			"name": schema.StringAttribute{
 				Computed:    true,
@@ -150,6 +151,7 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						Description: `The third party provider of the on call schedule.`,
 					},
 				},
+				Description: `The on call schedules attached to the group.`,
 			},
 			"remote_info": schema.SingleNestedAttribute{
 				Computed: true,

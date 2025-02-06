@@ -30,15 +30,15 @@ func (r *UARSListDataSourceModel) RefreshFromSharedPaginatedUARsList(resp *share
 				results1.UarScope = nil
 			} else {
 				results1.UarScope = &tfTypes.UARScope{}
-				results1.UarScope.Admins = []types.String{}
+				results1.UarScope.Admins = make([]types.String, 0, len(resultsItem.UarScope.Admins))
 				for _, v := range resultsItem.UarScope.Admins {
 					results1.UarScope.Admins = append(results1.UarScope.Admins, types.StringValue(v))
 				}
-				results1.UarScope.Apps = []types.String{}
+				results1.UarScope.Apps = make([]types.String, 0, len(resultsItem.UarScope.Apps))
 				for _, v := range resultsItem.UarScope.Apps {
 					results1.UarScope.Apps = append(results1.UarScope.Apps, types.StringValue(v))
 				}
-				results1.UarScope.Entities = []types.String{}
+				results1.UarScope.Entities = make([]types.String, 0, len(resultsItem.UarScope.Entities))
 				for _, v := range resultsItem.UarScope.Entities {
 					results1.UarScope.Entities = append(results1.UarScope.Entities, types.StringValue(v))
 				}
@@ -47,7 +47,7 @@ func (r *UARSListDataSourceModel) RefreshFromSharedPaginatedUARsList(resp *share
 				} else {
 					results1.UarScope.FilterOperator = types.StringNull()
 				}
-				results1.UarScope.GroupTypes = []types.String{}
+				results1.UarScope.GroupTypes = make([]types.String, 0, len(resultsItem.UarScope.GroupTypes))
 				for _, v := range resultsItem.UarScope.GroupTypes {
 					results1.UarScope.GroupTypes = append(results1.UarScope.GroupTypes, types.StringValue(string(v)))
 				}
@@ -57,11 +57,11 @@ func (r *UARSListDataSourceModel) RefreshFromSharedPaginatedUARsList(resp *share
 					results1.UarScope.GroupVisibility = types.StringNull()
 				}
 				results1.UarScope.IncludeGroupBindings = types.BoolPointerValue(resultsItem.UarScope.IncludeGroupBindings)
-				results1.UarScope.Names = []types.String{}
+				results1.UarScope.Names = make([]types.String, 0, len(resultsItem.UarScope.Names))
 				for _, v := range resultsItem.UarScope.Names {
 					results1.UarScope.Names = append(results1.UarScope.Names, types.StringValue(v))
 				}
-				results1.UarScope.ResourceTypes = []types.String{}
+				results1.UarScope.ResourceTypes = make([]types.String, 0, len(resultsItem.UarScope.ResourceTypes))
 				for _, v := range resultsItem.UarScope.ResourceTypes {
 					results1.UarScope.ResourceTypes = append(results1.UarScope.ResourceTypes, types.StringValue(string(v)))
 				}
@@ -77,7 +77,7 @@ func (r *UARSListDataSourceModel) RefreshFromSharedPaginatedUARsList(resp *share
 						results1.UarScope.Tags[tagsCount].Value = tags1.Value
 					}
 				}
-				results1.UarScope.Users = []types.String{}
+				results1.UarScope.Users = make([]types.String, 0, len(resultsItem.UarScope.Users))
 				for _, v := range resultsItem.UarScope.Users {
 					results1.UarScope.Users = append(results1.UarScope.Users, types.StringValue(v))
 				}

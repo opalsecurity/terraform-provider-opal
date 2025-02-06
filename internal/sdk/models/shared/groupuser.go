@@ -30,6 +30,8 @@ type GroupUser struct {
 	FullName string `json:"full_name"`
 	// The ID of the group.
 	GroupID string `json:"group_id"`
+	// The state of whether the push action was propagated to the remote system. If this is null, the access was synced from the remote system.
+	PropagationStatus *PropagationStatus `json:"propagation_status,omitempty"`
 	// The ID of the user.
 	UserID string `json:"user_id"`
 }
@@ -78,6 +80,13 @@ func (o *GroupUser) GetGroupID() string {
 		return ""
 	}
 	return o.GroupID
+}
+
+func (o *GroupUser) GetPropagationStatus() *PropagationStatus {
+	if o == nil {
+		return nil
+	}
+	return o.PropagationStatus
 }
 
 func (o *GroupUser) GetUserID() string {

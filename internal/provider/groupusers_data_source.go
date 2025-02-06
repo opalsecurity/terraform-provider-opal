@@ -88,6 +88,16 @@ func (r *GroupUsersDataSource) Schema(ctx context.Context, req datasource.Schema
 							Computed:    true,
 							Description: `The ID of the group.`,
 						},
+						"propagation_status": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"status": schema.StringAttribute{
+									Computed:    true,
+									Description: `The status of whether the user has been synced to the group or resource in the remote system.`,
+								},
+							},
+							Description: `The state of whether the push action was propagated to the remote system. If this is null, the access was synced from the remote system.`,
+						},
 						"user_id": schema.StringAttribute{
 							Computed:    true,
 							Description: `The ID of the user.`,

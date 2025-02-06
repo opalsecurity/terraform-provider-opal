@@ -51,6 +51,7 @@ View the `AccessLevel` of a resource/user or resource/group pair to see the leve
 - `full_name` (String) The user's full name.
 - `has_direct_access` (Boolean) The user has direct access to this resources (vs. indirectly, like through a group).
 - `num_access_paths` (Number) The number of ways in which the user has access through this resource (directly and indirectly).
+- `propagation_status` (Attributes) The state of whether the push action was propagated to the remote system. If this is null, the access was synced from the remote system. (see [below for nested schema](#nestedatt--results--propagation_status))
 - `resource_id` (String) The ID of the resource.
 - `user_id` (String) The ID of the user.
 
@@ -61,3 +62,11 @@ Read-Only:
 
 - `access_level_name` (String) The human-readable name of the access level.
 - `access_level_remote_id` (String) The machine-readable identifier of the access level.
+
+
+<a id="nestedatt--results--propagation_status"></a>
+### Nested Schema for `results.propagation_status`
+
+Read-Only:
+
+- `status` (String) The status of whether the user has been synced to the group or resource in the remote system.

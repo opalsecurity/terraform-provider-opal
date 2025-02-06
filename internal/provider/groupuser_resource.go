@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
@@ -44,6 +45,7 @@ type GroupUserResourceModel struct {
 	ExpirationDate      types.String                 `tfsdk:"expiration_date"`
 	FullName            types.String                 `tfsdk:"full_name"`
 	GroupID             types.String                 `tfsdk:"group_id"`
+	PropagationStatus   *tfTypes.PropagationStatus   `tfsdk:"propagation_status"`
 	UserID              types.String                 `tfsdk:"user_id"`
 }
 
@@ -116,6 +118,41 @@ func (r *GroupUserResource) Schema(ctx context.Context, req resource.SchemaReque
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 				Description: `The ID of the group. Requires replacement if changed.`,
+			},
+			"propagation_status": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"status": schema.StringAttribute{
+						Computed:    true,
+						Description: `The status of whether the user has been synced to the group or resource in the remote system. must be one of ["SUCCESS", "ERR_REMOTE_INTERNAL_ERROR", "ERR_REMOTE_USER_NOT_FOUND", "ERR_REMOTE_USER_NOT_LINKED", "ERR_REMOTE_RESOURCE_NOT_FOUND", "ERR_REMOTE_THROTTLE", "ERR_NOT_AUTHORIZED_TO_QUERY_RESOURCE", "ERR_REMOTE_PROVISIONING_VIA_IDP_FAILED", "ERR_IDP_EMAIL_UPDATE_CONFLICT", "ERR_TIMEOUT", "ERR_UNKNOWN", "ERR_OPAL_INTERNAL_ERROR", "ERR_ORG_READ_ONLY", "ERR_OPERATION_UNSUPPORTED", "PENDING", "PENDING_MANUAL_PROPAGATION", "PENDING_TICKET_CREATION", "ERR_TICKET_CREATION_SKIPPED", "ERR_DRY_RUN_MODE_ENABLED", "ERR_HR_IDP_PROVIDER_NOT_LINKED", "ERR_REMOTE_UNRECOVERABLE_ERROR"]`,
+						Validators: []validator.String{
+							stringvalidator.OneOf(
+								"SUCCESS",
+								"ERR_REMOTE_INTERNAL_ERROR",
+								"ERR_REMOTE_USER_NOT_FOUND",
+								"ERR_REMOTE_USER_NOT_LINKED",
+								"ERR_REMOTE_RESOURCE_NOT_FOUND",
+								"ERR_REMOTE_THROTTLE",
+								"ERR_NOT_AUTHORIZED_TO_QUERY_RESOURCE",
+								"ERR_REMOTE_PROVISIONING_VIA_IDP_FAILED",
+								"ERR_IDP_EMAIL_UPDATE_CONFLICT",
+								"ERR_TIMEOUT",
+								"ERR_UNKNOWN",
+								"ERR_OPAL_INTERNAL_ERROR",
+								"ERR_ORG_READ_ONLY",
+								"ERR_OPERATION_UNSUPPORTED",
+								"PENDING",
+								"PENDING_MANUAL_PROPAGATION",
+								"PENDING_TICKET_CREATION",
+								"ERR_TICKET_CREATION_SKIPPED",
+								"ERR_DRY_RUN_MODE_ENABLED",
+								"ERR_HR_IDP_PROVIDER_NOT_LINKED",
+								"ERR_REMOTE_UNRECOVERABLE_ERROR",
+							),
+						},
+					},
+				},
+				Description: `The state of whether the push action was propagated to the remote system. If this is null, the access was synced from the remote system.`,
 			},
 			"user_id": schema.StringAttribute{
 				Required: true,

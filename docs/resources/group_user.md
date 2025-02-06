@@ -46,6 +46,7 @@ View the `GroupAccessLevel` of a group/user or group/group pair to see the level
 - `email` (String) The user's email.
 - `expiration_date` (String) The day and time the user's access will expire.
 - `full_name` (String) The user's full name.
+- `propagation_status` (Attributes) The state of whether the push action was propagated to the remote system. If this is null, the access was synced from the remote system. (see [below for nested schema](#nestedatt--propagation_status))
 
 <a id="nestedatt--access_level"></a>
 ### Nested Schema for `access_level`
@@ -54,3 +55,11 @@ Read-Only:
 
 - `access_level_name` (String) The human-readable name of the access level.
 - `access_level_remote_id` (String) The machine-readable identifier of the access level.
+
+
+<a id="nestedatt--propagation_status"></a>
+### Nested Schema for `propagation_status`
+
+Read-Only:
+
+- `status` (String) The status of whether the user has been synced to the group or resource in the remote system. must be one of ["SUCCESS", "ERR_REMOTE_INTERNAL_ERROR", "ERR_REMOTE_USER_NOT_FOUND", "ERR_REMOTE_USER_NOT_LINKED", "ERR_REMOTE_RESOURCE_NOT_FOUND", "ERR_REMOTE_THROTTLE", "ERR_NOT_AUTHORIZED_TO_QUERY_RESOURCE", "ERR_REMOTE_PROVISIONING_VIA_IDP_FAILED", "ERR_IDP_EMAIL_UPDATE_CONFLICT", "ERR_TIMEOUT", "ERR_UNKNOWN", "ERR_OPAL_INTERNAL_ERROR", "ERR_ORG_READ_ONLY", "ERR_OPERATION_UNSUPPORTED", "PENDING", "PENDING_MANUAL_PROPAGATION", "PENDING_TICKET_CREATION", "ERR_TICKET_CREATION_SKIPPED", "ERR_DRY_RUN_MODE_ENABLED", "ERR_HR_IDP_PROVIDER_NOT_LINKED", "ERR_REMOTE_UNRECOVERABLE_ERROR"]

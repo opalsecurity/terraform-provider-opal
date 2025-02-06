@@ -17,7 +17,7 @@ terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "0.29.0"
+      version = "0.30.0"
     }
   }
 }
@@ -33,4 +33,5 @@ provider "opal" {
 ### Optional
 
 - `bearer_auth` (String, Sensitive)
+- `http_headers` (Map of String) HTTP headers to include in all requests
 - `server_url` (String) Server URL (defaults to https://api.opal.dev/v1)

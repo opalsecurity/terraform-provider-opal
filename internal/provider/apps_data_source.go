@@ -75,6 +75,42 @@ func (r *AppsDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 							Computed:    true,
 							Description: `The type of an app.`,
 						},
+						"validations": schema.ListNestedAttribute{
+							Computed: true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"details": schema.StringAttribute{
+										Computed:    true,
+										Description: `Extra details regarding the validation. Could be an error message or restrictions on permissions.`,
+									},
+									"key": schema.StringAttribute{
+										Computed:    true,
+										Description: `The key of the app validation. These are not unique IDs between runs.`,
+									},
+									"name": schema.StringAttribute{
+										Computed:    true,
+										Description: `The human-readable description of whether the validation has the permissions. Parsed as JSON.`,
+									},
+									"severity": schema.StringAttribute{
+										Computed:    true,
+										Description: `The severity of an app validation.`,
+									},
+									"status": schema.StringAttribute{
+										Computed:    true,
+										Description: `The status of an app validation.`,
+									},
+									"updated_at": schema.StringAttribute{
+										Computed:    true,
+										Description: `The date and time the app validation was last run.`,
+									},
+									"usage_reason": schema.StringAttribute{
+										Computed:    true,
+										Description: `The reason for needing the validation.`,
+									},
+								},
+							},
+							Description: `Validation checks of an apps' configuration and permissions.`,
+						},
 					},
 				},
 			},
