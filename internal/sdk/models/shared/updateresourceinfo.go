@@ -2,6 +2,10 @@
 
 package shared
 
+import (
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
+)
+
 // # UpdateResourceInfo Object
 // ### Description
 // The `UpdateResourceInfo` object is used as an input to the UpdateResource API.
@@ -19,12 +23,23 @@ type UpdateResourceInfo struct {
 	// A list of configurations for requests to this resource. If not provided, the default request configuration will be used.
 	RequestConfigurations []RequestConfiguration `json:"request_configurations"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
-	RequireMfaToApprove *bool `json:"require_mfa_to_approve,omitempty"`
+	RequireMfaToApprove *bool `default:"false" json:"require_mfa_to_approve"`
 	// A bool representing whether or not to require MFA to connect to this resource.
 	RequireMfaToConnect     *bool                `json:"require_mfa_to_connect,omitempty"`
 	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
 	// Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.
 	TicketPropagation *TicketPropagationConfiguration `json:"ticket_propagation,omitempty"`
+}
+
+func (u UpdateResourceInfo) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(u, "", false)
+}
+
+func (u *UpdateResourceInfo) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &u, "", false, false); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *UpdateResourceInfo) GetAdminOwnerID() *string {

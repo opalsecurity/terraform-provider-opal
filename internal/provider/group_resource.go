@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setdefault"
@@ -524,27 +525,18 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					Validators: []validator.Object{
 						speakeasy_objectvalidators.NotNull(),
 					},
-					PlanModifiers: []planmodifier.Object{
-						speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
-					},
 					Attributes: map[string]schema.Attribute{
 						"allow_requests": schema.BoolAttribute{
-							Computed: true,
-							Optional: true,
-							PlanModifiers: []planmodifier.Bool{
-								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
-							},
+							Computed:    true,
+							Optional:    true,
 							Description: `A bool representing whether or not to allow requests for this resource. Not Null`,
 							Validators: []validator.Bool{
 								speakeasy_boolvalidators.NotNull(),
 							},
 						},
 						"auto_approval": schema.BoolAttribute{
-							Computed: true,
-							Optional: true,
-							PlanModifiers: []planmodifier.Bool{
-								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
-							},
+							Computed:    true,
+							Optional:    true,
 							Description: `A bool representing whether or not to automatically approve requests for this resource. Not Null`,
 							Validators: []validator.Bool{
 								speakeasy_boolvalidators.NotNull(),
@@ -553,25 +545,18 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						"condition": schema.SingleNestedAttribute{
 							Computed: true,
 							Optional: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
-							},
 							Attributes: map[string]schema.Attribute{
 								"group_ids": schema.SetAttribute{
-									Computed: true,
-									Optional: true,
-									PlanModifiers: []planmodifier.Set{
-										speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
-									},
+									Computed:    true,
+									Optional:    true,
+									Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 									ElementType: types.StringType,
 									Description: `The list of group IDs to match.`,
 								},
 								"role_remote_ids": schema.SetAttribute{
-									Computed: true,
-									Optional: true,
-									PlanModifiers: []planmodifier.Set{
-										speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
-									},
+									Computed:    true,
+									Optional:    true,
+									Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 									ElementType: types.StringType,
 									Description: `The list of role remote IDs to match.`,
 								},
@@ -586,11 +571,8 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							Description: `The maximum duration for which the resource can be requested (in minutes).`,
 						},
 						"priority": schema.Int64Attribute{
-							Computed: true,
-							Optional: true,
-							PlanModifiers: []planmodifier.Int64{
-								speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
-							},
+							Computed:    true,
+							Optional:    true,
 							Description: `The priority of the request configuration. Not Null`,
 							Validators: []validator.Int64{
 								speakeasy_int64validators.NotNull(),
@@ -613,22 +595,16 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							Description: `The ID of the associated request template.`,
 						},
 						"require_mfa_to_request": schema.BoolAttribute{
-							Computed: true,
-							Optional: true,
-							PlanModifiers: []planmodifier.Bool{
-								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
-							},
+							Computed:    true,
+							Optional:    true,
 							Description: `A bool representing whether or not to require MFA for requesting access to this resource. Not Null`,
 							Validators: []validator.Bool{
 								speakeasy_boolvalidators.NotNull(),
 							},
 						},
 						"require_support_ticket": schema.BoolAttribute{
-							Computed: true,
-							Optional: true,
-							PlanModifiers: []planmodifier.Bool{
-								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
-							},
+							Computed:    true,
+							Optional:    true,
 							Description: `A bool representing whether or not access requests to the resource require an access ticket. Not Null`,
 							Validators: []validator.Bool{
 								speakeasy_boolvalidators.NotNull(),
@@ -709,7 +685,8 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 			"require_mfa_to_approve": schema.BoolAttribute{
 				Computed:    true,
 				Optional:    true,
-				Description: `A bool representing whether or not to require MFA for reviewers to approve requests for this group.`,
+				Default:     booldefault.StaticBool(false),
+				Description: `A bool representing whether or not to require MFA for reviewers to approve requests for this group. Default: false`,
 			},
 			"risk_sensitivity": schema.StringAttribute{
 				Computed: true,

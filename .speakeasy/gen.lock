@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 510d98ceb65494071b84598083f0fc60
+  docChecksum: 8c5ff931262f50559a06ad555a45f347
   docVersion: "1.0"
-  speakeasyVersion: 1.486.0
-  generationVersion: 2.505.0
-  releaseVersion: 0.30.0
-  configChecksum: 195600955244335c18fb48ce4010d79a
+  speakeasyVersion: 1.487.0
+  generationVersion: 2.506.0
+  releaseVersion: 0.30.10
+  configChecksum: 0e8ccc12e4b4ed9fcc7c18d2ab7dc4be
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -640,7 +640,7 @@ examples:
         application/json: {"app_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "description": "Engineering team Okta group.", "group_type": "OPAL_GROUP", "name": "mongo-db-prod"}
       responses:
         "200":
-          application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "app_id": "b5a5ca27-0ea3-4d86-9199-2126d57d1fbd", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "group_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "remote_name": "Finance team"}
+          application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "app_id": "b5a5ca27-0ea3-4d86-9199-2126d57d1fbd", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "group_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "remote_name": "Finance team", "require_mfa_to_approve": false}
   createGroupResources:
     "":
       parameters:
@@ -683,7 +683,7 @@ examples:
           group_id: "32acc112-21ff-4669-91c2-21e27683eaa1"
       responses:
         "200":
-          application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "app_id": "b5a5ca27-0ea3-4d86-9199-2126d57d1fbd", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "group_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "remote_name": "Finance Team"}
+          application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "app_id": "b5a5ca27-0ea3-4d86-9199-2126d57d1fbd", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "group_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "remote_name": "Finance Team", "require_mfa_to_approve": false}
   getGroupMessageChannels:
     "":
       parameters:
@@ -750,14 +750,14 @@ examples:
           group_name: "example-name"
       responses:
         "200":
-          application/json: {"results": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "app_id": "b5a5ca27-0ea3-4d86-9199-2126d57d1fbd", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "group_id": "f454d283-ca87-4a8a-bdbb-df212eca5353"}, {"admin_owner_id": "4220bc12-ab8a-4b5d-be7b-f6bbcf9159f3", "description": "Manages the Integrations Team on-call privileged resources. This group is automatically synced with the on-call rotation defined in PagerDuty.", "group_id": "99d0b81d-14be-4cf6-bd27-348b4af1d11b"}]}
+          application/json: {"results": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "app_id": "b5a5ca27-0ea3-4d86-9199-2126d57d1fbd", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "group_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "require_mfa_to_approve": false}, {"admin_owner_id": "4220bc12-ab8a-4b5d-be7b-f6bbcf9159f3", "description": "Manages the Integrations Team on-call privileged resources. This group is automatically synced with the on-call rotation defined in PagerDuty.", "group_id": "99d0b81d-14be-4cf6-bd27-348b4af1d11b", "require_mfa_to_approve": false}]}
   updateGroups:
     speakeasy-default-update-groups:
       requestBody:
-        application/json: {"groups": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "group_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "api-group", "request_configurations": [{"allow_requests": true, "auto_approval": false, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_manager_approval": false}]}]}]}
+        application/json: {"groups": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "group_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "api-group", "request_configurations": [{"allow_requests": true, "auto_approval": false, "condition": {"group_ids": [], "role_remote_ids": []}, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_manager_approval": false}]}], "require_mfa_to_approve": false}]}
       responses:
         "200":
-          application/json: {"groups": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "group_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "api-group", "request_configurations": [{"allow_requests": true, "auto_approval": false, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_manager_approval": false}]}]}]}
+          application/json: {"groups": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "group_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "api-group", "request_configurations": [{"allow_requests": true, "auto_approval": false, "condition": {"group_ids": [], "role_remote_ids": []}, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_manager_approval": false}]}], "require_mfa_to_approve": false}]}
   updateGroupMessageChannels:
     "":
       parameters:
@@ -845,7 +845,7 @@ examples:
           page_size: 200
       responses:
         "200":
-          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This resource represents AWS IAM role \"SupportUser\".", "resource_id": "f454d283-ca67-4a8a-bdbb-df212eca5353", "parent_resource_id": "f454d283-ca67-4a8a-bdbb-df212eca5345"}, {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This resource represents GCP project \"app-demo\".", "resource_id": "99d0b81d-14be-4cf6-bd27-348b4af1d11b"}]}
+          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This resource represents AWS IAM role \"SupportUser\".", "resource_id": "f454d283-ca67-4a8a-bdbb-df212eca5353", "parent_resource_id": "f454d283-ca67-4a8a-bdbb-df212eca5345", "require_mfa_to_approve": false}, {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This resource represents GCP project \"app-demo\".", "resource_id": "99d0b81d-14be-4cf6-bd27-348b4af1d11b", "require_mfa_to_approve": false}]}
   createOnCallSchedule:
     speakeasy-default-create-on-call-schedule:
       requestBody:
@@ -954,7 +954,7 @@ examples:
         application/json: {"app_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "description": "Engineering team Okta role.", "name": "mongo-db-prod", "resource_type": "AWS_IAM_ROLE"}
       responses:
         "200":
-          application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "app_id": "b5a5ca27-0ea3-4d86-9199-2126d57d1fbd", "description": "This resource represents AWS IAM role \"SupportUser\".", "resource_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "parent_resource_id": "06851574-e50d-40ca-8c78-f72ae6ab4305"}
+          application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "app_id": "b5a5ca27-0ea3-4d86-9199-2126d57d1fbd", "description": "This resource represents AWS IAM role \"SupportUser\".", "resource_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "parent_resource_id": "06851574-e50d-40ca-8c78-f72ae6ab4305", "require_mfa_to_approve": false}
   deleteResource:
     "":
       parameters:
@@ -980,7 +980,7 @@ examples:
           parent_resource_id: "[\"4baf8423-db0a-4037-a4cf-f79c60cb67a5\"]"
       responses:
         "200":
-          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This resource represents AWS IAM role \"SupportUser\".", "resource_id": "f454d283-ca67-4a8a-bdbb-df212eca5353", "parent_resource_id": "f454d283-ca67-4a8a-bdbb-df212eca5345"}, {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This resource represents GCP project \"app-demo\".", "resource_id": "99d0b81d-14be-4cf6-bd27-348b4af1d11b"}]}
+          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This resource represents AWS IAM role \"SupportUser\".", "resource_id": "f454d283-ca67-4a8a-bdbb-df212eca5353", "parent_resource_id": "f454d283-ca67-4a8a-bdbb-df212eca5345", "require_mfa_to_approve": false}, {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This resource represents GCP project \"app-demo\".", "resource_id": "99d0b81d-14be-4cf6-bd27-348b4af1d11b", "require_mfa_to_approve": false}]}
   getResourceUserAccessStatus:
     "":
       parameters:
@@ -1001,7 +1001,7 @@ examples:
           resource_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
       responses:
         "200":
-          application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "app_id": "b5a5ca27-0ea3-4d86-9199-2126d57d1fbd", "description": "This resource represents AWS IAM role \"SupportUser\".", "resource_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "parent_resource_id": "f454d283-ca67-4a8a-bdbb-df212eca5345"}
+          application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "app_id": "b5a5ca27-0ea3-4d86-9199-2126d57d1fbd", "description": "This resource represents AWS IAM role \"SupportUser\".", "resource_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "parent_resource_id": "f454d283-ca67-4a8a-bdbb-df212eca5345", "require_mfa_to_approve": false}
   getResourceMessageChannels:
     "":
       parameters:
@@ -1057,10 +1057,10 @@ examples:
   updateResources:
     speakeasy-default-update-resources:
       requestBody:
-        application/json: {"resources": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This resource represents AWS IAM role \"SupportUser\".", "resource_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "my-mongo-db", "request_configurations": [{"allow_requests": true, "auto_approval": false, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_manager_approval": false}]}]}]}
+        application/json: {"resources": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This resource represents AWS IAM role \"SupportUser\".", "resource_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "my-mongo-db", "request_configurations": [{"allow_requests": true, "auto_approval": false, "condition": {"group_ids": [], "role_remote_ids": []}, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_manager_approval": false}]}], "require_mfa_to_approve": false}]}
       responses:
         "200":
-          application/json: {"resources": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This resource represents AWS IAM role \"SupportUser\".", "resource_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "my-mongo-db", "request_configurations": [{"allow_requests": true, "auto_approval": false, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_manager_approval": false}]}]}]}
+          application/json: {"resources": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This resource represents AWS IAM role \"SupportUser\".", "resource_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "my-mongo-db", "request_configurations": [{"allow_requests": true, "auto_approval": false, "condition": {"group_ids": [], "role_remote_ids": []}, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_manager_approval": false}]}], "require_mfa_to_approve": false}]}
   updateResourceMessageChannels:
     "":
       parameters:

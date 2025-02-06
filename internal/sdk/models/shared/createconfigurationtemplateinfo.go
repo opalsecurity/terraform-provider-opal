@@ -28,7 +28,7 @@ type CreateConfigurationTemplateInfo struct {
 	// The request configuration list of the configuration template. If not provided, the default request configuration will be used.
 	RequestConfigurations []RequestConfiguration `json:"request_configurations,omitempty"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template.
-	RequireMfaToApprove bool `json:"require_mfa_to_approve"`
+	RequireMfaToApprove *bool `default:"false" json:"require_mfa_to_approve"`
 	// A bool representing whether or not to require MFA to connect to resources associated with this configuration template.
 	RequireMfaToConnect bool `json:"require_mfa_to_connect"`
 	// Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.
@@ -97,9 +97,9 @@ func (o *CreateConfigurationTemplateInfo) GetRequestConfigurations() []RequestCo
 	return o.RequestConfigurations
 }
 
-func (o *CreateConfigurationTemplateInfo) GetRequireMfaToApprove() bool {
+func (o *CreateConfigurationTemplateInfo) GetRequireMfaToApprove() *bool {
 	if o == nil {
-		return false
+		return nil
 	}
 	return o.RequireMfaToApprove
 }

@@ -5,6 +5,7 @@ package shared
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
 )
 
 // ResourceRiskSensitivity - The risk sensitivity level for the resource. When an override is set, this field will match that.
@@ -111,7 +112,7 @@ type Resource struct {
 	// A list of configurations for requests to this resource.
 	RequestConfigurations []RequestConfiguration `json:"request_configurations,omitempty"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
-	RequireMfaToApprove *bool `json:"require_mfa_to_approve,omitempty"`
+	RequireMfaToApprove *bool `default:"false" json:"require_mfa_to_approve"`
 	// A bool representing whether or not to require MFA to connect to this resource.
 	RequireMfaToConnect *bool `json:"require_mfa_to_connect,omitempty"`
 	// The type of the resource.
@@ -121,6 +122,17 @@ type Resource struct {
 	RiskSensitivityOverride *ResourceRiskSensitivityOverride `json:"risk_sensitivity_override,omitempty"`
 	// Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.
 	TicketPropagation *TicketPropagationConfiguration `json:"ticket_propagation,omitempty"`
+}
+
+func (r Resource) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(r, "", false)
+}
+
+func (r *Resource) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &r, "", false, false); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *Resource) GetAdminOwnerID() *string {
