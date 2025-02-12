@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.0.12
+- Add default values for condition and require_mfa_to_approve fields
+- Remove diff suppression on condition field.
+
 ## v3.0.11
 - Allow sending custom HTTP headers on requests to the Opal backend
 

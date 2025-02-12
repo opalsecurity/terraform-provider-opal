@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
@@ -123,12 +124,16 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 							Optional: true,
 							Attributes: map[string]schema.Attribute{
 								"group_ids": schema.SetAttribute{
+									Computed:    true,
 									Optional:    true,
+									Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 									ElementType: types.StringType,
 									Description: `The list of group IDs to match.`,
 								},
 								"role_remote_ids": schema.SetAttribute{
+									Computed:    true,
 									Optional:    true,
+									Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 									ElementType: types.StringType,
 									Description: `The list of role remote IDs to match.`,
 								},
@@ -195,8 +200,10 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 				Description: `The request configuration list of the configuration template. If not provided, the default request configuration will be used.`,
 			},
 			"require_mfa_to_approve": schema.BoolAttribute{
-				Required:    true,
-				Description: `A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template.`,
+				Computed:    true,
+				Optional:    true,
+				Default:     booldefault.StaticBool(false),
+				Description: `A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template. Default: false`,
 			},
 			"require_mfa_to_connect": schema.BoolAttribute{
 				Required:    true,

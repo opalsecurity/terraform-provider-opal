@@ -2,6 +2,10 @@
 
 package shared
 
+import (
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
+)
+
 // # UpdateGroupInfo Object
 // ### Description
 // The `UpdateGroupInfo` object is used as an input to the UpdateGroup API.
@@ -21,8 +25,19 @@ type UpdateGroupInfo struct {
 	// The request configuration list of the configuration template. If not provided, the default request configuration will be used.
 	RequestConfigurations []RequestConfiguration `json:"request_configurations"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this group.
-	RequireMfaToApprove     *bool                `json:"require_mfa_to_approve,omitempty"`
+	RequireMfaToApprove     *bool                `default:"false" json:"require_mfa_to_approve"`
 	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
+}
+
+func (u UpdateGroupInfo) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(u, "", false)
+}
+
+func (u *UpdateGroupInfo) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &u, "", false, false); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *UpdateGroupInfo) GetAdminOwnerID() *string {

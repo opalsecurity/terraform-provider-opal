@@ -1,6 +1,6 @@
 overlay: 1.0.0
 info:
-  title: Overlay ./openapi_original.yaml => ./openapi.yaml
+  title: Overlay .speakeasy/temp/remote_openapi.yaml => ./openapi.yaml
   version: 0.0.0
 actions:
   - target: $["servers"][0]
@@ -1045,6 +1045,9 @@ actions:
   - target: $["components"]["schemas"]["Group"]["properties"]["require_support_ticket"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["require_mfa_to_approve"]
+    update:
+      default: false
   - target: $["components"]["schemas"]["Group"]["properties"]["require_mfa_to_request"]
     update:
       x-speakeasy-ignore: true
@@ -1132,6 +1135,9 @@ actions:
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["folder_id"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["require_mfa_to_approve"]
+    update:
+      default: false
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["require_mfa_to_request"]
     update:
       x-speakeasy-ignore: true
@@ -1218,6 +1224,9 @@ actions:
   - target: $["components"]["schemas"]["OnCallScheduleIDList"]["properties"]["on_call_schedule_ids"]
     update:
       format: set
+  - target: $["components"]["schemas"]["OnCallScheduleIDList"]["properties"]["on_call_schedule_ids"]
+    update:
+      default: []
   - target: $["components"]["schemas"]["OnCallScheduleIDList"]
     update:
       x-speakeasy-entity: GroupOnCallSchedule
@@ -1552,6 +1561,9 @@ actions:
   - target: $["components"]["schemas"]["Resource"]["properties"]["require_support_ticket"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["require_mfa_to_approve"]
+    update:
+      default: false
   - target: $["components"]["schemas"]["Resource"]["properties"]["require_mfa_to_request"]
     update:
       x-speakeasy-ignore: true
@@ -1639,6 +1651,9 @@ actions:
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["folder_id"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["require_mfa_to_approve"]
+    update:
+      default: false
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["require_mfa_to_request"]
     update:
       x-speakeasy-ignore: true
@@ -1721,18 +1736,18 @@ actions:
       format: set
   - target: $["components"]["schemas"]["Condition"]["properties"]["group_ids"]
     update:
-      x-speakeasy-param-suppress-computed-diff: true
+      default: []
   - target: $["components"]["schemas"]["Condition"]["properties"]["role_remote_ids"]
     update:
       format: set
   - target: $["components"]["schemas"]["Condition"]["properties"]["role_remote_ids"]
     update:
-      x-speakeasy-param-suppress-computed-diff: true
+      default: []
   - target: $["components"]["schemas"]["Condition"]["description"]
     remove: true
   - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["condition"]
     update:
-      x-speakeasy-param-suppress-computed-diff: true
+      default: null
   - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["max_duration_minutes"]
     update:
       x-speakeasy-name-override: max_duration
@@ -1763,9 +1778,6 @@ actions:
       - priority
   - target: $["components"]["schemas"]["RequestConfiguration"]
     update:
-      x-speakeasy-param-suppress-computed-diff: true
-  - target: $["components"]["schemas"]["RequestConfiguration"]
-    update:
       x-speakeasy-entity: Requests
   - target: $["components"]["schemas"]["CreateRequestConfigurationInfoList"]
     update:
@@ -1779,12 +1791,12 @@ actions:
   - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["member_oncall_schedule_ids"]
     update:
       default: []
-  - target: $["components"]["schemas"]["OnCallScheduleIDList"]["properties"]["on_call_schedule_ids"]
-    update:
-      default: []
   - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["break_glass_user_ids"]
     update:
       format: set
+  - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["require_mfa_to_approve"]
+    update:
+      default: false
   - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true

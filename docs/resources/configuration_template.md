@@ -80,7 +80,6 @@ resource "opal_configuration_template" "my_configurationtemplate" {
 
 - `admin_owner_id` (String) The ID of the owner of the configuration template.
 - `name` (String) The name of the configuration template.
-- `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template.
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to resources associated with this configuration template.
 - `visibility` (Attributes) Visibility infomation of an entity. (see [below for nested schema](#nestedatt--visibility))
 
@@ -91,6 +90,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
 - `linked_audit_message_channel_ids` (Set of String) The IDs of the audit message channels linked to the configuration template.
 - `member_oncall_schedule_ids` (Set of String) The IDs of the on-call schedules linked to the configuration template.
 - `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
+- `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template. Default: false
 - `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--ticket_propagation))
 
 ### Read-Only

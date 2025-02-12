@@ -4378,6 +4378,7 @@ components:
           description: A bool representing whether or not to require MFA for reviewers to approve requests for this group.
           example: False
           type: boolean
+          default: false
         require_mfa_to_request:
           description: A bool representing whether or not to require MFA for requesting access to this group.
           example: False
@@ -4683,6 +4684,7 @@ components:
           description: A bool representing whether or not to require MFA for reviewers to approve requests for this group.
           example: False
           type: boolean
+          default: false
         require_mfa_to_request:
           description: A bool representing whether or not to require MFA for requesting access to this group. Deprecated in favor of `request_configurations`.
           example: False
@@ -6602,6 +6604,7 @@ components:
           description: A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
           example: False
           type: boolean
+          default: false
         require_mfa_to_request:
           description: A bool representing whether or not to require MFA for requesting access to this resource.
           example: False
@@ -6798,6 +6801,7 @@ components:
           description: A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
           example: False
           type: boolean
+          default: false
         require_mfa_to_request:
           description: A bool representing whether or not to require MFA for requesting access to this resource. Deprecated in favor of `request_configurations`.
           example: False
@@ -7447,7 +7451,7 @@ components:
             format: uuid
           type: array
           format: set
-          x-speakeasy-param-suppress-computed-diff: true
+          default: []
         role_remote_ids:
           description: The list of role remote IDs to match.
           example:
@@ -7456,7 +7460,7 @@ components:
           items:
             type: string
           format: set
-          x-speakeasy-param-suppress-computed-diff: true
+          default: []
     RequestConfiguration:
       description: |-
         # Request Configuration Object
@@ -7490,7 +7494,7 @@ components:
         condition:
           description: The condition for the request configuration.
           $ref: "#/components/schemas/Condition"
-          x-speakeasy-param-suppress-computed-diff: true
+          default: null
         allow_requests:
           description: A bool representing whether or not to allow requests for this resource.
           example: True
@@ -7542,7 +7546,6 @@ components:
         - require_mfa_to_request
         - require_support_ticket
         - priority
-      x-speakeasy-param-suppress-computed-diff: true
       x-speakeasy-entity: Requests
     CreateRequestConfigurationInfoList:
       description: |-
@@ -7684,6 +7687,7 @@ components:
           description: A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template.
           example: False
           type: boolean
+          default: false
         require_mfa_to_connect:
           description: A bool representing whether or not to require MFA to connect to resources associated with this configuration template.
           example: False

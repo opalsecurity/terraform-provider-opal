@@ -124,9 +124,12 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 			ReviewerStages:       reviewerStages,
 		})
 	}
-	var requireMfaToApprove bool
-	requireMfaToApprove = r.RequireMfaToApprove.ValueBool()
-
+	requireMfaToApprove := new(bool)
+	if !r.RequireMfaToApprove.IsUnknown() && !r.RequireMfaToApprove.IsNull() {
+		*requireMfaToApprove = r.RequireMfaToApprove.ValueBool()
+	} else {
+		requireMfaToApprove = nil
+	}
 	var requireMfaToConnect bool
 	requireMfaToConnect = r.RequireMfaToConnect.ValueBool()
 

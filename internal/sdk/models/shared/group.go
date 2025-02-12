@@ -5,6 +5,7 @@ package shared
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
 )
 
 // RiskSensitivity - The risk sensitivity level for the group. When an override is set, this field will match that.
@@ -117,10 +118,21 @@ type Group struct {
 	// A list of request configurations for this group.
 	RequestConfigurations []RequestConfiguration `json:"request_configurations,omitempty"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this group.
-	RequireMfaToApprove *bool `json:"require_mfa_to_approve,omitempty"`
+	RequireMfaToApprove *bool `default:"false" json:"require_mfa_to_approve"`
 	// The risk sensitivity level for the group. When an override is set, this field will match that.
 	RiskSensitivity         *RiskSensitivity         `json:"risk_sensitivity,omitempty"`
 	RiskSensitivityOverride *RiskSensitivityOverride `json:"risk_sensitivity_override,omitempty"`
+}
+
+func (g Group) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(g, "", false)
+}
+
+func (g *Group) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &g, "", false, false); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *Group) GetAdminOwnerID() *string {
