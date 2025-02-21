@@ -398,6 +398,8 @@ actions:
     update:
       "404":
         description: Not Found
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["put"]["requestBody"]["content"]["application/json"]["schema"]["properties"]["mappings"]["items"]["properties"]["hidden_from_end_user"]
+    remove: true
   - target: $["paths"]["/owners"]["get"]["operationId"]
     update: getOwners
   - target: $["paths"]["/owners"]["get"]["responses"]
@@ -1177,6 +1179,72 @@ actions:
   - target: $["components"]["schemas"]["UpdateGroupResourcesInfo"]
     update:
       x-speakeasy-entity: GroupResourceList
+  - target: $["components"]["schemas"]["IdpGroupMapping"]["example"]
+    update:
+      id: 7870617d-e72a-47f5-a84c-693817ab4567
+  - target: $["components"]["schemas"]["IdpGroupMapping"]["example"]
+    update:
+      organization_id: 1520617d-e72a-47f5-a84c-693817ab48ad2
+  - target: $["components"]["schemas"]["IdpGroupMapping"]["example"]
+    update:
+      app_resource_id: 6f99639b-7928-4043-8184-47cbc6766145
+  - target: $["components"]["schemas"]["IdpGroupMapping"]["properties"]
+    update:
+      id:
+        description: The ID of the idp group mapping.
+        example: 7870617d-e72a-47f5-a84c-693817ab4567
+        format: uuid
+        type: string
+  - target: $["components"]["schemas"]["IdpGroupMapping"]["properties"]
+    update:
+      organization_id:
+        description: The ID of the organization.
+        example: 1520617d-e72a-47f5-a84c-693817ab48ad2
+        format: uuid
+        type: string
+  - target: $["components"]["schemas"]["IdpGroupMapping"]["properties"]
+    update:
+      app_resource_id:
+        description: The ID of the idp app resource.
+        example: 6f99639b-7928-4043-8184-47cbc6766145
+        format: uuid
+        type: string
+  - target: $["components"]["schemas"]["IdpGroupMapping"]["required"][*]
+    remove: true
+  - target: $["components"]["schemas"]["IdpGroupMapping"]["required"]
+    update:
+      - id
+      - organization_id
+      - app_resource_id
+      - group_id
+      - hidden_from_end_user
+  - target: $["components"]["schemas"]["IdpGroupMappingList"]["example"]
+    update:
+      idp_group_mappings:
+        - id: 7870617d-e72a-47f5-a84c-693817ab4567
+          organization_id: 1520617d-e72a-47f5-a84c-693817ab48ad2
+          app_resource_id: 6f99639b-7928-4043-8184-47cbc6766145
+          group_id: 6f99639b-7928-4043-8184-47cbc6766145
+          alias: "finance-team"
+          hidden_from_end_user: False
+        - id: 1520617d-e72a-47f5-a84c-693817ab48ad2
+          organization_id: 6f99639b-7928-4043-8184-47cbc6766145
+          app_resource_id: 7870617d-e72a-47f5-a84c-693817ab4567
+          group_id: 7870617d-e72a-47f5-a84c-693817ab4567
+          alias: "engineering-team"
+          hidden_from_end_user: False
+  - target: $["components"]["schemas"]["IdpGroupMappingList"]["example"]["mappings"]
+    remove: true
+  - target: $["components"]["schemas"]["IdpGroupMappingList"]["properties"]
+    update:
+      idp_group_mappings:
+        items:
+          $ref: "#/components/schemas/IdpGroupMapping"
+        type: array
+  - target: $["components"]["schemas"]["IdpGroupMappingList"]["properties"]["mappings"]
+    remove: true
+  - target: $["components"]["schemas"]["IdpGroupMappingList"]["required"][0]
+    update: idp_group_mappings
   - target: $["components"]["schemas"]["GroupResourceList"]["properties"]["group_resources"]
     update:
       x-speakeasy-param-suppress-computed-diff: true

@@ -29,13 +29,6 @@ func newUars(sdkConfig sdkConfiguration) *Uars {
 
 // Create - Starts a User Access Review.
 func (s *Uars) Create(ctx context.Context, request shared.CreateUARInfo, opts ...operations.Option) (*operations.CreateUARResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "createUAR",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -59,6 +52,13 @@ func (s *Uars) Create(ctx context.Context, request shared.CreateUARInfo, opts ..
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createUAR",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -230,13 +230,6 @@ func (s *Uars) Create(ctx context.Context, request shared.CreateUARInfo, opts ..
 
 // Get - Returns a list of `UAR` objects.
 func (s *Uars) Get(ctx context.Context, request operations.GetUARsRequest, opts ...operations.Option) (*operations.GetUARsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getUARs",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -258,6 +251,14 @@ func (s *Uars) Get(ctx context.Context, request operations.GetUARsRequest, opts 
 	opURL, err := url.JoinPath(baseURL, "/uars")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getUARs",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -428,13 +429,6 @@ func (s *Uars) Get(ctx context.Context, request operations.GetUARsRequest, opts 
 
 // GetID - Retrieves a specific UAR.
 func (s *Uars) GetID(ctx context.Context, request operations.GetUARIDRequest, opts ...operations.Option) (*operations.GetUARIDResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getUARID",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -456,6 +450,14 @@ func (s *Uars) GetID(ctx context.Context, request operations.GetUARIDRequest, op
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/uar/{uar_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getUARID",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout

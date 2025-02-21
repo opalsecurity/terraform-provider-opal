@@ -28,13 +28,6 @@ func newNonHumanIdentities(sdkConfig sdkConfiguration) *NonHumanIdentities {
 
 // GetNhis - Returns a list of non-human identities for your organization.
 func (s *NonHumanIdentities) GetNhis(ctx context.Context, request operations.GetNhisRequest, opts ...operations.Option) (*operations.GetNhisResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "get_nhis",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -56,6 +49,14 @@ func (s *NonHumanIdentities) GetNhis(ctx context.Context, request operations.Get
 	opURL, err := url.JoinPath(baseURL, "/non-human-identities")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "get_nhis",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout

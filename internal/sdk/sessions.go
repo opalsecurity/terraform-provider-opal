@@ -29,13 +29,6 @@ func newSessions(sdkConfig sdkConfiguration) *Sessions {
 
 // Get - Returns a list of `Session` objects.
 func (s *Sessions) Get(ctx context.Context, request operations.GetSessionsRequest, opts ...operations.Option) (*operations.GetSessionsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getSessions",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -57,6 +50,14 @@ func (s *Sessions) Get(ctx context.Context, request operations.GetSessionsReques
 	opURL, err := url.JoinPath(baseURL, "/sessions")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getSessions",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout

@@ -28,13 +28,6 @@ func newGroupBindings(sdkConfig sdkConfiguration) *GroupBindings {
 
 // CreateGroupBinding - Creates a group binding.
 func (s *GroupBindings) CreateGroupBinding(ctx context.Context, request shared.CreateGroupBindingInfo, opts ...operations.Option) (*operations.CreateGroupBindingResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "createGroupBinding",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -58,6 +51,13 @@ func (s *GroupBindings) CreateGroupBinding(ctx context.Context, request shared.C
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createGroupBinding",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -229,13 +229,6 @@ func (s *GroupBindings) CreateGroupBinding(ctx context.Context, request shared.C
 
 // DeleteGroupBinding - Deletes a group binding.
 func (s *GroupBindings) DeleteGroupBinding(ctx context.Context, request operations.DeleteGroupBindingRequest, opts ...operations.Option) (*operations.DeleteGroupBindingResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "deleteGroupBinding",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -257,6 +250,14 @@ func (s *GroupBindings) DeleteGroupBinding(ctx context.Context, request operatio
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/group-bindings/{group_binding_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "deleteGroupBinding",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -402,13 +403,6 @@ func (s *GroupBindings) DeleteGroupBinding(ctx context.Context, request operatio
 
 // GetGroupBinding - Returns a `GroupBinding` object.
 func (s *GroupBindings) GetGroupBinding(ctx context.Context, request operations.GetGroupBindingRequest, opts ...operations.Option) (*operations.GetGroupBindingResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getGroupBinding",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -430,6 +424,14 @@ func (s *GroupBindings) GetGroupBinding(ctx context.Context, request operations.
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/group-bindings/{group_binding_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getGroupBinding",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -596,13 +598,6 @@ func (s *GroupBindings) GetGroupBinding(ctx context.Context, request operations.
 
 // GetGroupBindings - Returns a list of `GroupBinding` objects.
 func (s *GroupBindings) GetGroupBindings(ctx context.Context, request operations.GetGroupBindingsRequest, opts ...operations.Option) (*operations.GetGroupBindingsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getGroupBindings",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -624,6 +619,14 @@ func (s *GroupBindings) GetGroupBindings(ctx context.Context, request operations
 	opURL, err := url.JoinPath(baseURL, "/group-bindings")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getGroupBindings",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -794,13 +797,6 @@ func (s *GroupBindings) GetGroupBindings(ctx context.Context, request operations
 
 // UpdateGroupBindings - Bulk updates a list of group bindings.
 func (s *GroupBindings) UpdateGroupBindings(ctx context.Context, request shared.UpdateGroupBindingInfoList, opts ...operations.Option) (*operations.UpdateGroupBindingsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "updateGroupBindings",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -824,6 +820,13 @@ func (s *GroupBindings) UpdateGroupBindings(ctx context.Context, request shared.
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "updateGroupBindings",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err

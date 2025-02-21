@@ -27,7 +27,7 @@ func (r *ResourcesUsersListDataSourceModel) RefreshFromSharedResourceAccessUserL
 			}
 			results1.FullName = types.StringValue(resultsItem.FullName)
 			results1.HasDirectAccess = types.BoolValue(resultsItem.HasDirectAccess)
-			results1.NumAccessPaths = types.Int64Value(int64(resultsItem.NumAccessPaths))
+			results1.NumAccessPaths = types.Int32Value(int32(resultsItem.NumAccessPaths))
 			if resultsItem.PropagationStatus == nil {
 				results1.PropagationStatus = nil
 			} else {

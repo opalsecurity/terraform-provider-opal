@@ -29,7 +29,7 @@ type ResourcesUsersListDataSource struct {
 
 // ResourcesUsersListDataSourceModel describes the data model.
 type ResourcesUsersListDataSourceModel struct {
-	Limit      types.Int64                  `tfsdk:"limit"`
+	Limit      types.Int64                  `queryParam:"style=form,explode=true,name=limit" tfsdk:"limit"`
 	ResourceID types.String                 `tfsdk:"resource_id"`
 	Results    []tfTypes.ResourceAccessUser `tfsdk:"results"`
 }
@@ -93,7 +93,7 @@ func (r *ResourcesUsersListDataSource) Schema(ctx context.Context, req datasourc
 							Computed:    true,
 							Description: `The user has direct access to this resources (vs. indirectly, like through a group).`,
 						},
-						"num_access_paths": schema.Int64Attribute{
+						"num_access_paths": schema.Int32Attribute{
 							Computed:    true,
 							Description: `The number of ways in which the user has access through this resource (directly and indirectly).`,
 						},
