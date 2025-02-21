@@ -7,8 +7,9 @@ import (
 )
 
 type Mappings struct {
-	Alias   *string `json:"alias,omitempty"`
-	GroupID *string `json:"group_id,omitempty"`
+	Alias             *string `json:"alias,omitempty"`
+	GroupID           *string `json:"group_id,omitempty"`
+	HiddenFromEndUser *bool   `json:"hidden_from_end_user,omitempty"`
 }
 
 func (o *Mappings) GetAlias() *string {
@@ -23,6 +24,13 @@ func (o *Mappings) GetGroupID() *string {
 		return nil
 	}
 	return o.GroupID
+}
+
+func (o *Mappings) GetHiddenFromEndUser() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.HiddenFromEndUser
 }
 
 type UpdateIdpGroupMappingsRequestBody struct {

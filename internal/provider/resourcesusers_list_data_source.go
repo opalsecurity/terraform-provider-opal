@@ -93,7 +93,7 @@ func (r *ResourcesUsersListDataSource) Schema(ctx context.Context, req datasourc
 							Computed:    true,
 							Description: `The user has direct access to this resources (vs. indirectly, like through a group).`,
 						},
-						"num_access_paths": schema.Int64Attribute{
+						"num_access_paths": schema.Int32Attribute{
 							Computed:    true,
 							Description: `The number of ways in which the user has access through this resource (directly and indirectly).`,
 						},

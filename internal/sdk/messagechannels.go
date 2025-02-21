@@ -29,13 +29,6 @@ func newMessageChannels(sdkConfig sdkConfiguration) *MessageChannels {
 
 // Create - Creates a `MessageChannel` objects.
 func (s *MessageChannels) Create(ctx context.Context, request shared.CreateMessageChannelInfo, opts ...operations.Option) (*operations.CreateMessageChannelResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "createMessageChannel",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -59,6 +52,13 @@ func (s *MessageChannels) Create(ctx context.Context, request shared.CreateMessa
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createMessageChannel",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -230,13 +230,6 @@ func (s *MessageChannels) Create(ctx context.Context, request shared.CreateMessa
 
 // Get - Returns a list of `MessageChannel` objects.
 func (s *MessageChannels) Get(ctx context.Context, opts ...operations.Option) (*operations.GetMessageChannelsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getMessageChannels",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -258,6 +251,14 @@ func (s *MessageChannels) Get(ctx context.Context, opts ...operations.Option) (*
 	opURL, err := url.JoinPath(baseURL, "/message-channels")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getMessageChannels",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -424,13 +425,6 @@ func (s *MessageChannels) Get(ctx context.Context, opts ...operations.Option) (*
 
 // GetID - Gets a `MessageChannel` object.
 func (s *MessageChannels) GetID(ctx context.Context, request operations.GetMessageChannelIDRequest, opts ...operations.Option) (*operations.GetMessageChannelIDResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getMessageChannelID",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -452,6 +446,14 @@ func (s *MessageChannels) GetID(ctx context.Context, request operations.GetMessa
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/message-channels/{message_channel_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getMessageChannelID",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
