@@ -30,10 +30,10 @@ type GroupListDataSource struct {
 
 // GroupListDataSourceModel describes the data model.
 type GroupListDataSourceModel struct {
-	GroupIds        []types.String  `tfsdk:"group_ids"`
-	GroupName       types.String    `tfsdk:"group_name"`
-	GroupTypeFilter types.String    `tfsdk:"group_type_filter"`
-	PageSize        types.Int64     `tfsdk:"page_size"`
+	GroupIds        []types.String  `queryParam:"style=form,explode=false,name=group_ids" tfsdk:"group_ids"`
+	GroupName       types.String    `queryParam:"style=form,explode=true,name=group_name" tfsdk:"group_name"`
+	GroupTypeFilter types.String    `queryParam:"style=form,explode=true,name=group_type_filter" tfsdk:"group_type_filter"`
+	PageSize        types.Int64     `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
 	Results         []tfTypes.Group `tfsdk:"results"`
 }
 
