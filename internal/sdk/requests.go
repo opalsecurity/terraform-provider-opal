@@ -29,13 +29,6 @@ func newRequests(sdkConfig sdkConfiguration) *Requests {
 
 // CreateRequest - Create an access request
 func (s *Requests) CreateRequest(ctx context.Context, request shared.CreateRequestInfo, opts ...operations.Option) (*operations.CreateRequestResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "createRequest",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -59,6 +52,13 @@ func (s *Requests) CreateRequest(ctx context.Context, request shared.CreateReque
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createRequest",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -230,13 +230,6 @@ func (s *Requests) CreateRequest(ctx context.Context, request shared.CreateReque
 
 // Get - Returns a list of requests for your organization that is visible by the admin.
 func (s *Requests) Get(ctx context.Context, request operations.GetRequestsRequest, opts ...operations.Option) (*operations.GetRequestsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getRequests",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -258,6 +251,14 @@ func (s *Requests) Get(ctx context.Context, request operations.GetRequestsReques
 	opURL, err := url.JoinPath(baseURL, "/requests")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getRequests",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout

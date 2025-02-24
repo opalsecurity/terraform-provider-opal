@@ -27,13 +27,6 @@ func newIdpGroupMappings(sdkConfig sdkConfiguration) *IdpGroupMappings {
 
 // DeleteIdpGroupMappings - Deletes an `IdpGroupMapping` object.
 func (s *IdpGroupMappings) DeleteIdpGroupMappings(ctx context.Context, request operations.DeleteIdpGroupMappingsRequest, opts ...operations.Option) (*operations.DeleteIdpGroupMappingsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "delete_idp_group_mappings",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -55,6 +48,14 @@ func (s *IdpGroupMappings) DeleteIdpGroupMappings(ctx context.Context, request o
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/idp-group-mappings/{app_resource_id}/{group_id}/", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "delete_idp_group_mappings",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -200,13 +201,6 @@ func (s *IdpGroupMappings) DeleteIdpGroupMappings(ctx context.Context, request o
 
 // GetIdpGroupMappings - Returns the configured set of available `IdpGroupMapping` objects for an Okta app.
 func (s *IdpGroupMappings) GetIdpGroupMappings(ctx context.Context, request operations.GetIdpGroupMappingsRequest, opts ...operations.Option) (*operations.GetIdpGroupMappingsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getIdpGroupMappings",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -228,6 +222,14 @@ func (s *IdpGroupMappings) GetIdpGroupMappings(ctx context.Context, request oper
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/idp-group-mappings/{app_resource_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getIdpGroupMappings",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -393,13 +395,6 @@ func (s *IdpGroupMappings) GetIdpGroupMappings(ctx context.Context, request oper
 
 // UpdateIdpGroupMappings - Updates the list of available `IdpGroupMapping` objects for an Okta app.
 func (s *IdpGroupMappings) UpdateIdpGroupMappings(ctx context.Context, request operations.UpdateIdpGroupMappingsRequest, opts ...operations.Option) (*operations.UpdateIdpGroupMappingsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "updateIdpGroupMappings",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -423,6 +418,13 @@ func (s *IdpGroupMappings) UpdateIdpGroupMappings(ctx context.Context, request o
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "updateIdpGroupMappings",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
