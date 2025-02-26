@@ -10,7 +10,7 @@ type ResourceAccessUser struct {
 	ExpirationDate    types.String        `tfsdk:"expiration_date"`
 	FullName          types.String        `tfsdk:"full_name"`
 	HasDirectAccess   types.Bool          `tfsdk:"has_direct_access"`
-	NumAccessPaths    types.Int64         `tfsdk:"num_access_paths"`
+	NumAccessPaths    types.Int32         `tfsdk:"num_access_paths"`
 	PropagationStatus *PropagationStatus  `tfsdk:"propagation_status"`
 	ResourceID        types.String        `tfsdk:"resource_id"`
 	UserID            types.String        `tfsdk:"user_id"`

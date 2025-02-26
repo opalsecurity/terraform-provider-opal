@@ -1044,7 +1044,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 									"operator": schema.StringAttribute{
 										Computed: true,
 										Optional: true,
-										Default:  stringdefault.StaticString("AND"),
+										Default:  stringdefault.StaticString(`AND`),
 										PlanModifiers: []planmodifier.String{
 											speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 										},

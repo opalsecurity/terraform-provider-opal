@@ -3,7 +3,7 @@ speakeasyVersion: latest
 sources:
     opal-terraform-provider:
         inputs:
-            - location: https://app.opal.dev/openapi.yaml
+            - location: ../opal/web/backend/router/handlers/public/openapi.yaml
         overlays:
             - location: terraform_overlay.yaml
         output: openapi.yaml

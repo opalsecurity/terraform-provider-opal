@@ -29,13 +29,6 @@ func newEvents(sdkConfig sdkConfiguration) *Events {
 
 // Get - Returns a list of `Event` objects.
 func (s *Events) Get(ctx context.Context, request operations.GetEventsRequest, opts ...operations.Option) (*operations.GetEventsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getEvents",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -57,6 +50,14 @@ func (s *Events) Get(ctx context.Context, request operations.GetEventsRequest, o
 	opURL, err := url.JoinPath(baseURL, "/events")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getEvents",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
