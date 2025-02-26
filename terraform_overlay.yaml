@@ -398,6 +398,14 @@ actions:
     update:
       "404":
         description: Not Found
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: IdpGroupMappings#get
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["put"]["requestBody"]["content"]["application/json"]["schema"]["properties"]["mappings"]["items"]["properties"]["hidden_from_end_user"]
+    remove: true
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["put"]
+    update:
+      x-speakeasy-entity-operation: IdpGroupMappings#create,update
   - target: $["paths"]["/owners"]["get"]["operationId"]
     update: getOwners
   - target: $["paths"]["/owners"]["get"]["responses"]

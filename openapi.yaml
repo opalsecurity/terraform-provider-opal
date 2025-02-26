@@ -1242,6 +1242,7 @@ paths:
         - BearerAuth: []
       tags:
         - idp-group-mappings
+      x-speakeasy-entity-operation: IdpGroupMappings#get
     put:
       description: Updates the list of available `IdpGroupMapping` objects for an Okta app.
       operationId: updateIdpGroupMappings
@@ -1282,6 +1283,7 @@ paths:
         - BearerAuth: []
       tags:
         - idp-group-mappings
+      x-speakeasy-entity-operation: IdpGroupMappings#create,update
   /idp-group-mappings/{app_resource_id}/{group_id}/:
     delete:
       description: Deletes an `IdpGroupMapping` object.
@@ -1576,7 +1578,7 @@ paths:
       x-speakeasy-entity-operation: Requests#get
     post:
       description: "Create an access request"
-      operationId: "createRequest" # TODO amruth confirm naming
+      operationId: "createRequest"
       requestBody:
         description: Resources to be updated
         required: true
@@ -4898,28 +4900,10 @@ components:
     IdpGroupMapping:
       description: Information about a group mapping.
       example:
-        id: 7870617d-e72a-47f5-a84c-693817ab4567
-        organization_id: 1520617d-e72a-47f5-a84c-693817ab48ad2
-        app_resource_id: 6f99639b-7928-4043-8184-47cbc6766145
         group_id: 6f99639b-7928-4043-8184-47cbc6766145
         alias: "finance-team"
         hidden_from_end_user: False
       properties:
-        id:
-          description: The ID of the idp group mapping.
-          example: 7870617d-e72a-47f5-a84c-693817ab4567
-          format: uuid
-          type: string
-        organization_id:
-          description: The ID of the organization.
-          example: 1520617d-e72a-47f5-a84c-693817ab48ad2
-          format: uuid
-          type: string
-        app_resource_id:
-          description: The ID of the idp app resource.
-          example: 6f99639b-7928-4043-8184-47cbc6766145
-          format: uuid
-          type: string
         group_id:
           description: The ID of the group.
           example: 6f99639b-7928-4043-8184-47cbc6766145
@@ -4934,35 +4918,26 @@ components:
           example: False
           type: boolean
       required:
-        - id
-        - organization_id
-        - app_resource_id
         - group_id
         - hidden_from_end_user
       type: object
     IdpGroupMappingList:
       example:
-        idp_group_mappings:
-          - id: 7870617d-e72a-47f5-a84c-693817ab4567
-            organization_id: 1520617d-e72a-47f5-a84c-693817ab48ad2
-            app_resource_id: 6f99639b-7928-4043-8184-47cbc6766145
-            group_id: 6f99639b-7928-4043-8184-47cbc6766145
+        mappings:
+          - group_id: 6f99639b-7928-4043-8184-47cbc6766145
             alias: "finance-team"
             hidden_from_end_user: False
-          - id: 1520617d-e72a-47f5-a84c-693817ab48ad2
-            organization_id: 6f99639b-7928-4043-8184-47cbc6766145
-            app_resource_id: 7870617d-e72a-47f5-a84c-693817ab4567
-            group_id: 7870617d-e72a-47f5-a84c-693817ab4567
+          - group_id: 7870617d-e72a-47f5-a84c-693817ab4567
             alias: "engineering-team"
             hidden_from_end_user: False
       properties:
-        idp_group_mappings:
+        mappings:
           items:
             $ref: "#/components/schemas/IdpGroupMapping"
           type: array
       type: object
       required:
-        - idp_group_mappings
+        - mappings
     ResourceWithAccessLevel:
       description: Information about a resource and corresponding access level
       example:
@@ -8096,7 +8071,7 @@ components:
             identifier:
               type: string
             url:
-              type: string # TODO amruth Does url format exist?
+              type: string
           required:
             - ticketing_provider
             - remote_id
