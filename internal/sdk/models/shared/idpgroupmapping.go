@@ -6,16 +6,10 @@ package shared
 type IdpGroupMapping struct {
 	// The alias of the group.
 	Alias *string `json:"alias,omitempty"`
-	// The ID of the idp app resource.
-	AppResourceID string `json:"app_resource_id"`
 	// The ID of the group.
 	GroupID string `json:"group_id"`
 	// A bool representing whether or not the group is hidden from the end user.
 	HiddenFromEndUser bool `json:"hidden_from_end_user"`
-	// The ID of the idp group mapping.
-	ID string `json:"id"`
-	// The ID of the organization.
-	OrganizationID string `json:"organization_id"`
 }
 
 func (o *IdpGroupMapping) GetAlias() *string {
@@ -23,13 +17,6 @@ func (o *IdpGroupMapping) GetAlias() *string {
 		return nil
 	}
 	return o.Alias
-}
-
-func (o *IdpGroupMapping) GetAppResourceID() string {
-	if o == nil {
-		return ""
-	}
-	return o.AppResourceID
 }
 
 func (o *IdpGroupMapping) GetGroupID() string {
@@ -44,18 +31,4 @@ func (o *IdpGroupMapping) GetHiddenFromEndUser() bool {
 		return false
 	}
 	return o.HiddenFromEndUser
-}
-
-func (o *IdpGroupMapping) GetID() string {
-	if o == nil {
-		return ""
-	}
-	return o.ID
-}
-
-func (o *IdpGroupMapping) GetOrganizationID() string {
-	if o == nil {
-		return ""
-	}
-	return o.OrganizationID
 }

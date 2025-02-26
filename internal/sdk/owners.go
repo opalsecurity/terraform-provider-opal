@@ -29,13 +29,6 @@ func newOwners(sdkConfig sdkConfiguration) *Owners {
 
 // Create - Creates an owner.
 func (s *Owners) Create(ctx context.Context, request shared.CreateOwnerInfo, opts ...operations.Option) (*operations.CreateOwnerResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "createOwner",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -59,6 +52,13 @@ func (s *Owners) Create(ctx context.Context, request shared.CreateOwnerInfo, opt
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createOwner",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -230,13 +230,6 @@ func (s *Owners) Create(ctx context.Context, request shared.CreateOwnerInfo, opt
 
 // Delete - Deletes an owner.
 func (s *Owners) Delete(ctx context.Context, request operations.DeleteOwnerRequest, opts ...operations.Option) (*operations.DeleteOwnerResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "deleteOwner",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -258,6 +251,14 @@ func (s *Owners) Delete(ctx context.Context, request operations.DeleteOwnerReque
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/owners/{owner_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "deleteOwner",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -403,13 +404,6 @@ func (s *Owners) Delete(ctx context.Context, request operations.DeleteOwnerReque
 
 // Get - Returns a list of `Owner` objects.
 func (s *Owners) Get(ctx context.Context, request operations.GetOwnersRequest, opts ...operations.Option) (*operations.GetOwnersResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getOwners",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -431,6 +425,14 @@ func (s *Owners) Get(ctx context.Context, request operations.GetOwnersRequest, o
 	opURL, err := url.JoinPath(baseURL, "/owners")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getOwners",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -601,13 +603,6 @@ func (s *Owners) Get(ctx context.Context, request operations.GetOwnersRequest, o
 
 // GetFromName - Returns an `Owner` object. Does not support owners with `/` in their name, use /owners?name=... instead.
 func (s *Owners) GetFromName(ctx context.Context, request operations.GetOwnerFromNameRequest, opts ...operations.Option) (*operations.GetOwnerFromNameResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getOwnerFromName",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -629,6 +624,14 @@ func (s *Owners) GetFromName(ctx context.Context, request operations.GetOwnerFro
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/owners/name/{owner_name}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getOwnerFromName",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -795,13 +798,6 @@ func (s *Owners) GetFromName(ctx context.Context, request operations.GetOwnerFro
 
 // GetID - Returns an `Owner` object.
 func (s *Owners) GetID(ctx context.Context, request operations.GetOwnerIDRequest, opts ...operations.Option) (*operations.GetOwnerIDResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getOwnerID",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -823,6 +819,14 @@ func (s *Owners) GetID(ctx context.Context, request operations.GetOwnerIDRequest
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/owners/{owner_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getOwnerID",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -989,13 +993,6 @@ func (s *Owners) GetID(ctx context.Context, request operations.GetOwnerIDRequest
 
 // Update - Bulk updates a list of owners.
 func (s *Owners) Update(ctx context.Context, request shared.UpdateOwnerInfoList, opts ...operations.Option) (*operations.UpdateOwnersResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "updateOwners",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1019,6 +1016,13 @@ func (s *Owners) Update(ctx context.Context, request shared.UpdateOwnerInfoList,
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "updateOwners",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -1190,13 +1194,6 @@ func (s *Owners) Update(ctx context.Context, request shared.UpdateOwnerInfoList,
 
 // UpdateUsers - Sets the list of users for this owner. If escalation is enabled, the order of this list is the escalation priority order of the users. If the owner has a source group, adding or removing users from this list won't be possible.
 func (s *Owners) UpdateUsers(ctx context.Context, request operations.UpdateOwnerUsersRequest, opts ...operations.Option) (*operations.UpdateOwnerUsersResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "update_owner_users",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1220,6 +1217,13 @@ func (s *Owners) UpdateUsers(ctx context.Context, request operations.UpdateOwner
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "update_owner_users",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "UserIDList", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err

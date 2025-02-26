@@ -30,9 +30,9 @@ type AppsDataSource struct {
 
 // AppsDataSourceModel describes the data model.
 type AppsDataSourceModel struct {
-	AppTypeFilter []types.String `tfsdk:"app_type_filter"`
+	AppTypeFilter []types.String `queryParam:"style=form,explode=false,name=app_type_filter" tfsdk:"app_type_filter"`
 	Apps          []tfTypes.App  `tfsdk:"apps"`
-	OwnerFilter   types.String   `tfsdk:"owner_filter"`
+	OwnerFilter   types.String   `queryParam:"style=form,explode=true,name=owner_filter" tfsdk:"owner_filter"`
 }
 
 // Metadata returns the data source type name.

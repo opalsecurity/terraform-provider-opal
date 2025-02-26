@@ -29,13 +29,6 @@ func newResources(sdkConfig sdkConfiguration) *Resources {
 
 // AddResourceNhi - Gives a non-human identity access to this resource.
 func (s *Resources) AddResourceNhi(ctx context.Context, request operations.AddResourceNhiRequest, opts ...operations.Option) (*operations.AddResourceNhiResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "add_resource_nhi",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -59,6 +52,13 @@ func (s *Resources) AddResourceNhi(ctx context.Context, request operations.AddRe
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "add_resource_nhi",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "RequestBody", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -230,13 +230,6 @@ func (s *Resources) AddResourceNhi(ctx context.Context, request operations.AddRe
 
 // Create - Creates a resource. See [here](https://docs.opal.dev/reference/end-system-objects) for details about importing resources.
 func (s *Resources) Create(ctx context.Context, request shared.CreateResourceInfo, opts ...operations.Option) (*operations.CreateResourceResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "createResource",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -260,6 +253,13 @@ func (s *Resources) Create(ctx context.Context, request shared.CreateResourceInf
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createResource",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -431,13 +431,6 @@ func (s *Resources) Create(ctx context.Context, request shared.CreateResourceInf
 
 // Delete - Deletes a resource.
 func (s *Resources) Delete(ctx context.Context, request operations.DeleteResourceRequest, opts ...operations.Option) (*operations.DeleteResourceResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "deleteResource",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -459,6 +452,14 @@ func (s *Resources) Delete(ctx context.Context, request operations.DeleteResourc
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/resources/{resource_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "deleteResource",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -604,13 +605,6 @@ func (s *Resources) Delete(ctx context.Context, request operations.DeleteResourc
 
 // DeleteResourceNhi - Removes a non-human identity's direct access from this resource.
 func (s *Resources) DeleteResourceNhi(ctx context.Context, request operations.DeleteResourceNhiRequest, opts ...operations.Option) (*operations.DeleteResourceNhiResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "delete_resource_nhi",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -632,6 +626,14 @@ func (s *Resources) DeleteResourceNhi(ctx context.Context, request operations.De
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/resources/{resource_id}/non-human-identities/{non_human_identity_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "delete_resource_nhi",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -781,13 +783,6 @@ func (s *Resources) DeleteResourceNhi(ctx context.Context, request operations.De
 
 // Get - Returns a list of resources for your organization.
 func (s *Resources) Get(ctx context.Context, request operations.GetResourcesRequest, opts ...operations.Option) (*operations.GetResourcesResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getResources",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -809,6 +804,14 @@ func (s *Resources) Get(ctx context.Context, request operations.GetResourcesRequ
 	opURL, err := url.JoinPath(baseURL, "/resources")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getResources",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -979,13 +982,6 @@ func (s *Resources) Get(ctx context.Context, request operations.GetResourcesRequ
 
 // GetAccessStatus - Get user's access status to a resource.
 func (s *Resources) GetAccessStatus(ctx context.Context, request operations.GetResourceUserAccessStatusRequest, opts ...operations.Option) (*operations.GetResourceUserAccessStatusResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getResourceUserAccessStatus",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1007,6 +1003,14 @@ func (s *Resources) GetAccessStatus(ctx context.Context, request operations.GetR
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/resource-user-access-status/{resource_id}/{user_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getResourceUserAccessStatus",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -1177,13 +1181,6 @@ func (s *Resources) GetAccessStatus(ctx context.Context, request operations.GetR
 
 // GetID - Retrieves a resource.
 func (s *Resources) GetID(ctx context.Context, request operations.GetResourceIDRequest, opts ...operations.Option) (*operations.GetResourceIDResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getResourceID",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1205,6 +1202,14 @@ func (s *Resources) GetID(ctx context.Context, request operations.GetResourceIDR
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/resources/{resource_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getResourceID",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -1371,13 +1376,6 @@ func (s *Resources) GetID(ctx context.Context, request operations.GetResourceIDR
 
 // GetMessageChannels - Gets the list of audit message channels attached to a resource.
 func (s *Resources) GetMessageChannels(ctx context.Context, request operations.GetResourceMessageChannelsRequest, opts ...operations.Option) (*operations.GetResourceMessageChannelsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getResourceMessageChannels",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1399,6 +1397,14 @@ func (s *Resources) GetMessageChannels(ctx context.Context, request operations.G
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/resources/{resource_id}/message-channels", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getResourceMessageChannels",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -1565,13 +1571,6 @@ func (s *Resources) GetMessageChannels(ctx context.Context, request operations.G
 
 // GetResourceNhis - Gets the list of non-human identities with access to this resource.
 func (s *Resources) GetResourceNhis(ctx context.Context, request operations.GetResourceNhisRequest, opts ...operations.Option) (*operations.GetResourceNhisResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "get_resource_nhis",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1593,6 +1592,14 @@ func (s *Resources) GetResourceNhis(ctx context.Context, request operations.GetR
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/resources/{resource_id}/non-human-identities", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "get_resource_nhis",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -1763,13 +1770,6 @@ func (s *Resources) GetResourceNhis(ctx context.Context, request operations.GetR
 
 // GetReviewers - Gets the list of owner IDs of the reviewers for a resource.
 func (s *Resources) GetReviewers(ctx context.Context, request operations.GetResourceReviewersRequest, opts ...operations.Option) (*operations.GetResourceReviewersResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getResourceReviewers",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1791,6 +1791,14 @@ func (s *Resources) GetReviewers(ctx context.Context, request operations.GetReso
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/resources/{resource_id}/reviewers", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getResourceReviewers",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -1957,13 +1965,6 @@ func (s *Resources) GetReviewers(ctx context.Context, request operations.GetReso
 
 // GetTags - Returns all tags applied to the resource.
 func (s *Resources) GetTags(ctx context.Context, request operations.GetResourceTagsRequest, opts ...operations.Option) (*operations.GetResourceTagsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getResourceTags",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1985,6 +1986,14 @@ func (s *Resources) GetTags(ctx context.Context, request operations.GetResourceT
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/resources/{resource_id}/tags", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getResourceTags",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -2151,13 +2160,6 @@ func (s *Resources) GetTags(ctx context.Context, request operations.GetResourceT
 
 // GetUsers - Gets the list of users for this resource.
 func (s *Resources) GetUsers(ctx context.Context, request operations.GetResourceUsersRequest, opts ...operations.Option) (*operations.GetResourceUsersResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getResourceUsers",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -2179,6 +2181,14 @@ func (s *Resources) GetUsers(ctx context.Context, request operations.GetResource
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/resources/{resource_id}/users", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getResourceUsers",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -2349,13 +2359,6 @@ func (s *Resources) GetUsers(ctx context.Context, request operations.GetResource
 
 // GetVisibility - Gets the visibility of this resource.
 func (s *Resources) GetVisibility(ctx context.Context, request operations.GetResourceVisibilityRequest, opts ...operations.Option) (*operations.GetResourceVisibilityResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getResourceVisibility",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -2377,6 +2380,14 @@ func (s *Resources) GetVisibility(ctx context.Context, request operations.GetRes
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/resources/{resource_id}/visibility", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getResourceVisibility",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -2543,13 +2554,6 @@ func (s *Resources) GetVisibility(ctx context.Context, request operations.GetRes
 
 // Update - Bulk updates a list of resources.
 func (s *Resources) Update(ctx context.Context, request shared.UpdateResourceInfoList, opts ...operations.Option) (*operations.UpdateResourcesResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "updateResources",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -2573,6 +2577,13 @@ func (s *Resources) Update(ctx context.Context, request shared.UpdateResourceInf
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "updateResources",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -2744,13 +2755,6 @@ func (s *Resources) Update(ctx context.Context, request shared.UpdateResourceInf
 
 // UpdateMessageChannels - Sets the list of audit message channels attached to a resource.
 func (s *Resources) UpdateMessageChannels(ctx context.Context, request operations.UpdateResourceMessageChannelsRequest, opts ...operations.Option) (*operations.UpdateResourceMessageChannelsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "updateResourceMessageChannels",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -2774,6 +2778,13 @@ func (s *Resources) UpdateMessageChannels(ctx context.Context, request operation
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "updateResourceMessageChannels",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "MessageChannelIDList", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -2945,13 +2956,6 @@ func (s *Resources) UpdateMessageChannels(ctx context.Context, request operation
 
 // UpdateReviewers - Sets the list of reviewers for a resource.
 func (s *Resources) UpdateReviewers(ctx context.Context, request operations.UpdateResourceReviewersRequest, opts ...operations.Option) (*operations.UpdateResourceReviewersResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "updateResourceReviewers",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -2975,6 +2979,13 @@ func (s *Resources) UpdateReviewers(ctx context.Context, request operations.Upda
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "updateResourceReviewers",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "ReviewerIDList", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -3146,13 +3157,6 @@ func (s *Resources) UpdateReviewers(ctx context.Context, request operations.Upda
 
 // UpdateVisibility - Sets the visibility of this resource.
 func (s *Resources) UpdateVisibility(ctx context.Context, request operations.UpdateResourceVisibilityRequest, opts ...operations.Option) (*operations.UpdateResourceVisibilityResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "updateResourceVisibility",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -3176,6 +3180,13 @@ func (s *Resources) UpdateVisibility(ctx context.Context, request operations.Upd
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "updateResourceVisibility",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "VisibilityInfo", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
