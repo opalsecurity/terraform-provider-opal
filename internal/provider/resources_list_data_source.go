@@ -30,14 +30,14 @@ type ResourcesListDataSource struct {
 
 // ResourcesListDataSourceModel describes the data model.
 type ResourcesListDataSourceModel struct {
-	Cursor             types.String       `tfsdk:"cursor"`
+	Cursor             types.String       `queryParam:"style=form,explode=true,name=cursor" tfsdk:"cursor"`
 	Next               types.String       `tfsdk:"next"`
-	PageSize           types.Int64        `tfsdk:"page_size"`
-	ParentResourceID   types.String       `tfsdk:"parent_resource_id"`
+	PageSize           types.Int64        `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
+	ParentResourceID   types.String       `queryParam:"style=form,explode=false,name=parent_resource_id" tfsdk:"parent_resource_id"`
 	Previous           types.String       `tfsdk:"previous"`
-	ResourceIds        []types.String     `tfsdk:"resource_ids"`
-	ResourceName       types.String       `tfsdk:"resource_name"`
-	ResourceTypeFilter types.String       `tfsdk:"resource_type_filter"`
+	ResourceIds        []types.String     `queryParam:"style=form,explode=false,name=resource_ids" tfsdk:"resource_ids"`
+	ResourceName       types.String       `queryParam:"style=form,explode=true,name=resource_name" tfsdk:"resource_name"`
+	ResourceTypeFilter types.String       `queryParam:"style=form,explode=true,name=resource_type_filter" tfsdk:"resource_type_filter"`
 	Results            []tfTypes.Resource `tfsdk:"results"`
 }
 

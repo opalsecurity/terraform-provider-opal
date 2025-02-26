@@ -28,10 +28,10 @@ type UserDataSource struct {
 
 // UserDataSourceModel describes the data model.
 type UserDataSourceModel struct {
-	Email       types.String `tfsdk:"email"`
+	Email       types.String `queryParam:"style=form,explode=true,name=email" tfsdk:"email"`
 	FirstName   types.String `tfsdk:"first_name"`
 	HrIdpStatus types.String `tfsdk:"hr_idp_status"`
-	ID          types.String `tfsdk:"id"`
+	ID          types.String `queryParam:"style=form,explode=true,name=user_id" tfsdk:"id"`
 	LastName    types.String `tfsdk:"last_name"`
 	Name        types.String `tfsdk:"name"`
 	Position    types.String `tfsdk:"position"`
