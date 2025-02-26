@@ -30,10 +30,10 @@ type ResourcesAccessStatusDataSource struct {
 // ResourcesAccessStatusDataSourceModel describes the data model.
 type ResourcesAccessStatusDataSourceModel struct {
 	AccessLevel         *tfTypes.ResourceAccessLevel `tfsdk:"access_level"`
-	AccessLevelRemoteID types.String                 `tfsdk:"access_level_remote_id"`
-	Cursor              types.String                 `tfsdk:"cursor"`
+	AccessLevelRemoteID types.String                 `queryParam:"style=form,explode=true,name=access_level_remote_id" tfsdk:"access_level_remote_id"`
+	Cursor              types.String                 `queryParam:"style=form,explode=true,name=cursor" tfsdk:"cursor"`
 	ExpirationDate      types.String                 `tfsdk:"expiration_date"`
-	PageSize            types.Int64                  `tfsdk:"page_size"`
+	PageSize            types.Int64                  `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
 	ResourceID          types.String                 `tfsdk:"resource_id"`
 	Status              types.String                 `tfsdk:"status"`
 	UserID              types.String                 `tfsdk:"user_id"`
