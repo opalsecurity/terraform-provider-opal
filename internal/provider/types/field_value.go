@@ -5,6 +5,6 @@ package types
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type FieldValue struct {
-	Str     types.String `tfsdk:"str" tfPlanOnly:"true"`
-	Boolean types.Bool   `tfsdk:"boolean" tfPlanOnly:"true"`
+	Str     types.String `queryParam:"inline" tfsdk:"str" tfPlanOnly:"true"`
+	Boolean types.Bool   `queryParam:"inline" tfsdk:"boolean" tfPlanOnly:"true"`
 }

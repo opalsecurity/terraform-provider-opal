@@ -3,12 +3,12 @@
 package shared
 
 type IdpGroupMappingList struct {
-	IdpGroupMappings []IdpGroupMapping `json:"idp_group_mappings"`
+	Mappings []IdpGroupMapping `json:"mappings"`
 }
 
-func (o *IdpGroupMappingList) GetIdpGroupMappings() []IdpGroupMapping {
+func (o *IdpGroupMappingList) GetMappings() []IdpGroupMapping {
 	if o == nil {
 		return []IdpGroupMapping{}
 	}
-	return o.IdpGroupMappings
+	return o.Mappings
 }
