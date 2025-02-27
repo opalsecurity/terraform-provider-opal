@@ -29,13 +29,6 @@ func newOnCallSchedules(sdkConfig sdkConfiguration) *OnCallSchedules {
 
 // Create - Creates a `OnCallSchedule` objects.
 func (s *OnCallSchedules) Create(ctx context.Context, request shared.CreateOnCallScheduleInfo, opts ...operations.Option) (*operations.CreateOnCallScheduleResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "createOnCallSchedule",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -59,6 +52,13 @@ func (s *OnCallSchedules) Create(ctx context.Context, request shared.CreateOnCal
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createOnCallSchedule",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -230,13 +230,6 @@ func (s *OnCallSchedules) Create(ctx context.Context, request shared.CreateOnCal
 
 // Get - Returns a list of `OnCallSchedule` objects.
 func (s *OnCallSchedules) Get(ctx context.Context, opts ...operations.Option) (*operations.GetOnCallScheduleResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getOnCallSchedule",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -258,6 +251,14 @@ func (s *OnCallSchedules) Get(ctx context.Context, opts ...operations.Option) (*
 	opURL, err := url.JoinPath(baseURL, "/on-call-schedules")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getOnCallSchedule",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -424,13 +425,6 @@ func (s *OnCallSchedules) Get(ctx context.Context, opts ...operations.Option) (*
 
 // GetID - Gets a `OnCallSchedule` object.
 func (s *OnCallSchedules) GetID(ctx context.Context, request operations.GetOnCallScheduleIDRequest, opts ...operations.Option) (*operations.GetOnCallScheduleIDResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getOnCallScheduleID",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -452,6 +446,14 @@ func (s *OnCallSchedules) GetID(ctx context.Context, request operations.GetOnCal
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/on-call-schedules/{on_call_schedule_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getOnCallScheduleID",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout

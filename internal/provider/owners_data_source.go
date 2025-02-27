@@ -29,10 +29,10 @@ type OwnersDataSource struct {
 
 // OwnersDataSourceModel describes the data model.
 type OwnersDataSourceModel struct {
-	Cursor   types.String    `tfsdk:"cursor"`
-	Name     types.String    `tfsdk:"name"`
+	Cursor   types.String    `queryParam:"style=form,explode=true,name=cursor" tfsdk:"cursor"`
+	Name     types.String    `queryParam:"style=form,explode=true,name=name" tfsdk:"name"`
 	Next     types.String    `tfsdk:"next"`
-	PageSize types.Int64     `tfsdk:"page_size"`
+	PageSize types.Int64     `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
 	Previous types.String    `tfsdk:"previous"`
 	Results  []tfTypes.Owner `tfsdk:"results"`
 }
