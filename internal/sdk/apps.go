@@ -29,13 +29,6 @@ func newApps(sdkConfig sdkConfiguration) *Apps {
 
 // Get - Returns a list of `App` objects.
 func (s *Apps) Get(ctx context.Context, request operations.GetAppsRequest, opts ...operations.Option) (*operations.GetAppsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getApps",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -57,6 +50,14 @@ func (s *Apps) Get(ctx context.Context, request operations.GetAppsRequest, opts 
 	opURL, err := url.JoinPath(baseURL, "/apps")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getApps",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -227,13 +228,6 @@ func (s *Apps) Get(ctx context.Context, request operations.GetAppsRequest, opts 
 
 // GetSyncErrors - Returns a list of recent sync errors that have occurred since the last successful sync.
 func (s *Apps) GetSyncErrors(ctx context.Context, request operations.GetSyncErrorsRequest, opts ...operations.Option) (*operations.GetSyncErrorsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getSyncErrors",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -255,6 +249,14 @@ func (s *Apps) GetSyncErrors(ctx context.Context, request operations.GetSyncErro
 	opURL, err := url.JoinPath(baseURL, "/sync_errors")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getSyncErrors",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -424,13 +426,6 @@ func (s *Apps) GetSyncErrors(ctx context.Context, request operations.GetSyncErro
 
 // GetID - Returns an `App` object.
 func (s *Apps) GetID(ctx context.Context, request operations.GetAppIDRequest, opts ...operations.Option) (*operations.GetAppIDResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getAppID",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -452,6 +447,14 @@ func (s *Apps) GetID(ctx context.Context, request operations.GetAppIDRequest, op
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/apps/{app_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getAppID",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
