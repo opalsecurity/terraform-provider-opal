@@ -29,13 +29,6 @@ func newTags(sdkConfig sdkConfiguration) *Tags {
 
 // CreateTag - Creates a tag with the given key and value.
 func (s *Tags) CreateTag(ctx context.Context, request shared.CreateTagInfo, opts ...operations.Option) (*operations.CreateTagResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "createTag",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -59,6 +52,13 @@ func (s *Tags) CreateTag(ctx context.Context, request shared.CreateTagInfo, opts
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createTag",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -230,13 +230,6 @@ func (s *Tags) CreateTag(ctx context.Context, request shared.CreateTagInfo, opts
 
 // CreateGroup - Applies a tag to a group.
 func (s *Tags) CreateGroup(ctx context.Context, request operations.CreateGroupTagRequest, opts ...operations.Option) (*operations.CreateGroupTagResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "createGroupTag",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -258,6 +251,14 @@ func (s *Tags) CreateGroup(ctx context.Context, request operations.CreateGroupTa
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/tags/{tag_id}/groups/{group_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createGroupTag",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -403,13 +404,6 @@ func (s *Tags) CreateGroup(ctx context.Context, request operations.CreateGroupTa
 
 // CreateResource - Applies a tag to a resource.
 func (s *Tags) CreateResource(ctx context.Context, request operations.CreateResourceTagRequest, opts ...operations.Option) (*operations.CreateResourceTagResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "createResourceTag",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -431,6 +425,14 @@ func (s *Tags) CreateResource(ctx context.Context, request operations.CreateReso
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/tags/{tag_id}/resources/{resource_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createResourceTag",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -576,13 +578,6 @@ func (s *Tags) CreateResource(ctx context.Context, request operations.CreateReso
 
 // CreateUser - Applies a tag to a user.
 func (s *Tags) CreateUser(ctx context.Context, request operations.CreateUserTagRequest, opts ...operations.Option) (*operations.CreateUserTagResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "createUserTag",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -604,6 +599,14 @@ func (s *Tags) CreateUser(ctx context.Context, request operations.CreateUserTagR
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/tags/{tag_id}/users/{user_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createUserTag",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -749,13 +752,6 @@ func (s *Tags) CreateUser(ctx context.Context, request operations.CreateUserTagR
 
 // Delete - Removes a tag from a user.
 func (s *Tags) Delete(ctx context.Context, request operations.DeleteUserTagRequest, opts ...operations.Option) (*operations.DeleteUserTagResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "deleteUserTag",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -777,6 +773,14 @@ func (s *Tags) Delete(ctx context.Context, request operations.DeleteUserTagReque
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/tags/{tag_id}/users/{user_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "deleteUserTag",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -922,13 +926,6 @@ func (s *Tags) Delete(ctx context.Context, request operations.DeleteUserTagReque
 
 // DeleteGroup - Removes a tag from a group.
 func (s *Tags) DeleteGroup(ctx context.Context, request operations.DeleteGroupTagRequest, opts ...operations.Option) (*operations.DeleteGroupTagResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "deleteGroupTag",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -950,6 +947,14 @@ func (s *Tags) DeleteGroup(ctx context.Context, request operations.DeleteGroupTa
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/tags/{tag_id}/groups/{group_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "deleteGroupTag",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -1095,13 +1100,6 @@ func (s *Tags) DeleteGroup(ctx context.Context, request operations.DeleteGroupTa
 
 // DeleteResource - Removes a tag from a resource.
 func (s *Tags) DeleteResource(ctx context.Context, request operations.DeleteResourceTagRequest, opts ...operations.Option) (*operations.DeleteResourceTagResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "deleteResourceTag",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1123,6 +1121,14 @@ func (s *Tags) DeleteResource(ctx context.Context, request operations.DeleteReso
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/tags/{tag_id}/resources/{resource_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "deleteResourceTag",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -1268,13 +1274,6 @@ func (s *Tags) DeleteResource(ctx context.Context, request operations.DeleteReso
 
 // DeleteTagByID - UNSTABLE. May be removed at any time. Deletes a tag with the given id.
 func (s *Tags) DeleteTagByID(ctx context.Context, request operations.DeleteTagByIDRequest, opts ...operations.Option) (*operations.DeleteTagByIDResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "delete_tag_by_ID",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1296,6 +1295,14 @@ func (s *Tags) DeleteTagByID(ctx context.Context, request operations.DeleteTagBy
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/tag/{tag_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "delete_tag_by_ID",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -1441,13 +1448,6 @@ func (s *Tags) DeleteTagByID(ctx context.Context, request operations.DeleteTagBy
 
 // GetTagByID - UNSTABLE. May be removed at any time. Gets a tag with the given id.
 func (s *Tags) GetTagByID(ctx context.Context, request operations.GetTagByIDRequest, opts ...operations.Option) (*operations.GetTagByIDResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "get_tag_by_ID",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1469,6 +1469,14 @@ func (s *Tags) GetTagByID(ctx context.Context, request operations.GetTagByIDRequ
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/tag/{tag_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "get_tag_by_ID",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -1635,13 +1643,6 @@ func (s *Tags) GetTagByID(ctx context.Context, request operations.GetTagByIDRequ
 
 // GetTags - Returns a list of tags created by your organization.
 func (s *Tags) GetTags(ctx context.Context, request operations.GetTagsRequest, opts ...operations.Option) (*operations.GetTagsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getTags",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1663,6 +1664,14 @@ func (s *Tags) GetTags(ctx context.Context, request operations.GetTagsRequest, o
 	opURL, err := url.JoinPath(baseURL, "/tags")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getTags",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout

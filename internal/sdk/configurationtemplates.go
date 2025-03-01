@@ -29,13 +29,6 @@ func newConfigurationTemplates(sdkConfig sdkConfiguration) *ConfigurationTemplat
 
 // Create - Creates a configuration template.
 func (s *ConfigurationTemplates) Create(ctx context.Context, request shared.CreateConfigurationTemplateInfo, opts ...operations.Option) (*operations.CreateConfigurationTemplateResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "createConfigurationTemplate",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -59,6 +52,13 @@ func (s *ConfigurationTemplates) Create(ctx context.Context, request shared.Crea
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "createConfigurationTemplate",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
@@ -230,13 +230,6 @@ func (s *ConfigurationTemplates) Create(ctx context.Context, request shared.Crea
 
 // Delete - Deletes a configuration template.
 func (s *ConfigurationTemplates) Delete(ctx context.Context, request operations.DeleteConfigurationTemplateRequest, opts ...operations.Option) (*operations.DeleteConfigurationTemplateResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "deleteConfigurationTemplate",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -258,6 +251,14 @@ func (s *ConfigurationTemplates) Delete(ctx context.Context, request operations.
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/configuration-templates/{configuration_template_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "deleteConfigurationTemplate",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -403,13 +404,6 @@ func (s *ConfigurationTemplates) Delete(ctx context.Context, request operations.
 
 // Get - Returns a list of `ConfigurationTemplate` objects.
 func (s *ConfigurationTemplates) Get(ctx context.Context, opts ...operations.Option) (*operations.GetConfigurationTemplatesResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getConfigurationTemplates",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -431,6 +425,14 @@ func (s *ConfigurationTemplates) Get(ctx context.Context, opts ...operations.Opt
 	opURL, err := url.JoinPath(baseURL, "/configuration-templates")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getConfigurationTemplates",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -597,13 +599,6 @@ func (s *ConfigurationTemplates) Get(ctx context.Context, opts ...operations.Opt
 
 // Update a configuration template.
 func (s *ConfigurationTemplates) Update(ctx context.Context, request shared.UpdateConfigurationTemplateInfo, opts ...operations.Option) (*operations.UpdateConfigurationTemplateResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "updateConfigurationTemplate",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -627,6 +622,13 @@ func (s *ConfigurationTemplates) Update(ctx context.Context, request shared.Upda
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "updateConfigurationTemplate",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err

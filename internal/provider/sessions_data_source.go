@@ -31,9 +31,9 @@ type SessionsDataSource struct {
 type SessionsDataSourceModel struct {
 	Next       types.String      `tfsdk:"next"`
 	Previous   types.String      `tfsdk:"previous"`
-	ResourceID types.String      `tfsdk:"resource_id"`
+	ResourceID types.String      `queryParam:"style=form,explode=true,name=resource_id" tfsdk:"resource_id"`
 	Results    []tfTypes.Session `tfsdk:"results"`
-	UserID     types.String      `tfsdk:"user_id"`
+	UserID     types.String      `queryParam:"style=form,explode=true,name=user_id" tfsdk:"user_id"`
 }
 
 // Metadata returns the data source type name.
