@@ -29,13 +29,6 @@ func newUsers(sdkConfig sdkConfiguration) *Users {
 
 // Get - Returns a `User` object.
 func (s *Users) Get(ctx context.Context, request operations.GetUserRequest, opts ...operations.Option) (*operations.GetUserResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getUser",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -57,6 +50,14 @@ func (s *Users) Get(ctx context.Context, request operations.GetUserRequest, opts
 	opURL, err := url.JoinPath(baseURL, "/user")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getUser",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -227,13 +228,6 @@ func (s *Users) Get(ctx context.Context, request operations.GetUserRequest, opts
 
 // GetUserTags - Returns all tags applied to the user.
 func (s *Users) GetUserTags(ctx context.Context, request operations.GetUserTagsRequest, opts ...operations.Option) (*operations.GetUserTagsResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getUserTags",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -255,6 +249,14 @@ func (s *Users) GetUserTags(ctx context.Context, request operations.GetUserTagsR
 	opURL, err := utils.GenerateURL(ctx, baseURL, "/users/{user_id}/tags", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getUserTags",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout
@@ -421,13 +423,6 @@ func (s *Users) GetUserTags(ctx context.Context, request operations.GetUserTagsR
 
 // GetUsers - Returns a list of users for your organization.
 func (s *Users) GetUsers(ctx context.Context, request operations.GetUsersRequest, opts ...operations.Option) (*operations.GetUsersResponse, error) {
-	hookCtx := hooks.HookContext{
-		Context:        ctx,
-		OperationID:    "getUsers",
-		OAuth2Scopes:   []string{},
-		SecuritySource: s.sdkConfiguration.Security,
-	}
-
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -449,6 +444,14 @@ func (s *Users) GetUsers(ctx context.Context, request operations.GetUsersRequest
 	opURL, err := url.JoinPath(baseURL, "/users")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "getUsers",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
 	}
 
 	timeout := o.Timeout

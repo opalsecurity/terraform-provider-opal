@@ -29,10 +29,10 @@ type RequestsDataSource struct {
 
 // RequestsDataSourceModel describes the data model.
 type RequestsDataSourceModel struct {
-	Cursor          types.String      `tfsdk:"cursor"`
-	PageSize        types.Int64       `tfsdk:"page_size"`
+	Cursor          types.String      `queryParam:"style=form,explode=true,name=cursor" tfsdk:"cursor"`
+	PageSize        types.Int64       `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
 	Requests        []tfTypes.Request `tfsdk:"requests"`
-	ShowPendingOnly types.Bool        `tfsdk:"show_pending_only"`
+	ShowPendingOnly types.Bool        `queryParam:"style=form,explode=true,name=show_pending_only" tfsdk:"show_pending_only"`
 }
 
 // Metadata returns the data source type name.

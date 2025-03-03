@@ -29,17 +29,17 @@ type EventsDataSource struct {
 
 // EventsDataSourceModel describes the data model.
 type EventsDataSourceModel struct {
-	ActorFilter     types.String    `tfsdk:"actor_filter"`
-	APITokenFilter  types.String    `tfsdk:"api_token_filter"`
-	Cursor          types.String    `tfsdk:"cursor"`
-	EndDateFilter   types.String    `tfsdk:"end_date_filter"`
-	EventTypeFilter types.String    `tfsdk:"event_type_filter"`
+	ActorFilter     types.String    `queryParam:"style=form,explode=true,name=actor_filter" tfsdk:"actor_filter"`
+	APITokenFilter  types.String    `queryParam:"style=form,explode=true,name=api_token_filter" tfsdk:"api_token_filter"`
+	Cursor          types.String    `queryParam:"style=form,explode=true,name=cursor" tfsdk:"cursor"`
+	EndDateFilter   types.String    `queryParam:"style=form,explode=true,name=end_date_filter" tfsdk:"end_date_filter"`
+	EventTypeFilter types.String    `queryParam:"style=form,explode=true,name=event_type_filter" tfsdk:"event_type_filter"`
 	Next            types.String    `tfsdk:"next"`
-	ObjectFilter    types.String    `tfsdk:"object_filter"`
-	PageSize        types.Int64     `tfsdk:"page_size"`
+	ObjectFilter    types.String    `queryParam:"style=form,explode=true,name=object_filter" tfsdk:"object_filter"`
+	PageSize        types.Int64     `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
 	Previous        types.String    `tfsdk:"previous"`
 	Results         []tfTypes.Event `tfsdk:"results"`
-	StartDateFilter types.String    `tfsdk:"start_date_filter"`
+	StartDateFilter types.String    `queryParam:"style=form,explode=true,name=start_date_filter" tfsdk:"start_date_filter"`
 }
 
 // Metadata returns the data source type name.

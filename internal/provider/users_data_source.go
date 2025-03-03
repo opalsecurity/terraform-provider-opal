@@ -29,9 +29,9 @@ type UsersDataSource struct {
 
 // UsersDataSourceModel describes the data model.
 type UsersDataSourceModel struct {
-	Cursor   types.String   `tfsdk:"cursor"`
+	Cursor   types.String   `queryParam:"style=form,explode=true,name=cursor" tfsdk:"cursor"`
 	Next     types.String   `tfsdk:"next"`
-	PageSize types.Int64    `tfsdk:"page_size"`
+	PageSize types.Int64    `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
 	Previous types.String   `tfsdk:"previous"`
 	Results  []tfTypes.User `tfsdk:"results"`
 }
