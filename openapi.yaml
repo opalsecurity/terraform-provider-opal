@@ -86,6 +86,430 @@ paths:
         - apps
       x-speakeasy-name-override: get_id
       x-speakeasy-entity-operation: App#get
+  /experimental/bundles:
+    get:
+      description: Returns a list of `Bundle` objects.
+      operationId: getBundles
+      parameters:
+        - description: The maximum number of bundles to return from the beginning of the list. Default is 200, max is 1000.
+          example: 200
+          explode: true
+          in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+          style: form
+        - description: A cursor indicating where to start fetching items after a specific point.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          explode: true
+          in: query
+          name: cursor
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: A filter for the bundle name.
+          example: Engineering
+          explode: true
+          in: query
+          name: contains
+          required: false
+          schema:
+            type: string
+          style: form
+      responses:
+        "200":
+          description: A list of bundles for your organization.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedBundleList"
+      security:
+        - BearerAuth: []
+      tags:
+        - coming soon
+    post:
+      description: Creates a bundle.
+      operationId: createBundle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBundleInfo"
+      responses:
+        "201":
+          description: The bundle successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bundle"
+      security:
+        - BearerAuth: []
+      tags:
+        - coming soon
+  /experimental/bundles/{bundle_id}:
+    get:
+      description: Returns a `Bundle` object.
+      operationId: getBundle
+      parameters:
+        - description: The ID of the bundle.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: true
+          in: path
+          name: bundle_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bundle"
+          description: The requested `Bundle`.
+      security:
+        - BearerAuth: []
+      tags:
+        - coming soon
+    delete:
+      description: Deletes a bundle.
+      operationId: deleteBundle
+      parameters:
+        - description: The ID of the bundle.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: true
+          in: path
+          name: bundle_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "204":
+          description: The bundle was successfully deleted.
+      security:
+        - BearerAuth: []
+      tags:
+        - coming soon
+    put:
+      description: Updates a bundle.
+      operationId: updateBundle
+      parameters:
+        - description: The ID of the bundle to be updated.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          in: path
+          name: bundle_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Bundle"
+      responses:
+        "200":
+          description: The bundle was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Bundle"
+        "204":
+          description: No changes detected (no-op)
+      security:
+        - BearerAuth: []
+      tags:
+        - coming soon
+  /experimental/bundles/{bundle_id}/resources:
+    get:
+      description: Returns a list of `Resource` objects in a given bundle.
+      operationId: getBundleResources
+      parameters:
+        - description: The ID of the bundle.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          in: path
+          name: bundle_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The maximum number of resources to return from the beginning of the list. Default is 200, max is 1000.
+          example: 200
+          explode: true
+          in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+          style: form
+        - description: A cursor indicating where to start fetching items after a specific point.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          explode: true
+          in: query
+          name: cursor
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: A filter for the bundle name.
+          example: Engineering
+          explode: true
+          in: query
+          name: contains
+          required: false
+          schema:
+            type: string
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedBundleResourceList"
+          description: A list of resources for the bundle.
+      security:
+        - BearerAuth: []
+      tags:
+        - coming soon
+    post:
+      description: Adds a resource to a bundle.
+      operationId: addBundleResource
+      parameters:
+        - description: The ID of the bundle.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          in: path
+          name: bundle_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              properties:
+                resource_id:
+                  description: The ID of the resource to add.
+                  example: 72e75a6f-7183-48c5-94ff-6013f213314b
+                  format: uuid
+                  type: string
+                resource_name:
+                  description: The name of the resource to add.
+                  example: S3 Bucket
+                  type: string
+                access_level_remote_id:
+                  description: The remote ID of the access level to grant to this user. Required if the resource being added requires an access level. If omitted, the default access level remote ID value (empty string) is used.
+                  example: arn:aws:iam::590304332660:role/AdministratorAccess
+                  type: string
+                access_level_name:
+                  description: The name of the access level to grant to this user. If omitted, the default access level name value (empty string) is used.
+                  example: AdministratorAccess
+                  type: string
+              required:
+                - resource_id
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BundleResource"
+          description: Resource was successfully added to the bundle.
+      security:
+        - BearerAuth: []
+      tags:
+        - coming soon
+  /experimental/bundles/{bundle_id}/resources/{resource_id}:
+    delete:
+      description: Removes a resource from a bundle.
+      operationId: removeBundleResource
+      parameters:
+        - description: The ID of the bundle.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          in: path
+          name: bundle_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+        - description: The ID of the resource to remove.
+          example: 72e75a6f-7183-48c5-94ff-6013f213314b
+          in: path
+          name: resource_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+        - description: The remote ID of the access level to grant. If omitted, the default access level remote ID value (empty string) is used.
+          example: arn:aws:iam::590304332660:role/AdministratorAccess
+          explode: true
+          in: query
+          name: access_level_remote_id
+          required: false
+          schema:
+            type: string
+          style: form
+      responses:
+        "204":
+          description: Resource was successfully removed from the bundle.
+      security:
+        - BearerAuth: []
+      tags:
+        - coming soon
+  /experimental/bundles/{bundle_id}/groups:
+    get:
+      description: Returns a list of `Group` objects in a given bundle.
+      operationId: getBundleGroups
+      parameters:
+        - description: The ID of the bundle.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          in: path
+          name: bundle_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The maximum number of groups to return from the beginning of the list. Default is 200, max is 1000.
+          example: 200
+          explode: true
+          in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+          style: form
+        - description: A cursor indicating where to start fetching items after a specific point.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          explode: true
+          in: query
+          name: cursor
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: A filter for the bundle name.
+          example: Engineering
+          explode: true
+          in: query
+          name: contains
+          required: false
+          schema:
+            type: string
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedBundleGroupList"
+          description: A list of groups for the bundle.
+      security:
+        - BearerAuth: []
+      tags:
+        - coming soon
+    post:
+      description: Adds a group to a bundle.
+      operationId: addBundleGroup
+      parameters:
+        - description: The ID of the bundle.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          in: path
+          name: bundle_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                group_id:
+                  description: The ID of the group to add.
+                  example: 72e75a6f-7183-48c5-94ff-6013f213314b
+                  format: uuid
+                  type: string
+                group_name:
+                  description: The name of the group to add.
+                  example: Engineering
+                  type: string
+              required:
+                - group_id
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BundleGroup"
+          description: Group was successfully added to the bundle.
+      security:
+        - BearerAuth: []
+      tags:
+        - coming soon
+  /experimental/bundles/{bundle_id}/groups/{group_id}:
+    delete:
+      description: Removes a group from a bundle.
+      operationId: removeBundleGroup
+      parameters:
+        - description: The ID of the bundle.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          in: path
+          name: bundle_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+        - description: The ID of the group to remove.
+          example: 72e75a6f-7183-48c5-94ff-6013f213314b
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+      responses:
+        "204":
+          description: Group was successfully removed from the bundle.
+      security:
+        - BearerAuth: []
+      tags:
+        - coming soon
+  /experimental/bundles/{bundle_id}/visibility:
+    get:
+      description: Gets the visibility of the bundle.
+      operationId: getBundleVisibility
+      parameters:
+        - description: The ID of the bundle.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          in: path
+          name: bundle_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VisibilityInfo"
+          description: The visibility details of a bundle.
+      security:
+        - BearerAuth: []
+      tags:
+        - coming soon
   /configuration-templates:
     get:
       description: Returns a list of `ConfigurationTemplate` objects.
@@ -4107,11 +4531,11 @@ components:
         previous: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
         results:
           - user_id: 29827fb8-f2dd-4e80-9576-28e31e9934ac
-            email: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+            email: john.doe@company.dev
             full_name: John Doe
             position: Senior Engineer
           - user_id: e8581682-04f7-473a-a419-472f0fb26d46
-            email: 186511e5-5b5a-4ad7-a4ad-b6c8694a544a
+            email: jane.smith@company.dev
             full_name: Jane Smith
             position: Product Marketing Lead
       properties:
@@ -4143,7 +4567,7 @@ components:
         Fetch from the `LIST Sessions` endpoint.
       example:
         user_id: 29827fb8-f2dd-4e80-9576-28e31e9934ac
-        email: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+        email: john.doe@company.dev
         full_name: John Doe
         first_name: John
         last_name: Doe
@@ -4158,7 +4582,7 @@ components:
           x-speakeasy-param-suppress-computed-diff: true
         email:
           description: The email of the user.
-          example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+          example: john.doe@company.dev
           type: string
         full_name:
           description: The full name of the user.
@@ -4883,6 +5307,13 @@ components:
       example: GLOBAL
       type: string
       x-speakeasy-entity: Groups
+    BundlesVisibilityTypeEnum:
+      description: The visibility level of the entity.
+      enum:
+        - GLOBAL
+        - TEAM
+      example: GLOBAL
+      type: string
     UpdateGroupResourcesInfo:
       example:
         group_resources:
@@ -6097,6 +6528,34 @@ components:
         - app_id
       type: object
       x-speakeasy-entity: Resource
+    CreateBundleInfo:
+      description: |-
+        # CreateBundleInfo Object
+        ### Description
+        The `CreateBundleInfo` object is used to store creation info for a bundle.
+
+        ### Usage Example
+        Use in the `POST Bundles` endpoint.
+      example:
+        name: Engineering Team Bundle
+        description: Engineering team bundle.
+        admin_owner_id: 7870617d-e72a-47f5-a84c-693817ab4567
+      properties:
+        name:
+          type: string
+          description: The name of the bundle.
+          example: "Test Bundle"
+        description:
+          type: string
+          description: A brief description of the bundle.
+          example: "This is a test bundle"
+        admin_owner_id:
+          type: string
+          description: The ID of the bundle's admin owner.
+          example: "7c86c85d-0651-43e2-a748-d69d658418e8"
+      required:
+        - name
+        - admin_owner_id
     CreateGroupInfo:
       description: |-
         # CreateGroupInfo Object
@@ -8160,6 +8619,201 @@ components:
         - last_seen
         - error_message
       type: object
+    Bundle:
+      properties:
+        id:
+          description: The ID of the bundle.
+          example: a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1
+          format: uuid
+          type: string
+          readOnly: true
+        name:
+          description: The name of the bundle.
+          example: Bundle 1
+          type: string
+        description:
+          description: The description of the bundle.
+          example: Description of bundle 1
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          description: The creation timestamp of the bundle, in ISO 8601 format
+        updated_at:
+          type: string
+          format: date-time
+          description: The last updated timestamp of the bundle, in ISO 8601 format
+          readOnly: true
+        admin_owner_id:
+          description: The ID of the owner of the bundle.
+          example: 4aed3e8a-727b-4d72-8010-3b8710c50bec
+          format: uuid
+          type: string
+        total_num_items:
+          description: The total number of items in the bundle.
+          example: 15
+          type: integer
+          readOnly: true
+        total_num_resources:
+          description: The total number of resources in the bundle.
+          example: 10
+          type: integer
+          readOnly: true
+        total_num_groups:
+          description: The total number of groups in the bundle.
+          example: 5
+          type: integer
+          readOnly: true
+    PaginatedBundleList:
+      example:
+        next: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+        previous: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+        totalCount: 2
+        bundles:
+          - id: a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1
+            name: Bundle 1
+            description: Description of bundle 1
+            admin_owner_id: 4aed3e8a-727b-4d72-8010-3b8710c50bec
+            total_num_items: 0
+            total_num_resources: 0
+            total_num_groups: 0
+          - id: 8294e9c9-deb6-48e9-9c99-da2a1e04a87f
+            name: Bundle 2
+            description: Description of bundle 2
+            admin_owner_id: 4aed3e8a-727b-4d72-8010-3b8710c50bec
+            total_num_items: 0
+            total_num_resources: 0
+            total_num_groups: 0
+      properties:
+        previous:
+          description: The cursor used to obtain the current result page.
+          example: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+          nullable: true
+          type: string
+        next:
+          description: The cursor with which to continue pagination if additional result pages exist.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          nullable: true
+          type: string
+        total_count:
+          description: The total number of items in the result set.
+          example: 2
+          type: integer
+        bundles:
+          items:
+            $ref: "#/components/schemas/Bundle"
+          type: array
+      type: object
+      required:
+        - bundles
+    BundleResource:
+      properties:
+        bundle_id:
+          description: The ID of the bundle containing the resource.
+          example: a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1
+          format: uuid
+          type: string
+          readOnly: true
+        resource_id:
+          description: The ID of the resource within a bundle.
+          example: a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1
+          format: uuid
+          type: string
+          readOnly: true
+        resource_name:
+          description: The name of the resource within a bundle.
+          example: Resource 1
+          type: string
+        access_level_name:
+          description: The access level of the resource within a bundle.
+          example: Read
+          type: string
+        access_level_remote_id:
+          description: The remote ID of the access level of the resource within a bundle.
+          example: arn:aws:iam::490306337630:role/SupportUser
+          type: string
+    PaginatedBundleResourceList:
+      example:
+        next: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+        previous: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+        total_count: 3
+        bundle_resources:
+          - id: a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1
+            name: Resource 1
+            access_level_name: read
+            access_level_remote_id: pull
+      properties:
+        previous:
+          description: The cursor used to obtain the current result page.
+          example: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+          nullable: true
+          type: string
+        next:
+          description: The cursor with which to continue pagination if additional result pages exist.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          nullable: true
+          type: string
+        total_count:
+          description: The total number of items in the result set.
+          example: 2
+          type: integer
+        bundle_resources:
+          items:
+            $ref: "#/components/schemas/BundleResource"
+          type: array
+      type: object
+      required:
+        - bundle_resources
+    BundleGroup:
+      properties:
+        bundle_id:
+          description: The ID of the bundle containing the group.
+          example: a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1
+          format: uuid
+          type: string
+          readOnly: true
+        group_id:
+          description: The ID of the group within a bundle.
+          example: a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1
+          format: uuid
+          type: string
+          readOnly: true
+        group_name:
+          description: The name of the group within a bundle.
+          example: Group 1
+          type: string
+    PaginatedBundleGroupList:
+      example:
+        next: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+        previous: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+        total_count: 2
+        bundle_groups:
+          - id: a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1
+            name: Group 1
+          - id: 8294e9c9-deb6-48e9-9c99-da2a1e04a87f
+            name: Group 2
+      properties:
+        previous:
+          description: The cursor used to obtain the current result page.
+          example: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+          nullable: true
+          type: string
+        next:
+          description: The cursor with which to continue pagination if additional result pages exist.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          nullable: true
+          type: string
+        total_count:
+          description: The total number of items in the result set.
+          example: 2
+          type: integer
+        bundle_groups:
+          items:
+            $ref: "#/components/schemas/BundleGroup"
+          type: array
+      type: object
+      required:
+        - bundle_groups
   securitySchemes:
     BearerAuth:
       scheme: bearer

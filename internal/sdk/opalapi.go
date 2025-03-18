@@ -84,6 +84,7 @@ type OpalAPI struct {
 	ConfigurationTemplates *ConfigurationTemplates
 	// Operations related to events
 	Events        *Events
+	ComingSoon    *ComingSoon
 	GroupBindings *GroupBindings
 	// Operations related to groups
 	Groups           *Groups
@@ -185,9 +186,9 @@ func New(opts ...SDKOption) *OpalAPI {
 		sdkConfiguration: sdkConfiguration{
 			Language:          "go",
 			OpenAPIDocVersion: "1.0",
-			SDKVersion:        "0.31.0",
-			GenVersion:        "2.533.0",
-			UserAgent:         "speakeasy-sdk/terraform 0.31.0 2.533.0 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
+			SDKVersion:        "0.32.0",
+			GenVersion:        "2.552.1",
+			UserAgent:         "speakeasy-sdk/terraform 0.32.0 2.552.1 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
 			Hooks:             hooks.New(),
 		},
 	}
@@ -212,6 +213,8 @@ func New(opts ...SDKOption) *OpalAPI {
 	sdk.ConfigurationTemplates = newConfigurationTemplates(sdk.sdkConfiguration)
 
 	sdk.Events = newEvents(sdk.sdkConfiguration)
+
+	sdk.ComingSoon = newComingSoon(sdk.sdkConfiguration)
 
 	sdk.GroupBindings = newGroupBindings(sdk.sdkConfiguration)
 
