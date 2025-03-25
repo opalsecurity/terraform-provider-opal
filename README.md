@@ -30,7 +30,7 @@ terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "0.32.1"
+      version = "0.32.3"
     }
   }
 }
@@ -47,6 +47,9 @@ provider "opal" {
 
 ### Resources
 
+* [opal_bundle](docs/resources/bundle.md)
+* [opal_bundle_group](docs/resources/bundle_group.md)
+* [opal_bundle_resource](docs/resources/bundle_resource.md)
 * [opal_configuration_template](docs/resources/configuration_template.md)
 * [opal_group](docs/resources/group.md)
 * [opal_group_resource_list](docs/resources/group_resource_list.md)
@@ -64,6 +67,11 @@ provider "opal" {
 
 * [opal_app](docs/data-sources/app.md)
 * [opal_apps](docs/data-sources/apps.md)
+* [opal_bundle](docs/data-sources/bundle.md)
+* [opal_bundle_groups](docs/data-sources/bundle_groups.md)
+* [opal_bundle_resources](docs/data-sources/bundle_resources.md)
+* [opal_bundles](docs/data-sources/bundles.md)
+* [opal_bundle_visibility](docs/data-sources/bundle_visibility.md)
 * [opal_configuration_template_list](docs/data-sources/configuration_template_list.md)
 * [opal_events](docs/data-sources/events.md)
 * [opal_group](docs/data-sources/group.md)

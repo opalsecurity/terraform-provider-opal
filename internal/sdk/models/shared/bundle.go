@@ -10,12 +10,12 @@ import (
 type Bundle struct {
 	// The ID of the owner of the bundle.
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
+	// The ID of the bundle.
+	BundleID *string `json:"bundle_id,omitempty"`
 	// The creation timestamp of the bundle, in ISO 8601 format
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// The description of the bundle.
 	Description *string `json:"description,omitempty"`
-	// The ID of the bundle.
-	ID *string `json:"id,omitempty"`
 	// The name of the bundle.
 	Name *string `json:"name,omitempty"`
 	// The total number of groups in the bundle.
@@ -46,6 +46,13 @@ func (o *Bundle) GetAdminOwnerID() *string {
 	return o.AdminOwnerID
 }
 
+func (o *Bundle) GetBundleID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.BundleID
+}
+
 func (o *Bundle) GetCreatedAt() *time.Time {
 	if o == nil {
 		return nil
@@ -58,13 +65,6 @@ func (o *Bundle) GetDescription() *string {
 		return nil
 	}
 	return o.Description
-}
-
-func (o *Bundle) GetID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ID
 }
 
 func (o *Bundle) GetName() *string {

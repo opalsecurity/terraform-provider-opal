@@ -129,6 +129,8 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-name-override: get_bundles
+      x-speakeasy-entity-operation: Bundles#get
     post:
       description: Creates a bundle.
       operationId: createBundle
@@ -149,6 +151,8 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-name-override: create_bundle
+      x-speakeasy-entity-operation: Bundle#create
   /bundles/{bundle_id}:
     get:
       description: Returns a `Bundle` object.
@@ -175,6 +179,8 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-name-override: get_bundle
+      x-speakeasy-entity-operation: Bundle#get
     delete:
       description: Deletes a bundle.
       operationId: deleteBundle
@@ -196,6 +202,8 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-name-override: delete_bundle
+      x-speakeasy-entity-operation: Bundle#delete
     put:
       description: Updates a bundle.
       operationId: updateBundle
@@ -228,6 +236,8 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-name-override: update_bundle
+      x-speakeasy-entity-operation: Bundles#update
   /bundles/{bundle_id}/resources:
     get:
       description: Returns a list of `Resource` objects in a given bundle.
@@ -280,6 +290,8 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-name-override: get_bundle_resources
+      x-speakeasy-entity-operation: BundleResources#get
     post:
       description: Adds a resource to a bundle.
       operationId: addBundleResource
@@ -328,6 +340,8 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-name-override: add_bundle_resource
+      x-speakeasy-entity-operation: BundleResource#create
   /bundles/{bundle_id}/resources/{resource_id}:
     delete:
       description: Removes a resource from a bundle.
@@ -365,6 +379,8 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-name-override: remove_bundle_resource
+      x-speakeasy-entity-operation: BundleResource#delete
   /bundles/{bundle_id}/groups:
     get:
       description: Returns a list of `Group` objects in a given bundle.
@@ -417,6 +433,8 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-name-override: get_bundle_groups
+      x-speakeasy-entity-operation: BundleGroups#get
     post:
       description: Adds a group to a bundle.
       operationId: addBundleGroup
@@ -457,6 +475,8 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-name-override: add_bundle_group
+      x-speakeasy-entity-operation: BundleGroup#create
   /bundles/{bundle_id}/groups/{group_id}:
     delete:
       description: Removes a group from a bundle.
@@ -485,6 +505,8 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-name-override: remove_bundle_group
+      x-speakeasy-entity-operation: BundleGroup#delete
   /bundles/{bundle_id}/visibility:
     get:
       description: Gets the visibility of the bundle.
@@ -510,6 +532,8 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-name-override: get_bundle_visibility
+      x-speakeasy-entity-operation: BundleVisibility#get
     put:
       description: Sets the visibility of the bundle.
       operationId: setBundleVisibility
@@ -536,6 +560,8 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-name-override: update_bundle_visibility
+      x-speakeasy-entity-operation: BundleVisibility#update
   /configuration-templates:
     get:
       description: Returns a list of `ConfigurationTemplate` objects.
@@ -8647,12 +8673,6 @@ components:
       type: object
     Bundle:
       properties:
-        id:
-          description: The ID of the bundle.
-          example: a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1
-          format: uuid
-          type: string
-          readOnly: true
         name:
           description: The name of the bundle.
           example: Bundle 1
@@ -8665,11 +8685,13 @@ components:
           type: string
           format: date-time
           description: The creation timestamp of the bundle, in ISO 8601 format
+          x-speakeasy-param-suppress-computed-diff: true
         updated_at:
           type: string
           format: date-time
           description: The last updated timestamp of the bundle, in ISO 8601 format
           readOnly: true
+          x-speakeasy-param-suppress-computed-diff: true
         admin_owner_id:
           description: The ID of the owner of the bundle.
           example: 4aed3e8a-727b-4d72-8010-3b8710c50bec
@@ -8690,6 +8712,13 @@ components:
           example: 5
           type: integer
           readOnly: true
+        bundle_id:
+          description: The ID of the bundle.
+          example: a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1
+          format: uuid
+          type: string
+          readOnly: true
+          x-speakeasy-param-suppress-computed-diff: true
     PaginatedBundleList:
       example:
         next: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
@@ -8881,3 +8910,5 @@ tags:
     description: Operations related to on-call schedules
   - name: uars
     description: Operations related to uars
+  - name: bundles
+    description: Operations related to bundles
