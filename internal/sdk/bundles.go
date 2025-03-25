@@ -16,18 +16,18 @@ import (
 	"net/url"
 )
 
-type ComingSoon struct {
+type Bundles struct {
 	sdkConfiguration sdkConfiguration
 }
 
-func newComingSoon(sdkConfig sdkConfiguration) *ComingSoon {
-	return &ComingSoon{
+func newBundles(sdkConfig sdkConfiguration) *Bundles {
+	return &Bundles{
 		sdkConfiguration: sdkConfig,
 	}
 }
 
 // AddBundleGroup - Adds a group to a bundle.
-func (s *ComingSoon) AddBundleGroup(ctx context.Context, request operations.AddBundleGroupRequest, opts ...operations.Option) (*operations.AddBundleGroupResponse, error) {
+func (s *Bundles) AddBundleGroup(ctx context.Context, request operations.AddBundleGroupRequest, opts ...operations.Option) (*operations.AddBundleGroupResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -46,7 +46,7 @@ func (s *ComingSoon) AddBundleGroup(ctx context.Context, request operations.AddB
 	} else {
 		baseURL = *o.ServerURL
 	}
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/experimental/bundles/{bundle_id}/groups", request, nil)
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/bundles/{bundle_id}/groups", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -228,7 +228,7 @@ func (s *ComingSoon) AddBundleGroup(ctx context.Context, request operations.AddB
 }
 
 // AddBundleResource - Adds a resource to a bundle.
-func (s *ComingSoon) AddBundleResource(ctx context.Context, request operations.AddBundleResourceRequest, opts ...operations.Option) (*operations.AddBundleResourceResponse, error) {
+func (s *Bundles) AddBundleResource(ctx context.Context, request operations.AddBundleResourceRequest, opts ...operations.Option) (*operations.AddBundleResourceResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -247,7 +247,7 @@ func (s *ComingSoon) AddBundleResource(ctx context.Context, request operations.A
 	} else {
 		baseURL = *o.ServerURL
 	}
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/experimental/bundles/{bundle_id}/resources", request, nil)
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/bundles/{bundle_id}/resources", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -429,7 +429,7 @@ func (s *ComingSoon) AddBundleResource(ctx context.Context, request operations.A
 }
 
 // CreateBundle - Creates a bundle.
-func (s *ComingSoon) CreateBundle(ctx context.Context, request shared.CreateBundleInfo, opts ...operations.Option) (*operations.CreateBundleResponse, error) {
+func (s *Bundles) CreateBundle(ctx context.Context, request shared.CreateBundleInfo, opts ...operations.Option) (*operations.CreateBundleResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -448,7 +448,7 @@ func (s *ComingSoon) CreateBundle(ctx context.Context, request shared.CreateBund
 	} else {
 		baseURL = *o.ServerURL
 	}
-	opURL, err := url.JoinPath(baseURL, "/experimental/bundles")
+	opURL, err := url.JoinPath(baseURL, "/bundles")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -630,7 +630,7 @@ func (s *ComingSoon) CreateBundle(ctx context.Context, request shared.CreateBund
 }
 
 // DeleteBundle - Deletes a bundle.
-func (s *ComingSoon) DeleteBundle(ctx context.Context, request operations.DeleteBundleRequest, opts ...operations.Option) (*operations.DeleteBundleResponse, error) {
+func (s *Bundles) DeleteBundle(ctx context.Context, request operations.DeleteBundleRequest, opts ...operations.Option) (*operations.DeleteBundleResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -649,7 +649,7 @@ func (s *ComingSoon) DeleteBundle(ctx context.Context, request operations.Delete
 	} else {
 		baseURL = *o.ServerURL
 	}
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/experimental/bundles/{bundle_id}", request, nil)
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/bundles/{bundle_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -804,7 +804,7 @@ func (s *ComingSoon) DeleteBundle(ctx context.Context, request operations.Delete
 }
 
 // GetBundle - Returns a `Bundle` object.
-func (s *ComingSoon) GetBundle(ctx context.Context, request operations.GetBundleRequest, opts ...operations.Option) (*operations.GetBundleResponse, error) {
+func (s *Bundles) GetBundle(ctx context.Context, request operations.GetBundleRequest, opts ...operations.Option) (*operations.GetBundleResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -823,7 +823,7 @@ func (s *ComingSoon) GetBundle(ctx context.Context, request operations.GetBundle
 	} else {
 		baseURL = *o.ServerURL
 	}
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/experimental/bundles/{bundle_id}", request, nil)
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/bundles/{bundle_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -998,7 +998,7 @@ func (s *ComingSoon) GetBundle(ctx context.Context, request operations.GetBundle
 }
 
 // GetBundleGroups - Returns a list of `Group` objects in a given bundle.
-func (s *ComingSoon) GetBundleGroups(ctx context.Context, request operations.GetBundleGroupsRequest, opts ...operations.Option) (*operations.GetBundleGroupsResponse, error) {
+func (s *Bundles) GetBundleGroups(ctx context.Context, request operations.GetBundleGroupsRequest, opts ...operations.Option) (*operations.GetBundleGroupsResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1017,7 +1017,7 @@ func (s *ComingSoon) GetBundleGroups(ctx context.Context, request operations.Get
 	} else {
 		baseURL = *o.ServerURL
 	}
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/experimental/bundles/{bundle_id}/groups", request, nil)
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/bundles/{bundle_id}/groups", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -1196,7 +1196,7 @@ func (s *ComingSoon) GetBundleGroups(ctx context.Context, request operations.Get
 }
 
 // GetBundleResources - Returns a list of `Resource` objects in a given bundle.
-func (s *ComingSoon) GetBundleResources(ctx context.Context, request operations.GetBundleResourcesRequest, opts ...operations.Option) (*operations.GetBundleResourcesResponse, error) {
+func (s *Bundles) GetBundleResources(ctx context.Context, request operations.GetBundleResourcesRequest, opts ...operations.Option) (*operations.GetBundleResourcesResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1215,7 +1215,7 @@ func (s *ComingSoon) GetBundleResources(ctx context.Context, request operations.
 	} else {
 		baseURL = *o.ServerURL
 	}
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/experimental/bundles/{bundle_id}/resources", request, nil)
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/bundles/{bundle_id}/resources", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -1394,7 +1394,7 @@ func (s *ComingSoon) GetBundleResources(ctx context.Context, request operations.
 }
 
 // GetBundleVisibility - Gets the visibility of the bundle.
-func (s *ComingSoon) GetBundleVisibility(ctx context.Context, request operations.GetBundleVisibilityRequest, opts ...operations.Option) (*operations.GetBundleVisibilityResponse, error) {
+func (s *Bundles) GetBundleVisibility(ctx context.Context, request operations.GetBundleVisibilityRequest, opts ...operations.Option) (*operations.GetBundleVisibilityResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1413,7 +1413,7 @@ func (s *ComingSoon) GetBundleVisibility(ctx context.Context, request operations
 	} else {
 		baseURL = *o.ServerURL
 	}
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/experimental/bundles/{bundle_id}/visibility", request, nil)
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/bundles/{bundle_id}/visibility", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -1588,7 +1588,7 @@ func (s *ComingSoon) GetBundleVisibility(ctx context.Context, request operations
 }
 
 // GetBundles - Returns a list of `Bundle` objects.
-func (s *ComingSoon) GetBundles(ctx context.Context, request operations.GetBundlesRequest, opts ...operations.Option) (*operations.GetBundlesResponse, error) {
+func (s *Bundles) GetBundles(ctx context.Context, request operations.GetBundlesRequest, opts ...operations.Option) (*operations.GetBundlesResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1607,7 +1607,7 @@ func (s *ComingSoon) GetBundles(ctx context.Context, request operations.GetBundl
 	} else {
 		baseURL = *o.ServerURL
 	}
-	opURL, err := url.JoinPath(baseURL, "/experimental/bundles")
+	opURL, err := url.JoinPath(baseURL, "/bundles")
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -1786,7 +1786,7 @@ func (s *ComingSoon) GetBundles(ctx context.Context, request operations.GetBundl
 }
 
 // RemoveBundleGroup - Removes a group from a bundle.
-func (s *ComingSoon) RemoveBundleGroup(ctx context.Context, request operations.RemoveBundleGroupRequest, opts ...operations.Option) (*operations.RemoveBundleGroupResponse, error) {
+func (s *Bundles) RemoveBundleGroup(ctx context.Context, request operations.RemoveBundleGroupRequest, opts ...operations.Option) (*operations.RemoveBundleGroupResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1805,7 +1805,7 @@ func (s *ComingSoon) RemoveBundleGroup(ctx context.Context, request operations.R
 	} else {
 		baseURL = *o.ServerURL
 	}
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/experimental/bundles/{bundle_id}/groups/{group_id}", request, nil)
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/bundles/{bundle_id}/groups/{group_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -1960,7 +1960,7 @@ func (s *ComingSoon) RemoveBundleGroup(ctx context.Context, request operations.R
 }
 
 // RemoveBundleResource - Removes a resource from a bundle.
-func (s *ComingSoon) RemoveBundleResource(ctx context.Context, request operations.RemoveBundleResourceRequest, opts ...operations.Option) (*operations.RemoveBundleResourceResponse, error) {
+func (s *Bundles) RemoveBundleResource(ctx context.Context, request operations.RemoveBundleResourceRequest, opts ...operations.Option) (*operations.RemoveBundleResourceResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1979,7 +1979,7 @@ func (s *ComingSoon) RemoveBundleResource(ctx context.Context, request operation
 	} else {
 		baseURL = *o.ServerURL
 	}
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/experimental/bundles/{bundle_id}/resources/{resource_id}", request, nil)
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/bundles/{bundle_id}/resources/{resource_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
@@ -2137,8 +2137,8 @@ func (s *ComingSoon) RemoveBundleResource(ctx context.Context, request operation
 
 }
 
-// UpdateBundle - Updates a bundle.
-func (s *ComingSoon) UpdateBundle(ctx context.Context, request operations.UpdateBundleRequest, opts ...operations.Option) (*operations.UpdateBundleResponse, error) {
+// SetBundleVisibility - Sets the visibility of the bundle.
+func (s *Bundles) SetBundleVisibility(ctx context.Context, request operations.SetBundleVisibilityRequest, opts ...operations.Option) (*operations.SetBundleVisibilityResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -2157,7 +2157,188 @@ func (s *ComingSoon) UpdateBundle(ctx context.Context, request operations.Update
 	} else {
 		baseURL = *o.ServerURL
 	}
-	opURL, err := utils.GenerateURL(ctx, baseURL, "/experimental/bundles/{bundle_id}", request, nil)
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/bundles/{bundle_id}/visibility", request, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		BaseURL:        baseURL,
+		Context:        ctx,
+		OperationID:    "setBundleVisibility",
+		OAuth2Scopes:   []string{},
+		SecuritySource: s.sdkConfiguration.Security,
+	}
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "VisibilityInfo", "json", `request:"mediaType=application/json"`)
+	if err != nil {
+		return nil, err
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "PUT", opURL, bodyReader)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+	req.Header.Set("Accept", "*/*")
+	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
+	if reqContentType != "" {
+		req.Header.Set("Content-Type", reqContentType)
+	}
+
+	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
+		return nil, err
+	}
+
+	for k, v := range o.SetHeaders {
+		req.Header.Set(k, v)
+	}
+
+	globalRetryConfig := s.sdkConfiguration.RetryConfig
+	retryConfig := o.Retries
+	if retryConfig == nil {
+		if globalRetryConfig != nil {
+			retryConfig = globalRetryConfig
+		} else {
+			retryConfig = &retry.Config{
+				Strategy: "backoff", Backoff: &retry.BackoffStrategy{
+					InitialInterval: 1000,
+					MaxInterval:     60000,
+					Exponent:        1.5,
+					MaxElapsedTime:  3600000,
+				},
+				RetryConnectionErrors: true,
+			}
+		}
+	}
+
+	var httpRes *http.Response
+	if retryConfig != nil {
+		httpRes, err = utils.Retry(ctx, utils.Retries{
+			Config: retryConfig,
+			StatusCodes: []string{
+				"429",
+			},
+		}, func() (*http.Response, error) {
+			if req.Body != nil {
+				copyBody, err := req.GetBody()
+				if err != nil {
+					return nil, err
+				}
+				req.Body = copyBody
+			}
+
+			req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
+			if err != nil {
+				if retry.IsPermanentError(err) || retry.IsTemporaryError(err) {
+					return nil, err
+				}
+
+				return nil, retry.Permanent(err)
+			}
+
+			httpRes, err := s.sdkConfiguration.Client.Do(req)
+			if err != nil || httpRes == nil {
+				if err != nil {
+					err = fmt.Errorf("error sending request: %w", err)
+				} else {
+					err = fmt.Errorf("error sending request: no response")
+				}
+
+				_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
+			}
+			return httpRes, err
+		})
+
+		if err != nil {
+			return nil, err
+		} else {
+			httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
+			if err != nil {
+				return nil, err
+			}
+		}
+	} else {
+		req, err = s.sdkConfiguration.Hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
+		if err != nil {
+			return nil, err
+		}
+
+		httpRes, err = s.sdkConfiguration.Client.Do(req)
+		if err != nil || httpRes == nil {
+			if err != nil {
+				err = fmt.Errorf("error sending request: %w", err)
+			} else {
+				err = fmt.Errorf("error sending request: no response")
+			}
+
+			_, err = s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
+			return nil, err
+		} else if utils.MatchStatusCodes([]string{}, httpRes.StatusCode) {
+			_httpRes, err := s.sdkConfiguration.Hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, httpRes, nil)
+			if err != nil {
+				return nil, err
+			} else if _httpRes != nil {
+				httpRes = _httpRes
+			}
+		} else {
+			httpRes, err = s.sdkConfiguration.Hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	res := &operations.SetBundleVisibilityResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: httpRes.Header.Get("Content-Type"),
+		RawResponse: httpRes,
+	}
+
+	switch {
+	case httpRes.StatusCode == 200:
+	default:
+		rawBody, err := utils.ConsumeRawBody(httpRes)
+		if err != nil {
+			return nil, err
+		}
+		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
+	}
+
+	return res, nil
+
+}
+
+// UpdateBundle - Updates a bundle.
+func (s *Bundles) UpdateBundle(ctx context.Context, request operations.UpdateBundleRequest, opts ...operations.Option) (*operations.UpdateBundleResponse, error) {
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionRetries,
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
+	}
+
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/bundles/{bundle_id}", request, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}

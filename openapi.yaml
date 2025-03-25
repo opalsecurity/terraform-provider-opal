@@ -86,7 +86,7 @@ paths:
         - apps
       x-speakeasy-name-override: get_id
       x-speakeasy-entity-operation: App#get
-  /experimental/bundles:
+  /bundles:
     get:
       description: Returns a list of `Bundle` objects.
       operationId: getBundles
@@ -128,7 +128,7 @@ paths:
       security:
         - BearerAuth: []
       tags:
-        - coming soon
+        - bundles
     post:
       description: Creates a bundle.
       operationId: createBundle
@@ -148,8 +148,8 @@ paths:
       security:
         - BearerAuth: []
       tags:
-        - coming soon
-  /experimental/bundles/{bundle_id}:
+        - bundles
+  /bundles/{bundle_id}:
     get:
       description: Returns a `Bundle` object.
       operationId: getBundle
@@ -174,7 +174,7 @@ paths:
       security:
         - BearerAuth: []
       tags:
-        - coming soon
+        - bundles
     delete:
       description: Deletes a bundle.
       operationId: deleteBundle
@@ -195,7 +195,7 @@ paths:
       security:
         - BearerAuth: []
       tags:
-        - coming soon
+        - bundles
     put:
       description: Updates a bundle.
       operationId: updateBundle
@@ -227,8 +227,8 @@ paths:
       security:
         - BearerAuth: []
       tags:
-        - coming soon
-  /experimental/bundles/{bundle_id}/resources:
+        - bundles
+  /bundles/{bundle_id}/resources:
     get:
       description: Returns a list of `Resource` objects in a given bundle.
       operationId: getBundleResources
@@ -279,7 +279,7 @@ paths:
       security:
         - BearerAuth: []
       tags:
-        - coming soon
+        - bundles
     post:
       description: Adds a resource to a bundle.
       operationId: addBundleResource
@@ -327,8 +327,8 @@ paths:
       security:
         - BearerAuth: []
       tags:
-        - coming soon
-  /experimental/bundles/{bundle_id}/resources/{resource_id}:
+        - bundles
+  /bundles/{bundle_id}/resources/{resource_id}:
     delete:
       description: Removes a resource from a bundle.
       operationId: removeBundleResource
@@ -364,8 +364,8 @@ paths:
       security:
         - BearerAuth: []
       tags:
-        - coming soon
-  /experimental/bundles/{bundle_id}/groups:
+        - bundles
+  /bundles/{bundle_id}/groups:
     get:
       description: Returns a list of `Group` objects in a given bundle.
       operationId: getBundleGroups
@@ -416,7 +416,7 @@ paths:
       security:
         - BearerAuth: []
       tags:
-        - coming soon
+        - bundles
     post:
       description: Adds a group to a bundle.
       operationId: addBundleGroup
@@ -456,8 +456,8 @@ paths:
       security:
         - BearerAuth: []
       tags:
-        - coming soon
-  /experimental/bundles/{bundle_id}/groups/{group_id}:
+        - bundles
+  /bundles/{bundle_id}/groups/{group_id}:
     delete:
       description: Removes a group from a bundle.
       operationId: removeBundleGroup
@@ -484,8 +484,8 @@ paths:
       security:
         - BearerAuth: []
       tags:
-        - coming soon
-  /experimental/bundles/{bundle_id}/visibility:
+        - bundles
+  /bundles/{bundle_id}/visibility:
     get:
       description: Gets the visibility of the bundle.
       operationId: getBundleVisibility
@@ -509,7 +509,33 @@ paths:
       security:
         - BearerAuth: []
       tags:
-        - coming soon
+        - bundles
+    put:
+      description: Sets the visibility of the bundle.
+      operationId: setBundleVisibility
+      parameters:
+        - description: The ID of the bundle.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          in: path
+          name: bundle_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              description: The visibility details of the bundle. Setting to LIMITED visibility with no visibility groups will make bundle only visible to admins and users with access.
+              $ref: "#/components/schemas/VisibilityInfo"
+      responses:
+        "200":
+          description: The visibility details of the bundle were successfully set.
+      security:
+        - BearerAuth: []
+      tags:
+        - bundles
   /configuration-templates:
     get:
       description: Returns a list of `ConfigurationTemplate` objects.
