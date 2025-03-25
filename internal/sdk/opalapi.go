@@ -79,12 +79,12 @@ func (c *sdkConfiguration) GetServerDetails() (string, map[string]string) {
 // OpalAPI - Opal API: The Opal API is a RESTful API that allows you to interact with the Opal Security platform programmatically.
 type OpalAPI struct {
 	// Operations related to apps
-	Apps *Apps
+	Apps    *Apps
+	Bundles *Bundles
 	// Operations related to configuration templates
 	ConfigurationTemplates *ConfigurationTemplates
 	// Operations related to events
 	Events        *Events
-	ComingSoon    *ComingSoon
 	GroupBindings *GroupBindings
 	// Operations related to groups
 	Groups           *Groups
@@ -186,9 +186,9 @@ func New(opts ...SDKOption) *OpalAPI {
 		sdkConfiguration: sdkConfiguration{
 			Language:          "go",
 			OpenAPIDocVersion: "1.0",
-			SDKVersion:        "0.32.0",
-			GenVersion:        "2.552.1",
-			UserAgent:         "speakeasy-sdk/terraform 0.32.0 2.552.1 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
+			SDKVersion:        "0.32.1",
+			GenVersion:        "2.559.0",
+			UserAgent:         "speakeasy-sdk/terraform 0.32.1 2.559.0 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
 			Hooks:             hooks.New(),
 		},
 	}
@@ -210,11 +210,11 @@ func New(opts ...SDKOption) *OpalAPI {
 
 	sdk.Apps = newApps(sdk.sdkConfiguration)
 
+	sdk.Bundles = newBundles(sdk.sdkConfiguration)
+
 	sdk.ConfigurationTemplates = newConfigurationTemplates(sdk.sdkConfiguration)
 
 	sdk.Events = newEvents(sdk.sdkConfiguration)
-
-	sdk.ComingSoon = newComingSoon(sdk.sdkConfiguration)
 
 	sdk.GroupBindings = newGroupBindings(sdk.sdkConfiguration)
 
