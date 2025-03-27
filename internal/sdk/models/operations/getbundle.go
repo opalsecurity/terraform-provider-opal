@@ -9,14 +9,14 @@ import (
 
 type GetBundleRequest struct {
 	// The ID of the bundle.
-	BundleID string `pathParam:"style=simple,explode=true,name=bundle_id"`
+	ID string `pathParam:"style=simple,explode=true,name=bundle_id"`
 }
 
-func (o *GetBundleRequest) GetBundleID() string {
+func (o *GetBundleRequest) GetID() string {
 	if o == nil {
 		return ""
 	}
-	return o.BundleID
+	return o.ID
 }
 
 type GetBundleResponse struct {

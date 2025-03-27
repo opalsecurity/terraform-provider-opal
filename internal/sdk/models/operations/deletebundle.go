@@ -8,14 +8,14 @@ import (
 
 type DeleteBundleRequest struct {
 	// The ID of the bundle.
-	BundleID string `pathParam:"style=simple,explode=true,name=bundle_id"`
+	ID string `pathParam:"style=simple,explode=true,name=bundle_id"`
 }
 
-func (o *DeleteBundleRequest) GetBundleID() string {
+func (o *DeleteBundleRequest) GetID() string {
 	if o == nil {
 		return ""
 	}
-	return o.BundleID
+	return o.ID
 }
 
 type DeleteBundleResponse struct {
