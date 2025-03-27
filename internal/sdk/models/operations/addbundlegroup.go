@@ -10,8 +10,6 @@ import (
 type AddBundleGroupRequestBody struct {
 	// The ID of the group to add.
 	GroupID string `json:"group_id"`
-	// The name of the group to add.
-	GroupName *string `json:"group_name,omitempty"`
 }
 
 func (o *AddBundleGroupRequestBody) GetGroupID() string {
@@ -19,13 +17,6 @@ func (o *AddBundleGroupRequestBody) GetGroupID() string {
 		return ""
 	}
 	return o.GroupID
-}
-
-func (o *AddBundleGroupRequestBody) GetGroupName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.GroupName
 }
 
 type AddBundleGroupRequest struct {

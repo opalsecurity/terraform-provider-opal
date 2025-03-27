@@ -11,8 +11,6 @@ type BundleResource struct {
 	BundleID *string `json:"bundle_id,omitempty"`
 	// The ID of the resource within a bundle.
 	ResourceID *string `json:"resource_id,omitempty"`
-	// The name of the resource within a bundle.
-	ResourceName *string `json:"resource_name,omitempty"`
 }
 
 func (o *BundleResource) GetAccessLevelName() *string {
@@ -41,11 +39,4 @@ func (o *BundleResource) GetResourceID() *string {
 		return nil
 	}
 	return o.ResourceID
-}
-
-func (o *BundleResource) GetResourceName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ResourceName
 }

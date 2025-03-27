@@ -14,8 +14,6 @@ type AddBundleResourceRequestBody struct {
 	AccessLevelRemoteID *string `json:"access_level_remote_id,omitempty"`
 	// The ID of the resource to add.
 	ResourceID string `json:"resource_id"`
-	// The name of the resource to add.
-	ResourceName *string `json:"resource_name,omitempty"`
 }
 
 func (o *AddBundleResourceRequestBody) GetAccessLevelName() *string {
@@ -37,13 +35,6 @@ func (o *AddBundleResourceRequestBody) GetResourceID() string {
 		return ""
 	}
 	return o.ResourceID
-}
-
-func (o *AddBundleResourceRequestBody) GetResourceName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.ResourceName
 }
 
 type AddBundleResourceRequest struct {

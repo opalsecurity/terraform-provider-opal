@@ -129,6 +129,7 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-entity-operation: PaginatedBundleList#read
     post:
       description: Creates a bundle.
       operationId: createBundle
@@ -149,6 +150,7 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-entity-operation: Bundle#create
   /bundles/{bundle_id}:
     get:
       description: Returns a `Bundle` object.
@@ -175,6 +177,7 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-entity-operation: Bundle#read
     delete:
       description: Deletes a bundle.
       operationId: deleteBundle
@@ -190,12 +193,13 @@ paths:
             type: string
           style: simple
       responses:
-        "204":
+        "200":
           description: The bundle was successfully deleted.
       security:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-entity-operation: Bundle#delete
     put:
       description: Updates a bundle.
       operationId: updateBundle
@@ -228,6 +232,7 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-entity-operation: Bundle#update
   /bundles/{bundle_id}/resources:
     get:
       description: Returns a list of `Resource` objects in a given bundle.
@@ -260,15 +265,6 @@ paths:
           schema:
             type: string
           style: form
-        - description: A filter for the bundle name.
-          example: Engineering
-          explode: true
-          in: query
-          name: contains
-          required: false
-          schema:
-            type: string
-          style: form
       responses:
         "200":
           content:
@@ -280,6 +276,7 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-entity-operation: PaginatedBundleResourceList#read
     post:
       description: Adds a resource to a bundle.
       operationId: addBundleResource
@@ -303,10 +300,6 @@ paths:
                   example: 72e75a6f-7183-48c5-94ff-6013f213314b
                   format: uuid
                   type: string
-                resource_name:
-                  description: The name of the resource to add.
-                  example: S3 Bucket
-                  type: string
                 access_level_remote_id:
                   description: The remote ID of the access level to grant to this user. Required if the resource being added requires an access level. If omitted, the default access level remote ID value (empty string) is used.
                   example: arn:aws:iam::590304332660:role/AdministratorAccess
@@ -328,6 +321,7 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-entity-operation: BundleResource#create
   /bundles/{bundle_id}/resources/{resource_id}:
     delete:
       description: Removes a resource from a bundle.
@@ -359,12 +353,13 @@ paths:
             type: string
           style: form
       responses:
-        "204":
+        "200":
           description: Resource was successfully removed from the bundle.
       security:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-entity-operation: BundleResource#delete
   /bundles/{bundle_id}/groups:
     get:
       description: Returns a list of `Group` objects in a given bundle.
@@ -397,15 +392,6 @@ paths:
           schema:
             type: string
           style: form
-        - description: A filter for the bundle name.
-          example: Engineering
-          explode: true
-          in: query
-          name: contains
-          required: false
-          schema:
-            type: string
-          style: form
       responses:
         "200":
           content:
@@ -417,6 +403,7 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-entity-operation: PaginatedBundleGroupList#read
     post:
       description: Adds a group to a bundle.
       operationId: addBundleGroup
@@ -440,10 +427,6 @@ paths:
                   example: 72e75a6f-7183-48c5-94ff-6013f213314b
                   format: uuid
                   type: string
-                group_name:
-                  description: The name of the group to add.
-                  example: Engineering
-                  type: string
               required:
                 - group_id
       responses:
@@ -457,6 +440,7 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-entity-operation: BundleGroup#create
   /bundles/{bundle_id}/groups/{group_id}:
     delete:
       description: Removes a group from a bundle.
@@ -479,12 +463,13 @@ paths:
             format: uuid
             type: string
       responses:
-        "204":
+        "200":
           description: Group was successfully removed from the bundle.
       security:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-entity-operation: BundleGroup#delete
   /bundles/{bundle_id}/visibility:
     get:
       description: Gets the visibility of the bundle.
@@ -510,6 +495,9 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-entity-operation:
+        - Bundle#read#2
+        - BundleVisibility#read
     put:
       description: Sets the visibility of the bundle.
       operationId: setBundleVisibility
@@ -536,6 +524,9 @@ paths:
         - BearerAuth: []
       tags:
         - bundles
+      x-speakeasy-entity-operation:
+        - Bundle#create#2
+        - Bundle#update#2
   /configuration-templates:
     get:
       description: Returns a list of `ConfigurationTemplate` objects.
@@ -5333,13 +5324,6 @@ components:
       example: GLOBAL
       type: string
       x-speakeasy-entity: Groups
-    BundlesVisibilityTypeEnum:
-      description: The visibility level of the entity.
-      enum:
-        - GLOBAL
-        - TEAM
-      example: GLOBAL
-      type: string
     UpdateGroupResourcesInfo:
       example:
         group_resources:
@@ -5503,6 +5487,7 @@ components:
       x-speakeasy-entity:
         - GroupVisibility
         - ResourceVisibility
+        - BundleVisibility
       x-speakeasy-plan-validators:
         - VisibilityInfo
     MessageChannelIDList:
@@ -8647,12 +8632,14 @@ components:
       type: object
     Bundle:
       properties:
-        id:
+        bundle_id:
           description: The ID of the bundle.
           example: a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1
           format: uuid
           type: string
           readOnly: true
+          x-speakeasy-param-suppress-computed-diff: true
+          x-speakeasy-param-readonly: true
         name:
           description: The name of the bundle.
           example: Bundle 1
@@ -8665,11 +8652,15 @@ components:
           type: string
           format: date-time
           description: The creation timestamp of the bundle, in ISO 8601 format
+          readOnly: true
+          x-speakeasy-param-suppress-computed-diff: true
+          x-speakeasy-param-readonly: true
         updated_at:
           type: string
           format: date-time
           description: The last updated timestamp of the bundle, in ISO 8601 format
           readOnly: true
+          x-speakeasy-param-readonly: true
         admin_owner_id:
           description: The ID of the owner of the bundle.
           example: 4aed3e8a-727b-4d72-8010-3b8710c50bec
@@ -8746,10 +8737,6 @@ components:
           format: uuid
           type: string
           readOnly: true
-        resource_name:
-          description: The name of the resource within a bundle.
-          example: Resource 1
-          type: string
         access_level_name:
           description: The access level of the resource within a bundle.
           example: Read
@@ -8804,10 +8791,6 @@ components:
           format: uuid
           type: string
           readOnly: true
-        group_name:
-          description: The name of the group within a bundle.
-          example: Group 1
-          type: string
     PaginatedBundleGroupList:
       example:
         next: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
@@ -8840,6 +8823,13 @@ components:
       type: object
       required:
         - bundle_groups
+    BundlesVisibilityTypeEnum:
+      description: The visibility level of the entity.
+      enum:
+        - GLOBAL
+        - TEAM
+      example: GLOBAL
+      type: string
   securitySchemes:
     BearerAuth:
       scheme: bearer

@@ -1,4 +1,5 @@
 overlay: 1.0.0
+x-speakeasy-jsonpath: rfc9535
 info:
   title: Overlay .speakeasy/temp/remote_openapi.yaml => ./openapi.yaml
   version: 0.0.0
@@ -31,6 +32,133 @@ actions:
   - target: $["paths"]["/apps/{app_id}"]["get"]
     update:
       x-speakeasy-entity-operation: App#get
+  - target: $["paths"]["/bundles"]["get"]
+    update:
+      x-speakeasy-entity-operation: PaginatedBundleList#read
+  - target: $["paths"]["/bundles"]["post"]
+    update:
+      x-speakeasy-entity-operation: Bundle#create
+  - target: $["paths"]["/bundles/{bundle_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: Bundle#read
+  - target: $["paths"]["/bundles/{bundle_id}"]["delete"]["responses"]
+    update:
+      "200":
+        description: The bundle was successfully deleted.
+  - target: $["paths"]["/bundles/{bundle_id}"]["delete"]["responses"]["204"]
+    remove: true
+  - target: $["paths"]["/bundles/{bundle_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: Bundle#delete
+  - target: $["paths"]["/bundles/{bundle_id}"]["put"]
+    update:
+      x-speakeasy-entity-operation: Bundle#update
+  - target: $["paths"]["/bundles/{bundle_id}/resources"]["get"]["parameters"][*]
+    remove: true
+  - target: $["paths"]["/bundles/{bundle_id}/resources"]["get"]["parameters"]
+    update:
+      - description: The ID of the bundle.
+        example: 32acc112-21ff-4669-91c2-21e27683eaa1
+        in: path
+        name: bundle_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: The maximum number of resources to return from the beginning of the list. Default is 200, max is 1000.
+        example: 200
+        explode: true
+        in: query
+        name: page_size
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: A cursor indicating where to start fetching items after a specific point.
+        example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+        explode: true
+        in: query
+        name: cursor
+        required: false
+        schema:
+          type: string
+        style: form
+  - target: $["paths"]["/bundles/{bundle_id}/resources"]["get"]
+    update:
+      x-speakeasy-entity-operation: PaginatedBundleResourceList#read
+  - target: $["paths"]["/bundles/{bundle_id}/resources"]["post"]["requestBody"]["content"]["application/json"]["schema"]["properties"]["resource_name"]
+    remove: true
+  - target: $["paths"]["/bundles/{bundle_id}/resources"]["post"]
+    update:
+      x-speakeasy-entity-operation: BundleResource#create
+  - target: $["paths"]["/bundles/{bundle_id}/resources/{resource_id}"]["delete"]["responses"]
+    update:
+      "200":
+        description: Resource was successfully removed from the bundle.
+  - target: $["paths"]["/bundles/{bundle_id}/resources/{resource_id}"]["delete"]["responses"]["204"]
+    remove: true
+  - target: $["paths"]["/bundles/{bundle_id}/resources/{resource_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: BundleResource#delete
+  - target: $["paths"]["/bundles/{bundle_id}/groups"]["get"]["parameters"][*]
+    remove: true
+  - target: $["paths"]["/bundles/{bundle_id}/groups"]["get"]["parameters"]
+    update:
+      - description: The ID of the bundle.
+        example: 32acc112-21ff-4669-91c2-21e27683eaa1
+        in: path
+        name: bundle_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: The maximum number of groups to return from the beginning of the list. Default is 200, max is 1000.
+        example: 200
+        explode: true
+        in: query
+        name: page_size
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: A cursor indicating where to start fetching items after a specific point.
+        example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+        explode: true
+        in: query
+        name: cursor
+        required: false
+        schema:
+          type: string
+        style: form
+  - target: $["paths"]["/bundles/{bundle_id}/groups"]["get"]
+    update:
+      x-speakeasy-entity-operation: PaginatedBundleGroupList#read
+  - target: $["paths"]["/bundles/{bundle_id}/groups"]["post"]["requestBody"]["content"]["application/json"]["schema"]["properties"]["group_name"]
+    remove: true
+  - target: $["paths"]["/bundles/{bundle_id}/groups"]["post"]
+    update:
+      x-speakeasy-entity-operation: BundleGroup#create
+  - target: $["paths"]["/bundles/{bundle_id}/groups/{group_id}"]["delete"]["responses"]
+    update:
+      "200":
+        description: Group was successfully removed from the bundle.
+  - target: $["paths"]["/bundles/{bundle_id}/groups/{group_id}"]["delete"]["responses"]["204"]
+    remove: true
+  - target: $["paths"]["/bundles/{bundle_id}/groups/{group_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: BundleGroup#delete
+  - target: $["paths"]["/bundles/{bundle_id}/visibility"]["get"]
+    update:
+      x-speakeasy-entity-operation:
+        - Bundle#read#2
+        - BundleVisibility#read
+  - target: $["paths"]["/bundles/{bundle_id}/visibility"]["put"]
+    update:
+      x-speakeasy-entity-operation:
+        - Bundle#create#2
+        - Bundle#update#2
   - target: $["paths"]["/configuration-templates"]["get"]["responses"]
     update:
       "404":
@@ -93,6 +221,8 @@ actions:
       x-speakeasy-entity-operation:
         - Group#create#2
         - Group#update
+  - target: $["paths"]["/groups"]["post"]["description"]
+    update: Creates a group. See [here](https://docs.opal.dev/reference/end-system-objects) for details about importing groups.
   - target: $["paths"]["/groups"]["post"]
     update:
       x-speakeasy-name-override: create
@@ -914,7 +1044,13 @@ actions:
   - target: $["paths"]["/uar/{uar_id}"]["get"]
     update:
       x-speakeasy-entity-operation: UAR#get
+  - target: $["paths"]["/groups/{group_id}/containing-groups"]
+    remove: true
+  - target: $["paths"]["/groups/{group_id}/containing-groups/{containing_group_id}"]
+    remove: true
   - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]
+    remove: true
+  - target: $["paths"]["/access-rules/{access_rule_id}"]
     remove: true
   - target: $["components"]["schemas"]["PaginatedUARsList"]
     update:
@@ -1212,6 +1348,7 @@ actions:
       x-speakeasy-entity:
         - GroupVisibility
         - ResourceVisibility
+        - BundleVisibility
   - target: $["components"]["schemas"]["VisibilityInfo"]
     update:
       x-speakeasy-plan-validators:
@@ -1772,16 +1909,6 @@ actions:
   - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["reviewer_stages"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
-  - target: $["components"]["schemas"]["RequestConfiguration"]["required"][*]
-    remove: true
-  - target: $["components"]["schemas"]["RequestConfiguration"]["required"]
-    update:
-      - organization_id
-      - allow_requests
-      - auto_approval
-      - require_mfa_to_request
-      - require_support_ticket
-      - priority
   - target: $["components"]["schemas"]["RequestConfiguration"]
     update:
       x-speakeasy-entity: Requests
@@ -1846,6 +1973,50 @@ actions:
   - target: $["components"]["schemas"]["PaginatedConfigurationTemplateList"]
     update:
       x-speakeasy-entity: ConfigurationTemplateList
+  - target: $["components"]["schemas"]["Bundle"]["properties"]["bundle_id"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Bundle"]["properties"]["bundle_id"]
+    update:
+      x-speakeasy-param-readonly: true
+  - target: $["components"]["schemas"]["Bundle"]["properties"]["created_at"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Bundle"]["properties"]["created_at"]
+    update:
+      x-speakeasy-param-readonly: true
+  - target: $["components"]["schemas"]["Bundle"]["properties"]["updated_at"]
+    update:
+      x-speakeasy-param-readonly: true
+  - target: $["components"]["schemas"]["BundleResource"]["properties"]["resource_name"]
+    remove: true
+  - target: $["components"]["schemas"]["BundleGroup"]["properties"]["group_name"]
+    remove: true
+  - target: $["components"]["schemas"]
+    update:
+      BundlesVisibilityTypeEnum:
+        description: The visibility level of the entity.
+        enum:
+          - GLOBAL
+          - TEAM
+        example: GLOBAL
+        type: string
+  - target: $["components"]["schemas"]["GroupContainingGroup"]
+    remove: true
+  - target: $["components"]["schemas"]["GroupWithAccessLevel"]
+    remove: true
+  - target: $["components"]["schemas"]["GroupContainingGroupList"]
+    remove: true
+  - target: $["components"]["schemas"]["AccessRuleCondition"]
+    remove: true
+  - target: $["components"]["schemas"]["RuleClauses"]
+    remove: true
+  - target: $["components"]["schemas"]["RuleConjunction"]
+    remove: true
+  - target: $["components"]["schemas"]["RuleDisjunction"]
+    remove: true
+  - target: $["components"]["schemas"]["TagSelector"]
+    remove: true
   - target: $
     update:
       x-speakeasy-retries:

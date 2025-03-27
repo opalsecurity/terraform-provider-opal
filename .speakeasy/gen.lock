@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 56aad9b52ba03b1552a9a9c73de25381
+  docChecksum: a29c92670c7ec75a3c04bc943b343461
   docVersion: "1.0"
-  speakeasyVersion: 1.523.1
-  generationVersion: 2.559.0
-  releaseVersion: 0.32.1
-  configChecksum: faabb48aeceff2758f4fab3f1d92736e
+  speakeasyVersion: 1.526.6
+  generationVersion: 2.563.1
+  releaseVersion: 0.32.17
+  configChecksum: a0459015129697a21ce639eef82a5656
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -34,6 +34,8 @@ generatedFiles:
   - examples/README.md
   - examples/data-sources/opal_app/data-source.tf
   - examples/data-sources/opal_apps/data-source.tf
+  - examples/data-sources/opal_bundle/data-source.tf
+  - examples/data-sources/opal_bundle_visibility/data-source.tf
   - examples/data-sources/opal_configuration_template_list/data-source.tf
   - examples/data-sources/opal_events/data-source.tf
   - examples/data-sources/opal_group/data-source.tf
@@ -50,6 +52,9 @@ generatedFiles:
   - examples/data-sources/opal_owner/data-source.tf
   - examples/data-sources/opal_owner_from_name/data-source.tf
   - examples/data-sources/opal_owners/data-source.tf
+  - examples/data-sources/opal_paginated_bundle_group_list/data-source.tf
+  - examples/data-sources/opal_paginated_bundle_list/data-source.tf
+  - examples/data-sources/opal_paginated_bundle_resource_list/data-source.tf
   - examples/data-sources/opal_requests/data-source.tf
   - examples/data-sources/opal_resource/data-source.tf
   - examples/data-sources/opal_resource_message_channel_list/data-source.tf
@@ -68,6 +73,10 @@ generatedFiles:
   - examples/data-sources/opal_user_tags/data-source.tf
   - examples/data-sources/opal_users/data-source.tf
   - examples/provider/provider.tf
+  - examples/resources/opal_bundle/import.sh
+  - examples/resources/opal_bundle/resource.tf
+  - examples/resources/opal_bundle_group/resource.tf
+  - examples/resources/opal_bundle_resource/resource.tf
   - examples/resources/opal_configuration_template/resource.tf
   - examples/resources/opal_group/import.sh
   - examples/resources/opal_group/resource.tf
@@ -107,6 +116,16 @@ generatedFiles:
   - internal/provider/app_data_source_sdk.go
   - internal/provider/apps_data_source.go
   - internal/provider/apps_data_source_sdk.go
+  - internal/provider/bundle_data_source.go
+  - internal/provider/bundle_data_source_sdk.go
+  - internal/provider/bundle_resource.go
+  - internal/provider/bundle_resource_sdk.go
+  - internal/provider/bundlegroup_resource.go
+  - internal/provider/bundlegroup_resource_sdk.go
+  - internal/provider/bundleresource_resource.go
+  - internal/provider/bundleresource_resource_sdk.go
+  - internal/provider/bundlevisibility_data_source.go
+  - internal/provider/bundlevisibility_data_source_sdk.go
   - internal/provider/configurationtemplate_resource.go
   - internal/provider/configurationtemplate_resource_sdk.go
   - internal/provider/configurationtemplatelist_data_source.go
@@ -157,6 +176,12 @@ generatedFiles:
   - internal/provider/ownerfromname_data_source_sdk.go
   - internal/provider/owners_data_source.go
   - internal/provider/owners_data_source_sdk.go
+  - internal/provider/paginatedbundlegrouplist_data_source.go
+  - internal/provider/paginatedbundlegrouplist_data_source_sdk.go
+  - internal/provider/paginatedbundlelist_data_source.go
+  - internal/provider/paginatedbundlelist_data_source_sdk.go
+  - internal/provider/paginatedbundleresourcelist_data_source.go
+  - internal/provider/paginatedbundleresourcelist_data_source_sdk.go
   - internal/provider/provider.go
   - internal/provider/reflect/diags.go
   - internal/provider/reflect/doc.go
@@ -212,6 +237,9 @@ generatedFiles:
   - internal/provider/types/aws_eks_cluster.go
   - internal/provider/types/aws_permission_set.go
   - internal/provider/types/aws_rds_instance.go
+  - internal/provider/types/bundle.go
+  - internal/provider/types/bundle_group.go
+  - internal/provider/types/bundle_resource.go
   - internal/provider/types/condition.go
   - internal/provider/types/configuration_template.go
   - internal/provider/types/event.go
@@ -1254,27 +1282,27 @@ examples:
         path:
           bundle_id: "32acc112-21ff-4669-91c2-21e27683eaa1"
       requestBody:
-        application/json: {"group_id": "72e75a6f-7183-48c5-94ff-6013f213314b", "group_name": "Engineering"}
+        application/json: {"group_id": "72e75a6f-7183-48c5-94ff-6013f213314b"}
       responses:
         "201":
-          application/json: {"bundle_id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "group_id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "group_name": "Group 1"}
+          application/json: {"bundle_id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "group_id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1"}
   addBundleResource:
     "":
       parameters:
         path:
           bundle_id: "32acc112-21ff-4669-91c2-21e27683eaa1"
       requestBody:
-        application/json: {"access_level_name": "AdministratorAccess", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess", "resource_id": "72e75a6f-7183-48c5-94ff-6013f213314b", "resource_name": "S3 Bucket"}
+        application/json: {"access_level_name": "AdministratorAccess", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess", "resource_id": "72e75a6f-7183-48c5-94ff-6013f213314b"}
       responses:
         "201":
-          application/json: {"access_level_name": "Read", "access_level_remote_id": "arn:aws:iam::490306337630:role/SupportUser", "bundle_id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "resource_id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "resource_name": "Resource 1"}
+          application/json: {"access_level_name": "Read", "access_level_remote_id": "arn:aws:iam::490306337630:role/SupportUser", "bundle_id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "resource_id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1"}
   createBundle:
     speakeasy-default-create-bundle:
       requestBody:
         application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This is a test bundle", "name": "Test Bundle"}
       responses:
         "201":
-          application/json: {"admin_owner_id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "description": "Description of bundle 1", "id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "name": "Bundle 1", "total_num_groups": 5, "total_num_items": 15, "total_num_resources": 10}
+          application/json: {"admin_owner_id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "bundle_id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "description": "Description of bundle 1", "name": "Bundle 1", "total_num_groups": 5, "total_num_items": 15, "total_num_resources": 10}
   deleteBundle:
     "":
       parameters:
@@ -1287,7 +1315,7 @@ examples:
           bundle_id: "32acc112-21ff-4669-91c2-21e27683eaa1"
       responses:
         "200":
-          application/json: {"admin_owner_id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "description": "Description of bundle 1", "id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "name": "Bundle 1", "total_num_groups": 5, "total_num_items": 15, "total_num_resources": 10}
+          application/json: {"admin_owner_id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "description": "Description of bundle 1", "name": "Bundle 1", "total_num_groups": 5, "total_num_items": 15, "total_num_resources": 10}
   getBundleGroups:
     "":
       parameters:
@@ -1329,7 +1357,7 @@ examples:
           contains: "Engineering"
       responses:
         "200":
-          application/json: {"bundles": [{"admin_owner_id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "description": "Description of bundle 1", "id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "name": "Bundle 1", "total_num_groups": 0, "total_num_items": 0, "total_num_resources": 0}, {"admin_owner_id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "description": "Description of bundle 2", "id": "8294e9c9-deb6-48e9-9c99-da2a1e04a87f", "name": "Bundle 2", "total_num_groups": 0, "total_num_items": 0, "total_num_resources": 0}], "next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ"}
+          application/json: {"bundles": [{"admin_owner_id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "description": "Description of bundle 1", "name": "Bundle 1", "total_num_groups": 0, "total_num_items": 0, "total_num_resources": 0}, {"admin_owner_id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "description": "Description of bundle 2", "name": "Bundle 2", "total_num_groups": 0, "total_num_items": 0, "total_num_resources": 0}], "next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ"}
   removeBundleGroup:
     "":
       parameters:
@@ -1353,7 +1381,7 @@ examples:
         application/json: {"admin_owner_id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "description": "Description of bundle 1", "name": "Bundle 1"}
       responses:
         "200":
-          application/json: {"admin_owner_id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "description": "Description of bundle 1", "id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "name": "Bundle 1", "total_num_groups": 5, "total_num_items": 15, "total_num_resources": 10}
+          application/json: {"admin_owner_id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "description": "Description of bundle 1", "name": "Bundle 1", "total_num_groups": 5, "total_num_items": 15, "total_num_resources": 10}
   setBundleVisibility:
     "":
       parameters:
