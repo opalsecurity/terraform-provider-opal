@@ -112,6 +112,9 @@ func (p *OpalProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 
 func (p *OpalProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
+		NewBundleResource,
+		NewBundleGroupResource,
+		NewBundleResourceResource,
 		NewConfigurationTemplateResource,
 		NewGroupResource,
 		NewGroupResourceListResource,
@@ -132,6 +135,8 @@ func (p *OpalProvider) DataSources(ctx context.Context) []func() datasource.Data
 	return []func() datasource.DataSource{
 		NewAppDataSource,
 		NewAppsDataSource,
+		NewBundleDataSource,
+		NewBundleVisibilityDataSource,
 		NewConfigurationTemplateListDataSource,
 		NewEventsDataSource,
 		NewGroupDataSource,
@@ -148,6 +153,9 @@ func (p *OpalProvider) DataSources(ctx context.Context) []func() datasource.Data
 		NewOwnerDataSource,
 		NewOwnerFromNameDataSource,
 		NewOwnersDataSource,
+		NewPaginatedBundleGroupListDataSource,
+		NewPaginatedBundleListDataSource,
+		NewPaginatedBundleResourceListDataSource,
 		NewRequestsDataSource,
 		NewResourceDataSource,
 		NewResourceMessageChannelListDataSource,

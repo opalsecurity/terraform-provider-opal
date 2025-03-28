@@ -1,4 +1,5 @@
 overlay: 1.0.0
+x-speakeasy-jsonpath: rfc9535
 info:
   title: Overlay .speakeasy/temp/remote_openapi.yaml => ./openapi.yaml
   version: 0.0.0
@@ -31,6 +32,103 @@ actions:
   - target: $["paths"]["/apps/{app_id}"]["get"]
     update:
       x-speakeasy-entity-operation: App#get
+  - target: $["paths"]["/bundles"]["get"]
+    update:
+      x-speakeasy-name-override: get_bundles
+  - target: $["paths"]["/bundles"]["get"]
+    update:
+      x-speakeasy-entity-operation: PaginatedBundleList#read
+  - target: $["paths"]["/bundles"]["post"]
+    update:
+      x-speakeasy-name-override: create_bundle
+  - target: $["paths"]["/bundles"]["post"]
+    update:
+      x-speakeasy-entity-operation: Bundle#create
+  - target: $["paths"]["/bundles/{bundle_id}"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/bundles/{bundle_id}"]["get"]
+    update:
+      x-speakeasy-name-override: get_bundle
+  - target: $["paths"]["/bundles/{bundle_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: Bundle#read
+  - target: $["paths"]["/bundles/{bundle_id}"]["delete"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/bundles/{bundle_id}"]["delete"]
+    update:
+      x-speakeasy-name-override: delete_bundle
+  - target: $["paths"]["/bundles/{bundle_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: Bundle#delete
+  - target: $["paths"]["/bundles/{bundle_id}"]["put"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/bundles/{bundle_id}"]["put"]
+    update:
+      x-speakeasy-name-override: update_bundle
+  - target: $["paths"]["/bundles/{bundle_id}"]["put"]
+    update:
+      x-speakeasy-entity-operation: Bundle#update
+  - target: $["paths"]["/bundles/{bundle_id}/resources"]["get"]
+    update:
+      x-speakeasy-name-override: get_bundle_resources
+  - target: $["paths"]["/bundles/{bundle_id}/resources"]["get"]
+    update:
+      x-speakeasy-entity-operation: PaginatedBundleResourceList#read
+  - target: $["paths"]["/bundles/{bundle_id}/resources"]["post"]
+    update:
+      x-speakeasy-name-override: add_bundle_resource
+  - target: $["paths"]["/bundles/{bundle_id}/resources"]["post"]
+    update:
+      x-speakeasy-entity-operation: BundleResource#create
+  - target: $["paths"]["/bundles/{bundle_id}/resources/{resource_id}"]["delete"]
+    update:
+      x-speakeasy-name-override: delete_bundle_resource
+  - target: $["paths"]["/bundles/{bundle_id}/resources/{resource_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: BundleResource#delete
+  - target: $["paths"]["/bundles/{bundle_id}/groups"]["get"]
+    update:
+      x-speakeasy-name-override: get_bundle_groups
+  - target: $["paths"]["/bundles/{bundle_id}/groups"]["get"]
+    update:
+      x-speakeasy-entity-operation: PaginatedBundleGroupList#read
+  - target: $["paths"]["/bundles/{bundle_id}/groups"]["post"]
+    update:
+      x-speakeasy-name-override: add_bundle_group
+  - target: $["paths"]["/bundles/{bundle_id}/groups"]["post"]
+    update:
+      x-speakeasy-entity-operation: BundleGroup#create
+  - target: $["paths"]["/bundles/{bundle_id}/groups/{group_id}"]["delete"]
+    update:
+      x-speakeasy-name-override: remove_bundle_group
+  - target: $["paths"]["/bundles/{bundle_id}/groups/{group_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: BundleGroup#delete
+  - target: $["paths"]["/bundles/{bundle_id}/visibility"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/bundles/{bundle_id}/visibility"]["get"]
+    update:
+      x-speakeasy-name-override: get_bundle_visibility
+  - target: $["paths"]["/bundles/{bundle_id}/visibility"]["get"]
+    update:
+      x-speakeasy-entity-operation:
+        - Bundle#read#2
+        - BundleVisibility#read
+  - target: $["paths"]["/bundles/{bundle_id}/visibility"]["put"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/bundles/{bundle_id}/visibility"]["put"]
+    update:
+      x-speakeasy-name-override: update_bundle_visibility
+  - target: $["paths"]["/bundles/{bundle_id}/visibility"]["put"]
+    update:
+      x-speakeasy-entity-operation:
+        - Bundle#create#2
+        - Bundle#update#2
   - target: $["paths"]["/configuration-templates"]["get"]["responses"]
     update:
       "404":
@@ -93,6 +191,8 @@ actions:
       x-speakeasy-entity-operation:
         - Group#create#2
         - Group#update
+  - target: $["paths"]["/groups"]["post"]["description"]
+    update: Creates a group. See [here](https://docs.opal.dev/reference/end-system-objects) for details about importing groups.
   - target: $["paths"]["/groups"]["post"]
     update:
       x-speakeasy-name-override: create
@@ -914,7 +1014,13 @@ actions:
   - target: $["paths"]["/uar/{uar_id}"]["get"]
     update:
       x-speakeasy-entity-operation: UAR#get
+  - target: $["paths"]["/groups/{group_id}/containing-groups"]
+    remove: true
+  - target: $["paths"]["/groups/{group_id}/containing-groups/{containing_group_id}"]
+    remove: true
   - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]
+    remove: true
+  - target: $["paths"]["/access-rules/{access_rule_id}"]
     remove: true
   - target: $["components"]["schemas"]["PaginatedUARsList"]
     update:
@@ -1212,6 +1318,7 @@ actions:
       x-speakeasy-entity:
         - GroupVisibility
         - ResourceVisibility
+        - BundleVisibility
   - target: $["components"]["schemas"]["VisibilityInfo"]
     update:
       x-speakeasy-plan-validators:
@@ -1772,16 +1879,6 @@ actions:
   - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["reviewer_stages"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
-  - target: $["components"]["schemas"]["RequestConfiguration"]["required"][*]
-    remove: true
-  - target: $["components"]["schemas"]["RequestConfiguration"]["required"]
-    update:
-      - organization_id
-      - allow_requests
-      - auto_approval
-      - require_mfa_to_request
-      - require_support_ticket
-      - priority
   - target: $["components"]["schemas"]["RequestConfiguration"]
     update:
       x-speakeasy-entity: Requests
@@ -1846,6 +1943,37 @@ actions:
   - target: $["components"]["schemas"]["PaginatedConfigurationTemplateList"]
     update:
       x-speakeasy-entity: ConfigurationTemplateList
+  - target: $["components"]["schemas"]["Bundle"]["properties"]["bundle_id"]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["components"]["schemas"]["Bundle"]["properties"]["bundle_id"]
+    update:
+      x-speakeasy-param-readonly: true
+  - target: $["components"]["schemas"]["Bundle"]["properties"]["created_at"]
+    update:
+      x-speakeasy-param-readonly: true
+  - target: $["components"]["schemas"]["Bundle"]["properties"]["updated_at"]
+    update:
+      x-speakeasy-param-readonly: true
+  - target: $["components"]["schemas"]["BundleGroup"]["properties"]["group_name"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["GroupContainingGroup"]
+    remove: true
+  - target: $["components"]["schemas"]["GroupWithAccessLevel"]
+    remove: true
+  - target: $["components"]["schemas"]["GroupContainingGroupList"]
+    remove: true
+  - target: $["components"]["schemas"]["AccessRuleCondition"]
+    remove: true
+  - target: $["components"]["schemas"]["RuleClauses"]
+    remove: true
+  - target: $["components"]["schemas"]["RuleConjunction"]
+    remove: true
+  - target: $["components"]["schemas"]["RuleDisjunction"]
+    remove: true
+  - target: $["components"]["schemas"]["TagSelector"]
+    remove: true
   - target: $
     update:
       x-speakeasy-retries:

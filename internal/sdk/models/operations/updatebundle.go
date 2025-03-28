@@ -10,7 +10,7 @@ import (
 type UpdateBundleRequest struct {
 	Bundle shared.BundleInput `request:"mediaType=application/json"`
 	// The ID of the bundle to be updated.
-	BundleID string `pathParam:"style=simple,explode=false,name=bundle_id"`
+	ID string `pathParam:"style=simple,explode=false,name=bundle_id"`
 }
 
 func (o *UpdateBundleRequest) GetBundle() shared.BundleInput {
@@ -20,11 +20,11 @@ func (o *UpdateBundleRequest) GetBundle() shared.BundleInput {
 	return o.Bundle
 }
 
-func (o *UpdateBundleRequest) GetBundleID() string {
+func (o *UpdateBundleRequest) GetID() string {
 	if o == nil {
 		return ""
 	}
-	return o.BundleID
+	return o.ID
 }
 
 type UpdateBundleResponse struct {

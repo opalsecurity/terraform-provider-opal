@@ -15,7 +15,7 @@ type Bundle struct {
 	// The description of the bundle.
 	Description *string `json:"description,omitempty"`
 	// The ID of the bundle.
-	ID *string `json:"id,omitempty"`
+	ID *string `json:"bundle_id,omitempty"`
 	// The name of the bundle.
 	Name *string `json:"name,omitempty"`
 	// The total number of groups in the bundle.

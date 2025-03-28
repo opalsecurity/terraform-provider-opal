@@ -10,7 +10,7 @@ import (
 type SetBundleVisibilityRequest struct {
 	VisibilityInfo shared.VisibilityInfo `request:"mediaType=application/json"`
 	// The ID of the bundle.
-	BundleID string `pathParam:"style=simple,explode=false,name=bundle_id"`
+	ID string `pathParam:"style=simple,explode=false,name=bundle_id"`
 }
 
 func (o *SetBundleVisibilityRequest) GetVisibilityInfo() shared.VisibilityInfo {
@@ -20,11 +20,11 @@ func (o *SetBundleVisibilityRequest) GetVisibilityInfo() shared.VisibilityInfo {
 	return o.VisibilityInfo
 }
 
-func (o *SetBundleVisibilityRequest) GetBundleID() string {
+func (o *SetBundleVisibilityRequest) GetID() string {
 	if o == nil {
 		return ""
 	}
-	return o.BundleID
+	return o.ID
 }
 
 type SetBundleVisibilityResponse struct {
