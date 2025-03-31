@@ -1,4 +1,5 @@
 overlay: 1.0.0
+x-speakeasy-jsonpath: rfc9535
 info:
   title: Overlay .speakeasy/temp/remote_openapi.yaml => ./openapi.yaml
   version: 0.0.0
@@ -93,12 +94,16 @@ actions:
       x-speakeasy-entity-operation:
         - Group#create#2
         - Group#update
+  - target: $["paths"]["/groups"]["post"]["description"]
+    update: Creates a group. See [here](https://docs.opal.dev/reference/end-system-objects) for details about importing groups.
   - target: $["paths"]["/groups"]["post"]
     update:
       x-speakeasy-name-override: create
   - target: $["paths"]["/groups"]["post"]
     update:
-      x-speakeasy-entity-operation: Group#create
+      x-speakeasy-entity-operation:
+        - Group#create
+#        - AccessRule#create
   - target: $["paths"]["/groups/{group_id}"]["get"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
@@ -119,7 +124,9 @@ actions:
       x-speakeasy-name-override: delete
   - target: $["paths"]["/groups/{group_id}"]["delete"]
     update:
-      x-speakeasy-entity-operation: Group#delete
+      x-speakeasy-entity-operation:
+        - Group#delete
+        - AccessRule#delete
   - target: $["paths"]["/groups/{group_id}/message-channels"]["get"]["operationId"]
     update: getGroupMessageChannels
   - target: $["paths"]["/groups/{group_id}/message-channels"]["get"]["parameters"][0]
@@ -914,8 +921,25 @@ actions:
   - target: $["paths"]["/uar/{uar_id}"]["get"]
     update:
       x-speakeasy-entity-operation: UAR#get
+  - target: $["paths"]["/groups/{group_id}/containing-groups"]["get"]
+    update:
+      x-speakeasy-entity-operation: GroupContainingGroup#read
+  - target: $["paths"]["/groups/{group_id}/containing-groups"]["post"]
+    update:
+      x-speakeasy-entity-operation: GroupContainingGroup#create
+  - target: $["paths"]["/groups/{group_id}/containing-groups/{containing_group_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: GroupContainingGroup#delete
   - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]
     remove: true
+  - target: $["paths"]["/access-rules/{access_rule_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: AccessRule#read#2
+  - target: $["paths"]["/access-rules/{access_rule_id}"]["put"]
+    update:
+      x-speakeasy-entity-operation:
+        - AccessRule#create#2
+        - AccessRule#update
   - target: $["components"]["schemas"]["PaginatedUARsList"]
     update:
       x-speakeasy-entity: UARS_list
@@ -1095,7 +1119,9 @@ actions:
       x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["Group"]
     update:
-      x-speakeasy-entity: Group
+      x-speakeasy-entity:
+        - Group
+        - AccessRule
   - target: $["components"]["schemas"]["Group"]
     update:
       x-speakeasy-entity-version: 1
@@ -1772,16 +1798,6 @@ actions:
   - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["reviewer_stages"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
-  - target: $["components"]["schemas"]["RequestConfiguration"]["required"][*]
-    remove: true
-  - target: $["components"]["schemas"]["RequestConfiguration"]["required"]
-    update:
-      - organization_id
-      - allow_requests
-      - auto_approval
-      - require_mfa_to_request
-      - require_support_ticket
-      - priority
   - target: $["components"]["schemas"]["RequestConfiguration"]
     update:
       x-speakeasy-entity: Requests
@@ -1846,6 +1862,39 @@ actions:
   - target: $["components"]["schemas"]["PaginatedConfigurationTemplateList"]
     update:
       x-speakeasy-entity: ConfigurationTemplateList
+  - target: $["components"]["schemas"]["Bundle"]["properties"]
+    update:
+      id:
+        description: The ID of the bundle.
+        example: a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1
+        format: uuid
+        type: string
+        readOnly: true
+  - target: $["components"]["schemas"]["Bundle"]["properties"]["bundle_id"]
+    remove: true
+  - target: $["components"]["schemas"]["GroupContainingGroup"]
+    update:
+      x-speakeasy-entity: GroupContainingGroup
+  - target: $["components"]["schemas"]["GroupWithAccessLevel"]
+    remove: true
+  - target: $["components"]["schemas"]["GroupContainingGroupList"]
+    update:
+      x-speakeasy-entity: GroupContainingGroup
+  - target: $["components"]["schemas"]["AccessRuleCondition"]
+    update:
+      x-speakeasy-entity: AccessRuleCondition
+  - target: $["components"]["schemas"]["RuleClauses"]
+    update:
+      x-speakeasy-entity: RuleClauses
+  - target: $["components"]["schemas"]["RuleConjunction"]
+    update:
+      x-speakeasy-entity: RuleConjunction
+  - target: $["components"]["schemas"]["RuleDisjunction"]
+    update:
+      x-speakeasy-entity: RuleDisjunction
+  - target: $["components"]["schemas"]["TagSelector"]
+    update:
+      x-speakeasy-entity: TagSelector
   - target: $
     update:
       x-speakeasy-retries:

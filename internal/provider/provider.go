@@ -112,8 +112,10 @@ func (p *OpalProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 
 func (p *OpalProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
+		NewAccessRuleResource,
 		NewConfigurationTemplateResource,
 		NewGroupResource,
+		NewGroupContainingGroupResource,
 		NewGroupResourceListResource,
 		NewGroupTagResource,
 		NewGroupUserResource,
@@ -130,12 +132,14 @@ func (p *OpalProvider) Resources(ctx context.Context) []func() resource.Resource
 
 func (p *OpalProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
+		NewAccessRuleDataSource,
 		NewAppDataSource,
 		NewAppsDataSource,
 		NewConfigurationTemplateListDataSource,
 		NewEventsDataSource,
 		NewGroupDataSource,
 		NewGroupListDataSource,
+		NewGroupContainingGroupDataSource,
 		NewGroupResourceListDataSource,
 		NewGroupReviewersStagesListDataSource,
 		NewGroupTagsDataSource,

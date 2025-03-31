@@ -2,31 +2,13 @@
 
 package shared
 
-import (
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
-	"time"
-)
-
 type BundleInput struct {
 	// The ID of the owner of the bundle.
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
-	// The creation timestamp of the bundle, in ISO 8601 format
-	CreatedAt *time.Time `json:"created_at,omitempty"`
 	// The description of the bundle.
 	Description *string `json:"description,omitempty"`
 	// The name of the bundle.
 	Name *string `json:"name,omitempty"`
-}
-
-func (b BundleInput) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(b, "", false)
-}
-
-func (b *BundleInput) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &b, "", false, false); err != nil {
-		return err
-	}
-	return nil
 }
 
 func (o *BundleInput) GetAdminOwnerID() *string {
@@ -34,13 +16,6 @@ func (o *BundleInput) GetAdminOwnerID() *string {
 		return nil
 	}
 	return o.AdminOwnerID
-}
-
-func (o *BundleInput) GetCreatedAt() *time.Time {
-	if o == nil {
-		return nil
-	}
-	return o.CreatedAt
 }
 
 func (o *BundleInput) GetDescription() *string {

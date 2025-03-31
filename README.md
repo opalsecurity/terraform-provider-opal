@@ -30,7 +30,7 @@ terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "0.32.1"
+      version = "0.32.23"
     }
   }
 }
@@ -47,8 +47,10 @@ provider "opal" {
 
 ### Resources
 
+* [opal_access_rule](docs/resources/access_rule.md)
 * [opal_configuration_template](docs/resources/configuration_template.md)
 * [opal_group](docs/resources/group.md)
+* [opal_group_containing_group](docs/resources/group_containing_group.md)
 * [opal_group_resource_list](docs/resources/group_resource_list.md)
 * [opal_group_tag](docs/resources/group_tag.md)
 * [opal_group_user](docs/resources/group_user.md)
@@ -62,12 +64,14 @@ provider "opal" {
 * [opal_tag_user](docs/resources/tag_user.md)
 ### Data Sources
 
+* [opal_access_rule](docs/data-sources/access_rule.md)
 * [opal_app](docs/data-sources/app.md)
 * [opal_apps](docs/data-sources/apps.md)
 * [opal_configuration_template_list](docs/data-sources/configuration_template_list.md)
 * [opal_events](docs/data-sources/events.md)
 * [opal_group](docs/data-sources/group.md)
 * [opal_group_list](docs/data-sources/group_list.md)
+* [opal_group_containing_group](docs/data-sources/group_containing_group.md)
 * [opal_group_resource_list](docs/data-sources/group_resource_list.md)
 * [opal_group_reviewers_stages_list](docs/data-sources/group_reviewers_stages_list.md)
 * [opal_group_tags](docs/data-sources/group_tags.md)

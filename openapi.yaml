@@ -851,7 +851,9 @@ paths:
       tags:
         - groups
       x-speakeasy-name-override: create
-      x-speakeasy-entity-operation: Group#create
+      x-speakeasy-entity-operation:
+        - Group#create
+        #        - AccessRule#create
   /groups/{group_id}:
     get:
       description: Returns a `Group` object.
@@ -905,7 +907,9 @@ paths:
       tags:
         - groups
       x-speakeasy-name-override: delete
-      x-speakeasy-entity-operation: Group#delete
+      x-speakeasy-entity-operation:
+        - Group#delete
+        - AccessRule#delete
   /groups/{group_id}/message-channels:
     get:
       description: Gets the list of audit and reviewer message channels attached to a group.
@@ -1103,6 +1107,98 @@ paths:
         - groups
       x-speakeasy-name-override: update_resources
       x-speakeasy-entity-operation: GroupResourceList#create,update
+  /groups/{group_id}/containing-groups:
+    get:
+      description: Gets the list of groups that the group gives access to.
+      operationId: get_group_containing_groups
+      parameters:
+        - description: The ID of the group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupContainingGroupList"
+          description: The resources that the group gives access to.
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
+      x-speakeasy-entity-operation: GroupContainingGroup#read
+    post:
+      description: Creates a new containing group.
+      operationId: add_group_containing_group
+      parameters:
+        - description: The ID of the group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GroupContainingGroup"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupContainingGroup"
+          description: The created `GroupContainingGroup` object.
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
+      x-speakeasy-entity-operation: GroupContainingGroup#create
+  /groups/{group_id}/containing-groups/{containing_group_id}:
+    delete:
+      description: Removes a containing group from a group.
+      operationId: remove_group_containing_group
+      parameters:
+        - description: The ID of the group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the containing group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: containing_group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "204":
+          description: The containing group was successfully removed from the group.
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
+      x-speakeasy-entity-operation: GroupContainingGroup#delete
   /groups/{group_id}/resources/{resource_id}:
     post:
       description: Adds a resource to a group.
@@ -2969,6 +3065,67 @@ paths:
         - users
       x-speakeasy-name-override: get_user_tags
       x-speakeasy-entity-operation: UserTags#get
+  /access-rules/{access_rule_id}:
+    get:
+      description: Returns a list of access rule config given the group_id of the access rule.
+      operationId: get_access_rule
+      parameters:
+        - description: The access rule ID (group ID) of the access rule.
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          explode: false
+          in: path
+          name: access_rule_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessRuleCondition"
+          description: The access rules for the group.
+      security:
+        - BearerAuth: []
+      tags:
+        - access-rules
+      x-speakeasy-entity-operation: AccessRule#read#2
+    put:
+      description: Updates the access rule config for the given group_id.
+      operationId: update_access_rule
+      parameters:
+        - description: The access rule ID (group ID) of the access rule.
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          explode: false
+          in: path
+          name: access_rule_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccessRuleCondition"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessRuleCondition"
+          description: The updated access rule config for the group.
+      security:
+        - BearerAuth: []
+      tags:
+        - access-rules
+      x-speakeasy-entity-operation:
+        - AccessRule#create#2
+        - AccessRule#update
   /tag/{tag_id}:
     get:
       description: UNSTABLE. May be removed at any time. Gets a tag with the given id.
@@ -4743,6 +4900,23 @@ components:
         - resource_id
         - access_level
       type: object
+    GroupContainingGroup:
+      description: |-
+        # GroupContainingGroup Object
+        ### Description
+        The `GroupContainingGroup` object is used to represent a relationship between a group and a group.
+      example:
+        containing_group_id: f454d283-ca87-4a8a-bdbb-df212eca5353
+      properties:
+        containing_group_id:
+          description: The groupID of the containing group.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          format: uuid
+          type: string
+      required:
+        - containing_group_id
+      type: object
+      x-speakeasy-entity: GroupContainingGroup
     Group:
       description: |-
         # Group Object
@@ -4911,7 +5085,9 @@ components:
       required:
         - group_id
       type: object
-      x-speakeasy-entity: Group
+      x-speakeasy-entity:
+        - Group
+        - AccessRule
       x-speakeasy-entity-version: 1
     GroupUserList:
       example:
@@ -5333,13 +5509,6 @@ components:
       example: GLOBAL
       type: string
       x-speakeasy-entity: Groups
-    BundlesVisibilityTypeEnum:
-      description: The visibility level of the entity.
-      enum:
-        - GLOBAL
-        - TEAM
-      example: GLOBAL
-      type: string
     UpdateGroupResourcesInfo:
       example:
         group_resources:
@@ -5434,6 +5603,20 @@ components:
       required:
         - group_resources
       x-speakeasy-entity: GroupResourceList
+    GroupContainingGroupList:
+      example:
+        containing_groups:
+          - containing_group_id: 7870617d-e72a-47f5-a84c-693817ab4567
+          - containing_group_id: 50333e67-73ce-47ab-b049-d8abcd45f7a1
+      properties:
+        containing_groups:
+          items:
+            $ref: "#/components/schemas/GroupContainingGroup"
+          type: array
+      type: object
+      required:
+        - containing_groups
+      x-speakeasy-entity: GroupContainingGroup
     MessageChannelList:
       example:
         channels:
@@ -7709,6 +7892,71 @@ components:
         - group_id
         - group_type
       type: object
+    AccessRuleCondition:
+      description: |-
+        # Access Rule Config Object
+        ### Description
+        The `AccessRuleConfig` object is used to represent an access rule configuration.
+
+        ### Usage Example
+        Get access rule configurations from the `GET Access Rule Configs` endpoint.
+      properties:
+        status:
+          description: The status of the access rule.
+          type: string
+          enum:
+            - ACTIVE
+            - PAUSED
+          example: ACTIVE
+        ruleClauses:
+          $ref: "#/components/schemas/RuleClauses"
+      required:
+        - status
+        - ruleClauses
+      x-speakeasy-entity: AccessRuleCondition
+    RuleClauses:
+      properties:
+        when:
+          $ref: "#/components/schemas/RuleConjunction"
+        unless:
+          $ref: "#/components/schemas/RuleConjunction"
+      required:
+        - when
+      x-speakeasy-entity: RuleClauses
+    RuleConjunction:
+      properties:
+        clauses:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/RuleDisjunction"
+      required:
+        - clauses
+      x-speakeasy-entity: RuleConjunction
+    RuleDisjunction:
+      properties:
+        selectors:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/TagSelector"
+      required:
+        - selectors
+      x-speakeasy-entity: RuleDisjunction
+    TagSelector:
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+        connection_id:
+          type: string
+          format: uuid
+      required:
+        - key
+        - value
+        - connection_id
+      x-speakeasy-entity: TagSelector
     PaginatedOwnersList:
       example:
         next: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
@@ -8647,12 +8895,6 @@ components:
       type: object
     Bundle:
       properties:
-        id:
-          description: The ID of the bundle.
-          example: a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1
-          format: uuid
-          type: string
-          readOnly: true
         name:
           description: The name of the bundle.
           example: Bundle 1
@@ -8665,6 +8907,7 @@ components:
           type: string
           format: date-time
           description: The creation timestamp of the bundle, in ISO 8601 format
+          readOnly: true
         updated_at:
           type: string
           format: date-time
@@ -8689,6 +8932,12 @@ components:
           description: The total number of groups in the bundle.
           example: 5
           type: integer
+          readOnly: true
+        id:
+          description: The ID of the bundle.
+          example: a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1
+          format: uuid
+          type: string
           readOnly: true
     PaginatedBundleList:
       example:

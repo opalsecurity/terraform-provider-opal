@@ -78,6 +78,7 @@ func (c *sdkConfiguration) GetServerDetails() (string, map[string]string) {
 
 // OpalAPI - Opal API: The Opal API is a RESTful API that allows you to interact with the Opal Security platform programmatically.
 type OpalAPI struct {
+	AccessRules *AccessRules
 	// Operations related to apps
 	Apps    *Apps
 	Bundles *Bundles
@@ -186,9 +187,9 @@ func New(opts ...SDKOption) *OpalAPI {
 		sdkConfiguration: sdkConfiguration{
 			Language:          "go",
 			OpenAPIDocVersion: "1.0",
-			SDKVersion:        "0.32.1",
-			GenVersion:        "2.559.0",
-			UserAgent:         "speakeasy-sdk/terraform 0.32.1 2.559.0 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
+			SDKVersion:        "0.32.23",
+			GenVersion:        "2.563.1",
+			UserAgent:         "speakeasy-sdk/terraform 0.32.23 2.563.1 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
 			Hooks:             hooks.New(),
 		},
 	}
@@ -207,6 +208,8 @@ func New(opts ...SDKOption) *OpalAPI {
 	if serverURL != currentServerURL {
 		sdk.sdkConfiguration.ServerURL = serverURL
 	}
+
+	sdk.AccessRules = newAccessRules(sdk.sdkConfiguration)
 
 	sdk.Apps = newApps(sdk.sdkConfiguration)
 
