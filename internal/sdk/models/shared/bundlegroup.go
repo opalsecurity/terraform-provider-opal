@@ -7,8 +7,6 @@ type BundleGroup struct {
 	BundleID *string `json:"bundle_id,omitempty"`
 	// The ID of the group within a bundle.
 	GroupID *string `json:"group_id,omitempty"`
-	// The name of the group within a bundle.
-	GroupName *string `json:"group_name,omitempty"`
 }
 
 func (o *BundleGroup) GetBundleID() *string {
@@ -23,11 +21,4 @@ func (o *BundleGroup) GetGroupID() *string {
 		return nil
 	}
 	return o.GroupID
-}
-
-func (o *BundleGroup) GetGroupName() *string {
-	if o == nil {
-		return nil
-	}
-	return o.GroupName
 }
