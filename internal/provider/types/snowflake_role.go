@@ -4,6 +4,6 @@ package types
 
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
-type OktaCustomRole struct {
+type SnowflakeRole struct {
 	RoleID types.String `tfsdk:"role_id"`
 }

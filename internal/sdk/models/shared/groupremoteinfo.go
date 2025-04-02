@@ -119,6 +119,19 @@ func (o *OktaGroup) GetGroupID() string {
 	return o.GroupID
 }
 
+// SnowflakeRole - Remote info for Snowflake role.
+type SnowflakeRole struct {
+	// The id of the Snowflake role.
+	RoleID string `json:"role_id"`
+}
+
+func (o *SnowflakeRole) GetRoleID() string {
+	if o == nil {
+		return ""
+	}
+	return o.RoleID
+}
+
 // GroupRemoteInfo - Information that defines the remote group. This replaces the deprecated remote_id and metadata fields.
 type GroupRemoteInfo struct {
 	// Remote info for Active Directory group.
@@ -139,6 +152,8 @@ type GroupRemoteInfo struct {
 	LdapGroup *LdapGroup `json:"ldap_group,omitempty"`
 	// Remote info for Okta Directory group.
 	OktaGroup *OktaGroup `json:"okta_group,omitempty"`
+	// Remote info for Snowflake role.
+	SnowflakeRole *SnowflakeRole `json:"snowflake_role,omitempty"`
 }
 
 func (o *GroupRemoteInfo) GetActiveDirectoryGroup() *ActiveDirectoryGroup {
@@ -202,4 +217,11 @@ func (o *GroupRemoteInfo) GetOktaGroup() *OktaGroup {
 		return nil
 	}
 	return o.OktaGroup
+}
+
+func (o *GroupRemoteInfo) GetSnowflakeRole() *SnowflakeRole {
+	if o == nil {
+		return nil
+	}
+	return o.SnowflakeRole
 }

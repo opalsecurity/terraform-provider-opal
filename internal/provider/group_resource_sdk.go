@@ -112,6 +112,15 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo() *shared.CreateGroupInfo {
 				GroupID: groupId7,
 			}
 		}
+		var snowflakeRole *shared.SnowflakeRole
+		if r.RemoteInfo.SnowflakeRole != nil {
+			var roleID string
+			roleID = r.RemoteInfo.SnowflakeRole.RoleID.ValueString()
+
+			snowflakeRole = &shared.SnowflakeRole{
+				RoleID: roleID,
+			}
+		}
 		remoteInfo = &shared.GroupRemoteInfo{
 			ActiveDirectoryGroup:     activeDirectoryGroup,
 			AzureAdMicrosoft365Group: azureAdMicrosoft365Group,
@@ -122,6 +131,7 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo() *shared.CreateGroupInfo {
 			GoogleGroup:              googleGroup,
 			LdapGroup:                ldapGroup,
 			OktaGroup:                oktaGroup,
+			SnowflakeRole:            snowflakeRole,
 		}
 	}
 	riskSensitivityOverride := new(shared.RiskSensitivityEnum)
@@ -217,6 +227,12 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(resp *shared.Group) {
 			} else {
 				r.RemoteInfo.OktaGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.OktaGroup.GroupID = types.StringValue(resp.RemoteInfo.OktaGroup.GroupID)
+			}
+			if resp.RemoteInfo.SnowflakeRole == nil {
+				r.RemoteInfo.SnowflakeRole = nil
+			} else {
+				r.RemoteInfo.SnowflakeRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.SnowflakeRole.RoleID = types.StringValue(resp.RemoteInfo.SnowflakeRole.RoleID)
 			}
 		}
 		r.RemoteName = types.StringPointerValue(resp.RemoteName)
