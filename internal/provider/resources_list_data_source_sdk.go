@@ -162,7 +162,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 				if resultsItem.RemoteInfo.OktaCustomRole == nil {
 					results1.RemoteInfo.OktaCustomRole = nil
 				} else {
-					results1.RemoteInfo.OktaCustomRole = &tfTypes.OktaCustomRole{}
+					results1.RemoteInfo.OktaCustomRole = &tfTypes.SnowflakeRole{}
 					results1.RemoteInfo.OktaCustomRole.RoleID = types.StringValue(resultsItem.RemoteInfo.OktaCustomRole.RoleID)
 				}
 				if resultsItem.RemoteInfo.OktaStandardRole == nil {
@@ -193,7 +193,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 				if resultsItem.RemoteInfo.SalesforceRole == nil {
 					results1.RemoteInfo.SalesforceRole = nil
 				} else {
-					results1.RemoteInfo.SalesforceRole = &tfTypes.OktaCustomRole{}
+					results1.RemoteInfo.SalesforceRole = &tfTypes.SnowflakeRole{}
 					results1.RemoteInfo.SalesforceRole.RoleID = types.StringValue(resultsItem.RemoteInfo.SalesforceRole.RoleID)
 				}
 				if resultsItem.RemoteInfo.TeleportRole == nil {

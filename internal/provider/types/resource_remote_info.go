@@ -22,11 +22,11 @@ type ResourceRemoteInfo struct {
 	GithubRepo              *GithubRepo              `tfsdk:"github_repo"`
 	GitlabProject           *GcpProject              `tfsdk:"gitlab_project"`
 	OktaApp                 *OktaApp                 `tfsdk:"okta_app"`
-	OktaCustomRole          *OktaCustomRole          `tfsdk:"okta_custom_role"`
+	OktaCustomRole          *SnowflakeRole           `tfsdk:"okta_custom_role"`
 	OktaStandardRole        *OktaStandardRole        `tfsdk:"okta_standard_role"`
 	PagerdutyRole           *PagerdutyRole           `tfsdk:"pagerduty_role"`
 	SalesforcePermissionSet *SalesforcePermissionSet `tfsdk:"salesforce_permission_set"`
 	SalesforceProfile       *SalesforceProfile       `tfsdk:"salesforce_profile"`
-	SalesforceRole          *OktaCustomRole          `tfsdk:"salesforce_role"`
+	SalesforceRole          *SnowflakeRole           `tfsdk:"salesforce_role"`
 	TeleportRole            *PagerdutyRole           `tfsdk:"teleport_role"`
 }

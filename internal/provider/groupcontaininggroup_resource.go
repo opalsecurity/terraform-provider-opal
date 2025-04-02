@@ -3,7 +3,9 @@
 package provider
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -13,7 +15,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
-	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
@@ -33,9 +34,8 @@ type GroupContainingGroupResource struct {
 
 // GroupContainingGroupResourceModel describes the resource data model.
 type GroupContainingGroupResourceModel struct {
-	ContainingGroupID types.String                   `tfsdk:"containing_group_id"`
-	ContainingGroups  []tfTypes.GroupContainingGroup `tfsdk:"containing_groups"`
-	GroupID           types.String                   `tfsdk:"group_id"`
+	ContainingGroupID types.String `tfsdk:"containing_group_id"`
+	GroupID           types.String `tfsdk:"group_id"`
 }
 
 func (r *GroupContainingGroupResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -53,17 +53,6 @@ func (r *GroupContainingGroupResource) Schema(ctx context.Context, req resource.
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 				Description: `The groupID of the containing group. Requires replacement if changed.`,
-			},
-			"containing_groups": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"containing_group_id": schema.StringAttribute{
-							Computed:    true,
-							Description: `The groupID of the containing group.`,
-						},
-					},
-				},
 			},
 			"group_id": schema.StringAttribute{
 				Required: true,
@@ -144,34 +133,6 @@ func (r *GroupContainingGroupResource) Create(ctx context.Context, req resource.
 	}
 	data.RefreshFromSharedGroupContainingGroup(res.GroupContainingGroup)
 	refreshPlan(ctx, plan, &data, resp.Diagnostics)
-	var groupId1 string
-	groupId1 = data.GroupID.ValueString()
-
-	request1 := operations.GetGroupContainingGroupsRequest{
-		GroupID: groupId1,
-	}
-	res1, err := r.client.Groups.GetGroupContainingGroups(ctx, request1)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
-		if res1 != nil && res1.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
-		}
-		return
-	}
-	if res1 == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
-		return
-	}
-	if res1.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
-		return
-	}
-	if !(res1.GroupContainingGroupList != nil) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
-		return
-	}
-	data.RefreshFromSharedGroupContainingGroupList(res1.GroupContainingGroupList)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -195,13 +156,17 @@ func (r *GroupContainingGroupResource) Read(ctx context.Context, req resource.Re
 		return
 	}
 
+	var containingGroupID string
+	containingGroupID = data.ContainingGroupID.ValueString()
+
 	var groupID string
 	groupID = data.GroupID.ValueString()
 
-	request := operations.GetGroupContainingGroupsRequest{
-		GroupID: groupID,
+	request := operations.GetGroupContainingGroupRequest{
+		ContainingGroupID: containingGroupID,
+		GroupID:           groupID,
 	}
-	res, err := r.client.Groups.GetGroupContainingGroups(ctx, request)
+	res, err := r.client.Groups.GetGroupContainingGroup(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -221,11 +186,11 @@ func (r *GroupContainingGroupResource) Read(ctx context.Context, req resource.Re
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.GroupContainingGroupList != nil) {
+	if !(res.GroupContainingGroup != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedGroupContainingGroupList(res.GroupContainingGroupList)
+	data.RefreshFromSharedGroupContainingGroup(res.GroupContainingGroup)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -299,5 +264,27 @@ func (r *GroupContainingGroupResource) Delete(ctx context.Context, req resource.
 }
 
 func (r *GroupContainingGroupResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("group_id"), req.ID)...)
+	dec := json.NewDecoder(bytes.NewReader([]byte(req.ID)))
+	dec.DisallowUnknownFields()
+	var data struct {
+		ContainingGroupID string `json:"containing_group_id"`
+		GroupID           string `json:"group_id"`
+	}
+
+	if err := dec.Decode(&data); err != nil {
+		resp.Diagnostics.AddError("Invalid ID", `The ID is not valid. It's expected to be a JSON object alike '{ "containing_group_id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5",  "group_id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5"}': `+err.Error())
+		return
+	}
+
+	if len(data.ContainingGroupID) == 0 {
+		resp.Diagnostics.AddError("Missing required field", `The field containing_group_id is required but was not found in the json encoded ID. It's expected to be a value alike '"4baf8423-db0a-4037-a4cf-f79c60cb67a5"`)
+		return
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("containing_group_id"), data.ContainingGroupID)...)
+	if len(data.GroupID) == 0 {
+		resp.Diagnostics.AddError("Missing required field", `The field group_id is required but was not found in the json encoded ID. It's expected to be a value alike '"4baf8423-db0a-4037-a4cf-f79c60cb67a5"`)
+		return
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("group_id"), data.GroupID)...)
+
 }

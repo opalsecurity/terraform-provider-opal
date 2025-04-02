@@ -14,7 +14,8 @@ GroupContainingGroup DataSource
 
 ```terraform
 data "opal_group_containing_group" "my_groupcontaininggroup" {
-  group_id = "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+  containing_group_id = "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+  group_id            = "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
 }
 ```
 
@@ -23,15 +24,5 @@ data "opal_group_containing_group" "my_groupcontaininggroup" {
 
 ### Required
 
+- `containing_group_id` (String) The ID of the containing group.
 - `group_id` (String) The ID of the group.
-
-### Read-Only
-
-- `containing_groups` (Attributes List) (see [below for nested schema](#nestedatt--containing_groups))
-
-<a id="nestedatt--containing_groups"></a>
-### Nested Schema for `containing_groups`
-
-Read-Only:
-
-- `containing_group_id` (String) The groupID of the containing group.

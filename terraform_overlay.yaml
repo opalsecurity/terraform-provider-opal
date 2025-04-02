@@ -921,9 +921,13 @@ actions:
   - target: $["paths"]["/uar/{uar_id}"]["get"]
     update:
       x-speakeasy-entity-operation: UAR#get
-  - target: $["paths"]["/groups/{group_id}/containing-groups"]["get"]
+  - target: $["paths"]["/groups/{group_id}/containing-groups/{containing_group_id}"]["get"]
     update:
       x-speakeasy-entity-operation: GroupContainingGroup#read
+  - target: $["paths"]["/groups/{group_id}/containing-groups/{containing_group_id}"]["get"]["responses"]
+    update:
+      "404":
+        description: Not Found
   - target: $["paths"]["/groups/{group_id}/containing-groups"]["post"]
     update:
       x-speakeasy-entity-operation: GroupContainingGroup#create

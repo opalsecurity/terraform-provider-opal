@@ -27,21 +27,10 @@ resource "opal_group_containing_group" "my_groupcontaininggroup" {
 - `containing_group_id` (String) The groupID of the containing group. Requires replacement if changed.
 - `group_id` (String) The ID of the group. Requires replacement if changed.
 
-### Read-Only
-
-- `containing_groups` (Attributes List) (see [below for nested schema](#nestedatt--containing_groups))
-
-<a id="nestedatt--containing_groups"></a>
-### Nested Schema for `containing_groups`
-
-Read-Only:
-
-- `containing_group_id` (String) The groupID of the containing group.
-
 ## Import
 
 Import is supported using the following syntax:
 
 ```shell
-terraform import opal_group_containing_group.my_opal_group_containing_group "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+terraform import opal_group_containing_group.my_opal_group_containing_group "{ \"containing_group_id\": \"4baf8423-db0a-4037-a4cf-f79c60cb67a5\",  \"group_id\": \"4baf8423-db0a-4037-a4cf-f79c60cb67a5\"}"
 ```

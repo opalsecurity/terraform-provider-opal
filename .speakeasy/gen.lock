@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 582a8696bf143fbe5cbe0509c490b9fe
+  docChecksum: cf4aa41f219bcae1f29e9aba0eb7e16d
   docVersion: "1.0"
-  speakeasyVersion: 1.526.6
-  generationVersion: 2.563.1
-  releaseVersion: 0.32.23
-  configChecksum: 5b192c761a55c188471e7d8274a4084b
+  speakeasyVersion: 1.528.1
+  generationVersion: 2.565.1
+  releaseVersion: 0.35.0
+  configChecksum: b38a86480f889b67007f075e740f1379
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -15,7 +15,7 @@ features:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.2
     constsAndDefaults: 0.2.1
-    core: 3.36.1
+    core: 3.38.0
     deprecations: 2.82.0
     envVarSecurityUsage: 0.1.0
     globalSecurity: 2.81.10
@@ -245,7 +245,6 @@ generatedFiles:
   - internal/provider/types/github_repo.go
   - internal/provider/types/github_team.go
   - internal/provider/types/group.go
-  - internal/provider/types/group_containing_group.go
   - internal/provider/types/group_remote_info.go
   - internal/provider/types/group_resource.go
   - internal/provider/types/group_user.go
@@ -253,7 +252,6 @@ generatedFiles:
   - internal/provider/types/mappings.go
   - internal/provider/types/message_channel.go
   - internal/provider/types/okta_app.go
-  - internal/provider/types/okta_custom_role.go
   - internal/provider/types/okta_standard_role.go
   - internal/provider/types/owner.go
   - internal/provider/types/pagerduty_role.go
@@ -271,6 +269,7 @@ generatedFiles:
   - internal/provider/types/salesforce_permission_set.go
   - internal/provider/types/salesforce_profile.go
   - internal/provider/types/session.go
+  - internal/provider/types/snowflake_role.go
   - internal/provider/types/sub_event.go
   - internal/provider/types/tag.go
   - internal/provider/types/tag_filter.go
@@ -359,6 +358,7 @@ generatedFiles:
   - internal/sdk/models/operations/getgroup.go
   - internal/sdk/models/operations/getgroupbinding.go
   - internal/sdk/models/operations/getgroupbindings.go
+  - internal/sdk/models/operations/getgroupcontaininggroup.go
   - internal/sdk/models/operations/getgroupcontaininggroups.go
   - internal/sdk/models/operations/getgroupmessagechannels.go
   - internal/sdk/models/operations/getgrouponcallschedules.go
@@ -701,10 +701,10 @@ examples:
   createGroup:
     speakeasy-default-create-group:
       requestBody:
-        application/json: {"app_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "custom_request_notification": "Check your email to register your account.", "description": "Engineering team Okta group.", "group_type": "OPAL_GROUP", "name": "mongo-db-prod", "remote_info": {"active_directory_group": {"group_id": "01fa7402-01d8-103b-8deb-5f3a0ab7884"}, "azure_ad_microsoft_365_group": {"group_id": "01fa7402-01d8-103b-8deb-5f3a0ab7884"}, "azure_ad_security_group": {"group_id": "01fa7402-01d8-103b-8deb-5f3a0ab7884"}, "duo_group": {"group_id": "DSRD8W89B9DNDBY4RHAC"}, "github_team": {"team_slug": "opal-security"}, "gitlab_group": {"group_id": "898931321"}, "google_group": {"group_id": "1y6w882181n7sg"}, "ldap_group": {"group_id": "01fa7402-01d8-103b-8deb-5f3a0ab7884"}, "okta_group": {"group_id": "00gjs33pe8rtmRrp3rd6"}}}
+        application/json: {"app_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "custom_request_notification": "Check your email to register your account.", "description": "Engineering team Okta group.", "group_type": "OPAL_GROUP", "name": "mongo-db-prod", "remote_info": {"active_directory_group": {"group_id": "01fa7402-01d8-103b-8deb-5f3a0ab7884"}, "azure_ad_microsoft_365_group": {"group_id": "01fa7402-01d8-103b-8deb-5f3a0ab7884"}, "azure_ad_security_group": {"group_id": "01fa7402-01d8-103b-8deb-5f3a0ab7884"}, "duo_group": {"group_id": "DSRD8W89B9DNDBY4RHAC"}, "github_team": {"team_slug": "opal-security"}, "gitlab_group": {"group_id": "898931321"}, "google_group": {"group_id": "1y6w882181n7sg"}, "ldap_group": {"group_id": "01fa7402-01d8-103b-8deb-5f3a0ab7884"}, "okta_group": {"group_id": "00gjs33pe8rtmRrp3rd6"}, "snowflake_role": {"role_id": "01fa7402-01d8-103b-8deb-5f3a0ab7884"}}}
       responses:
         "200":
-          application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "app_id": "b5a5ca27-0ea3-4d86-9199-2126d57d1fbd", "custom_request_notification": "Check your email to register your account.", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "group_binding_id": "06851574-e50d-40ca-8c78-f72ae6ab4304", "group_type": "OPAL_GROUP", "group_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "API Group", "remote_info": {"active_directory_group": {"group_id": "01fa7402-01d8-103b-8deb-5f3a0ab7884"}, "azure_ad_microsoft_365_group": {"group_id": "01fa7402-01d8-103b-8deb-5f3a0ab7884"}, "azure_ad_security_group": {"group_id": "01fa7402-01d8-103b-8deb-5f3a0ab7884"}, "duo_group": {"group_id": "DSRD8W89B9DNDBY4RHAC"}, "github_team": {"team_slug": "opal-security"}, "gitlab_group": {"group_id": "898931321"}, "google_group": {"group_id": "1y6w882181n7sg"}, "ldap_group": {"group_id": "01fa7402-01d8-103b-8deb-5f3a0ab7884"}, "okta_group": {"group_id": "00gjs33pe8rtmRrp3rd6"}}, "remote_name": "Finance team", "request_configurations": [{"allow_requests": true, "auto_approval": false, "condition": {"group_ids": [], "role_remote_ids": []}, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_manager_approval": false}]}], "require_mfa_to_approve": false}
+          application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "app_id": "b5a5ca27-0ea3-4d86-9199-2126d57d1fbd", "custom_request_notification": "Check your email to register your account.", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "group_binding_id": "06851574-e50d-40ca-8c78-f72ae6ab4304", "group_type": "OPAL_GROUP", "group_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "API Group", "remote_info": {"active_directory_group": {"group_id": "01fa7402-01d8-103b-8deb-5f3a0ab7884"}, "azure_ad_microsoft_365_group": {"group_id": "01fa7402-01d8-103b-8deb-5f3a0ab7884"}, "azure_ad_security_group": {"group_id": "01fa7402-01d8-103b-8deb-5f3a0ab7884"}, "duo_group": {"group_id": "DSRD8W89B9DNDBY4RHAC"}, "github_team": {"team_slug": "opal-security"}, "gitlab_group": {"group_id": "898931321"}, "google_group": {"group_id": "1y6w882181n7sg"}, "ldap_group": {"group_id": "01fa7402-01d8-103b-8deb-5f3a0ab7884"}, "okta_group": {"group_id": "00gjs33pe8rtmRrp3rd6"}, "snowflake_role": {"role_id": "01fa7402-01d8-103b-8deb-5f3a0ab7884"}}, "remote_name": "Finance team", "request_configurations": [{"allow_requests": true, "auto_approval": false, "condition": {"group_ids": [], "role_remote_ids": []}, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_manager_approval": false}]}], "require_mfa_to_approve": false}
   createGroupResources:
     "":
       parameters:
@@ -1282,20 +1282,20 @@ examples:
         path:
           bundle_id: "32acc112-21ff-4669-91c2-21e27683eaa1"
       requestBody:
-        application/json: {"group_id": "72e75a6f-7183-48c5-94ff-6013f213314b", "group_name": "Engineering"}
+        application/json: {"group_id": "72e75a6f-7183-48c5-94ff-6013f213314b"}
       responses:
         "201":
-          application/json: {"bundle_id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "group_id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "group_name": "Group 1"}
+          application/json: {"bundle_id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "group_id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1"}
   addBundleResource:
     "":
       parameters:
         path:
           bundle_id: "32acc112-21ff-4669-91c2-21e27683eaa1"
       requestBody:
-        application/json: {"access_level_name": "AdministratorAccess", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess", "resource_id": "72e75a6f-7183-48c5-94ff-6013f213314b", "resource_name": "S3 Bucket"}
+        application/json: {"access_level_name": "AdministratorAccess", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess", "resource_id": "72e75a6f-7183-48c5-94ff-6013f213314b"}
       responses:
         "201":
-          application/json: {"access_level_name": "Read", "access_level_remote_id": "arn:aws:iam::490306337630:role/SupportUser", "bundle_id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "resource_id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "resource_name": "Resource 1"}
+          application/json: {"access_level_name": "Read", "access_level_remote_id": "arn:aws:iam::490306337630:role/SupportUser", "bundle_id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "resource_id": "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1"}
   createBundle:
     speakeasy-default-create-bundle:
       requestBody:
@@ -1431,5 +1431,14 @@ examples:
       responses:
         "200":
           application/json: {"ruleClauses": {"when": {"clauses": []}}, "status": "ACTIVE"}
+  get_group_containing_group:
+    "":
+      parameters:
+        path:
+          group_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+          containing_group_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+      responses:
+        "200":
+          application/json: {"containing_group_id": "f454d283-ca87-4a8a-bdbb-df212eca5353"}
 examplesVersion: 1.0.0
 generatedTests: {}

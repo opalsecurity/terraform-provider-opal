@@ -190,7 +190,7 @@ paths:
             type: string
           style: simple
       responses:
-        "204":
+        "200":
           description: The bundle was successfully deleted.
       security:
         - BearerAuth: []
@@ -260,15 +260,6 @@ paths:
           schema:
             type: string
           style: form
-        - description: A filter for the bundle name.
-          example: Engineering
-          explode: true
-          in: query
-          name: contains
-          required: false
-          schema:
-            type: string
-          style: form
       responses:
         "200":
           content:
@@ -302,10 +293,6 @@ paths:
                   description: The ID of the resource to add.
                   example: 72e75a6f-7183-48c5-94ff-6013f213314b
                   format: uuid
-                  type: string
-                resource_name:
-                  description: The name of the resource to add.
-                  example: S3 Bucket
                   type: string
                 access_level_remote_id:
                   description: The remote ID of the access level to grant to this user. Required if the resource being added requires an access level. If omitted, the default access level remote ID value (empty string) is used.
@@ -359,7 +346,7 @@ paths:
             type: string
           style: form
       responses:
-        "204":
+        "200":
           description: Resource was successfully removed from the bundle.
       security:
         - BearerAuth: []
@@ -393,15 +380,6 @@ paths:
           explode: true
           in: query
           name: cursor
-          required: false
-          schema:
-            type: string
-          style: form
-        - description: A filter for the bundle name.
-          example: Engineering
-          explode: true
-          in: query
-          name: contains
           required: false
           schema:
             type: string
@@ -440,10 +418,6 @@ paths:
                   example: 72e75a6f-7183-48c5-94ff-6013f213314b
                   format: uuid
                   type: string
-                group_name:
-                  description: The name of the group to add.
-                  example: Engineering
-                  type: string
               required:
                 - group_id
       responses:
@@ -479,7 +453,7 @@ paths:
             format: uuid
             type: string
       responses:
-        "204":
+        "200":
           description: Group was successfully removed from the bundle.
       security:
         - BearerAuth: []
@@ -1133,7 +1107,6 @@ paths:
         - BearerAuth: []
       tags:
         - groups
-      x-speakeasy-entity-operation: GroupContainingGroup#read
     post:
       description: Creates a new containing group.
       operationId: add_group_containing_group
@@ -1167,6 +1140,44 @@ paths:
         - groups
       x-speakeasy-entity-operation: GroupContainingGroup#create
   /groups/{group_id}/containing-groups/{containing_group_id}:
+    get:
+      description: Gets a specific containing group for a group.
+      operationId: get_group_containing_group
+      parameters:
+        - description: The ID of the group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the containing group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: containing_group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupContainingGroup"
+          description: The created `GroupContainingGroup` object.
+        "404":
+          description: Not Found
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
+      x-speakeasy-entity-operation: GroupContainingGroup#read
     delete:
       description: Removes a containing group from a group.
       operationId: remove_group_containing_group
@@ -6042,6 +6053,16 @@ components:
           required:
             - group_id
           x-speakeasy-param-force-new: true
+        snowflake_role:
+          description: Remote info for Snowflake role.
+          properties:
+            role_id:
+              description: The id of the Snowflake role.
+              example: 01fa7402-01d8-103b-8deb-5f3a0ab7884
+              type: string
+          type: object
+          required:
+            - role_id
       type: object
       x-speakeasy-entity: GroupRemote
     ResourceRemoteInfo:
@@ -8995,10 +9016,6 @@ components:
           format: uuid
           type: string
           readOnly: true
-        resource_name:
-          description: The name of the resource within a bundle.
-          example: Resource 1
-          type: string
         access_level_name:
           description: The access level of the resource within a bundle.
           example: Read
@@ -9053,10 +9070,6 @@ components:
           format: uuid
           type: string
           readOnly: true
-        group_name:
-          description: The name of the group within a bundle.
-          example: Group 1
-          type: string
     PaginatedBundleGroupList:
       example:
         next: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw

@@ -9,7 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
@@ -29,8 +28,8 @@ type GroupContainingGroupDataSource struct {
 
 // GroupContainingGroupDataSourceModel describes the data model.
 type GroupContainingGroupDataSourceModel struct {
-	ContainingGroups []tfTypes.GroupContainingGroup `tfsdk:"containing_groups"`
-	GroupID          types.String                   `tfsdk:"group_id"`
+	ContainingGroupID types.String `tfsdk:"containing_group_id"`
+	GroupID           types.String `tfsdk:"group_id"`
 }
 
 // Metadata returns the data source type name.
@@ -44,16 +43,9 @@ func (r *GroupContainingGroupDataSource) Schema(ctx context.Context, req datasou
 		MarkdownDescription: "GroupContainingGroup DataSource",
 
 		Attributes: map[string]schema.Attribute{
-			"containing_groups": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"containing_group_id": schema.StringAttribute{
-							Computed:    true,
-							Description: `The groupID of the containing group.`,
-						},
-					},
-				},
+			"containing_group_id": schema.StringAttribute{
+				Required:    true,
+				Description: `The ID of the containing group.`,
 			},
 			"group_id": schema.StringAttribute{
 				Required:    true,
@@ -101,13 +93,17 @@ func (r *GroupContainingGroupDataSource) Read(ctx context.Context, req datasourc
 		return
 	}
 
+	var containingGroupID string
+	containingGroupID = data.ContainingGroupID.ValueString()
+
 	var groupID string
 	groupID = data.GroupID.ValueString()
 
-	request := operations.GetGroupContainingGroupsRequest{
-		GroupID: groupID,
+	request := operations.GetGroupContainingGroupRequest{
+		ContainingGroupID: containingGroupID,
+		GroupID:           groupID,
 	}
-	res, err := r.client.Groups.GetGroupContainingGroups(ctx, request)
+	res, err := r.client.Groups.GetGroupContainingGroup(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -127,11 +123,11 @@ func (r *GroupContainingGroupDataSource) Read(ctx context.Context, req datasourc
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.GroupContainingGroupList != nil) {
+	if !(res.GroupContainingGroup != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedGroupContainingGroupList(res.GroupContainingGroupList)
+	data.RefreshFromSharedGroupContainingGroup(res.GroupContainingGroup)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

@@ -537,7 +537,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(resp *shared.Resource)
 			if resp.RemoteInfo.OktaCustomRole == nil {
 				r.RemoteInfo.OktaCustomRole = nil
 			} else {
-				r.RemoteInfo.OktaCustomRole = &tfTypes.OktaCustomRole{}
+				r.RemoteInfo.OktaCustomRole = &tfTypes.SnowflakeRole{}
 				r.RemoteInfo.OktaCustomRole.RoleID = types.StringValue(resp.RemoteInfo.OktaCustomRole.RoleID)
 			}
 			if resp.RemoteInfo.OktaStandardRole == nil {
@@ -568,7 +568,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(resp *shared.Resource)
 			if resp.RemoteInfo.SalesforceRole == nil {
 				r.RemoteInfo.SalesforceRole = nil
 			} else {
-				r.RemoteInfo.SalesforceRole = &tfTypes.OktaCustomRole{}
+				r.RemoteInfo.SalesforceRole = &tfTypes.SnowflakeRole{}
 				r.RemoteInfo.SalesforceRole.RoleID = types.StringValue(resp.RemoteInfo.SalesforceRole.RoleID)
 			}
 			if resp.RemoteInfo.TeleportRole == nil {

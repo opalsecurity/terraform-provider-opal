@@ -10,8 +10,6 @@ import (
 type GetBundleGroupsRequest struct {
 	// The ID of the bundle.
 	BundleID string `pathParam:"style=simple,explode=false,name=bundle_id"`
-	// A filter for the bundle name.
-	Contains *string `queryParam:"style=form,explode=true,name=contains"`
 	// A cursor indicating where to start fetching items after a specific point.
 	Cursor *string `queryParam:"style=form,explode=true,name=cursor"`
 	// The maximum number of groups to return from the beginning of the list. Default is 200, max is 1000.
@@ -23,13 +21,6 @@ func (o *GetBundleGroupsRequest) GetBundleID() string {
 		return ""
 	}
 	return o.BundleID
-}
-
-func (o *GetBundleGroupsRequest) GetContains() *string {
-	if o == nil {
-		return nil
-	}
-	return o.Contains
 }
 
 func (o *GetBundleGroupsRequest) GetCursor() *string {

@@ -790,7 +790,7 @@ func (s *Bundles) DeleteBundle(ctx context.Context, request operations.DeleteBun
 	}
 
 	switch {
-	case httpRes.StatusCode == 204:
+	case httpRes.StatusCode == 200:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -1946,7 +1946,7 @@ func (s *Bundles) RemoveBundleGroup(ctx context.Context, request operations.Remo
 	}
 
 	switch {
-	case httpRes.StatusCode == 204:
+	case httpRes.StatusCode == 200:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -2124,7 +2124,7 @@ func (s *Bundles) RemoveBundleResource(ctx context.Context, request operations.R
 	}
 
 	switch {
-	case httpRes.StatusCode == 204:
+	case httpRes.StatusCode == 200:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {

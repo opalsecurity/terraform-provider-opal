@@ -4,24 +4,11 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *GroupContainingGroupDataSourceModel) RefreshFromSharedGroupContainingGroupList(resp *shared.GroupContainingGroupList) {
+func (r *GroupContainingGroupDataSourceModel) RefreshFromSharedGroupContainingGroup(resp *shared.GroupContainingGroup) {
 	if resp != nil {
-		r.ContainingGroups = []tfTypes.GroupContainingGroup{}
-		if len(r.ContainingGroups) > len(resp.ContainingGroups) {
-			r.ContainingGroups = r.ContainingGroups[:len(resp.ContainingGroups)]
-		}
-		for containingGroupsCount, containingGroupsItem := range resp.ContainingGroups {
-			var containingGroups1 tfTypes.GroupContainingGroup
-			containingGroups1.ContainingGroupID = types.StringValue(containingGroupsItem.ContainingGroupID)
-			if containingGroupsCount+1 > len(r.ContainingGroups) {
-				r.ContainingGroups = append(r.ContainingGroups, containingGroups1)
-			} else {
-				r.ContainingGroups[containingGroupsCount].ContainingGroupID = containingGroups1.ContainingGroupID
-			}
-		}
+		r.ContainingGroupID = types.StringValue(resp.ContainingGroupID)
 	}
 }
