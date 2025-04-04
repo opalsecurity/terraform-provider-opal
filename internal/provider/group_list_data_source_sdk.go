@@ -90,6 +90,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *sh
 					results1.RemoteInfo.OktaGroup = &tfTypes.ActiveDirectoryGroup{}
 					results1.RemoteInfo.OktaGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.OktaGroup.GroupID)
 				}
+				if resultsItem.RemoteInfo.SnowflakeRole == nil {
+					results1.RemoteInfo.SnowflakeRole = nil
+				} else {
+					results1.RemoteInfo.SnowflakeRole = &tfTypes.SnowflakeRole{}
+					results1.RemoteInfo.SnowflakeRole.RoleID = types.StringValue(resultsItem.RemoteInfo.SnowflakeRole.RoleID)
+				}
 			}
 			results1.RemoteName = types.StringPointerValue(resultsItem.RemoteName)
 			results1.RequestConfigurations = []tfTypes.RequestConfiguration{}

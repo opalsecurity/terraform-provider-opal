@@ -1044,10 +1044,22 @@ actions:
   - target: $["paths"]["/uar/{uar_id}"]["get"]
     update:
       x-speakeasy-entity-operation: UAR#get
-  - target: $["paths"]["/groups/{group_id}/containing-groups"]
-    remove: true
-  - target: $["paths"]["/groups/{group_id}/containing-groups/{containing_group_id}"]
-    remove: true
+  - target: $["paths"]["/groups/{group_id}/containing-groups/{containing_group_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: GroupContainingGroup#read
+  - target: $["paths"]["/groups/{group_id}/containing-groups/{containing_group_id}"]["get"]["responses"]
+    update:
+      "404":
+        description: Not Found
+  - target: $["paths"]["/groups/{group_id}/containing-groups"]["post"]
+    update:
+      x-speakeasy-entity-operation: GroupContainingGroup#create
+  - target: $["paths"]["/groups/{group_id}/containing-groups"]["get"]
+    remove:
+      true
+  - target: $["paths"]["/groups/{group_id}/containing-groups/{containing_group_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: GroupContainingGroup#delete
   - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]
     remove: true
   - target: $["paths"]["/access-rules/{access_rule_id}"]
@@ -1461,6 +1473,9 @@ actions:
     update:
       x-speakeasy-param-force-new: true
   - target: $["components"]["schemas"]["GroupRemoteInfo"]["properties"]["azure_ad_microsoft_365_group"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["GroupRemoteInfo"]["properties"]["snowflake_role"]
     update:
       x-speakeasy-param-force-new: true
   - target: $["components"]["schemas"]["GroupRemoteInfo"]
@@ -2002,7 +2017,8 @@ actions:
         example: GLOBAL
         type: string
   - target: $["components"]["schemas"]["GroupContainingGroup"]
-    remove: true
+    update:
+      x-speakeasy-entity: GroupContainingGroup
   - target: $["components"]["schemas"]["GroupWithAccessLevel"]
     remove: true
   - target: $["components"]["schemas"]["GroupContainingGroupList"]

@@ -57,6 +57,9 @@ resource "opal_group" "my_group" {
     okta_group = {
       group_id = "00gjs33pe8rtmRrp3rd6"
     }
+    snowflake_role = {
+      role_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
   }
   request_configurations = [
     {
@@ -181,6 +184,7 @@ Optional:
 - `google_group` (Attributes) Remote info for Google group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--google_group))
 - `ldap_group` (Attributes) Remote info for LDAP group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--ldap_group))
 - `okta_group` (Attributes) Remote info for Okta Directory group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_group))
+- `snowflake_role` (Attributes) Remote info for Snowflake role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--snowflake_role))
 
 <a id="nestedatt--remote_info--active_directory_group"></a>
 ### Nested Schema for `remote_info.active_directory_group`
@@ -252,6 +256,14 @@ Optional:
 Optional:
 
 - `group_id` (String) The id of the Okta Directory group. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--snowflake_role"></a>
+### Nested Schema for `remote_info.snowflake_role`
+
+Optional:
+
+- `role_id` (String) The id of the Snowflake role. Not Null; Requires replacement if changed.
 
 
 

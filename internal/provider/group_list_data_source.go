@@ -199,6 +199,16 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 									},
 									Description: `Remote info for Okta Directory group.`,
 								},
+								"snowflake_role": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"role_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The id of the Snowflake role.`,
+										},
+									},
+									Description: `Remote info for Snowflake role.`,
+								},
 							},
 							Description: `Information that defines the remote group. This replaces the deprecated remote_id and metadata fields.`,
 						},

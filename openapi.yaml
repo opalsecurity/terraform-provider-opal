@@ -1094,6 +1094,110 @@ paths:
         - groups
       x-speakeasy-name-override: update_resources
       x-speakeasy-entity-operation: GroupResourceList#create,update
+  /groups/{group_id}/containing-groups:
+    post:
+      description: Creates a new containing group.
+      operationId: add_group_containing_group
+      parameters:
+        - description: The ID of the group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GroupContainingGroup"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupContainingGroup"
+          description: The created `GroupContainingGroup` object.
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
+      x-speakeasy-entity-operation: GroupContainingGroup#create
+  /groups/{group_id}/containing-groups/{containing_group_id}:
+    get:
+      description: Gets a specific containing group for a group.
+      operationId: get_group_containing_group
+      parameters:
+        - description: The ID of the group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the containing group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: containing_group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupContainingGroup"
+          description: The created `GroupContainingGroup` object.
+        "404":
+          description: Not Found
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
+      x-speakeasy-entity-operation: GroupContainingGroup#read
+    delete:
+      description: Removes a containing group from a group.
+      operationId: remove_group_containing_group
+      parameters:
+        - description: The ID of the group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the containing group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: containing_group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "204":
+          description: The containing group was successfully removed from the group.
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
+      x-speakeasy-entity-operation: GroupContainingGroup#delete
   /groups/{group_id}/resources/{resource_id}:
     post:
       description: Adds a resource to a group.
@@ -4734,6 +4838,23 @@ components:
         - resource_id
         - access_level
       type: object
+    GroupContainingGroup:
+      description: |-
+        # GroupContainingGroup Object
+        ### Description
+        The `GroupContainingGroup` object is used to represent a relationship between a group and a group.
+      example:
+        containing_group_id: f454d283-ca87-4a8a-bdbb-df212eca5353
+      properties:
+        containing_group_id:
+          description: The groupID of the containing group.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          format: uuid
+          type: string
+      required:
+        - containing_group_id
+      type: object
+      x-speakeasy-entity: GroupContainingGroup
     Group:
       description: |-
         # Group Object
@@ -5843,6 +5964,17 @@ components:
           type: object
           required:
             - group_id
+          x-speakeasy-param-force-new: true
+        snowflake_role:
+          description: Remote info for Snowflake role.
+          properties:
+            role_id:
+              description: The id of the Snowflake role.
+              example: 01fa7402-01d8-103b-8deb-5f3a0ab7884
+              type: string
+          type: object
+          required:
+            - role_id
           x-speakeasy-param-force-new: true
       type: object
       x-speakeasy-entity: GroupRemote
