@@ -1,4 +1,6 @@
 # Changelog
+## v.3.0.14
+- Add support for bundles
 
 ## v3.0.12
 - Add default values for condition and require_mfa_to_approve fields
