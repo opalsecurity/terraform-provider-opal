@@ -1,4 +1,11 @@
 # Changelog
+## v.3.0.16
+- Add support for Access Rules
+
+## v.3.0.15
+- Add support for group <> containing group pairs
+- Add support for Snowflake Roles to Group creation
+
 ## v.3.0.14
 - Add support for bundles
 
