@@ -3,53 +3,51 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
-	"time"
 )
 
-func (r *PaginatedBundleListDataSourceModel) RefreshFromSharedPaginatedBundleList(resp *shared.PaginatedBundleList) {
+func (r *PaginatedBundleListDataSourceModel) RefreshFromSharedPaginatedBundleList(ctx context.Context, resp *shared.PaginatedBundleList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.Bundles = []tfTypes.Bundle{}
 		if len(r.Bundles) > len(resp.Bundles) {
 			r.Bundles = r.Bundles[:len(resp.Bundles)]
 		}
 		for bundlesCount, bundlesItem := range resp.Bundles {
-			var bundles1 tfTypes.Bundle
-			bundles1.AdminOwnerID = types.StringPointerValue(bundlesItem.AdminOwnerID)
-			bundles1.BundleID = types.StringPointerValue(bundlesItem.BundleID)
-			if bundlesItem.CreatedAt != nil {
-				bundles1.CreatedAt = types.StringValue(bundlesItem.CreatedAt.Format(time.RFC3339Nano))
-			} else {
-				bundles1.CreatedAt = types.StringNull()
-			}
-			bundles1.Description = types.StringPointerValue(bundlesItem.Description)
-			bundles1.Name = types.StringPointerValue(bundlesItem.Name)
-			bundles1.TotalNumGroups = types.Int64PointerValue(bundlesItem.TotalNumGroups)
-			bundles1.TotalNumItems = types.Int64PointerValue(bundlesItem.TotalNumItems)
-			bundles1.TotalNumResources = types.Int64PointerValue(bundlesItem.TotalNumResources)
-			if bundlesItem.UpdatedAt != nil {
-				bundles1.UpdatedAt = types.StringValue(bundlesItem.UpdatedAt.Format(time.RFC3339Nano))
-			} else {
-				bundles1.UpdatedAt = types.StringNull()
-			}
+			var bundles tfTypes.Bundle
+			bundles.AdminOwnerID = types.StringPointerValue(bundlesItem.AdminOwnerID)
+			bundles.BundleID = types.StringPointerValue(bundlesItem.BundleID)
+			bundles.CreatedAt = types.StringPointerValue(typeconvert.TimePointerToStringPointer(bundlesItem.CreatedAt))
+			bundles.Description = types.StringPointerValue(bundlesItem.Description)
+			bundles.Name = types.StringPointerValue(bundlesItem.Name)
+			bundles.TotalNumGroups = types.Int64PointerValue(bundlesItem.TotalNumGroups)
+			bundles.TotalNumItems = types.Int64PointerValue(bundlesItem.TotalNumItems)
+			bundles.TotalNumResources = types.Int64PointerValue(bundlesItem.TotalNumResources)
+			bundles.UpdatedAt = types.StringPointerValue(typeconvert.TimePointerToStringPointer(bundlesItem.UpdatedAt))
 			if bundlesCount+1 > len(r.Bundles) {
-				r.Bundles = append(r.Bundles, bundles1)
+				r.Bundles = append(r.Bundles, bundles)
 			} else {
-				r.Bundles[bundlesCount].AdminOwnerID = bundles1.AdminOwnerID
-				r.Bundles[bundlesCount].BundleID = bundles1.BundleID
-				r.Bundles[bundlesCount].CreatedAt = bundles1.CreatedAt
-				r.Bundles[bundlesCount].Description = bundles1.Description
-				r.Bundles[bundlesCount].Name = bundles1.Name
-				r.Bundles[bundlesCount].TotalNumGroups = bundles1.TotalNumGroups
-				r.Bundles[bundlesCount].TotalNumItems = bundles1.TotalNumItems
-				r.Bundles[bundlesCount].TotalNumResources = bundles1.TotalNumResources
-				r.Bundles[bundlesCount].UpdatedAt = bundles1.UpdatedAt
+				r.Bundles[bundlesCount].AdminOwnerID = bundles.AdminOwnerID
+				r.Bundles[bundlesCount].BundleID = bundles.BundleID
+				r.Bundles[bundlesCount].CreatedAt = bundles.CreatedAt
+				r.Bundles[bundlesCount].Description = bundles.Description
+				r.Bundles[bundlesCount].Name = bundles.Name
+				r.Bundles[bundlesCount].TotalNumGroups = bundles.TotalNumGroups
+				r.Bundles[bundlesCount].TotalNumItems = bundles.TotalNumItems
+				r.Bundles[bundlesCount].TotalNumResources = bundles.TotalNumResources
+				r.Bundles[bundlesCount].UpdatedAt = bundles.UpdatedAt
 			}
 		}
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
 		r.TotalCount = types.Int64PointerValue(resp.TotalCount)
 	}
+
+	return diags
 }

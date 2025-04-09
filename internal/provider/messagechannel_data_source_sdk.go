@@ -3,11 +3,15 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *MessageChannelDataSourceModel) RefreshFromSharedMessageChannel(resp *shared.MessageChannel) {
+func (r *MessageChannelDataSourceModel) RefreshFromSharedMessageChannel(ctx context.Context, resp *shared.MessageChannel) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.ID = types.StringValue(resp.ID)
 		r.IsPrivate = types.BoolPointerValue(resp.IsPrivate)
@@ -19,4 +23,6 @@ func (r *MessageChannelDataSourceModel) RefreshFromSharedMessageChannel(resp *sh
 			r.ThirdPartyProvider = types.StringNull()
 		}
 	}
+
+	return diags
 }

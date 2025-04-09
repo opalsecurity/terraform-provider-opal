@@ -3,11 +3,15 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *OnCallScheduleDataSourceModel) RefreshFromSharedOnCallSchedule(resp *shared.OnCallSchedule) {
+func (r *OnCallScheduleDataSourceModel) RefreshFromSharedOnCallSchedule(ctx context.Context, resp *shared.OnCallSchedule) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.ID = types.StringPointerValue(resp.ID)
 		r.Name = types.StringPointerValue(resp.Name)
@@ -18,4 +22,6 @@ func (r *OnCallScheduleDataSourceModel) RefreshFromSharedOnCallSchedule(resp *sh
 			r.ThirdPartyProvider = types.StringNull()
 		}
 	}
+
+	return diags
 }

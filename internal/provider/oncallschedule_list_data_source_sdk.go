@@ -3,35 +3,41 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *OnCallScheduleListDataSourceModel) RefreshFromSharedOnCallScheduleList(resp *shared.OnCallScheduleList) {
+func (r *OnCallScheduleListDataSourceModel) RefreshFromSharedOnCallScheduleList(ctx context.Context, resp *shared.OnCallScheduleList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.OnCallSchedules = []tfTypes.GetGroupOnCallSchedulesResponseBody{}
 		if len(r.OnCallSchedules) > len(resp.OnCallSchedules) {
 			r.OnCallSchedules = r.OnCallSchedules[:len(resp.OnCallSchedules)]
 		}
 		for onCallSchedulesCount, onCallSchedulesItem := range resp.OnCallSchedules {
-			var onCallSchedules1 tfTypes.GetGroupOnCallSchedulesResponseBody
-			onCallSchedules1.ID = types.StringPointerValue(onCallSchedulesItem.ID)
-			onCallSchedules1.Name = types.StringPointerValue(onCallSchedulesItem.Name)
-			onCallSchedules1.RemoteID = types.StringPointerValue(onCallSchedulesItem.RemoteID)
+			var onCallSchedules tfTypes.GetGroupOnCallSchedulesResponseBody
+			onCallSchedules.ID = types.StringPointerValue(onCallSchedulesItem.ID)
+			onCallSchedules.Name = types.StringPointerValue(onCallSchedulesItem.Name)
+			onCallSchedules.RemoteID = types.StringPointerValue(onCallSchedulesItem.RemoteID)
 			if onCallSchedulesItem.ThirdPartyProvider != nil {
-				onCallSchedules1.ThirdPartyProvider = types.StringValue(string(*onCallSchedulesItem.ThirdPartyProvider))
+				onCallSchedules.ThirdPartyProvider = types.StringValue(string(*onCallSchedulesItem.ThirdPartyProvider))
 			} else {
-				onCallSchedules1.ThirdPartyProvider = types.StringNull()
+				onCallSchedules.ThirdPartyProvider = types.StringNull()
 			}
 			if onCallSchedulesCount+1 > len(r.OnCallSchedules) {
-				r.OnCallSchedules = append(r.OnCallSchedules, onCallSchedules1)
+				r.OnCallSchedules = append(r.OnCallSchedules, onCallSchedules)
 			} else {
-				r.OnCallSchedules[onCallSchedulesCount].ID = onCallSchedules1.ID
-				r.OnCallSchedules[onCallSchedulesCount].Name = onCallSchedules1.Name
-				r.OnCallSchedules[onCallSchedulesCount].RemoteID = onCallSchedules1.RemoteID
-				r.OnCallSchedules[onCallSchedulesCount].ThirdPartyProvider = onCallSchedules1.ThirdPartyProvider
+				r.OnCallSchedules[onCallSchedulesCount].ID = onCallSchedules.ID
+				r.OnCallSchedules[onCallSchedulesCount].Name = onCallSchedules.Name
+				r.OnCallSchedules[onCallSchedulesCount].RemoteID = onCallSchedules.RemoteID
+				r.OnCallSchedules[onCallSchedulesCount].ThirdPartyProvider = onCallSchedules.ThirdPartyProvider
 			}
 		}
 	}
+
+	return diags
 }

@@ -3,12 +3,16 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *ResourceDataSourceModel) RefreshFromSharedResource(resp *shared.Resource) {
+func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context, resp *shared.Resource) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 		r.AppID = types.StringPointerValue(resp.AppID)
@@ -200,64 +204,64 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(resp *shared.Resourc
 			r.RequestConfigurations = r.RequestConfigurations[:len(resp.RequestConfigurations)]
 		}
 		for requestConfigurationsCount, requestConfigurationsItem := range resp.RequestConfigurations {
-			var requestConfigurations1 tfTypes.RequestConfiguration
-			requestConfigurations1.AllowRequests = types.BoolValue(requestConfigurationsItem.AllowRequests)
-			requestConfigurations1.AutoApproval = types.BoolValue(requestConfigurationsItem.AutoApproval)
+			var requestConfigurations tfTypes.RequestConfiguration
+			requestConfigurations.AllowRequests = types.BoolValue(requestConfigurationsItem.AllowRequests)
+			requestConfigurations.AutoApproval = types.BoolValue(requestConfigurationsItem.AutoApproval)
 			if requestConfigurationsItem.Condition == nil {
-				requestConfigurations1.Condition = nil
+				requestConfigurations.Condition = nil
 			} else {
-				requestConfigurations1.Condition = &tfTypes.Condition{}
-				requestConfigurations1.Condition.GroupIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.GroupIds))
+				requestConfigurations.Condition = &tfTypes.Condition{}
+				requestConfigurations.Condition.GroupIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.GroupIds))
 				for _, v := range requestConfigurationsItem.Condition.GroupIds {
-					requestConfigurations1.Condition.GroupIds = append(requestConfigurations1.Condition.GroupIds, types.StringValue(v))
+					requestConfigurations.Condition.GroupIds = append(requestConfigurations.Condition.GroupIds, types.StringValue(v))
 				}
-				requestConfigurations1.Condition.RoleRemoteIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
+				requestConfigurations.Condition.RoleRemoteIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
 				for _, v := range requestConfigurationsItem.Condition.RoleRemoteIds {
-					requestConfigurations1.Condition.RoleRemoteIds = append(requestConfigurations1.Condition.RoleRemoteIds, types.StringValue(v))
+					requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 				}
 			}
-			requestConfigurations1.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
-			requestConfigurations1.Priority = types.Int64Value(requestConfigurationsItem.Priority)
-			requestConfigurations1.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)
-			requestConfigurations1.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
-			requestConfigurations1.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
-			requestConfigurations1.RequireSupportTicket = types.BoolValue(requestConfigurationsItem.RequireSupportTicket)
-			requestConfigurations1.ReviewerStages = []tfTypes.ReviewerStage{}
+			requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
+			requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
+			requestConfigurations.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)
+			requestConfigurations.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
+			requestConfigurations.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
+			requestConfigurations.RequireSupportTicket = types.BoolValue(requestConfigurationsItem.RequireSupportTicket)
+			requestConfigurations.ReviewerStages = []tfTypes.ReviewerStage{}
 			for reviewerStagesCount, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
-				var reviewerStages1 tfTypes.ReviewerStage
+				var reviewerStages tfTypes.ReviewerStage
 				if reviewerStagesItem.Operator != nil {
-					reviewerStages1.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
+					reviewerStages.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
 				} else {
-					reviewerStages1.Operator = types.StringNull()
+					reviewerStages.Operator = types.StringNull()
 				}
-				reviewerStages1.OwnerIds = make([]types.String, 0, len(reviewerStagesItem.OwnerIds))
+				reviewerStages.OwnerIds = make([]types.String, 0, len(reviewerStagesItem.OwnerIds))
 				for _, v := range reviewerStagesItem.OwnerIds {
-					reviewerStages1.OwnerIds = append(reviewerStages1.OwnerIds, types.StringValue(v))
+					reviewerStages.OwnerIds = append(reviewerStages.OwnerIds, types.StringValue(v))
 				}
-				reviewerStages1.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
-				reviewerStages1.RequireManagerApproval = types.BoolValue(reviewerStagesItem.RequireManagerApproval)
-				if reviewerStagesCount+1 > len(requestConfigurations1.ReviewerStages) {
-					requestConfigurations1.ReviewerStages = append(requestConfigurations1.ReviewerStages, reviewerStages1)
+				reviewerStages.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
+				reviewerStages.RequireManagerApproval = types.BoolValue(reviewerStagesItem.RequireManagerApproval)
+				if reviewerStagesCount+1 > len(requestConfigurations.ReviewerStages) {
+					requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
 				} else {
-					requestConfigurations1.ReviewerStages[reviewerStagesCount].Operator = reviewerStages1.Operator
-					requestConfigurations1.ReviewerStages[reviewerStagesCount].OwnerIds = reviewerStages1.OwnerIds
-					requestConfigurations1.ReviewerStages[reviewerStagesCount].RequireAdminApproval = reviewerStages1.RequireAdminApproval
-					requestConfigurations1.ReviewerStages[reviewerStagesCount].RequireManagerApproval = reviewerStages1.RequireManagerApproval
+					requestConfigurations.ReviewerStages[reviewerStagesCount].Operator = reviewerStages.Operator
+					requestConfigurations.ReviewerStages[reviewerStagesCount].OwnerIds = reviewerStages.OwnerIds
+					requestConfigurations.ReviewerStages[reviewerStagesCount].RequireAdminApproval = reviewerStages.RequireAdminApproval
+					requestConfigurations.ReviewerStages[reviewerStagesCount].RequireManagerApproval = reviewerStages.RequireManagerApproval
 				}
 			}
 			if requestConfigurationsCount+1 > len(r.RequestConfigurations) {
-				r.RequestConfigurations = append(r.RequestConfigurations, requestConfigurations1)
+				r.RequestConfigurations = append(r.RequestConfigurations, requestConfigurations)
 			} else {
-				r.RequestConfigurations[requestConfigurationsCount].AllowRequests = requestConfigurations1.AllowRequests
-				r.RequestConfigurations[requestConfigurationsCount].AutoApproval = requestConfigurations1.AutoApproval
-				r.RequestConfigurations[requestConfigurationsCount].Condition = requestConfigurations1.Condition
-				r.RequestConfigurations[requestConfigurationsCount].MaxDuration = requestConfigurations1.MaxDuration
-				r.RequestConfigurations[requestConfigurationsCount].Priority = requestConfigurations1.Priority
-				r.RequestConfigurations[requestConfigurationsCount].RecommendedDuration = requestConfigurations1.RecommendedDuration
-				r.RequestConfigurations[requestConfigurationsCount].RequestTemplateID = requestConfigurations1.RequestTemplateID
-				r.RequestConfigurations[requestConfigurationsCount].RequireMfaToRequest = requestConfigurations1.RequireMfaToRequest
-				r.RequestConfigurations[requestConfigurationsCount].RequireSupportTicket = requestConfigurations1.RequireSupportTicket
-				r.RequestConfigurations[requestConfigurationsCount].ReviewerStages = requestConfigurations1.ReviewerStages
+				r.RequestConfigurations[requestConfigurationsCount].AllowRequests = requestConfigurations.AllowRequests
+				r.RequestConfigurations[requestConfigurationsCount].AutoApproval = requestConfigurations.AutoApproval
+				r.RequestConfigurations[requestConfigurationsCount].Condition = requestConfigurations.Condition
+				r.RequestConfigurations[requestConfigurationsCount].MaxDuration = requestConfigurations.MaxDuration
+				r.RequestConfigurations[requestConfigurationsCount].Priority = requestConfigurations.Priority
+				r.RequestConfigurations[requestConfigurationsCount].RecommendedDuration = requestConfigurations.RecommendedDuration
+				r.RequestConfigurations[requestConfigurationsCount].RequestTemplateID = requestConfigurations.RequestTemplateID
+				r.RequestConfigurations[requestConfigurationsCount].RequireMfaToRequest = requestConfigurations.RequireMfaToRequest
+				r.RequestConfigurations[requestConfigurationsCount].RequireSupportTicket = requestConfigurations.RequireSupportTicket
+				r.RequestConfigurations[requestConfigurationsCount].ReviewerStages = requestConfigurations.ReviewerStages
 			}
 		}
 		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
@@ -291,4 +295,6 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(resp *shared.Resourc
 			}
 		}
 	}
+
+	return diags
 }

@@ -13,7 +13,7 @@ generation:
     oAuth2PasswordEnabled: false
   flattenGlobalSecurity: true
 terraform:
-  version: 0.33.8
+  version: 0.34.2
   additionalDataSources: []
   additionalDependencies: {}
   additionalProviderAttributes:

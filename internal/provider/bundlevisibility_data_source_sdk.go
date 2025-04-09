@@ -3,11 +3,15 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *BundleVisibilityDataSourceModel) RefreshFromSharedVisibilityInfo(resp *shared.VisibilityInfo) {
+func (r *BundleVisibilityDataSourceModel) RefreshFromSharedVisibilityInfo(ctx context.Context, resp *shared.VisibilityInfo) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.Visibility = types.StringValue(string(resp.Visibility))
 		r.VisibilityGroupIds = make([]types.String, 0, len(resp.VisibilityGroupIds))
@@ -15,4 +19,6 @@ func (r *BundleVisibilityDataSourceModel) RefreshFromSharedVisibilityInfo(resp *
 			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
 		}
 	}
+
+	return diags
 }

@@ -3,6 +3,8 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
@@ -50,7 +52,9 @@ func (r *OwnerResourceModel) ToSharedCreateOwnerInfo() *shared.CreateOwnerInfo {
 	return &out
 }
 
-func (r *OwnerResourceModel) RefreshFromSharedOwner(resp *shared.Owner) {
+func (r *OwnerResourceModel) RefreshFromSharedOwner(ctx context.Context, resp *shared.Owner) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.AccessRequestEscalationPeriod = types.Int64PointerValue(resp.AccessRequestEscalationPeriod)
 		r.Description = types.StringPointerValue(resp.Description)
@@ -59,6 +63,8 @@ func (r *OwnerResourceModel) RefreshFromSharedOwner(resp *shared.Owner) {
 		r.ReviewerMessageChannelID = types.StringPointerValue(resp.ReviewerMessageChannelID)
 		r.SourceGroupID = types.StringPointerValue(resp.SourceGroupID)
 	}
+
+	return diags
 }
 
 func (r *OwnerResourceModel) ToSharedUpdateOwnerInfo() *shared.UpdateOwnerInfo {
@@ -106,13 +112,17 @@ func (r *OwnerResourceModel) ToSharedUpdateOwnerInfo() *shared.UpdateOwnerInfo {
 	return &out
 }
 
-func (r *OwnerResourceModel) RefreshFromSharedUpdateOwnerInfo(resp *shared.UpdateOwnerInfo) {
+func (r *OwnerResourceModel) RefreshFromSharedUpdateOwnerInfo(ctx context.Context, resp *shared.UpdateOwnerInfo) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	r.AccessRequestEscalationPeriod = types.Int64PointerValue(resp.AccessRequestEscalationPeriod)
 	r.Description = types.StringPointerValue(resp.Description)
 	r.ID = types.StringValue(resp.ID)
 	r.Name = types.StringPointerValue(resp.Name)
 	r.ReviewerMessageChannelID = types.StringPointerValue(resp.ReviewerMessageChannelID)
 	r.SourceGroupID = types.StringPointerValue(resp.SourceGroupID)
+
+	return diags
 }
 
 func (r *OwnerResourceModel) ToSharedUserIDList() *shared.UserIDList {

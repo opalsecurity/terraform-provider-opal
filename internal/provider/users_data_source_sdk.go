@@ -3,12 +3,16 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *UsersDataSourceModel) RefreshFromSharedPaginatedUsersList(resp *shared.PaginatedUsersList) {
+func (r *UsersDataSourceModel) RefreshFromSharedPaginatedUsersList(ctx context.Context, resp *shared.PaginatedUsersList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
@@ -17,29 +21,31 @@ func (r *UsersDataSourceModel) RefreshFromSharedPaginatedUsersList(resp *shared.
 			r.Results = r.Results[:len(resp.Results)]
 		}
 		for resultsCount, resultsItem := range resp.Results {
-			var results1 tfTypes.User
-			results1.Email = types.StringValue(resultsItem.Email)
-			results1.FirstName = types.StringValue(resultsItem.FirstName)
+			var results tfTypes.User
+			results.Email = types.StringValue(resultsItem.Email)
+			results.FirstName = types.StringValue(resultsItem.FirstName)
 			if resultsItem.HrIdpStatus != nil {
-				results1.HrIdpStatus = types.StringValue(string(*resultsItem.HrIdpStatus))
+				results.HrIdpStatus = types.StringValue(string(*resultsItem.HrIdpStatus))
 			} else {
-				results1.HrIdpStatus = types.StringNull()
+				results.HrIdpStatus = types.StringNull()
 			}
-			results1.ID = types.StringValue(resultsItem.ID)
-			results1.LastName = types.StringValue(resultsItem.LastName)
-			results1.Name = types.StringValue(resultsItem.Name)
-			results1.Position = types.StringValue(resultsItem.Position)
+			results.ID = types.StringValue(resultsItem.ID)
+			results.LastName = types.StringValue(resultsItem.LastName)
+			results.Name = types.StringValue(resultsItem.Name)
+			results.Position = types.StringValue(resultsItem.Position)
 			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results1)
+				r.Results = append(r.Results, results)
 			} else {
-				r.Results[resultsCount].Email = results1.Email
-				r.Results[resultsCount].FirstName = results1.FirstName
-				r.Results[resultsCount].HrIdpStatus = results1.HrIdpStatus
-				r.Results[resultsCount].ID = results1.ID
-				r.Results[resultsCount].LastName = results1.LastName
-				r.Results[resultsCount].Name = results1.Name
-				r.Results[resultsCount].Position = results1.Position
+				r.Results[resultsCount].Email = results.Email
+				r.Results[resultsCount].FirstName = results.FirstName
+				r.Results[resultsCount].HrIdpStatus = results.HrIdpStatus
+				r.Results[resultsCount].ID = results.ID
+				r.Results[resultsCount].LastName = results.LastName
+				r.Results[resultsCount].Name = results.Name
+				r.Results[resultsCount].Position = results.Position
 			}
 		}
 	}
+
+	return diags
 }

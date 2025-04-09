@@ -3,14 +3,18 @@
 package provider
 
 import (
+	"context"
 	"encoding/json"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
-	"time"
 )
 
-func (r *AppDataSourceModel) RefreshFromSharedApp(resp *shared.App) {
+func (r *AppDataSourceModel) RefreshFromSharedApp(ctx context.Context, resp *shared.App) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.AdminOwnerID = types.StringValue(resp.AdminOwnerID)
 		r.Description = types.StringValue(resp.Description)
@@ -22,26 +26,28 @@ func (r *AppDataSourceModel) RefreshFromSharedApp(resp *shared.App) {
 			r.Validations = r.Validations[:len(resp.Validations)]
 		}
 		for validationsCount, validationsItem := range resp.Validations {
-			var validations1 tfTypes.AppValidation
-			validations1.Details = types.StringPointerValue(validationsItem.Details)
-			validations1.Key = types.StringValue(validationsItem.Key)
+			var validations tfTypes.AppValidation
+			validations.Details = types.StringPointerValue(validationsItem.Details)
+			validations.Key = types.StringValue(validationsItem.Key)
 			nameResult, _ := json.Marshal(validationsItem.Name)
-			validations1.Name = types.StringValue(string(nameResult))
-			validations1.Severity = types.StringValue(string(validationsItem.Severity))
-			validations1.Status = types.StringValue(string(validationsItem.Status))
-			validations1.UpdatedAt = types.StringValue(validationsItem.UpdatedAt.Format(time.RFC3339Nano))
-			validations1.UsageReason = types.StringPointerValue(validationsItem.UsageReason)
+			validations.Name = types.StringValue(string(nameResult))
+			validations.Severity = types.StringValue(string(validationsItem.Severity))
+			validations.Status = types.StringValue(string(validationsItem.Status))
+			validations.UpdatedAt = types.StringValue(typeconvert.TimeToString(validationsItem.UpdatedAt))
+			validations.UsageReason = types.StringPointerValue(validationsItem.UsageReason)
 			if validationsCount+1 > len(r.Validations) {
-				r.Validations = append(r.Validations, validations1)
+				r.Validations = append(r.Validations, validations)
 			} else {
-				r.Validations[validationsCount].Details = validations1.Details
-				r.Validations[validationsCount].Key = validations1.Key
-				r.Validations[validationsCount].Name = validations1.Name
-				r.Validations[validationsCount].Severity = validations1.Severity
-				r.Validations[validationsCount].Status = validations1.Status
-				r.Validations[validationsCount].UpdatedAt = validations1.UpdatedAt
-				r.Validations[validationsCount].UsageReason = validations1.UsageReason
+				r.Validations[validationsCount].Details = validations.Details
+				r.Validations[validationsCount].Key = validations.Key
+				r.Validations[validationsCount].Name = validations.Name
+				r.Validations[validationsCount].Severity = validations.Severity
+				r.Validations[validationsCount].Status = validations.Status
+				r.Validations[validationsCount].UpdatedAt = validations.UpdatedAt
+				r.Validations[validationsCount].UsageReason = validations.UsageReason
 			}
 		}
 	}
+
+	return diags
 }

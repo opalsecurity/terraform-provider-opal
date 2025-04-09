@@ -3,13 +3,17 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
-	"time"
 )
 
-func (r *SessionsDataSourceModel) RefreshFromSharedSessionsList(resp *shared.SessionsList) {
+func (r *SessionsDataSourceModel) RefreshFromSharedSessionsList(ctx context.Context, resp *shared.SessionsList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
@@ -18,22 +22,24 @@ func (r *SessionsDataSourceModel) RefreshFromSharedSessionsList(resp *shared.Ses
 			r.Results = r.Results[:len(resp.Results)]
 		}
 		for resultsCount, resultsItem := range resp.Results {
-			var results1 tfTypes.Session
-			results1.AccessLevel.AccessLevelName = types.StringValue(resultsItem.AccessLevel.AccessLevelName)
-			results1.AccessLevel.AccessLevelRemoteID = types.StringValue(resultsItem.AccessLevel.AccessLevelRemoteID)
-			results1.ConnectionID = types.StringValue(resultsItem.ConnectionID)
-			results1.ExpirationDate = types.StringValue(resultsItem.ExpirationDate.Format(time.RFC3339Nano))
-			results1.ResourceID = types.StringValue(resultsItem.ResourceID)
-			results1.UserID = types.StringValue(resultsItem.UserID)
+			var results tfTypes.Session
+			results.AccessLevel.AccessLevelName = types.StringValue(resultsItem.AccessLevel.AccessLevelName)
+			results.AccessLevel.AccessLevelRemoteID = types.StringValue(resultsItem.AccessLevel.AccessLevelRemoteID)
+			results.ConnectionID = types.StringValue(resultsItem.ConnectionID)
+			results.ExpirationDate = types.StringValue(typeconvert.TimeToString(resultsItem.ExpirationDate))
+			results.ResourceID = types.StringValue(resultsItem.ResourceID)
+			results.UserID = types.StringValue(resultsItem.UserID)
 			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results1)
+				r.Results = append(r.Results, results)
 			} else {
-				r.Results[resultsCount].AccessLevel = results1.AccessLevel
-				r.Results[resultsCount].ConnectionID = results1.ConnectionID
-				r.Results[resultsCount].ExpirationDate = results1.ExpirationDate
-				r.Results[resultsCount].ResourceID = results1.ResourceID
-				r.Results[resultsCount].UserID = results1.UserID
+				r.Results[resultsCount].AccessLevel = results.AccessLevel
+				r.Results[resultsCount].ConnectionID = results.ConnectionID
+				r.Results[resultsCount].ExpirationDate = results.ExpirationDate
+				r.Results[resultsCount].ResourceID = results.ResourceID
+				r.Results[resultsCount].UserID = results.UserID
 			}
 		}
 	}
+
+	return diags
 }

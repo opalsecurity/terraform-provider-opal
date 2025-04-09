@@ -3,11 +3,15 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *UserDataSourceModel) RefreshFromSharedUser(resp *shared.User) {
+func (r *UserDataSourceModel) RefreshFromSharedUser(ctx context.Context, resp *shared.User) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.Email = types.StringValue(resp.Email)
 		r.FirstName = types.StringValue(resp.FirstName)
@@ -21,4 +25,6 @@ func (r *UserDataSourceModel) RefreshFromSharedUser(resp *shared.User) {
 		r.Name = types.StringValue(resp.Name)
 		r.Position = types.StringValue(resp.Position)
 	}
+
+	return diags
 }

@@ -3,34 +3,40 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *PaginatedBundleResourceListDataSourceModel) RefreshFromSharedPaginatedBundleResourceList(resp *shared.PaginatedBundleResourceList) {
+func (r *PaginatedBundleResourceListDataSourceModel) RefreshFromSharedPaginatedBundleResourceList(ctx context.Context, resp *shared.PaginatedBundleResourceList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.BundleResources = []tfTypes.BundleResource{}
 		if len(r.BundleResources) > len(resp.BundleResources) {
 			r.BundleResources = r.BundleResources[:len(resp.BundleResources)]
 		}
 		for bundleResourcesCount, bundleResourcesItem := range resp.BundleResources {
-			var bundleResources1 tfTypes.BundleResource
-			bundleResources1.AccessLevelName = types.StringPointerValue(bundleResourcesItem.AccessLevelName)
-			bundleResources1.AccessLevelRemoteID = types.StringPointerValue(bundleResourcesItem.AccessLevelRemoteID)
-			bundleResources1.BundleID = types.StringPointerValue(bundleResourcesItem.BundleID)
-			bundleResources1.ResourceID = types.StringPointerValue(bundleResourcesItem.ResourceID)
+			var bundleResources tfTypes.BundleResource
+			bundleResources.AccessLevelName = types.StringPointerValue(bundleResourcesItem.AccessLevelName)
+			bundleResources.AccessLevelRemoteID = types.StringPointerValue(bundleResourcesItem.AccessLevelRemoteID)
+			bundleResources.BundleID = types.StringPointerValue(bundleResourcesItem.BundleID)
+			bundleResources.ResourceID = types.StringPointerValue(bundleResourcesItem.ResourceID)
 			if bundleResourcesCount+1 > len(r.BundleResources) {
-				r.BundleResources = append(r.BundleResources, bundleResources1)
+				r.BundleResources = append(r.BundleResources, bundleResources)
 			} else {
-				r.BundleResources[bundleResourcesCount].AccessLevelName = bundleResources1.AccessLevelName
-				r.BundleResources[bundleResourcesCount].AccessLevelRemoteID = bundleResources1.AccessLevelRemoteID
-				r.BundleResources[bundleResourcesCount].BundleID = bundleResources1.BundleID
-				r.BundleResources[bundleResourcesCount].ResourceID = bundleResources1.ResourceID
+				r.BundleResources[bundleResourcesCount].AccessLevelName = bundleResources.AccessLevelName
+				r.BundleResources[bundleResourcesCount].AccessLevelRemoteID = bundleResources.AccessLevelRemoteID
+				r.BundleResources[bundleResourcesCount].BundleID = bundleResources.BundleID
+				r.BundleResources[bundleResourcesCount].ResourceID = bundleResources.ResourceID
 			}
 		}
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
 		r.TotalCount = types.Int64PointerValue(resp.TotalCount)
 	}
+
+	return diags
 }

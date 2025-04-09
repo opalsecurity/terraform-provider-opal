@@ -3,13 +3,17 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
-	"time"
 )
 
-func (r *ResourcesAccessStatusDataSourceModel) RefreshFromSharedResourceUserAccessStatus(resp *shared.ResourceUserAccessStatus) {
+func (r *ResourcesAccessStatusDataSourceModel) RefreshFromSharedResourceUserAccessStatus(ctx context.Context, resp *shared.ResourceUserAccessStatus) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		if resp.AccessLevel == nil {
 			r.AccessLevel = nil
@@ -18,13 +22,11 @@ func (r *ResourcesAccessStatusDataSourceModel) RefreshFromSharedResourceUserAcce
 			r.AccessLevel.AccessLevelName = types.StringValue(resp.AccessLevel.AccessLevelName)
 			r.AccessLevel.AccessLevelRemoteID = types.StringValue(resp.AccessLevel.AccessLevelRemoteID)
 		}
-		if resp.ExpirationDate != nil {
-			r.ExpirationDate = types.StringValue(resp.ExpirationDate.Format(time.RFC3339Nano))
-		} else {
-			r.ExpirationDate = types.StringNull()
-		}
+		r.ExpirationDate = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resp.ExpirationDate))
 		r.ResourceID = types.StringValue(resp.ResourceID)
 		r.Status = types.StringValue(string(resp.Status))
 		r.UserID = types.StringValue(resp.UserID)
 	}
+
+	return diags
 }

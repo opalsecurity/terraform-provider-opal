@@ -3,59 +3,65 @@
 package provider
 
 import (
+	"context"
 	"encoding/json"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
-	"time"
 )
 
-func (r *AppsDataSourceModel) RefreshFromSharedAppsList(resp *shared.AppsList) {
+func (r *AppsDataSourceModel) RefreshFromSharedAppsList(ctx context.Context, resp *shared.AppsList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.Apps = []tfTypes.App{}
 		if len(r.Apps) > len(resp.Apps) {
 			r.Apps = r.Apps[:len(resp.Apps)]
 		}
 		for appsCount, appsItem := range resp.Apps {
-			var apps1 tfTypes.App
-			apps1.AdminOwnerID = types.StringValue(appsItem.AdminOwnerID)
-			apps1.Description = types.StringValue(appsItem.Description)
-			apps1.ID = types.StringValue(appsItem.ID)
-			apps1.Name = types.StringValue(appsItem.Name)
-			apps1.Type = types.StringValue(appsItem.Type)
-			apps1.Validations = []tfTypes.AppValidation{}
+			var apps tfTypes.App
+			apps.AdminOwnerID = types.StringValue(appsItem.AdminOwnerID)
+			apps.Description = types.StringValue(appsItem.Description)
+			apps.ID = types.StringValue(appsItem.ID)
+			apps.Name = types.StringValue(appsItem.Name)
+			apps.Type = types.StringValue(appsItem.Type)
+			apps.Validations = []tfTypes.AppValidation{}
 			for validationsCount, validationsItem := range appsItem.Validations {
-				var validations1 tfTypes.AppValidation
-				validations1.Details = types.StringPointerValue(validationsItem.Details)
-				validations1.Key = types.StringValue(validationsItem.Key)
+				var validations tfTypes.AppValidation
+				validations.Details = types.StringPointerValue(validationsItem.Details)
+				validations.Key = types.StringValue(validationsItem.Key)
 				nameResult, _ := json.Marshal(validationsItem.Name)
-				validations1.Name = types.StringValue(string(nameResult))
-				validations1.Severity = types.StringValue(string(validationsItem.Severity))
-				validations1.Status = types.StringValue(string(validationsItem.Status))
-				validations1.UpdatedAt = types.StringValue(validationsItem.UpdatedAt.Format(time.RFC3339Nano))
-				validations1.UsageReason = types.StringPointerValue(validationsItem.UsageReason)
-				if validationsCount+1 > len(apps1.Validations) {
-					apps1.Validations = append(apps1.Validations, validations1)
+				validations.Name = types.StringValue(string(nameResult))
+				validations.Severity = types.StringValue(string(validationsItem.Severity))
+				validations.Status = types.StringValue(string(validationsItem.Status))
+				validations.UpdatedAt = types.StringValue(typeconvert.TimeToString(validationsItem.UpdatedAt))
+				validations.UsageReason = types.StringPointerValue(validationsItem.UsageReason)
+				if validationsCount+1 > len(apps.Validations) {
+					apps.Validations = append(apps.Validations, validations)
 				} else {
-					apps1.Validations[validationsCount].Details = validations1.Details
-					apps1.Validations[validationsCount].Key = validations1.Key
-					apps1.Validations[validationsCount].Name = validations1.Name
-					apps1.Validations[validationsCount].Severity = validations1.Severity
-					apps1.Validations[validationsCount].Status = validations1.Status
-					apps1.Validations[validationsCount].UpdatedAt = validations1.UpdatedAt
-					apps1.Validations[validationsCount].UsageReason = validations1.UsageReason
+					apps.Validations[validationsCount].Details = validations.Details
+					apps.Validations[validationsCount].Key = validations.Key
+					apps.Validations[validationsCount].Name = validations.Name
+					apps.Validations[validationsCount].Severity = validations.Severity
+					apps.Validations[validationsCount].Status = validations.Status
+					apps.Validations[validationsCount].UpdatedAt = validations.UpdatedAt
+					apps.Validations[validationsCount].UsageReason = validations.UsageReason
 				}
 			}
 			if appsCount+1 > len(r.Apps) {
-				r.Apps = append(r.Apps, apps1)
+				r.Apps = append(r.Apps, apps)
 			} else {
-				r.Apps[appsCount].AdminOwnerID = apps1.AdminOwnerID
-				r.Apps[appsCount].Description = apps1.Description
-				r.Apps[appsCount].ID = apps1.ID
-				r.Apps[appsCount].Name = apps1.Name
-				r.Apps[appsCount].Type = apps1.Type
-				r.Apps[appsCount].Validations = apps1.Validations
+				r.Apps[appsCount].AdminOwnerID = apps.AdminOwnerID
+				r.Apps[appsCount].Description = apps.Description
+				r.Apps[appsCount].ID = apps.ID
+				r.Apps[appsCount].Name = apps.Name
+				r.Apps[appsCount].Type = apps.Type
+				r.Apps[appsCount].Validations = apps.Validations
 			}
 		}
 	}
+
+	return diags
 }

@@ -16,10 +16,10 @@ import (
 type RequestStatusEnum string
 
 const (
-	RequestStatusEnumPending  RequestStatusEnum = "pending"
-	RequestStatusEnumApproved RequestStatusEnum = "approved"
-	RequestStatusEnumDenied   RequestStatusEnum = "denied"
-	RequestStatusEnumCanceled RequestStatusEnum = "canceled"
+	RequestStatusEnumPending  RequestStatusEnum = "PENDING"
+	RequestStatusEnumApproved RequestStatusEnum = "APPROVED"
+	RequestStatusEnumDenied   RequestStatusEnum = "DENIED"
+	RequestStatusEnumCanceled RequestStatusEnum = "CANCELED"
 )
 
 func (e RequestStatusEnum) ToPointer() *RequestStatusEnum {
@@ -31,13 +31,13 @@ func (e *RequestStatusEnum) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	switch v {
-	case "pending":
+	case "PENDING":
 		fallthrough
-	case "approved":
+	case "APPROVED":
 		fallthrough
-	case "denied":
+	case "DENIED":
 		fallthrough
-	case "canceled":
+	case "CANCELED":
 		*e = RequestStatusEnum(v)
 		return nil
 	default:

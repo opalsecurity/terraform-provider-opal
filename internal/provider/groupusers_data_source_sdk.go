@@ -3,53 +3,55 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
-	"time"
 )
 
-func (r *GroupUsersDataSourceModel) RefreshFromSharedGroupUserList(resp *shared.GroupUserList) {
+func (r *GroupUsersDataSourceModel) RefreshFromSharedGroupUserList(ctx context.Context, resp *shared.GroupUserList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.Results = []tfTypes.GroupUser{}
 		if len(r.Results) > len(resp.Results) {
 			r.Results = r.Results[:len(resp.Results)]
 		}
 		for resultsCount, resultsItem := range resp.Results {
-			var results1 tfTypes.GroupUser
+			var results tfTypes.GroupUser
 			if resultsItem.AccessLevel == nil {
-				results1.AccessLevel = nil
+				results.AccessLevel = nil
 			} else {
-				results1.AccessLevel = &tfTypes.ResourceAccessLevel{}
-				results1.AccessLevel.AccessLevelName = types.StringValue(resultsItem.AccessLevel.AccessLevelName)
-				results1.AccessLevel.AccessLevelRemoteID = types.StringValue(resultsItem.AccessLevel.AccessLevelRemoteID)
+				results.AccessLevel = &tfTypes.ResourceAccessLevel{}
+				results.AccessLevel.AccessLevelName = types.StringValue(resultsItem.AccessLevel.AccessLevelName)
+				results.AccessLevel.AccessLevelRemoteID = types.StringValue(resultsItem.AccessLevel.AccessLevelRemoteID)
 			}
-			results1.Email = types.StringValue(resultsItem.Email)
-			if resultsItem.ExpirationDate != nil {
-				results1.ExpirationDate = types.StringValue(resultsItem.ExpirationDate.Format(time.RFC3339Nano))
-			} else {
-				results1.ExpirationDate = types.StringNull()
-			}
-			results1.FullName = types.StringValue(resultsItem.FullName)
-			results1.GroupID = types.StringValue(resultsItem.GroupID)
+			results.Email = types.StringValue(resultsItem.Email)
+			results.ExpirationDate = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resultsItem.ExpirationDate))
+			results.FullName = types.StringValue(resultsItem.FullName)
+			results.GroupID = types.StringValue(resultsItem.GroupID)
 			if resultsItem.PropagationStatus == nil {
-				results1.PropagationStatus = nil
+				results.PropagationStatus = nil
 			} else {
-				results1.PropagationStatus = &tfTypes.PropagationStatus{}
-				results1.PropagationStatus.Status = types.StringValue(string(resultsItem.PropagationStatus.Status))
+				results.PropagationStatus = &tfTypes.PropagationStatus{}
+				results.PropagationStatus.Status = types.StringValue(string(resultsItem.PropagationStatus.Status))
 			}
-			results1.UserID = types.StringValue(resultsItem.UserID)
+			results.UserID = types.StringValue(resultsItem.UserID)
 			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results1)
+				r.Results = append(r.Results, results)
 			} else {
-				r.Results[resultsCount].AccessLevel = results1.AccessLevel
-				r.Results[resultsCount].Email = results1.Email
-				r.Results[resultsCount].ExpirationDate = results1.ExpirationDate
-				r.Results[resultsCount].FullName = results1.FullName
-				r.Results[resultsCount].GroupID = results1.GroupID
-				r.Results[resultsCount].PropagationStatus = results1.PropagationStatus
-				r.Results[resultsCount].UserID = results1.UserID
+				r.Results[resultsCount].AccessLevel = results.AccessLevel
+				r.Results[resultsCount].Email = results.Email
+				r.Results[resultsCount].ExpirationDate = results.ExpirationDate
+				r.Results[resultsCount].FullName = results.FullName
+				r.Results[resultsCount].GroupID = results.GroupID
+				r.Results[resultsCount].PropagationStatus = results.PropagationStatus
+				r.Results[resultsCount].UserID = results.UserID
 			}
 		}
 	}
+
+	return diags
 }

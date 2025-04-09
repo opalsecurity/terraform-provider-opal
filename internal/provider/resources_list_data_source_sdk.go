@@ -3,12 +3,16 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(resp *shared.PaginatedResourcesList) {
+func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(ctx context.Context, resp *shared.PaginatedResourcesList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
@@ -17,303 +21,305 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(r
 			r.Results = r.Results[:len(resp.Results)]
 		}
 		for resultsCount, resultsItem := range resp.Results {
-			var results1 tfTypes.Resource
-			results1.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
-			results1.AppID = types.StringPointerValue(resultsItem.AppID)
-			results1.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
-			results1.Description = types.StringPointerValue(resultsItem.Description)
-			results1.ID = types.StringValue(resultsItem.ID)
-			results1.Name = types.StringPointerValue(resultsItem.Name)
-			results1.ParentResourceID = types.StringPointerValue(resultsItem.ParentResourceID)
+			var results tfTypes.Resource
+			results.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
+			results.AppID = types.StringPointerValue(resultsItem.AppID)
+			results.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
+			results.Description = types.StringPointerValue(resultsItem.Description)
+			results.ID = types.StringValue(resultsItem.ID)
+			results.Name = types.StringPointerValue(resultsItem.Name)
+			results.ParentResourceID = types.StringPointerValue(resultsItem.ParentResourceID)
 			if resultsItem.RemoteInfo == nil {
-				results1.RemoteInfo = nil
+				results.RemoteInfo = nil
 			} else {
-				results1.RemoteInfo = &tfTypes.ResourceRemoteInfo{}
+				results.RemoteInfo = &tfTypes.ResourceRemoteInfo{}
 				if resultsItem.RemoteInfo.AwsAccount == nil {
-					results1.RemoteInfo.AwsAccount = nil
+					results.RemoteInfo.AwsAccount = nil
 				} else {
-					results1.RemoteInfo.AwsAccount = &tfTypes.AwsAccount{}
-					results1.RemoteInfo.AwsAccount.AccountID = types.StringValue(resultsItem.RemoteInfo.AwsAccount.AccountID)
+					results.RemoteInfo.AwsAccount = &tfTypes.AwsAccount{}
+					results.RemoteInfo.AwsAccount.AccountID = types.StringValue(resultsItem.RemoteInfo.AwsAccount.AccountID)
 				}
 				if resultsItem.RemoteInfo.AwsEc2Instance == nil {
-					results1.RemoteInfo.AwsEc2Instance = nil
+					results.RemoteInfo.AwsEc2Instance = nil
 				} else {
-					results1.RemoteInfo.AwsEc2Instance = &tfTypes.AwsEc2Instance{}
-					results1.RemoteInfo.AwsEc2Instance.AccountID = types.StringPointerValue(resultsItem.RemoteInfo.AwsEc2Instance.AccountID)
-					results1.RemoteInfo.AwsEc2Instance.InstanceID = types.StringValue(resultsItem.RemoteInfo.AwsEc2Instance.InstanceID)
-					results1.RemoteInfo.AwsEc2Instance.Region = types.StringValue(resultsItem.RemoteInfo.AwsEc2Instance.Region)
+					results.RemoteInfo.AwsEc2Instance = &tfTypes.AwsEc2Instance{}
+					results.RemoteInfo.AwsEc2Instance.AccountID = types.StringPointerValue(resultsItem.RemoteInfo.AwsEc2Instance.AccountID)
+					results.RemoteInfo.AwsEc2Instance.InstanceID = types.StringValue(resultsItem.RemoteInfo.AwsEc2Instance.InstanceID)
+					results.RemoteInfo.AwsEc2Instance.Region = types.StringValue(resultsItem.RemoteInfo.AwsEc2Instance.Region)
 				}
 				if resultsItem.RemoteInfo.AwsEksCluster == nil {
-					results1.RemoteInfo.AwsEksCluster = nil
+					results.RemoteInfo.AwsEksCluster = nil
 				} else {
-					results1.RemoteInfo.AwsEksCluster = &tfTypes.AwsEksCluster{}
-					results1.RemoteInfo.AwsEksCluster.AccountID = types.StringPointerValue(resultsItem.RemoteInfo.AwsEksCluster.AccountID)
-					results1.RemoteInfo.AwsEksCluster.Arn = types.StringValue(resultsItem.RemoteInfo.AwsEksCluster.Arn)
+					results.RemoteInfo.AwsEksCluster = &tfTypes.AwsEksCluster{}
+					results.RemoteInfo.AwsEksCluster.AccountID = types.StringPointerValue(resultsItem.RemoteInfo.AwsEksCluster.AccountID)
+					results.RemoteInfo.AwsEksCluster.Arn = types.StringValue(resultsItem.RemoteInfo.AwsEksCluster.Arn)
 				}
 				if resultsItem.RemoteInfo.AwsIamRole == nil {
-					results1.RemoteInfo.AwsIamRole = nil
+					results.RemoteInfo.AwsIamRole = nil
 				} else {
-					results1.RemoteInfo.AwsIamRole = &tfTypes.AwsEksCluster{}
-					results1.RemoteInfo.AwsIamRole.AccountID = types.StringPointerValue(resultsItem.RemoteInfo.AwsIamRole.AccountID)
-					results1.RemoteInfo.AwsIamRole.Arn = types.StringValue(resultsItem.RemoteInfo.AwsIamRole.Arn)
+					results.RemoteInfo.AwsIamRole = &tfTypes.AwsEksCluster{}
+					results.RemoteInfo.AwsIamRole.AccountID = types.StringPointerValue(resultsItem.RemoteInfo.AwsIamRole.AccountID)
+					results.RemoteInfo.AwsIamRole.Arn = types.StringValue(resultsItem.RemoteInfo.AwsIamRole.Arn)
 				}
 				if resultsItem.RemoteInfo.AwsPermissionSet == nil {
-					results1.RemoteInfo.AwsPermissionSet = nil
+					results.RemoteInfo.AwsPermissionSet = nil
 				} else {
-					results1.RemoteInfo.AwsPermissionSet = &tfTypes.AwsPermissionSet{}
-					results1.RemoteInfo.AwsPermissionSet.AccountID = types.StringValue(resultsItem.RemoteInfo.AwsPermissionSet.AccountID)
-					results1.RemoteInfo.AwsPermissionSet.Arn = types.StringValue(resultsItem.RemoteInfo.AwsPermissionSet.Arn)
+					results.RemoteInfo.AwsPermissionSet = &tfTypes.AwsPermissionSet{}
+					results.RemoteInfo.AwsPermissionSet.AccountID = types.StringValue(resultsItem.RemoteInfo.AwsPermissionSet.AccountID)
+					results.RemoteInfo.AwsPermissionSet.Arn = types.StringValue(resultsItem.RemoteInfo.AwsPermissionSet.Arn)
 				}
 				if resultsItem.RemoteInfo.AwsRdsInstance == nil {
-					results1.RemoteInfo.AwsRdsInstance = nil
+					results.RemoteInfo.AwsRdsInstance = nil
 				} else {
-					results1.RemoteInfo.AwsRdsInstance = &tfTypes.AwsRdsInstance{}
-					results1.RemoteInfo.AwsRdsInstance.AccountID = types.StringPointerValue(resultsItem.RemoteInfo.AwsRdsInstance.AccountID)
-					results1.RemoteInfo.AwsRdsInstance.InstanceID = types.StringValue(resultsItem.RemoteInfo.AwsRdsInstance.InstanceID)
-					results1.RemoteInfo.AwsRdsInstance.Region = types.StringValue(resultsItem.RemoteInfo.AwsRdsInstance.Region)
-					results1.RemoteInfo.AwsRdsInstance.ResourceID = types.StringValue(resultsItem.RemoteInfo.AwsRdsInstance.ResourceID)
+					results.RemoteInfo.AwsRdsInstance = &tfTypes.AwsRdsInstance{}
+					results.RemoteInfo.AwsRdsInstance.AccountID = types.StringPointerValue(resultsItem.RemoteInfo.AwsRdsInstance.AccountID)
+					results.RemoteInfo.AwsRdsInstance.InstanceID = types.StringValue(resultsItem.RemoteInfo.AwsRdsInstance.InstanceID)
+					results.RemoteInfo.AwsRdsInstance.Region = types.StringValue(resultsItem.RemoteInfo.AwsRdsInstance.Region)
+					results.RemoteInfo.AwsRdsInstance.ResourceID = types.StringValue(resultsItem.RemoteInfo.AwsRdsInstance.ResourceID)
 				}
 				if resultsItem.RemoteInfo.GcpBigQueryDataset == nil {
-					results1.RemoteInfo.GcpBigQueryDataset = nil
+					results.RemoteInfo.GcpBigQueryDataset = nil
 				} else {
-					results1.RemoteInfo.GcpBigQueryDataset = &tfTypes.GcpBigQueryDataset{}
-					results1.RemoteInfo.GcpBigQueryDataset.DatasetID = types.StringValue(resultsItem.RemoteInfo.GcpBigQueryDataset.DatasetID)
-					results1.RemoteInfo.GcpBigQueryDataset.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpBigQueryDataset.ProjectID)
+					results.RemoteInfo.GcpBigQueryDataset = &tfTypes.GcpBigQueryDataset{}
+					results.RemoteInfo.GcpBigQueryDataset.DatasetID = types.StringValue(resultsItem.RemoteInfo.GcpBigQueryDataset.DatasetID)
+					results.RemoteInfo.GcpBigQueryDataset.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpBigQueryDataset.ProjectID)
 				}
 				if resultsItem.RemoteInfo.GcpBigQueryTable == nil {
-					results1.RemoteInfo.GcpBigQueryTable = nil
+					results.RemoteInfo.GcpBigQueryTable = nil
 				} else {
-					results1.RemoteInfo.GcpBigQueryTable = &tfTypes.GcpBigQueryTable{}
-					results1.RemoteInfo.GcpBigQueryTable.DatasetID = types.StringValue(resultsItem.RemoteInfo.GcpBigQueryTable.DatasetID)
-					results1.RemoteInfo.GcpBigQueryTable.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpBigQueryTable.ProjectID)
-					results1.RemoteInfo.GcpBigQueryTable.TableID = types.StringValue(resultsItem.RemoteInfo.GcpBigQueryTable.TableID)
+					results.RemoteInfo.GcpBigQueryTable = &tfTypes.GcpBigQueryTable{}
+					results.RemoteInfo.GcpBigQueryTable.DatasetID = types.StringValue(resultsItem.RemoteInfo.GcpBigQueryTable.DatasetID)
+					results.RemoteInfo.GcpBigQueryTable.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpBigQueryTable.ProjectID)
+					results.RemoteInfo.GcpBigQueryTable.TableID = types.StringValue(resultsItem.RemoteInfo.GcpBigQueryTable.TableID)
 				}
 				if resultsItem.RemoteInfo.GcpBucket == nil {
-					results1.RemoteInfo.GcpBucket = nil
+					results.RemoteInfo.GcpBucket = nil
 				} else {
-					results1.RemoteInfo.GcpBucket = &tfTypes.GcpBucket{}
-					results1.RemoteInfo.GcpBucket.BucketID = types.StringValue(resultsItem.RemoteInfo.GcpBucket.BucketID)
+					results.RemoteInfo.GcpBucket = &tfTypes.GcpBucket{}
+					results.RemoteInfo.GcpBucket.BucketID = types.StringValue(resultsItem.RemoteInfo.GcpBucket.BucketID)
 				}
 				if resultsItem.RemoteInfo.GcpComputeInstance == nil {
-					results1.RemoteInfo.GcpComputeInstance = nil
+					results.RemoteInfo.GcpComputeInstance = nil
 				} else {
-					results1.RemoteInfo.GcpComputeInstance = &tfTypes.GcpComputeInstance{}
-					results1.RemoteInfo.GcpComputeInstance.InstanceID = types.StringValue(resultsItem.RemoteInfo.GcpComputeInstance.InstanceID)
-					results1.RemoteInfo.GcpComputeInstance.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpComputeInstance.ProjectID)
-					results1.RemoteInfo.GcpComputeInstance.Zone = types.StringValue(resultsItem.RemoteInfo.GcpComputeInstance.Zone)
+					results.RemoteInfo.GcpComputeInstance = &tfTypes.GcpComputeInstance{}
+					results.RemoteInfo.GcpComputeInstance.InstanceID = types.StringValue(resultsItem.RemoteInfo.GcpComputeInstance.InstanceID)
+					results.RemoteInfo.GcpComputeInstance.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpComputeInstance.ProjectID)
+					results.RemoteInfo.GcpComputeInstance.Zone = types.StringValue(resultsItem.RemoteInfo.GcpComputeInstance.Zone)
 				}
 				if resultsItem.RemoteInfo.GcpFolder == nil {
-					results1.RemoteInfo.GcpFolder = nil
+					results.RemoteInfo.GcpFolder = nil
 				} else {
-					results1.RemoteInfo.GcpFolder = &tfTypes.GcpFolder{}
-					results1.RemoteInfo.GcpFolder.FolderID = types.StringValue(resultsItem.RemoteInfo.GcpFolder.FolderID)
+					results.RemoteInfo.GcpFolder = &tfTypes.GcpFolder{}
+					results.RemoteInfo.GcpFolder.FolderID = types.StringValue(resultsItem.RemoteInfo.GcpFolder.FolderID)
 				}
 				if resultsItem.RemoteInfo.GcpGkeCluster == nil {
-					results1.RemoteInfo.GcpGkeCluster = nil
+					results.RemoteInfo.GcpGkeCluster = nil
 				} else {
-					results1.RemoteInfo.GcpGkeCluster = &tfTypes.GcpGkeCluster{}
-					results1.RemoteInfo.GcpGkeCluster.ClusterName = types.StringValue(resultsItem.RemoteInfo.GcpGkeCluster.ClusterName)
+					results.RemoteInfo.GcpGkeCluster = &tfTypes.GcpGkeCluster{}
+					results.RemoteInfo.GcpGkeCluster.ClusterName = types.StringValue(resultsItem.RemoteInfo.GcpGkeCluster.ClusterName)
 				}
 				if resultsItem.RemoteInfo.GcpOrganization == nil {
-					results1.RemoteInfo.GcpOrganization = nil
+					results.RemoteInfo.GcpOrganization = nil
 				} else {
-					results1.RemoteInfo.GcpOrganization = &tfTypes.GcpOrganization{}
-					results1.RemoteInfo.GcpOrganization.OrganizationID = types.StringValue(resultsItem.RemoteInfo.GcpOrganization.OrganizationID)
+					results.RemoteInfo.GcpOrganization = &tfTypes.GcpOrganization{}
+					results.RemoteInfo.GcpOrganization.OrganizationID = types.StringValue(resultsItem.RemoteInfo.GcpOrganization.OrganizationID)
 				}
 				if resultsItem.RemoteInfo.GcpProject == nil {
-					results1.RemoteInfo.GcpProject = nil
+					results.RemoteInfo.GcpProject = nil
 				} else {
-					results1.RemoteInfo.GcpProject = &tfTypes.GcpProject{}
-					results1.RemoteInfo.GcpProject.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpProject.ProjectID)
+					results.RemoteInfo.GcpProject = &tfTypes.GcpProject{}
+					results.RemoteInfo.GcpProject.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpProject.ProjectID)
 				}
 				if resultsItem.RemoteInfo.GcpServiceAccount == nil {
-					results1.RemoteInfo.GcpServiceAccount = nil
+					results.RemoteInfo.GcpServiceAccount = nil
 				} else {
-					results1.RemoteInfo.GcpServiceAccount = &tfTypes.GcpServiceAccount{}
-					results1.RemoteInfo.GcpServiceAccount.Email = types.StringValue(resultsItem.RemoteInfo.GcpServiceAccount.Email)
-					results1.RemoteInfo.GcpServiceAccount.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpServiceAccount.ProjectID)
-					results1.RemoteInfo.GcpServiceAccount.ServiceAccountID = types.StringValue(resultsItem.RemoteInfo.GcpServiceAccount.ServiceAccountID)
+					results.RemoteInfo.GcpServiceAccount = &tfTypes.GcpServiceAccount{}
+					results.RemoteInfo.GcpServiceAccount.Email = types.StringValue(resultsItem.RemoteInfo.GcpServiceAccount.Email)
+					results.RemoteInfo.GcpServiceAccount.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpServiceAccount.ProjectID)
+					results.RemoteInfo.GcpServiceAccount.ServiceAccountID = types.StringValue(resultsItem.RemoteInfo.GcpServiceAccount.ServiceAccountID)
 				}
 				if resultsItem.RemoteInfo.GcpSQLInstance == nil {
-					results1.RemoteInfo.GcpSQLInstance = nil
+					results.RemoteInfo.GcpSQLInstance = nil
 				} else {
-					results1.RemoteInfo.GcpSQLInstance = &tfTypes.GcpSQLInstance{}
-					results1.RemoteInfo.GcpSQLInstance.InstanceID = types.StringValue(resultsItem.RemoteInfo.GcpSQLInstance.InstanceID)
-					results1.RemoteInfo.GcpSQLInstance.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpSQLInstance.ProjectID)
+					results.RemoteInfo.GcpSQLInstance = &tfTypes.GcpSQLInstance{}
+					results.RemoteInfo.GcpSQLInstance.InstanceID = types.StringValue(resultsItem.RemoteInfo.GcpSQLInstance.InstanceID)
+					results.RemoteInfo.GcpSQLInstance.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpSQLInstance.ProjectID)
 				}
 				if resultsItem.RemoteInfo.GithubRepo == nil {
-					results1.RemoteInfo.GithubRepo = nil
+					results.RemoteInfo.GithubRepo = nil
 				} else {
-					results1.RemoteInfo.GithubRepo = &tfTypes.GithubRepo{}
-					results1.RemoteInfo.GithubRepo.RepoName = types.StringValue(resultsItem.RemoteInfo.GithubRepo.RepoName)
+					results.RemoteInfo.GithubRepo = &tfTypes.GithubRepo{}
+					results.RemoteInfo.GithubRepo.RepoName = types.StringValue(resultsItem.RemoteInfo.GithubRepo.RepoName)
 				}
 				if resultsItem.RemoteInfo.GitlabProject == nil {
-					results1.RemoteInfo.GitlabProject = nil
+					results.RemoteInfo.GitlabProject = nil
 				} else {
-					results1.RemoteInfo.GitlabProject = &tfTypes.GcpProject{}
-					results1.RemoteInfo.GitlabProject.ProjectID = types.StringValue(resultsItem.RemoteInfo.GitlabProject.ProjectID)
+					results.RemoteInfo.GitlabProject = &tfTypes.GcpProject{}
+					results.RemoteInfo.GitlabProject.ProjectID = types.StringValue(resultsItem.RemoteInfo.GitlabProject.ProjectID)
 				}
 				if resultsItem.RemoteInfo.OktaApp == nil {
-					results1.RemoteInfo.OktaApp = nil
+					results.RemoteInfo.OktaApp = nil
 				} else {
-					results1.RemoteInfo.OktaApp = &tfTypes.OktaApp{}
-					results1.RemoteInfo.OktaApp.AppID = types.StringValue(resultsItem.RemoteInfo.OktaApp.AppID)
+					results.RemoteInfo.OktaApp = &tfTypes.OktaApp{}
+					results.RemoteInfo.OktaApp.AppID = types.StringValue(resultsItem.RemoteInfo.OktaApp.AppID)
 				}
 				if resultsItem.RemoteInfo.OktaCustomRole == nil {
-					results1.RemoteInfo.OktaCustomRole = nil
+					results.RemoteInfo.OktaCustomRole = nil
 				} else {
-					results1.RemoteInfo.OktaCustomRole = &tfTypes.SnowflakeRole{}
-					results1.RemoteInfo.OktaCustomRole.RoleID = types.StringValue(resultsItem.RemoteInfo.OktaCustomRole.RoleID)
+					results.RemoteInfo.OktaCustomRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.OktaCustomRole.RoleID = types.StringValue(resultsItem.RemoteInfo.OktaCustomRole.RoleID)
 				}
 				if resultsItem.RemoteInfo.OktaStandardRole == nil {
-					results1.RemoteInfo.OktaStandardRole = nil
+					results.RemoteInfo.OktaStandardRole = nil
 				} else {
-					results1.RemoteInfo.OktaStandardRole = &tfTypes.OktaStandardRole{}
-					results1.RemoteInfo.OktaStandardRole.RoleType = types.StringValue(resultsItem.RemoteInfo.OktaStandardRole.RoleType)
+					results.RemoteInfo.OktaStandardRole = &tfTypes.OktaStandardRole{}
+					results.RemoteInfo.OktaStandardRole.RoleType = types.StringValue(resultsItem.RemoteInfo.OktaStandardRole.RoleType)
 				}
 				if resultsItem.RemoteInfo.PagerdutyRole == nil {
-					results1.RemoteInfo.PagerdutyRole = nil
+					results.RemoteInfo.PagerdutyRole = nil
 				} else {
-					results1.RemoteInfo.PagerdutyRole = &tfTypes.PagerdutyRole{}
-					results1.RemoteInfo.PagerdutyRole.RoleName = types.StringValue(resultsItem.RemoteInfo.PagerdutyRole.RoleName)
+					results.RemoteInfo.PagerdutyRole = &tfTypes.PagerdutyRole{}
+					results.RemoteInfo.PagerdutyRole.RoleName = types.StringValue(resultsItem.RemoteInfo.PagerdutyRole.RoleName)
 				}
 				if resultsItem.RemoteInfo.SalesforcePermissionSet == nil {
-					results1.RemoteInfo.SalesforcePermissionSet = nil
+					results.RemoteInfo.SalesforcePermissionSet = nil
 				} else {
-					results1.RemoteInfo.SalesforcePermissionSet = &tfTypes.SalesforcePermissionSet{}
-					results1.RemoteInfo.SalesforcePermissionSet.PermissionSetID = types.StringValue(resultsItem.RemoteInfo.SalesforcePermissionSet.PermissionSetID)
+					results.RemoteInfo.SalesforcePermissionSet = &tfTypes.SalesforcePermissionSet{}
+					results.RemoteInfo.SalesforcePermissionSet.PermissionSetID = types.StringValue(resultsItem.RemoteInfo.SalesforcePermissionSet.PermissionSetID)
 				}
 				if resultsItem.RemoteInfo.SalesforceProfile == nil {
-					results1.RemoteInfo.SalesforceProfile = nil
+					results.RemoteInfo.SalesforceProfile = nil
 				} else {
-					results1.RemoteInfo.SalesforceProfile = &tfTypes.SalesforceProfile{}
-					results1.RemoteInfo.SalesforceProfile.ProfileID = types.StringValue(resultsItem.RemoteInfo.SalesforceProfile.ProfileID)
-					results1.RemoteInfo.SalesforceProfile.UserLicenseID = types.StringValue(resultsItem.RemoteInfo.SalesforceProfile.UserLicenseID)
+					results.RemoteInfo.SalesforceProfile = &tfTypes.SalesforceProfile{}
+					results.RemoteInfo.SalesforceProfile.ProfileID = types.StringValue(resultsItem.RemoteInfo.SalesforceProfile.ProfileID)
+					results.RemoteInfo.SalesforceProfile.UserLicenseID = types.StringValue(resultsItem.RemoteInfo.SalesforceProfile.UserLicenseID)
 				}
 				if resultsItem.RemoteInfo.SalesforceRole == nil {
-					results1.RemoteInfo.SalesforceRole = nil
+					results.RemoteInfo.SalesforceRole = nil
 				} else {
-					results1.RemoteInfo.SalesforceRole = &tfTypes.SnowflakeRole{}
-					results1.RemoteInfo.SalesforceRole.RoleID = types.StringValue(resultsItem.RemoteInfo.SalesforceRole.RoleID)
+					results.RemoteInfo.SalesforceRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.SalesforceRole.RoleID = types.StringValue(resultsItem.RemoteInfo.SalesforceRole.RoleID)
 				}
 				if resultsItem.RemoteInfo.TeleportRole == nil {
-					results1.RemoteInfo.TeleportRole = nil
+					results.RemoteInfo.TeleportRole = nil
 				} else {
-					results1.RemoteInfo.TeleportRole = &tfTypes.PagerdutyRole{}
-					results1.RemoteInfo.TeleportRole.RoleName = types.StringValue(resultsItem.RemoteInfo.TeleportRole.RoleName)
+					results.RemoteInfo.TeleportRole = &tfTypes.PagerdutyRole{}
+					results.RemoteInfo.TeleportRole.RoleName = types.StringValue(resultsItem.RemoteInfo.TeleportRole.RoleName)
 				}
 			}
-			results1.RequestConfigurations = []tfTypes.RequestConfiguration{}
+			results.RequestConfigurations = []tfTypes.RequestConfiguration{}
 			for requestConfigurationsCount, requestConfigurationsItem := range resultsItem.RequestConfigurations {
-				var requestConfigurations1 tfTypes.RequestConfiguration
-				requestConfigurations1.AllowRequests = types.BoolValue(requestConfigurationsItem.AllowRequests)
-				requestConfigurations1.AutoApproval = types.BoolValue(requestConfigurationsItem.AutoApproval)
+				var requestConfigurations tfTypes.RequestConfiguration
+				requestConfigurations.AllowRequests = types.BoolValue(requestConfigurationsItem.AllowRequests)
+				requestConfigurations.AutoApproval = types.BoolValue(requestConfigurationsItem.AutoApproval)
 				if requestConfigurationsItem.Condition == nil {
-					requestConfigurations1.Condition = nil
+					requestConfigurations.Condition = nil
 				} else {
-					requestConfigurations1.Condition = &tfTypes.Condition{}
-					requestConfigurations1.Condition.GroupIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.GroupIds))
+					requestConfigurations.Condition = &tfTypes.Condition{}
+					requestConfigurations.Condition.GroupIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.GroupIds))
 					for _, v := range requestConfigurationsItem.Condition.GroupIds {
-						requestConfigurations1.Condition.GroupIds = append(requestConfigurations1.Condition.GroupIds, types.StringValue(v))
+						requestConfigurations.Condition.GroupIds = append(requestConfigurations.Condition.GroupIds, types.StringValue(v))
 					}
-					requestConfigurations1.Condition.RoleRemoteIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
+					requestConfigurations.Condition.RoleRemoteIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
 					for _, v := range requestConfigurationsItem.Condition.RoleRemoteIds {
-						requestConfigurations1.Condition.RoleRemoteIds = append(requestConfigurations1.Condition.RoleRemoteIds, types.StringValue(v))
+						requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 					}
 				}
-				requestConfigurations1.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
-				requestConfigurations1.Priority = types.Int64Value(requestConfigurationsItem.Priority)
-				requestConfigurations1.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)
-				requestConfigurations1.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
-				requestConfigurations1.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
-				requestConfigurations1.RequireSupportTicket = types.BoolValue(requestConfigurationsItem.RequireSupportTicket)
-				requestConfigurations1.ReviewerStages = []tfTypes.ReviewerStage{}
+				requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
+				requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
+				requestConfigurations.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)
+				requestConfigurations.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
+				requestConfigurations.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
+				requestConfigurations.RequireSupportTicket = types.BoolValue(requestConfigurationsItem.RequireSupportTicket)
+				requestConfigurations.ReviewerStages = []tfTypes.ReviewerStage{}
 				for reviewerStagesCount, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
-					var reviewerStages1 tfTypes.ReviewerStage
+					var reviewerStages tfTypes.ReviewerStage
 					if reviewerStagesItem.Operator != nil {
-						reviewerStages1.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
+						reviewerStages.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
 					} else {
-						reviewerStages1.Operator = types.StringNull()
+						reviewerStages.Operator = types.StringNull()
 					}
-					reviewerStages1.OwnerIds = make([]types.String, 0, len(reviewerStagesItem.OwnerIds))
+					reviewerStages.OwnerIds = make([]types.String, 0, len(reviewerStagesItem.OwnerIds))
 					for _, v := range reviewerStagesItem.OwnerIds {
-						reviewerStages1.OwnerIds = append(reviewerStages1.OwnerIds, types.StringValue(v))
+						reviewerStages.OwnerIds = append(reviewerStages.OwnerIds, types.StringValue(v))
 					}
-					reviewerStages1.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
-					reviewerStages1.RequireManagerApproval = types.BoolValue(reviewerStagesItem.RequireManagerApproval)
-					if reviewerStagesCount+1 > len(requestConfigurations1.ReviewerStages) {
-						requestConfigurations1.ReviewerStages = append(requestConfigurations1.ReviewerStages, reviewerStages1)
+					reviewerStages.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
+					reviewerStages.RequireManagerApproval = types.BoolValue(reviewerStagesItem.RequireManagerApproval)
+					if reviewerStagesCount+1 > len(requestConfigurations.ReviewerStages) {
+						requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
 					} else {
-						requestConfigurations1.ReviewerStages[reviewerStagesCount].Operator = reviewerStages1.Operator
-						requestConfigurations1.ReviewerStages[reviewerStagesCount].OwnerIds = reviewerStages1.OwnerIds
-						requestConfigurations1.ReviewerStages[reviewerStagesCount].RequireAdminApproval = reviewerStages1.RequireAdminApproval
-						requestConfigurations1.ReviewerStages[reviewerStagesCount].RequireManagerApproval = reviewerStages1.RequireManagerApproval
+						requestConfigurations.ReviewerStages[reviewerStagesCount].Operator = reviewerStages.Operator
+						requestConfigurations.ReviewerStages[reviewerStagesCount].OwnerIds = reviewerStages.OwnerIds
+						requestConfigurations.ReviewerStages[reviewerStagesCount].RequireAdminApproval = reviewerStages.RequireAdminApproval
+						requestConfigurations.ReviewerStages[reviewerStagesCount].RequireManagerApproval = reviewerStages.RequireManagerApproval
 					}
 				}
-				if requestConfigurationsCount+1 > len(results1.RequestConfigurations) {
-					results1.RequestConfigurations = append(results1.RequestConfigurations, requestConfigurations1)
+				if requestConfigurationsCount+1 > len(results.RequestConfigurations) {
+					results.RequestConfigurations = append(results.RequestConfigurations, requestConfigurations)
 				} else {
-					results1.RequestConfigurations[requestConfigurationsCount].AllowRequests = requestConfigurations1.AllowRequests
-					results1.RequestConfigurations[requestConfigurationsCount].AutoApproval = requestConfigurations1.AutoApproval
-					results1.RequestConfigurations[requestConfigurationsCount].Condition = requestConfigurations1.Condition
-					results1.RequestConfigurations[requestConfigurationsCount].MaxDuration = requestConfigurations1.MaxDuration
-					results1.RequestConfigurations[requestConfigurationsCount].Priority = requestConfigurations1.Priority
-					results1.RequestConfigurations[requestConfigurationsCount].RecommendedDuration = requestConfigurations1.RecommendedDuration
-					results1.RequestConfigurations[requestConfigurationsCount].RequestTemplateID = requestConfigurations1.RequestTemplateID
-					results1.RequestConfigurations[requestConfigurationsCount].RequireMfaToRequest = requestConfigurations1.RequireMfaToRequest
-					results1.RequestConfigurations[requestConfigurationsCount].RequireSupportTicket = requestConfigurations1.RequireSupportTicket
-					results1.RequestConfigurations[requestConfigurationsCount].ReviewerStages = requestConfigurations1.ReviewerStages
+					results.RequestConfigurations[requestConfigurationsCount].AllowRequests = requestConfigurations.AllowRequests
+					results.RequestConfigurations[requestConfigurationsCount].AutoApproval = requestConfigurations.AutoApproval
+					results.RequestConfigurations[requestConfigurationsCount].Condition = requestConfigurations.Condition
+					results.RequestConfigurations[requestConfigurationsCount].MaxDuration = requestConfigurations.MaxDuration
+					results.RequestConfigurations[requestConfigurationsCount].Priority = requestConfigurations.Priority
+					results.RequestConfigurations[requestConfigurationsCount].RecommendedDuration = requestConfigurations.RecommendedDuration
+					results.RequestConfigurations[requestConfigurationsCount].RequestTemplateID = requestConfigurations.RequestTemplateID
+					results.RequestConfigurations[requestConfigurationsCount].RequireMfaToRequest = requestConfigurations.RequireMfaToRequest
+					results.RequestConfigurations[requestConfigurationsCount].RequireSupportTicket = requestConfigurations.RequireSupportTicket
+					results.RequestConfigurations[requestConfigurationsCount].ReviewerStages = requestConfigurations.ReviewerStages
 				}
 			}
-			results1.RequireMfaToApprove = types.BoolPointerValue(resultsItem.RequireMfaToApprove)
-			results1.RequireMfaToConnect = types.BoolPointerValue(resultsItem.RequireMfaToConnect)
+			results.RequireMfaToApprove = types.BoolPointerValue(resultsItem.RequireMfaToApprove)
+			results.RequireMfaToConnect = types.BoolPointerValue(resultsItem.RequireMfaToConnect)
 			if resultsItem.ResourceType != nil {
-				results1.ResourceType = types.StringValue(string(*resultsItem.ResourceType))
+				results.ResourceType = types.StringValue(string(*resultsItem.ResourceType))
 			} else {
-				results1.ResourceType = types.StringNull()
+				results.ResourceType = types.StringNull()
 			}
 			if resultsItem.RiskSensitivity != nil {
-				results1.RiskSensitivity = types.StringValue(string(*resultsItem.RiskSensitivity))
+				results.RiskSensitivity = types.StringValue(string(*resultsItem.RiskSensitivity))
 			} else {
-				results1.RiskSensitivity = types.StringNull()
+				results.RiskSensitivity = types.StringNull()
 			}
 			if resultsItem.RiskSensitivityOverride != nil {
-				results1.RiskSensitivityOverride = types.StringValue(string(*resultsItem.RiskSensitivityOverride))
+				results.RiskSensitivityOverride = types.StringValue(string(*resultsItem.RiskSensitivityOverride))
 			} else {
-				results1.RiskSensitivityOverride = types.StringNull()
+				results.RiskSensitivityOverride = types.StringNull()
 			}
 			if resultsItem.TicketPropagation == nil {
-				results1.TicketPropagation = nil
+				results.TicketPropagation = nil
 			} else {
-				results1.TicketPropagation = &tfTypes.TicketPropagationConfiguration{}
-				results1.TicketPropagation.EnabledOnGrant = types.BoolValue(resultsItem.TicketPropagation.EnabledOnGrant)
-				results1.TicketPropagation.EnabledOnRevocation = types.BoolValue(resultsItem.TicketPropagation.EnabledOnRevocation)
-				results1.TicketPropagation.TicketProjectID = types.StringPointerValue(resultsItem.TicketPropagation.TicketProjectID)
+				results.TicketPropagation = &tfTypes.TicketPropagationConfiguration{}
+				results.TicketPropagation.EnabledOnGrant = types.BoolValue(resultsItem.TicketPropagation.EnabledOnGrant)
+				results.TicketPropagation.EnabledOnRevocation = types.BoolValue(resultsItem.TicketPropagation.EnabledOnRevocation)
+				results.TicketPropagation.TicketProjectID = types.StringPointerValue(resultsItem.TicketPropagation.TicketProjectID)
 				if resultsItem.TicketPropagation.TicketProvider != nil {
-					results1.TicketPropagation.TicketProvider = types.StringValue(string(*resultsItem.TicketPropagation.TicketProvider))
+					results.TicketPropagation.TicketProvider = types.StringValue(string(*resultsItem.TicketPropagation.TicketProvider))
 				} else {
-					results1.TicketPropagation.TicketProvider = types.StringNull()
+					results.TicketPropagation.TicketProvider = types.StringNull()
 				}
 			}
 			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results1)
+				r.Results = append(r.Results, results)
 			} else {
-				r.Results[resultsCount].AdminOwnerID = results1.AdminOwnerID
-				r.Results[resultsCount].AppID = results1.AppID
-				r.Results[resultsCount].CustomRequestNotification = results1.CustomRequestNotification
-				r.Results[resultsCount].Description = results1.Description
-				r.Results[resultsCount].ID = results1.ID
-				r.Results[resultsCount].Name = results1.Name
-				r.Results[resultsCount].ParentResourceID = results1.ParentResourceID
-				r.Results[resultsCount].RemoteInfo = results1.RemoteInfo
-				r.Results[resultsCount].RequestConfigurations = results1.RequestConfigurations
-				r.Results[resultsCount].RequireMfaToApprove = results1.RequireMfaToApprove
-				r.Results[resultsCount].RequireMfaToConnect = results1.RequireMfaToConnect
-				r.Results[resultsCount].ResourceType = results1.ResourceType
-				r.Results[resultsCount].RiskSensitivity = results1.RiskSensitivity
-				r.Results[resultsCount].RiskSensitivityOverride = results1.RiskSensitivityOverride
-				r.Results[resultsCount].TicketPropagation = results1.TicketPropagation
+				r.Results[resultsCount].AdminOwnerID = results.AdminOwnerID
+				r.Results[resultsCount].AppID = results.AppID
+				r.Results[resultsCount].CustomRequestNotification = results.CustomRequestNotification
+				r.Results[resultsCount].Description = results.Description
+				r.Results[resultsCount].ID = results.ID
+				r.Results[resultsCount].Name = results.Name
+				r.Results[resultsCount].ParentResourceID = results.ParentResourceID
+				r.Results[resultsCount].RemoteInfo = results.RemoteInfo
+				r.Results[resultsCount].RequestConfigurations = results.RequestConfigurations
+				r.Results[resultsCount].RequireMfaToApprove = results.RequireMfaToApprove
+				r.Results[resultsCount].RequireMfaToConnect = results.RequireMfaToConnect
+				r.Results[resultsCount].ResourceType = results.ResourceType
+				r.Results[resultsCount].RiskSensitivity = results.RiskSensitivity
+				r.Results[resultsCount].RiskSensitivityOverride = results.RiskSensitivityOverride
+				r.Results[resultsCount].TicketPropagation = results.TicketPropagation
 			}
 		}
 	}
+
+	return diags
 }

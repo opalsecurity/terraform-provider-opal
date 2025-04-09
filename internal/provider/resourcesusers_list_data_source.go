@@ -197,7 +197,11 @@ func (r *ResourcesUsersListDataSource) Read(ctx context.Context, req datasource.
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedResourceAccessUserList(res.ResourceAccessUserList)
+	resp.Diagnostics.Append(data.RefreshFromSharedResourceAccessUserList(ctx, res.ResourceAccessUserList)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

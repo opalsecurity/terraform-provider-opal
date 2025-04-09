@@ -3,11 +3,13 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
-	"time"
 )
 
 func (r *GroupUserResourceModel) ToOperationsCreateGroupUserRequestBody() *operations.CreateGroupUserRequestBody {
@@ -30,7 +32,9 @@ func (r *GroupUserResourceModel) ToOperationsCreateGroupUserRequestBody() *opera
 	return &out
 }
 
-func (r *GroupUserResourceModel) RefreshFromSharedGroupUser(resp *shared.GroupUser) {
+func (r *GroupUserResourceModel) RefreshFromSharedGroupUser(ctx context.Context, resp *shared.GroupUser) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		if resp.AccessLevel == nil {
 			r.AccessLevel = nil
@@ -40,11 +44,7 @@ func (r *GroupUserResourceModel) RefreshFromSharedGroupUser(resp *shared.GroupUs
 			r.AccessLevel.AccessLevelRemoteID = types.StringValue(resp.AccessLevel.AccessLevelRemoteID)
 		}
 		r.Email = types.StringValue(resp.Email)
-		if resp.ExpirationDate != nil {
-			r.ExpirationDate = types.StringValue(resp.ExpirationDate.Format(time.RFC3339Nano))
-		} else {
-			r.ExpirationDate = types.StringNull()
-		}
+		r.ExpirationDate = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resp.ExpirationDate))
 		r.FullName = types.StringValue(resp.FullName)
 		r.GroupID = types.StringValue(resp.GroupID)
 		if resp.PropagationStatus == nil {
@@ -55,4 +55,6 @@ func (r *GroupUserResourceModel) RefreshFromSharedGroupUser(resp *shared.GroupUs
 		}
 		r.UserID = types.StringValue(resp.UserID)
 	}
+
+	return diags
 }

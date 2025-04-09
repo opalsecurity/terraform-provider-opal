@@ -3,6 +3,8 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
@@ -32,11 +34,15 @@ func (r *BundleResourceResourceModel) ToOperationsAddBundleResourceRequestBody()
 	return &out
 }
 
-func (r *BundleResourceResourceModel) RefreshFromSharedBundleResource(resp *shared.BundleResource) {
+func (r *BundleResourceResourceModel) RefreshFromSharedBundleResource(ctx context.Context, resp *shared.BundleResource) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.AccessLevelName = types.StringPointerValue(resp.AccessLevelName)
 		r.AccessLevelRemoteID = types.StringPointerValue(resp.AccessLevelRemoteID)
 		r.BundleID = types.StringPointerValue(resp.BundleID)
 		r.ResourceID = types.StringPointerValue(resp.ResourceID)
 	}
+
+	return diags
 }

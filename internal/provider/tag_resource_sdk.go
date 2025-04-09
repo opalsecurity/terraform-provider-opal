@@ -3,9 +3,11 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
-	"time"
 )
 
 func (r *TagResourceModel) ToSharedCreateTagInfo() *shared.CreateTagInfo {
@@ -25,21 +27,17 @@ func (r *TagResourceModel) ToSharedCreateTagInfo() *shared.CreateTagInfo {
 	return &out
 }
 
-func (r *TagResourceModel) RefreshFromSharedTag(resp *shared.Tag) {
+func (r *TagResourceModel) RefreshFromSharedTag(ctx context.Context, resp *shared.Tag) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
-		if resp.CreatedAt != nil {
-			r.CreatedAt = types.StringValue(resp.CreatedAt.Format(time.RFC3339Nano))
-		} else {
-			r.CreatedAt = types.StringNull()
-		}
+		r.CreatedAt = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resp.CreatedAt))
 		r.ID = types.StringValue(resp.ID)
 		r.Key = types.StringPointerValue(resp.Key)
-		if resp.UpdatedAt != nil {
-			r.UpdatedAt = types.StringValue(resp.UpdatedAt.Format(time.RFC3339Nano))
-		} else {
-			r.UpdatedAt = types.StringNull()
-		}
+		r.UpdatedAt = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resp.UpdatedAt))
 		r.UserCreatorID = types.StringPointerValue(resp.UserCreatorID)
 		r.Value = types.StringPointerValue(resp.Value)
 	}
+
+	return diags
 }

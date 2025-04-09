@@ -680,7 +680,11 @@ func (r *ResourcesListDataSource) Read(ctx context.Context, req datasource.ReadR
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedPaginatedResourcesList(res.PaginatedResourcesList)
+	resp.Diagnostics.Append(data.RefreshFromSharedPaginatedResourcesList(ctx, res.PaginatedResourcesList)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

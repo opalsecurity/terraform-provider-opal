@@ -139,7 +139,11 @@ func (r *IdpGroupMappingsDataSource) Read(ctx context.Context, req datasource.Re
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedIdpGroupMappingList(res.IdpGroupMappingList)
+	resp.Diagnostics.Append(data.RefreshFromSharedIdpGroupMappingList(ctx, res.IdpGroupMappingList)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

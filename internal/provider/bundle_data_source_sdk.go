@@ -3,34 +3,34 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
-	"time"
 )
 
-func (r *BundleDataSourceModel) RefreshFromSharedBundle(resp *shared.Bundle) {
+func (r *BundleDataSourceModel) RefreshFromSharedBundle(ctx context.Context, resp *shared.Bundle) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 		r.BundleID = types.StringPointerValue(resp.BundleID)
-		if resp.CreatedAt != nil {
-			r.CreatedAt = types.StringValue(resp.CreatedAt.Format(time.RFC3339Nano))
-		} else {
-			r.CreatedAt = types.StringNull()
-		}
+		r.CreatedAt = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resp.CreatedAt))
 		r.Description = types.StringPointerValue(resp.Description)
 		r.Name = types.StringPointerValue(resp.Name)
 		r.TotalNumGroups = types.Int64PointerValue(resp.TotalNumGroups)
 		r.TotalNumItems = types.Int64PointerValue(resp.TotalNumItems)
 		r.TotalNumResources = types.Int64PointerValue(resp.TotalNumResources)
-		if resp.UpdatedAt != nil {
-			r.UpdatedAt = types.StringValue(resp.UpdatedAt.Format(time.RFC3339Nano))
-		} else {
-			r.UpdatedAt = types.StringNull()
-		}
+		r.UpdatedAt = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resp.UpdatedAt))
 	}
+
+	return diags
 }
 
-func (r *BundleDataSourceModel) RefreshFromSharedVisibilityInfo(resp *shared.VisibilityInfo) {
+func (r *BundleDataSourceModel) RefreshFromSharedVisibilityInfo(ctx context.Context, resp *shared.VisibilityInfo) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.Visibility = types.StringValue(string(resp.Visibility))
 		r.VisibilityGroupIds = make([]types.String, 0, len(resp.VisibilityGroupIds))
@@ -38,4 +38,6 @@ func (r *BundleDataSourceModel) RefreshFromSharedVisibilityInfo(resp *shared.Vis
 			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
 		}
 	}
+
+	return diags
 }

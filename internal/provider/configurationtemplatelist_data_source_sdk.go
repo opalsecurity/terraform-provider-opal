@@ -3,77 +3,83 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *ConfigurationTemplateListDataSourceModel) RefreshFromSharedPaginatedConfigurationTemplateList(resp *shared.PaginatedConfigurationTemplateList) {
+func (r *ConfigurationTemplateListDataSourceModel) RefreshFromSharedPaginatedConfigurationTemplateList(ctx context.Context, resp *shared.PaginatedConfigurationTemplateList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.Results = []tfTypes.ConfigurationTemplate{}
 		if len(r.Results) > len(resp.Results) {
 			r.Results = r.Results[:len(resp.Results)]
 		}
 		for resultsCount, resultsItem := range resp.Results {
-			var results1 tfTypes.ConfigurationTemplate
-			results1.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
-			results1.BreakGlassUserIds = make([]types.String, 0, len(resultsItem.BreakGlassUserIds))
+			var results tfTypes.ConfigurationTemplate
+			results.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
+			results.BreakGlassUserIds = make([]types.String, 0, len(resultsItem.BreakGlassUserIds))
 			for _, v := range resultsItem.BreakGlassUserIds {
-				results1.BreakGlassUserIds = append(results1.BreakGlassUserIds, types.StringValue(v))
+				results.BreakGlassUserIds = append(results.BreakGlassUserIds, types.StringValue(v))
 			}
-			results1.ConfigurationTemplateID = types.StringPointerValue(resultsItem.ConfigurationTemplateID)
-			results1.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
-			results1.LinkedAuditMessageChannelIds = make([]types.String, 0, len(resultsItem.LinkedAuditMessageChannelIds))
+			results.ConfigurationTemplateID = types.StringPointerValue(resultsItem.ConfigurationTemplateID)
+			results.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
+			results.LinkedAuditMessageChannelIds = make([]types.String, 0, len(resultsItem.LinkedAuditMessageChannelIds))
 			for _, v := range resultsItem.LinkedAuditMessageChannelIds {
-				results1.LinkedAuditMessageChannelIds = append(results1.LinkedAuditMessageChannelIds, types.StringValue(v))
+				results.LinkedAuditMessageChannelIds = append(results.LinkedAuditMessageChannelIds, types.StringValue(v))
 			}
-			results1.MemberOncallScheduleIds = make([]types.String, 0, len(resultsItem.MemberOncallScheduleIds))
+			results.MemberOncallScheduleIds = make([]types.String, 0, len(resultsItem.MemberOncallScheduleIds))
 			for _, v := range resultsItem.MemberOncallScheduleIds {
-				results1.MemberOncallScheduleIds = append(results1.MemberOncallScheduleIds, types.StringValue(v))
+				results.MemberOncallScheduleIds = append(results.MemberOncallScheduleIds, types.StringValue(v))
 			}
-			results1.Name = types.StringPointerValue(resultsItem.Name)
-			results1.RequestConfigurationID = types.StringPointerValue(resultsItem.RequestConfigurationID)
-			results1.RequireMfaToApprove = types.BoolPointerValue(resultsItem.RequireMfaToApprove)
-			results1.RequireMfaToConnect = types.BoolPointerValue(resultsItem.RequireMfaToConnect)
+			results.Name = types.StringPointerValue(resultsItem.Name)
+			results.RequestConfigurationID = types.StringPointerValue(resultsItem.RequestConfigurationID)
+			results.RequireMfaToApprove = types.BoolPointerValue(resultsItem.RequireMfaToApprove)
+			results.RequireMfaToConnect = types.BoolPointerValue(resultsItem.RequireMfaToConnect)
 			if resultsItem.TicketPropagation == nil {
-				results1.TicketPropagation = nil
+				results.TicketPropagation = nil
 			} else {
-				results1.TicketPropagation = &tfTypes.TicketPropagationConfiguration{}
-				results1.TicketPropagation.EnabledOnGrant = types.BoolValue(resultsItem.TicketPropagation.EnabledOnGrant)
-				results1.TicketPropagation.EnabledOnRevocation = types.BoolValue(resultsItem.TicketPropagation.EnabledOnRevocation)
-				results1.TicketPropagation.TicketProjectID = types.StringPointerValue(resultsItem.TicketPropagation.TicketProjectID)
+				results.TicketPropagation = &tfTypes.TicketPropagationConfiguration{}
+				results.TicketPropagation.EnabledOnGrant = types.BoolValue(resultsItem.TicketPropagation.EnabledOnGrant)
+				results.TicketPropagation.EnabledOnRevocation = types.BoolValue(resultsItem.TicketPropagation.EnabledOnRevocation)
+				results.TicketPropagation.TicketProjectID = types.StringPointerValue(resultsItem.TicketPropagation.TicketProjectID)
 				if resultsItem.TicketPropagation.TicketProvider != nil {
-					results1.TicketPropagation.TicketProvider = types.StringValue(string(*resultsItem.TicketPropagation.TicketProvider))
+					results.TicketPropagation.TicketProvider = types.StringValue(string(*resultsItem.TicketPropagation.TicketProvider))
 				} else {
-					results1.TicketPropagation.TicketProvider = types.StringNull()
+					results.TicketPropagation.TicketProvider = types.StringNull()
 				}
 			}
 			if resultsItem.Visibility == nil {
-				results1.Visibility = nil
+				results.Visibility = nil
 			} else {
-				results1.Visibility = &tfTypes.VisibilityInfo{}
-				results1.Visibility.Visibility = types.StringValue(string(resultsItem.Visibility.Visibility))
-				results1.Visibility.VisibilityGroupIds = make([]types.String, 0, len(resultsItem.Visibility.VisibilityGroupIds))
+				results.Visibility = &tfTypes.VisibilityInfo{}
+				results.Visibility.Visibility = types.StringValue(string(resultsItem.Visibility.Visibility))
+				results.Visibility.VisibilityGroupIds = make([]types.String, 0, len(resultsItem.Visibility.VisibilityGroupIds))
 				for _, v := range resultsItem.Visibility.VisibilityGroupIds {
-					results1.Visibility.VisibilityGroupIds = append(results1.Visibility.VisibilityGroupIds, types.StringValue(v))
+					results.Visibility.VisibilityGroupIds = append(results.Visibility.VisibilityGroupIds, types.StringValue(v))
 				}
 			}
 			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results1)
+				r.Results = append(r.Results, results)
 			} else {
-				r.Results[resultsCount].AdminOwnerID = results1.AdminOwnerID
-				r.Results[resultsCount].BreakGlassUserIds = results1.BreakGlassUserIds
-				r.Results[resultsCount].ConfigurationTemplateID = results1.ConfigurationTemplateID
-				r.Results[resultsCount].CustomRequestNotification = results1.CustomRequestNotification
-				r.Results[resultsCount].LinkedAuditMessageChannelIds = results1.LinkedAuditMessageChannelIds
-				r.Results[resultsCount].MemberOncallScheduleIds = results1.MemberOncallScheduleIds
-				r.Results[resultsCount].Name = results1.Name
-				r.Results[resultsCount].RequestConfigurationID = results1.RequestConfigurationID
-				r.Results[resultsCount].RequireMfaToApprove = results1.RequireMfaToApprove
-				r.Results[resultsCount].RequireMfaToConnect = results1.RequireMfaToConnect
-				r.Results[resultsCount].TicketPropagation = results1.TicketPropagation
-				r.Results[resultsCount].Visibility = results1.Visibility
+				r.Results[resultsCount].AdminOwnerID = results.AdminOwnerID
+				r.Results[resultsCount].BreakGlassUserIds = results.BreakGlassUserIds
+				r.Results[resultsCount].ConfigurationTemplateID = results.ConfigurationTemplateID
+				r.Results[resultsCount].CustomRequestNotification = results.CustomRequestNotification
+				r.Results[resultsCount].LinkedAuditMessageChannelIds = results.LinkedAuditMessageChannelIds
+				r.Results[resultsCount].MemberOncallScheduleIds = results.MemberOncallScheduleIds
+				r.Results[resultsCount].Name = results.Name
+				r.Results[resultsCount].RequestConfigurationID = results.RequestConfigurationID
+				r.Results[resultsCount].RequireMfaToApprove = results.RequireMfaToApprove
+				r.Results[resultsCount].RequireMfaToConnect = results.RequireMfaToConnect
+				r.Results[resultsCount].TicketPropagation = results.TicketPropagation
+				r.Results[resultsCount].Visibility = results.Visibility
 			}
 		}
 	}
+
+	return diags
 }
