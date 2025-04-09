@@ -3,12 +3,18 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-func (r *ResourceReviewersListDataSourceModel) RefreshFromString(resp []string) {
+func (r *ResourceReviewersListDataSourceModel) RefreshFromString(ctx context.Context, resp []string) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	r.Data = make([]types.String, 0, len(resp))
 	for _, v := range resp {
 		r.Data = append(r.Data, types.StringValue(v))
 	}
+
+	return diags
 }

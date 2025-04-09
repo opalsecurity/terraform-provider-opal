@@ -3,11 +3,15 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *OwnerDataSourceModel) RefreshFromSharedOwner(resp *shared.Owner) {
+func (r *OwnerDataSourceModel) RefreshFromSharedOwner(ctx context.Context, resp *shared.Owner) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.AccessRequestEscalationPeriod = types.Int64PointerValue(resp.AccessRequestEscalationPeriod)
 		r.Description = types.StringPointerValue(resp.Description)
@@ -16,4 +20,6 @@ func (r *OwnerDataSourceModel) RefreshFromSharedOwner(resp *shared.Owner) {
 		r.ReviewerMessageChannelID = types.StringPointerValue(resp.ReviewerMessageChannelID)
 		r.SourceGroupID = types.StringPointerValue(resp.SourceGroupID)
 	}
+
+	return diags
 }

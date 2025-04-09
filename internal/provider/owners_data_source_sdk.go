@@ -3,12 +3,16 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *OwnersDataSourceModel) RefreshFromSharedPaginatedOwnersList(resp *shared.PaginatedOwnersList) {
+func (r *OwnersDataSourceModel) RefreshFromSharedPaginatedOwnersList(ctx context.Context, resp *shared.PaginatedOwnersList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
@@ -17,23 +21,25 @@ func (r *OwnersDataSourceModel) RefreshFromSharedPaginatedOwnersList(resp *share
 			r.Results = r.Results[:len(resp.Results)]
 		}
 		for resultsCount, resultsItem := range resp.Results {
-			var results1 tfTypes.Owner
-			results1.AccessRequestEscalationPeriod = types.Int64PointerValue(resultsItem.AccessRequestEscalationPeriod)
-			results1.Description = types.StringPointerValue(resultsItem.Description)
-			results1.ID = types.StringValue(resultsItem.ID)
-			results1.Name = types.StringPointerValue(resultsItem.Name)
-			results1.ReviewerMessageChannelID = types.StringPointerValue(resultsItem.ReviewerMessageChannelID)
-			results1.SourceGroupID = types.StringPointerValue(resultsItem.SourceGroupID)
+			var results tfTypes.Owner
+			results.AccessRequestEscalationPeriod = types.Int64PointerValue(resultsItem.AccessRequestEscalationPeriod)
+			results.Description = types.StringPointerValue(resultsItem.Description)
+			results.ID = types.StringValue(resultsItem.ID)
+			results.Name = types.StringPointerValue(resultsItem.Name)
+			results.ReviewerMessageChannelID = types.StringPointerValue(resultsItem.ReviewerMessageChannelID)
+			results.SourceGroupID = types.StringPointerValue(resultsItem.SourceGroupID)
 			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results1)
+				r.Results = append(r.Results, results)
 			} else {
-				r.Results[resultsCount].AccessRequestEscalationPeriod = results1.AccessRequestEscalationPeriod
-				r.Results[resultsCount].Description = results1.Description
-				r.Results[resultsCount].ID = results1.ID
-				r.Results[resultsCount].Name = results1.Name
-				r.Results[resultsCount].ReviewerMessageChannelID = results1.ReviewerMessageChannelID
-				r.Results[resultsCount].SourceGroupID = results1.SourceGroupID
+				r.Results[resultsCount].AccessRequestEscalationPeriod = results.AccessRequestEscalationPeriod
+				r.Results[resultsCount].Description = results.Description
+				r.Results[resultsCount].ID = results.ID
+				r.Results[resultsCount].Name = results.Name
+				r.Results[resultsCount].ReviewerMessageChannelID = results.ReviewerMessageChannelID
+				r.Results[resultsCount].SourceGroupID = results.SourceGroupID
 			}
 		}
 	}
+
+	return diags
 }

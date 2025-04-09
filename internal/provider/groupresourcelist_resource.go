@@ -188,7 +188,12 @@ func (r *GroupResourceListResource) Create(ctx context.Context, req resource.Cre
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var groupId1 string
 	groupId1 = data.GroupID.ValueString()
 
@@ -215,8 +220,17 @@ func (r *GroupResourceListResource) Create(ctx context.Context, req resource.Cre
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedGroupResourceList(res1.GroupResourceList)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedGroupResourceList(ctx, res1.GroupResourceList)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -270,7 +284,11 @@ func (r *GroupResourceListResource) Read(ctx context.Context, req resource.ReadR
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedGroupResourceList(res.GroupResourceList)
+	resp.Diagnostics.Append(data.RefreshFromSharedGroupResourceList(ctx, res.GroupResourceList)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -314,7 +332,12 @@ func (r *GroupResourceListResource) Update(ctx context.Context, req resource.Upd
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var groupId1 string
 	groupId1 = data.GroupID.ValueString()
 
@@ -341,8 +364,17 @@ func (r *GroupResourceListResource) Update(ctx context.Context, req resource.Upd
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedGroupResourceList(res1.GroupResourceList)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedGroupResourceList(ctx, res1.GroupResourceList)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

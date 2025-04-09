@@ -354,8 +354,17 @@ func (r *ConfigurationTemplateResource) Create(ctx context.Context, req resource
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedConfigurationTemplate(res.ConfigurationTemplate)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedConfigurationTemplate(ctx, res.ConfigurationTemplate)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -420,8 +429,17 @@ func (r *ConfigurationTemplateResource) Update(ctx context.Context, req resource
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedConfigurationTemplate(res.ConfigurationTemplate)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedConfigurationTemplate(ctx, res.ConfigurationTemplate)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

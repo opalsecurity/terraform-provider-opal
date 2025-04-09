@@ -168,7 +168,11 @@ func (r *BundleDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedBundle(res.Bundle)
+	resp.Diagnostics.Append(data.RefreshFromSharedBundle(ctx, res.Bundle)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var bundleId1 string
 	bundleId1 = data.BundleID.ValueString()
 
@@ -199,7 +203,11 @@ func (r *BundleDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedVisibilityInfo(res1.VisibilityInfo)
+	resp.Diagnostics.Append(data.RefreshFromSharedVisibilityInfo(ctx, res1.VisibilityInfo)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

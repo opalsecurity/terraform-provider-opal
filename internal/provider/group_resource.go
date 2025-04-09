@@ -828,8 +828,17 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedGroup(res.Group)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedGroup(ctx, res.Group)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	singleton := *data.ToSharedUpdateGroupInfo()
 	groups := []shared.UpdateGroupInfo{singleton}
 	request1 := shared.UpdateGroupInfoList{
@@ -855,8 +864,17 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedUpdateGroupInfo(&res1.UpdateGroupInfoList.Groups[0])
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedUpdateGroupInfo(ctx, &res1.UpdateGroupInfoList.Groups[0])...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	messageChannelIDList := *data.ToSharedMessageChannelIDList()
 	var id string
 	id = data.ID.ValueString()
@@ -881,7 +899,12 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
 		return
 	}
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var onCallScheduleIds []string = []string{}
 	for _, onCallScheduleIdsItem := range data.OnCallScheduleIds {
 		onCallScheduleIds = append(onCallScheduleIds, onCallScheduleIdsItem.ValueString())
@@ -912,7 +935,12 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res3.StatusCode), debugResponse(res3.RawResponse))
 		return
 	}
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	visibilityInfo := *data.ToSharedVisibilityInfo()
 	var id2 string
 	id2 = data.ID.ValueString()
@@ -937,7 +965,12 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res4.StatusCode), debugResponse(res4.RawResponse))
 		return
 	}
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var id3 string
 	id3 = data.ID.ValueString()
 
@@ -964,8 +997,17 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res5.RawResponse))
 		return
 	}
-	data.RefreshFromSharedGroup(res5.Group)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedGroup(ctx, res5.Group)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var id4 string
 	id4 = data.ID.ValueString()
 
@@ -992,8 +1034,17 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res6.RawResponse))
 		return
 	}
-	data.RefreshFromOperationsGetGroupMessageChannelsResponseBody(res6.Object)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupMessageChannelsResponseBody(ctx, res6.Object)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var id5 string
 	id5 = data.ID.ValueString()
 
@@ -1016,7 +1067,12 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res7.StatusCode), debugResponse(res7.RawResponse))
 		return
 	}
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var id6 string
 	id6 = data.ID.ValueString()
 
@@ -1043,8 +1099,17 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res8.RawResponse))
 		return
 	}
-	data.RefreshFromOperationsGetGroupVisibilityResponseBody(res8.Object)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupVisibilityResponseBody(ctx, res8.Object)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -1098,7 +1163,11 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedGroup(res.Group)
+	resp.Diagnostics.Append(data.RefreshFromSharedGroup(ctx, res.Group)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var id1 string
 	id1 = data.ID.ValueString()
 
@@ -1129,7 +1198,11 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromOperationsGetGroupMessageChannelsResponseBody(res1.Object)
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupMessageChannelsResponseBody(ctx, res1.Object)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var id2 string
 	id2 = data.ID.ValueString()
 
@@ -1186,7 +1259,11 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res3.RawResponse))
 		return
 	}
-	data.RefreshFromOperationsGetGroupVisibilityResponseBody(res3.Object)
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupVisibilityResponseBody(ctx, res3.Object)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -1231,8 +1308,17 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedUpdateGroupInfo(&res.UpdateGroupInfoList.Groups[0])
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedUpdateGroupInfo(ctx, &res.UpdateGroupInfoList.Groups[0])...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	messageChannelIDList := *data.ToSharedMessageChannelIDList()
 	var id string
 	id = data.ID.ValueString()
@@ -1257,7 +1343,12 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var onCallScheduleIds []string = []string{}
 	for _, onCallScheduleIdsItem := range data.OnCallScheduleIds {
 		onCallScheduleIds = append(onCallScheduleIds, onCallScheduleIdsItem.ValueString())
@@ -1288,7 +1379,12 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
 		return
 	}
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	visibilityInfo := *data.ToSharedVisibilityInfo()
 	var id2 string
 	id2 = data.ID.ValueString()
@@ -1313,7 +1409,12 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res3.StatusCode), debugResponse(res3.RawResponse))
 		return
 	}
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var id3 string
 	id3 = data.ID.ValueString()
 
@@ -1340,8 +1441,17 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res4.RawResponse))
 		return
 	}
-	data.RefreshFromSharedGroup(res4.Group)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedGroup(ctx, res4.Group)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var id4 string
 	id4 = data.ID.ValueString()
 
@@ -1368,8 +1478,17 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res5.RawResponse))
 		return
 	}
-	data.RefreshFromOperationsGetGroupMessageChannelsResponseBody(res5.Object)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupMessageChannelsResponseBody(ctx, res5.Object)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var id5 string
 	id5 = data.ID.ValueString()
 
@@ -1392,7 +1511,12 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res6.StatusCode), debugResponse(res6.RawResponse))
 		return
 	}
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var id6 string
 	id6 = data.ID.ValueString()
 
@@ -1419,8 +1543,17 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res7.RawResponse))
 		return
 	}
-	data.RefreshFromOperationsGetGroupVisibilityResponseBody(res7.Object)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupVisibilityResponseBody(ctx, res7.Object)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

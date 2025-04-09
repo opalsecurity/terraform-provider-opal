@@ -3,12 +3,16 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *GroupReviewersStagesListDataSourceModel) RefreshFromSharedReviewerStage(resp []shared.ReviewerStage) {
+func (r *GroupReviewersStagesListDataSourceModel) RefreshFromSharedReviewerStage(ctx context.Context, resp []shared.ReviewerStage) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	r.Data = []tfTypes.ReviewerStage{}
 	if len(r.Data) > len(resp) {
 		r.Data = r.Data[:len(resp)]
@@ -35,4 +39,6 @@ func (r *GroupReviewersStagesListDataSourceModel) RefreshFromSharedReviewerStage
 			r.Data[dataCount].RequireManagerApproval = data.RequireManagerApproval
 		}
 	}
+
+	return diags
 }

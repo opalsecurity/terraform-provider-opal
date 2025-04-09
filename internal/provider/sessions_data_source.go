@@ -185,7 +185,11 @@ func (r *SessionsDataSource) Read(ctx context.Context, req datasource.ReadReques
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedSessionsList(res.SessionsList)
+	resp.Diagnostics.Append(data.RefreshFromSharedSessionsList(ctx, res.SessionsList)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

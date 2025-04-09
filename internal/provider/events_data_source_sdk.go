@@ -3,14 +3,18 @@
 package provider
 
 import (
+	"context"
 	"encoding/json"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
-	"time"
 )
 
-func (r *EventsDataSourceModel) RefreshFromSharedPaginatedEventList(resp *shared.PaginatedEventList) {
+func (r *EventsDataSourceModel) RefreshFromSharedPaginatedEventList(ctx context.Context, resp *shared.PaginatedEventList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
@@ -19,48 +23,50 @@ func (r *EventsDataSourceModel) RefreshFromSharedPaginatedEventList(resp *shared
 			r.Results = r.Results[:len(resp.Results)]
 		}
 		for resultsCount, resultsItem := range resp.Results {
-			var results1 tfTypes.Event
-			results1.ActorEmail = types.StringPointerValue(resultsItem.ActorEmail)
-			results1.ActorIPAddress = types.StringPointerValue(resultsItem.ActorIPAddress)
+			var results tfTypes.Event
+			results.ActorEmail = types.StringPointerValue(resultsItem.ActorEmail)
+			results.ActorIPAddress = types.StringPointerValue(resultsItem.ActorIPAddress)
 			actorNameResult, _ := json.Marshal(resultsItem.ActorName)
-			results1.ActorName = types.StringValue(string(actorNameResult))
-			results1.ActorUserID = types.StringValue(resultsItem.ActorUserID)
-			results1.APITokenName = types.StringPointerValue(resultsItem.APITokenName)
-			results1.APITokenPreview = types.StringPointerValue(resultsItem.APITokenPreview)
-			results1.CreatedAt = types.StringValue(resultsItem.CreatedAt.Format(time.RFC3339Nano))
-			results1.EventID = types.StringValue(resultsItem.EventID)
-			results1.EventType = types.StringValue(resultsItem.EventType)
-			results1.SubEvents = []tfTypes.SubEvent{}
+			results.ActorName = types.StringValue(string(actorNameResult))
+			results.ActorUserID = types.StringValue(resultsItem.ActorUserID)
+			results.APITokenName = types.StringPointerValue(resultsItem.APITokenName)
+			results.APITokenPreview = types.StringPointerValue(resultsItem.APITokenPreview)
+			results.CreatedAt = types.StringValue(typeconvert.TimeToString(resultsItem.CreatedAt))
+			results.EventID = types.StringValue(resultsItem.EventID)
+			results.EventType = types.StringValue(resultsItem.EventType)
+			results.SubEvents = []tfTypes.SubEvent{}
 			for subEventsCount, subEventsItem := range resultsItem.SubEvents {
-				var subEvents1 tfTypes.SubEvent
+				var subEvents tfTypes.SubEvent
 				if subEventsItem.AdditionalProperties == nil {
-					subEvents1.AdditionalProperties = types.StringNull()
+					subEvents.AdditionalProperties = types.StringNull()
 				} else {
 					additionalPropertiesResult, _ := json.Marshal(subEventsItem.AdditionalProperties)
-					subEvents1.AdditionalProperties = types.StringValue(string(additionalPropertiesResult))
+					subEvents.AdditionalProperties = types.StringValue(string(additionalPropertiesResult))
 				}
-				subEvents1.SubEventType = types.StringValue(subEventsItem.SubEventType)
-				if subEventsCount+1 > len(results1.SubEvents) {
-					results1.SubEvents = append(results1.SubEvents, subEvents1)
+				subEvents.SubEventType = types.StringValue(subEventsItem.SubEventType)
+				if subEventsCount+1 > len(results.SubEvents) {
+					results.SubEvents = append(results.SubEvents, subEvents)
 				} else {
-					results1.SubEvents[subEventsCount].AdditionalProperties = subEvents1.AdditionalProperties
-					results1.SubEvents[subEventsCount].SubEventType = subEvents1.SubEventType
+					results.SubEvents[subEventsCount].AdditionalProperties = subEvents.AdditionalProperties
+					results.SubEvents[subEventsCount].SubEventType = subEvents.SubEventType
 				}
 			}
 			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results1)
+				r.Results = append(r.Results, results)
 			} else {
-				r.Results[resultsCount].ActorEmail = results1.ActorEmail
-				r.Results[resultsCount].ActorIPAddress = results1.ActorIPAddress
-				r.Results[resultsCount].ActorName = results1.ActorName
-				r.Results[resultsCount].ActorUserID = results1.ActorUserID
-				r.Results[resultsCount].APITokenName = results1.APITokenName
-				r.Results[resultsCount].APITokenPreview = results1.APITokenPreview
-				r.Results[resultsCount].CreatedAt = results1.CreatedAt
-				r.Results[resultsCount].EventID = results1.EventID
-				r.Results[resultsCount].EventType = results1.EventType
-				r.Results[resultsCount].SubEvents = results1.SubEvents
+				r.Results[resultsCount].ActorEmail = results.ActorEmail
+				r.Results[resultsCount].ActorIPAddress = results.ActorIPAddress
+				r.Results[resultsCount].ActorName = results.ActorName
+				r.Results[resultsCount].ActorUserID = results.ActorUserID
+				r.Results[resultsCount].APITokenName = results.APITokenName
+				r.Results[resultsCount].APITokenPreview = results.APITokenPreview
+				r.Results[resultsCount].CreatedAt = results.CreatedAt
+				r.Results[resultsCount].EventID = results.EventID
+				r.Results[resultsCount].EventType = results.EventType
+				r.Results[resultsCount].SubEvents = results.SubEvents
 			}
 		}
 	}
+
+	return diags
 }

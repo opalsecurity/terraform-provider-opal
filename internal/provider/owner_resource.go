@@ -148,8 +148,17 @@ func (r *OwnerResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedOwner(res.Owner)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedOwner(ctx, res.Owner)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var id string
 	id = data.ID.ValueString()
 
@@ -176,8 +185,17 @@ func (r *OwnerResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedOwner(res1.Owner)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedOwner(ctx, res1.Owner)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -231,7 +249,11 @@ func (r *OwnerResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedOwner(res.Owner)
+	resp.Diagnostics.Append(data.RefreshFromSharedOwner(ctx, res.Owner)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -276,8 +298,17 @@ func (r *OwnerResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedUpdateOwnerInfo(&res.UpdateOwnerInfoList.Owners[0])
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedUpdateOwnerInfo(ctx, &res.UpdateOwnerInfoList.Owners[0])...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	userIDList := *data.ToSharedUserIDList()
 	var id string
 	id = data.ID.ValueString()
@@ -302,7 +333,12 @@ func (r *OwnerResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var id1 string
 	id1 = data.ID.ValueString()
 
@@ -329,8 +365,17 @@ func (r *OwnerResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res2.RawResponse))
 		return
 	}
-	data.RefreshFromSharedOwner(res2.Owner)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedOwner(ctx, res2.Owner)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

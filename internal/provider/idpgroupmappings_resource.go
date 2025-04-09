@@ -136,7 +136,12 @@ func (r *IdpGroupMappingsResource) Create(ctx context.Context, req resource.Crea
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -190,7 +195,11 @@ func (r *IdpGroupMappingsResource) Read(ctx context.Context, req resource.ReadRe
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedIdpGroupMappingList(res.IdpGroupMappingList)
+	resp.Diagnostics.Append(data.RefreshFromSharedIdpGroupMappingList(ctx, res.IdpGroupMappingList)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -234,7 +243,12 @@ func (r *IdpGroupMappingsResource) Update(ctx context.Context, req resource.Upda
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

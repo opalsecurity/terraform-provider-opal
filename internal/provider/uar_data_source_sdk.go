@@ -3,15 +3,19 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
-	"time"
 )
 
-func (r *UarDataSourceModel) RefreshFromSharedUar(resp *shared.Uar) {
+func (r *UarDataSourceModel) RefreshFromSharedUar(ctx context.Context, resp *shared.Uar) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
-		r.Deadline = types.StringValue(resp.Deadline.Format(time.RFC3339Nano))
+		r.Deadline = types.StringValue(typeconvert.TimeToString(resp.Deadline))
 		r.Name = types.StringValue(resp.Name)
 		r.ReviewerAssignmentPolicy = types.StringValue(string(resp.ReviewerAssignmentPolicy))
 		r.SelfReviewAllowed = types.BoolValue(resp.SelfReviewAllowed)
@@ -62,14 +66,14 @@ func (r *UarDataSourceModel) RefreshFromSharedUar(resp *shared.Uar) {
 				r.UarScope.Tags = r.UarScope.Tags[:len(resp.UarScope.Tags)]
 			}
 			for tagsCount, tagsItem := range resp.UarScope.Tags {
-				var tags1 tfTypes.TagFilter
-				tags1.Key = types.StringValue(tagsItem.Key)
-				tags1.Value = types.StringPointerValue(tagsItem.Value)
+				var tags tfTypes.TagFilter
+				tags.Key = types.StringValue(tagsItem.Key)
+				tags.Value = types.StringPointerValue(tagsItem.Value)
 				if tagsCount+1 > len(r.UarScope.Tags) {
-					r.UarScope.Tags = append(r.UarScope.Tags, tags1)
+					r.UarScope.Tags = append(r.UarScope.Tags, tags)
 				} else {
-					r.UarScope.Tags[tagsCount].Key = tags1.Key
-					r.UarScope.Tags[tagsCount].Value = tags1.Value
+					r.UarScope.Tags[tagsCount].Key = tags.Key
+					r.UarScope.Tags[tagsCount].Value = tags.Value
 				}
 			}
 			r.UarScope.Users = make([]types.String, 0, len(resp.UarScope.Users))
@@ -78,4 +82,6 @@ func (r *UarDataSourceModel) RefreshFromSharedUar(resp *shared.Uar) {
 			}
 		}
 	}
+
+	return diags
 }

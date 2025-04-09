@@ -249,7 +249,9 @@ actions:
       x-speakeasy-name-override: delete
   - target: $["paths"]["/groups/{group_id}"]["delete"]
     update:
-      x-speakeasy-entity-operation: Group#delete
+      x-speakeasy-entity-operation:
+        - Group#delete
+        - AccessRule#delete
   - target: $["paths"]["/groups/{group_id}/message-channels"]["get"]["operationId"]
     update: getGroupMessageChannels
   - target: $["paths"]["/groups/{group_id}/message-channels"]["get"]["parameters"][0]
@@ -352,6 +354,21 @@ actions:
   - target: $["paths"]["/groups/{group_id}/resources"]["put"]
     update:
       x-speakeasy-entity-operation: GroupResourceList#create,update
+  - target: $["paths"]["/groups/{group_id}/containing-groups"]["post"]
+    update:
+      x-speakeasy-entity-operation: GroupContainingGroup#create
+  - target: $["paths"]["/groups/{group_id}/containing-groups"]["get"]
+    remove: true
+  - target: $["paths"]["/groups/{group_id}/containing-groups/{containing_group_id}"]["get"]["responses"]
+    update:
+      "404":
+        description: Not Found
+  - target: $["paths"]["/groups/{group_id}/containing-groups/{containing_group_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: GroupContainingGroup#read
+  - target: $["paths"]["/groups/{group_id}/containing-groups/{containing_group_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: GroupContainingGroup#delete
   - target: $["paths"]["/groups/{group_id}/resources/{resource_id}"]["post"]["operationId"]
     update: createGroupResources
   - target: $["paths"]["/groups/{group_id}/resources/{resource_id}"]["post"]
@@ -862,6 +879,21 @@ actions:
   - target: $["paths"]["/users/{user_id}/tags"]["get"]
     update:
       x-speakeasy-entity-operation: UserTags#get
+  - target: $["paths"]["/access-rules"]["post"]
+    update:
+      x-speakeasy-entity-operation: AccessRule#create
+  - target: $["paths"]["/access-rules/{access_rule_id}"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/access-rules/{access_rule_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: AccessRule#read
+  - target: $["paths"]["/access-rules/{access_rule_id}"]["put"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/access-rules/{access_rule_id}"]["put"]
+    update:
+      x-speakeasy-entity-operation: AccessRule#update
   - target: $["paths"]["/tag/{tag_id}"]["get"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
@@ -1044,25 +1076,7 @@ actions:
   - target: $["paths"]["/uar/{uar_id}"]["get"]
     update:
       x-speakeasy-entity-operation: UAR#get
-  - target: $["paths"]["/groups/{group_id}/containing-groups/{containing_group_id}"]["get"]
-    update:
-      x-speakeasy-entity-operation: GroupContainingGroup#read
-  - target: $["paths"]["/groups/{group_id}/containing-groups/{containing_group_id}"]["get"]["responses"]
-    update:
-      "404":
-        description: Not Found
-  - target: $["paths"]["/groups/{group_id}/containing-groups"]["post"]
-    update:
-      x-speakeasy-entity-operation: GroupContainingGroup#create
-  - target: $["paths"]["/groups/{group_id}/containing-groups"]["get"]
-    remove:
-      true
-  - target: $["paths"]["/groups/{group_id}/containing-groups/{containing_group_id}"]["delete"]
-    update:
-      x-speakeasy-entity-operation: GroupContainingGroup#delete
   - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]
-    remove: true
-  - target: $["paths"]["/access-rules/{access_rule_id}"]
     remove: true
   - target: $["components"]["schemas"]["PaginatedUARsList"]
     update:
@@ -1164,6 +1178,9 @@ actions:
   - target: $["components"]["schemas"]["PaginatedGroupsList"]
     update:
       x-speakeasy-entity: Group_list
+  - target: $["components"]["schemas"]["GroupContainingGroup"]
+    update:
+      x-speakeasy-entity: GroupContainingGroup
   - target: $["components"]["schemas"]["Group"]["example"]["max_duration"]
     remove: true
   - target: $["components"]["schemas"]["Group"]["properties"]["group_id"]
@@ -1863,6 +1880,36 @@ actions:
   - target: $["components"]["schemas"]["CreateTagInfo"]["properties"]["tag_value"]
     update:
       x-speakeasy-name-override: value
+  - target: $["components"]["schemas"]["UpdateAccessRuleInfo"]
+    update:
+      x-speakeasy-entity: AccessRule
+  - target: $["components"]["schemas"]["AccessRule"]["properties"]["access_rule_id"]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["components"]["schemas"]["AccessRule"]["properties"]["access_rule_id"]
+    update:
+      x-speakeasy-param-readonly: true
+  - target: $["components"]["schemas"]["AccessRule"]["properties"]["access_rule_id"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["AccessRule"]
+    update:
+      x-speakeasy-entity: AccessRule
+  - target: $["components"]["schemas"]["RuleClauses"]["properties"]["unless"]
+    update:
+      default: null
+  - target: $["components"]["schemas"]["RuleClauses"]
+    update:
+      x-speakeasy-entity: RuleClauses
+  - target: $["components"]["schemas"]["RuleConjunction"]
+    update:
+      x-speakeasy-entity: RuleConjunction
+  - target: $["components"]["schemas"]["RuleDisjunction"]
+    update:
+      x-speakeasy-entity: RuleConjunction
+  - target: $["components"]["schemas"]["TagSelector"]
+    update:
+      x-speakeasy-entity: TagSelector
   - target: $["components"]["schemas"]["PaginatedOwnersList"]
     update:
       x-speakeasy-entity: Owners
@@ -2003,10 +2050,6 @@ actions:
   - target: $["components"]["schemas"]["Bundle"]["properties"]["updated_at"]
     update:
       x-speakeasy-param-readonly: true
-  - target: $["components"]["schemas"]["BundleResource"]["properties"]["resource_name"]
-    remove: true
-  - target: $["components"]["schemas"]["BundleGroup"]["properties"]["group_name"]
-    remove: true
   - target: $["components"]["schemas"]
     update:
       BundlesVisibilityTypeEnum:
@@ -2016,22 +2059,9 @@ actions:
           - TEAM
         example: GLOBAL
         type: string
-  - target: $["components"]["schemas"]["GroupContainingGroup"]
-    update:
-      x-speakeasy-entity: GroupContainingGroup
   - target: $["components"]["schemas"]["GroupWithAccessLevel"]
     remove: true
   - target: $["components"]["schemas"]["GroupContainingGroupList"]
-    remove: true
-  - target: $["components"]["schemas"]["AccessRuleCondition"]
-    remove: true
-  - target: $["components"]["schemas"]["RuleClauses"]
-    remove: true
-  - target: $["components"]["schemas"]["RuleConjunction"]
-    remove: true
-  - target: $["components"]["schemas"]["RuleDisjunction"]
-    remove: true
-  - target: $["components"]["schemas"]["TagSelector"]
     remove: true
   - target: $
     update:

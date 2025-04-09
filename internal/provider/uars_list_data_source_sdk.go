@@ -3,13 +3,17 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
-	"time"
 )
 
-func (r *UARSListDataSourceModel) RefreshFromSharedPaginatedUARsList(resp *shared.PaginatedUARsList) {
+func (r *UARSListDataSourceModel) RefreshFromSharedPaginatedUARsList(ctx context.Context, resp *shared.PaginatedUARsList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
@@ -18,82 +22,84 @@ func (r *UARSListDataSourceModel) RefreshFromSharedPaginatedUARsList(resp *share
 			r.Results = r.Results[:len(resp.Results)]
 		}
 		for resultsCount, resultsItem := range resp.Results {
-			var results1 tfTypes.Uar
-			results1.Deadline = types.StringValue(resultsItem.Deadline.Format(time.RFC3339Nano))
-			results1.Name = types.StringValue(resultsItem.Name)
-			results1.ReviewerAssignmentPolicy = types.StringValue(string(resultsItem.ReviewerAssignmentPolicy))
-			results1.SelfReviewAllowed = types.BoolValue(resultsItem.SelfReviewAllowed)
-			results1.SendReviewerAssignmentNotification = types.BoolValue(resultsItem.SendReviewerAssignmentNotification)
-			results1.TimeZone = types.StringValue(resultsItem.TimeZone)
-			results1.UarID = types.StringValue(resultsItem.UarID)
+			var results tfTypes.Uar
+			results.Deadline = types.StringValue(typeconvert.TimeToString(resultsItem.Deadline))
+			results.Name = types.StringValue(resultsItem.Name)
+			results.ReviewerAssignmentPolicy = types.StringValue(string(resultsItem.ReviewerAssignmentPolicy))
+			results.SelfReviewAllowed = types.BoolValue(resultsItem.SelfReviewAllowed)
+			results.SendReviewerAssignmentNotification = types.BoolValue(resultsItem.SendReviewerAssignmentNotification)
+			results.TimeZone = types.StringValue(resultsItem.TimeZone)
+			results.UarID = types.StringValue(resultsItem.UarID)
 			if resultsItem.UarScope == nil {
-				results1.UarScope = nil
+				results.UarScope = nil
 			} else {
-				results1.UarScope = &tfTypes.UARScope{}
-				results1.UarScope.Admins = make([]types.String, 0, len(resultsItem.UarScope.Admins))
+				results.UarScope = &tfTypes.UARScope{}
+				results.UarScope.Admins = make([]types.String, 0, len(resultsItem.UarScope.Admins))
 				for _, v := range resultsItem.UarScope.Admins {
-					results1.UarScope.Admins = append(results1.UarScope.Admins, types.StringValue(v))
+					results.UarScope.Admins = append(results.UarScope.Admins, types.StringValue(v))
 				}
-				results1.UarScope.Apps = make([]types.String, 0, len(resultsItem.UarScope.Apps))
+				results.UarScope.Apps = make([]types.String, 0, len(resultsItem.UarScope.Apps))
 				for _, v := range resultsItem.UarScope.Apps {
-					results1.UarScope.Apps = append(results1.UarScope.Apps, types.StringValue(v))
+					results.UarScope.Apps = append(results.UarScope.Apps, types.StringValue(v))
 				}
-				results1.UarScope.Entities = make([]types.String, 0, len(resultsItem.UarScope.Entities))
+				results.UarScope.Entities = make([]types.String, 0, len(resultsItem.UarScope.Entities))
 				for _, v := range resultsItem.UarScope.Entities {
-					results1.UarScope.Entities = append(results1.UarScope.Entities, types.StringValue(v))
+					results.UarScope.Entities = append(results.UarScope.Entities, types.StringValue(v))
 				}
 				if resultsItem.UarScope.FilterOperator != nil {
-					results1.UarScope.FilterOperator = types.StringValue(string(*resultsItem.UarScope.FilterOperator))
+					results.UarScope.FilterOperator = types.StringValue(string(*resultsItem.UarScope.FilterOperator))
 				} else {
-					results1.UarScope.FilterOperator = types.StringNull()
+					results.UarScope.FilterOperator = types.StringNull()
 				}
-				results1.UarScope.GroupTypes = make([]types.String, 0, len(resultsItem.UarScope.GroupTypes))
+				results.UarScope.GroupTypes = make([]types.String, 0, len(resultsItem.UarScope.GroupTypes))
 				for _, v := range resultsItem.UarScope.GroupTypes {
-					results1.UarScope.GroupTypes = append(results1.UarScope.GroupTypes, types.StringValue(string(v)))
+					results.UarScope.GroupTypes = append(results.UarScope.GroupTypes, types.StringValue(string(v)))
 				}
 				if resultsItem.UarScope.GroupVisibility != nil {
-					results1.UarScope.GroupVisibility = types.StringValue(string(*resultsItem.UarScope.GroupVisibility))
+					results.UarScope.GroupVisibility = types.StringValue(string(*resultsItem.UarScope.GroupVisibility))
 				} else {
-					results1.UarScope.GroupVisibility = types.StringNull()
+					results.UarScope.GroupVisibility = types.StringNull()
 				}
-				results1.UarScope.IncludeGroupBindings = types.BoolPointerValue(resultsItem.UarScope.IncludeGroupBindings)
-				results1.UarScope.Names = make([]types.String, 0, len(resultsItem.UarScope.Names))
+				results.UarScope.IncludeGroupBindings = types.BoolPointerValue(resultsItem.UarScope.IncludeGroupBindings)
+				results.UarScope.Names = make([]types.String, 0, len(resultsItem.UarScope.Names))
 				for _, v := range resultsItem.UarScope.Names {
-					results1.UarScope.Names = append(results1.UarScope.Names, types.StringValue(v))
+					results.UarScope.Names = append(results.UarScope.Names, types.StringValue(v))
 				}
-				results1.UarScope.ResourceTypes = make([]types.String, 0, len(resultsItem.UarScope.ResourceTypes))
+				results.UarScope.ResourceTypes = make([]types.String, 0, len(resultsItem.UarScope.ResourceTypes))
 				for _, v := range resultsItem.UarScope.ResourceTypes {
-					results1.UarScope.ResourceTypes = append(results1.UarScope.ResourceTypes, types.StringValue(string(v)))
+					results.UarScope.ResourceTypes = append(results.UarScope.ResourceTypes, types.StringValue(string(v)))
 				}
-				results1.UarScope.Tags = []tfTypes.TagFilter{}
+				results.UarScope.Tags = []tfTypes.TagFilter{}
 				for tagsCount, tagsItem := range resultsItem.UarScope.Tags {
-					var tags1 tfTypes.TagFilter
-					tags1.Key = types.StringValue(tagsItem.Key)
-					tags1.Value = types.StringPointerValue(tagsItem.Value)
-					if tagsCount+1 > len(results1.UarScope.Tags) {
-						results1.UarScope.Tags = append(results1.UarScope.Tags, tags1)
+					var tags tfTypes.TagFilter
+					tags.Key = types.StringValue(tagsItem.Key)
+					tags.Value = types.StringPointerValue(tagsItem.Value)
+					if tagsCount+1 > len(results.UarScope.Tags) {
+						results.UarScope.Tags = append(results.UarScope.Tags, tags)
 					} else {
-						results1.UarScope.Tags[tagsCount].Key = tags1.Key
-						results1.UarScope.Tags[tagsCount].Value = tags1.Value
+						results.UarScope.Tags[tagsCount].Key = tags.Key
+						results.UarScope.Tags[tagsCount].Value = tags.Value
 					}
 				}
-				results1.UarScope.Users = make([]types.String, 0, len(resultsItem.UarScope.Users))
+				results.UarScope.Users = make([]types.String, 0, len(resultsItem.UarScope.Users))
 				for _, v := range resultsItem.UarScope.Users {
-					results1.UarScope.Users = append(results1.UarScope.Users, types.StringValue(v))
+					results.UarScope.Users = append(results.UarScope.Users, types.StringValue(v))
 				}
 			}
 			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results1)
+				r.Results = append(r.Results, results)
 			} else {
-				r.Results[resultsCount].Deadline = results1.Deadline
-				r.Results[resultsCount].Name = results1.Name
-				r.Results[resultsCount].ReviewerAssignmentPolicy = results1.ReviewerAssignmentPolicy
-				r.Results[resultsCount].SelfReviewAllowed = results1.SelfReviewAllowed
-				r.Results[resultsCount].SendReviewerAssignmentNotification = results1.SendReviewerAssignmentNotification
-				r.Results[resultsCount].TimeZone = results1.TimeZone
-				r.Results[resultsCount].UarID = results1.UarID
-				r.Results[resultsCount].UarScope = results1.UarScope
+				r.Results[resultsCount].Deadline = results.Deadline
+				r.Results[resultsCount].Name = results.Name
+				r.Results[resultsCount].ReviewerAssignmentPolicy = results.ReviewerAssignmentPolicy
+				r.Results[resultsCount].SelfReviewAllowed = results.SelfReviewAllowed
+				r.Results[resultsCount].SendReviewerAssignmentNotification = results.SendReviewerAssignmentNotification
+				r.Results[resultsCount].TimeZone = results.TimeZone
+				r.Results[resultsCount].UarID = results.UarID
+				r.Results[resultsCount].UarScope = results.UarScope
 			}
 		}
 	}
+
+	return diags
 }

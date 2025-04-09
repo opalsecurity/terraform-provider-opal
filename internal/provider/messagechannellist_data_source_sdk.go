@@ -3,37 +3,43 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *MessageChannelListDataSourceModel) RefreshFromSharedMessageChannelList(resp *shared.MessageChannelList) {
+func (r *MessageChannelListDataSourceModel) RefreshFromSharedMessageChannelList(ctx context.Context, resp *shared.MessageChannelList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.Channels = []tfTypes.MessageChannel{}
 		if len(r.Channels) > len(resp.Channels) {
 			r.Channels = r.Channels[:len(resp.Channels)]
 		}
 		for channelsCount, channelsItem := range resp.Channels {
-			var channels1 tfTypes.MessageChannel
-			channels1.ID = types.StringValue(channelsItem.ID)
-			channels1.IsPrivate = types.BoolPointerValue(channelsItem.IsPrivate)
-			channels1.Name = types.StringPointerValue(channelsItem.Name)
-			channels1.RemoteID = types.StringPointerValue(channelsItem.RemoteID)
+			var channels tfTypes.MessageChannel
+			channels.ID = types.StringValue(channelsItem.ID)
+			channels.IsPrivate = types.BoolPointerValue(channelsItem.IsPrivate)
+			channels.Name = types.StringPointerValue(channelsItem.Name)
+			channels.RemoteID = types.StringPointerValue(channelsItem.RemoteID)
 			if channelsItem.ThirdPartyProvider != nil {
-				channels1.ThirdPartyProvider = types.StringValue(string(*channelsItem.ThirdPartyProvider))
+				channels.ThirdPartyProvider = types.StringValue(string(*channelsItem.ThirdPartyProvider))
 			} else {
-				channels1.ThirdPartyProvider = types.StringNull()
+				channels.ThirdPartyProvider = types.StringNull()
 			}
 			if channelsCount+1 > len(r.Channels) {
-				r.Channels = append(r.Channels, channels1)
+				r.Channels = append(r.Channels, channels)
 			} else {
-				r.Channels[channelsCount].ID = channels1.ID
-				r.Channels[channelsCount].IsPrivate = channels1.IsPrivate
-				r.Channels[channelsCount].Name = channels1.Name
-				r.Channels[channelsCount].RemoteID = channels1.RemoteID
-				r.Channels[channelsCount].ThirdPartyProvider = channels1.ThirdPartyProvider
+				r.Channels[channelsCount].ID = channels.ID
+				r.Channels[channelsCount].IsPrivate = channels.IsPrivate
+				r.Channels[channelsCount].Name = channels.Name
+				r.Channels[channelsCount].RemoteID = channels.RemoteID
+				r.Channels[channelsCount].ThirdPartyProvider = channels.ThirdPartyProvider
 			}
 		}
 	}
+
+	return diags
 }

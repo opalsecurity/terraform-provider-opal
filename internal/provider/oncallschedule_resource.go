@@ -144,8 +144,17 @@ func (r *OnCallScheduleResource) Create(ctx context.Context, req resource.Create
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedOnCallSchedule(res.OnCallSchedule)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedOnCallSchedule(ctx, res.OnCallSchedule)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -199,7 +208,11 @@ func (r *OnCallScheduleResource) Read(ctx context.Context, req resource.ReadRequ
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedOnCallSchedule(res.OnCallSchedule)
+	resp.Diagnostics.Append(data.RefreshFromSharedOnCallSchedule(ctx, res.OnCallSchedule)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

@@ -3,193 +3,199 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(resp *shared.PaginatedGroupsList) {
+func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx context.Context, resp *shared.PaginatedGroupsList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.Results = []tfTypes.Group{}
 		if len(r.Results) > len(resp.Results) {
 			r.Results = r.Results[:len(resp.Results)]
 		}
 		for resultsCount, resultsItem := range resp.Results {
-			var results1 tfTypes.Group
-			results1.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
-			results1.AppID = types.StringPointerValue(resultsItem.AppID)
-			results1.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
-			results1.Description = types.StringPointerValue(resultsItem.Description)
-			results1.GroupBindingID = types.StringPointerValue(resultsItem.GroupBindingID)
-			results1.GroupLeaderUserIds = make([]types.String, 0, len(resultsItem.GroupLeaderUserIds))
+			var results tfTypes.Group
+			results.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
+			results.AppID = types.StringPointerValue(resultsItem.AppID)
+			results.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
+			results.Description = types.StringPointerValue(resultsItem.Description)
+			results.GroupBindingID = types.StringPointerValue(resultsItem.GroupBindingID)
+			results.GroupLeaderUserIds = make([]types.String, 0, len(resultsItem.GroupLeaderUserIds))
 			for _, v := range resultsItem.GroupLeaderUserIds {
-				results1.GroupLeaderUserIds = append(results1.GroupLeaderUserIds, types.StringValue(v))
+				results.GroupLeaderUserIds = append(results.GroupLeaderUserIds, types.StringValue(v))
 			}
 			if resultsItem.GroupType != nil {
-				results1.GroupType = types.StringValue(string(*resultsItem.GroupType))
+				results.GroupType = types.StringValue(string(*resultsItem.GroupType))
 			} else {
-				results1.GroupType = types.StringNull()
+				results.GroupType = types.StringNull()
 			}
-			results1.ID = types.StringValue(resultsItem.ID)
-			results1.Name = types.StringPointerValue(resultsItem.Name)
+			results.ID = types.StringValue(resultsItem.ID)
+			results.Name = types.StringPointerValue(resultsItem.Name)
 			if resultsItem.RemoteInfo == nil {
-				results1.RemoteInfo = nil
+				results.RemoteInfo = nil
 			} else {
-				results1.RemoteInfo = &tfTypes.GroupRemoteInfo{}
+				results.RemoteInfo = &tfTypes.GroupRemoteInfo{}
 				if resultsItem.RemoteInfo.ActiveDirectoryGroup == nil {
-					results1.RemoteInfo.ActiveDirectoryGroup = nil
+					results.RemoteInfo.ActiveDirectoryGroup = nil
 				} else {
-					results1.RemoteInfo.ActiveDirectoryGroup = &tfTypes.ActiveDirectoryGroup{}
-					results1.RemoteInfo.ActiveDirectoryGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.ActiveDirectoryGroup.GroupID)
+					results.RemoteInfo.ActiveDirectoryGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.ActiveDirectoryGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.ActiveDirectoryGroup.GroupID)
 				}
 				if resultsItem.RemoteInfo.AzureAdMicrosoft365Group == nil {
-					results1.RemoteInfo.AzureAdMicrosoft365Group = nil
+					results.RemoteInfo.AzureAdMicrosoft365Group = nil
 				} else {
-					results1.RemoteInfo.AzureAdMicrosoft365Group = &tfTypes.ActiveDirectoryGroup{}
-					results1.RemoteInfo.AzureAdMicrosoft365Group.GroupID = types.StringValue(resultsItem.RemoteInfo.AzureAdMicrosoft365Group.GroupID)
+					results.RemoteInfo.AzureAdMicrosoft365Group = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.AzureAdMicrosoft365Group.GroupID = types.StringValue(resultsItem.RemoteInfo.AzureAdMicrosoft365Group.GroupID)
 				}
 				if resultsItem.RemoteInfo.AzureAdSecurityGroup == nil {
-					results1.RemoteInfo.AzureAdSecurityGroup = nil
+					results.RemoteInfo.AzureAdSecurityGroup = nil
 				} else {
-					results1.RemoteInfo.AzureAdSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
-					results1.RemoteInfo.AzureAdSecurityGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.AzureAdSecurityGroup.GroupID)
+					results.RemoteInfo.AzureAdSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.AzureAdSecurityGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.AzureAdSecurityGroup.GroupID)
 				}
 				if resultsItem.RemoteInfo.DuoGroup == nil {
-					results1.RemoteInfo.DuoGroup = nil
+					results.RemoteInfo.DuoGroup = nil
 				} else {
-					results1.RemoteInfo.DuoGroup = &tfTypes.ActiveDirectoryGroup{}
-					results1.RemoteInfo.DuoGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.DuoGroup.GroupID)
+					results.RemoteInfo.DuoGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.DuoGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.DuoGroup.GroupID)
 				}
 				if resultsItem.RemoteInfo.GithubTeam == nil {
-					results1.RemoteInfo.GithubTeam = nil
+					results.RemoteInfo.GithubTeam = nil
 				} else {
-					results1.RemoteInfo.GithubTeam = &tfTypes.GithubTeam{}
-					results1.RemoteInfo.GithubTeam.TeamSlug = types.StringValue(resultsItem.RemoteInfo.GithubTeam.TeamSlug)
+					results.RemoteInfo.GithubTeam = &tfTypes.GithubTeam{}
+					results.RemoteInfo.GithubTeam.TeamSlug = types.StringValue(resultsItem.RemoteInfo.GithubTeam.TeamSlug)
 				}
 				if resultsItem.RemoteInfo.GitlabGroup == nil {
-					results1.RemoteInfo.GitlabGroup = nil
+					results.RemoteInfo.GitlabGroup = nil
 				} else {
-					results1.RemoteInfo.GitlabGroup = &tfTypes.ActiveDirectoryGroup{}
-					results1.RemoteInfo.GitlabGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.GitlabGroup.GroupID)
+					results.RemoteInfo.GitlabGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.GitlabGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.GitlabGroup.GroupID)
 				}
 				if resultsItem.RemoteInfo.GoogleGroup == nil {
-					results1.RemoteInfo.GoogleGroup = nil
+					results.RemoteInfo.GoogleGroup = nil
 				} else {
-					results1.RemoteInfo.GoogleGroup = &tfTypes.ActiveDirectoryGroup{}
-					results1.RemoteInfo.GoogleGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.GoogleGroup.GroupID)
+					results.RemoteInfo.GoogleGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.GoogleGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.GoogleGroup.GroupID)
 				}
 				if resultsItem.RemoteInfo.LdapGroup == nil {
-					results1.RemoteInfo.LdapGroup = nil
+					results.RemoteInfo.LdapGroup = nil
 				} else {
-					results1.RemoteInfo.LdapGroup = &tfTypes.ActiveDirectoryGroup{}
-					results1.RemoteInfo.LdapGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.LdapGroup.GroupID)
+					results.RemoteInfo.LdapGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.LdapGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.LdapGroup.GroupID)
 				}
 				if resultsItem.RemoteInfo.OktaGroup == nil {
-					results1.RemoteInfo.OktaGroup = nil
+					results.RemoteInfo.OktaGroup = nil
 				} else {
-					results1.RemoteInfo.OktaGroup = &tfTypes.ActiveDirectoryGroup{}
-					results1.RemoteInfo.OktaGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.OktaGroup.GroupID)
+					results.RemoteInfo.OktaGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.OktaGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.OktaGroup.GroupID)
 				}
 				if resultsItem.RemoteInfo.SnowflakeRole == nil {
-					results1.RemoteInfo.SnowflakeRole = nil
+					results.RemoteInfo.SnowflakeRole = nil
 				} else {
-					results1.RemoteInfo.SnowflakeRole = &tfTypes.SnowflakeRole{}
-					results1.RemoteInfo.SnowflakeRole.RoleID = types.StringValue(resultsItem.RemoteInfo.SnowflakeRole.RoleID)
+					results.RemoteInfo.SnowflakeRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.SnowflakeRole.RoleID = types.StringValue(resultsItem.RemoteInfo.SnowflakeRole.RoleID)
 				}
 			}
-			results1.RemoteName = types.StringPointerValue(resultsItem.RemoteName)
-			results1.RequestConfigurations = []tfTypes.RequestConfiguration{}
+			results.RemoteName = types.StringPointerValue(resultsItem.RemoteName)
+			results.RequestConfigurations = []tfTypes.RequestConfiguration{}
 			for requestConfigurationsCount, requestConfigurationsItem := range resultsItem.RequestConfigurations {
-				var requestConfigurations1 tfTypes.RequestConfiguration
-				requestConfigurations1.AllowRequests = types.BoolValue(requestConfigurationsItem.AllowRequests)
-				requestConfigurations1.AutoApproval = types.BoolValue(requestConfigurationsItem.AutoApproval)
+				var requestConfigurations tfTypes.RequestConfiguration
+				requestConfigurations.AllowRequests = types.BoolValue(requestConfigurationsItem.AllowRequests)
+				requestConfigurations.AutoApproval = types.BoolValue(requestConfigurationsItem.AutoApproval)
 				if requestConfigurationsItem.Condition == nil {
-					requestConfigurations1.Condition = nil
+					requestConfigurations.Condition = nil
 				} else {
-					requestConfigurations1.Condition = &tfTypes.Condition{}
-					requestConfigurations1.Condition.GroupIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.GroupIds))
+					requestConfigurations.Condition = &tfTypes.Condition{}
+					requestConfigurations.Condition.GroupIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.GroupIds))
 					for _, v := range requestConfigurationsItem.Condition.GroupIds {
-						requestConfigurations1.Condition.GroupIds = append(requestConfigurations1.Condition.GroupIds, types.StringValue(v))
+						requestConfigurations.Condition.GroupIds = append(requestConfigurations.Condition.GroupIds, types.StringValue(v))
 					}
-					requestConfigurations1.Condition.RoleRemoteIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
+					requestConfigurations.Condition.RoleRemoteIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
 					for _, v := range requestConfigurationsItem.Condition.RoleRemoteIds {
-						requestConfigurations1.Condition.RoleRemoteIds = append(requestConfigurations1.Condition.RoleRemoteIds, types.StringValue(v))
+						requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 					}
 				}
-				requestConfigurations1.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
-				requestConfigurations1.Priority = types.Int64Value(requestConfigurationsItem.Priority)
-				requestConfigurations1.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)
-				requestConfigurations1.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
-				requestConfigurations1.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
-				requestConfigurations1.RequireSupportTicket = types.BoolValue(requestConfigurationsItem.RequireSupportTicket)
-				requestConfigurations1.ReviewerStages = []tfTypes.ReviewerStage{}
+				requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
+				requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
+				requestConfigurations.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)
+				requestConfigurations.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
+				requestConfigurations.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
+				requestConfigurations.RequireSupportTicket = types.BoolValue(requestConfigurationsItem.RequireSupportTicket)
+				requestConfigurations.ReviewerStages = []tfTypes.ReviewerStage{}
 				for reviewerStagesCount, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
-					var reviewerStages1 tfTypes.ReviewerStage
+					var reviewerStages tfTypes.ReviewerStage
 					if reviewerStagesItem.Operator != nil {
-						reviewerStages1.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
+						reviewerStages.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
 					} else {
-						reviewerStages1.Operator = types.StringNull()
+						reviewerStages.Operator = types.StringNull()
 					}
-					reviewerStages1.OwnerIds = make([]types.String, 0, len(reviewerStagesItem.OwnerIds))
+					reviewerStages.OwnerIds = make([]types.String, 0, len(reviewerStagesItem.OwnerIds))
 					for _, v := range reviewerStagesItem.OwnerIds {
-						reviewerStages1.OwnerIds = append(reviewerStages1.OwnerIds, types.StringValue(v))
+						reviewerStages.OwnerIds = append(reviewerStages.OwnerIds, types.StringValue(v))
 					}
-					reviewerStages1.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
-					reviewerStages1.RequireManagerApproval = types.BoolValue(reviewerStagesItem.RequireManagerApproval)
-					if reviewerStagesCount+1 > len(requestConfigurations1.ReviewerStages) {
-						requestConfigurations1.ReviewerStages = append(requestConfigurations1.ReviewerStages, reviewerStages1)
+					reviewerStages.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
+					reviewerStages.RequireManagerApproval = types.BoolValue(reviewerStagesItem.RequireManagerApproval)
+					if reviewerStagesCount+1 > len(requestConfigurations.ReviewerStages) {
+						requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
 					} else {
-						requestConfigurations1.ReviewerStages[reviewerStagesCount].Operator = reviewerStages1.Operator
-						requestConfigurations1.ReviewerStages[reviewerStagesCount].OwnerIds = reviewerStages1.OwnerIds
-						requestConfigurations1.ReviewerStages[reviewerStagesCount].RequireAdminApproval = reviewerStages1.RequireAdminApproval
-						requestConfigurations1.ReviewerStages[reviewerStagesCount].RequireManagerApproval = reviewerStages1.RequireManagerApproval
+						requestConfigurations.ReviewerStages[reviewerStagesCount].Operator = reviewerStages.Operator
+						requestConfigurations.ReviewerStages[reviewerStagesCount].OwnerIds = reviewerStages.OwnerIds
+						requestConfigurations.ReviewerStages[reviewerStagesCount].RequireAdminApproval = reviewerStages.RequireAdminApproval
+						requestConfigurations.ReviewerStages[reviewerStagesCount].RequireManagerApproval = reviewerStages.RequireManagerApproval
 					}
 				}
-				if requestConfigurationsCount+1 > len(results1.RequestConfigurations) {
-					results1.RequestConfigurations = append(results1.RequestConfigurations, requestConfigurations1)
+				if requestConfigurationsCount+1 > len(results.RequestConfigurations) {
+					results.RequestConfigurations = append(results.RequestConfigurations, requestConfigurations)
 				} else {
-					results1.RequestConfigurations[requestConfigurationsCount].AllowRequests = requestConfigurations1.AllowRequests
-					results1.RequestConfigurations[requestConfigurationsCount].AutoApproval = requestConfigurations1.AutoApproval
-					results1.RequestConfigurations[requestConfigurationsCount].Condition = requestConfigurations1.Condition
-					results1.RequestConfigurations[requestConfigurationsCount].MaxDuration = requestConfigurations1.MaxDuration
-					results1.RequestConfigurations[requestConfigurationsCount].Priority = requestConfigurations1.Priority
-					results1.RequestConfigurations[requestConfigurationsCount].RecommendedDuration = requestConfigurations1.RecommendedDuration
-					results1.RequestConfigurations[requestConfigurationsCount].RequestTemplateID = requestConfigurations1.RequestTemplateID
-					results1.RequestConfigurations[requestConfigurationsCount].RequireMfaToRequest = requestConfigurations1.RequireMfaToRequest
-					results1.RequestConfigurations[requestConfigurationsCount].RequireSupportTicket = requestConfigurations1.RequireSupportTicket
-					results1.RequestConfigurations[requestConfigurationsCount].ReviewerStages = requestConfigurations1.ReviewerStages
+					results.RequestConfigurations[requestConfigurationsCount].AllowRequests = requestConfigurations.AllowRequests
+					results.RequestConfigurations[requestConfigurationsCount].AutoApproval = requestConfigurations.AutoApproval
+					results.RequestConfigurations[requestConfigurationsCount].Condition = requestConfigurations.Condition
+					results.RequestConfigurations[requestConfigurationsCount].MaxDuration = requestConfigurations.MaxDuration
+					results.RequestConfigurations[requestConfigurationsCount].Priority = requestConfigurations.Priority
+					results.RequestConfigurations[requestConfigurationsCount].RecommendedDuration = requestConfigurations.RecommendedDuration
+					results.RequestConfigurations[requestConfigurationsCount].RequestTemplateID = requestConfigurations.RequestTemplateID
+					results.RequestConfigurations[requestConfigurationsCount].RequireMfaToRequest = requestConfigurations.RequireMfaToRequest
+					results.RequestConfigurations[requestConfigurationsCount].RequireSupportTicket = requestConfigurations.RequireSupportTicket
+					results.RequestConfigurations[requestConfigurationsCount].ReviewerStages = requestConfigurations.ReviewerStages
 				}
 			}
-			results1.RequireMfaToApprove = types.BoolPointerValue(resultsItem.RequireMfaToApprove)
+			results.RequireMfaToApprove = types.BoolPointerValue(resultsItem.RequireMfaToApprove)
 			if resultsItem.RiskSensitivity != nil {
-				results1.RiskSensitivity = types.StringValue(string(*resultsItem.RiskSensitivity))
+				results.RiskSensitivity = types.StringValue(string(*resultsItem.RiskSensitivity))
 			} else {
-				results1.RiskSensitivity = types.StringNull()
+				results.RiskSensitivity = types.StringNull()
 			}
 			if resultsItem.RiskSensitivityOverride != nil {
-				results1.RiskSensitivityOverride = types.StringValue(string(*resultsItem.RiskSensitivityOverride))
+				results.RiskSensitivityOverride = types.StringValue(string(*resultsItem.RiskSensitivityOverride))
 			} else {
-				results1.RiskSensitivityOverride = types.StringNull()
+				results.RiskSensitivityOverride = types.StringNull()
 			}
 			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results1)
+				r.Results = append(r.Results, results)
 			} else {
-				r.Results[resultsCount].AdminOwnerID = results1.AdminOwnerID
-				r.Results[resultsCount].AppID = results1.AppID
-				r.Results[resultsCount].CustomRequestNotification = results1.CustomRequestNotification
-				r.Results[resultsCount].Description = results1.Description
-				r.Results[resultsCount].GroupBindingID = results1.GroupBindingID
-				r.Results[resultsCount].GroupLeaderUserIds = results1.GroupLeaderUserIds
-				r.Results[resultsCount].GroupType = results1.GroupType
-				r.Results[resultsCount].ID = results1.ID
-				r.Results[resultsCount].Name = results1.Name
-				r.Results[resultsCount].RemoteInfo = results1.RemoteInfo
-				r.Results[resultsCount].RemoteName = results1.RemoteName
-				r.Results[resultsCount].RequestConfigurations = results1.RequestConfigurations
-				r.Results[resultsCount].RequireMfaToApprove = results1.RequireMfaToApprove
-				r.Results[resultsCount].RiskSensitivity = results1.RiskSensitivity
-				r.Results[resultsCount].RiskSensitivityOverride = results1.RiskSensitivityOverride
+				r.Results[resultsCount].AdminOwnerID = results.AdminOwnerID
+				r.Results[resultsCount].AppID = results.AppID
+				r.Results[resultsCount].CustomRequestNotification = results.CustomRequestNotification
+				r.Results[resultsCount].Description = results.Description
+				r.Results[resultsCount].GroupBindingID = results.GroupBindingID
+				r.Results[resultsCount].GroupLeaderUserIds = results.GroupLeaderUserIds
+				r.Results[resultsCount].GroupType = results.GroupType
+				r.Results[resultsCount].ID = results.ID
+				r.Results[resultsCount].Name = results.Name
+				r.Results[resultsCount].RemoteInfo = results.RemoteInfo
+				r.Results[resultsCount].RemoteName = results.RemoteName
+				r.Results[resultsCount].RequestConfigurations = results.RequestConfigurations
+				r.Results[resultsCount].RequireMfaToApprove = results.RequireMfaToApprove
+				r.Results[resultsCount].RiskSensitivity = results.RiskSensitivity
+				r.Results[resultsCount].RiskSensitivityOverride = results.RiskSensitivityOverride
 			}
 		}
 	}
+
+	return diags
 }

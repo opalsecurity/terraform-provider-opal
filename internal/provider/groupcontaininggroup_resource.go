@@ -131,8 +131,17 @@ func (r *GroupContainingGroupResource) Create(ctx context.Context, req resource.
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedGroupContainingGroup(res.GroupContainingGroup)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedGroupContainingGroup(ctx, res.GroupContainingGroup)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -190,7 +199,11 @@ func (r *GroupContainingGroupResource) Read(ctx context.Context, req resource.Re
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedGroupContainingGroup(res.GroupContainingGroup)
+	resp.Diagnostics.Append(data.RefreshFromSharedGroupContainingGroup(ctx, res.GroupContainingGroup)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -272,7 +285,7 @@ func (r *GroupContainingGroupResource) ImportState(ctx context.Context, req reso
 	}
 
 	if err := dec.Decode(&data); err != nil {
-		resp.Diagnostics.AddError("Invalid ID", `The ID is not valid. It's expected to be a JSON object alike '{ "containing_group_id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5",  "group_id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5"}': `+err.Error())
+		resp.Diagnostics.AddError("Invalid ID", `The import ID is not valid. It is expected to be a JSON object string with the format: '{ "containing_group_id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5",  "group_id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5"}': `+err.Error())
 		return
 	}
 

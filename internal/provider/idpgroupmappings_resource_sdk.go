@@ -3,6 +3,8 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
@@ -42,24 +44,28 @@ func (r *IdpGroupMappingsResourceModel) ToOperationsUpdateIdpGroupMappingsReques
 	return &out
 }
 
-func (r *IdpGroupMappingsResourceModel) RefreshFromSharedIdpGroupMappingList(resp *shared.IdpGroupMappingList) {
+func (r *IdpGroupMappingsResourceModel) RefreshFromSharedIdpGroupMappingList(ctx context.Context, resp *shared.IdpGroupMappingList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.Mappings = []tfTypes.Mappings{}
 		if len(r.Mappings) > len(resp.Mappings) {
 			r.Mappings = r.Mappings[:len(resp.Mappings)]
 		}
 		for mappingsCount, mappingsItem := range resp.Mappings {
-			var mappings1 tfTypes.Mappings
-			mappings1.Alias = types.StringPointerValue(mappingsItem.Alias)
-			mappings1.GroupID = types.StringValue(mappingsItem.GroupID)
-			mappings1.HiddenFromEndUser = types.BoolValue(mappingsItem.HiddenFromEndUser)
+			var mappings tfTypes.Mappings
+			mappings.Alias = types.StringPointerValue(mappingsItem.Alias)
+			mappings.GroupID = types.StringValue(mappingsItem.GroupID)
+			mappings.HiddenFromEndUser = types.BoolValue(mappingsItem.HiddenFromEndUser)
 			if mappingsCount+1 > len(r.Mappings) {
-				r.Mappings = append(r.Mappings, mappings1)
+				r.Mappings = append(r.Mappings, mappings)
 			} else {
-				r.Mappings[mappingsCount].Alias = mappings1.Alias
-				r.Mappings[mappingsCount].GroupID = mappings1.GroupID
-				r.Mappings[mappingsCount].HiddenFromEndUser = mappings1.HiddenFromEndUser
+				r.Mappings[mappingsCount].Alias = mappings.Alias
+				r.Mappings[mappingsCount].GroupID = mappings.GroupID
+				r.Mappings[mappingsCount].HiddenFromEndUser = mappings.HiddenFromEndUser
 			}
 		}
 	}
+
+	return diags
 }

@@ -896,7 +896,9 @@ paths:
       tags:
         - groups
       x-speakeasy-name-override: delete
-      x-speakeasy-entity-operation: Group#delete
+      x-speakeasy-entity-operation:
+        - Group#delete
+        - AccessRule#delete
   /groups/{group_id}/message-channels:
     get:
       description: Gets the list of audit and reviewer message channels attached to a group.
@@ -3064,6 +3066,89 @@ paths:
         - users
       x-speakeasy-name-override: get_user_tags
       x-speakeasy-entity-operation: UserTags#get
+  /access-rules:
+    post:
+      description: Creates a new access rule config for the given group_id.
+      operationId: create_access_rule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAccessRuleInfo"
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessRule"
+          description: The created access rule config for the group.
+      security:
+        - BearerAuth: []
+      tags:
+        - access-rules
+      x-speakeasy-entity-operation: AccessRule#create
+  /access-rules/{access_rule_id}:
+    get:
+      description: Returns a list of access rule config given the group_id of the access rule.
+      operationId: get_access_rule
+      parameters:
+        - description: The access rule ID (group ID) of the access rule.
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          explode: false
+          in: path
+          name: access_rule_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+          x-speakeasy-name-override: id
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessRule"
+          description: The access rules for the group.
+      security:
+        - BearerAuth: []
+      tags:
+        - access-rules
+      x-speakeasy-entity-operation: AccessRule#read
+    put:
+      description: Updates the access rule config for the given group_id.
+      operationId: update_access_rule
+      parameters:
+        - description: The access rule ID (group ID) of the access rule.
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          explode: false
+          in: path
+          name: access_rule_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+          x-speakeasy-name-override: id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAccessRuleInfo"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessRule"
+          description: The updated access rule config for the group.
+      security:
+        - BearerAuth: []
+      tags:
+        - access-rules
+      x-speakeasy-entity-operation: AccessRule#update
   /tag/{tag_id}:
     get:
       description: UNSTABLE. May be removed at any time. Gets a tag with the given id.
@@ -6903,10 +6988,10 @@ components:
         ### Usage Example
         Returned from the `GET Requests` endpoint.
       enum:
-        - pending
-        - approved
-        - denied
-        - canceled
+        - PENDING
+        - APPROVED
+        - DENIED
+        - CANCELED
       type: string
       x-speakeasy-entity: Requests
     Request:
@@ -7826,6 +7911,131 @@ components:
         - group_id
         - group_type
       type: object
+    UpdateAccessRuleInfo:
+      description: |-
+        # UpdateAccessRuleInfo Object
+        ### Description
+        The `UpdateAccessRuleInfo` object is used as an input to the UpdateAccessRule and CreateAccessRule API.
+      properties:
+        name:
+          description: The name of the access rule.
+          example: Platform Engineering
+          type: string
+        description:
+          description: A description of the group.
+          example: This access rule represents all platform engineers in the company.
+          type: string
+        admin_owner_id:
+          description: The ID of the owner of the group.
+          example: 7c86c85d-0651-43e2-a748-d69d658418e8
+          format: uuid
+          type: string
+        status:
+          description: The status of the access rule.
+          type: string
+          enum:
+            - ACTIVE
+            - PAUSED
+          example: ACTIVE
+        ruleClauses:
+          $ref: "#/components/schemas/RuleClauses"
+      required:
+        - status
+        - ruleClauses
+        - name
+        - admin_owner_id
+        - description
+      x-speakeasy-entity: AccessRule
+    AccessRule:
+      description: |-
+        # Access Rule Object
+        ### Description
+        The `AccessRule` object is used to represent an access rule configuration.
+
+        ### Usage Example
+        Get access rule configurations from the `GET Access Rule Configs` endpoint.
+      properties:
+        access_rule_id:
+          description: The ID (group ID) of the access rule.
+          example: 7c86c85d-0651-43e2-a748-d69d658418e8
+          format: uuid
+          type: string
+          x-speakeasy-name-override: id
+          x-speakeasy-param-readonly: true
+          x-speakeasy-param-suppress-computed-diff: true
+        name:
+          description: The name of the access rule.
+          example: Platform Engineering
+          type: string
+        description:
+          description: A description of the group.
+          example: This access rule represents all platform engineers in the company.
+          type: string
+        admin_owner_id:
+          description: The ID of the owner of the group.
+          example: 7c86c85d-0651-43e2-a748-d69d658418e8
+          format: uuid
+          type: string
+        status:
+          description: The status of the access rule.
+          type: string
+          enum:
+            - ACTIVE
+            - PAUSED
+          example: ACTIVE
+        ruleClauses:
+          $ref: "#/components/schemas/RuleClauses"
+      required:
+        - status
+        - ruleClauses
+        - name
+        - admin_owner_id
+        - access_rule_id
+        - description
+      x-speakeasy-entity: AccessRule
+    RuleClauses:
+      properties:
+        when:
+          $ref: "#/components/schemas/RuleConjunction"
+        unless:
+          $ref: "#/components/schemas/RuleConjunction"
+          default: null
+      required:
+        - when
+      x-speakeasy-entity: RuleClauses
+    RuleConjunction:
+      properties:
+        clauses:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/RuleDisjunction"
+      required:
+        - clauses
+      x-speakeasy-entity: RuleConjunction
+    RuleDisjunction:
+      properties:
+        selectors:
+          type: array
+          items:
+            $ref: "#/components/schemas/TagSelector"
+      required:
+        - selectors
+      x-speakeasy-entity: RuleConjunction
+    TagSelector:
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+        connection_id:
+          type: string
+          format: uuid
+      required:
+        - key
+        - value
+        - connection_id
+      x-speakeasy-entity: TagSelector
     PaginatedOwnersList:
       example:
         next: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw

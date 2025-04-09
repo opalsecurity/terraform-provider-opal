@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 8e319e5f86bd72eaa1fa8389cbf77416
+  docChecksum: bc0d11f15b0ad0f29084727ee92a4ae3
   docVersion: "1.0"
-  speakeasyVersion: 1.529.1
-  generationVersion: 2.566.5
-  releaseVersion: 0.33.8
-  configChecksum: 16e91fa30d308108b84a66464232fbd7
+  speakeasyVersion: 1.531.0
+  generationVersion: 2.568.2
+  releaseVersion: 0.34.2
+  configChecksum: b9255a19428f1ec12824e09ad5d0bc32
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -15,14 +15,14 @@ features:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.2
     constsAndDefaults: 0.2.1
-    core: 3.38.1
+    core: 3.39.2
     deprecations: 2.82.0
     envVarSecurityUsage: 0.1.0
     globalSecurity: 2.81.10
     globalServerURLs: 2.82.1
     ignores: 2.81.1
     inputOutputModels: 2.83.0
-    nameOverrides: 2.81.2
+    nameOverrides: 2.81.3
     nullables: 0.0.0
     retries: 2.81.2
     serverIDs: 2.81.1
@@ -32,6 +32,7 @@ generatedFiles:
   - .gitattributes
   - USAGE.md
   - examples/README.md
+  - examples/data-sources/opal_access_rule/data-source.tf
   - examples/data-sources/opal_app/data-source.tf
   - examples/data-sources/opal_apps/data-source.tf
   - examples/data-sources/opal_bundle/data-source.tf
@@ -74,6 +75,8 @@ generatedFiles:
   - examples/data-sources/opal_user_tags/data-source.tf
   - examples/data-sources/opal_users/data-source.tf
   - examples/provider/provider.tf
+  - examples/resources/opal_access_rule/import.sh
+  - examples/resources/opal_access_rule/resource.tf
   - examples/resources/opal_bundle/import.sh
   - examples/resources/opal_bundle/resource.tf
   - examples/resources/opal_bundle_group/resource.tf
@@ -115,6 +118,10 @@ generatedFiles:
   - internal/planmodifiers/setplanmodifier/suppress_diff.go
   - internal/planmodifiers/stringplanmodifier/suppress_diff.go
   - internal/planmodifiers/utils/state_check.go
+  - internal/provider/accessrule_data_source.go
+  - internal/provider/accessrule_data_source_sdk.go
+  - internal/provider/accessrule_resource.go
+  - internal/provider/accessrule_resource_sdk.go
   - internal/provider/app_data_source.go
   - internal/provider/app_data_source_sdk.go
   - internal/provider/apps_data_source.go
@@ -236,6 +243,9 @@ generatedFiles:
   - internal/provider/tags_list_data_source_sdk.go
   - internal/provider/taguser_resource.go
   - internal/provider/taguser_resource_sdk.go
+  - internal/provider/typeconvert/date.go
+  - internal/provider/typeconvert/datetime.go
+  - internal/provider/typeconvert/int32.go
   - internal/provider/types/active_directory_group.go
   - internal/provider/types/app.go
   - internal/provider/types/app_validation.go
@@ -287,6 +297,9 @@ generatedFiles:
   - internal/provider/types/resource_remote_info.go
   - internal/provider/types/resource_with_access_level.go
   - internal/provider/types/reviewer_stage.go
+  - internal/provider/types/rule_clauses.go
+  - internal/provider/types/rule_conjunction.go
+  - internal/provider/types/rule_disjunction.go
   - internal/provider/types/salesforce_permission_set.go
   - internal/provider/types/salesforce_profile.go
   - internal/provider/types/session.go
@@ -294,6 +307,7 @@ generatedFiles:
   - internal/provider/types/sub_event.go
   - internal/provider/types/tag.go
   - internal/provider/types/tag_filter.go
+  - internal/provider/types/tag_selector.go
   - internal/provider/types/ticket_propagation_configuration.go
   - internal/provider/types/uar.go
   - internal/provider/types/uar_scope.go
@@ -311,6 +325,7 @@ generatedFiles:
   - internal/provider/usertags_data_source_sdk.go
   - internal/provider/utils.go
   - internal/sdk/.gitattributes
+  - internal/sdk/accessrules.go
   - internal/sdk/apps.go
   - internal/sdk/bundles.go
   - internal/sdk/configurationtemplates.go
@@ -337,6 +352,7 @@ generatedFiles:
   - internal/sdk/models/operations/addbundleresource.go
   - internal/sdk/models/operations/addgroupcontaininggroup.go
   - internal/sdk/models/operations/addresourcenhi.go
+  - internal/sdk/models/operations/createaccessrule.go
   - internal/sdk/models/operations/createbundle.go
   - internal/sdk/models/operations/createconfigurationtemplate.go
   - internal/sdk/models/operations/creategroup.go
@@ -366,6 +382,7 @@ generatedFiles:
   - internal/sdk/models/operations/deleteresourcetag.go
   - internal/sdk/models/operations/deletetagbyid.go
   - internal/sdk/models/operations/deleteusertag.go
+  - internal/sdk/models/operations/getaccessrule.go
   - internal/sdk/models/operations/getappid.go
   - internal/sdk/models/operations/getapps.go
   - internal/sdk/models/operations/getbundle.go
@@ -420,6 +437,7 @@ generatedFiles:
   - internal/sdk/models/operations/removebundleresource.go
   - internal/sdk/models/operations/removegroupcontaininggroup.go
   - internal/sdk/models/operations/setbundlevisibility.go
+  - internal/sdk/models/operations/updateaccessrule.go
   - internal/sdk/models/operations/updatebundle.go
   - internal/sdk/models/operations/updateconfigurationtemplate.go
   - internal/sdk/models/operations/updategroupbindings.go
@@ -438,6 +456,7 @@ generatedFiles:
   - internal/sdk/models/operations/updateresourcevisibility.go
   - internal/sdk/models/shared/access.go
   - internal/sdk/models/shared/accesslist.go
+  - internal/sdk/models/shared/accessrule.go
   - internal/sdk/models/shared/app.go
   - internal/sdk/models/shared/appslist.go
   - internal/sdk/models/shared/apptypeenum.go
@@ -520,6 +539,9 @@ generatedFiles:
   - internal/sdk/models/shared/reviewerstage.go
   - internal/sdk/models/shared/reviewerstagelist.go
   - internal/sdk/models/shared/risksensitivityenum.go
+  - internal/sdk/models/shared/ruleclauses.go
+  - internal/sdk/models/shared/ruleconjunction.go
+  - internal/sdk/models/shared/ruledisjunction.go
   - internal/sdk/models/shared/security.go
   - internal/sdk/models/shared/session.go
   - internal/sdk/models/shared/sessionslist.go
@@ -528,12 +550,14 @@ generatedFiles:
   - internal/sdk/models/shared/syncerrorlist.go
   - internal/sdk/models/shared/tag.go
   - internal/sdk/models/shared/tagfilter.go
+  - internal/sdk/models/shared/tagselector.go
   - internal/sdk/models/shared/tagslist.go
   - internal/sdk/models/shared/ticketingproviderenum.go
   - internal/sdk/models/shared/ticketpropagationconfiguration.go
   - internal/sdk/models/shared/uar.go
   - internal/sdk/models/shared/uarreviewerassignmentpolicyenum.go
   - internal/sdk/models/shared/uarscope.go
+  - internal/sdk/models/shared/updateaccessruleinfo.go
   - internal/sdk/models/shared/updateconfigurationtemplateinfo.go
   - internal/sdk/models/shared/updategroupbindinginfo.go
   - internal/sdk/models/shared/updategroupbindinginfolist.go
@@ -1148,7 +1172,7 @@ examples:
           page_size: 200
       responses:
         "200":
-          application/json: {"cursor": "eyJjcmVhdGVkX2F0IjoiMjAyMS0wMS0wNlQyMDo0NzowMFoiLCJ2YWx1ZSI6ImFkbWluIn0=", "requests": [{"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "status": "pending", "target_group_id": "g86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}]}
+          application/json: {"cursor": "eyJjcmVhdGVkX2F0IjoiMjAyMS0wMS0wNlQyMDo0NzowMFoiLCJ2YWx1ZSI6ImFkbWluIn0=", "requests": [{"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "status": "DENIED", "target_group_id": "g86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}]}
   add_resource_nhi:
     "":
       parameters:
@@ -1424,5 +1448,32 @@ examples:
       responses:
         "200":
           application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"email": "john.doe@company.dev", "first_name": "John", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac", "last_name": "Doe", "full_name": "John Doe", "position": "Senior Engineer"}, {"email": "jane.smith@company.dev", "first_name": "John", "user_id": "e8581682-04f7-473a-a419-472f0fb26d46", "last_name": "Doe", "full_name": "Jane Smith", "position": "Product Marketing Lead"}]}
+  create_access_rule:
+    speakeasy-default-create-access-rule:
+      requestBody:
+        application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This access rule represents all platform engineers in the company.", "name": "Platform Engineering", "ruleClauses": {"when": {"clauses": [{"selectors": [{"connection_id": "1717888b-c1ff-4b21-bbd3-59fb9373fb24", "key": "<key>", "value": "<value>"}, {"connection_id": "4575cbf9-6537-483a-86a0-75715ba04d88", "key": "<key>", "value": "<value>"}, {"connection_id": "c781ed55-b8f6-49cd-bd3f-70ae1f045666", "key": "<key>", "value": "<value>"}]}, {"selectors": [{"connection_id": "a191e1ed-acdd-4469-85e1-5292f5c4e813", "key": "<key>", "value": "<value>"}, {"connection_id": "f52ddec6-6044-4bbd-b1e4-56440cbc479e", "key": "<key>", "value": "<value>"}]}]}}, "status": "ACTIVE"}
+      responses:
+        "200":
+          application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "access_rule_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "name": "api-group", "ruleClauses": {"when": {"clauses": []}}, "status": "ACTIVE"}
+        "201":
+          application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This access rule represents all platform engineers in the company.", "access_rule_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "name": "Platform Engineering", "ruleClauses": {"when": {"clauses": [{"selectors": [{"connection_id": "1717888b-c1ff-4b21-bbd3-59fb9373fb24", "key": "<key>", "value": "<value>"}, {"connection_id": "4575cbf9-6537-483a-86a0-75715ba04d88", "key": "<key>", "value": "<value>"}, {"connection_id": "c781ed55-b8f6-49cd-bd3f-70ae1f045666", "key": "<key>", "value": "<value>"}]}, {"selectors": [{"connection_id": "a191e1ed-acdd-4469-85e1-5292f5c4e813", "key": "<key>", "value": "<value>"}, {"connection_id": "f52ddec6-6044-4bbd-b1e4-56440cbc479e", "key": "<key>", "value": "<value>"}]}]}}, "status": "ACTIVE"}
+  get_access_rule:
+    "":
+      parameters:
+        path:
+          access_rule_id: "1b978423-db0a-4037-a4cf-f79c60cb67b3"
+      responses:
+        "200":
+          application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "access_rule_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "name": "api-group", "ruleClauses": {"when": {"clauses": [{"selectors": []}]}}, "status": "ACTIVE"}
+  update_access_rule:
+    "":
+      parameters:
+        path:
+          access_rule_id: "1b978423-db0a-4037-a4cf-f79c60cb67b3"
+      requestBody:
+        application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "name": "api-group", "ruleClauses": {"when": {"clauses": []}}, "status": "ACTIVE"}
+      responses:
+        "200":
+          application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "access_rule_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "name": "api-group", "ruleClauses": {"when": {"clauses": []}}, "status": "ACTIVE"}
 examplesVersion: 1.0.1
 generatedTests: {}

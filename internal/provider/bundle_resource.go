@@ -189,8 +189,17 @@ func (r *BundleResource) Create(ctx context.Context, req resource.CreateRequest,
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedBundle(res.Bundle)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedBundle(ctx, res.Bundle)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	visibilityInfo := *data.ToSharedVisibilityInfo()
 	var bundleID string
 	bundleID = data.BundleID.ValueString()
@@ -215,7 +224,12 @@ func (r *BundleResource) Create(ctx context.Context, req resource.CreateRequest,
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -269,7 +283,11 @@ func (r *BundleResource) Read(ctx context.Context, req resource.ReadRequest, res
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedBundle(res.Bundle)
+	resp.Diagnostics.Append(data.RefreshFromSharedBundle(ctx, res.Bundle)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var bundleId1 string
 	bundleId1 = data.BundleID.ValueString()
 
@@ -300,7 +318,11 @@ func (r *BundleResource) Read(ctx context.Context, req resource.ReadRequest, res
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedVisibilityInfo(res1.VisibilityInfo)
+	resp.Diagnostics.Append(data.RefreshFromSharedVisibilityInfo(ctx, res1.VisibilityInfo)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -351,8 +373,17 @@ func (r *BundleResource) Update(ctx context.Context, req resource.UpdateRequest,
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedBundle(res.Bundle)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedBundle(ctx, res.Bundle)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	visibilityInfo := *data.ToSharedVisibilityInfo()
 	var bundleId1 string
 	bundleId1 = data.BundleID.ValueString()
@@ -377,7 +408,12 @@ func (r *BundleResource) Update(ctx context.Context, req resource.UpdateRequest,
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

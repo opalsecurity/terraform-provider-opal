@@ -1351,8 +1351,17 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedResource(res.Resource)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedResource(ctx, res.Resource)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	singleton := *data.ToSharedUpdateResourceInfo()
 	resources := []shared.UpdateResourceInfo{singleton}
 	request1 := shared.UpdateResourceInfoList{
@@ -1378,8 +1387,17 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromSharedUpdateResourceInfo(&res1.UpdateResourceInfoList.Resources[0])
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedUpdateResourceInfo(ctx, &res1.UpdateResourceInfoList.Resources[0])...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	visibilityInfo := *data.ToSharedVisibilityInfo()
 	var id string
 	id = data.ID.ValueString()
@@ -1404,7 +1422,12 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
 		return
 	}
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var id1 string
 	id1 = data.ID.ValueString()
 
@@ -1431,8 +1454,17 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res3.RawResponse))
 		return
 	}
-	data.RefreshFromSharedResource(res3.Resource)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedResource(ctx, res3.Resource)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -1486,7 +1518,11 @@ func (r *ResourceResource) Read(ctx context.Context, req resource.ReadRequest, r
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedResource(res.Resource)
+	resp.Diagnostics.Append(data.RefreshFromSharedResource(ctx, res.Resource)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -1531,8 +1567,17 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedUpdateResourceInfo(&res.UpdateResourceInfoList.Resources[0])
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedUpdateResourceInfo(ctx, &res.UpdateResourceInfoList.Resources[0])...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	visibilityInfo := *data.ToSharedVisibilityInfo()
 	var id string
 	id = data.ID.ValueString()
@@ -1557,7 +1602,12 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var id1 string
 	id1 = data.ID.ValueString()
 
@@ -1584,8 +1634,17 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res2.RawResponse))
 		return
 	}
-	data.RefreshFromSharedResource(res2.Resource)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedResource(ctx, res2.Resource)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

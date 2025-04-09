@@ -24,7 +24,7 @@ terraform_overlay.yaml: check-speakeasy
 	speakeasy overlay compare -b ./openapi_original.yaml -a ./openapi.yaml > ./terraform_overlay.yaml
 
 openapi.yaml: check-speakeasy
-	speakeasy overlay apply -b ./openapi_original.yaml -a ./terraform_overlay.yaml > ./openapi.yaml
+	speakeasy overlay apply -s ./openapi_original.yaml -o ./terraform_overlay.yaml > ./openapi.yaml
 
 check-speakeasy:
 	@command -v speakeasy >/dev/null 2>&1 || { echo >&2 "speakeasy CLI is not installed. Please install before continuing."; exit 1; }

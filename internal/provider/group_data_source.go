@@ -434,7 +434,11 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedGroup(res.Group)
+	resp.Diagnostics.Append(data.RefreshFromSharedGroup(ctx, res.Group)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var id1 string
 	id1 = data.ID.ValueString()
 
@@ -465,7 +469,11 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	data.RefreshFromOperationsGetGroupMessageChannelsResponseBody(res1.Object)
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupMessageChannelsResponseBody(ctx, res1.Object)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 	var id2 string
 	id2 = data.ID.ValueString()
 
@@ -522,7 +530,11 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res3.RawResponse))
 		return
 	}
-	data.RefreshFromOperationsGetGroupVisibilityResponseBody(res3.Object)
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupVisibilityResponseBody(ctx, res3.Object)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

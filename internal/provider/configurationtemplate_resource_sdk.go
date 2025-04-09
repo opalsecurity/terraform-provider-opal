@@ -3,6 +3,8 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
@@ -185,7 +187,9 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 	return &out
 }
 
-func (r *ConfigurationTemplateResourceModel) RefreshFromSharedConfigurationTemplate(resp *shared.ConfigurationTemplate) {
+func (r *ConfigurationTemplateResourceModel) RefreshFromSharedConfigurationTemplate(ctx context.Context, resp *shared.ConfigurationTemplate) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 		r.BreakGlassUserIds = make([]types.String, 0, len(resp.BreakGlassUserIds))
@@ -227,6 +231,8 @@ func (r *ConfigurationTemplateResourceModel) RefreshFromSharedConfigurationTempl
 			}
 		}
 	}
+
+	return diags
 }
 
 func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplateInfo() *shared.UpdateConfigurationTemplateInfo {

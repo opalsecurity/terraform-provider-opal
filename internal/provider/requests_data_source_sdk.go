@@ -3,13 +3,17 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
-	"time"
 )
 
-func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(resp *shared.RequestList) {
+func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(ctx context.Context, resp *shared.RequestList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.Cursor = types.StringPointerValue(resp.Cursor)
 		r.Requests = []tfTypes.Request{}
@@ -17,68 +21,70 @@ func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(resp *shared.Requ
 			r.Requests = r.Requests[:len(resp.Requests)]
 		}
 		for requestsCount, requestsItem := range resp.Requests {
-			var requests1 tfTypes.Request
-			requests1.CreatedAt = types.StringValue(requestsItem.CreatedAt.Format(time.RFC3339Nano))
-			requests1.CustomFieldsResponses = []tfTypes.RequestCustomFieldResponse{}
+			var requests tfTypes.Request
+			requests.CreatedAt = types.StringValue(typeconvert.TimeToString(requestsItem.CreatedAt))
+			requests.CustomFieldsResponses = []tfTypes.RequestCustomFieldResponse{}
 			for customFieldsResponsesCount, customFieldsResponsesItem := range requestsItem.CustomFieldsResponses {
-				var customFieldsResponses1 tfTypes.RequestCustomFieldResponse
-				customFieldsResponses1.FieldName = types.StringValue(customFieldsResponsesItem.FieldName)
-				customFieldsResponses1.FieldType = types.StringValue(string(customFieldsResponsesItem.FieldType))
+				var customFieldsResponses tfTypes.RequestCustomFieldResponse
+				customFieldsResponses.FieldName = types.StringValue(customFieldsResponsesItem.FieldName)
+				customFieldsResponses.FieldType = types.StringValue(string(customFieldsResponsesItem.FieldType))
 				if customFieldsResponsesItem.FieldValue.Str != nil {
-					customFieldsResponses1.FieldValue.Str = types.StringPointerValue(customFieldsResponsesItem.FieldValue.Str)
+					customFieldsResponses.FieldValue.Str = types.StringPointerValue(customFieldsResponsesItem.FieldValue.Str)
 				}
 				if customFieldsResponsesItem.FieldValue.Boolean != nil {
-					customFieldsResponses1.FieldValue.Boolean = types.BoolPointerValue(customFieldsResponsesItem.FieldValue.Boolean)
+					customFieldsResponses.FieldValue.Boolean = types.BoolPointerValue(customFieldsResponsesItem.FieldValue.Boolean)
 				}
-				if customFieldsResponsesCount+1 > len(requests1.CustomFieldsResponses) {
-					requests1.CustomFieldsResponses = append(requests1.CustomFieldsResponses, customFieldsResponses1)
+				if customFieldsResponsesCount+1 > len(requests.CustomFieldsResponses) {
+					requests.CustomFieldsResponses = append(requests.CustomFieldsResponses, customFieldsResponses)
 				} else {
-					requests1.CustomFieldsResponses[customFieldsResponsesCount].FieldName = customFieldsResponses1.FieldName
-					requests1.CustomFieldsResponses[customFieldsResponsesCount].FieldType = customFieldsResponses1.FieldType
-					requests1.CustomFieldsResponses[customFieldsResponsesCount].FieldValue = customFieldsResponses1.FieldValue
+					requests.CustomFieldsResponses[customFieldsResponsesCount].FieldName = customFieldsResponses.FieldName
+					requests.CustomFieldsResponses[customFieldsResponsesCount].FieldType = customFieldsResponses.FieldType
+					requests.CustomFieldsResponses[customFieldsResponsesCount].FieldValue = customFieldsResponses.FieldValue
 				}
 			}
-			requests1.DurationMinutes = types.Int64PointerValue(requestsItem.DurationMinutes)
-			requests1.ID = types.StringValue(requestsItem.ID)
-			requests1.Reason = types.StringValue(requestsItem.Reason)
-			requests1.RequestedItemsList = []tfTypes.RequestedItem{}
+			requests.DurationMinutes = types.Int64PointerValue(requestsItem.DurationMinutes)
+			requests.ID = types.StringValue(requestsItem.ID)
+			requests.Reason = types.StringValue(requestsItem.Reason)
+			requests.RequestedItemsList = []tfTypes.RequestedItem{}
 			for requestedItemsListCount, requestedItemsListItem := range requestsItem.RequestedItemsList {
-				var requestedItemsList1 tfTypes.RequestedItem
-				requestedItemsList1.AccessLevelName = types.StringPointerValue(requestedItemsListItem.AccessLevelName)
-				requestedItemsList1.AccessLevelRemoteID = types.StringPointerValue(requestedItemsListItem.AccessLevelRemoteID)
-				requestedItemsList1.GroupID = types.StringPointerValue(requestedItemsListItem.GroupID)
-				requestedItemsList1.Name = types.StringPointerValue(requestedItemsListItem.Name)
-				requestedItemsList1.ResourceID = types.StringPointerValue(requestedItemsListItem.ResourceID)
-				if requestedItemsListCount+1 > len(requests1.RequestedItemsList) {
-					requests1.RequestedItemsList = append(requests1.RequestedItemsList, requestedItemsList1)
+				var requestedItemsList tfTypes.RequestedItem
+				requestedItemsList.AccessLevelName = types.StringPointerValue(requestedItemsListItem.AccessLevelName)
+				requestedItemsList.AccessLevelRemoteID = types.StringPointerValue(requestedItemsListItem.AccessLevelRemoteID)
+				requestedItemsList.GroupID = types.StringPointerValue(requestedItemsListItem.GroupID)
+				requestedItemsList.Name = types.StringPointerValue(requestedItemsListItem.Name)
+				requestedItemsList.ResourceID = types.StringPointerValue(requestedItemsListItem.ResourceID)
+				if requestedItemsListCount+1 > len(requests.RequestedItemsList) {
+					requests.RequestedItemsList = append(requests.RequestedItemsList, requestedItemsList)
 				} else {
-					requests1.RequestedItemsList[requestedItemsListCount].AccessLevelName = requestedItemsList1.AccessLevelName
-					requests1.RequestedItemsList[requestedItemsListCount].AccessLevelRemoteID = requestedItemsList1.AccessLevelRemoteID
-					requests1.RequestedItemsList[requestedItemsListCount].GroupID = requestedItemsList1.GroupID
-					requests1.RequestedItemsList[requestedItemsListCount].Name = requestedItemsList1.Name
-					requests1.RequestedItemsList[requestedItemsListCount].ResourceID = requestedItemsList1.ResourceID
+					requests.RequestedItemsList[requestedItemsListCount].AccessLevelName = requestedItemsList.AccessLevelName
+					requests.RequestedItemsList[requestedItemsListCount].AccessLevelRemoteID = requestedItemsList.AccessLevelRemoteID
+					requests.RequestedItemsList[requestedItemsListCount].GroupID = requestedItemsList.GroupID
+					requests.RequestedItemsList[requestedItemsListCount].Name = requestedItemsList.Name
+					requests.RequestedItemsList[requestedItemsListCount].ResourceID = requestedItemsList.ResourceID
 				}
 			}
-			requests1.RequesterID = types.StringValue(requestsItem.RequesterID)
-			requests1.Status = types.StringValue(string(requestsItem.Status))
-			requests1.TargetGroupID = types.StringPointerValue(requestsItem.TargetGroupID)
-			requests1.TargetUserID = types.StringPointerValue(requestsItem.TargetUserID)
-			requests1.UpdatedAt = types.StringValue(requestsItem.UpdatedAt.Format(time.RFC3339Nano))
+			requests.RequesterID = types.StringValue(requestsItem.RequesterID)
+			requests.Status = types.StringValue(string(requestsItem.Status))
+			requests.TargetGroupID = types.StringPointerValue(requestsItem.TargetGroupID)
+			requests.TargetUserID = types.StringPointerValue(requestsItem.TargetUserID)
+			requests.UpdatedAt = types.StringValue(typeconvert.TimeToString(requestsItem.UpdatedAt))
 			if requestsCount+1 > len(r.Requests) {
-				r.Requests = append(r.Requests, requests1)
+				r.Requests = append(r.Requests, requests)
 			} else {
-				r.Requests[requestsCount].CreatedAt = requests1.CreatedAt
-				r.Requests[requestsCount].CustomFieldsResponses = requests1.CustomFieldsResponses
-				r.Requests[requestsCount].DurationMinutes = requests1.DurationMinutes
-				r.Requests[requestsCount].ID = requests1.ID
-				r.Requests[requestsCount].Reason = requests1.Reason
-				r.Requests[requestsCount].RequestedItemsList = requests1.RequestedItemsList
-				r.Requests[requestsCount].RequesterID = requests1.RequesterID
-				r.Requests[requestsCount].Status = requests1.Status
-				r.Requests[requestsCount].TargetGroupID = requests1.TargetGroupID
-				r.Requests[requestsCount].TargetUserID = requests1.TargetUserID
-				r.Requests[requestsCount].UpdatedAt = requests1.UpdatedAt
+				r.Requests[requestsCount].CreatedAt = requests.CreatedAt
+				r.Requests[requestsCount].CustomFieldsResponses = requests.CustomFieldsResponses
+				r.Requests[requestsCount].DurationMinutes = requests.DurationMinutes
+				r.Requests[requestsCount].ID = requests.ID
+				r.Requests[requestsCount].Reason = requests.Reason
+				r.Requests[requestsCount].RequestedItemsList = requests.RequestedItemsList
+				r.Requests[requestsCount].RequesterID = requests.RequesterID
+				r.Requests[requestsCount].Status = requests.Status
+				r.Requests[requestsCount].TargetGroupID = requests.TargetGroupID
+				r.Requests[requestsCount].TargetUserID = requests.TargetUserID
+				r.Requests[requestsCount].UpdatedAt = requests.UpdatedAt
 			}
 		}
 	}
+
+	return diags
 }

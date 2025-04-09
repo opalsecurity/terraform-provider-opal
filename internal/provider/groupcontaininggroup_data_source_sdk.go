@@ -3,12 +3,18 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *GroupContainingGroupDataSourceModel) RefreshFromSharedGroupContainingGroup(resp *shared.GroupContainingGroup) {
+func (r *GroupContainingGroupDataSourceModel) RefreshFromSharedGroupContainingGroup(ctx context.Context, resp *shared.GroupContainingGroup) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.ContainingGroupID = types.StringValue(resp.ContainingGroupID)
 	}
+
+	return diags
 }
