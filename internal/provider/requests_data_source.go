@@ -30,9 +30,11 @@ type RequestsDataSource struct {
 // RequestsDataSourceModel describes the data model.
 type RequestsDataSourceModel struct {
 	Cursor          types.String      `queryParam:"style=form,explode=true,name=cursor" tfsdk:"cursor"`
+	EndDateFilter   types.String      `queryParam:"style=form,explode=true,name=end_date_filter" tfsdk:"end_date_filter"`
 	PageSize        types.Int64       `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
 	Requests        []tfTypes.Request `tfsdk:"requests"`
 	ShowPendingOnly types.Bool        `queryParam:"style=form,explode=true,name=show_pending_only" tfsdk:"show_pending_only"`
+	StartDateFilter types.String      `queryParam:"style=form,explode=true,name=start_date_filter" tfsdk:"start_date_filter"`
 }
 
 // Metadata returns the data source type name.
@@ -50,6 +52,10 @@ func (r *RequestsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Computed:    true,
 				Optional:    true,
 				Description: `The pagination cursor value.`,
+			},
+			"end_date_filter": schema.StringAttribute{
+				Optional:    true,
+				Description: `An end date filter for the events.`,
 			},
 			"page_size": schema.Int64Attribute{
 				Optional:    true,
@@ -162,6 +168,10 @@ func (r *RequestsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Optional:    true,
 				Description: `Boolean toggle for if it should only show pending requests.`,
 			},
+			"start_date_filter": schema.StringAttribute{
+				Optional:    true,
+				Description: `A start date filter for the events.`,
+			},
 		},
 	}
 }
@@ -210,6 +220,12 @@ func (r *RequestsDataSource) Read(ctx context.Context, req datasource.ReadReques
 	} else {
 		cursor = nil
 	}
+	endDateFilter := new(string)
+	if !data.EndDateFilter.IsUnknown() && !data.EndDateFilter.IsNull() {
+		*endDateFilter = data.EndDateFilter.ValueString()
+	} else {
+		endDateFilter = nil
+	}
 	pageSize := new(int64)
 	if !data.PageSize.IsUnknown() && !data.PageSize.IsNull() {
 		*pageSize = data.PageSize.ValueInt64()
@@ -222,10 +238,18 @@ func (r *RequestsDataSource) Read(ctx context.Context, req datasource.ReadReques
 	} else {
 		showPendingOnly = nil
 	}
+	startDateFilter := new(string)
+	if !data.StartDateFilter.IsUnknown() && !data.StartDateFilter.IsNull() {
+		*startDateFilter = data.StartDateFilter.ValueString()
+	} else {
+		startDateFilter = nil
+	}
 	request := operations.GetRequestsRequest{
 		Cursor:          cursor,
+		EndDateFilter:   endDateFilter,
 		PageSize:        pageSize,
 		ShowPendingOnly: showPendingOnly,
+		StartDateFilter: startDateFilter,
 	}
 	res, err := r.client.Requests.Get(ctx, request)
 	if err != nil {

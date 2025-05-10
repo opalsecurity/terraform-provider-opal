@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: bc0d11f15b0ad0f29084727ee92a4ae3
+  docChecksum: 80b8ec8d027a28f189fad834ff70b467
   docVersion: "1.0"
   speakeasyVersion: 1.531.1
   generationVersion: 2.568.5
-  releaseVersion: 0.34.3
-  configChecksum: aef2ba92c80d1d8ad4a5175554b0717a
+  releaseVersion: 0.36.0
+  configChecksum: 0a4e06e0bddf2eec7daa8298dde42393
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -722,6 +722,8 @@ examples:
         path:
           bundle_id: "32acc112-21ff-4669-91c2-21e27683eaa1"
           group_id: "72e75a6f-7183-48c5-94ff-6013f213314b"
+        query:
+          access_level_remote_id: "arn:aws:iam::590304332660:role/AdministratorAccess"
   removeBundleResource:
     "":
       parameters:
@@ -789,8 +791,8 @@ examples:
     withDatetime:
       parameters:
         query:
-          start_date_filter: "2021-11-01T12:00:00Z"
-          end_date_filter: "2021-11-12T12:00:00Z"
+          start_date_filter: "2025-01-01T00:00:00Z"
+          end_date_filter: "2025-01-01T00:00:00Z"
           actor_filter: "29827fb8-f2dd-4e80-9576-28e31e9934ac"
           object_filter: "29827fb8-f2dd-4e80-9576-28e31e9934ac"
           event_type_filter: "USER_MFA_RESET"
@@ -1168,6 +1170,26 @@ examples:
     "":
       parameters:
         query:
+          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+          page_size: 200
+      responses:
+        "200":
+          application/json: {"cursor": "eyJjcmVhdGVkX2F0IjoiMjAyMS0wMS0wNlQyMDo0NzowMFoiLCJ2YWx1ZSI6ImFkbWluIn0=", "requests": [{"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "status": "DENIED", "target_group_id": "g86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}]}
+    withDate:
+      parameters:
+        query:
+          start_date_filter: "2021-11-01T00:00:00Z"
+          end_date_filter: "2021-11-12T00:00:00Z"
+          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+          page_size: 200
+      responses:
+        "200":
+          application/json: {"cursor": "eyJjcmVhdGVkX2F0IjoiMjAyMS0wMS0wNlQyMDo0NzowMFoiLCJ2YWx1ZSI6ImFkbWluIn0=", "requests": [{"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "status": "DENIED", "target_group_id": "g86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}]}
+    withDatetime:
+      parameters:
+        query:
+          start_date_filter: "2025-01-01T00:00:00Z"
+          end_date_filter: "2025-01-01T00:00:00Z"
           cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
           page_size: 200
       responses:

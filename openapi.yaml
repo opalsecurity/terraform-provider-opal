@@ -427,6 +427,14 @@ paths:
                   example: 72e75a6f-7183-48c5-94ff-6013f213314b
                   format: uuid
                   type: string
+                access_level_remote_id:
+                  description: The remote ID of the access level to grant to this user. Required if the group being added requires an access level. If omitted, the default access level remote ID value (empty string) is used.
+                  example: arn:aws:iam::590304332660:role/AdministratorAccess
+                  type: string
+                access_level_name:
+                  description: The name of the access level to grant to this user. If omitted, the default access level name value (empty string) is used.
+                  example: AdministratorAccess
+                  type: string
               required:
                 - group_id
       responses:
@@ -462,6 +470,15 @@ paths:
           schema:
             format: uuid
             type: string
+        - description: The remote ID of the access level to remove.
+          example: arn:aws:iam::590304332660:role/AdministratorAccess
+          explode: true
+          in: query
+          name: access_level_remote_id
+          required: false
+          schema:
+            type: string
+          style: form
       responses:
         "200":
           description: Group was successfully removed from the bundle.
@@ -626,8 +643,8 @@ paths:
               summary: Example with date
               value: 2021-11-01
             withDatetime:
-              summary: Example with date and time
-              value: 2021-11-01 12:00:00
+              summary: Example with date and time in ISO 8601 datetime format.
+              value: 2025-01-01T00:00:00Z
           explode: true
           in: query
           name: start_date_filter
@@ -641,8 +658,8 @@ paths:
               summary: Example with date
               value: 2021-11-12
             withDatetime:
-              summary: Example with date and time
-              value: 2021-11-12 12:00:00
+              summary: Example with date and time in ISO 8601 datetime format.
+              value: 2025-01-01T00:00:00Z
           explode: true
           in: query
           name: end_date_filter
@@ -2083,6 +2100,36 @@ paths:
       description: Returns a list of requests for your organization that is visible by the admin.
       operationId: getRequests
       parameters:
+        - description: A start date filter for the events.
+          examples:
+            withDate:
+              summary: Example with date
+              value: 2021-11-01
+            withDatetime:
+              summary: Example with date and time in ISO 8601 datetime format.
+              value: 2025-01-01T00:00:00Z
+          explode: true
+          in: query
+          name: start_date_filter
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: An end date filter for the events.
+          examples:
+            withDate:
+              summary: Example with date
+              value: 2021-11-12
+            withDatetime:
+              summary: Example with date and time in ISO 8601 datetime format.
+              value: 2025-01-01T00:00:00Z
+          explode: true
+          in: query
+          name: end_date_filter
+          required: false
+          schema:
+            type: string
+          style: form
         - description: The pagination cursor value.
           example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
           explode: true
@@ -2822,6 +2869,7 @@ paths:
         - resources
   /resource-user-access-status/{resource_id}/{user_id}:
     get:
+      deprecated: true
       description: Get user's access status to a resource.
       operationId: getResourceUserAccessStatus
       parameters:
@@ -5499,6 +5547,7 @@ components:
         - GCP_BIG_QUERY_TABLE
         - GCP_SERVICE_ACCOUNT
         - GIT_HUB_REPO
+        - GIT_HUB_ORG_ROLE
         - GIT_LAB_PROJECT
         - GOOGLE_WORKSPACE_ROLE
         - MONGO_INSTANCE
@@ -9133,6 +9182,14 @@ components:
           format: uuid
           type: string
           readOnly: true
+        access_level_name:
+          description: The access level of the group within a bundle.
+          example: Read
+          type: string
+        access_level_remote_id:
+          description: The remote ID of the access level of the group within a bundle.
+          example: arn:aws:iam::490306337630:role/SupportUser
+          type: string
     PaginatedBundleGroupList:
       example:
         next: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
