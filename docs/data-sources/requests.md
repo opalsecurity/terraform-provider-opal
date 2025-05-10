@@ -15,8 +15,10 @@ Requests DataSource
 ```terraform
 data "opal_requests" "my_requests" {
   cursor            = "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+  end_date_filter   = "...my_end_date_filter..."
   page_size         = 200
   show_pending_only = false
+  start_date_filter = "...my_start_date_filter..."
 }
 ```
 
@@ -26,8 +28,10 @@ data "opal_requests" "my_requests" {
 ### Optional
 
 - `cursor` (String) The pagination cursor value.
+- `end_date_filter` (String) An end date filter for the events.
 - `page_size` (Number) Number of results to return per page. Default is 200.
 - `show_pending_only` (Boolean) Boolean toggle for if it should only show pending requests.
+- `start_date_filter` (String) A start date filter for the events.
 
 ### Read-Only
 

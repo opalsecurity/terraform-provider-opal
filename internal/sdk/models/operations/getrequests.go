@@ -10,10 +10,14 @@ import (
 type GetRequestsRequest struct {
 	// The pagination cursor value.
 	Cursor *string `queryParam:"style=form,explode=true,name=cursor"`
+	// An end date filter for the events.
+	EndDateFilter *string `queryParam:"style=form,explode=true,name=end_date_filter"`
 	// Number of results to return per page. Default is 200.
 	PageSize *int64 `queryParam:"style=form,explode=true,name=page_size"`
 	// Boolean toggle for if it should only show pending requests.
 	ShowPendingOnly *bool `queryParam:"style=form,explode=true,name=show_pending_only"`
+	// A start date filter for the events.
+	StartDateFilter *string `queryParam:"style=form,explode=true,name=start_date_filter"`
 }
 
 func (o *GetRequestsRequest) GetCursor() *string {
@@ -21,6 +25,13 @@ func (o *GetRequestsRequest) GetCursor() *string {
 		return nil
 	}
 	return o.Cursor
+}
+
+func (o *GetRequestsRequest) GetEndDateFilter() *string {
+	if o == nil {
+		return nil
+	}
+	return o.EndDateFilter
 }
 
 func (o *GetRequestsRequest) GetPageSize() *int64 {
@@ -35,6 +46,13 @@ func (o *GetRequestsRequest) GetShowPendingOnly() *bool {
 		return nil
 	}
 	return o.ShowPendingOnly
+}
+
+func (o *GetRequestsRequest) GetStartDateFilter() *string {
+	if o == nil {
+		return nil
+	}
+	return o.StartDateFilter
 }
 
 type GetRequestsResponse struct {
