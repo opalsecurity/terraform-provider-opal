@@ -28,6 +28,8 @@ type Request struct {
 	RequestedItemsList []RequestedItem `json:"requested_items_list,omitempty"`
 	// The unique identifier of the user who created the request.
 	RequesterID string `json:"requester_id"`
+	// The stages configuration for a request item
+	Stages *RequestItemStages `json:"stages,omitempty"`
 	// # Request Status
 	// ### Description
 	// The `RequestStatus` enum is used to represent the status of a request.
@@ -101,6 +103,13 @@ func (o *Request) GetRequesterID() string {
 		return ""
 	}
 	return o.RequesterID
+}
+
+func (o *Request) GetStages() *RequestItemStages {
+	if o == nil {
+		return nil
+	}
+	return o.Stages
 }
 
 func (o *Request) GetStatus() RequestStatusEnum {
