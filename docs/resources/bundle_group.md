@@ -14,8 +14,10 @@ BundleGroup Resource
 
 ```terraform
 resource "opal_bundle_group" "my_bundlegroup" {
-  bundle_id = "32acc112-21ff-4669-91c2-21e27683eaa1"
-  group_id  = "72e75a6f-7183-48c5-94ff-6013f213314b"
+  access_level_name      = "AdministratorAccess"
+  access_level_remote_id = "arn:aws:iam::590304332660:role/AdministratorAccess"
+  bundle_id              = "32acc112-21ff-4669-91c2-21e27683eaa1"
+  group_id               = "72e75a6f-7183-48c5-94ff-6013f213314b"
 }
 ```
 
@@ -26,3 +28,8 @@ resource "opal_bundle_group" "my_bundlegroup" {
 
 - `bundle_id` (String) The ID of the bundle. Requires replacement if changed.
 - `group_id` (String) The ID of the group to add. Requires replacement if changed.
+
+### Optional
+
+- `access_level_name` (String) The name of the access level to grant to this user. If omitted, the default access level name value (empty string) is used. Requires replacement if changed.
+- `access_level_remote_id` (String) The remote ID of the access level to grant to this user. Required if the group being added requires an access level. If omitted, the default access level remote ID value (empty string) is used. Requires replacement if changed.

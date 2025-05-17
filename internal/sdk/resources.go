@@ -981,6 +981,8 @@ func (s *Resources) Get(ctx context.Context, request operations.GetResourcesRequ
 }
 
 // GetAccessStatus - Get user's access status to a resource.
+//
+// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
 func (s *Resources) GetAccessStatus(ctx context.Context, request operations.GetResourceUserAccessStatusRequest, opts ...operations.Option) (*operations.GetResourceUserAccessStatusResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{

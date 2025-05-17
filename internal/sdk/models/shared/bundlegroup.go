@@ -3,10 +3,28 @@
 package shared
 
 type BundleGroup struct {
+	// The access level of the group within a bundle.
+	AccessLevelName *string `json:"access_level_name,omitempty"`
+	// The remote ID of the access level of the group within a bundle.
+	AccessLevelRemoteID *string `json:"access_level_remote_id,omitempty"`
 	// The ID of the bundle containing the group.
 	BundleID *string `json:"bundle_id,omitempty"`
 	// The ID of the group within a bundle.
 	GroupID *string `json:"group_id,omitempty"`
+}
+
+func (o *BundleGroup) GetAccessLevelName() *string {
+	if o == nil {
+		return nil
+	}
+	return o.AccessLevelName
+}
+
+func (o *BundleGroup) GetAccessLevelRemoteID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.AccessLevelRemoteID
 }
 
 func (o *BundleGroup) GetBundleID() *string {
