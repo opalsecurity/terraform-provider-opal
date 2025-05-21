@@ -15,8 +15,10 @@ Requests DataSource
 ```terraform
 data "opal_requests" "my_requests" {
   cursor            = "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+  end_date_filter   = "...my_end_date_filter..."
   page_size         = 200
   show_pending_only = false
+  start_date_filter = "...my_start_date_filter..."
 }
 ```
 
@@ -26,8 +28,10 @@ data "opal_requests" "my_requests" {
 ### Optional
 
 - `cursor` (String) The pagination cursor value.
+- `end_date_filter` (String) An end date filter for the events.
 - `page_size` (Number) Number of results to return per page. Default is 200.
 - `show_pending_only` (Boolean) Boolean toggle for if it should only show pending requests.
+- `start_date_filter` (String) A start date filter for the events.
 
 ### Read-Only
 
@@ -45,6 +49,7 @@ Read-Only:
 - `reason` (String) The reason for the request.
 - `requested_items_list` (Attributes List) The list of targets for the request. (see [below for nested schema](#nestedatt--requests--requested_items_list))
 - `requester_id` (String) The unique identifier of the user who created the request.
+- `stages` (Attributes) The stages configuration for a request item (see [below for nested schema](#nestedatt--requests--stages))
 - `status` (String) # Request Status
 ### Description
 The `RequestStatus` enum is used to represent the status of a request.
@@ -84,3 +89,30 @@ Read-Only:
 - `group_id` (String) The ID of the group requested.
 - `name` (String) The name of the target.
 - `resource_id` (String) The ID of the resource requested.
+
+
+<a id="nestedatt--requests--stages"></a>
+### Nested Schema for `requests.stages`
+
+Read-Only:
+
+- `requested_item_name` (String) The name of the requested item
+- `requested_role_name` (String) The name of the requested role
+- `stages` (Attributes List) The stages of review for this request (see [below for nested schema](#nestedatt--requests--stages--stages))
+
+<a id="nestedatt--requests--stages--stages"></a>
+### Nested Schema for `requests.stages.stages`
+
+Read-Only:
+
+- `operator` (String) The operator to apply to reviewers in a stage
+- `reviewers` (Attributes List) The reviewers for this stage (see [below for nested schema](#nestedatt--requests--stages--stages--reviewers))
+- `stage` (Number) The stage number
+
+<a id="nestedatt--requests--stages--stages--reviewers"></a>
+### Nested Schema for `requests.stages.stages.reviewers`
+
+Read-Only:
+
+- `id` (String) The unique identifier of the reviewer
+- `status` (String) The status of this reviewer's review

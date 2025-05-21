@@ -11,11 +11,25 @@ import (
 )
 
 func (r *BundleGroupResourceModel) ToOperationsAddBundleGroupRequestBody() *operations.AddBundleGroupRequestBody {
+	accessLevelName := new(string)
+	if !r.AccessLevelName.IsUnknown() && !r.AccessLevelName.IsNull() {
+		*accessLevelName = r.AccessLevelName.ValueString()
+	} else {
+		accessLevelName = nil
+	}
+	accessLevelRemoteID := new(string)
+	if !r.AccessLevelRemoteID.IsUnknown() && !r.AccessLevelRemoteID.IsNull() {
+		*accessLevelRemoteID = r.AccessLevelRemoteID.ValueString()
+	} else {
+		accessLevelRemoteID = nil
+	}
 	var groupID string
 	groupID = r.GroupID.ValueString()
 
 	out := operations.AddBundleGroupRequestBody{
-		GroupID: groupID,
+		AccessLevelName:     accessLevelName,
+		AccessLevelRemoteID: accessLevelRemoteID,
+		GroupID:             groupID,
 	}
 	return &out
 }
@@ -24,6 +38,8 @@ func (r *BundleGroupResourceModel) RefreshFromSharedBundleGroup(ctx context.Cont
 	var diags diag.Diagnostics
 
 	if resp != nil {
+		r.AccessLevelName = types.StringPointerValue(resp.AccessLevelName)
+		r.AccessLevelRemoteID = types.StringPointerValue(resp.AccessLevelRemoteID)
 		r.BundleID = types.StringPointerValue(resp.BundleID)
 		r.GroupID = types.StringPointerValue(resp.GroupID)
 	}
