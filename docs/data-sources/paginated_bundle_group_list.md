@@ -44,5 +44,7 @@ data "opal_paginated_bundle_group_list" "my_paginatedbundlegrouplist" {
 
 Read-Only:
 
+- `access_level_name` (String) The access level of the group within a bundle.
+- `access_level_remote_id` (String) The remote ID of the access level of the group within a bundle.
 - `bundle_id` (String) The ID of the bundle containing the group.
 - `group_id` (String) The ID of the group within a bundle.
