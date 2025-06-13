@@ -19,6 +19,8 @@ func init() {
 }
 
 func testAccPreCheck(t *testing.T) {
+	t.Log("OPAL_TEST_BASE_URL:", os.Getenv("OPAL_TEST_BASE_URL"), "length: ", len(os.Getenv("OPAL_TEST_BASE_URL")))
+	t.Log("OPAL_TEST_KNOWN_OPAL_APP_ID:", os.Getenv("OPAL_TEST_KNOWN_OPAL_APP_ID"), len(os.Getenv("OPAL_TEST_KNOWN_OPAL_APP_ID")))
 	if v := os.Getenv("OPAL_TEST_KNOWN_OPAL_APP_ID"); v == "" {
 		t.Fatal("OPAL_TEST_KNOWN_OPAL_APP_ID must be set for acceptance tests. You should get this value from the Opal product connection in the test organization.")
 	}
@@ -62,7 +64,6 @@ func testAccPreCheck(t *testing.T) {
 	if os.Getenv("OPAL_TEST_KNOWN_REQUEST_TEMPLATE_ID") == "" {
 		t.Fatal("OPAL_TEST_KNOWN_REQUEST_TEMPLATE_ID must be set for acceptance tests. You should get this value from a custom app integration in the test organization.")
 	}
-
 	if os.Getenv("OPAL_TEST_BASE_URL") == "" {
 		t.Fatal("OPAL_TEST_BASE_URL must be set for acceptance tests")
 	}
