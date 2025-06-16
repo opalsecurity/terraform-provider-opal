@@ -11,8 +11,21 @@ import (
 var testAccProviderFactories map[string]func() (tfprotov6.ProviderServer, error)
 
 func init() {
-	os.Setenv("OPAL_AUTH_TOKEN", os.Getenv("OPAL_TEST_TOKEN"))
-	os.Setenv("OPAL_BASE_URL", os.Getenv("OPAL_TEST_BASE_URL"))
+	// Validate required environment variables first
+	opalTestToken := os.Getenv("OPAL_TEST_TOKEN")
+	if opalTestToken == "" {
+		panic("OPAL_TEST_TOKEN must be set for acceptance tests")
+	}
+
+	opalTestBaseURL := os.Getenv("OPAL_TEST_BASE_URL")
+	if opalTestBaseURL == "" {
+		panic("OPAL_TEST_BASE_URL must be set for acceptance tests")
+	}
+
+	// Now set the provider environment variables
+	os.Setenv("OPAL_AUTH_TOKEN", opalTestToken)
+	os.Setenv("OPAL_BASE_URL", opalTestBaseURL)
+
 	testAccProviderFactories = map[string]func() (tfprotov6.ProviderServer, error){
 		"opal": providerserver.NewProtocol6WithError(New("test")()),
 	}
