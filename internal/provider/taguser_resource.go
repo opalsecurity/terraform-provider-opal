@@ -7,10 +7,12 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
@@ -30,8 +32,9 @@ type TagUserResource struct {
 
 // TagUserResourceModel describes the resource data model.
 type TagUserResourceModel struct {
-	TagID  types.String `tfsdk:"tag_id"`
-	UserID types.String `tfsdk:"user_id"`
+	RequestBody *tfTypes.CreateUserTagRequestBody `tfsdk:"request_body"`
+	TagID       types.String                      `tfsdk:"tag_id"`
+	UserID      types.String                      `tfsdk:"user_id"`
 }
 
 func (r *TagUserResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -42,6 +45,13 @@ func (r *TagUserResource) Schema(ctx context.Context, req resource.SchemaRequest
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "TagUser Resource",
 		Attributes: map[string]schema.Attribute{
+			"request_body": schema.SingleNestedAttribute{
+				Optional: true,
+				PlanModifiers: []planmodifier.Object{
+					objectplanmodifier.RequiresReplaceIfConfigured(),
+				},
+				Description: `Requires replacement if changed.`,
+			},
 			"tag_id": schema.StringAttribute{
 				Required: true,
 				PlanModifiers: []planmodifier.String{
@@ -98,6 +108,10 @@ func (r *TagUserResource) Create(ctx context.Context, req resource.CreateRequest
 		return
 	}
 
+	var requestBody *operations.CreateUserTagRequestBody
+	if data.RequestBody != nil {
+		requestBody = &operations.CreateUserTagRequestBody{}
+	}
 	var tagID string
 	tagID = data.TagID.ValueString()
 
@@ -105,8 +119,9 @@ func (r *TagUserResource) Create(ctx context.Context, req resource.CreateRequest
 	userID = data.UserID.ValueString()
 
 	request := operations.CreateUserTagRequest{
-		TagID:  tagID,
-		UserID: userID,
+		RequestBody: requestBody,
+		TagID:       tagID,
+		UserID:      userID,
 	}
 	res, err := r.client.Tags.CreateUser(ctx, request)
 	if err != nil {

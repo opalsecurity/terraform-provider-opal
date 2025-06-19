@@ -427,6 +427,14 @@ paths:
                   example: 72e75a6f-7183-48c5-94ff-6013f213314b
                   format: uuid
                   type: string
+                access_level_remote_id:
+                  description: The remote ID of the access level to grant to this user. Required if the group being added requires an access level. If omitted, the default access level remote ID value (empty string) is used.
+                  example: arn:aws:iam::590304332660:role/AdministratorAccess
+                  type: string
+                access_level_name:
+                  description: The name of the access level to grant to this user. If omitted, the default access level name value (empty string) is used.
+                  example: AdministratorAccess
+                  type: string
               required:
                 - group_id
       responses:
@@ -462,6 +470,15 @@ paths:
           schema:
             format: uuid
             type: string
+        - description: The remote ID of the access level to remove.
+          example: arn:aws:iam::590304332660:role/AdministratorAccess
+          explode: true
+          in: query
+          name: access_level_remote_id
+          required: false
+          schema:
+            type: string
+          style: form
       responses:
         "200":
           description: Group was successfully removed from the bundle.
@@ -626,8 +643,8 @@ paths:
               summary: Example with date
               value: 2021-11-01
             withDatetime:
-              summary: Example with date and time
-              value: 2021-11-01 12:00:00
+              summary: Example with date and time in ISO 8601 datetime format.
+              value: 2025-01-01T00:00:00Z
           explode: true
           in: query
           name: start_date_filter
@@ -641,8 +658,8 @@ paths:
               summary: Example with date
               value: 2021-11-12
             withDatetime:
-              summary: Example with date and time
-              value: 2021-11-12 12:00:00
+              summary: Example with date and time in ISO 8601 datetime format.
+              value: 2025-01-01T00:00:00Z
           explode: true
           in: query
           name: end_date_filter
@@ -1538,6 +1555,60 @@ paths:
       x-speakeasy-name-override: get_users
       x-speakeasy-entity-operation: GroupUsers#get
   /groups/{group_id}/users/{user_id}:
+    put:
+      description: Updates a user's access level or duration in this group.
+      operationId: update_group_user
+      parameters:
+        - description: The ID of the group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the user whose access is being updated.
+          example: f92aa855-cea9-4814-b9d8-f2a60d3e4a06
+          in: path
+          name: user_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                duration_minutes: 60
+                access_level_remote_id: arn:aws:iam::590304332660:role/AdministratorAccess
+              properties:
+                duration_minutes:
+                  description: The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite.
+                  type: integer
+                  maximum: 525960 # One year
+                  example: 120
+                access_level_remote_id:
+                  description: The updated remote ID of the access level granted to this user.
+                  type: string
+                  example: arn:aws:iam::590304332660:role/ReadOnlyAccess
+              required:
+                - duration_minutes
+      responses:
+        "200":
+          description: The GroupUser was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupUser"
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
     post:
       description: Adds a user to this group.
       operationId: createGroupUser
@@ -2083,6 +2154,36 @@ paths:
       description: Returns a list of requests for your organization that is visible by the admin.
       operationId: getRequests
       parameters:
+        - description: A start date filter for the events.
+          examples:
+            withDate:
+              summary: Example with date
+              value: 2021-11-01
+            withDatetime:
+              summary: Example with date and time in ISO 8601 datetime format.
+              value: 2025-01-01T00:00:00Z
+          explode: true
+          in: query
+          name: start_date_filter
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: An end date filter for the events.
+          examples:
+            withDate:
+              summary: Example with date
+              value: 2021-11-12
+            withDatetime:
+              summary: Example with date and time in ISO 8601 datetime format.
+              value: 2025-01-01T00:00:00Z
+          explode: true
+          in: query
+          name: end_date_filter
+          required: false
+          schema:
+            type: string
+          style: form
         - description: The pagination cursor value.
           example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
           explode: true
@@ -2146,6 +2247,127 @@ paths:
                     type: string
                     example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
           description: The resulting request.
+      security:
+        - BearerAuth: []
+      tags:
+        - requests
+  /requests/relay:
+    get:
+      description: Returns a paginated list of requests using Relay-style cursor pagination.
+      operationId: getRequestsRelay
+      parameters:
+        - description: Number of results to return after the cursor. Use either first/after or last/before, not both.
+          example: 10
+          in: query
+          name: first
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+        - description: Cursor to fetch results after. Used with 'first' for forward pagination.
+          example: "Y3Vyc29yOnYyOpK5MjAyMS0wMS0wN1QwNzo0MToyNy4xMTlaFjYwZmM2YmJlZjk4YzE1N2ZhNjFhYjk4Nw=="
+          in: query
+          name: after
+          required: false
+          schema:
+            type: string
+        - description: Number of results to return before the cursor. Use either first/after or last/before, not both.
+          example: 10
+          in: query
+          name: last
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+        - description: Cursor to fetch results before. Used with 'last' for backward pagination.
+          example: "Y3Vyc29yOnYyOpK5MjAyMS0wMS0wN1QwNzo0MToyNy4xMTlaFjYwZmM2YmJlZjk4YzE1N2ZhNjFhYjk4Nw=="
+          in: query
+          name: before
+          required: false
+          schema:
+            type: string
+        - description: Filter requests by their status.
+          example: PENDING
+          in: query
+          name: status
+          required: false
+          schema:
+            $ref: "#/components/schemas/RequestStatusEnum"
+        - description: Filter requests assigned to a specific user ID.
+          example: 37cb7e41-12ba-46da-92ff-030abe0450b1
+          in: query
+          name: to
+          required: false
+          schema:
+            format: uuid
+            type: string
+        - description: Filter requests made by a specific user ID.
+          example: 37cb7e41-12ba-46da-92ff-030abe0450b1
+          in: query
+          name: from
+          required: false
+          schema:
+            format: uuid
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestConnection"
+          description: A paginated list of requests using Relay-style cursor pagination.
+      security:
+        - BearerAuth: []
+      tags:
+        - requests
+  /requests/{id}/approve:
+    post:
+      description: "Approve an access request"
+      operationId: "approveRequest"
+      parameters:
+        - description: "The ID of the request to approve"
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Approval parameters
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                level:
+                  type: string
+                  enum: [REGULAR, ADMIN]
+                  description: "The decision level for the approval"
+                  example: "REGULAR"
+                comment:
+                  type: string
+                  description: "Optional comment for the approval"
+                  example: "Approved after security review"
+              required:
+                - level
+      responses:
+        "200":
+          description: "Request successfully approved"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  request:
+                    $ref: "#/components/schemas/Request"
+                  taskId:
+                    type: string
+                    format: uuid
+                    description: "ID of the task created for propagating access"
+                    example: "c6f85bfb-3fe7-4936-a68d-7a5e1e3d0f6a"
       security:
         - BearerAuth: []
       tags:
@@ -2822,6 +3044,7 @@ paths:
         - resources
   /resource-user-access-status/{resource_id}/{user_id}:
     get:
+      deprecated: true
       description: Get user's access status to a resource.
       operationId: getResourceUserAccessStatus
       parameters:
@@ -3288,6 +3511,12 @@ paths:
             format: uuid
             type: string
           style: simple
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
       responses:
         "200":
           description: Tag applied to user successfully.
@@ -3752,6 +3981,66 @@ paths:
         - apps
 components:
   schemas:
+    PaginatedAssignedRequestList:
+      type: object
+      required:
+        - requests
+        - cursor
+      properties:
+        requests:
+          type: array
+          items:
+            $ref: "#/components/schemas/Request"
+        cursor:
+          type: string
+          description: The cursor to continue pagination
+    PageInfo:
+      type: object
+      required:
+        - hasNextPage
+        - endCursor
+        - hasPreviousPage
+        - startCursor
+      properties:
+        hasNextPage:
+          type: boolean
+          description: Whether there are more items after the end cursor
+        endCursor:
+          type: string
+          description: The cursor to continue pagination forwards
+        hasPreviousPage:
+          type: boolean
+          description: Whether there are more items before the start cursor
+        startCursor:
+          type: string
+          description: The cursor to continue pagination backwards
+    RequestEdge:
+      type: object
+      required:
+        - node
+        - cursor
+      properties:
+        node:
+          $ref: "#/components/schemas/Request"
+        cursor:
+          type: string
+          description: The cursor for this request edge
+    RequestConnection:
+      type: object
+      required:
+        - edges
+        - pageInfo
+        - totalCount
+      properties:
+        edges:
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestEdge"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
+        totalCount:
+          type: integer
+          description: The total number of items available
     UARScope:
       description: If set, the access review will only contain resources and groups that match at least one of the filters in scope.
       example:
@@ -5499,6 +5788,7 @@ components:
         - GCP_BIG_QUERY_TABLE
         - GCP_SERVICE_ACCOUNT
         - GIT_HUB_REPO
+        - GIT_HUB_ORG_ROLE
         - GIT_LAB_PROJECT
         - GOOGLE_WORKSPACE_ROLE
         - MONGO_INSTANCE
@@ -7019,6 +7309,20 @@ components:
             request_id: 4c86c85d-0651-43e2-a748-d69d658418e8
             user_id: c86c85d-0651-43e2-a748-d69d658418e8
             comment: This is a comment.
+        stages:
+          requestedRoleName: "Admin"
+          requestedItemName: "AWS Production Account"
+          stages:
+            - stage: 1
+              operator: AND
+              reviewers:
+                - id: 7c86c85d-0651-43e2-a748-d69d658418e8
+                  status: PENDING
+            - stage: 2
+              operator: OR
+              reviewers:
+                - id: 8d86c85d-0651-43e2-a748-d69d658418e9
+                  status: APPROVED
         type: object
       properties:
         id:
@@ -7073,6 +7377,9 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/RequestCustomFieldResponse"
+        stages:
+          description: The stages configuration for this request
+          $ref: "#/components/schemas/RequestItemStages"
       required:
         - id
         - created_at
@@ -7082,6 +7389,67 @@ components:
         - reason
       x-speakeasy-entity: Requests
       type: object
+    RequestItemStages:
+      description: The stages configuration for a request item
+      type: object
+      properties:
+        requestedRoleName:
+          description: The name of the requested role
+          type: string
+        requestedItemName:
+          description: The name of the requested item
+          type: string
+        stages:
+          description: The stages of review for this request
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestStage"
+      required:
+        - requestedItemName
+        - stages
+    RequestStage:
+      description: A stage in the request review process
+      type: object
+      properties:
+        stage:
+          description: The stage number
+          type: integer
+        operator:
+          description: The operator to apply to reviewers in this stage
+          $ref: "#/components/schemas/ReviewStageOperator"
+        reviewers:
+          description: The reviewers for this stage
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestReviewer"
+      required:
+        - stage
+        - operator
+        - reviewers
+    ReviewStageOperator:
+      description: The operator to apply to reviewers in a stage
+      type: string
+      enum:
+        - AND
+        - OR
+    RequestReviewer:
+      description: A reviewer in a request stage
+      type: object
+      properties:
+        id:
+          description: The unique identifier of the reviewer
+          type: string
+          format: uuid
+        status:
+          description: The status of this reviewer's review
+          type: string
+          enum:
+            - PENDING
+            - APPROVED
+            - REJECTED
+      required:
+        - id
+        - status
     RequestedItem:
       description: |-
         # Requested Item Object
@@ -9133,6 +9501,14 @@ components:
           format: uuid
           type: string
           readOnly: true
+        access_level_name:
+          description: The access level of the group within a bundle.
+          example: Read
+          type: string
+        access_level_remote_id:
+          description: The remote ID of the access level of the group within a bundle.
+          example: arn:aws:iam::490306337630:role/SupportUser
+          type: string
     PaginatedBundleGroupList:
       example:
         next: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw

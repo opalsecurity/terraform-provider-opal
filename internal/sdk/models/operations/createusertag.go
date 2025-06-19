@@ -6,11 +6,22 @@ import (
 	"net/http"
 )
 
+type CreateUserTagRequestBody struct {
+}
+
 type CreateUserTagRequest struct {
+	RequestBody *CreateUserTagRequestBody `request:"mediaType=application/json"`
 	// The ID of the tag to apply.
 	TagID string `pathParam:"style=simple,explode=false,name=tag_id"`
 	// The ID of the user to apply the tag to.
 	UserID string `pathParam:"style=simple,explode=false,name=user_id"`
+}
+
+func (o *CreateUserTagRequest) GetRequestBody() *CreateUserTagRequestBody {
+	if o == nil {
+		return nil
+	}
+	return o.RequestBody
 }
 
 func (o *CreateUserTagRequest) GetTagID() string {
