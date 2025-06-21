@@ -13,8 +13,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -127,8 +125,13 @@ func (r *OwnerResource) Create(ctx context.Context, req resource.CreateRequest, 
 		return
 	}
 
-	request := *data.ToSharedCreateOwnerInfo()
-	res, err := r.client.Owners.Create(ctx, request)
+	request, requestDiags := data.ToSharedCreateOwnerInfo(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.Owners.Create(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -159,13 +162,13 @@ func (r *OwnerResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var id string
-	id = data.ID.ValueString()
+	request1, request1Diags := data.ToOperationsGetOwnerIDRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
 
-	request1 := operations.GetOwnerIDRequest{
-		ID: id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.Owners.GetID(ctx, request1)
+	res1, err := r.client.Owners.GetID(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -219,13 +222,13 @@ func (r *OwnerResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		return
 	}
 
-	var id string
-	id = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsGetOwnerIDRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetOwnerIDRequest{
-		ID: id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Owners.GetID(ctx, request)
+	res, err := r.client.Owners.GetID(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -273,12 +276,13 @@ func (r *OwnerResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		return
 	}
 
-	singleton := *data.ToSharedUpdateOwnerInfo()
-	owners := []shared.UpdateOwnerInfo{singleton}
-	request := shared.UpdateOwnerInfoList{
-		Owners: owners,
+	request, requestDiags := data.ToSharedUpdateOwnerInfoList(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Owners.Update(ctx, request)
+	res, err := r.client.Owners.Update(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -309,15 +313,13 @@ func (r *OwnerResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	userIDList := *data.ToSharedUserIDList()
-	var id string
-	id = data.ID.ValueString()
+	request1, request1Diags := data.ToOperationsUpdateOwnerUsersRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
 
-	request1 := operations.UpdateOwnerUsersRequest{
-		UserIDList: userIDList,
-		ID:         id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.Owners.UpdateUsers(ctx, request1)
+	res1, err := r.client.Owners.UpdateUsers(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -339,13 +341,13 @@ func (r *OwnerResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var id1 string
-	id1 = data.ID.ValueString()
+	request2, request2Diags := data.ToOperationsGetOwnerIDRequest(ctx)
+	resp.Diagnostics.Append(request2Diags...)
 
-	request2 := operations.GetOwnerIDRequest{
-		ID: id1,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res2, err := r.client.Owners.GetID(ctx, request2)
+	res2, err := r.client.Owners.GetID(ctx, *request2)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res2 != nil && res2.RawResponse != nil {
@@ -399,13 +401,13 @@ func (r *OwnerResource) Delete(ctx context.Context, req resource.DeleteRequest, 
 		return
 	}
 
-	var id string
-	id = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsDeleteOwnerRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.DeleteOwnerRequest{
-		ID: id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Owners.Delete(ctx, request)
+	res, err := r.client.Owners.Delete(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

@@ -14,9 +14,10 @@ ResourcesList DataSource
 
 ```terraform
 data "opal_resources_list" "my_resources_list" {
-  cursor             = "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
-  page_size          = 200
-  parent_resource_id = ["4baf8423-db0a-4037-a4cf-f79c60cb67a5"]
+  ancestor_resource_id = ["4baf8423-db0a-4037-a4cf-f79c60cb67a5"]
+  cursor               = "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+  page_size            = 200
+  parent_resource_id   = ["4baf8423-db0a-4037-a4cf-f79c60cb67a5"]
   resource_ids = [
     "1b978423-db0a-4037-a4cf-f79c60cb67b3"
   ]
@@ -30,6 +31,7 @@ data "opal_resources_list" "my_resources_list" {
 
 ### Optional
 
+- `ancestor_resource_id` (String) The ancestor resource id to filter by. Returns all resources that are descendants of the specified resource.
 - `cursor` (String) The pagination cursor value.
 - `page_size` (Number) Number of results to return per page. Default is 200.
 - `parent_resource_id` (String) The parent resource id to filter by.
@@ -49,8 +51,10 @@ data "opal_resources_list" "my_resources_list" {
 Read-Only:
 
 - `admin_owner_id` (String) The ID of the owner of the resource.
+- `ancestor_resource_ids` (List of String) List of resource IDs that are ancestors of this resource.
 - `app_id` (String) The ID of the app.
 - `custom_request_notification` (String) Custom request notification sent upon request approval.
+- `descendant_resource_ids` (List of String) List of resource IDs that are descendants of this resource.
 - `description` (String) A description of the resource.
 - `id` (String) The ID of the resource.
 - `name` (String) The name of the resource.
@@ -73,8 +77,10 @@ Read-Only:
 - `aws_ec2_instance` (Attributes) Remote info for AWS EC2 instance. (see [below for nested schema](#nestedatt--results--remote_info--aws_ec2_instance))
 - `aws_eks_cluster` (Attributes) Remote info for AWS EKS cluster. (see [below for nested schema](#nestedatt--results--remote_info--aws_eks_cluster))
 - `aws_iam_role` (Attributes) Remote info for AWS IAM role. (see [below for nested schema](#nestedatt--results--remote_info--aws_iam_role))
+- `aws_organizational_unit` (Attributes) Remote info for AWS organizational unit. (see [below for nested schema](#nestedatt--results--remote_info--aws_organizational_unit))
 - `aws_permission_set` (Attributes) Remote info for AWS Identity Center permission set. (see [below for nested schema](#nestedatt--results--remote_info--aws_permission_set))
 - `aws_rds_instance` (Attributes) Remote info for AWS RDS instance. (see [below for nested schema](#nestedatt--results--remote_info--aws_rds_instance))
+- `custom_connector` (Attributes) Remote info for a custom connector resource. (see [below for nested schema](#nestedatt--results--remote_info--custom_connector))
 - `gcp_big_query_dataset` (Attributes) Remote info for GCP BigQuery Dataset. (see [below for nested schema](#nestedatt--results--remote_info--gcp_big_query_dataset))
 - `gcp_big_query_table` (Attributes) Remote info for GCP BigQuery Table. (see [below for nested schema](#nestedatt--results--remote_info--gcp_big_query_table))
 - `gcp_bucket` (Attributes) Remote info for GCP bucket. (see [below for nested schema](#nestedatt--results--remote_info--gcp_bucket))
@@ -102,6 +108,7 @@ Read-Only:
 Read-Only:
 
 - `account_id` (String) The id of the AWS account.
+- `organizational_unit_id` (String) The id of the AWS organizational unit. Required only if customer has OUs enabled.
 
 
 <a id="nestedatt--results--remote_info--aws_ec2_instance"></a>
@@ -132,6 +139,15 @@ Read-Only:
 - `arn` (String) The ARN of the IAM role.
 
 
+<a id="nestedatt--results--remote_info--aws_organizational_unit"></a>
+### Nested Schema for `results.remote_info.aws_organizational_unit`
+
+Read-Only:
+
+- `organizational_unit_id` (String) The id of the AWS organizational unit that is being created.
+- `parent_id` (String) The id of the parent organizational unit.
+
+
 <a id="nestedatt--results--remote_info--aws_permission_set"></a>
 ### Nested Schema for `results.remote_info.aws_permission_set`
 
@@ -150,6 +166,15 @@ Read-Only:
 - `instance_id` (String) The instanceId of the RDS instance.
 - `region` (String) The region of the RDS instance.
 - `resource_id` (String) The resourceId of the RDS instance.
+
+
+<a id="nestedatt--results--remote_info--custom_connector"></a>
+### Nested Schema for `results.remote_info.custom_connector`
+
+Read-Only:
+
+- `can_have_usage_events` (Boolean) A bool representing whether or not the resource can have usage data.
+- `remote_resource_id` (String) The id of the resource in the end system
 
 
 <a id="nestedatt--results--remote_info--gcp_big_query_dataset"></a>

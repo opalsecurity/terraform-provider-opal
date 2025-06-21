@@ -7,8 +7,36 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *PaginatedBundleResourceListDataSourceModel) ToOperationsGetBundleResourcesRequest(ctx context.Context) (*operations.GetBundleResourcesRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var bundleID string
+	bundleID = r.BundleID.ValueString()
+
+	cursor := new(string)
+	if !r.Cursor.IsUnknown() && !r.Cursor.IsNull() {
+		*cursor = r.Cursor.ValueString()
+	} else {
+		cursor = nil
+	}
+	pageSize := new(int64)
+	if !r.PageSize.IsUnknown() && !r.PageSize.IsNull() {
+		*pageSize = r.PageSize.ValueInt64()
+	} else {
+		pageSize = nil
+	}
+	out := operations.GetBundleResourcesRequest{
+		BundleID: bundleID,
+		Cursor:   cursor,
+		PageSize: pageSize,
+	}
+
+	return &out, diags
+}
 
 func (r *PaginatedBundleResourceListDataSourceModel) RefreshFromSharedPaginatedBundleResourceList(ctx context.Context, resp *shared.PaginatedBundleResourceList) diag.Diagnostics {
 	var diags diag.Diagnostics

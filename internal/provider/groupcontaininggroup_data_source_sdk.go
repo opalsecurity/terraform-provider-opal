@@ -6,8 +6,26 @@ import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *GroupContainingGroupDataSourceModel) ToOperationsGetGroupContainingGroupRequest(ctx context.Context) (*operations.GetGroupContainingGroupRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var containingGroupID string
+	containingGroupID = r.ContainingGroupID.ValueString()
+
+	var groupID string
+	groupID = r.GroupID.ValueString()
+
+	out := operations.GetGroupContainingGroupRequest{
+		ContainingGroupID: containingGroupID,
+		GroupID:           groupID,
+	}
+
+	return &out, diags
+}
 
 func (r *GroupContainingGroupDataSourceModel) RefreshFromSharedGroupContainingGroup(ctx context.Context, resp *shared.GroupContainingGroup) diag.Diagnostics {
 	var diags diag.Diagnostics

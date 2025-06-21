@@ -7,8 +7,65 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *ResourcesListDataSourceModel) ToOperationsGetResourcesRequest(ctx context.Context) (*operations.GetResourcesRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	ancestorResourceID := new(string)
+	if !r.AncestorResourceID.IsUnknown() && !r.AncestorResourceID.IsNull() {
+		*ancestorResourceID = r.AncestorResourceID.ValueString()
+	} else {
+		ancestorResourceID = nil
+	}
+	cursor := new(string)
+	if !r.Cursor.IsUnknown() && !r.Cursor.IsNull() {
+		*cursor = r.Cursor.ValueString()
+	} else {
+		cursor = nil
+	}
+	pageSize := new(int64)
+	if !r.PageSize.IsUnknown() && !r.PageSize.IsNull() {
+		*pageSize = r.PageSize.ValueInt64()
+	} else {
+		pageSize = nil
+	}
+	parentResourceID := new(string)
+	if !r.ParentResourceID.IsUnknown() && !r.ParentResourceID.IsNull() {
+		*parentResourceID = r.ParentResourceID.ValueString()
+	} else {
+		parentResourceID = nil
+	}
+	resourceIds := make([]string, 0, len(r.ResourceIds))
+	for _, resourceIdsItem := range r.ResourceIds {
+		resourceIds = append(resourceIds, resourceIdsItem.ValueString())
+	}
+	resourceName := new(string)
+	if !r.ResourceName.IsUnknown() && !r.ResourceName.IsNull() {
+		*resourceName = r.ResourceName.ValueString()
+	} else {
+		resourceName = nil
+	}
+	resourceTypeFilter := new(shared.ResourceTypeEnum)
+	if !r.ResourceTypeFilter.IsUnknown() && !r.ResourceTypeFilter.IsNull() {
+		*resourceTypeFilter = shared.ResourceTypeEnum(r.ResourceTypeFilter.ValueString())
+	} else {
+		resourceTypeFilter = nil
+	}
+	out := operations.GetResourcesRequest{
+		AncestorResourceID: ancestorResourceID,
+		Cursor:             cursor,
+		PageSize:           pageSize,
+		ParentResourceID:   parentResourceID,
+		ResourceIds:        resourceIds,
+		ResourceName:       resourceName,
+		ResourceTypeFilter: resourceTypeFilter,
+	}
+
+	return &out, diags
+}
 
 func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(ctx context.Context, resp *shared.PaginatedResourcesList) diag.Diagnostics {
 	var diags diag.Diagnostics
@@ -23,8 +80,16 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 		for resultsCount, resultsItem := range resp.Results {
 			var results tfTypes.Resource
 			results.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
+			results.AncestorResourceIds = make([]types.String, 0, len(resultsItem.AncestorResourceIds))
+			for _, v := range resultsItem.AncestorResourceIds {
+				results.AncestorResourceIds = append(results.AncestorResourceIds, types.StringValue(v))
+			}
 			results.AppID = types.StringPointerValue(resultsItem.AppID)
 			results.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
+			results.DescendantResourceIds = make([]types.String, 0, len(resultsItem.DescendantResourceIds))
+			for _, v := range resultsItem.DescendantResourceIds {
+				results.DescendantResourceIds = append(results.DescendantResourceIds, types.StringValue(v))
+			}
 			results.Description = types.StringPointerValue(resultsItem.Description)
 			results.ID = types.StringValue(resultsItem.ID)
 			results.Name = types.StringPointerValue(resultsItem.Name)
@@ -38,6 +103,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				} else {
 					results.RemoteInfo.AwsAccount = &tfTypes.AwsAccount{}
 					results.RemoteInfo.AwsAccount.AccountID = types.StringValue(resultsItem.RemoteInfo.AwsAccount.AccountID)
+					results.RemoteInfo.AwsAccount.OrganizationalUnitID = types.StringPointerValue(resultsItem.RemoteInfo.AwsAccount.OrganizationalUnitID)
 				}
 				if resultsItem.RemoteInfo.AwsEc2Instance == nil {
 					results.RemoteInfo.AwsEc2Instance = nil
@@ -61,6 +127,13 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.AwsIamRole.AccountID = types.StringPointerValue(resultsItem.RemoteInfo.AwsIamRole.AccountID)
 					results.RemoteInfo.AwsIamRole.Arn = types.StringValue(resultsItem.RemoteInfo.AwsIamRole.Arn)
 				}
+				if resultsItem.RemoteInfo.AwsOrganizationalUnit == nil {
+					results.RemoteInfo.AwsOrganizationalUnit = nil
+				} else {
+					results.RemoteInfo.AwsOrganizationalUnit = &tfTypes.AwsOrganizationalUnit{}
+					results.RemoteInfo.AwsOrganizationalUnit.OrganizationalUnitID = types.StringValue(resultsItem.RemoteInfo.AwsOrganizationalUnit.OrganizationalUnitID)
+					results.RemoteInfo.AwsOrganizationalUnit.ParentID = types.StringPointerValue(resultsItem.RemoteInfo.AwsOrganizationalUnit.ParentID)
+				}
 				if resultsItem.RemoteInfo.AwsPermissionSet == nil {
 					results.RemoteInfo.AwsPermissionSet = nil
 				} else {
@@ -76,6 +149,13 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.AwsRdsInstance.InstanceID = types.StringValue(resultsItem.RemoteInfo.AwsRdsInstance.InstanceID)
 					results.RemoteInfo.AwsRdsInstance.Region = types.StringValue(resultsItem.RemoteInfo.AwsRdsInstance.Region)
 					results.RemoteInfo.AwsRdsInstance.ResourceID = types.StringValue(resultsItem.RemoteInfo.AwsRdsInstance.ResourceID)
+				}
+				if resultsItem.RemoteInfo.CustomConnector == nil {
+					results.RemoteInfo.CustomConnector = nil
+				} else {
+					results.RemoteInfo.CustomConnector = &tfTypes.CustomConnector{}
+					results.RemoteInfo.CustomConnector.CanHaveUsageEvents = types.BoolValue(resultsItem.RemoteInfo.CustomConnector.CanHaveUsageEvents)
+					results.RemoteInfo.CustomConnector.RemoteResourceID = types.StringValue(resultsItem.RemoteInfo.CustomConnector.RemoteResourceID)
 				}
 				if resultsItem.RemoteInfo.GcpBigQueryDataset == nil {
 					results.RemoteInfo.GcpBigQueryDataset = nil
@@ -303,8 +383,10 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				r.Results = append(r.Results, results)
 			} else {
 				r.Results[resultsCount].AdminOwnerID = results.AdminOwnerID
+				r.Results[resultsCount].AncestorResourceIds = results.AncestorResourceIds
 				r.Results[resultsCount].AppID = results.AppID
 				r.Results[resultsCount].CustomRequestNotification = results.CustomRequestNotification
+				r.Results[resultsCount].DescendantResourceIds = results.DescendantResourceIds
 				r.Results[resultsCount].Description = results.Description
 				r.Results[resultsCount].ID = results.ID
 				r.Results[resultsCount].Name = results.Name

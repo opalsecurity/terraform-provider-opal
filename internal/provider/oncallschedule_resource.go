@@ -16,7 +16,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -123,8 +122,13 @@ func (r *OnCallScheduleResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
-	request := *data.ToSharedCreateOnCallScheduleInfo()
-	res, err := r.client.OnCallSchedules.Create(ctx, request)
+	request, requestDiags := data.ToSharedCreateOnCallScheduleInfo(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.OnCallSchedules.Create(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -178,13 +182,13 @@ func (r *OnCallScheduleResource) Read(ctx context.Context, req resource.ReadRequ
 		return
 	}
 
-	var id string
-	id = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsGetOnCallScheduleIDRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetOnCallScheduleIDRequest{
-		ID: id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.OnCallSchedules.GetID(ctx, request)
+	res, err := r.client.OnCallSchedules.GetID(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

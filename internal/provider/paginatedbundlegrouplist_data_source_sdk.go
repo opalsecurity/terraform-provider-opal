@@ -7,8 +7,36 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *PaginatedBundleGroupListDataSourceModel) ToOperationsGetBundleGroupsRequest(ctx context.Context) (*operations.GetBundleGroupsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var bundleID string
+	bundleID = r.BundleID.ValueString()
+
+	cursor := new(string)
+	if !r.Cursor.IsUnknown() && !r.Cursor.IsNull() {
+		*cursor = r.Cursor.ValueString()
+	} else {
+		cursor = nil
+	}
+	pageSize := new(int64)
+	if !r.PageSize.IsUnknown() && !r.PageSize.IsNull() {
+		*pageSize = r.PageSize.ValueInt64()
+	} else {
+		pageSize = nil
+	}
+	out := operations.GetBundleGroupsRequest{
+		BundleID: bundleID,
+		Cursor:   cursor,
+		PageSize: pageSize,
+	}
+
+	return &out, diags
+}
 
 func (r *PaginatedBundleGroupListDataSourceModel) RefreshFromSharedPaginatedBundleGroupList(ctx context.Context, resp *shared.PaginatedBundleGroupList) diag.Diagnostics {
 	var diags diag.Diagnostics
@@ -20,11 +48,15 @@ func (r *PaginatedBundleGroupListDataSourceModel) RefreshFromSharedPaginatedBund
 		}
 		for bundleGroupsCount, bundleGroupsItem := range resp.BundleGroups {
 			var bundleGroups tfTypes.BundleGroup
+			bundleGroups.AccessLevelName = types.StringPointerValue(bundleGroupsItem.AccessLevelName)
+			bundleGroups.AccessLevelRemoteID = types.StringPointerValue(bundleGroupsItem.AccessLevelRemoteID)
 			bundleGroups.BundleID = types.StringPointerValue(bundleGroupsItem.BundleID)
 			bundleGroups.GroupID = types.StringPointerValue(bundleGroupsItem.GroupID)
 			if bundleGroupsCount+1 > len(r.BundleGroups) {
 				r.BundleGroups = append(r.BundleGroups, bundleGroups)
 			} else {
+				r.BundleGroups[bundleGroupsCount].AccessLevelName = bundleGroups.AccessLevelName
+				r.BundleGroups[bundleGroupsCount].AccessLevelRemoteID = bundleGroups.AccessLevelRemoteID
 				r.BundleGroups[bundleGroupsCount].BundleID = bundleGroups.BundleID
 				r.BundleGroups[bundleGroupsCount].GroupID = bundleGroups.GroupID
 			}

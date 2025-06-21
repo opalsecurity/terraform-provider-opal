@@ -8,6 +8,8 @@ import (
 )
 
 type GetResourcesRequest struct {
+	// The ancestor resource id to filter by. Returns all resources that are descendants of the specified resource.
+	AncestorResourceID *string `queryParam:"style=form,explode=false,name=ancestor_resource_id"`
 	// The pagination cursor value.
 	Cursor *string `queryParam:"style=form,explode=true,name=cursor"`
 	// Number of results to return per page. Default is 200.
@@ -20,6 +22,13 @@ type GetResourcesRequest struct {
 	ResourceName *string `queryParam:"style=form,explode=true,name=resource_name"`
 	// The resource type to filter by.
 	ResourceTypeFilter *shared.ResourceTypeEnum `queryParam:"style=form,explode=true,name=resource_type_filter"`
+}
+
+func (o *GetResourcesRequest) GetAncestorResourceID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.AncestorResourceID
 }
 
 func (o *GetResourcesRequest) GetCursor() *string {

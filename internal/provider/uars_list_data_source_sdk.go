@@ -8,8 +8,32 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *UARSListDataSourceModel) ToOperationsGetUARsRequest(ctx context.Context) (*operations.GetUARsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	cursor := new(string)
+	if !r.Cursor.IsUnknown() && !r.Cursor.IsNull() {
+		*cursor = r.Cursor.ValueString()
+	} else {
+		cursor = nil
+	}
+	pageSize := new(int64)
+	if !r.PageSize.IsUnknown() && !r.PageSize.IsNull() {
+		*pageSize = r.PageSize.ValueInt64()
+	} else {
+		pageSize = nil
+	}
+	out := operations.GetUARsRequest{
+		Cursor:   cursor,
+		PageSize: pageSize,
+	}
+
+	return &out, diags
+}
 
 func (r *UARSListDataSourceModel) RefreshFromSharedPaginatedUARsList(ctx context.Context, resp *shared.PaginatedUARsList) diag.Diagnostics {
 	var diags diag.Diagnostics

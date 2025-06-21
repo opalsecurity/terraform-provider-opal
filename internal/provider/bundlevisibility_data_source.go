@@ -10,7 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -98,13 +97,13 @@ func (r *BundleVisibilityDataSource) Read(ctx context.Context, req datasource.Re
 		return
 	}
 
-	var bundleID string
-	bundleID = data.BundleID.ValueString()
+	request, requestDiags := data.ToOperationsGetBundleVisibilityRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetBundleVisibilityRequest{
-		BundleID: bundleID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Bundles.GetBundleVisibility(ctx, request)
+	res, err := r.client.Bundles.GetBundleVisibility(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -114,10 +113,6 @@ func (r *BundleVisibilityDataSource) Read(ctx context.Context, req datasource.Re
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
-		return
-	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

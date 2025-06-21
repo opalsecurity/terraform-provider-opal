@@ -6,7 +6,8 @@ resource "opal_resource" "my_resource" {
   name                        = "mongo-db-prod"
   remote_info = {
     aws_account = {
-      account_id = 234234234234
+      account_id             = 234234234234
+      organizational_unit_id = "ou-1234"
     }
     aws_ec2_instance = {
       account_id  = 234234234234
@@ -21,6 +22,10 @@ resource "opal_resource" "my_resource" {
       account_id = 234234234234
       arn        = "arn:aws:iam::179308207300:role/MyRole"
     }
+    aws_organizational_unit = {
+      organizational_unit_id = "ou-1234"
+      parent_id              = "ou-1234"
+    }
     aws_permission_set = {
       account_id = 234234234234
       arn        = "arn:aws:sso:::permissionSet/asdf-32139302d201d32/ps-f03323201211e1b9"
@@ -30,6 +35,10 @@ resource "opal_resource" "my_resource" {
       instance_id = "demo-mysql-db"
       region      = "us-east-2"
       resource_id = "db-AOO8V0XUCNU13XLZXQDQRSN0NQ"
+    }
+    custom_connector = {
+      can_have_usage_events = false
+      remote_resource_id    = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
     gcp_big_query_dataset = {
       dataset_id = "example-dataset-898931321"

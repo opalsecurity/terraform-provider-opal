@@ -12,7 +12,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -98,17 +97,13 @@ func (r *GroupTagResource) Create(ctx context.Context, req resource.CreateReques
 		return
 	}
 
-	var groupID string
-	groupID = data.GroupID.ValueString()
+	request, requestDiags := data.ToOperationsCreateGroupTagRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	var tagID string
-	tagID = data.TagID.ValueString()
-
-	request := operations.CreateGroupTagRequest{
-		GroupID: groupID,
-		TagID:   tagID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Tags.CreateGroup(ctx, request)
+	res, err := r.client.Tags.CreateGroup(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -197,17 +192,13 @@ func (r *GroupTagResource) Delete(ctx context.Context, req resource.DeleteReques
 		return
 	}
 
-	var groupID string
-	groupID = data.GroupID.ValueString()
+	request, requestDiags := data.ToOperationsDeleteGroupTagRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	var tagID string
-	tagID = data.TagID.ValueString()
-
-	request := operations.DeleteGroupTagRequest{
-		GroupID: groupID,
-		TagID:   tagID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Tags.DeleteGroup(ctx, request)
+	res, err := r.client.Tags.DeleteGroup(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

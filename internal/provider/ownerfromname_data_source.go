@@ -10,7 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -116,13 +115,13 @@ func (r *OwnerFromNameDataSource) Read(ctx context.Context, req datasource.ReadR
 		return
 	}
 
-	var ownerName string
-	ownerName = data.OwnerName.ValueString()
+	request, requestDiags := data.ToOperationsGetOwnerFromNameRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetOwnerFromNameRequest{
-		OwnerName: ownerName,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Owners.GetFromName(ctx, request)
+	res, err := r.client.Owners.GetFromName(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -132,10 +131,6 @@ func (r *OwnerFromNameDataSource) Read(ctx context.Context, req datasource.ReadR
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
-		return
-	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

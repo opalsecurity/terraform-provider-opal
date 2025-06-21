@@ -13,7 +13,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -31,8 +30,10 @@ type BundleGroupResource struct {
 
 // BundleGroupResourceModel describes the resource data model.
 type BundleGroupResourceModel struct {
-	BundleID types.String `tfsdk:"bundle_id"`
-	GroupID  types.String `tfsdk:"group_id"`
+	AccessLevelName     types.String `tfsdk:"access_level_name"`
+	AccessLevelRemoteID types.String `tfsdk:"access_level_remote_id"`
+	BundleID            types.String `tfsdk:"bundle_id"`
+	GroupID             types.String `tfsdk:"group_id"`
 }
 
 func (r *BundleGroupResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -43,6 +44,24 @@ func (r *BundleGroupResource) Schema(ctx context.Context, req resource.SchemaReq
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "BundleGroup Resource",
 		Attributes: map[string]schema.Attribute{
+			"access_level_name": schema.StringAttribute{
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplaceIfConfigured(),
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
+				Description: `The name of the access level to grant to this user. If omitted, the default access level name value (empty string) is used. Requires replacement if changed.`,
+			},
+			"access_level_remote_id": schema.StringAttribute{
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplaceIfConfigured(),
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
+				Description: `The remote ID of the access level to grant to this user. Required if the group being added requires an access level. If omitted, the default access level remote ID value (empty string) is used. Requires replacement if changed.`,
+			},
 			"bundle_id": schema.StringAttribute{
 				Required: true,
 				PlanModifiers: []planmodifier.String{
@@ -101,15 +120,13 @@ func (r *BundleGroupResource) Create(ctx context.Context, req resource.CreateReq
 		return
 	}
 
-	requestBody := *data.ToOperationsAddBundleGroupRequestBody()
-	var bundleID string
-	bundleID = data.BundleID.ValueString()
+	request, requestDiags := data.ToOperationsAddBundleGroupRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.AddBundleGroupRequest{
-		RequestBody: requestBody,
-		BundleID:    bundleID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Bundles.AddBundleGroup(ctx, request)
+	res, err := r.client.Bundles.AddBundleGroup(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -207,17 +224,13 @@ func (r *BundleGroupResource) Delete(ctx context.Context, req resource.DeleteReq
 		return
 	}
 
-	var bundleID string
-	bundleID = data.BundleID.ValueString()
+	request, requestDiags := data.ToOperationsRemoveBundleGroupRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	var groupID string
-	groupID = data.GroupID.ValueString()
-
-	request := operations.RemoveBundleGroupRequest{
-		BundleID: bundleID,
-		GroupID:  groupID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Bundles.RemoveBundleGroup(ctx, request)
+	res, err := r.client.Bundles.RemoveBundleGroup(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

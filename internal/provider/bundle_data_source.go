@@ -10,7 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -138,13 +137,13 @@ func (r *BundleDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	var bundleID string
-	bundleID = data.BundleID.ValueString()
+	request, requestDiags := data.ToOperationsGetBundleRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetBundleRequest{
-		BundleID: bundleID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Bundles.GetBundle(ctx, request)
+	res, err := r.client.Bundles.GetBundle(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -154,10 +153,6 @@ func (r *BundleDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
-		return
-	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {
@@ -173,13 +168,13 @@ func (r *BundleDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var bundleId1 string
-	bundleId1 = data.BundleID.ValueString()
+	request1, request1Diags := data.ToOperationsGetBundleVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
 
-	request1 := operations.GetBundleVisibilityRequest{
-		BundleID: bundleId1,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.Bundles.GetBundleVisibility(ctx, request1)
+	res1, err := r.client.Bundles.GetBundleVisibility(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -189,10 +184,6 @@ func (r *BundleDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 	}
 	if res1 == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
-		return
-	}
-	if res1.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res1.StatusCode != 200 {
