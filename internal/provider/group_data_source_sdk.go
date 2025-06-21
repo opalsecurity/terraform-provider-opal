@@ -137,7 +137,7 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 					reviewerStages.OwnerIds = append(reviewerStages.OwnerIds, types.StringValue(v))
 				}
 				reviewerStages.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
-				reviewerStages.RequireManagerApproval = types.BoolValue(reviewerStagesItem.RequireManagerApproval)
+				reviewerStages.RequireManagerApproval = types.BoolPointerValue(reviewerStagesItem.RequireManagerApproval)
 				if reviewerStagesCount+1 > len(requestConfigurations.ReviewerStages) {
 					requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
 				} else {

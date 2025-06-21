@@ -5,5 +5,6 @@ package types
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type AwsAccount struct {
-	AccountID types.String `tfsdk:"account_id"`
+	AccountID            types.String `tfsdk:"account_id"`
+	OrganizationalUnitID types.String `tfsdk:"organizational_unit_id"`
 }

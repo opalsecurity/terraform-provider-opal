@@ -41,9 +41,9 @@ type ReviewerStage struct {
 	Operator *Operator `default:"AND" json:"operator"`
 	OwnerIds []string  `json:"owner_ids"`
 	// Whether this reviewer stage should require admin approval.
-	RequireAdminApproval *bool `json:"require_admin_approval,omitempty"`
+	RequireAdminApproval *bool `default:"false" json:"require_admin_approval"`
 	// Whether this reviewer stage should require manager approval.
-	RequireManagerApproval bool `json:"require_manager_approval"`
+	RequireManagerApproval *bool `default:"false" json:"require_manager_approval"`
 }
 
 func (r ReviewerStage) MarshalJSON() ([]byte, error) {
@@ -78,9 +78,9 @@ func (o *ReviewerStage) GetRequireAdminApproval() *bool {
 	return o.RequireAdminApproval
 }
 
-func (o *ReviewerStage) GetRequireManagerApproval() bool {
+func (o *ReviewerStage) GetRequireManagerApproval() *bool {
 	if o == nil {
-		return false
+		return nil
 	}
 	return o.RequireManagerApproval
 }

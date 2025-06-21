@@ -103,9 +103,12 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 			} else {
 				requireAdminApproval = nil
 			}
-			var requireManagerApproval bool
-			requireManagerApproval = reviewerStagesItem.RequireManagerApproval.ValueBool()
-
+			requireManagerApproval := new(bool)
+			if !reviewerStagesItem.RequireManagerApproval.IsUnknown() && !reviewerStagesItem.RequireManagerApproval.IsNull() {
+				*requireManagerApproval = reviewerStagesItem.RequireManagerApproval.ValueBool()
+			} else {
+				requireManagerApproval = nil
+			}
 			reviewerStages = append(reviewerStages, shared.ReviewerStage{
 				Operator:               operator,
 				OwnerIds:               ownerIds,
@@ -337,9 +340,12 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 			} else {
 				requireAdminApproval = nil
 			}
-			var requireManagerApproval bool
-			requireManagerApproval = reviewerStagesItem.RequireManagerApproval.ValueBool()
-
+			requireManagerApproval := new(bool)
+			if !reviewerStagesItem.RequireManagerApproval.IsUnknown() && !reviewerStagesItem.RequireManagerApproval.IsNull() {
+				*requireManagerApproval = reviewerStagesItem.RequireManagerApproval.ValueBool()
+			} else {
+				requireManagerApproval = nil
+			}
 			reviewerStages = append(reviewerStages, shared.ReviewerStage{
 				Operator:               operator,
 				OwnerIds:               ownerIds,

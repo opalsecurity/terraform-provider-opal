@@ -30,6 +30,7 @@ type ResourcesListDataSource struct {
 
 // ResourcesListDataSourceModel describes the data model.
 type ResourcesListDataSourceModel struct {
+	AncestorResourceID types.String       `queryParam:"style=form,explode=false,name=ancestor_resource_id" tfsdk:"ancestor_resource_id"`
 	Cursor             types.String       `queryParam:"style=form,explode=true,name=cursor" tfsdk:"cursor"`
 	Next               types.String       `tfsdk:"next"`
 	PageSize           types.Int64        `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
@@ -52,6 +53,10 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 		MarkdownDescription: "ResourcesList DataSource",
 
 		Attributes: map[string]schema.Attribute{
+			"ancestor_resource_id": schema.StringAttribute{
+				Optional:    true,
+				Description: `The ancestor resource id to filter by. Returns all resources that are descendants of the specified resource.`,
+			},
 			"cursor": schema.StringAttribute{
 				Optional:    true,
 				Description: `The pagination cursor value.`,
@@ -93,6 +98,11 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 							Computed:    true,
 							Description: `The ID of the owner of the resource.`,
 						},
+						"ancestor_resource_ids": schema.ListAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
+							Description: `List of resource IDs that are ancestors of this resource.`,
+						},
 						"app_id": schema.StringAttribute{
 							Computed:    true,
 							Description: `The ID of the app.`,
@@ -100,6 +110,11 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 						"custom_request_notification": schema.StringAttribute{
 							Computed:    true,
 							Description: `Custom request notification sent upon request approval.`,
+						},
+						"descendant_resource_ids": schema.ListAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
+							Description: `List of resource IDs that are descendants of this resource.`,
 						},
 						"description": schema.StringAttribute{
 							Computed:    true,
@@ -126,6 +141,10 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 										"account_id": schema.StringAttribute{
 											Computed:    true,
 											Description: `The id of the AWS account.`,
+										},
+										"organizational_unit_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The id of the AWS organizational unit. Required only if customer has OUs enabled.`,
 										},
 									},
 									Description: `Remote info for AWS account.`,
@@ -176,6 +195,20 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 									},
 									Description: `Remote info for AWS IAM role.`,
 								},
+								"aws_organizational_unit": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"organizational_unit_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The id of the AWS organizational unit that is being created.`,
+										},
+										"parent_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The id of the parent organizational unit.`,
+										},
+									},
+									Description: `Remote info for AWS organizational unit.`,
+								},
 								"aws_permission_set": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
@@ -211,6 +244,20 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 										},
 									},
 									Description: `Remote info for AWS RDS instance.`,
+								},
+								"custom_connector": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"can_have_usage_events": schema.BoolAttribute{
+											Computed:    true,
+											Description: `A bool representing whether or not the resource can have usage data.`,
+										},
+										"remote_resource_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The id of the resource in the end system`,
+										},
+									},
+									Description: `Remote info for a custom connector resource.`,
 								},
 								"gcp_big_query_dataset": schema.SingleNestedAttribute{
 									Computed: true,
@@ -614,6 +661,12 @@ func (r *ResourcesListDataSource) Read(ctx context.Context, req datasource.ReadR
 		return
 	}
 
+	ancestorResourceID := new(string)
+	if !data.AncestorResourceID.IsUnknown() && !data.AncestorResourceID.IsNull() {
+		*ancestorResourceID = data.AncestorResourceID.ValueString()
+	} else {
+		ancestorResourceID = nil
+	}
 	cursor := new(string)
 	if !data.Cursor.IsUnknown() && !data.Cursor.IsNull() {
 		*cursor = data.Cursor.ValueString()
@@ -649,6 +702,7 @@ func (r *ResourcesListDataSource) Read(ctx context.Context, req datasource.ReadR
 		resourceTypeFilter = nil
 	}
 	request := operations.GetResourcesRequest{
+		AncestorResourceID: ancestorResourceID,
 		Cursor:             cursor,
 		PageSize:           pageSize,
 		ParentResourceID:   parentResourceID,

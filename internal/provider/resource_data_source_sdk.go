@@ -15,8 +15,16 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 
 	if resp != nil {
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
+		r.AncestorResourceIds = make([]types.String, 0, len(resp.AncestorResourceIds))
+		for _, v := range resp.AncestorResourceIds {
+			r.AncestorResourceIds = append(r.AncestorResourceIds, types.StringValue(v))
+		}
 		r.AppID = types.StringPointerValue(resp.AppID)
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
+		r.DescendantResourceIds = make([]types.String, 0, len(resp.DescendantResourceIds))
+		for _, v := range resp.DescendantResourceIds {
+			r.DescendantResourceIds = append(r.DescendantResourceIds, types.StringValue(v))
+		}
 		r.Description = types.StringPointerValue(resp.Description)
 		r.ID = types.StringValue(resp.ID)
 		r.Name = types.StringPointerValue(resp.Name)
@@ -30,6 +38,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			} else {
 				r.RemoteInfo.AwsAccount = &tfTypes.AwsAccount{}
 				r.RemoteInfo.AwsAccount.AccountID = types.StringValue(resp.RemoteInfo.AwsAccount.AccountID)
+				r.RemoteInfo.AwsAccount.OrganizationalUnitID = types.StringPointerValue(resp.RemoteInfo.AwsAccount.OrganizationalUnitID)
 			}
 			if resp.RemoteInfo.AwsEc2Instance == nil {
 				r.RemoteInfo.AwsEc2Instance = nil
@@ -53,6 +62,13 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.AwsIamRole.AccountID = types.StringPointerValue(resp.RemoteInfo.AwsIamRole.AccountID)
 				r.RemoteInfo.AwsIamRole.Arn = types.StringValue(resp.RemoteInfo.AwsIamRole.Arn)
 			}
+			if resp.RemoteInfo.AwsOrganizationalUnit == nil {
+				r.RemoteInfo.AwsOrganizationalUnit = nil
+			} else {
+				r.RemoteInfo.AwsOrganizationalUnit = &tfTypes.AwsOrganizationalUnit{}
+				r.RemoteInfo.AwsOrganizationalUnit.OrganizationalUnitID = types.StringValue(resp.RemoteInfo.AwsOrganizationalUnit.OrganizationalUnitID)
+				r.RemoteInfo.AwsOrganizationalUnit.ParentID = types.StringPointerValue(resp.RemoteInfo.AwsOrganizationalUnit.ParentID)
+			}
 			if resp.RemoteInfo.AwsPermissionSet == nil {
 				r.RemoteInfo.AwsPermissionSet = nil
 			} else {
@@ -68,6 +84,13 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.AwsRdsInstance.InstanceID = types.StringValue(resp.RemoteInfo.AwsRdsInstance.InstanceID)
 				r.RemoteInfo.AwsRdsInstance.Region = types.StringValue(resp.RemoteInfo.AwsRdsInstance.Region)
 				r.RemoteInfo.AwsRdsInstance.ResourceID = types.StringValue(resp.RemoteInfo.AwsRdsInstance.ResourceID)
+			}
+			if resp.RemoteInfo.CustomConnector == nil {
+				r.RemoteInfo.CustomConnector = nil
+			} else {
+				r.RemoteInfo.CustomConnector = &tfTypes.CustomConnector{}
+				r.RemoteInfo.CustomConnector.CanHaveUsageEvents = types.BoolValue(resp.RemoteInfo.CustomConnector.CanHaveUsageEvents)
+				r.RemoteInfo.CustomConnector.RemoteResourceID = types.StringValue(resp.RemoteInfo.CustomConnector.RemoteResourceID)
 			}
 			if resp.RemoteInfo.GcpBigQueryDataset == nil {
 				r.RemoteInfo.GcpBigQueryDataset = nil
@@ -239,7 +262,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 					reviewerStages.OwnerIds = append(reviewerStages.OwnerIds, types.StringValue(v))
 				}
 				reviewerStages.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
-				reviewerStages.RequireManagerApproval = types.BoolValue(reviewerStagesItem.RequireManagerApproval)
+				reviewerStages.RequireManagerApproval = types.BoolPointerValue(reviewerStagesItem.RequireManagerApproval)
 				if reviewerStagesCount+1 > len(requestConfigurations.ReviewerStages) {
 					requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
 				} else {

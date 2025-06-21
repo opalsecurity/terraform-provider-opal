@@ -95,10 +95,14 @@ func (e *ResourceRiskSensitivityOverride) UnmarshalJSON(data []byte) error {
 type Resource struct {
 	// The ID of the owner of the resource.
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
+	// List of resource IDs that are ancestors of this resource.
+	AncestorResourceIds []string `json:"ancestor_resource_ids,omitempty"`
 	// The ID of the app.
 	AppID *string `json:"app_id,omitempty"`
 	// Custom request notification sent upon request approval.
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
+	// List of resource IDs that are descendants of this resource.
+	DescendantResourceIds []string `json:"descendant_resource_ids,omitempty"`
 	// A description of the resource.
 	Description *string `json:"description,omitempty"`
 	// The ID of the resource.
@@ -142,6 +146,13 @@ func (o *Resource) GetAdminOwnerID() *string {
 	return o.AdminOwnerID
 }
 
+func (o *Resource) GetAncestorResourceIds() []string {
+	if o == nil {
+		return nil
+	}
+	return o.AncestorResourceIds
+}
+
 func (o *Resource) GetAppID() *string {
 	if o == nil {
 		return nil
@@ -154,6 +165,13 @@ func (o *Resource) GetCustomRequestNotification() *string {
 		return nil
 	}
 	return o.CustomRequestNotification
+}
+
+func (o *Resource) GetDescendantResourceIds() []string {
+	if o == nil {
+		return nil
+	}
+	return o.DescendantResourceIds
 }
 
 func (o *Resource) GetDescription() *string {

@@ -41,111 +41,27 @@ actions:
   - target: $["paths"]["/bundles/{bundle_id}"]["get"]
     update:
       x-speakeasy-entity-operation: Bundle#read
-  - target: $["paths"]["/bundles/{bundle_id}"]["delete"]["responses"]
-    update:
-      "200":
-        description: The bundle was successfully deleted.
-  - target: $["paths"]["/bundles/{bundle_id}"]["delete"]["responses"]["204"]
-    remove: true
   - target: $["paths"]["/bundles/{bundle_id}"]["delete"]
     update:
       x-speakeasy-entity-operation: Bundle#delete
   - target: $["paths"]["/bundles/{bundle_id}"]["put"]
     update:
       x-speakeasy-entity-operation: Bundle#update
-  - target: $["paths"]["/bundles/{bundle_id}/resources"]["get"]["parameters"][*]
-    remove: true
-  - target: $["paths"]["/bundles/{bundle_id}/resources"]["get"]["parameters"]
-    update:
-      - description: The ID of the bundle.
-        example: 32acc112-21ff-4669-91c2-21e27683eaa1
-        in: path
-        name: bundle_id
-        required: true
-        schema:
-          format: uuid
-          type: string
-        style: simple
-      - description: The maximum number of resources to return from the beginning of the list. Default is 200, max is 1000.
-        example: 200
-        explode: true
-        in: query
-        name: page_size
-        required: false
-        schema:
-          type: integer
-        style: form
-      - description: A cursor indicating where to start fetching items after a specific point.
-        example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
-        explode: true
-        in: query
-        name: cursor
-        required: false
-        schema:
-          type: string
-        style: form
   - target: $["paths"]["/bundles/{bundle_id}/resources"]["get"]
     update:
       x-speakeasy-entity-operation: PaginatedBundleResourceList#read
-  - target: $["paths"]["/bundles/{bundle_id}/resources"]["post"]["requestBody"]["content"]["application/json"]["schema"]["properties"]["resource_name"]
-    remove: true
   - target: $["paths"]["/bundles/{bundle_id}/resources"]["post"]
     update:
       x-speakeasy-entity-operation: BundleResource#create
-  - target: $["paths"]["/bundles/{bundle_id}/resources/{resource_id}"]["delete"]["responses"]
-    update:
-      "200":
-        description: Resource was successfully removed from the bundle.
-  - target: $["paths"]["/bundles/{bundle_id}/resources/{resource_id}"]["delete"]["responses"]["204"]
-    remove: true
   - target: $["paths"]["/bundles/{bundle_id}/resources/{resource_id}"]["delete"]
     update:
       x-speakeasy-entity-operation: BundleResource#delete
-  - target: $["paths"]["/bundles/{bundle_id}/groups"]["get"]["parameters"][*]
-    remove: true
-  - target: $["paths"]["/bundles/{bundle_id}/groups"]["get"]["parameters"]
-    update:
-      - description: The ID of the bundle.
-        example: 32acc112-21ff-4669-91c2-21e27683eaa1
-        in: path
-        name: bundle_id
-        required: true
-        schema:
-          format: uuid
-          type: string
-        style: simple
-      - description: The maximum number of groups to return from the beginning of the list. Default is 200, max is 1000.
-        example: 200
-        explode: true
-        in: query
-        name: page_size
-        required: false
-        schema:
-          type: integer
-        style: form
-      - description: A cursor indicating where to start fetching items after a specific point.
-        example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
-        explode: true
-        in: query
-        name: cursor
-        required: false
-        schema:
-          type: string
-        style: form
   - target: $["paths"]["/bundles/{bundle_id}/groups"]["get"]
     update:
       x-speakeasy-entity-operation: PaginatedBundleGroupList#read
-  - target: $["paths"]["/bundles/{bundle_id}/groups"]["post"]["requestBody"]["content"]["application/json"]["schema"]["properties"]["group_name"]
-    remove: true
   - target: $["paths"]["/bundles/{bundle_id}/groups"]["post"]
     update:
       x-speakeasy-entity-operation: BundleGroup#create
-  - target: $["paths"]["/bundles/{bundle_id}/groups/{group_id}"]["delete"]["responses"]
-    update:
-      "200":
-        description: Group was successfully removed from the bundle.
-  - target: $["paths"]["/bundles/{bundle_id}/groups/{group_id}"]["delete"]["responses"]["204"]
-    remove: true
   - target: $["paths"]["/bundles/{bundle_id}/groups/{group_id}"]["delete"]
     update:
       x-speakeasy-entity-operation: BundleGroup#delete
@@ -1414,12 +1330,25 @@ actions:
       x-speakeasy-entity:
         - GroupsReviewersStages
         - ResourcesReviewersStagesList
+  - target: $["components"]["schemas"]["ReviewerStage"]["properties"]["require_manager_approval"]
+    update:
+      default: False
+  - target: $["components"]["schemas"]["ReviewerStage"]["properties"]["require_admin_approval"]
+    update:
+      default: False
   - target: $["components"]["schemas"]["ReviewerStage"]["properties"]["operator"]
     update:
       default: AND
   - target: $["components"]["schemas"]["ReviewerStage"]["properties"]["owner_ids"]
     update:
       format: set
+  - target: $["components"]["schemas"]["ReviewerStage"]["required"][*]
+    remove: true
+  - target: $["components"]["schemas"]["ReviewerStage"]["required"]
+    update:
+      - operator
+      - owner_ids
+      - stage
   - target: $["components"]["schemas"]["MessageChannel"]["properties"]["message_channel_id"]
     update:
       x-speakeasy-name-override: id
@@ -1781,6 +1710,12 @@ actions:
   - target: $["components"]["schemas"]["Resource"]["properties"]["remote_info"]
     update:
       x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["ancestor_resource_ids"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["descendant_resource_ids"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["Resource"]
     update:
       x-speakeasy-entity: Resource

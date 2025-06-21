@@ -280,7 +280,7 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 					reviewerStages.OwnerIds = append(reviewerStages.OwnerIds, types.StringValue(v))
 				}
 				reviewerStages.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
-				reviewerStages.RequireManagerApproval = types.BoolValue(reviewerStagesItem.RequireManagerApproval)
+				reviewerStages.RequireManagerApproval = types.BoolPointerValue(reviewerStagesItem.RequireManagerApproval)
 				if reviewerStagesCount+1 > len(requestConfigurations.ReviewerStages) {
 					requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
 				} else {
@@ -421,9 +421,12 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo() *shared.UpdateGroupInfo {
 			} else {
 				requireAdminApproval = nil
 			}
-			var requireManagerApproval bool
-			requireManagerApproval = reviewerStagesItem.RequireManagerApproval.ValueBool()
-
+			requireManagerApproval := new(bool)
+			if !reviewerStagesItem.RequireManagerApproval.IsUnknown() && !reviewerStagesItem.RequireManagerApproval.IsNull() {
+				*requireManagerApproval = reviewerStagesItem.RequireManagerApproval.ValueBool()
+			} else {
+				requireManagerApproval = nil
+			}
 			reviewerStages = append(reviewerStages, shared.ReviewerStage{
 				Operator:               operator,
 				OwnerIds:               ownerIds,
@@ -522,7 +525,7 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(ctx context.Contex
 				reviewerStages.OwnerIds = append(reviewerStages.OwnerIds, types.StringValue(v))
 			}
 			reviewerStages.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
-			reviewerStages.RequireManagerApproval = types.BoolValue(reviewerStagesItem.RequireManagerApproval)
+			reviewerStages.RequireManagerApproval = types.BoolPointerValue(reviewerStagesItem.RequireManagerApproval)
 			if reviewerStagesCount+1 > len(requestConfigurations.ReviewerStages) {
 				requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
 			} else {

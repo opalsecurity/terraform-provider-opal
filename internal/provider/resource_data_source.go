@@ -30,8 +30,10 @@ type ResourceDataSource struct {
 // ResourceDataSourceModel describes the data model.
 type ResourceDataSourceModel struct {
 	AdminOwnerID              types.String                            `tfsdk:"admin_owner_id"`
+	AncestorResourceIds       []types.String                          `tfsdk:"ancestor_resource_ids"`
 	AppID                     types.String                            `tfsdk:"app_id"`
 	CustomRequestNotification types.String                            `tfsdk:"custom_request_notification"`
+	DescendantResourceIds     []types.String                          `tfsdk:"descendant_resource_ids"`
 	Description               types.String                            `tfsdk:"description"`
 	ID                        types.String                            `tfsdk:"id"`
 	Name                      types.String                            `tfsdk:"name"`
@@ -61,6 +63,11 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Computed:    true,
 				Description: `The ID of the owner of the resource.`,
 			},
+			"ancestor_resource_ids": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
+				Description: `List of resource IDs that are ancestors of this resource.`,
+			},
 			"app_id": schema.StringAttribute{
 				Computed:    true,
 				Description: `The ID of the app.`,
@@ -68,6 +75,11 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"custom_request_notification": schema.StringAttribute{
 				Computed:    true,
 				Description: `Custom request notification sent upon request approval.`,
+			},
+			"descendant_resource_ids": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
+				Description: `List of resource IDs that are descendants of this resource.`,
 			},
 			"description": schema.StringAttribute{
 				Computed:    true,
@@ -94,6 +106,10 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							"account_id": schema.StringAttribute{
 								Computed:    true,
 								Description: `The id of the AWS account.`,
+							},
+							"organizational_unit_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the AWS organizational unit. Required only if customer has OUs enabled.`,
 							},
 						},
 						Description: `Remote info for AWS account.`,
@@ -144,6 +160,20 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for AWS IAM role.`,
 					},
+					"aws_organizational_unit": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"organizational_unit_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the AWS organizational unit that is being created.`,
+							},
+							"parent_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the parent organizational unit.`,
+							},
+						},
+						Description: `Remote info for AWS organizational unit.`,
+					},
 					"aws_permission_set": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -179,6 +209,20 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for AWS RDS instance.`,
+					},
+					"custom_connector": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"can_have_usage_events": schema.BoolAttribute{
+								Computed:    true,
+								Description: `A bool representing whether or not the resource can have usage data.`,
+							},
+							"remote_resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the resource in the end system`,
+							},
+						},
+						Description: `Remote info for a custom connector resource.`,
 					},
 					"gcp_big_query_dataset": schema.SingleNestedAttribute{
 						Computed: true,

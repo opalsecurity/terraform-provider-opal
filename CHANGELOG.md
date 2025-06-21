@@ -1,4 +1,9 @@
 # Changelog
+## v.3.0.17
+- Add support for AWS Organizational Units
+- Add support for hierarchical data to resources
+- Add default values for require_admin_approval and require_manager_approval
+
 ## v.3.0.16
 - Add support for Access Rules
 

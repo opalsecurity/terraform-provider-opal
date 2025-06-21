@@ -3,24 +3,29 @@ generation:
   sdkClassName: Opal-API
   usageSnippets:
     optionalPropertyRendering: withExample
+    sdkInitStyle: constructor
   fixes:
     nameResolutionFeb2025: false
     parameterOrderingFeb2024: false
     requestResponseComponentNamesFeb2024: false
     securityFeb2025: false
+    sharedErrorComponentsApr2025: false
   auth:
     oAuth2ClientCredentialsEnabled: false
     oAuth2PasswordEnabled: false
   flattenGlobalSecurity: true
 terraform:
-  version: 0.34.3
+  version: 0.40.6
   additionalDataSources: []
-  additionalDependencies: {}
+  additionalDependencies:
+    github.com/hashicorp/terraform-plugin-testing: v1.12.0
+  additionalEphemeralResources: []
   additionalProviderAttributes:
     httpHeaders: http_headers
   additionalResources: []
   allowUnknownFieldsInWeakUnions: false
   author: opalsecurity
+  baseErrorName: OpalAPIError
   defaultErrorName: SDKError
   enableTypeDeduplication: true
   environmentVariables:
