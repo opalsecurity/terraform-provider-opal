@@ -8,8 +8,53 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *RequestsDataSourceModel) ToOperationsGetRequestsRequest(ctx context.Context) (*operations.GetRequestsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	cursor := new(string)
+	if !r.Cursor.IsUnknown() && !r.Cursor.IsNull() {
+		*cursor = r.Cursor.ValueString()
+	} else {
+		cursor = nil
+	}
+	endDateFilter := new(string)
+	if !r.EndDateFilter.IsUnknown() && !r.EndDateFilter.IsNull() {
+		*endDateFilter = r.EndDateFilter.ValueString()
+	} else {
+		endDateFilter = nil
+	}
+	pageSize := new(int64)
+	if !r.PageSize.IsUnknown() && !r.PageSize.IsNull() {
+		*pageSize = r.PageSize.ValueInt64()
+	} else {
+		pageSize = nil
+	}
+	showPendingOnly := new(bool)
+	if !r.ShowPendingOnly.IsUnknown() && !r.ShowPendingOnly.IsNull() {
+		*showPendingOnly = r.ShowPendingOnly.ValueBool()
+	} else {
+		showPendingOnly = nil
+	}
+	startDateFilter := new(string)
+	if !r.StartDateFilter.IsUnknown() && !r.StartDateFilter.IsNull() {
+		*startDateFilter = r.StartDateFilter.ValueString()
+	} else {
+		startDateFilter = nil
+	}
+	out := operations.GetRequestsRequest{
+		Cursor:          cursor,
+		EndDateFilter:   endDateFilter,
+		PageSize:        pageSize,
+		ShowPendingOnly: showPendingOnly,
+		StartDateFilter: startDateFilter,
+	}
+
+	return &out, diags
+}
 
 func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(ctx context.Context, resp *shared.RequestList) diag.Diagnostics {
 	var diags diag.Diagnostics
@@ -64,6 +109,38 @@ func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(ctx context.Conte
 				}
 			}
 			requests.RequesterID = types.StringValue(requestsItem.RequesterID)
+			if requestsItem.Stages == nil {
+				requests.Stages = nil
+			} else {
+				requests.Stages = &tfTypes.RequestItemStages{}
+				requests.Stages.RequestedItemName = types.StringValue(requestsItem.Stages.RequestedItemName)
+				requests.Stages.RequestedRoleName = types.StringPointerValue(requestsItem.Stages.RequestedRoleName)
+				requests.Stages.Stages = []tfTypes.RequestStage{}
+				for stagesCount, stagesItem := range requestsItem.Stages.Stages {
+					var stages tfTypes.RequestStage
+					stages.Operator = types.StringValue(string(stagesItem.Operator))
+					stages.Reviewers = []tfTypes.RequestReviewer{}
+					for reviewersCount, reviewersItem := range stagesItem.Reviewers {
+						var reviewers tfTypes.RequestReviewer
+						reviewers.ID = types.StringValue(reviewersItem.ID)
+						reviewers.Status = types.StringValue(string(reviewersItem.Status))
+						if reviewersCount+1 > len(stages.Reviewers) {
+							stages.Reviewers = append(stages.Reviewers, reviewers)
+						} else {
+							stages.Reviewers[reviewersCount].ID = reviewers.ID
+							stages.Reviewers[reviewersCount].Status = reviewers.Status
+						}
+					}
+					stages.Stage = types.Int64Value(stagesItem.Stage)
+					if stagesCount+1 > len(requests.Stages.Stages) {
+						requests.Stages.Stages = append(requests.Stages.Stages, stages)
+					} else {
+						requests.Stages.Stages[stagesCount].Operator = stages.Operator
+						requests.Stages.Stages[stagesCount].Reviewers = stages.Reviewers
+						requests.Stages.Stages[stagesCount].Stage = stages.Stage
+					}
+				}
+			}
 			requests.Status = types.StringValue(string(requestsItem.Status))
 			requests.TargetGroupID = types.StringPointerValue(requestsItem.TargetGroupID)
 			requests.TargetUserID = types.StringPointerValue(requestsItem.TargetUserID)
@@ -78,6 +155,7 @@ func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(ctx context.Conte
 				r.Requests[requestsCount].Reason = requests.Reason
 				r.Requests[requestsCount].RequestedItemsList = requests.RequestedItemsList
 				r.Requests[requestsCount].RequesterID = requests.RequesterID
+				r.Requests[requestsCount].Stages = requests.Stages
 				r.Requests[requestsCount].Status = requests.Status
 				r.Requests[requestsCount].TargetGroupID = requests.TargetGroupID
 				r.Requests[requestsCount].TargetUserID = requests.TargetUserID

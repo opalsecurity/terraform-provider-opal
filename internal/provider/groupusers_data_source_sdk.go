@@ -8,8 +8,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *GroupUsersDataSourceModel) ToOperationsGetGroupUsersRequest(ctx context.Context) (*operations.GetGroupUsersRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var groupID string
+	groupID = r.GroupID.ValueString()
+
+	out := operations.GetGroupUsersRequest{
+		GroupID: groupID,
+	}
+
+	return &out, diags
+}
 
 func (r *GroupUsersDataSourceModel) RefreshFromSharedGroupUserList(ctx context.Context, resp *shared.GroupUserList) diag.Diagnostics {
 	var diags diag.Diagnostics

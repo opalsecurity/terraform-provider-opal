@@ -13,7 +13,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	speakeasy_objectvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/objectvalidators"
 )
 
@@ -112,15 +111,13 @@ func (r *IdpGroupMappingsResource) Create(ctx context.Context, req resource.Crea
 		return
 	}
 
-	requestBody := *data.ToOperationsUpdateIdpGroupMappingsRequestBody()
-	var appResourceID string
-	appResourceID = data.AppResourceID.ValueString()
+	request, requestDiags := data.ToOperationsUpdateIdpGroupMappingsRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.UpdateIdpGroupMappingsRequest{
-		RequestBody:   requestBody,
-		AppResourceID: appResourceID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.IdpGroupMappings.UpdateIdpGroupMappings(ctx, request)
+	res, err := r.client.IdpGroupMappings.UpdateIdpGroupMappings(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -165,13 +162,13 @@ func (r *IdpGroupMappingsResource) Read(ctx context.Context, req resource.ReadRe
 		return
 	}
 
-	var appResourceID string
-	appResourceID = data.AppResourceID.ValueString()
+	request, requestDiags := data.ToOperationsGetIdpGroupMappingsRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetIdpGroupMappingsRequest{
-		AppResourceID: appResourceID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.IdpGroupMappings.GetIdpGroupMappings(ctx, request)
+	res, err := r.client.IdpGroupMappings.GetIdpGroupMappings(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -219,15 +216,13 @@ func (r *IdpGroupMappingsResource) Update(ctx context.Context, req resource.Upda
 		return
 	}
 
-	requestBody := *data.ToOperationsUpdateIdpGroupMappingsRequestBody()
-	var appResourceID string
-	appResourceID = data.AppResourceID.ValueString()
+	request, requestDiags := data.ToOperationsUpdateIdpGroupMappingsRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.UpdateIdpGroupMappingsRequest{
-		RequestBody:   requestBody,
-		AppResourceID: appResourceID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.IdpGroupMappings.UpdateIdpGroupMappings(ctx, request)
+	res, err := r.client.IdpGroupMappings.UpdateIdpGroupMappings(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

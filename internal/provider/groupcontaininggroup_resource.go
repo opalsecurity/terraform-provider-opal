@@ -16,7 +16,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -103,15 +102,13 @@ func (r *GroupContainingGroupResource) Create(ctx context.Context, req resource.
 		return
 	}
 
-	groupContainingGroup := *data.ToSharedGroupContainingGroup()
-	var groupID string
-	groupID = data.GroupID.ValueString()
+	request, requestDiags := data.ToOperationsAddGroupContainingGroupRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.AddGroupContainingGroupRequest{
-		GroupContainingGroup: groupContainingGroup,
-		GroupID:              groupID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Groups.AddGroupContainingGroup(ctx, request)
+	res, err := r.client.Groups.AddGroupContainingGroup(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -165,17 +162,13 @@ func (r *GroupContainingGroupResource) Read(ctx context.Context, req resource.Re
 		return
 	}
 
-	var containingGroupID string
-	containingGroupID = data.ContainingGroupID.ValueString()
+	request, requestDiags := data.ToOperationsGetGroupContainingGroupRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	var groupID string
-	groupID = data.GroupID.ValueString()
-
-	request := operations.GetGroupContainingGroupRequest{
-		ContainingGroupID: containingGroupID,
-		GroupID:           groupID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Groups.GetGroupContainingGroup(ctx, request)
+	res, err := r.client.Groups.GetGroupContainingGroup(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -247,17 +240,13 @@ func (r *GroupContainingGroupResource) Delete(ctx context.Context, req resource.
 		return
 	}
 
-	var containingGroupID string
-	containingGroupID = data.ContainingGroupID.ValueString()
+	request, requestDiags := data.ToOperationsRemoveGroupContainingGroupRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	var groupID string
-	groupID = data.GroupID.ValueString()
-
-	request := operations.RemoveGroupContainingGroupRequest{
-		ContainingGroupID: containingGroupID,
-		GroupID:           groupID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Groups.RemoveGroupContainingGroup(ctx, request)
+	res, err := r.client.Groups.RemoveGroupContainingGroup(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

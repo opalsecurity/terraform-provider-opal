@@ -7,12 +7,13 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -30,8 +31,9 @@ type TagUserResource struct {
 
 // TagUserResourceModel describes the resource data model.
 type TagUserResourceModel struct {
-	TagID  types.String `tfsdk:"tag_id"`
-	UserID types.String `tfsdk:"user_id"`
+	RequestBody *tfTypes.CreateUserTagRequestBody `tfsdk:"request_body"`
+	TagID       types.String                      `tfsdk:"tag_id"`
+	UserID      types.String                      `tfsdk:"user_id"`
 }
 
 func (r *TagUserResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -42,6 +44,13 @@ func (r *TagUserResource) Schema(ctx context.Context, req resource.SchemaRequest
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "TagUser Resource",
 		Attributes: map[string]schema.Attribute{
+			"request_body": schema.SingleNestedAttribute{
+				Optional: true,
+				PlanModifiers: []planmodifier.Object{
+					objectplanmodifier.RequiresReplaceIfConfigured(),
+				},
+				Description: `Requires replacement if changed.`,
+			},
 			"tag_id": schema.StringAttribute{
 				Required: true,
 				PlanModifiers: []planmodifier.String{
@@ -98,17 +107,13 @@ func (r *TagUserResource) Create(ctx context.Context, req resource.CreateRequest
 		return
 	}
 
-	var tagID string
-	tagID = data.TagID.ValueString()
+	request, requestDiags := data.ToOperationsCreateUserTagRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	var userID string
-	userID = data.UserID.ValueString()
-
-	request := operations.CreateUserTagRequest{
-		TagID:  tagID,
-		UserID: userID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Tags.CreateUser(ctx, request)
+	res, err := r.client.Tags.CreateUser(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -197,17 +202,13 @@ func (r *TagUserResource) Delete(ctx context.Context, req resource.DeleteRequest
 		return
 	}
 
-	var tagID string
-	tagID = data.TagID.ValueString()
+	request, requestDiags := data.ToOperationsDeleteUserTagRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	var userID string
-	userID = data.UserID.ValueString()
-
-	request := operations.DeleteUserTagRequest{
-		TagID:  tagID,
-		UserID: userID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Tags.Delete(ctx, request)
+	res, err := r.client.Tags.Delete(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

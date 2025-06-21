@@ -12,7 +12,9 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *GroupUserResourceModel) ToOperationsCreateGroupUserRequestBody() *operations.CreateGroupUserRequestBody {
+func (r *GroupUserResourceModel) ToOperationsCreateGroupUserRequestBody(ctx context.Context) (*operations.CreateGroupUserRequestBody, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	accessLevelRemoteID := new(string)
 	if !r.AccessLevelRemoteID.IsUnknown() && !r.AccessLevelRemoteID.IsNull() {
 		*accessLevelRemoteID = r.AccessLevelRemoteID.ValueString()
@@ -29,7 +31,50 @@ func (r *GroupUserResourceModel) ToOperationsCreateGroupUserRequestBody() *opera
 		AccessLevelRemoteID: accessLevelRemoteID,
 		DurationMinutes:     durationMinutes,
 	}
-	return &out
+
+	return &out, diags
+}
+
+func (r *GroupUserResourceModel) ToOperationsCreateGroupUserRequest(ctx context.Context) (*operations.CreateGroupUserRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	requestBody, requestBodyDiags := r.ToOperationsCreateGroupUserRequestBody(ctx)
+	diags.Append(requestBodyDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var groupID string
+	groupID = r.GroupID.ValueString()
+
+	var userID string
+	userID = r.UserID.ValueString()
+
+	out := operations.CreateGroupUserRequest{
+		RequestBody: *requestBody,
+		GroupID:     groupID,
+		UserID:      userID,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupUserResourceModel) ToOperationsDeleteGroupUserRequest(ctx context.Context) (*operations.DeleteGroupUserRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var groupID string
+	groupID = r.GroupID.ValueString()
+
+	var userID string
+	userID = r.UserID.ValueString()
+
+	out := operations.DeleteGroupUserRequest{
+		GroupID: groupID,
+		UserID:  userID,
+	}
+
+	return &out, diags
 }
 
 func (r *GroupUserResourceModel) RefreshFromSharedGroupUser(ctx context.Context, resp *shared.GroupUser) diag.Diagnostics {

@@ -8,8 +8,47 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *ResourcesAccessStatusDataSourceModel) ToOperationsGetResourceUserAccessStatusRequest(ctx context.Context) (*operations.GetResourceUserAccessStatusRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	accessLevelRemoteID := new(string)
+	if !r.AccessLevelRemoteID.IsUnknown() && !r.AccessLevelRemoteID.IsNull() {
+		*accessLevelRemoteID = r.AccessLevelRemoteID.ValueString()
+	} else {
+		accessLevelRemoteID = nil
+	}
+	cursor := new(string)
+	if !r.Cursor.IsUnknown() && !r.Cursor.IsNull() {
+		*cursor = r.Cursor.ValueString()
+	} else {
+		cursor = nil
+	}
+	pageSize := new(int64)
+	if !r.PageSize.IsUnknown() && !r.PageSize.IsNull() {
+		*pageSize = r.PageSize.ValueInt64()
+	} else {
+		pageSize = nil
+	}
+	var resourceID string
+	resourceID = r.ResourceID.ValueString()
+
+	var userID string
+	userID = r.UserID.ValueString()
+
+	out := operations.GetResourceUserAccessStatusRequest{
+		AccessLevelRemoteID: accessLevelRemoteID,
+		Cursor:              cursor,
+		PageSize:            pageSize,
+		ResourceID:          resourceID,
+		UserID:              userID,
+	}
+
+	return &out, diags
+}
 
 func (r *ResourcesAccessStatusDataSourceModel) RefreshFromSharedResourceUserAccessStatus(ctx context.Context, resp *shared.ResourceUserAccessStatus) diag.Diagnostics {
 	var diags diag.Diagnostics

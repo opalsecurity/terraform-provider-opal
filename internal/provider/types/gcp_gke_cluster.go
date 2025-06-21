@@ -2,7 +2,9 @@
 
 package types
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
 type GcpGkeCluster struct {
 	ClusterName types.String `tfsdk:"cluster_name"`

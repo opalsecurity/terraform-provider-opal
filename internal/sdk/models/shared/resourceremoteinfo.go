@@ -6,6 +6,8 @@ package shared
 type AwsAccount struct {
 	// The id of the AWS account.
 	AccountID string `json:"account_id"`
+	// The id of the AWS organizational unit. Required only if customer has OUs enabled.
+	OrganizationalUnitID *string `json:"organizational_unit_id,omitempty"`
 }
 
 func (o *AwsAccount) GetAccountID() string {
@@ -13,6 +15,13 @@ func (o *AwsAccount) GetAccountID() string {
 		return ""
 	}
 	return o.AccountID
+}
+
+func (o *AwsAccount) GetOrganizationalUnitID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.OrganizationalUnitID
 }
 
 // AwsEc2Instance - Remote info for AWS EC2 instance.
@@ -90,6 +99,28 @@ func (o *AwsIamRole) GetArn() string {
 	return o.Arn
 }
 
+// AwsOrganizationalUnit - Remote info for AWS organizational unit.
+type AwsOrganizationalUnit struct {
+	// The id of the AWS organizational unit that is being created.
+	OrganizationalUnitID string `json:"organizational_unit_id"`
+	// The id of the parent organizational unit.
+	ParentID *string `json:"parent_id,omitempty"`
+}
+
+func (o *AwsOrganizationalUnit) GetOrganizationalUnitID() string {
+	if o == nil {
+		return ""
+	}
+	return o.OrganizationalUnitID
+}
+
+func (o *AwsOrganizationalUnit) GetParentID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.ParentID
+}
+
 // AwsPermissionSet - Remote info for AWS Identity Center permission set.
 type AwsPermissionSet struct {
 	// The ID of an AWS account to which this permission set is provisioned.
@@ -150,6 +181,28 @@ func (o *AwsRdsInstance) GetResourceID() string {
 		return ""
 	}
 	return o.ResourceID
+}
+
+// CustomConnector - Remote info for a custom connector resource.
+type CustomConnector struct {
+	// A bool representing whether or not the resource can have usage data.
+	CanHaveUsageEvents bool `json:"can_have_usage_events"`
+	// The id of the resource in the end system
+	RemoteResourceID string `json:"remote_resource_id"`
+}
+
+func (o *CustomConnector) GetCanHaveUsageEvents() bool {
+	if o == nil {
+		return false
+	}
+	return o.CanHaveUsageEvents
+}
+
+func (o *CustomConnector) GetRemoteResourceID() string {
+	if o == nil {
+		return ""
+	}
+	return o.RemoteResourceID
 }
 
 // GcpBigQueryDataset - Remote info for GCP BigQuery Dataset.
@@ -503,10 +556,14 @@ type ResourceRemoteInfo struct {
 	AwsEksCluster *AwsEksCluster `json:"aws_eks_cluster,omitempty"`
 	// Remote info for AWS IAM role.
 	AwsIamRole *AwsIamRole `json:"aws_iam_role,omitempty"`
+	// Remote info for AWS organizational unit.
+	AwsOrganizationalUnit *AwsOrganizationalUnit `json:"aws_organizational_unit,omitempty"`
 	// Remote info for AWS Identity Center permission set.
 	AwsPermissionSet *AwsPermissionSet `json:"aws_permission_set,omitempty"`
 	// Remote info for AWS RDS instance.
 	AwsRdsInstance *AwsRdsInstance `json:"aws_rds_instance,omitempty"`
+	// Remote info for a custom connector resource.
+	CustomConnector *CustomConnector `json:"custom_connector,omitempty"`
 	// Remote info for GCP BigQuery Dataset.
 	GcpBigQueryDataset *GcpBigQueryDataset `json:"gcp_big_query_dataset,omitempty"`
 	// Remote info for GCP BigQuery Table.
@@ -577,6 +634,13 @@ func (o *ResourceRemoteInfo) GetAwsIamRole() *AwsIamRole {
 	return o.AwsIamRole
 }
 
+func (o *ResourceRemoteInfo) GetAwsOrganizationalUnit() *AwsOrganizationalUnit {
+	if o == nil {
+		return nil
+	}
+	return o.AwsOrganizationalUnit
+}
+
 func (o *ResourceRemoteInfo) GetAwsPermissionSet() *AwsPermissionSet {
 	if o == nil {
 		return nil
@@ -589,6 +653,13 @@ func (o *ResourceRemoteInfo) GetAwsRdsInstance() *AwsRdsInstance {
 		return nil
 	}
 	return o.AwsRdsInstance
+}
+
+func (o *ResourceRemoteInfo) GetCustomConnector() *CustomConnector {
+	if o == nil {
+		return nil
+	}
+	return o.CustomConnector
 }
 
 func (o *ResourceRemoteInfo) GetGcpBigQueryDataset() *GcpBigQueryDataset {

@@ -6,8 +6,22 @@ import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *OwnerFromNameDataSourceModel) ToOperationsGetOwnerFromNameRequest(ctx context.Context) (*operations.GetOwnerFromNameRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var ownerName string
+	ownerName = r.OwnerName.ValueString()
+
+	out := operations.GetOwnerFromNameRequest{
+		OwnerName: ownerName,
+	}
+
+	return &out, diags
+}
 
 func (r *OwnerFromNameDataSourceModel) RefreshFromSharedOwner(ctx context.Context, resp *shared.Owner) diag.Diagnostics {
 	var diags diag.Diagnostics

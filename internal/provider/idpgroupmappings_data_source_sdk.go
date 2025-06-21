@@ -7,8 +7,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *IdpGroupMappingsDataSourceModel) ToOperationsGetIdpGroupMappingsRequest(ctx context.Context) (*operations.GetIdpGroupMappingsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var appResourceID string
+	appResourceID = r.AppResourceID.ValueString()
+
+	out := operations.GetIdpGroupMappingsRequest{
+		AppResourceID: appResourceID,
+	}
+
+	return &out, diags
+}
 
 func (r *IdpGroupMappingsDataSourceModel) RefreshFromSharedIdpGroupMappingList(ctx context.Context, resp *shared.IdpGroupMappingList) diag.Diagnostics {
 	var diags diag.Diagnostics

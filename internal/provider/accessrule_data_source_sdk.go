@@ -7,8 +7,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *AccessRuleDataSourceModel) ToOperationsGetAccessRuleRequest(ctx context.Context) (*operations.GetAccessRuleRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetAccessRuleRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
 
 func (r *AccessRuleDataSourceModel) RefreshFromSharedAccessRule(ctx context.Context, resp *shared.AccessRule) diag.Diagnostics {
 	var diags diag.Diagnostics

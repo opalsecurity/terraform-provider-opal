@@ -2,7 +2,9 @@
 
 package types
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
 type ResourceWithAccessLevel struct {
 	AccessLevelRemoteID types.String `tfsdk:"access_level_remote_id"`

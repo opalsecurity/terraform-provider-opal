@@ -7,8 +7,10 @@ type ResourceRemoteInfo struct {
 	AwsEc2Instance          *AwsEc2Instance          `tfsdk:"aws_ec2_instance"`
 	AwsEksCluster           *AwsEksCluster           `tfsdk:"aws_eks_cluster"`
 	AwsIamRole              *AwsEksCluster           `tfsdk:"aws_iam_role"`
+	AwsOrganizationalUnit   *AwsOrganizationalUnit   `tfsdk:"aws_organizational_unit"`
 	AwsPermissionSet        *AwsPermissionSet        `tfsdk:"aws_permission_set"`
 	AwsRdsInstance          *AwsRdsInstance          `tfsdk:"aws_rds_instance"`
+	CustomConnector         *CustomConnector         `tfsdk:"custom_connector"`
 	GcpBigQueryDataset      *GcpBigQueryDataset      `tfsdk:"gcp_big_query_dataset"`
 	GcpBigQueryTable        *GcpBigQueryTable        `tfsdk:"gcp_big_query_table"`
 	GcpBucket               *GcpBucket               `tfsdk:"gcp_bucket"`

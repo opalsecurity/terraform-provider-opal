@@ -11,8 +11,10 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *IdpGroupMappingsResourceModel) ToOperationsUpdateIdpGroupMappingsRequestBody() *operations.UpdateIdpGroupMappingsRequestBody {
-	var mappings []operations.Mappings = []operations.Mappings{}
+func (r *IdpGroupMappingsResourceModel) ToOperationsUpdateIdpGroupMappingsRequestBody(ctx context.Context) (*operations.UpdateIdpGroupMappingsRequestBody, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	mappings := make([]operations.Mappings, 0, len(r.Mappings))
 	for _, mappingsItem := range r.Mappings {
 		alias := new(string)
 		if !mappingsItem.Alias.IsUnknown() && !mappingsItem.Alias.IsNull() {
@@ -41,7 +43,42 @@ func (r *IdpGroupMappingsResourceModel) ToOperationsUpdateIdpGroupMappingsReques
 	out := operations.UpdateIdpGroupMappingsRequestBody{
 		Mappings: mappings,
 	}
-	return &out
+
+	return &out, diags
+}
+
+func (r *IdpGroupMappingsResourceModel) ToOperationsUpdateIdpGroupMappingsRequest(ctx context.Context) (*operations.UpdateIdpGroupMappingsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	requestBody, requestBodyDiags := r.ToOperationsUpdateIdpGroupMappingsRequestBody(ctx)
+	diags.Append(requestBodyDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var appResourceID string
+	appResourceID = r.AppResourceID.ValueString()
+
+	out := operations.UpdateIdpGroupMappingsRequest{
+		RequestBody:   *requestBody,
+		AppResourceID: appResourceID,
+	}
+
+	return &out, diags
+}
+
+func (r *IdpGroupMappingsResourceModel) ToOperationsGetIdpGroupMappingsRequest(ctx context.Context) (*operations.GetIdpGroupMappingsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var appResourceID string
+	appResourceID = r.AppResourceID.ValueString()
+
+	out := operations.GetIdpGroupMappingsRequest{
+		AppResourceID: appResourceID,
+	}
+
+	return &out, diags
 }
 
 func (r *IdpGroupMappingsResourceModel) RefreshFromSharedIdpGroupMappingList(ctx context.Context, resp *shared.IdpGroupMappingList) diag.Diagnostics {

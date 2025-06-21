@@ -2,7 +2,9 @@
 
 package types
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
 type Request struct {
 	CreatedAt             types.String                 `tfsdk:"created_at"`
@@ -12,6 +14,7 @@ type Request struct {
 	Reason                types.String                 `tfsdk:"reason"`
 	RequestedItemsList    []RequestedItem              `tfsdk:"requested_items_list"`
 	RequesterID           types.String                 `tfsdk:"requester_id"`
+	Stages                *RequestItemStages           `tfsdk:"stages"`
 	Status                types.String                 `tfsdk:"status"`
 	TargetGroupID         types.String                 `tfsdk:"target_group_id"`
 	TargetUserID          types.String                 `tfsdk:"target_user_id"`

@@ -404,7 +404,7 @@ func testAccCheckGroupDestroy(s *terraform.State) error {
 		}
 
 		security := shared.Security{
-			BearerAuth: &opalToken,
+			BearerAuth: opalToken,
 		}
 		opts := []sdk.SDKOption{
 			sdk.WithServerURL(opalBaseURL),

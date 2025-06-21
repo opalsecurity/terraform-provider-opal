@@ -19,7 +19,6 @@ import (
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/validators"
 )
 
@@ -204,19 +203,13 @@ func (r *GroupUserResource) Create(ctx context.Context, req resource.CreateReque
 		return
 	}
 
-	requestBody := *data.ToOperationsCreateGroupUserRequestBody()
-	var groupID string
-	groupID = data.GroupID.ValueString()
+	request, requestDiags := data.ToOperationsCreateGroupUserRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	var userID string
-	userID = data.UserID.ValueString()
-
-	request := operations.CreateGroupUserRequest{
-		RequestBody: requestBody,
-		GroupID:     groupID,
-		UserID:      userID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Groups.CreateUser(ctx, request)
+	res, err := r.client.Groups.CreateUser(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -314,17 +307,13 @@ func (r *GroupUserResource) Delete(ctx context.Context, req resource.DeleteReque
 		return
 	}
 
-	var groupID string
-	groupID = data.GroupID.ValueString()
+	request, requestDiags := data.ToOperationsDeleteGroupUserRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	var userID string
-	userID = data.UserID.ValueString()
-
-	request := operations.DeleteGroupUserRequest{
-		GroupID: groupID,
-		UserID:  userID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Groups.DeleteUser(ctx, request)
+	res, err := r.client.Groups.DeleteUser(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

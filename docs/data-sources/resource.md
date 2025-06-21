@@ -28,8 +28,10 @@ data "opal_resource" "my_resource" {
 ### Read-Only
 
 - `admin_owner_id` (String) The ID of the owner of the resource.
+- `ancestor_resource_ids` (List of String) List of resource IDs that are ancestors of this resource.
 - `app_id` (String) The ID of the app.
 - `custom_request_notification` (String) Custom request notification sent upon request approval.
+- `descendant_resource_ids` (List of String) List of resource IDs that are descendants of this resource.
 - `description` (String) A description of the resource.
 - `name` (String) The name of the resource.
 - `parent_resource_id` (String) The ID of the parent resource.
@@ -51,8 +53,10 @@ Read-Only:
 - `aws_ec2_instance` (Attributes) Remote info for AWS EC2 instance. (see [below for nested schema](#nestedatt--remote_info--aws_ec2_instance))
 - `aws_eks_cluster` (Attributes) Remote info for AWS EKS cluster. (see [below for nested schema](#nestedatt--remote_info--aws_eks_cluster))
 - `aws_iam_role` (Attributes) Remote info for AWS IAM role. (see [below for nested schema](#nestedatt--remote_info--aws_iam_role))
+- `aws_organizational_unit` (Attributes) Remote info for AWS organizational unit. (see [below for nested schema](#nestedatt--remote_info--aws_organizational_unit))
 - `aws_permission_set` (Attributes) Remote info for AWS Identity Center permission set. (see [below for nested schema](#nestedatt--remote_info--aws_permission_set))
 - `aws_rds_instance` (Attributes) Remote info for AWS RDS instance. (see [below for nested schema](#nestedatt--remote_info--aws_rds_instance))
+- `custom_connector` (Attributes) Remote info for a custom connector resource. (see [below for nested schema](#nestedatt--remote_info--custom_connector))
 - `gcp_big_query_dataset` (Attributes) Remote info for GCP BigQuery Dataset. (see [below for nested schema](#nestedatt--remote_info--gcp_big_query_dataset))
 - `gcp_big_query_table` (Attributes) Remote info for GCP BigQuery Table. (see [below for nested schema](#nestedatt--remote_info--gcp_big_query_table))
 - `gcp_bucket` (Attributes) Remote info for GCP bucket. (see [below for nested schema](#nestedatt--remote_info--gcp_bucket))
@@ -80,6 +84,7 @@ Read-Only:
 Read-Only:
 
 - `account_id` (String) The id of the AWS account.
+- `organizational_unit_id` (String) The id of the AWS organizational unit. Required only if customer has OUs enabled.
 
 
 <a id="nestedatt--remote_info--aws_ec2_instance"></a>
@@ -110,6 +115,15 @@ Read-Only:
 - `arn` (String) The ARN of the IAM role.
 
 
+<a id="nestedatt--remote_info--aws_organizational_unit"></a>
+### Nested Schema for `remote_info.aws_organizational_unit`
+
+Read-Only:
+
+- `organizational_unit_id` (String) The id of the AWS organizational unit that is being created.
+- `parent_id` (String) The id of the parent organizational unit.
+
+
 <a id="nestedatt--remote_info--aws_permission_set"></a>
 ### Nested Schema for `remote_info.aws_permission_set`
 
@@ -128,6 +142,15 @@ Read-Only:
 - `instance_id` (String) The instanceId of the RDS instance.
 - `region` (String) The region of the RDS instance.
 - `resource_id` (String) The resourceId of the RDS instance.
+
+
+<a id="nestedatt--remote_info--custom_connector"></a>
+### Nested Schema for `remote_info.custom_connector`
+
+Read-Only:
+
+- `can_have_usage_events` (Boolean) A bool representing whether or not the resource can have usage data.
+- `remote_resource_id` (String) The id of the resource in the end system
 
 
 <a id="nestedatt--remote_info--gcp_big_query_dataset"></a>

@@ -7,8 +7,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *GroupResourceListDataSourceModel) ToOperationsGetGroupResourcesRequest(ctx context.Context) (*operations.GetGroupResourcesRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var groupID string
+	groupID = r.GroupID.ValueString()
+
+	out := operations.GetGroupResourcesRequest{
+		GroupID: groupID,
+	}
+
+	return &out, diags
+}
 
 func (r *GroupResourceListDataSourceModel) RefreshFromSharedGroupResourceList(ctx context.Context, resp *shared.GroupResourceList) diag.Diagnostics {
 	var diags diag.Diagnostics

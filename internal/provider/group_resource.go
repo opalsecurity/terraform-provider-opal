@@ -28,8 +28,6 @@ import (
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 	stateupgraders "github.com/opalsecurity/terraform-provider-opal/internal/stateupgraders"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/boolvalidators"
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/internal/validators/int64validators"
@@ -807,8 +805,13 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		return
 	}
 
-	request := *data.ToSharedCreateGroupInfo()
-	res, err := r.client.Groups.Create(ctx, request)
+	request, requestDiags := data.ToSharedCreateGroupInfo(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.Groups.Create(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -839,12 +842,13 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	singleton := *data.ToSharedUpdateGroupInfo()
-	groups := []shared.UpdateGroupInfo{singleton}
-	request1 := shared.UpdateGroupInfoList{
-		Groups: groups,
+	request1, request1Diags := data.ToSharedUpdateGroupInfoList(ctx)
+	resp.Diagnostics.Append(request1Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.Groups.Update(ctx, request1)
+	res1, err := r.client.Groups.Update(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -875,15 +879,13 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	messageChannelIDList := *data.ToSharedMessageChannelIDList()
-	var id string
-	id = data.ID.ValueString()
+	request2, request2Diags := data.ToOperationsUpdateGroupMessageChannelsRequest(ctx)
+	resp.Diagnostics.Append(request2Diags...)
 
-	request2 := operations.UpdateGroupMessageChannelsRequest{
-		MessageChannelIDList: messageChannelIDList,
-		ID:                   id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res2, err := r.client.Groups.UpdateMessageChannels(ctx, request2)
+	res2, err := r.client.Groups.UpdateMessageChannels(ctx, *request2)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res2 != nil && res2.RawResponse != nil {
@@ -905,21 +907,13 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var onCallScheduleIds []string = []string{}
-	for _, onCallScheduleIdsItem := range data.OnCallScheduleIds {
-		onCallScheduleIds = append(onCallScheduleIds, onCallScheduleIdsItem.ValueString())
-	}
-	onCallScheduleIDList := shared.OnCallScheduleIDList{
-		OnCallScheduleIds: onCallScheduleIds,
-	}
-	var id1 string
-	id1 = data.ID.ValueString()
+	request3, request3Diags := data.ToOperationsUpdateGroupOnCallSchedulesRequest(ctx)
+	resp.Diagnostics.Append(request3Diags...)
 
-	request3 := operations.UpdateGroupOnCallSchedulesRequest{
-		OnCallScheduleIDList: onCallScheduleIDList,
-		ID:                   id1,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res3, err := r.client.Groups.UpdateOnCallSchedule(ctx, request3)
+	res3, err := r.client.Groups.UpdateOnCallSchedule(ctx, *request3)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res3 != nil && res3.RawResponse != nil {
@@ -941,15 +935,13 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	visibilityInfo := *data.ToSharedVisibilityInfo()
-	var id2 string
-	id2 = data.ID.ValueString()
+	request4, request4Diags := data.ToOperationsUpdateGroupVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request4Diags...)
 
-	request4 := operations.UpdateGroupVisibilityRequest{
-		VisibilityInfo: visibilityInfo,
-		ID:             id2,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res4, err := r.client.Groups.UpdateVisibility(ctx, request4)
+	res4, err := r.client.Groups.UpdateVisibility(ctx, *request4)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res4 != nil && res4.RawResponse != nil {
@@ -971,13 +963,13 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var id3 string
-	id3 = data.ID.ValueString()
+	request5, request5Diags := data.ToOperationsGetGroupRequest(ctx)
+	resp.Diagnostics.Append(request5Diags...)
 
-	request5 := operations.GetGroupRequest{
-		ID: id3,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res5, err := r.client.Groups.GetGroup(ctx, request5)
+	res5, err := r.client.Groups.GetGroup(ctx, *request5)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res5 != nil && res5.RawResponse != nil {
@@ -1008,13 +1000,13 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var id4 string
-	id4 = data.ID.ValueString()
+	request6, request6Diags := data.ToOperationsGetGroupMessageChannelsRequest(ctx)
+	resp.Diagnostics.Append(request6Diags...)
 
-	request6 := operations.GetGroupMessageChannelsRequest{
-		ID: id4,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res6, err := r.client.Groups.GetMessageChannels(ctx, request6)
+	res6, err := r.client.Groups.GetMessageChannels(ctx, *request6)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res6 != nil && res6.RawResponse != nil {
@@ -1045,13 +1037,13 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var id5 string
-	id5 = data.ID.ValueString()
+	request7, request7Diags := data.ToOperationsGetGroupOnCallSchedulesRequest(ctx)
+	resp.Diagnostics.Append(request7Diags...)
 
-	request7 := operations.GetGroupOnCallSchedulesRequest{
-		ID: id5,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res7, err := r.client.Groups.GetOnCallSchedule(ctx, request7)
+	res7, err := r.client.Groups.GetOnCallSchedule(ctx, *request7)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res7 != nil && res7.RawResponse != nil {
@@ -1073,13 +1065,13 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var id6 string
-	id6 = data.ID.ValueString()
+	request8, request8Diags := data.ToOperationsGetGroupVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request8Diags...)
 
-	request8 := operations.GetGroupVisibilityRequest{
-		ID: id6,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res8, err := r.client.Groups.GetVisibility(ctx, request8)
+	res8, err := r.client.Groups.GetVisibility(ctx, *request8)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res8 != nil && res8.RawResponse != nil {
@@ -1133,13 +1125,13 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		return
 	}
 
-	var id string
-	id = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsGetGroupRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetGroupRequest{
-		ID: id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Groups.GetGroup(ctx, request)
+	res, err := r.client.Groups.GetGroup(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -1168,13 +1160,13 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var id1 string
-	id1 = data.ID.ValueString()
+	request1, request1Diags := data.ToOperationsGetGroupMessageChannelsRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
 
-	request1 := operations.GetGroupMessageChannelsRequest{
-		ID: id1,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.Groups.GetMessageChannels(ctx, request1)
+	res1, err := r.client.Groups.GetMessageChannels(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -1203,13 +1195,13 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var id2 string
-	id2 = data.ID.ValueString()
+	request2, request2Diags := data.ToOperationsGetGroupOnCallSchedulesRequest(ctx)
+	resp.Diagnostics.Append(request2Diags...)
 
-	request2 := operations.GetGroupOnCallSchedulesRequest{
-		ID: id2,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res2, err := r.client.Groups.GetOnCallSchedule(ctx, request2)
+	res2, err := r.client.Groups.GetOnCallSchedule(ctx, *request2)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res2 != nil && res2.RawResponse != nil {
@@ -1229,13 +1221,13 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
 		return
 	}
-	var id3 string
-	id3 = data.ID.ValueString()
+	request3, request3Diags := data.ToOperationsGetGroupVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request3Diags...)
 
-	request3 := operations.GetGroupVisibilityRequest{
-		ID: id3,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res3, err := r.client.Groups.GetVisibility(ctx, request3)
+	res3, err := r.client.Groups.GetVisibility(ctx, *request3)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res3 != nil && res3.RawResponse != nil {
@@ -1283,12 +1275,13 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		return
 	}
 
-	singleton := *data.ToSharedUpdateGroupInfo()
-	groups := []shared.UpdateGroupInfo{singleton}
-	request := shared.UpdateGroupInfoList{
-		Groups: groups,
+	request, requestDiags := data.ToSharedUpdateGroupInfoList(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Groups.Update(ctx, request)
+	res, err := r.client.Groups.Update(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -1319,15 +1312,13 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	messageChannelIDList := *data.ToSharedMessageChannelIDList()
-	var id string
-	id = data.ID.ValueString()
+	request1, request1Diags := data.ToOperationsUpdateGroupMessageChannelsRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
 
-	request1 := operations.UpdateGroupMessageChannelsRequest{
-		MessageChannelIDList: messageChannelIDList,
-		ID:                   id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.Groups.UpdateMessageChannels(ctx, request1)
+	res1, err := r.client.Groups.UpdateMessageChannels(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -1349,21 +1340,13 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var onCallScheduleIds []string = []string{}
-	for _, onCallScheduleIdsItem := range data.OnCallScheduleIds {
-		onCallScheduleIds = append(onCallScheduleIds, onCallScheduleIdsItem.ValueString())
-	}
-	onCallScheduleIDList := shared.OnCallScheduleIDList{
-		OnCallScheduleIds: onCallScheduleIds,
-	}
-	var id1 string
-	id1 = data.ID.ValueString()
+	request2, request2Diags := data.ToOperationsUpdateGroupOnCallSchedulesRequest(ctx)
+	resp.Diagnostics.Append(request2Diags...)
 
-	request2 := operations.UpdateGroupOnCallSchedulesRequest{
-		OnCallScheduleIDList: onCallScheduleIDList,
-		ID:                   id1,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res2, err := r.client.Groups.UpdateOnCallSchedule(ctx, request2)
+	res2, err := r.client.Groups.UpdateOnCallSchedule(ctx, *request2)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res2 != nil && res2.RawResponse != nil {
@@ -1385,15 +1368,13 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	visibilityInfo := *data.ToSharedVisibilityInfo()
-	var id2 string
-	id2 = data.ID.ValueString()
+	request3, request3Diags := data.ToOperationsUpdateGroupVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request3Diags...)
 
-	request3 := operations.UpdateGroupVisibilityRequest{
-		VisibilityInfo: visibilityInfo,
-		ID:             id2,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res3, err := r.client.Groups.UpdateVisibility(ctx, request3)
+	res3, err := r.client.Groups.UpdateVisibility(ctx, *request3)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res3 != nil && res3.RawResponse != nil {
@@ -1415,13 +1396,13 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var id3 string
-	id3 = data.ID.ValueString()
+	request4, request4Diags := data.ToOperationsGetGroupRequest(ctx)
+	resp.Diagnostics.Append(request4Diags...)
 
-	request4 := operations.GetGroupRequest{
-		ID: id3,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res4, err := r.client.Groups.GetGroup(ctx, request4)
+	res4, err := r.client.Groups.GetGroup(ctx, *request4)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res4 != nil && res4.RawResponse != nil {
@@ -1452,13 +1433,13 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var id4 string
-	id4 = data.ID.ValueString()
+	request5, request5Diags := data.ToOperationsGetGroupMessageChannelsRequest(ctx)
+	resp.Diagnostics.Append(request5Diags...)
 
-	request5 := operations.GetGroupMessageChannelsRequest{
-		ID: id4,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res5, err := r.client.Groups.GetMessageChannels(ctx, request5)
+	res5, err := r.client.Groups.GetMessageChannels(ctx, *request5)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res5 != nil && res5.RawResponse != nil {
@@ -1489,13 +1470,13 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var id5 string
-	id5 = data.ID.ValueString()
+	request6, request6Diags := data.ToOperationsGetGroupOnCallSchedulesRequest(ctx)
+	resp.Diagnostics.Append(request6Diags...)
 
-	request6 := operations.GetGroupOnCallSchedulesRequest{
-		ID: id5,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res6, err := r.client.Groups.GetOnCallSchedule(ctx, request6)
+	res6, err := r.client.Groups.GetOnCallSchedule(ctx, *request6)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res6 != nil && res6.RawResponse != nil {
@@ -1517,13 +1498,13 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var id6 string
-	id6 = data.ID.ValueString()
+	request7, request7Diags := data.ToOperationsGetGroupVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request7Diags...)
 
-	request7 := operations.GetGroupVisibilityRequest{
-		ID: id6,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res7, err := r.client.Groups.GetVisibility(ctx, request7)
+	res7, err := r.client.Groups.GetVisibility(ctx, *request7)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res7 != nil && res7.RawResponse != nil {
@@ -1577,13 +1558,13 @@ func (r *GroupResource) Delete(ctx context.Context, req resource.DeleteRequest, 
 		return
 	}
 
-	var id string
-	id = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsDeleteGroupRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.DeleteGroupRequest{
-		ID: id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Groups.Delete(ctx, request)
+	res, err := r.client.Groups.Delete(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

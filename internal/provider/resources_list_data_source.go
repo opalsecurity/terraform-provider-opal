@@ -11,8 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -30,6 +28,7 @@ type ResourcesListDataSource struct {
 
 // ResourcesListDataSourceModel describes the data model.
 type ResourcesListDataSourceModel struct {
+	AncestorResourceID types.String       `queryParam:"style=form,explode=false,name=ancestor_resource_id" tfsdk:"ancestor_resource_id"`
 	Cursor             types.String       `queryParam:"style=form,explode=true,name=cursor" tfsdk:"cursor"`
 	Next               types.String       `tfsdk:"next"`
 	PageSize           types.Int64        `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
@@ -52,6 +51,10 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 		MarkdownDescription: "ResourcesList DataSource",
 
 		Attributes: map[string]schema.Attribute{
+			"ancestor_resource_id": schema.StringAttribute{
+				Optional:    true,
+				Description: `The ancestor resource id to filter by. Returns all resources that are descendants of the specified resource.`,
+			},
 			"cursor": schema.StringAttribute{
 				Optional:    true,
 				Description: `The pagination cursor value.`,
@@ -93,6 +96,11 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 							Computed:    true,
 							Description: `The ID of the owner of the resource.`,
 						},
+						"ancestor_resource_ids": schema.ListAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
+							Description: `List of resource IDs that are ancestors of this resource.`,
+						},
 						"app_id": schema.StringAttribute{
 							Computed:    true,
 							Description: `The ID of the app.`,
@@ -100,6 +108,11 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 						"custom_request_notification": schema.StringAttribute{
 							Computed:    true,
 							Description: `Custom request notification sent upon request approval.`,
+						},
+						"descendant_resource_ids": schema.ListAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
+							Description: `List of resource IDs that are descendants of this resource.`,
 						},
 						"description": schema.StringAttribute{
 							Computed:    true,
@@ -126,6 +139,10 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 										"account_id": schema.StringAttribute{
 											Computed:    true,
 											Description: `The id of the AWS account.`,
+										},
+										"organizational_unit_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The id of the AWS organizational unit. Required only if customer has OUs enabled.`,
 										},
 									},
 									Description: `Remote info for AWS account.`,
@@ -176,6 +193,20 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 									},
 									Description: `Remote info for AWS IAM role.`,
 								},
+								"aws_organizational_unit": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"organizational_unit_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The id of the AWS organizational unit that is being created.`,
+										},
+										"parent_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The id of the parent organizational unit.`,
+										},
+									},
+									Description: `Remote info for AWS organizational unit.`,
+								},
 								"aws_permission_set": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
@@ -211,6 +242,20 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 										},
 									},
 									Description: `Remote info for AWS RDS instance.`,
+								},
+								"custom_connector": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"can_have_usage_events": schema.BoolAttribute{
+											Computed:    true,
+											Description: `A bool representing whether or not the resource can have usage data.`,
+										},
+										"remote_resource_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The id of the resource in the end system`,
+										},
+									},
+									Description: `Remote info for a custom connector resource.`,
 								},
 								"gcp_big_query_dataset": schema.SingleNestedAttribute{
 									Computed: true,
@@ -614,49 +659,13 @@ func (r *ResourcesListDataSource) Read(ctx context.Context, req datasource.ReadR
 		return
 	}
 
-	cursor := new(string)
-	if !data.Cursor.IsUnknown() && !data.Cursor.IsNull() {
-		*cursor = data.Cursor.ValueString()
-	} else {
-		cursor = nil
+	request, requestDiags := data.ToOperationsGetResourcesRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	pageSize := new(int64)
-	if !data.PageSize.IsUnknown() && !data.PageSize.IsNull() {
-		*pageSize = data.PageSize.ValueInt64()
-	} else {
-		pageSize = nil
-	}
-	parentResourceID := new(string)
-	if !data.ParentResourceID.IsUnknown() && !data.ParentResourceID.IsNull() {
-		*parentResourceID = data.ParentResourceID.ValueString()
-	} else {
-		parentResourceID = nil
-	}
-	var resourceIds []string = []string{}
-	for _, resourceIdsItem := range data.ResourceIds {
-		resourceIds = append(resourceIds, resourceIdsItem.ValueString())
-	}
-	resourceName := new(string)
-	if !data.ResourceName.IsUnknown() && !data.ResourceName.IsNull() {
-		*resourceName = data.ResourceName.ValueString()
-	} else {
-		resourceName = nil
-	}
-	resourceTypeFilter := new(shared.ResourceTypeEnum)
-	if !data.ResourceTypeFilter.IsUnknown() && !data.ResourceTypeFilter.IsNull() {
-		*resourceTypeFilter = shared.ResourceTypeEnum(data.ResourceTypeFilter.ValueString())
-	} else {
-		resourceTypeFilter = nil
-	}
-	request := operations.GetResourcesRequest{
-		Cursor:             cursor,
-		PageSize:           pageSize,
-		ParentResourceID:   parentResourceID,
-		ResourceIds:        resourceIds,
-		ResourceName:       resourceName,
-		ResourceTypeFilter: resourceTypeFilter,
-	}
-	res, err := r.client.Resources.Get(ctx, request)
+	res, err := r.client.Resources.Get(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -666,10 +675,6 @@ func (r *ResourcesListDataSource) Read(ctx context.Context, req datasource.ReadR
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
-		return
-	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {
