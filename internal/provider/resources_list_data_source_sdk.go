@@ -23,8 +23,16 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 		for resultsCount, resultsItem := range resp.Results {
 			var results tfTypes.Resource
 			results.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
+			results.AncestorResourceIds = make([]types.String, 0, len(resultsItem.AncestorResourceIds))
+			for _, v := range resultsItem.AncestorResourceIds {
+				results.AncestorResourceIds = append(results.AncestorResourceIds, types.StringValue(v))
+			}
 			results.AppID = types.StringPointerValue(resultsItem.AppID)
 			results.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
+			results.DescendantResourceIds = make([]types.String, 0, len(resultsItem.DescendantResourceIds))
+			for _, v := range resultsItem.DescendantResourceIds {
+				results.DescendantResourceIds = append(results.DescendantResourceIds, types.StringValue(v))
+			}
 			results.Description = types.StringPointerValue(resultsItem.Description)
 			results.ID = types.StringValue(resultsItem.ID)
 			results.Name = types.StringPointerValue(resultsItem.Name)
@@ -38,6 +46,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				} else {
 					results.RemoteInfo.AwsAccount = &tfTypes.AwsAccount{}
 					results.RemoteInfo.AwsAccount.AccountID = types.StringValue(resultsItem.RemoteInfo.AwsAccount.AccountID)
+					results.RemoteInfo.AwsAccount.OrganizationalUnitID = types.StringPointerValue(resultsItem.RemoteInfo.AwsAccount.OrganizationalUnitID)
 				}
 				if resultsItem.RemoteInfo.AwsEc2Instance == nil {
 					results.RemoteInfo.AwsEc2Instance = nil
@@ -61,6 +70,13 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.AwsIamRole.AccountID = types.StringPointerValue(resultsItem.RemoteInfo.AwsIamRole.AccountID)
 					results.RemoteInfo.AwsIamRole.Arn = types.StringValue(resultsItem.RemoteInfo.AwsIamRole.Arn)
 				}
+				if resultsItem.RemoteInfo.AwsOrganizationalUnit == nil {
+					results.RemoteInfo.AwsOrganizationalUnit = nil
+				} else {
+					results.RemoteInfo.AwsOrganizationalUnit = &tfTypes.AwsOrganizationalUnit{}
+					results.RemoteInfo.AwsOrganizationalUnit.OrganizationalUnitID = types.StringValue(resultsItem.RemoteInfo.AwsOrganizationalUnit.OrganizationalUnitID)
+					results.RemoteInfo.AwsOrganizationalUnit.ParentID = types.StringPointerValue(resultsItem.RemoteInfo.AwsOrganizationalUnit.ParentID)
+				}
 				if resultsItem.RemoteInfo.AwsPermissionSet == nil {
 					results.RemoteInfo.AwsPermissionSet = nil
 				} else {
@@ -76,6 +92,13 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.AwsRdsInstance.InstanceID = types.StringValue(resultsItem.RemoteInfo.AwsRdsInstance.InstanceID)
 					results.RemoteInfo.AwsRdsInstance.Region = types.StringValue(resultsItem.RemoteInfo.AwsRdsInstance.Region)
 					results.RemoteInfo.AwsRdsInstance.ResourceID = types.StringValue(resultsItem.RemoteInfo.AwsRdsInstance.ResourceID)
+				}
+				if resultsItem.RemoteInfo.CustomConnector == nil {
+					results.RemoteInfo.CustomConnector = nil
+				} else {
+					results.RemoteInfo.CustomConnector = &tfTypes.CustomConnector{}
+					results.RemoteInfo.CustomConnector.CanHaveUsageEvents = types.BoolValue(resultsItem.RemoteInfo.CustomConnector.CanHaveUsageEvents)
+					results.RemoteInfo.CustomConnector.RemoteResourceID = types.StringValue(resultsItem.RemoteInfo.CustomConnector.RemoteResourceID)
 				}
 				if resultsItem.RemoteInfo.GcpBigQueryDataset == nil {
 					results.RemoteInfo.GcpBigQueryDataset = nil
@@ -244,7 +267,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 						reviewerStages.OwnerIds = append(reviewerStages.OwnerIds, types.StringValue(v))
 					}
 					reviewerStages.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
-					reviewerStages.RequireManagerApproval = types.BoolValue(reviewerStagesItem.RequireManagerApproval)
+					reviewerStages.RequireManagerApproval = types.BoolPointerValue(reviewerStagesItem.RequireManagerApproval)
 					if reviewerStagesCount+1 > len(requestConfigurations.ReviewerStages) {
 						requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
 					} else {
@@ -303,8 +326,10 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				r.Results = append(r.Results, results)
 			} else {
 				r.Results[resultsCount].AdminOwnerID = results.AdminOwnerID
+				r.Results[resultsCount].AncestorResourceIds = results.AncestorResourceIds
 				r.Results[resultsCount].AppID = results.AppID
 				r.Results[resultsCount].CustomRequestNotification = results.CustomRequestNotification
+				r.Results[resultsCount].DescendantResourceIds = results.DescendantResourceIds
 				r.Results[resultsCount].Description = results.Description
 				r.Results[resultsCount].ID = results.ID
 				r.Results[resultsCount].Name = results.Name

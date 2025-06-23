@@ -36,8 +36,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo() *shared.CreateResou
 			var accountID string
 			accountID = r.RemoteInfo.AwsAccount.AccountID.ValueString()
 
+			organizationalUnitID := new(string)
+			if !r.RemoteInfo.AwsAccount.OrganizationalUnitID.IsUnknown() && !r.RemoteInfo.AwsAccount.OrganizationalUnitID.IsNull() {
+				*organizationalUnitID = r.RemoteInfo.AwsAccount.OrganizationalUnitID.ValueString()
+			} else {
+				organizationalUnitID = nil
+			}
 			awsAccount = &shared.AwsAccount{
-				AccountID: accountID,
+				AccountID:            accountID,
+				OrganizationalUnitID: organizationalUnitID,
 			}
 		}
 		var awsEc2Instance *shared.AwsEc2Instance
@@ -92,6 +99,22 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo() *shared.CreateResou
 				Arn:       arn1,
 			}
 		}
+		var awsOrganizationalUnit *shared.AwsOrganizationalUnit
+		if r.RemoteInfo.AwsOrganizationalUnit != nil {
+			var organizationalUnitId1 string
+			organizationalUnitId1 = r.RemoteInfo.AwsOrganizationalUnit.OrganizationalUnitID.ValueString()
+
+			parentID := new(string)
+			if !r.RemoteInfo.AwsOrganizationalUnit.ParentID.IsUnknown() && !r.RemoteInfo.AwsOrganizationalUnit.ParentID.IsNull() {
+				*parentID = r.RemoteInfo.AwsOrganizationalUnit.ParentID.ValueString()
+			} else {
+				parentID = nil
+			}
+			awsOrganizationalUnit = &shared.AwsOrganizationalUnit{
+				OrganizationalUnitID: organizationalUnitId1,
+				ParentID:             parentID,
+			}
+		}
 		var awsPermissionSet *shared.AwsPermissionSet
 		if r.RemoteInfo.AwsPermissionSet != nil {
 			var accountId4 string
@@ -127,6 +150,19 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo() *shared.CreateResou
 				InstanceID: instanceId1,
 				Region:     region1,
 				ResourceID: resourceID,
+			}
+		}
+		var customConnector *shared.CustomConnector
+		if r.RemoteInfo.CustomConnector != nil {
+			var canHaveUsageEvents bool
+			canHaveUsageEvents = r.RemoteInfo.CustomConnector.CanHaveUsageEvents.ValueBool()
+
+			var remoteResourceID string
+			remoteResourceID = r.RemoteInfo.CustomConnector.RemoteResourceID.ValueString()
+
+			customConnector = &shared.CustomConnector{
+				CanHaveUsageEvents: canHaveUsageEvents,
+				RemoteResourceID:   remoteResourceID,
 			}
 		}
 		var gcpBigQueryDataset *shared.GcpBigQueryDataset
@@ -350,8 +386,10 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo() *shared.CreateResou
 			AwsEc2Instance:          awsEc2Instance,
 			AwsEksCluster:           awsEksCluster,
 			AwsIamRole:              awsIamRole,
+			AwsOrganizationalUnit:   awsOrganizationalUnit,
 			AwsPermissionSet:        awsPermissionSet,
 			AwsRdsInstance:          awsRdsInstance,
+			CustomConnector:         customConnector,
 			GcpBigQueryDataset:      gcpBigQueryDataset,
 			GcpBigQueryTable:        gcpBigQueryTable,
 			GcpBucket:               gcpBucket,
@@ -398,8 +436,16 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 
 	if resp != nil {
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
+		r.AncestorResourceIds = make([]types.String, 0, len(resp.AncestorResourceIds))
+		for _, v := range resp.AncestorResourceIds {
+			r.AncestorResourceIds = append(r.AncestorResourceIds, types.StringValue(v))
+		}
 		r.AppID = types.StringPointerValue(resp.AppID)
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
+		r.DescendantResourceIds = make([]types.String, 0, len(resp.DescendantResourceIds))
+		for _, v := range resp.DescendantResourceIds {
+			r.DescendantResourceIds = append(r.DescendantResourceIds, types.StringValue(v))
+		}
 		r.Description = types.StringPointerValue(resp.Description)
 		r.ID = types.StringValue(resp.ID)
 		r.Name = types.StringPointerValue(resp.Name)
@@ -413,6 +459,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			} else {
 				r.RemoteInfo.AwsAccount = &tfTypes.AwsAccount{}
 				r.RemoteInfo.AwsAccount.AccountID = types.StringValue(resp.RemoteInfo.AwsAccount.AccountID)
+				r.RemoteInfo.AwsAccount.OrganizationalUnitID = types.StringPointerValue(resp.RemoteInfo.AwsAccount.OrganizationalUnitID)
 			}
 			if resp.RemoteInfo.AwsEc2Instance == nil {
 				r.RemoteInfo.AwsEc2Instance = nil
@@ -436,6 +483,13 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.AwsIamRole.AccountID = types.StringPointerValue(resp.RemoteInfo.AwsIamRole.AccountID)
 				r.RemoteInfo.AwsIamRole.Arn = types.StringValue(resp.RemoteInfo.AwsIamRole.Arn)
 			}
+			if resp.RemoteInfo.AwsOrganizationalUnit == nil {
+				r.RemoteInfo.AwsOrganizationalUnit = nil
+			} else {
+				r.RemoteInfo.AwsOrganizationalUnit = &tfTypes.AwsOrganizationalUnit{}
+				r.RemoteInfo.AwsOrganizationalUnit.OrganizationalUnitID = types.StringValue(resp.RemoteInfo.AwsOrganizationalUnit.OrganizationalUnitID)
+				r.RemoteInfo.AwsOrganizationalUnit.ParentID = types.StringPointerValue(resp.RemoteInfo.AwsOrganizationalUnit.ParentID)
+			}
 			if resp.RemoteInfo.AwsPermissionSet == nil {
 				r.RemoteInfo.AwsPermissionSet = nil
 			} else {
@@ -451,6 +505,13 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.AwsRdsInstance.InstanceID = types.StringValue(resp.RemoteInfo.AwsRdsInstance.InstanceID)
 				r.RemoteInfo.AwsRdsInstance.Region = types.StringValue(resp.RemoteInfo.AwsRdsInstance.Region)
 				r.RemoteInfo.AwsRdsInstance.ResourceID = types.StringValue(resp.RemoteInfo.AwsRdsInstance.ResourceID)
+			}
+			if resp.RemoteInfo.CustomConnector == nil {
+				r.RemoteInfo.CustomConnector = nil
+			} else {
+				r.RemoteInfo.CustomConnector = &tfTypes.CustomConnector{}
+				r.RemoteInfo.CustomConnector.CanHaveUsageEvents = types.BoolValue(resp.RemoteInfo.CustomConnector.CanHaveUsageEvents)
+				r.RemoteInfo.CustomConnector.RemoteResourceID = types.StringValue(resp.RemoteInfo.CustomConnector.RemoteResourceID)
 			}
 			if resp.RemoteInfo.GcpBigQueryDataset == nil {
 				r.RemoteInfo.GcpBigQueryDataset = nil
@@ -622,7 +683,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 					reviewerStages.OwnerIds = append(reviewerStages.OwnerIds, types.StringValue(v))
 				}
 				reviewerStages.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
-				reviewerStages.RequireManagerApproval = types.BoolValue(reviewerStagesItem.RequireManagerApproval)
+				reviewerStages.RequireManagerApproval = types.BoolPointerValue(reviewerStagesItem.RequireManagerApproval)
 				if reviewerStagesCount+1 > len(requestConfigurations.ReviewerStages) {
 					requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
 				} else {
@@ -778,9 +839,12 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo() *shared.UpdateResou
 			} else {
 				requireAdminApproval = nil
 			}
-			var requireManagerApproval bool
-			requireManagerApproval = reviewerStagesItem.RequireManagerApproval.ValueBool()
-
+			requireManagerApproval := new(bool)
+			if !reviewerStagesItem.RequireManagerApproval.IsUnknown() && !reviewerStagesItem.RequireManagerApproval.IsNull() {
+				*requireManagerApproval = reviewerStagesItem.RequireManagerApproval.ValueBool()
+			} else {
+				requireManagerApproval = nil
+			}
 			reviewerStages = append(reviewerStages, shared.ReviewerStage{
 				Operator:               operator,
 				OwnerIds:               ownerIds,
@@ -909,7 +973,7 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.
 				reviewerStages.OwnerIds = append(reviewerStages.OwnerIds, types.StringValue(v))
 			}
 			reviewerStages.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
-			reviewerStages.RequireManagerApproval = types.BoolValue(reviewerStagesItem.RequireManagerApproval)
+			reviewerStages.RequireManagerApproval = types.BoolPointerValue(reviewerStagesItem.RequireManagerApproval)
 			if reviewerStagesCount+1 > len(requestConfigurations.ReviewerStages) {
 				requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
 			} else {

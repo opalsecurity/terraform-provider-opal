@@ -677,21 +677,20 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 									"require_admin_approval": schema.BoolAttribute{
 										Computed: true,
 										Optional: true,
+										Default:  booldefault.StaticBool(false),
 										PlanModifiers: []planmodifier.Bool{
 											speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
 										},
-										Description: `Whether this reviewer stage should require admin approval.`,
+										Description: `Whether this reviewer stage should require admin approval. Default: false`,
 									},
 									"require_manager_approval": schema.BoolAttribute{
 										Computed: true,
 										Optional: true,
+										Default:  booldefault.StaticBool(false),
 										PlanModifiers: []planmodifier.Bool{
 											speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
 										},
-										Description: `Whether this reviewer stage should require manager approval. Not Null`,
-										Validators: []validator.Bool{
-											speakeasy_boolvalidators.NotNull(),
-										},
+										Description: `Whether this reviewer stage should require manager approval. Default: false`,
 									},
 								},
 							},

@@ -53,6 +53,14 @@ func (r *PaginatedBundleGroupListDataSource) Schema(ctx context.Context, req dat
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
+						"access_level_name": schema.StringAttribute{
+							Computed:    true,
+							Description: `The access level of the group within a bundle.`,
+						},
+						"access_level_remote_id": schema.StringAttribute{
+							Computed:    true,
+							Description: `The remote ID of the access level of the group within a bundle.`,
+						},
 						"bundle_id": schema.StringAttribute{
 							Computed:    true,
 							Description: `The ID of the bundle containing the group.`,

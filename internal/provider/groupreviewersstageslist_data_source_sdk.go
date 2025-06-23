@@ -29,7 +29,7 @@ func (r *GroupReviewersStagesListDataSourceModel) RefreshFromSharedReviewerStage
 			data.OwnerIds = append(data.OwnerIds, types.StringValue(v))
 		}
 		data.RequireAdminApproval = types.BoolPointerValue(dataItem.RequireAdminApproval)
-		data.RequireManagerApproval = types.BoolValue(dataItem.RequireManagerApproval)
+		data.RequireManagerApproval = types.BoolPointerValue(dataItem.RequireManagerApproval)
 		if dataCount+1 > len(r.Data) {
 			r.Data = append(r.Data, data)
 		} else {

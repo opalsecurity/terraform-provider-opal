@@ -144,12 +144,12 @@ Optional:
 Required:
 
 - `owner_ids` (Set of String)
-- `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval.
 
 Optional:
 
 - `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. Default: "AND"; must be one of ["AND", "OR"]
-- `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval.
+- `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval. Default: false
+- `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval. Default: false
 
 
 

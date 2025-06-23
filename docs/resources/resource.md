@@ -21,7 +21,8 @@ resource "opal_resource" "my_resource" {
   name                        = "mongo-db-prod"
   remote_info = {
     aws_account = {
-      account_id = 234234234234
+      account_id             = 234234234234
+      organizational_unit_id = "ou-1234"
     }
     aws_ec2_instance = {
       account_id  = 234234234234
@@ -36,6 +37,10 @@ resource "opal_resource" "my_resource" {
       account_id = 234234234234
       arn        = "arn:aws:iam::179308207300:role/MyRole"
     }
+    aws_organizational_unit = {
+      organizational_unit_id = "ou-1234"
+      parent_id              = "ou-1234"
+    }
     aws_permission_set = {
       account_id = 234234234234
       arn        = "arn:aws:sso:::permissionSet/asdf-32139302d201d32/ps-f03323201211e1b9"
@@ -45,6 +50,10 @@ resource "opal_resource" "my_resource" {
       instance_id = "demo-mysql-db"
       region      = "us-east-2"
       resource_id = "db-AOO8V0XUCNU13XLZXQDQRSN0NQ"
+    }
+    custom_connector = {
+      can_have_usage_events = false
+      remote_resource_id    = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
     gcp_big_query_dataset = {
       dataset_id = "example-dataset-898931321"
@@ -171,7 +180,7 @@ resource "opal_resource" "my_resource" {
 - `app_id` (String) The ID of the app for the resource. Requires replacement if changed.
 - `name` (String) The name of the remote resource.
 - `request_configurations` (Attributes List) A list of configurations for requests to this resource. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
-- `resource_type` (String) The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE"]; Requires replacement if changed.
+- `resource_type` (String) The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE"]; Requires replacement if changed.
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 
 ### Optional
@@ -188,6 +197,8 @@ resource "opal_resource" "my_resource" {
 
 ### Read-Only
 
+- `ancestor_resource_ids` (List of String) List of resource IDs that are ancestors of this resource.
+- `descendant_resource_ids` (List of String) List of resource IDs that are descendants of this resource.
 - `id` (String) The ID of the resource.
 - `parent_resource_id` (String) The ID of the parent resource.
 - `risk_sensitivity` (String) The risk sensitivity level for the resource. When an override is set, this field will match that. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
@@ -224,8 +235,8 @@ Optional:
 
 - `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. Default: "AND"; must be one of ["AND", "OR"]
 - `owner_ids` (Set of String) Not Null
-- `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval.
-- `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval. Not Null
+- `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval. Default: false
+- `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval. Default: false
 
 
 
@@ -238,8 +249,10 @@ Optional:
 - `aws_ec2_instance` (Attributes) Remote info for AWS EC2 instance. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_ec2_instance))
 - `aws_eks_cluster` (Attributes) Remote info for AWS EKS cluster. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_eks_cluster))
 - `aws_iam_role` (Attributes) Remote info for AWS IAM role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_iam_role))
+- `aws_organizational_unit` (Attributes) Remote info for AWS organizational unit. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_organizational_unit))
 - `aws_permission_set` (Attributes) Remote info for AWS Identity Center permission set. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_permission_set))
 - `aws_rds_instance` (Attributes) Remote info for AWS RDS instance. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_rds_instance))
+- `custom_connector` (Attributes) Remote info for a custom connector resource. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--custom_connector))
 - `gcp_big_query_dataset` (Attributes) Remote info for GCP BigQuery Dataset. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gcp_big_query_dataset))
 - `gcp_big_query_table` (Attributes) Remote info for GCP BigQuery Table. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gcp_big_query_table))
 - `gcp_bucket` (Attributes) Remote info for GCP bucket. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gcp_bucket))
@@ -267,6 +280,7 @@ Optional:
 Optional:
 
 - `account_id` (String) The id of the AWS account. Not Null; Requires replacement if changed.
+- `organizational_unit_id` (String) The id of the AWS organizational unit. Required only if customer has OUs enabled. Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--aws_ec2_instance"></a>
@@ -297,6 +311,15 @@ Optional:
 - `arn` (String) The ARN of the IAM role. Not Null; Requires replacement if changed.
 
 
+<a id="nestedatt--remote_info--aws_organizational_unit"></a>
+### Nested Schema for `remote_info.aws_organizational_unit`
+
+Optional:
+
+- `organizational_unit_id` (String) The id of the AWS organizational unit that is being created. Not Null; Requires replacement if changed.
+- `parent_id` (String) The id of the parent organizational unit. Requires replacement if changed.
+
+
 <a id="nestedatt--remote_info--aws_permission_set"></a>
 ### Nested Schema for `remote_info.aws_permission_set`
 
@@ -315,6 +338,15 @@ Optional:
 - `instance_id` (String) The instanceId of the RDS instance. Not Null; Requires replacement if changed.
 - `region` (String) The region of the RDS instance. Not Null; Requires replacement if changed.
 - `resource_id` (String) The resourceId of the RDS instance. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--custom_connector"></a>
+### Nested Schema for `remote_info.custom_connector`
+
+Optional:
+
+- `can_have_usage_events` (Boolean) A bool representing whether or not the resource can have usage data. Not Null; Requires replacement if changed.
+- `remote_resource_id` (String) The id of the resource in the end system. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--gcp_big_query_dataset"></a>

@@ -14,6 +14,9 @@ TagUser Resource
 
 ```terraform
 resource "opal_tag_user" "my_taguser" {
+  request_body = {
+    # ...
+  }
   tag_id  = "1b978423-db0a-4037-a4cf-f79c60cb67b3"
   user_id = "1b978423-db0a-4037-a4cf-f79c60cb67b3"
 }
@@ -26,3 +29,10 @@ resource "opal_tag_user" "my_taguser" {
 
 - `tag_id` (String) The ID of the tag to apply. Requires replacement if changed.
 - `user_id` (String) The ID of the user to apply the tag to. Requires replacement if changed.
+
+### Optional
+
+- `request_body` (Attributes) Requires replacement if changed. (see [below for nested schema](#nestedatt--request_body))
+
+<a id="nestedatt--request_body"></a>
+### Nested Schema for `request_body`

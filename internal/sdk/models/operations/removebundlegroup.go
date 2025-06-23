@@ -7,10 +7,19 @@ import (
 )
 
 type RemoveBundleGroupRequest struct {
+	// The remote ID of the access level to remove.
+	AccessLevelRemoteID *string `queryParam:"style=form,explode=true,name=access_level_remote_id"`
 	// The ID of the bundle.
 	BundleID string `pathParam:"style=simple,explode=false,name=bundle_id"`
 	// The ID of the group to remove.
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
+}
+
+func (o *RemoveBundleGroupRequest) GetAccessLevelRemoteID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.AccessLevelRemoteID
 }
 
 func (o *RemoveBundleGroupRequest) GetBundleID() string {
