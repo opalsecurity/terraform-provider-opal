@@ -119,6 +119,19 @@ func (o *OktaGroup) GetGroupID() string {
 	return o.GroupID
 }
 
+// OktaGroupRule - Remote info for Okta Directory group rule.
+type OktaGroupRule struct {
+	// The id of the Okta group rule.
+	RuleID string `json:"rule_id"`
+}
+
+func (o *OktaGroupRule) GetRuleID() string {
+	if o == nil {
+		return ""
+	}
+	return o.RuleID
+}
+
 // SnowflakeRole - Remote info for Snowflake role.
 type SnowflakeRole struct {
 	// The id of the Snowflake role.
@@ -130,6 +143,19 @@ func (o *SnowflakeRole) GetRoleID() string {
 		return ""
 	}
 	return o.RoleID
+}
+
+// WorkdayUserSecurityGroup - Remote info for Workday User Security group.
+type WorkdayUserSecurityGroup struct {
+	// The id of the Workday User Security group.
+	GroupID string `json:"group_id"`
+}
+
+func (o *WorkdayUserSecurityGroup) GetGroupID() string {
+	if o == nil {
+		return ""
+	}
+	return o.GroupID
 }
 
 // GroupRemoteInfo - Information that defines the remote group. This replaces the deprecated remote_id and metadata fields.
@@ -152,8 +178,12 @@ type GroupRemoteInfo struct {
 	LdapGroup *LdapGroup `json:"ldap_group,omitempty"`
 	// Remote info for Okta Directory group.
 	OktaGroup *OktaGroup `json:"okta_group,omitempty"`
+	// Remote info for Okta Directory group rule.
+	OktaGroupRule *OktaGroupRule `json:"okta_group_rule,omitempty"`
 	// Remote info for Snowflake role.
 	SnowflakeRole *SnowflakeRole `json:"snowflake_role,omitempty"`
+	// Remote info for Workday User Security group.
+	WorkdayUserSecurityGroup *WorkdayUserSecurityGroup `json:"workday_user_security_group,omitempty"`
 }
 
 func (o *GroupRemoteInfo) GetActiveDirectoryGroup() *ActiveDirectoryGroup {
@@ -219,9 +249,23 @@ func (o *GroupRemoteInfo) GetOktaGroup() *OktaGroup {
 	return o.OktaGroup
 }
 
+func (o *GroupRemoteInfo) GetOktaGroupRule() *OktaGroupRule {
+	if o == nil {
+		return nil
+	}
+	return o.OktaGroupRule
+}
+
 func (o *GroupRemoteInfo) GetSnowflakeRole() *SnowflakeRole {
 	if o == nil {
 		return nil
 	}
 	return o.SnowflakeRole
+}
+
+func (o *GroupRemoteInfo) GetWorkdayUserSecurityGroup() *WorkdayUserSecurityGroup {
+	if o == nil {
+		return nil
+	}
+	return o.WorkdayUserSecurityGroup
 }

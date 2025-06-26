@@ -57,8 +57,14 @@ resource "opal_group" "my_group" {
     okta_group = {
       group_id = "00gjs33pe8rtmRrp3rd6"
     }
+    okta_group_rule = {
+      rule_id = "0pr3f7zMZZHPgUoWO0g4"
+    }
     snowflake_role = {
       role_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    workday_user_security_group = {
+      group_id = "123abc456def"
     }
   }
   request_configurations = [
@@ -184,7 +190,9 @@ Optional:
 - `google_group` (Attributes) Remote info for Google group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--google_group))
 - `ldap_group` (Attributes) Remote info for LDAP group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--ldap_group))
 - `okta_group` (Attributes) Remote info for Okta Directory group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_group))
+- `okta_group_rule` (Attributes) Remote info for Okta Directory group rule. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_group_rule))
 - `snowflake_role` (Attributes) Remote info for Snowflake role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--snowflake_role))
+- `workday_user_security_group` (Attributes) Remote info for Workday User Security group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--workday_user_security_group))
 
 <a id="nestedatt--remote_info--active_directory_group"></a>
 ### Nested Schema for `remote_info.active_directory_group`
@@ -258,12 +266,28 @@ Optional:
 - `group_id` (String) The id of the Okta Directory group. Not Null; Requires replacement if changed.
 
 
+<a id="nestedatt--remote_info--okta_group_rule"></a>
+### Nested Schema for `remote_info.okta_group_rule`
+
+Optional:
+
+- `rule_id` (String) The id of the Okta group rule. Not Null; Requires replacement if changed.
+
+
 <a id="nestedatt--remote_info--snowflake_role"></a>
 ### Nested Schema for `remote_info.snowflake_role`
 
 Optional:
 
 - `role_id` (String) The id of the Snowflake role. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--workday_user_security_group"></a>
+### Nested Schema for `remote_info.workday_user_security_group`
+
+Optional:
+
+- `group_id` (String) The id of the Workday User Security group. Not Null; Requires replacement if changed.
 
 
 

@@ -15,7 +15,7 @@ generation:
     oAuth2PasswordEnabled: false
   flattenGlobalSecurity: true
 terraform:
-  version: 0.40.6
+  version: 0.40.7
   additionalDataSources: []
   additionalDependencies:
     github.com/hashicorp/terraform-plugin-testing: v1.12.0

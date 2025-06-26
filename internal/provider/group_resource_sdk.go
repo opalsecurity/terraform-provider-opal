@@ -114,6 +114,15 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo() *shared.CreateGroupInfo {
 				GroupID: groupId7,
 			}
 		}
+		var oktaGroupRule *shared.OktaGroupRule
+		if r.RemoteInfo.OktaGroupRule != nil {
+			var ruleID string
+			ruleID = r.RemoteInfo.OktaGroupRule.RuleID.ValueString()
+
+			oktaGroupRule = &shared.OktaGroupRule{
+				RuleID: ruleID,
+			}
+		}
 		var snowflakeRole *shared.SnowflakeRole
 		if r.RemoteInfo.SnowflakeRole != nil {
 			var roleID string
@@ -121,6 +130,15 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo() *shared.CreateGroupInfo {
 
 			snowflakeRole = &shared.SnowflakeRole{
 				RoleID: roleID,
+			}
+		}
+		var workdayUserSecurityGroup *shared.WorkdayUserSecurityGroup
+		if r.RemoteInfo.WorkdayUserSecurityGroup != nil {
+			var groupId8 string
+			groupId8 = r.RemoteInfo.WorkdayUserSecurityGroup.GroupID.ValueString()
+
+			workdayUserSecurityGroup = &shared.WorkdayUserSecurityGroup{
+				GroupID: groupId8,
 			}
 		}
 		remoteInfo = &shared.GroupRemoteInfo{
@@ -133,7 +151,9 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo() *shared.CreateGroupInfo {
 			GoogleGroup:              googleGroup,
 			LdapGroup:                ldapGroup,
 			OktaGroup:                oktaGroup,
+			OktaGroupRule:            oktaGroupRule,
 			SnowflakeRole:            snowflakeRole,
+			WorkdayUserSecurityGroup: workdayUserSecurityGroup,
 		}
 	}
 	riskSensitivityOverride := new(shared.RiskSensitivityEnum)
@@ -232,11 +252,23 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 				r.RemoteInfo.OktaGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.OktaGroup.GroupID = types.StringValue(resp.RemoteInfo.OktaGroup.GroupID)
 			}
+			if resp.RemoteInfo.OktaGroupRule == nil {
+				r.RemoteInfo.OktaGroupRule = nil
+			} else {
+				r.RemoteInfo.OktaGroupRule = &tfTypes.OktaGroupRule{}
+				r.RemoteInfo.OktaGroupRule.RuleID = types.StringValue(resp.RemoteInfo.OktaGroupRule.RuleID)
+			}
 			if resp.RemoteInfo.SnowflakeRole == nil {
 				r.RemoteInfo.SnowflakeRole = nil
 			} else {
 				r.RemoteInfo.SnowflakeRole = &tfTypes.SnowflakeRole{}
 				r.RemoteInfo.SnowflakeRole.RoleID = types.StringValue(resp.RemoteInfo.SnowflakeRole.RoleID)
+			}
+			if resp.RemoteInfo.WorkdayUserSecurityGroup == nil {
+				r.RemoteInfo.WorkdayUserSecurityGroup = nil
+			} else {
+				r.RemoteInfo.WorkdayUserSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.WorkdayUserSecurityGroup.GroupID = types.StringValue(resp.RemoteInfo.WorkdayUserSecurityGroup.GroupID)
 			}
 		}
 		r.RemoteName = types.StringPointerValue(resp.RemoteName)

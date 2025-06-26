@@ -246,6 +246,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Okta Directory group.`,
 					},
+					"okta_group_rule": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"rule_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the Okta group rule.`,
+							},
+						},
+						Description: `Remote info for Okta Directory group rule.`,
+					},
 					"snowflake_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -255,6 +265,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							},
 						},
 						Description: `Remote info for Snowflake role.`,
+					},
+					"workday_user_security_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the Workday User Security group.`,
+							},
+						},
+						Description: `Remote info for Workday User Security group.`,
 					},
 				},
 				Description: `Information that defines the remote group. This replaces the deprecated remote_id and metadata fields.`,

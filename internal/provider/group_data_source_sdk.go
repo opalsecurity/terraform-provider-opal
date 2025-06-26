@@ -89,11 +89,23 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.OktaGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.OktaGroup.GroupID = types.StringValue(resp.RemoteInfo.OktaGroup.GroupID)
 			}
+			if resp.RemoteInfo.OktaGroupRule == nil {
+				r.RemoteInfo.OktaGroupRule = nil
+			} else {
+				r.RemoteInfo.OktaGroupRule = &tfTypes.OktaGroupRule{}
+				r.RemoteInfo.OktaGroupRule.RuleID = types.StringValue(resp.RemoteInfo.OktaGroupRule.RuleID)
+			}
 			if resp.RemoteInfo.SnowflakeRole == nil {
 				r.RemoteInfo.SnowflakeRole = nil
 			} else {
 				r.RemoteInfo.SnowflakeRole = &tfTypes.SnowflakeRole{}
 				r.RemoteInfo.SnowflakeRole.RoleID = types.StringValue(resp.RemoteInfo.SnowflakeRole.RoleID)
+			}
+			if resp.RemoteInfo.WorkdayUserSecurityGroup == nil {
+				r.RemoteInfo.WorkdayUserSecurityGroup = nil
+			} else {
+				r.RemoteInfo.WorkdayUserSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.WorkdayUserSecurityGroup.GroupID = types.StringValue(resp.RemoteInfo.WorkdayUserSecurityGroup.GroupID)
 			}
 		}
 		r.RemoteName = types.StringPointerValue(resp.RemoteName)
