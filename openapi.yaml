@@ -6364,6 +6364,26 @@ components:
           required:
             - role_id
           x-speakeasy-param-force-new: true
+        okta_group_rule:
+          description: Remote info for Okta Directory group rule.
+          properties:
+            rule_id:
+              description: The id of the Okta group rule.
+              example: 0pr3f7zMZZHPgUoWO0g4
+              type: string
+          type: object
+          required:
+            - rule_id
+        workday_user_security_group:
+          description: Remote info for Workday User Security group.
+          properties:
+            group_id:
+              description: The id of the Workday User Security group.
+              example: 123abc456def
+              type: string
+          type: object
+          required:
+            - group_id
       type: object
       x-speakeasy-entity: GroupRemote
     ResourceRemoteInfo:

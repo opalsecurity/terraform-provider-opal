@@ -42,8 +42,14 @@ resource "opal_group" "my_group" {
     okta_group = {
       group_id = "00gjs33pe8rtmRrp3rd6"
     }
+    okta_group_rule = {
+      rule_id = "0pr3f7zMZZHPgUoWO0g4"
+    }
     snowflake_role = {
       role_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    workday_user_security_group = {
+      group_id = "123abc456def"
     }
   }
   request_configurations = [

@@ -72,7 +72,9 @@ Read-Only:
 - `google_group` (Attributes) Remote info for Google group. (see [below for nested schema](#nestedatt--results--remote_info--google_group))
 - `ldap_group` (Attributes) Remote info for LDAP group. (see [below for nested schema](#nestedatt--results--remote_info--ldap_group))
 - `okta_group` (Attributes) Remote info for Okta Directory group. (see [below for nested schema](#nestedatt--results--remote_info--okta_group))
+- `okta_group_rule` (Attributes) Remote info for Okta Directory group rule. (see [below for nested schema](#nestedatt--results--remote_info--okta_group_rule))
 - `snowflake_role` (Attributes) Remote info for Snowflake role. (see [below for nested schema](#nestedatt--results--remote_info--snowflake_role))
+- `workday_user_security_group` (Attributes) Remote info for Workday User Security group. (see [below for nested schema](#nestedatt--results--remote_info--workday_user_security_group))
 
 <a id="nestedatt--results--remote_info--active_directory_group"></a>
 ### Nested Schema for `results.remote_info.active_directory_group`
@@ -146,12 +148,28 @@ Read-Only:
 - `group_id` (String) The id of the Okta Directory group.
 
 
+<a id="nestedatt--results--remote_info--okta_group_rule"></a>
+### Nested Schema for `results.remote_info.okta_group_rule`
+
+Read-Only:
+
+- `rule_id` (String) The id of the Okta group rule.
+
+
 <a id="nestedatt--results--remote_info--snowflake_role"></a>
 ### Nested Schema for `results.remote_info.snowflake_role`
 
 Read-Only:
 
 - `role_id` (String) The id of the Snowflake role.
+
+
+<a id="nestedatt--results--remote_info--workday_user_security_group"></a>
+### Nested Schema for `results.remote_info.workday_user_security_group`
+
+Read-Only:
+
+- `group_id` (String) The id of the Workday User Security group.
 
 
 

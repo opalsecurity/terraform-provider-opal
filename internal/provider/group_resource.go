@@ -509,6 +509,29 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						},
 						Description: `Remote info for Okta Directory group. Requires replacement if changed.`,
 					},
+					"okta_group_rule": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"rule_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The id of the Okta group rule. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Okta Directory group rule. Requires replacement if changed.`,
+					},
 					"snowflake_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -531,6 +554,29 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							},
 						},
 						Description: `Remote info for Snowflake role. Requires replacement if changed.`,
+					},
+					"workday_user_security_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The id of the Workday User Security group. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Workday User Security group. Requires replacement if changed.`,
 					},
 				},
 				Description: `Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed.`,

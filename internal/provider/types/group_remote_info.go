@@ -12,5 +12,7 @@ type GroupRemoteInfo struct {
 	GoogleGroup              *ActiveDirectoryGroup `tfsdk:"google_group"`
 	LdapGroup                *ActiveDirectoryGroup `tfsdk:"ldap_group"`
 	OktaGroup                *ActiveDirectoryGroup `tfsdk:"okta_group"`
+	OktaGroupRule            *OktaGroupRule        `tfsdk:"okta_group_rule"`
 	SnowflakeRole            *SnowflakeRole        `tfsdk:"snowflake_role"`
+	WorkdayUserSecurityGroup *ActiveDirectoryGroup `tfsdk:"workday_user_security_group"`
 }

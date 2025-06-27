@@ -94,11 +94,23 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.OktaGroup = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.OktaGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.OktaGroup.GroupID)
 				}
+				if resultsItem.RemoteInfo.OktaGroupRule == nil {
+					results.RemoteInfo.OktaGroupRule = nil
+				} else {
+					results.RemoteInfo.OktaGroupRule = &tfTypes.OktaGroupRule{}
+					results.RemoteInfo.OktaGroupRule.RuleID = types.StringValue(resultsItem.RemoteInfo.OktaGroupRule.RuleID)
+				}
 				if resultsItem.RemoteInfo.SnowflakeRole == nil {
 					results.RemoteInfo.SnowflakeRole = nil
 				} else {
 					results.RemoteInfo.SnowflakeRole = &tfTypes.SnowflakeRole{}
 					results.RemoteInfo.SnowflakeRole.RoleID = types.StringValue(resultsItem.RemoteInfo.SnowflakeRole.RoleID)
+				}
+				if resultsItem.RemoteInfo.WorkdayUserSecurityGroup == nil {
+					results.RemoteInfo.WorkdayUserSecurityGroup = nil
+				} else {
+					results.RemoteInfo.WorkdayUserSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.WorkdayUserSecurityGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.WorkdayUserSecurityGroup.GroupID)
 				}
 			}
 			results.RemoteName = types.StringPointerValue(resultsItem.RemoteName)
