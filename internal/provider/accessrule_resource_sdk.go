@@ -7,10 +7,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *AccessRuleResourceModel) ToSharedUpdateAccessRuleInfo() *shared.UpdateAccessRuleInfo {
+func (r *AccessRuleResourceModel) ToSharedUpdateAccessRuleInfo(ctx context.Context) (*shared.UpdateAccessRuleInfo, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	var adminOwnerID string
 	adminOwnerID = r.AdminOwnerID.ValueString()
 
@@ -22,9 +25,9 @@ func (r *AccessRuleResourceModel) ToSharedUpdateAccessRuleInfo() *shared.UpdateA
 
 	var unless *shared.RuleConjunction
 	if r.RuleClauses.Unless != nil {
-		var clauses []shared.RuleDisjunction = []shared.RuleDisjunction{}
+		clauses := make([]shared.RuleDisjunction, 0, len(r.RuleClauses.Unless.Clauses))
 		for _, clausesItem := range r.RuleClauses.Unless.Clauses {
-			var selectors []shared.TagSelector = []shared.TagSelector{}
+			selectors := make([]shared.TagSelector, 0, len(clausesItem.Selectors))
 			for _, selectorsItem := range clausesItem.Selectors {
 				var connectionID string
 				connectionID = selectorsItem.ConnectionID.ValueString()
@@ -49,9 +52,9 @@ func (r *AccessRuleResourceModel) ToSharedUpdateAccessRuleInfo() *shared.UpdateA
 			Clauses: clauses,
 		}
 	}
-	var clauses1 []shared.RuleDisjunction = []shared.RuleDisjunction{}
+	clauses1 := make([]shared.RuleDisjunction, 0, len(r.RuleClauses.When.Clauses))
 	for _, clausesItem1 := range r.RuleClauses.When.Clauses {
-		var selectors1 []shared.TagSelector = []shared.TagSelector{}
+		selectors1 := make([]shared.TagSelector, 0, len(clausesItem1.Selectors))
 		for _, selectorsItem1 := range clausesItem1.Selectors {
 			var connectionId1 string
 			connectionId1 = selectorsItem1.ConnectionID.ValueString()
@@ -87,7 +90,55 @@ func (r *AccessRuleResourceModel) ToSharedUpdateAccessRuleInfo() *shared.UpdateA
 		RuleClauses:  ruleClauses,
 		Status:       status,
 	}
-	return &out
+
+	return &out, diags
+}
+
+func (r *AccessRuleResourceModel) ToOperationsUpdateAccessRuleRequest(ctx context.Context) (*operations.UpdateAccessRuleRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	updateAccessRuleInfo, updateAccessRuleInfoDiags := r.ToSharedUpdateAccessRuleInfo(ctx)
+	diags.Append(updateAccessRuleInfoDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.UpdateAccessRuleRequest{
+		UpdateAccessRuleInfo: *updateAccessRuleInfo,
+		ID:                   id,
+	}
+
+	return &out, diags
+}
+
+func (r *AccessRuleResourceModel) ToOperationsGetAccessRuleRequest(ctx context.Context) (*operations.GetAccessRuleRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetAccessRuleRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *AccessRuleResourceModel) ToOperationsDeleteGroupRequest(ctx context.Context) (*operations.DeleteGroupRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.DeleteGroupRequest{
+		ID: id,
+	}
+
+	return &out, diags
 }
 
 func (r *AccessRuleResourceModel) RefreshFromSharedAccessRule(ctx context.Context, resp *shared.AccessRule) diag.Diagnostics {

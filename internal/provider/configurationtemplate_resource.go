@@ -22,7 +22,6 @@ import (
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/boolvalidators"
 	custom_objectvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/objectvalidators"
 )
@@ -337,8 +336,13 @@ func (r *ConfigurationTemplateResource) Create(ctx context.Context, req resource
 		return
 	}
 
-	request := *data.ToSharedCreateConfigurationTemplateInfo()
-	res, err := r.client.ConfigurationTemplates.Create(ctx, request)
+	request, requestDiags := data.ToSharedCreateConfigurationTemplateInfo(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.ConfigurationTemplates.Create(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -412,8 +416,13 @@ func (r *ConfigurationTemplateResource) Update(ctx context.Context, req resource
 		return
 	}
 
-	request := *data.ToSharedUpdateConfigurationTemplateInfo()
-	res, err := r.client.ConfigurationTemplates.Update(ctx, request)
+	request, requestDiags := data.ToSharedUpdateConfigurationTemplateInfo(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.ConfigurationTemplates.Update(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -467,13 +476,13 @@ func (r *ConfigurationTemplateResource) Delete(ctx context.Context, req resource
 		return
 	}
 
-	var configurationTemplateID string
-	configurationTemplateID = data.ConfigurationTemplateID.ValueString()
+	request, requestDiags := data.ToOperationsDeleteConfigurationTemplateRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.DeleteConfigurationTemplateRequest{
-		ConfigurationTemplateID: configurationTemplateID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.ConfigurationTemplates.Delete(ctx, request)
+	res, err := r.client.ConfigurationTemplates.Delete(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

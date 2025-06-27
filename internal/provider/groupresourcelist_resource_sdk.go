@@ -7,11 +7,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *GroupResourceListResourceModel) ToSharedUpdateGroupResourcesInfo() *shared.UpdateGroupResourcesInfo {
-	var resources []shared.ResourceWithAccessLevel = []shared.ResourceWithAccessLevel{}
+func (r *GroupResourceListResourceModel) ToSharedUpdateGroupResourcesInfo(ctx context.Context) (*shared.UpdateGroupResourcesInfo, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	resources := make([]shared.ResourceWithAccessLevel, 0, len(r.Resources))
 	for _, resourcesItem := range r.Resources {
 		accessLevelRemoteID := new(string)
 		if !resourcesItem.AccessLevelRemoteID.IsUnknown() && !resourcesItem.AccessLevelRemoteID.IsNull() {
@@ -30,7 +33,42 @@ func (r *GroupResourceListResourceModel) ToSharedUpdateGroupResourcesInfo() *sha
 	out := shared.UpdateGroupResourcesInfo{
 		Resources: resources,
 	}
-	return &out
+
+	return &out, diags
+}
+
+func (r *GroupResourceListResourceModel) ToOperationsUpdateGroupResourcesRequest(ctx context.Context) (*operations.UpdateGroupResourcesRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	updateGroupResourcesInfo, updateGroupResourcesInfoDiags := r.ToSharedUpdateGroupResourcesInfo(ctx)
+	diags.Append(updateGroupResourcesInfoDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var groupID string
+	groupID = r.GroupID.ValueString()
+
+	out := operations.UpdateGroupResourcesRequest{
+		UpdateGroupResourcesInfo: *updateGroupResourcesInfo,
+		GroupID:                  groupID,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupResourceListResourceModel) ToOperationsGetGroupResourcesRequest(ctx context.Context) (*operations.GetGroupResourcesRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var groupID string
+	groupID = r.GroupID.ValueString()
+
+	out := operations.GetGroupResourcesRequest{
+		GroupID: groupID,
+	}
+
+	return &out, diags
 }
 
 func (r *GroupResourceListResourceModel) RefreshFromSharedGroupResourceList(ctx context.Context, resp *shared.GroupResourceList) diag.Diagnostics {

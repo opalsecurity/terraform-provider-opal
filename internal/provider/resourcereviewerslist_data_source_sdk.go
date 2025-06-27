@@ -6,7 +6,21 @@ import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
+
+func (r *ResourceReviewersListDataSourceModel) ToOperationsGetResourceReviewersRequest(ctx context.Context) (*operations.GetResourceReviewersRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var resourceID string
+	resourceID = r.ResourceID.ValueString()
+
+	out := operations.GetResourceReviewersRequest{
+		ResourceID: resourceID,
+	}
+
+	return &out, diags
+}
 
 func (r *ResourceReviewersListDataSourceModel) RefreshFromString(ctx context.Context, resp []string) diag.Diagnostics {
 	var diags diag.Diagnostics

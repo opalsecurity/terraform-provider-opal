@@ -29,8 +29,6 @@ import (
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 	stateupgraders "github.com/opalsecurity/terraform-provider-opal/internal/stateupgraders"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/boolvalidators"
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/internal/validators/int64validators"
@@ -1426,8 +1424,13 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 		return
 	}
 
-	request := *data.ToSharedCreateResourceInfo()
-	res, err := r.client.Resources.Create(ctx, request)
+	request, requestDiags := data.ToSharedCreateResourceInfo(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.Resources.Create(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -1458,12 +1461,13 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	singleton := *data.ToSharedUpdateResourceInfo()
-	resources := []shared.UpdateResourceInfo{singleton}
-	request1 := shared.UpdateResourceInfoList{
-		Resources: resources,
+	request1, request1Diags := data.ToSharedUpdateResourceInfoList(ctx)
+	resp.Diagnostics.Append(request1Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.Resources.Update(ctx, request1)
+	res1, err := r.client.Resources.Update(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -1494,15 +1498,13 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	visibilityInfo := *data.ToSharedVisibilityInfo()
-	var id string
-	id = data.ID.ValueString()
+	request2, request2Diags := data.ToOperationsUpdateResourceVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request2Diags...)
 
-	request2 := operations.UpdateResourceVisibilityRequest{
-		VisibilityInfo: visibilityInfo,
-		ID:             id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res2, err := r.client.Resources.UpdateVisibility(ctx, request2)
+	res2, err := r.client.Resources.UpdateVisibility(ctx, *request2)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res2 != nil && res2.RawResponse != nil {
@@ -1524,13 +1526,13 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var id1 string
-	id1 = data.ID.ValueString()
+	request3, request3Diags := data.ToOperationsGetResourceIDRequest(ctx)
+	resp.Diagnostics.Append(request3Diags...)
 
-	request3 := operations.GetResourceIDRequest{
-		ID: id1,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res3, err := r.client.Resources.GetID(ctx, request3)
+	res3, err := r.client.Resources.GetID(ctx, *request3)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res3 != nil && res3.RawResponse != nil {
@@ -1584,13 +1586,13 @@ func (r *ResourceResource) Read(ctx context.Context, req resource.ReadRequest, r
 		return
 	}
 
-	var id string
-	id = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsGetResourceIDRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetResourceIDRequest{
-		ID: id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Resources.GetID(ctx, request)
+	res, err := r.client.Resources.GetID(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -1638,12 +1640,13 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 		return
 	}
 
-	singleton := *data.ToSharedUpdateResourceInfo()
-	resources := []shared.UpdateResourceInfo{singleton}
-	request := shared.UpdateResourceInfoList{
-		Resources: resources,
+	request, requestDiags := data.ToSharedUpdateResourceInfoList(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Resources.Update(ctx, request)
+	res, err := r.client.Resources.Update(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -1674,15 +1677,13 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	visibilityInfo := *data.ToSharedVisibilityInfo()
-	var id string
-	id = data.ID.ValueString()
+	request1, request1Diags := data.ToOperationsUpdateResourceVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
 
-	request1 := operations.UpdateResourceVisibilityRequest{
-		VisibilityInfo: visibilityInfo,
-		ID:             id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.Resources.UpdateVisibility(ctx, request1)
+	res1, err := r.client.Resources.UpdateVisibility(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -1704,13 +1705,13 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var id1 string
-	id1 = data.ID.ValueString()
+	request2, request2Diags := data.ToOperationsGetResourceIDRequest(ctx)
+	resp.Diagnostics.Append(request2Diags...)
 
-	request2 := operations.GetResourceIDRequest{
-		ID: id1,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res2, err := r.client.Resources.GetID(ctx, request2)
+	res2, err := r.client.Resources.GetID(ctx, *request2)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res2 != nil && res2.RawResponse != nil {
@@ -1764,13 +1765,13 @@ func (r *ResourceResource) Delete(ctx context.Context, req resource.DeleteReques
 		return
 	}
 
-	var id string
-	id = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsDeleteResourceRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.DeleteResourceRequest{
-		ID: id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Resources.Delete(ctx, request)
+	res, err := r.client.Resources.Delete(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

@@ -6,8 +6,32 @@ import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *UserDataSourceModel) ToOperationsGetUserRequest(ctx context.Context) (*operations.GetUserRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	email := new(string)
+	if !r.Email.IsUnknown() && !r.Email.IsNull() {
+		*email = r.Email.ValueString()
+	} else {
+		email = nil
+	}
+	id := new(string)
+	if !r.ID.IsUnknown() && !r.ID.IsNull() {
+		*id = r.ID.ValueString()
+	} else {
+		id = nil
+	}
+	out := operations.GetUserRequest{
+		Email: email,
+		ID:    id,
+	}
+
+	return &out, diags
+}
 
 func (r *UserDataSourceModel) RefreshFromSharedUser(ctx context.Context, resp *shared.User) diag.Diagnostics {
 	var diags diag.Diagnostics

@@ -14,7 +14,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -108,22 +107,13 @@ func (r *TagUserResource) Create(ctx context.Context, req resource.CreateRequest
 		return
 	}
 
-	var requestBody *operations.CreateUserTagRequestBody
-	if data.RequestBody != nil {
-		requestBody = &operations.CreateUserTagRequestBody{}
-	}
-	var tagID string
-	tagID = data.TagID.ValueString()
+	request, requestDiags := data.ToOperationsCreateUserTagRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	var userID string
-	userID = data.UserID.ValueString()
-
-	request := operations.CreateUserTagRequest{
-		RequestBody: requestBody,
-		TagID:       tagID,
-		UserID:      userID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Tags.CreateUser(ctx, request)
+	res, err := r.client.Tags.CreateUser(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -212,17 +202,13 @@ func (r *TagUserResource) Delete(ctx context.Context, req resource.DeleteRequest
 		return
 	}
 
-	var tagID string
-	tagID = data.TagID.ValueString()
+	request, requestDiags := data.ToOperationsDeleteUserTagRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	var userID string
-	userID = data.UserID.ValueString()
-
-	request := operations.DeleteUserTagRequest{
-		TagID:  tagID,
-		UserID: userID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Tags.Delete(ctx, request)
+	res, err := r.client.Tags.Delete(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

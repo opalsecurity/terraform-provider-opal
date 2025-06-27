@@ -7,8 +7,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *ResourceMessageChannelListDataSourceModel) ToOperationsGetResourceMessageChannelsRequest(ctx context.Context) (*operations.GetResourceMessageChannelsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var resourceID string
+	resourceID = r.ResourceID.ValueString()
+
+	out := operations.GetResourceMessageChannelsRequest{
+		ResourceID: resourceID,
+	}
+
+	return &out, diags
+}
 
 func (r *ResourceMessageChannelListDataSourceModel) RefreshFromSharedMessageChannelList(ctx context.Context, resp *shared.MessageChannelList) diag.Diagnostics {
 	var diags diag.Diagnostics

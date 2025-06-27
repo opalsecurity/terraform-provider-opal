@@ -13,7 +13,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -121,15 +120,13 @@ func (r *BundleGroupResource) Create(ctx context.Context, req resource.CreateReq
 		return
 	}
 
-	requestBody := *data.ToOperationsAddBundleGroupRequestBody()
-	var bundleID string
-	bundleID = data.BundleID.ValueString()
+	request, requestDiags := data.ToOperationsAddBundleGroupRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.AddBundleGroupRequest{
-		RequestBody: requestBody,
-		BundleID:    bundleID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Bundles.AddBundleGroup(ctx, request)
+	res, err := r.client.Bundles.AddBundleGroup(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -227,24 +224,13 @@ func (r *BundleGroupResource) Delete(ctx context.Context, req resource.DeleteReq
 		return
 	}
 
-	accessLevelRemoteID := new(string)
-	if !data.AccessLevelRemoteID.IsUnknown() && !data.AccessLevelRemoteID.IsNull() {
-		*accessLevelRemoteID = data.AccessLevelRemoteID.ValueString()
-	} else {
-		accessLevelRemoteID = nil
-	}
-	var bundleID string
-	bundleID = data.BundleID.ValueString()
+	request, requestDiags := data.ToOperationsRemoveBundleGroupRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	var groupID string
-	groupID = data.GroupID.ValueString()
-
-	request := operations.RemoveBundleGroupRequest{
-		AccessLevelRemoteID: accessLevelRemoteID,
-		BundleID:            bundleID,
-		GroupID:             groupID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Bundles.RemoveBundleGroup(ctx, request)
+	res, err := r.client.Bundles.RemoveBundleGroup(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

@@ -2,7 +2,9 @@
 
 package types
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
 type Resource struct {
 	AdminOwnerID              types.String                    `tfsdk:"admin_owner_id"`

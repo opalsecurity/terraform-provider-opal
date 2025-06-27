@@ -16,7 +16,6 @@ import (
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -164,15 +163,13 @@ func (r *GroupResourceListResource) Create(ctx context.Context, req resource.Cre
 		return
 	}
 
-	updateGroupResourcesInfo := *data.ToSharedUpdateGroupResourcesInfo()
-	var groupID string
-	groupID = data.GroupID.ValueString()
+	request, requestDiags := data.ToOperationsUpdateGroupResourcesRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.UpdateGroupResourcesRequest{
-		UpdateGroupResourcesInfo: updateGroupResourcesInfo,
-		GroupID:                  groupID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Groups.UpdateResources(ctx, request)
+	res, err := r.client.Groups.UpdateResources(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -194,13 +191,13 @@ func (r *GroupResourceListResource) Create(ctx context.Context, req resource.Cre
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var groupId1 string
-	groupId1 = data.GroupID.ValueString()
+	request1, request1Diags := data.ToOperationsGetGroupResourcesRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
 
-	request1 := operations.GetGroupResourcesRequest{
-		GroupID: groupId1,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.Groups.GetResources(ctx, request1)
+	res1, err := r.client.Groups.GetResources(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -254,13 +251,13 @@ func (r *GroupResourceListResource) Read(ctx context.Context, req resource.ReadR
 		return
 	}
 
-	var groupID string
-	groupID = data.GroupID.ValueString()
+	request, requestDiags := data.ToOperationsGetGroupResourcesRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetGroupResourcesRequest{
-		GroupID: groupID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Groups.GetResources(ctx, request)
+	res, err := r.client.Groups.GetResources(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -308,15 +305,13 @@ func (r *GroupResourceListResource) Update(ctx context.Context, req resource.Upd
 		return
 	}
 
-	updateGroupResourcesInfo := *data.ToSharedUpdateGroupResourcesInfo()
-	var groupID string
-	groupID = data.GroupID.ValueString()
+	request, requestDiags := data.ToOperationsUpdateGroupResourcesRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.UpdateGroupResourcesRequest{
-		UpdateGroupResourcesInfo: updateGroupResourcesInfo,
-		GroupID:                  groupID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Groups.UpdateResources(ctx, request)
+	res, err := r.client.Groups.UpdateResources(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -338,13 +333,13 @@ func (r *GroupResourceListResource) Update(ctx context.Context, req resource.Upd
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var groupId1 string
-	groupId1 = data.GroupID.ValueString()
+	request1, request1Diags := data.ToOperationsGetGroupResourcesRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
 
-	request1 := operations.GetGroupResourcesRequest{
-		GroupID: groupId1,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.Groups.GetResources(ctx, request1)
+	res1, err := r.client.Groups.GetResources(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {

@@ -7,10 +7,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *TagResourceModel) ToSharedCreateTagInfo() *shared.CreateTagInfo {
+func (r *TagResourceModel) ToSharedCreateTagInfo(ctx context.Context) (*shared.CreateTagInfo, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	var key string
 	key = r.Key.ValueString()
 
@@ -24,7 +27,34 @@ func (r *TagResourceModel) ToSharedCreateTagInfo() *shared.CreateTagInfo {
 		Key:   key,
 		Value: value,
 	}
-	return &out
+
+	return &out, diags
+}
+
+func (r *TagResourceModel) ToOperationsGetTagByIDRequest(ctx context.Context) (*operations.GetTagByIDRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetTagByIDRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *TagResourceModel) ToOperationsDeleteTagByIDRequest(ctx context.Context) (*operations.DeleteTagByIDRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.DeleteTagByIDRequest{
+		ID: id,
+	}
+
+	return &out, diags
 }
 
 func (r *TagResourceModel) RefreshFromSharedTag(ctx context.Context, resp *shared.Tag) diag.Diagnostics {

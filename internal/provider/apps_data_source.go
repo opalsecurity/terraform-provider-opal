@@ -11,8 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -160,21 +158,13 @@ func (r *AppsDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 		return
 	}
 
-	var appTypeFilter []shared.AppTypeEnum = []shared.AppTypeEnum{}
-	for _, appTypeFilterItem := range data.AppTypeFilter {
-		appTypeFilter = append(appTypeFilter, shared.AppTypeEnum(appTypeFilterItem.ValueString()))
+	request, requestDiags := data.ToOperationsGetAppsRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	ownerFilter := new(string)
-	if !data.OwnerFilter.IsUnknown() && !data.OwnerFilter.IsNull() {
-		*ownerFilter = data.OwnerFilter.ValueString()
-	} else {
-		ownerFilter = nil
-	}
-	request := operations.GetAppsRequest{
-		AppTypeFilter: appTypeFilter,
-		OwnerFilter:   ownerFilter,
-	}
-	res, err := r.client.Apps.Get(ctx, request)
+	res, err := r.client.Apps.Get(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -184,10 +174,6 @@ func (r *AppsDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
-		return
-	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

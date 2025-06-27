@@ -2,7 +2,9 @@
 
 package types
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
 type CustomConnector struct {
 	CanHaveUsageEvents types.Bool   `tfsdk:"can_have_usage_events"`

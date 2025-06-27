@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -140,38 +139,13 @@ func (r *ResourcesAccessStatusDataSource) Read(ctx context.Context, req datasour
 		return
 	}
 
-	accessLevelRemoteID := new(string)
-	if !data.AccessLevelRemoteID.IsUnknown() && !data.AccessLevelRemoteID.IsNull() {
-		*accessLevelRemoteID = data.AccessLevelRemoteID.ValueString()
-	} else {
-		accessLevelRemoteID = nil
-	}
-	cursor := new(string)
-	if !data.Cursor.IsUnknown() && !data.Cursor.IsNull() {
-		*cursor = data.Cursor.ValueString()
-	} else {
-		cursor = nil
-	}
-	pageSize := new(int64)
-	if !data.PageSize.IsUnknown() && !data.PageSize.IsNull() {
-		*pageSize = data.PageSize.ValueInt64()
-	} else {
-		pageSize = nil
-	}
-	var resourceID string
-	resourceID = data.ResourceID.ValueString()
+	request, requestDiags := data.ToOperationsGetResourceUserAccessStatusRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	var userID string
-	userID = data.UserID.ValueString()
-
-	request := operations.GetResourceUserAccessStatusRequest{
-		AccessLevelRemoteID: accessLevelRemoteID,
-		Cursor:              cursor,
-		PageSize:            pageSize,
-		ResourceID:          resourceID,
-		UserID:              userID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Resources.GetAccessStatus(ctx, request)
+	res, err := r.client.Resources.GetAccessStatus(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -181,10 +155,6 @@ func (r *ResourcesAccessStatusDataSource) Read(ctx context.Context, req datasour
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
-		return
-	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

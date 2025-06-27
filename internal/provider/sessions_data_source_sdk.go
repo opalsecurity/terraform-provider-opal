@@ -8,8 +8,29 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *SessionsDataSourceModel) ToOperationsGetSessionsRequest(ctx context.Context) (*operations.GetSessionsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var resourceID string
+	resourceID = r.ResourceID.ValueString()
+
+	userID := new(string)
+	if !r.UserID.IsUnknown() && !r.UserID.IsNull() {
+		*userID = r.UserID.ValueString()
+	} else {
+		userID = nil
+	}
+	out := operations.GetSessionsRequest{
+		ResourceID: resourceID,
+		UserID:     userID,
+	}
+
+	return &out, diags
+}
 
 func (r *SessionsDataSourceModel) RefreshFromSharedSessionsList(ctx context.Context, resp *shared.SessionsList) diag.Diagnostics {
 	var diags diag.Diagnostics

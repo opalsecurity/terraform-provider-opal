@@ -5,6 +5,7 @@ package provider
 import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/hashicorp/terraform-plugin-framework/ephemeral"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -15,7 +16,8 @@ import (
 	"os"
 )
 
-var _ provider.Provider = &OpalProvider{}
+var _ provider.Provider = (*OpalProvider)(nil)
+var _ provider.ProviderWithEphemeralResources = (*OpalProvider)(nil)
 
 type OpalProvider struct {
 	// version is set to the provider version on release, "dev" when the
@@ -72,18 +74,21 @@ func (p *OpalProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 		ServerURL = "https://api.opal.dev/v1"
 	}
 
-	bearerAuth := new(string)
-	if !data.BearerAuth.IsUnknown() && !data.BearerAuth.IsNull() {
-		*bearerAuth = data.BearerAuth.ValueString()
-	} else {
-		if len(os.Getenv("OPAL_AUTH_TOKEN")) > 0 {
-			*bearerAuth = os.Getenv("OPAL_AUTH_TOKEN")
-		} else {
-			bearerAuth = nil
-		}
+	security := shared.Security{}
+
+	if !data.BearerAuth.IsUnknown() {
+		security.BearerAuth = data.BearerAuth.ValueString()
 	}
-	security := shared.Security{
-		BearerAuth: bearerAuth,
+
+	if bearerAuthEnvVar := os.Getenv("OPAL_AUTH_TOKEN"); security.BearerAuth == "" && bearerAuthEnvVar != "" {
+		security.BearerAuth = bearerAuthEnvVar
+	}
+
+	if security.BearerAuth == "" {
+		resp.Diagnostics.AddError(
+			"Missing Provider Security Configuration",
+			"Either the environment variable OPAL_AUTH_TOKEN or provider configuration bearer_auth attribute must be configured.",
+		)
 	}
 
 	providerHTTPTransportOpts := ProviderHTTPTransportOpts{
@@ -107,6 +112,7 @@ func (p *OpalProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 	client := sdk.New(opts...)
 
 	resp.DataSourceData = client
+	resp.EphemeralResourceData = client
 	resp.ResourceData = client
 }
 
@@ -178,6 +184,10 @@ func (p *OpalProvider) DataSources(ctx context.Context) []func() datasource.Data
 		NewUsersDataSource,
 		NewUserTagsDataSource,
 	}
+}
+
+func (p *OpalProvider) EphemeralResources(ctx context.Context) []func() ephemeral.EphemeralResource {
+	return []func() ephemeral.EphemeralResource{}
 }
 
 func New(version string) func() provider.Provider {

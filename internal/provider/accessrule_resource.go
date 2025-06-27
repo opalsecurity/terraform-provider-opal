@@ -17,7 +17,6 @@ import (
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	speakeasy_listvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/listvalidators"
 	speakeasy_objectvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/objectvalidators"
 	speakeasy_stringvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/stringvalidators"
@@ -248,8 +247,13 @@ func (r *AccessRuleResource) Create(ctx context.Context, req resource.CreateRequ
 		return
 	}
 
-	request := *data.ToSharedUpdateAccessRuleInfo()
-	res, err := r.client.AccessRules.CreateAccessRule(ctx, request)
+	request, requestDiags := data.ToSharedUpdateAccessRuleInfo(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.AccessRules.CreateAccessRule(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -303,13 +307,13 @@ func (r *AccessRuleResource) Read(ctx context.Context, req resource.ReadRequest,
 		return
 	}
 
-	var id string
-	id = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsGetAccessRuleRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetAccessRuleRequest{
-		ID: id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.AccessRules.GetAccessRule(ctx, request)
+	res, err := r.client.AccessRules.GetAccessRule(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -357,15 +361,13 @@ func (r *AccessRuleResource) Update(ctx context.Context, req resource.UpdateRequ
 		return
 	}
 
-	updateAccessRuleInfo := *data.ToSharedUpdateAccessRuleInfo()
-	var id string
-	id = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsUpdateAccessRuleRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.UpdateAccessRuleRequest{
-		UpdateAccessRuleInfo: updateAccessRuleInfo,
-		ID:                   id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.AccessRules.UpdateAccessRule(ctx, request)
+	res, err := r.client.AccessRules.UpdateAccessRule(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -419,13 +421,13 @@ func (r *AccessRuleResource) Delete(ctx context.Context, req resource.DeleteRequ
 		return
 	}
 
-	var id string
-	id = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsDeleteGroupRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.DeleteGroupRequest{
-		ID: id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Groups.Delete(ctx, request)
+	res, err := r.client.Groups.Delete(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

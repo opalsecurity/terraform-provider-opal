@@ -6,8 +6,22 @@ import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *BundleVisibilityDataSourceModel) ToOperationsGetBundleVisibilityRequest(ctx context.Context) (*operations.GetBundleVisibilityRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var bundleID string
+	bundleID = r.BundleID.ValueString()
+
+	out := operations.GetBundleVisibilityRequest{
+		BundleID: bundleID,
+	}
+
+	return &out, diags
+}
 
 func (r *BundleVisibilityDataSourceModel) RefreshFromSharedVisibilityInfo(ctx context.Context, resp *shared.VisibilityInfo) diag.Diagnostics {
 	var diags diag.Diagnostics

@@ -10,7 +10,9 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *BundleResourceResourceModel) ToOperationsAddBundleResourceRequestBody() *operations.AddBundleResourceRequestBody {
+func (r *BundleResourceResourceModel) ToOperationsAddBundleResourceRequestBody(ctx context.Context) (*operations.AddBundleResourceRequestBody, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	accessLevelName := new(string)
 	if !r.AccessLevelName.IsUnknown() && !r.AccessLevelName.IsNull() {
 		*accessLevelName = r.AccessLevelName.ValueString()
@@ -31,7 +33,53 @@ func (r *BundleResourceResourceModel) ToOperationsAddBundleResourceRequestBody()
 		AccessLevelRemoteID: accessLevelRemoteID,
 		ResourceID:          resourceID,
 	}
-	return &out
+
+	return &out, diags
+}
+
+func (r *BundleResourceResourceModel) ToOperationsAddBundleResourceRequest(ctx context.Context) (*operations.AddBundleResourceRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	requestBody, requestBodyDiags := r.ToOperationsAddBundleResourceRequestBody(ctx)
+	diags.Append(requestBodyDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var bundleID string
+	bundleID = r.BundleID.ValueString()
+
+	out := operations.AddBundleResourceRequest{
+		RequestBody: requestBody,
+		BundleID:    bundleID,
+	}
+
+	return &out, diags
+}
+
+func (r *BundleResourceResourceModel) ToOperationsRemoveBundleResourceRequest(ctx context.Context) (*operations.RemoveBundleResourceRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	accessLevelRemoteID := new(string)
+	if !r.AccessLevelRemoteID.IsUnknown() && !r.AccessLevelRemoteID.IsNull() {
+		*accessLevelRemoteID = r.AccessLevelRemoteID.ValueString()
+	} else {
+		accessLevelRemoteID = nil
+	}
+	var bundleID string
+	bundleID = r.BundleID.ValueString()
+
+	var resourceID string
+	resourceID = r.ResourceID.ValueString()
+
+	out := operations.RemoveBundleResourceRequest{
+		AccessLevelRemoteID: accessLevelRemoteID,
+		BundleID:            bundleID,
+		ResourceID:          resourceID,
+	}
+
+	return &out, diags
 }
 
 func (r *BundleResourceResourceModel) RefreshFromSharedBundleResource(ctx context.Context, resp *shared.BundleResource) diag.Diagnostics {

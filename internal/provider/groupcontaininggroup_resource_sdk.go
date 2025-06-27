@@ -6,17 +6,76 @@ import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *GroupContainingGroupResourceModel) ToSharedGroupContainingGroup() *shared.GroupContainingGroup {
+func (r *GroupContainingGroupResourceModel) ToSharedGroupContainingGroup(ctx context.Context) (*shared.GroupContainingGroup, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	var containingGroupID string
 	containingGroupID = r.ContainingGroupID.ValueString()
 
 	out := shared.GroupContainingGroup{
 		ContainingGroupID: containingGroupID,
 	}
-	return &out
+
+	return &out, diags
+}
+
+func (r *GroupContainingGroupResourceModel) ToOperationsAddGroupContainingGroupRequest(ctx context.Context) (*operations.AddGroupContainingGroupRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	groupContainingGroup, groupContainingGroupDiags := r.ToSharedGroupContainingGroup(ctx)
+	diags.Append(groupContainingGroupDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var groupID string
+	groupID = r.GroupID.ValueString()
+
+	out := operations.AddGroupContainingGroupRequest{
+		GroupContainingGroup: *groupContainingGroup,
+		GroupID:              groupID,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupContainingGroupResourceModel) ToOperationsGetGroupContainingGroupRequest(ctx context.Context) (*operations.GetGroupContainingGroupRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var containingGroupID string
+	containingGroupID = r.ContainingGroupID.ValueString()
+
+	var groupID string
+	groupID = r.GroupID.ValueString()
+
+	out := operations.GetGroupContainingGroupRequest{
+		ContainingGroupID: containingGroupID,
+		GroupID:           groupID,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupContainingGroupResourceModel) ToOperationsRemoveGroupContainingGroupRequest(ctx context.Context) (*operations.RemoveGroupContainingGroupRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var containingGroupID string
+	containingGroupID = r.ContainingGroupID.ValueString()
+
+	var groupID string
+	groupID = r.GroupID.ValueString()
+
+	out := operations.RemoveGroupContainingGroupRequest{
+		ContainingGroupID: containingGroupID,
+		GroupID:           groupID,
+	}
+
+	return &out, diags
 }
 
 func (r *GroupContainingGroupResourceModel) RefreshFromSharedGroupContainingGroup(ctx context.Context, resp *shared.GroupContainingGroup) diag.Diagnostics {
