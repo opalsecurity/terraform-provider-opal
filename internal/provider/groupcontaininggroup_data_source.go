@@ -10,7 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -93,17 +92,13 @@ func (r *GroupContainingGroupDataSource) Read(ctx context.Context, req datasourc
 		return
 	}
 
-	var containingGroupID string
-	containingGroupID = data.ContainingGroupID.ValueString()
+	request, requestDiags := data.ToOperationsGetGroupContainingGroupRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	var groupID string
-	groupID = data.GroupID.ValueString()
-
-	request := operations.GetGroupContainingGroupRequest{
-		ContainingGroupID: containingGroupID,
-		GroupID:           groupID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Groups.GetGroupContainingGroup(ctx, request)
+	res, err := r.client.Groups.GetGroupContainingGroup(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -113,10 +108,6 @@ func (r *GroupContainingGroupDataSource) Read(ctx context.Context, req datasourc
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
-		return
-	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

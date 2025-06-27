@@ -11,6 +11,58 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
+func (r *GroupDataSourceModel) ToOperationsGetGroupRequest(ctx context.Context) (*operations.GetGroupRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetGroupRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupDataSourceModel) ToOperationsGetGroupMessageChannelsRequest(ctx context.Context) (*operations.GetGroupMessageChannelsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetGroupMessageChannelsRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupDataSourceModel) ToOperationsGetGroupOnCallSchedulesRequest(ctx context.Context) (*operations.GetGroupOnCallSchedulesRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetGroupOnCallSchedulesRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupDataSourceModel) ToOperationsGetGroupVisibilityRequest(ctx context.Context) (*operations.GetGroupVisibilityRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetGroupVisibilityRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
 func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp *shared.Group) diag.Diagnostics {
 	var diags diag.Diagnostics
 

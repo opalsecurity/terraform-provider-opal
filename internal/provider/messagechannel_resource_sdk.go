@@ -6,10 +6,13 @@ import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *MessageChannelResourceModel) ToSharedCreateMessageChannelInfo() *shared.CreateMessageChannelInfo {
+func (r *MessageChannelResourceModel) ToSharedCreateMessageChannelInfo(ctx context.Context) (*shared.CreateMessageChannelInfo, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	var remoteID string
 	remoteID = r.RemoteID.ValueString()
 
@@ -18,7 +21,21 @@ func (r *MessageChannelResourceModel) ToSharedCreateMessageChannelInfo() *shared
 		RemoteID:           remoteID,
 		ThirdPartyProvider: thirdPartyProvider,
 	}
-	return &out
+
+	return &out, diags
+}
+
+func (r *MessageChannelResourceModel) ToOperationsGetMessageChannelIDRequest(ctx context.Context) (*operations.GetMessageChannelIDRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetMessageChannelIDRequest{
+		ID: id,
+	}
+
+	return &out, diags
 }
 
 func (r *MessageChannelResourceModel) RefreshFromSharedMessageChannel(ctx context.Context, resp *shared.MessageChannel) diag.Diagnostics {

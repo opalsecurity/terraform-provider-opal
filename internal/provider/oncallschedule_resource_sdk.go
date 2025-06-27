@@ -6,10 +6,13 @@ import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *OnCallScheduleResourceModel) ToSharedCreateOnCallScheduleInfo() *shared.CreateOnCallScheduleInfo {
+func (r *OnCallScheduleResourceModel) ToSharedCreateOnCallScheduleInfo(ctx context.Context) (*shared.CreateOnCallScheduleInfo, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	var remoteID string
 	remoteID = r.RemoteID.ValueString()
 
@@ -18,7 +21,21 @@ func (r *OnCallScheduleResourceModel) ToSharedCreateOnCallScheduleInfo() *shared
 		RemoteID:           remoteID,
 		ThirdPartyProvider: thirdPartyProvider,
 	}
-	return &out
+
+	return &out, diags
+}
+
+func (r *OnCallScheduleResourceModel) ToOperationsGetOnCallScheduleIDRequest(ctx context.Context) (*operations.GetOnCallScheduleIDRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetOnCallScheduleIDRequest{
+		ID: id,
+	}
+
+	return &out, diags
 }
 
 func (r *OnCallScheduleResourceModel) RefreshFromSharedOnCallSchedule(ctx context.Context, resp *shared.OnCallSchedule) diag.Diagnostics {

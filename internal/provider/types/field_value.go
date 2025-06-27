@@ -2,7 +2,9 @@
 
 package types
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
 type FieldValue struct {
 	Str     types.String `queryParam:"inline" tfsdk:"str" tfPlanOnly:"true"`

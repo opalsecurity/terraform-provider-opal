@@ -2,7 +2,9 @@
 
 package types
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
 type AwsOrganizationalUnit struct {
 	OrganizationalUnitID types.String `tfsdk:"organizational_unit_id"`

@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -188,13 +187,13 @@ func (r *UarDataSource) Read(ctx context.Context, req datasource.ReadRequest, re
 		return
 	}
 
-	var uarID string
-	uarID = data.UarID.ValueString()
+	request, requestDiags := data.ToOperationsGetUARIDRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetUARIDRequest{
-		UarID: uarID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Uars.GetID(ctx, request)
+	res, err := r.client.Uars.GetID(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -204,10 +203,6 @@ func (r *UarDataSource) Read(ctx context.Context, req datasource.ReadRequest, re
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
-		return
-	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

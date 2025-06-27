@@ -11,8 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -372,35 +370,13 @@ func (r *GroupListDataSource) Read(ctx context.Context, req datasource.ReadReque
 		return
 	}
 
-	var groupIds []string = []string{}
-	for _, groupIdsItem := range data.GroupIds {
-		groupIds = append(groupIds, groupIdsItem.ValueString())
+	request, requestDiags := data.ToOperationsGetGroupsRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	groupName := new(string)
-	if !data.GroupName.IsUnknown() && !data.GroupName.IsNull() {
-		*groupName = data.GroupName.ValueString()
-	} else {
-		groupName = nil
-	}
-	groupTypeFilter := new(shared.GroupTypeEnum)
-	if !data.GroupTypeFilter.IsUnknown() && !data.GroupTypeFilter.IsNull() {
-		*groupTypeFilter = shared.GroupTypeEnum(data.GroupTypeFilter.ValueString())
-	} else {
-		groupTypeFilter = nil
-	}
-	pageSize := new(int64)
-	if !data.PageSize.IsUnknown() && !data.PageSize.IsNull() {
-		*pageSize = data.PageSize.ValueInt64()
-	} else {
-		pageSize = nil
-	}
-	request := operations.GetGroupsRequest{
-		GroupIds:        groupIds,
-		GroupName:       groupName,
-		GroupTypeFilter: groupTypeFilter,
-		PageSize:        pageSize,
-	}
-	res, err := r.client.Groups.List(ctx, request)
+	res, err := r.client.Groups.List(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -410,10 +386,6 @@ func (r *GroupListDataSource) Read(ctx context.Context, req datasource.ReadReque
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
-		return
-	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

@@ -11,6 +11,26 @@ servers:
   - description: Production
     url: https://api.opal.dev/v1
     x-speakeasy-server-id: prod
+# keep tags alphabetized, also add any new tags to the list below
+tags:
+  - name: access-rules
+  - name: apps
+  - name: bundles
+  - name: configuration-templates
+  - name: events
+  - name: groups
+  - name: group-bindings
+  - name: idp-group-mappings
+  - name: message-channels
+  - name: non-human-identities
+  - name: on-call-schedules
+  - name: owners
+  - name: requests
+  - name: resources
+  - name: sessions
+  - name: tags
+  - name: uars
+  - name: users
 paths:
   /apps:
     get:
@@ -9652,30 +9672,3 @@ x-speakeasy-retries:
   statusCodes:
     - 429
   retryConnectionErrors: true
-tags:
-  - name: apps
-    description: Operations related to apps
-  - name: configuration-templates
-    description: Operations related to configuration templates
-  - name: events
-    description: Operations related to events
-  - name: groups
-    description: Operations related to groups
-  - name: owners
-    description: Operations related to owners
-  - name: requests
-    description: Operations related to requests
-  - name: resources
-    description: Operations related to resources
-  - name: sessions
-    description: Operations related to sessions
-  - name: users
-    description: Operations related to users
-  - name: tags
-    description: Operations related to tags
-  - name: message-channels
-    description: Operations related to message channels
-  - name: on-call-schedules
-    description: Operations related to on-call schedules
-  - name: uars
-    description: Operations related to uars

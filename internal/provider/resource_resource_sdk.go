@@ -7,10 +7,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *ResourceResourceModel) ToSharedCreateResourceInfo() *shared.CreateResourceInfo {
+func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) (*shared.CreateResourceInfo, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	var appID string
 	appID = r.AppID.ValueString()
 
@@ -428,7 +431,273 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo() *shared.CreateResou
 		ResourceType:              resourceType,
 		RiskSensitivityOverride:   riskSensitivityOverride,
 	}
-	return &out
+
+	return &out, diags
+}
+
+func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) (*shared.UpdateResourceInfo, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	adminOwnerID := new(string)
+	if !r.AdminOwnerID.IsUnknown() && !r.AdminOwnerID.IsNull() {
+		*adminOwnerID = r.AdminOwnerID.ValueString()
+	} else {
+		adminOwnerID = nil
+	}
+	customRequestNotification := new(string)
+	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
+		*customRequestNotification = r.CustomRequestNotification.ValueString()
+	} else {
+		customRequestNotification = nil
+	}
+	description := new(string)
+	if !r.Description.IsUnknown() && !r.Description.IsNull() {
+		*description = r.Description.ValueString()
+	} else {
+		description = nil
+	}
+	var id string
+	id = r.ID.ValueString()
+
+	name := new(string)
+	if !r.Name.IsUnknown() && !r.Name.IsNull() {
+		*name = r.Name.ValueString()
+	} else {
+		name = nil
+	}
+	requestConfigurations := make([]shared.RequestConfiguration, 0, len(r.RequestConfigurations))
+	for _, requestConfigurationsItem := range r.RequestConfigurations {
+		var allowRequests bool
+		allowRequests = requestConfigurationsItem.AllowRequests.ValueBool()
+
+		var autoApproval bool
+		autoApproval = requestConfigurationsItem.AutoApproval.ValueBool()
+
+		var condition *shared.Condition
+		if requestConfigurationsItem.Condition != nil {
+			groupIds := make([]string, 0, len(requestConfigurationsItem.Condition.GroupIds))
+			for _, groupIdsItem := range requestConfigurationsItem.Condition.GroupIds {
+				groupIds = append(groupIds, groupIdsItem.ValueString())
+			}
+			roleRemoteIds := make([]string, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
+			for _, roleRemoteIdsItem := range requestConfigurationsItem.Condition.RoleRemoteIds {
+				roleRemoteIds = append(roleRemoteIds, roleRemoteIdsItem.ValueString())
+			}
+			condition = &shared.Condition{
+				GroupIds:      groupIds,
+				RoleRemoteIds: roleRemoteIds,
+			}
+		}
+		maxDuration := new(int64)
+		if !requestConfigurationsItem.MaxDuration.IsUnknown() && !requestConfigurationsItem.MaxDuration.IsNull() {
+			*maxDuration = requestConfigurationsItem.MaxDuration.ValueInt64()
+		} else {
+			maxDuration = nil
+		}
+		var priority int64
+		priority = requestConfigurationsItem.Priority.ValueInt64()
+
+		recommendedDuration := new(int64)
+		if !requestConfigurationsItem.RecommendedDuration.IsUnknown() && !requestConfigurationsItem.RecommendedDuration.IsNull() {
+			*recommendedDuration = requestConfigurationsItem.RecommendedDuration.ValueInt64()
+		} else {
+			recommendedDuration = nil
+		}
+		requestTemplateID := new(string)
+		if !requestConfigurationsItem.RequestTemplateID.IsUnknown() && !requestConfigurationsItem.RequestTemplateID.IsNull() {
+			*requestTemplateID = requestConfigurationsItem.RequestTemplateID.ValueString()
+		} else {
+			requestTemplateID = nil
+		}
+		var requireMfaToRequest bool
+		requireMfaToRequest = requestConfigurationsItem.RequireMfaToRequest.ValueBool()
+
+		var requireSupportTicket bool
+		requireSupportTicket = requestConfigurationsItem.RequireSupportTicket.ValueBool()
+
+		reviewerStages := make([]shared.ReviewerStage, 0, len(requestConfigurationsItem.ReviewerStages))
+		for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
+			operator := new(shared.Operator)
+			if !reviewerStagesItem.Operator.IsUnknown() && !reviewerStagesItem.Operator.IsNull() {
+				*operator = shared.Operator(reviewerStagesItem.Operator.ValueString())
+			} else {
+				operator = nil
+			}
+			ownerIds := make([]string, 0, len(reviewerStagesItem.OwnerIds))
+			for _, ownerIdsItem := range reviewerStagesItem.OwnerIds {
+				ownerIds = append(ownerIds, ownerIdsItem.ValueString())
+			}
+			requireAdminApproval := new(bool)
+			if !reviewerStagesItem.RequireAdminApproval.IsUnknown() && !reviewerStagesItem.RequireAdminApproval.IsNull() {
+				*requireAdminApproval = reviewerStagesItem.RequireAdminApproval.ValueBool()
+			} else {
+				requireAdminApproval = nil
+			}
+			requireManagerApproval := new(bool)
+			if !reviewerStagesItem.RequireManagerApproval.IsUnknown() && !reviewerStagesItem.RequireManagerApproval.IsNull() {
+				*requireManagerApproval = reviewerStagesItem.RequireManagerApproval.ValueBool()
+			} else {
+				requireManagerApproval = nil
+			}
+			reviewerStages = append(reviewerStages, shared.ReviewerStage{
+				Operator:               operator,
+				OwnerIds:               ownerIds,
+				RequireAdminApproval:   requireAdminApproval,
+				RequireManagerApproval: requireManagerApproval,
+			})
+		}
+		requestConfigurations = append(requestConfigurations, shared.RequestConfiguration{
+			AllowRequests:        allowRequests,
+			AutoApproval:         autoApproval,
+			Condition:            condition,
+			MaxDuration:          maxDuration,
+			Priority:             priority,
+			RecommendedDuration:  recommendedDuration,
+			RequestTemplateID:    requestTemplateID,
+			RequireMfaToRequest:  requireMfaToRequest,
+			RequireSupportTicket: requireSupportTicket,
+			ReviewerStages:       reviewerStages,
+		})
+	}
+	requireMfaToApprove := new(bool)
+	if !r.RequireMfaToApprove.IsUnknown() && !r.RequireMfaToApprove.IsNull() {
+		*requireMfaToApprove = r.RequireMfaToApprove.ValueBool()
+	} else {
+		requireMfaToApprove = nil
+	}
+	requireMfaToConnect := new(bool)
+	if !r.RequireMfaToConnect.IsUnknown() && !r.RequireMfaToConnect.IsNull() {
+		*requireMfaToConnect = r.RequireMfaToConnect.ValueBool()
+	} else {
+		requireMfaToConnect = nil
+	}
+	riskSensitivityOverride := new(shared.RiskSensitivityEnum)
+	if !r.RiskSensitivityOverride.IsUnknown() && !r.RiskSensitivityOverride.IsNull() {
+		*riskSensitivityOverride = shared.RiskSensitivityEnum(r.RiskSensitivityOverride.ValueString())
+	} else {
+		riskSensitivityOverride = nil
+	}
+	var ticketPropagation *shared.TicketPropagationConfiguration
+	if r.TicketPropagation != nil {
+		var enabledOnGrant bool
+		enabledOnGrant = r.TicketPropagation.EnabledOnGrant.ValueBool()
+
+		var enabledOnRevocation bool
+		enabledOnRevocation = r.TicketPropagation.EnabledOnRevocation.ValueBool()
+
+		ticketProjectID := new(string)
+		if !r.TicketPropagation.TicketProjectID.IsUnknown() && !r.TicketPropagation.TicketProjectID.IsNull() {
+			*ticketProjectID = r.TicketPropagation.TicketProjectID.ValueString()
+		} else {
+			ticketProjectID = nil
+		}
+		ticketProvider := new(shared.TicketingProviderEnum)
+		if !r.TicketPropagation.TicketProvider.IsUnknown() && !r.TicketPropagation.TicketProvider.IsNull() {
+			*ticketProvider = shared.TicketingProviderEnum(r.TicketPropagation.TicketProvider.ValueString())
+		} else {
+			ticketProvider = nil
+		}
+		ticketPropagation = &shared.TicketPropagationConfiguration{
+			EnabledOnGrant:      enabledOnGrant,
+			EnabledOnRevocation: enabledOnRevocation,
+			TicketProjectID:     ticketProjectID,
+			TicketProvider:      ticketProvider,
+		}
+	}
+	out := shared.UpdateResourceInfo{
+		AdminOwnerID:              adminOwnerID,
+		CustomRequestNotification: customRequestNotification,
+		Description:               description,
+		ID:                        id,
+		Name:                      name,
+		RequestConfigurations:     requestConfigurations,
+		RequireMfaToApprove:       requireMfaToApprove,
+		RequireMfaToConnect:       requireMfaToConnect,
+		RiskSensitivityOverride:   riskSensitivityOverride,
+		TicketPropagation:         ticketPropagation,
+	}
+
+	return &out, diags
+}
+
+func (r *ResourceResourceModel) ToSharedUpdateResourceInfoList(ctx context.Context) (*shared.UpdateResourceInfoList, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	resources, resourcesDiags := r.ToSharedUpdateResourceInfo(ctx)
+	diags.Append(resourcesDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	out := shared.UpdateResourceInfoList{
+		Resources: []shared.UpdateResourceInfo{*resources},
+	}
+
+	return &out, diags
+}
+
+func (r *ResourceResourceModel) ToSharedVisibilityInfo(ctx context.Context) (*shared.VisibilityInfo, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	visibility := shared.VisibilityTypeEnum(r.Visibility.ValueString())
+	visibilityGroupIds := make([]string, 0, len(r.VisibilityGroupIds))
+	for _, visibilityGroupIdsItem := range r.VisibilityGroupIds {
+		visibilityGroupIds = append(visibilityGroupIds, visibilityGroupIdsItem.ValueString())
+	}
+	out := shared.VisibilityInfo{
+		Visibility:         visibility,
+		VisibilityGroupIds: visibilityGroupIds,
+	}
+
+	return &out, diags
+}
+
+func (r *ResourceResourceModel) ToOperationsUpdateResourceVisibilityRequest(ctx context.Context) (*operations.UpdateResourceVisibilityRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	visibilityInfo, visibilityInfoDiags := r.ToSharedVisibilityInfo(ctx)
+	diags.Append(visibilityInfoDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.UpdateResourceVisibilityRequest{
+		VisibilityInfo: *visibilityInfo,
+		ID:             id,
+	}
+
+	return &out, diags
+}
+
+func (r *ResourceResourceModel) ToOperationsGetResourceIDRequest(ctx context.Context) (*operations.GetResourceIDRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetResourceIDRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *ResourceResourceModel) ToOperationsDeleteResourceRequest(ctx context.Context) (*operations.DeleteResourceRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.DeleteResourceRequest{
+		ID: id,
+	}
+
+	return &out, diags
 }
 
 func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, resp *shared.Resource) diag.Diagnostics {
@@ -743,188 +1012,6 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 	return diags
 }
 
-func (r *ResourceResourceModel) ToSharedUpdateResourceInfo() *shared.UpdateResourceInfo {
-	adminOwnerID := new(string)
-	if !r.AdminOwnerID.IsUnknown() && !r.AdminOwnerID.IsNull() {
-		*adminOwnerID = r.AdminOwnerID.ValueString()
-	} else {
-		adminOwnerID = nil
-	}
-	customRequestNotification := new(string)
-	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
-		*customRequestNotification = r.CustomRequestNotification.ValueString()
-	} else {
-		customRequestNotification = nil
-	}
-	description := new(string)
-	if !r.Description.IsUnknown() && !r.Description.IsNull() {
-		*description = r.Description.ValueString()
-	} else {
-		description = nil
-	}
-	var id string
-	id = r.ID.ValueString()
-
-	name := new(string)
-	if !r.Name.IsUnknown() && !r.Name.IsNull() {
-		*name = r.Name.ValueString()
-	} else {
-		name = nil
-	}
-	var requestConfigurations []shared.RequestConfiguration = []shared.RequestConfiguration{}
-	for _, requestConfigurationsItem := range r.RequestConfigurations {
-		var allowRequests bool
-		allowRequests = requestConfigurationsItem.AllowRequests.ValueBool()
-
-		var autoApproval bool
-		autoApproval = requestConfigurationsItem.AutoApproval.ValueBool()
-
-		var condition *shared.Condition
-		if requestConfigurationsItem.Condition != nil {
-			var groupIds []string = []string{}
-			for _, groupIdsItem := range requestConfigurationsItem.Condition.GroupIds {
-				groupIds = append(groupIds, groupIdsItem.ValueString())
-			}
-			var roleRemoteIds []string = []string{}
-			for _, roleRemoteIdsItem := range requestConfigurationsItem.Condition.RoleRemoteIds {
-				roleRemoteIds = append(roleRemoteIds, roleRemoteIdsItem.ValueString())
-			}
-			condition = &shared.Condition{
-				GroupIds:      groupIds,
-				RoleRemoteIds: roleRemoteIds,
-			}
-		}
-		maxDuration := new(int64)
-		if !requestConfigurationsItem.MaxDuration.IsUnknown() && !requestConfigurationsItem.MaxDuration.IsNull() {
-			*maxDuration = requestConfigurationsItem.MaxDuration.ValueInt64()
-		} else {
-			maxDuration = nil
-		}
-		var priority int64
-		priority = requestConfigurationsItem.Priority.ValueInt64()
-
-		recommendedDuration := new(int64)
-		if !requestConfigurationsItem.RecommendedDuration.IsUnknown() && !requestConfigurationsItem.RecommendedDuration.IsNull() {
-			*recommendedDuration = requestConfigurationsItem.RecommendedDuration.ValueInt64()
-		} else {
-			recommendedDuration = nil
-		}
-		requestTemplateID := new(string)
-		if !requestConfigurationsItem.RequestTemplateID.IsUnknown() && !requestConfigurationsItem.RequestTemplateID.IsNull() {
-			*requestTemplateID = requestConfigurationsItem.RequestTemplateID.ValueString()
-		} else {
-			requestTemplateID = nil
-		}
-		var requireMfaToRequest bool
-		requireMfaToRequest = requestConfigurationsItem.RequireMfaToRequest.ValueBool()
-
-		var requireSupportTicket bool
-		requireSupportTicket = requestConfigurationsItem.RequireSupportTicket.ValueBool()
-
-		var reviewerStages []shared.ReviewerStage = []shared.ReviewerStage{}
-		for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
-			operator := new(shared.Operator)
-			if !reviewerStagesItem.Operator.IsUnknown() && !reviewerStagesItem.Operator.IsNull() {
-				*operator = shared.Operator(reviewerStagesItem.Operator.ValueString())
-			} else {
-				operator = nil
-			}
-			var ownerIds []string = []string{}
-			for _, ownerIdsItem := range reviewerStagesItem.OwnerIds {
-				ownerIds = append(ownerIds, ownerIdsItem.ValueString())
-			}
-			requireAdminApproval := new(bool)
-			if !reviewerStagesItem.RequireAdminApproval.IsUnknown() && !reviewerStagesItem.RequireAdminApproval.IsNull() {
-				*requireAdminApproval = reviewerStagesItem.RequireAdminApproval.ValueBool()
-			} else {
-				requireAdminApproval = nil
-			}
-			requireManagerApproval := new(bool)
-			if !reviewerStagesItem.RequireManagerApproval.IsUnknown() && !reviewerStagesItem.RequireManagerApproval.IsNull() {
-				*requireManagerApproval = reviewerStagesItem.RequireManagerApproval.ValueBool()
-			} else {
-				requireManagerApproval = nil
-			}
-			reviewerStages = append(reviewerStages, shared.ReviewerStage{
-				Operator:               operator,
-				OwnerIds:               ownerIds,
-				RequireAdminApproval:   requireAdminApproval,
-				RequireManagerApproval: requireManagerApproval,
-			})
-		}
-		requestConfigurations = append(requestConfigurations, shared.RequestConfiguration{
-			AllowRequests:        allowRequests,
-			AutoApproval:         autoApproval,
-			Condition:            condition,
-			MaxDuration:          maxDuration,
-			Priority:             priority,
-			RecommendedDuration:  recommendedDuration,
-			RequestTemplateID:    requestTemplateID,
-			RequireMfaToRequest:  requireMfaToRequest,
-			RequireSupportTicket: requireSupportTicket,
-			ReviewerStages:       reviewerStages,
-		})
-	}
-	requireMfaToApprove := new(bool)
-	if !r.RequireMfaToApprove.IsUnknown() && !r.RequireMfaToApprove.IsNull() {
-		*requireMfaToApprove = r.RequireMfaToApprove.ValueBool()
-	} else {
-		requireMfaToApprove = nil
-	}
-	requireMfaToConnect := new(bool)
-	if !r.RequireMfaToConnect.IsUnknown() && !r.RequireMfaToConnect.IsNull() {
-		*requireMfaToConnect = r.RequireMfaToConnect.ValueBool()
-	} else {
-		requireMfaToConnect = nil
-	}
-	riskSensitivityOverride := new(shared.RiskSensitivityEnum)
-	if !r.RiskSensitivityOverride.IsUnknown() && !r.RiskSensitivityOverride.IsNull() {
-		*riskSensitivityOverride = shared.RiskSensitivityEnum(r.RiskSensitivityOverride.ValueString())
-	} else {
-		riskSensitivityOverride = nil
-	}
-	var ticketPropagation *shared.TicketPropagationConfiguration
-	if r.TicketPropagation != nil {
-		var enabledOnGrant bool
-		enabledOnGrant = r.TicketPropagation.EnabledOnGrant.ValueBool()
-
-		var enabledOnRevocation bool
-		enabledOnRevocation = r.TicketPropagation.EnabledOnRevocation.ValueBool()
-
-		ticketProjectID := new(string)
-		if !r.TicketPropagation.TicketProjectID.IsUnknown() && !r.TicketPropagation.TicketProjectID.IsNull() {
-			*ticketProjectID = r.TicketPropagation.TicketProjectID.ValueString()
-		} else {
-			ticketProjectID = nil
-		}
-		ticketProvider := new(shared.TicketingProviderEnum)
-		if !r.TicketPropagation.TicketProvider.IsUnknown() && !r.TicketPropagation.TicketProvider.IsNull() {
-			*ticketProvider = shared.TicketingProviderEnum(r.TicketPropagation.TicketProvider.ValueString())
-		} else {
-			ticketProvider = nil
-		}
-		ticketPropagation = &shared.TicketPropagationConfiguration{
-			EnabledOnGrant:      enabledOnGrant,
-			EnabledOnRevocation: enabledOnRevocation,
-			TicketProjectID:     ticketProjectID,
-			TicketProvider:      ticketProvider,
-		}
-	}
-	out := shared.UpdateResourceInfo{
-		AdminOwnerID:              adminOwnerID,
-		CustomRequestNotification: customRequestNotification,
-		Description:               description,
-		ID:                        id,
-		Name:                      name,
-		RequestConfigurations:     requestConfigurations,
-		RequireMfaToApprove:       requireMfaToApprove,
-		RequireMfaToConnect:       requireMfaToConnect,
-		RiskSensitivityOverride:   riskSensitivityOverride,
-		TicketPropagation:         ticketPropagation,
-	}
-	return &out
-}
-
 func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.Context, resp *shared.UpdateResourceInfo) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -1020,17 +1107,4 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.
 	}
 
 	return diags
-}
-
-func (r *ResourceResourceModel) ToSharedVisibilityInfo() *shared.VisibilityInfo {
-	visibility := shared.VisibilityTypeEnum(r.Visibility.ValueString())
-	var visibilityGroupIds []string = []string{}
-	for _, visibilityGroupIdsItem := range r.VisibilityGroupIds {
-		visibilityGroupIds = append(visibilityGroupIds, visibilityGroupIdsItem.ValueString())
-	}
-	out := shared.VisibilityInfo{
-		Visibility:         visibility,
-		VisibilityGroupIds: visibilityGroupIds,
-	}
-	return &out
 }

@@ -7,8 +7,65 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *ResourcesListDataSourceModel) ToOperationsGetResourcesRequest(ctx context.Context) (*operations.GetResourcesRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	ancestorResourceID := new(string)
+	if !r.AncestorResourceID.IsUnknown() && !r.AncestorResourceID.IsNull() {
+		*ancestorResourceID = r.AncestorResourceID.ValueString()
+	} else {
+		ancestorResourceID = nil
+	}
+	cursor := new(string)
+	if !r.Cursor.IsUnknown() && !r.Cursor.IsNull() {
+		*cursor = r.Cursor.ValueString()
+	} else {
+		cursor = nil
+	}
+	pageSize := new(int64)
+	if !r.PageSize.IsUnknown() && !r.PageSize.IsNull() {
+		*pageSize = r.PageSize.ValueInt64()
+	} else {
+		pageSize = nil
+	}
+	parentResourceID := new(string)
+	if !r.ParentResourceID.IsUnknown() && !r.ParentResourceID.IsNull() {
+		*parentResourceID = r.ParentResourceID.ValueString()
+	} else {
+		parentResourceID = nil
+	}
+	resourceIds := make([]string, 0, len(r.ResourceIds))
+	for _, resourceIdsItem := range r.ResourceIds {
+		resourceIds = append(resourceIds, resourceIdsItem.ValueString())
+	}
+	resourceName := new(string)
+	if !r.ResourceName.IsUnknown() && !r.ResourceName.IsNull() {
+		*resourceName = r.ResourceName.ValueString()
+	} else {
+		resourceName = nil
+	}
+	resourceTypeFilter := new(shared.ResourceTypeEnum)
+	if !r.ResourceTypeFilter.IsUnknown() && !r.ResourceTypeFilter.IsNull() {
+		*resourceTypeFilter = shared.ResourceTypeEnum(r.ResourceTypeFilter.ValueString())
+	} else {
+		resourceTypeFilter = nil
+	}
+	out := operations.GetResourcesRequest{
+		AncestorResourceID: ancestorResourceID,
+		Cursor:             cursor,
+		PageSize:           pageSize,
+		ParentResourceID:   parentResourceID,
+		ResourceIds:        resourceIds,
+		ResourceName:       resourceName,
+		ResourceTypeFilter: resourceTypeFilter,
+	}
+
+	return &out, diags
+}
 
 func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(ctx context.Context, resp *shared.PaginatedResourcesList) diag.Diagnostics {
 	var diags diag.Diagnostics

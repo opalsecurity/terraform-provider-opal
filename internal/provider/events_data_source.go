@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -193,65 +192,13 @@ func (r *EventsDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	actorFilter := new(string)
-	if !data.ActorFilter.IsUnknown() && !data.ActorFilter.IsNull() {
-		*actorFilter = data.ActorFilter.ValueString()
-	} else {
-		actorFilter = nil
+	request, requestDiags := data.ToOperationsGetEventsRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	apiTokenFilter := new(string)
-	if !data.APITokenFilter.IsUnknown() && !data.APITokenFilter.IsNull() {
-		*apiTokenFilter = data.APITokenFilter.ValueString()
-	} else {
-		apiTokenFilter = nil
-	}
-	cursor := new(string)
-	if !data.Cursor.IsUnknown() && !data.Cursor.IsNull() {
-		*cursor = data.Cursor.ValueString()
-	} else {
-		cursor = nil
-	}
-	endDateFilter := new(string)
-	if !data.EndDateFilter.IsUnknown() && !data.EndDateFilter.IsNull() {
-		*endDateFilter = data.EndDateFilter.ValueString()
-	} else {
-		endDateFilter = nil
-	}
-	eventTypeFilter := new(string)
-	if !data.EventTypeFilter.IsUnknown() && !data.EventTypeFilter.IsNull() {
-		*eventTypeFilter = data.EventTypeFilter.ValueString()
-	} else {
-		eventTypeFilter = nil
-	}
-	objectFilter := new(string)
-	if !data.ObjectFilter.IsUnknown() && !data.ObjectFilter.IsNull() {
-		*objectFilter = data.ObjectFilter.ValueString()
-	} else {
-		objectFilter = nil
-	}
-	pageSize := new(int64)
-	if !data.PageSize.IsUnknown() && !data.PageSize.IsNull() {
-		*pageSize = data.PageSize.ValueInt64()
-	} else {
-		pageSize = nil
-	}
-	startDateFilter := new(string)
-	if !data.StartDateFilter.IsUnknown() && !data.StartDateFilter.IsNull() {
-		*startDateFilter = data.StartDateFilter.ValueString()
-	} else {
-		startDateFilter = nil
-	}
-	request := operations.GetEventsRequest{
-		ActorFilter:     actorFilter,
-		APITokenFilter:  apiTokenFilter,
-		Cursor:          cursor,
-		EndDateFilter:   endDateFilter,
-		EventTypeFilter: eventTypeFilter,
-		ObjectFilter:    objectFilter,
-		PageSize:        pageSize,
-		StartDateFilter: startDateFilter,
-	}
-	res, err := r.client.Events.Get(ctx, request)
+	res, err := r.client.Events.Get(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -261,10 +208,6 @@ func (r *EventsDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
-		return
-	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

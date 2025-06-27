@@ -8,8 +8,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *UarDataSourceModel) ToOperationsGetUARIDRequest(ctx context.Context) (*operations.GetUARIDRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var uarID string
+	uarID = r.UarID.ValueString()
+
+	out := operations.GetUARIDRequest{
+		UarID: uarID,
+	}
+
+	return &out, diags
+}
 
 func (r *UarDataSourceModel) RefreshFromSharedUar(ctx context.Context, resp *shared.Uar) diag.Diagnostics {
 	var diags diag.Diagnostics

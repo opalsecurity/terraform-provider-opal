@@ -2,7 +2,9 @@
 
 package types
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
 type Owner struct {
 	AccessRequestEscalationPeriod types.Int64  `tfsdk:"access_request_escalation_period"`

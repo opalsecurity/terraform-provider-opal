@@ -7,8 +7,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *TagDataSourceModel) ToOperationsGetTagByIDRequest(ctx context.Context) (*operations.GetTagByIDRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetTagByIDRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
 
 func (r *TagDataSourceModel) RefreshFromSharedTag(ctx context.Context, resp *shared.Tag) diag.Diagnostics {
 	var diags diag.Diagnostics

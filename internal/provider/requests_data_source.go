@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -260,44 +259,13 @@ func (r *RequestsDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
-	cursor := new(string)
-	if !data.Cursor.IsUnknown() && !data.Cursor.IsNull() {
-		*cursor = data.Cursor.ValueString()
-	} else {
-		cursor = nil
+	request, requestDiags := data.ToOperationsGetRequestsRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	endDateFilter := new(string)
-	if !data.EndDateFilter.IsUnknown() && !data.EndDateFilter.IsNull() {
-		*endDateFilter = data.EndDateFilter.ValueString()
-	} else {
-		endDateFilter = nil
-	}
-	pageSize := new(int64)
-	if !data.PageSize.IsUnknown() && !data.PageSize.IsNull() {
-		*pageSize = data.PageSize.ValueInt64()
-	} else {
-		pageSize = nil
-	}
-	showPendingOnly := new(bool)
-	if !data.ShowPendingOnly.IsUnknown() && !data.ShowPendingOnly.IsNull() {
-		*showPendingOnly = data.ShowPendingOnly.ValueBool()
-	} else {
-		showPendingOnly = nil
-	}
-	startDateFilter := new(string)
-	if !data.StartDateFilter.IsUnknown() && !data.StartDateFilter.IsNull() {
-		*startDateFilter = data.StartDateFilter.ValueString()
-	} else {
-		startDateFilter = nil
-	}
-	request := operations.GetRequestsRequest{
-		Cursor:          cursor,
-		EndDateFilter:   endDateFilter,
-		PageSize:        pageSize,
-		ShowPendingOnly: showPendingOnly,
-		StartDateFilter: startDateFilter,
-	}
-	res, err := r.client.Requests.Get(ctx, request)
+	res, err := r.client.Requests.Get(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -307,10 +275,6 @@ func (r *RequestsDataSource) Read(ctx context.Context, req datasource.ReadReques
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
-		return
-	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

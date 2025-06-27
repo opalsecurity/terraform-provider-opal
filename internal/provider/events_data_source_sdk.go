@@ -9,8 +9,74 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *EventsDataSourceModel) ToOperationsGetEventsRequest(ctx context.Context) (*operations.GetEventsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	actorFilter := new(string)
+	if !r.ActorFilter.IsUnknown() && !r.ActorFilter.IsNull() {
+		*actorFilter = r.ActorFilter.ValueString()
+	} else {
+		actorFilter = nil
+	}
+	apiTokenFilter := new(string)
+	if !r.APITokenFilter.IsUnknown() && !r.APITokenFilter.IsNull() {
+		*apiTokenFilter = r.APITokenFilter.ValueString()
+	} else {
+		apiTokenFilter = nil
+	}
+	cursor := new(string)
+	if !r.Cursor.IsUnknown() && !r.Cursor.IsNull() {
+		*cursor = r.Cursor.ValueString()
+	} else {
+		cursor = nil
+	}
+	endDateFilter := new(string)
+	if !r.EndDateFilter.IsUnknown() && !r.EndDateFilter.IsNull() {
+		*endDateFilter = r.EndDateFilter.ValueString()
+	} else {
+		endDateFilter = nil
+	}
+	eventTypeFilter := new(string)
+	if !r.EventTypeFilter.IsUnknown() && !r.EventTypeFilter.IsNull() {
+		*eventTypeFilter = r.EventTypeFilter.ValueString()
+	} else {
+		eventTypeFilter = nil
+	}
+	objectFilter := new(string)
+	if !r.ObjectFilter.IsUnknown() && !r.ObjectFilter.IsNull() {
+		*objectFilter = r.ObjectFilter.ValueString()
+	} else {
+		objectFilter = nil
+	}
+	pageSize := new(int64)
+	if !r.PageSize.IsUnknown() && !r.PageSize.IsNull() {
+		*pageSize = r.PageSize.ValueInt64()
+	} else {
+		pageSize = nil
+	}
+	startDateFilter := new(string)
+	if !r.StartDateFilter.IsUnknown() && !r.StartDateFilter.IsNull() {
+		*startDateFilter = r.StartDateFilter.ValueString()
+	} else {
+		startDateFilter = nil
+	}
+	out := operations.GetEventsRequest{
+		ActorFilter:     actorFilter,
+		APITokenFilter:  apiTokenFilter,
+		Cursor:          cursor,
+		EndDateFilter:   endDateFilter,
+		EventTypeFilter: eventTypeFilter,
+		ObjectFilter:    objectFilter,
+		PageSize:        pageSize,
+		StartDateFilter: startDateFilter,
+	}
+
+	return &out, diags
+}
 
 func (r *EventsDataSourceModel) RefreshFromSharedPaginatedEventList(ctx context.Context, resp *shared.PaginatedEventList) diag.Diagnostics {
 	var diags diag.Diagnostics

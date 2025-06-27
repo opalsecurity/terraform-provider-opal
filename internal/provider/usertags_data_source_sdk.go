@@ -8,8 +8,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *UserTagsDataSourceModel) ToOperationsGetUserTagsRequest(ctx context.Context) (*operations.GetUserTagsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var userID string
+	userID = r.UserID.ValueString()
+
+	out := operations.GetUserTagsRequest{
+		UserID: userID,
+	}
+
+	return &out, diags
+}
 
 func (r *UserTagsDataSourceModel) RefreshFromSharedTagsList(ctx context.Context, resp *shared.TagsList) diag.Diagnostics {
 	var diags diag.Diagnostics

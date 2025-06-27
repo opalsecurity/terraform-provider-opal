@@ -3,10 +3,57 @@
 package provider
 
 import (
+	"context"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
-func (r *TagUserResourceModel) ToOperationsCreateUserTagRequestBody() *operations.CreateUserTagRequestBody {
+func (r *TagUserResourceModel) ToOperationsCreateUserTagRequestBody(ctx context.Context) (*operations.CreateUserTagRequestBody, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	out := operations.CreateUserTagRequestBody{}
-	return &out
+
+	return &out, diags
+}
+
+func (r *TagUserResourceModel) ToOperationsCreateUserTagRequest(ctx context.Context) (*operations.CreateUserTagRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	requestBody, requestBodyDiags := r.ToOperationsCreateUserTagRequestBody(ctx)
+	diags.Append(requestBodyDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var tagID string
+	tagID = r.TagID.ValueString()
+
+	var userID string
+	userID = r.UserID.ValueString()
+
+	out := operations.CreateUserTagRequest{
+		RequestBody: requestBody,
+		TagID:       tagID,
+		UserID:      userID,
+	}
+
+	return &out, diags
+}
+
+func (r *TagUserResourceModel) ToOperationsDeleteUserTagRequest(ctx context.Context) (*operations.DeleteUserTagRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var tagID string
+	tagID = r.TagID.ValueString()
+
+	var userID string
+	userID = r.UserID.ValueString()
+
+	out := operations.DeleteUserTagRequest{
+		TagID:  tagID,
+		UserID: userID,
+	}
+
+	return &out, diags
 }

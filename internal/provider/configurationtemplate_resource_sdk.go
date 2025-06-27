@@ -7,14 +7,17 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplateInfo() *shared.CreateConfigurationTemplateInfo {
+func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplateInfo(ctx context.Context) (*shared.CreateConfigurationTemplateInfo, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	var adminOwnerID string
 	adminOwnerID = r.AdminOwnerID.ValueString()
 
-	var breakGlassUserIds []string = []string{}
+	breakGlassUserIds := make([]string, 0, len(r.BreakGlassUserIds))
 	for _, breakGlassUserIdsItem := range r.BreakGlassUserIds {
 		breakGlassUserIds = append(breakGlassUserIds, breakGlassUserIdsItem.ValueString())
 	}
@@ -24,18 +27,18 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 	} else {
 		customRequestNotification = nil
 	}
-	var linkedAuditMessageChannelIds []string = []string{}
+	linkedAuditMessageChannelIds := make([]string, 0, len(r.LinkedAuditMessageChannelIds))
 	for _, linkedAuditMessageChannelIdsItem := range r.LinkedAuditMessageChannelIds {
 		linkedAuditMessageChannelIds = append(linkedAuditMessageChannelIds, linkedAuditMessageChannelIdsItem.ValueString())
 	}
-	var memberOncallScheduleIds []string = []string{}
+	memberOncallScheduleIds := make([]string, 0, len(r.MemberOncallScheduleIds))
 	for _, memberOncallScheduleIdsItem := range r.MemberOncallScheduleIds {
 		memberOncallScheduleIds = append(memberOncallScheduleIds, memberOncallScheduleIdsItem.ValueString())
 	}
 	var name string
 	name = r.Name.ValueString()
 
-	var requestConfigurations []shared.RequestConfiguration = []shared.RequestConfiguration{}
+	requestConfigurations := make([]shared.RequestConfiguration, 0, len(r.RequestConfigurations))
 	for _, requestConfigurationsItem := range r.RequestConfigurations {
 		var allowRequests bool
 		allowRequests = requestConfigurationsItem.AllowRequests.ValueBool()
@@ -45,11 +48,11 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 
 		var condition *shared.Condition
 		if requestConfigurationsItem.Condition != nil {
-			var groupIds []string = []string{}
+			groupIds := make([]string, 0, len(requestConfigurationsItem.Condition.GroupIds))
 			for _, groupIdsItem := range requestConfigurationsItem.Condition.GroupIds {
 				groupIds = append(groupIds, groupIdsItem.ValueString())
 			}
-			var roleRemoteIds []string = []string{}
+			roleRemoteIds := make([]string, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
 			for _, roleRemoteIdsItem := range requestConfigurationsItem.Condition.RoleRemoteIds {
 				roleRemoteIds = append(roleRemoteIds, roleRemoteIdsItem.ValueString())
 			}
@@ -85,7 +88,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 		var requireSupportTicket bool
 		requireSupportTicket = requestConfigurationsItem.RequireSupportTicket.ValueBool()
 
-		var reviewerStages []shared.ReviewerStage = []shared.ReviewerStage{}
+		reviewerStages := make([]shared.ReviewerStage, 0, len(requestConfigurationsItem.ReviewerStages))
 		for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 			operator := new(shared.Operator)
 			if !reviewerStagesItem.Operator.IsUnknown() && !reviewerStagesItem.Operator.IsNull() {
@@ -93,7 +96,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 			} else {
 				operator = nil
 			}
-			var ownerIds []string = []string{}
+			ownerIds := make([]string, 0, len(reviewerStagesItem.OwnerIds))
 			for _, ownerIdsItem := range reviewerStagesItem.OwnerIds {
 				ownerIds = append(ownerIds, ownerIdsItem.ValueString())
 			}
@@ -166,7 +169,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 		}
 	}
 	visibility1 := shared.VisibilityTypeEnum(r.Visibility.Visibility.ValueString())
-	var visibilityGroupIds []string = []string{}
+	visibilityGroupIds := make([]string, 0, len(r.Visibility.VisibilityGroupIds))
 	for _, visibilityGroupIdsItem := range r.Visibility.VisibilityGroupIds {
 		visibilityGroupIds = append(visibilityGroupIds, visibilityGroupIdsItem.ValueString())
 	}
@@ -187,65 +190,20 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 		TicketPropagation:            ticketPropagation,
 		Visibility:                   visibility,
 	}
-	return &out
+
+	return &out, diags
 }
 
-func (r *ConfigurationTemplateResourceModel) RefreshFromSharedConfigurationTemplate(ctx context.Context, resp *shared.ConfigurationTemplate) diag.Diagnostics {
+func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplateInfo(ctx context.Context) (*shared.UpdateConfigurationTemplateInfo, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if resp != nil {
-		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
-		r.BreakGlassUserIds = make([]types.String, 0, len(resp.BreakGlassUserIds))
-		for _, v := range resp.BreakGlassUserIds {
-			r.BreakGlassUserIds = append(r.BreakGlassUserIds, types.StringValue(v))
-		}
-		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
-		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
-		r.LinkedAuditMessageChannelIds = make([]types.String, 0, len(resp.LinkedAuditMessageChannelIds))
-		for _, v := range resp.LinkedAuditMessageChannelIds {
-			r.LinkedAuditMessageChannelIds = append(r.LinkedAuditMessageChannelIds, types.StringValue(v))
-		}
-		r.MemberOncallScheduleIds = make([]types.String, 0, len(resp.MemberOncallScheduleIds))
-		for _, v := range resp.MemberOncallScheduleIds {
-			r.MemberOncallScheduleIds = append(r.MemberOncallScheduleIds, types.StringValue(v))
-		}
-		r.Name = types.StringPointerValue(resp.Name)
-		r.RequestConfigurationID = types.StringPointerValue(resp.RequestConfigurationID)
-		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
-		r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
-		if resp.TicketPropagation == nil {
-			r.TicketPropagation = nil
-		} else {
-			r.TicketPropagation = &tfTypes.TicketPropagationConfiguration{}
-			r.TicketPropagation.EnabledOnGrant = types.BoolValue(resp.TicketPropagation.EnabledOnGrant)
-			r.TicketPropagation.EnabledOnRevocation = types.BoolValue(resp.TicketPropagation.EnabledOnRevocation)
-			r.TicketPropagation.TicketProjectID = types.StringPointerValue(resp.TicketPropagation.TicketProjectID)
-			if resp.TicketPropagation.TicketProvider != nil {
-				r.TicketPropagation.TicketProvider = types.StringValue(string(*resp.TicketPropagation.TicketProvider))
-			} else {
-				r.TicketPropagation.TicketProvider = types.StringNull()
-			}
-		}
-		if resp.Visibility != nil {
-			r.Visibility.Visibility = types.StringValue(string(resp.Visibility.Visibility))
-			r.Visibility.VisibilityGroupIds = make([]types.String, 0, len(resp.Visibility.VisibilityGroupIds))
-			for _, v := range resp.Visibility.VisibilityGroupIds {
-				r.Visibility.VisibilityGroupIds = append(r.Visibility.VisibilityGroupIds, types.StringValue(v))
-			}
-		}
-	}
-
-	return diags
-}
-
-func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplateInfo() *shared.UpdateConfigurationTemplateInfo {
 	adminOwnerID := new(string)
 	if !r.AdminOwnerID.IsUnknown() && !r.AdminOwnerID.IsNull() {
 		*adminOwnerID = r.AdminOwnerID.ValueString()
 	} else {
 		adminOwnerID = nil
 	}
-	var breakGlassUserIds []string = []string{}
+	breakGlassUserIds := make([]string, 0, len(r.BreakGlassUserIds))
 	for _, breakGlassUserIdsItem := range r.BreakGlassUserIds {
 		breakGlassUserIds = append(breakGlassUserIds, breakGlassUserIdsItem.ValueString())
 	}
@@ -258,11 +216,11 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 	} else {
 		customRequestNotification = nil
 	}
-	var linkedAuditMessageChannelIds []string = []string{}
+	linkedAuditMessageChannelIds := make([]string, 0, len(r.LinkedAuditMessageChannelIds))
 	for _, linkedAuditMessageChannelIdsItem := range r.LinkedAuditMessageChannelIds {
 		linkedAuditMessageChannelIds = append(linkedAuditMessageChannelIds, linkedAuditMessageChannelIdsItem.ValueString())
 	}
-	var memberOncallScheduleIds []string = []string{}
+	memberOncallScheduleIds := make([]string, 0, len(r.MemberOncallScheduleIds))
 	for _, memberOncallScheduleIdsItem := range r.MemberOncallScheduleIds {
 		memberOncallScheduleIds = append(memberOncallScheduleIds, memberOncallScheduleIdsItem.ValueString())
 	}
@@ -272,7 +230,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 	} else {
 		name = nil
 	}
-	var requestConfigurations []shared.RequestConfiguration = []shared.RequestConfiguration{}
+	requestConfigurations := make([]shared.RequestConfiguration, 0, len(r.RequestConfigurations))
 	for _, requestConfigurationsItem := range r.RequestConfigurations {
 		var allowRequests bool
 		allowRequests = requestConfigurationsItem.AllowRequests.ValueBool()
@@ -282,11 +240,11 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 
 		var condition *shared.Condition
 		if requestConfigurationsItem.Condition != nil {
-			var groupIds []string = []string{}
+			groupIds := make([]string, 0, len(requestConfigurationsItem.Condition.GroupIds))
 			for _, groupIdsItem := range requestConfigurationsItem.Condition.GroupIds {
 				groupIds = append(groupIds, groupIdsItem.ValueString())
 			}
-			var roleRemoteIds []string = []string{}
+			roleRemoteIds := make([]string, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
 			for _, roleRemoteIdsItem := range requestConfigurationsItem.Condition.RoleRemoteIds {
 				roleRemoteIds = append(roleRemoteIds, roleRemoteIdsItem.ValueString())
 			}
@@ -322,7 +280,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 		var requireSupportTicket bool
 		requireSupportTicket = requestConfigurationsItem.RequireSupportTicket.ValueBool()
 
-		var reviewerStages []shared.ReviewerStage = []shared.ReviewerStage{}
+		reviewerStages := make([]shared.ReviewerStage, 0, len(requestConfigurationsItem.ReviewerStages))
 		for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 			operator := new(shared.Operator)
 			if !reviewerStagesItem.Operator.IsUnknown() && !reviewerStagesItem.Operator.IsNull() {
@@ -330,7 +288,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 			} else {
 				operator = nil
 			}
-			var ownerIds []string = []string{}
+			ownerIds := make([]string, 0, len(reviewerStagesItem.OwnerIds))
 			for _, ownerIdsItem := range reviewerStagesItem.OwnerIds {
 				ownerIds = append(ownerIds, ownerIdsItem.ValueString())
 			}
@@ -407,7 +365,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 	}
 	var visibility *shared.VisibilityInfo
 	visibility1 := shared.VisibilityTypeEnum(r.Visibility.Visibility.ValueString())
-	var visibilityGroupIds []string = []string{}
+	visibilityGroupIds := make([]string, 0, len(r.Visibility.VisibilityGroupIds))
 	for _, visibilityGroupIdsItem := range r.Visibility.VisibilityGroupIds {
 		visibilityGroupIds = append(visibilityGroupIds, visibilityGroupIdsItem.ValueString())
 	}
@@ -429,5 +387,67 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 		TicketPropagation:            ticketPropagation,
 		Visibility:                   visibility,
 	}
-	return &out
+
+	return &out, diags
+}
+
+func (r *ConfigurationTemplateResourceModel) ToOperationsDeleteConfigurationTemplateRequest(ctx context.Context) (*operations.DeleteConfigurationTemplateRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var configurationTemplateID string
+	configurationTemplateID = r.ConfigurationTemplateID.ValueString()
+
+	out := operations.DeleteConfigurationTemplateRequest{
+		ConfigurationTemplateID: configurationTemplateID,
+	}
+
+	return &out, diags
+}
+
+func (r *ConfigurationTemplateResourceModel) RefreshFromSharedConfigurationTemplate(ctx context.Context, resp *shared.ConfigurationTemplate) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
+		r.BreakGlassUserIds = make([]types.String, 0, len(resp.BreakGlassUserIds))
+		for _, v := range resp.BreakGlassUserIds {
+			r.BreakGlassUserIds = append(r.BreakGlassUserIds, types.StringValue(v))
+		}
+		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
+		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
+		r.LinkedAuditMessageChannelIds = make([]types.String, 0, len(resp.LinkedAuditMessageChannelIds))
+		for _, v := range resp.LinkedAuditMessageChannelIds {
+			r.LinkedAuditMessageChannelIds = append(r.LinkedAuditMessageChannelIds, types.StringValue(v))
+		}
+		r.MemberOncallScheduleIds = make([]types.String, 0, len(resp.MemberOncallScheduleIds))
+		for _, v := range resp.MemberOncallScheduleIds {
+			r.MemberOncallScheduleIds = append(r.MemberOncallScheduleIds, types.StringValue(v))
+		}
+		r.Name = types.StringPointerValue(resp.Name)
+		r.RequestConfigurationID = types.StringPointerValue(resp.RequestConfigurationID)
+		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
+		r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
+		if resp.TicketPropagation == nil {
+			r.TicketPropagation = nil
+		} else {
+			r.TicketPropagation = &tfTypes.TicketPropagationConfiguration{}
+			r.TicketPropagation.EnabledOnGrant = types.BoolValue(resp.TicketPropagation.EnabledOnGrant)
+			r.TicketPropagation.EnabledOnRevocation = types.BoolValue(resp.TicketPropagation.EnabledOnRevocation)
+			r.TicketPropagation.TicketProjectID = types.StringPointerValue(resp.TicketPropagation.TicketProjectID)
+			if resp.TicketPropagation.TicketProvider != nil {
+				r.TicketPropagation.TicketProvider = types.StringValue(string(*resp.TicketPropagation.TicketProvider))
+			} else {
+				r.TicketPropagation.TicketProvider = types.StringNull()
+			}
+		}
+		if resp.Visibility != nil {
+			r.Visibility.Visibility = types.StringValue(string(resp.Visibility.Visibility))
+			r.Visibility.VisibilityGroupIds = make([]types.String, 0, len(resp.Visibility.VisibilityGroupIds))
+			for _, v := range resp.Visibility.VisibilityGroupIds {
+				r.Visibility.VisibilityGroupIds = append(r.Visibility.VisibilityGroupIds, types.StringValue(v))
+			}
+		}
+	}
+
+	return diags
 }

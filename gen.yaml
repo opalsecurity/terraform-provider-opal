@@ -13,12 +13,16 @@ generation:
   auth:
     oAuth2ClientCredentialsEnabled: false
     oAuth2PasswordEnabled: false
+  tests:
+    generateTests: true
+    generateNewTests: false
+    skipResponseBodyAssertions: false
   flattenGlobalSecurity: true
 terraform:
-  version: 0.40.7
+  version: 0.45.0
   additionalDataSources: []
   additionalDependencies:
-    github.com/hashicorp/terraform-plugin-testing: v1.12.0
+    github.com/hashicorp/terraform-plugin-testing: v1.13.2
   additionalEphemeralResources: []
   additionalProviderAttributes:
     httpHeaders: http_headers

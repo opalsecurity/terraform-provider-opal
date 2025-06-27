@@ -8,8 +8,53 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *RequestsDataSourceModel) ToOperationsGetRequestsRequest(ctx context.Context) (*operations.GetRequestsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	cursor := new(string)
+	if !r.Cursor.IsUnknown() && !r.Cursor.IsNull() {
+		*cursor = r.Cursor.ValueString()
+	} else {
+		cursor = nil
+	}
+	endDateFilter := new(string)
+	if !r.EndDateFilter.IsUnknown() && !r.EndDateFilter.IsNull() {
+		*endDateFilter = r.EndDateFilter.ValueString()
+	} else {
+		endDateFilter = nil
+	}
+	pageSize := new(int64)
+	if !r.PageSize.IsUnknown() && !r.PageSize.IsNull() {
+		*pageSize = r.PageSize.ValueInt64()
+	} else {
+		pageSize = nil
+	}
+	showPendingOnly := new(bool)
+	if !r.ShowPendingOnly.IsUnknown() && !r.ShowPendingOnly.IsNull() {
+		*showPendingOnly = r.ShowPendingOnly.ValueBool()
+	} else {
+		showPendingOnly = nil
+	}
+	startDateFilter := new(string)
+	if !r.StartDateFilter.IsUnknown() && !r.StartDateFilter.IsNull() {
+		*startDateFilter = r.StartDateFilter.ValueString()
+	} else {
+		startDateFilter = nil
+	}
+	out := operations.GetRequestsRequest{
+		Cursor:          cursor,
+		EndDateFilter:   endDateFilter,
+		PageSize:        pageSize,
+		ShowPendingOnly: showPendingOnly,
+		StartDateFilter: startDateFilter,
+	}
+
+	return &out, diags
+}
 
 func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(ctx context.Context, resp *shared.RequestList) diag.Diagnostics {
 	var diags diag.Diagnostics

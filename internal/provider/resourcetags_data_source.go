@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -121,13 +120,13 @@ func (r *ResourceTagsDataSource) Read(ctx context.Context, req datasource.ReadRe
 		return
 	}
 
-	var resourceID string
-	resourceID = data.ResourceID.ValueString()
+	request, requestDiags := data.ToOperationsGetResourceTagsRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetResourceTagsRequest{
-		ResourceID: resourceID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Resources.GetTags(ctx, request)
+	res, err := r.client.Resources.GetTags(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -137,10 +136,6 @@ func (r *ResourceTagsDataSource) Read(ctx context.Context, req datasource.ReadRe
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
-		return
-	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

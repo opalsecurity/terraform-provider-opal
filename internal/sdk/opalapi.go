@@ -2,9 +2,12 @@
 
 package sdk
 
+// Generated from OpenAPI doc version 1.0 and generator version 2.640.2
+
 import (
 	"context"
 	"fmt"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/config"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/hooks"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
@@ -23,7 +26,7 @@ var ServerList = map[string]string{
 	ServerProd: "https://api.opal.dev/v1",
 }
 
-// HTTPClient provides an interface for suplying the SDK with a custom HTTP client
+// HTTPClient provides an interface for supplying the SDK with a custom HTTP client
 type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
@@ -49,68 +52,30 @@ func Float64(f float64) *float64 { return &f }
 // Pointer provides a helper function to return a pointer to a type
 func Pointer[T any](v T) *T { return &v }
 
-type sdkConfiguration struct {
-	Client            HTTPClient
-	Security          func(context.Context) (interface{}, error)
-	ServerURL         string
-	Server            string
-	Language          string
-	OpenAPIDocVersion string
-	SDKVersion        string
-	GenVersion        string
-	UserAgent         string
-	RetryConfig       *retry.Config
-	Hooks             *hooks.Hooks
-	Timeout           *time.Duration
-}
-
-func (c *sdkConfiguration) GetServerDetails() (string, map[string]string) {
-	if c.ServerURL != "" {
-		return c.ServerURL, nil
-	}
-
-	if c.Server == "" {
-		c.Server = "prod"
-	}
-
-	return ServerList[c.Server], nil
-}
-
 // OpalAPI - Opal API: The Opal API is a RESTful API that allows you to interact with the Opal Security platform programmatically.
 type OpalAPI struct {
-	AccessRules *AccessRules
-	// Operations related to apps
-	Apps    *Apps
-	Bundles *Bundles
-	// Operations related to configuration templates
+	SDKVersion             string
+	AccessRules            *AccessRules
+	Apps                   *Apps
+	Bundles                *Bundles
 	ConfigurationTemplates *ConfigurationTemplates
-	// Operations related to events
-	Events        *Events
-	GroupBindings *GroupBindings
-	// Operations related to groups
-	Groups           *Groups
-	IdpGroupMappings *IdpGroupMappings
-	// Operations related to message channels
-	MessageChannels    *MessageChannels
-	NonHumanIdentities *NonHumanIdentities
-	// Operations related to on-call schedules
-	OnCallSchedules *OnCallSchedules
-	// Operations related to owners
-	Owners *Owners
-	// Operations related to requests
-	Requests *Requests
-	// Operations related to resources
-	Resources *Resources
-	// Operations related to sessions
-	Sessions *Sessions
-	// Operations related to tags
-	Tags *Tags
-	// Operations related to uars
-	Uars *Uars
-	// Operations related to users
-	Users *Users
+	Events                 *Events
+	GroupBindings          *GroupBindings
+	Groups                 *Groups
+	IdpGroupMappings       *IdpGroupMappings
+	MessageChannels        *MessageChannels
+	NonHumanIdentities     *NonHumanIdentities
+	OnCallSchedules        *OnCallSchedules
+	Owners                 *Owners
+	Requests               *Requests
+	Resources              *Resources
+	Sessions               *Sessions
+	Tags                   *Tags
+	Uars                   *Uars
+	Users                  *Users
 
-	sdkConfiguration sdkConfiguration
+	sdkConfiguration config.SDKConfiguration
+	hooks            *hooks.Hooks
 }
 
 type SDKOption func(*OpalAPI)
@@ -184,14 +149,12 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *OpalAPI {
 	sdk := &OpalAPI{
-		sdkConfiguration: sdkConfiguration{
-			Language:          "go",
-			OpenAPIDocVersion: "1.0",
-			SDKVersion:        "0.40.7",
-			GenVersion:        "2.568.5",
-			UserAgent:         "speakeasy-sdk/terraform 0.40.7 2.568.5 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
-			Hooks:             hooks.New(),
+		SDKVersion: "0.45.0",
+		sdkConfiguration: config.SDKConfiguration{
+			UserAgent:  "speakeasy-sdk/terraform 0.45.0 2.640.2 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
+			ServerList: ServerList,
 		},
+		hooks: hooks.New(),
 	}
 	for _, opt := range opts {
 		opt(sdk)
@@ -204,46 +167,29 @@ func New(opts ...SDKOption) *OpalAPI {
 
 	currentServerURL, _ := sdk.sdkConfiguration.GetServerDetails()
 	serverURL := currentServerURL
-	serverURL, sdk.sdkConfiguration.Client = sdk.sdkConfiguration.Hooks.SDKInit(currentServerURL, sdk.sdkConfiguration.Client)
-	if serverURL != currentServerURL {
+	serverURL, sdk.sdkConfiguration.Client = sdk.hooks.SDKInit(currentServerURL, sdk.sdkConfiguration.Client)
+	if currentServerURL != serverURL {
 		sdk.sdkConfiguration.ServerURL = serverURL
 	}
 
-	sdk.AccessRules = newAccessRules(sdk.sdkConfiguration)
-
-	sdk.Apps = newApps(sdk.sdkConfiguration)
-
-	sdk.Bundles = newBundles(sdk.sdkConfiguration)
-
-	sdk.ConfigurationTemplates = newConfigurationTemplates(sdk.sdkConfiguration)
-
-	sdk.Events = newEvents(sdk.sdkConfiguration)
-
-	sdk.GroupBindings = newGroupBindings(sdk.sdkConfiguration)
-
-	sdk.Groups = newGroups(sdk.sdkConfiguration)
-
-	sdk.IdpGroupMappings = newIdpGroupMappings(sdk.sdkConfiguration)
-
-	sdk.MessageChannels = newMessageChannels(sdk.sdkConfiguration)
-
-	sdk.NonHumanIdentities = newNonHumanIdentities(sdk.sdkConfiguration)
-
-	sdk.OnCallSchedules = newOnCallSchedules(sdk.sdkConfiguration)
-
-	sdk.Owners = newOwners(sdk.sdkConfiguration)
-
-	sdk.Requests = newRequests(sdk.sdkConfiguration)
-
-	sdk.Resources = newResources(sdk.sdkConfiguration)
-
-	sdk.Sessions = newSessions(sdk.sdkConfiguration)
-
-	sdk.Tags = newTags(sdk.sdkConfiguration)
-
-	sdk.Uars = newUars(sdk.sdkConfiguration)
-
-	sdk.Users = newUsers(sdk.sdkConfiguration)
+	sdk.AccessRules = newAccessRules(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Apps = newApps(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Bundles = newBundles(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.ConfigurationTemplates = newConfigurationTemplates(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Events = newEvents(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.GroupBindings = newGroupBindings(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Groups = newGroups(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.IdpGroupMappings = newIdpGroupMappings(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.MessageChannels = newMessageChannels(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.NonHumanIdentities = newNonHumanIdentities(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.OnCallSchedules = newOnCallSchedules(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Owners = newOwners(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Requests = newRequests(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Resources = newResources(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Sessions = newSessions(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Tags = newTags(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Uars = newUars(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Users = newUsers(sdk, sdk.sdkConfiguration, sdk.hooks)
 
 	return sdk
 }

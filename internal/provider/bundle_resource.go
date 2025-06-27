@@ -18,7 +18,6 @@ import (
 	speakeasy_setplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/setplanmodifier"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/validators"
 )
 
@@ -168,8 +167,13 @@ func (r *BundleResource) Create(ctx context.Context, req resource.CreateRequest,
 		return
 	}
 
-	request := *data.ToSharedCreateBundleInfo()
-	res, err := r.client.Bundles.CreateBundle(ctx, request)
+	request, requestDiags := data.ToSharedCreateBundleInfo(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.Bundles.CreateBundle(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -200,15 +204,13 @@ func (r *BundleResource) Create(ctx context.Context, req resource.CreateRequest,
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	visibilityInfo := *data.ToSharedVisibilityInfo()
-	var bundleID string
-	bundleID = data.BundleID.ValueString()
+	request1, request1Diags := data.ToOperationsSetBundleVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
 
-	request1 := operations.SetBundleVisibilityRequest{
-		VisibilityInfo: visibilityInfo,
-		BundleID:       bundleID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.Bundles.SetBundleVisibility(ctx, request1)
+	res1, err := r.client.Bundles.SetBundleVisibility(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -253,13 +255,13 @@ func (r *BundleResource) Read(ctx context.Context, req resource.ReadRequest, res
 		return
 	}
 
-	var bundleID string
-	bundleID = data.BundleID.ValueString()
+	request, requestDiags := data.ToOperationsGetBundleRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetBundleRequest{
-		BundleID: bundleID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Bundles.GetBundle(ctx, request)
+	res, err := r.client.Bundles.GetBundle(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -288,13 +290,13 @@ func (r *BundleResource) Read(ctx context.Context, req resource.ReadRequest, res
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var bundleId1 string
-	bundleId1 = data.BundleID.ValueString()
+	request1, request1Diags := data.ToOperationsGetBundleVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
 
-	request1 := operations.GetBundleVisibilityRequest{
-		BundleID: bundleId1,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.Bundles.GetBundleVisibility(ctx, request1)
+	res1, err := r.client.Bundles.GetBundleVisibility(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -342,15 +344,13 @@ func (r *BundleResource) Update(ctx context.Context, req resource.UpdateRequest,
 		return
 	}
 
-	bundle := *data.ToSharedBundleInput()
-	var bundleID string
-	bundleID = data.BundleID.ValueString()
+	request, requestDiags := data.ToOperationsUpdateBundleRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.UpdateBundleRequest{
-		Bundle:   bundle,
-		BundleID: bundleID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Bundles.UpdateBundle(ctx, request)
+	res, err := r.client.Bundles.UpdateBundle(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -384,15 +384,13 @@ func (r *BundleResource) Update(ctx context.Context, req resource.UpdateRequest,
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	visibilityInfo := *data.ToSharedVisibilityInfo()
-	var bundleId1 string
-	bundleId1 = data.BundleID.ValueString()
+	request1, request1Diags := data.ToOperationsSetBundleVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
 
-	request1 := operations.SetBundleVisibilityRequest{
-		VisibilityInfo: visibilityInfo,
-		BundleID:       bundleId1,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.Bundles.SetBundleVisibility(ctx, request1)
+	res1, err := r.client.Bundles.SetBundleVisibility(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -437,13 +435,13 @@ func (r *BundleResource) Delete(ctx context.Context, req resource.DeleteRequest,
 		return
 	}
 
-	var bundleID string
-	bundleID = data.BundleID.ValueString()
+	request, requestDiags := data.ToOperationsDeleteBundleRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.DeleteBundleRequest{
-		BundleID: bundleID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Bundles.DeleteBundle(ctx, request)
+	res, err := r.client.Bundles.DeleteBundle(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

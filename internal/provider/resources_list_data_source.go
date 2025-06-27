@@ -11,8 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -661,56 +659,13 @@ func (r *ResourcesListDataSource) Read(ctx context.Context, req datasource.ReadR
 		return
 	}
 
-	ancestorResourceID := new(string)
-	if !data.AncestorResourceID.IsUnknown() && !data.AncestorResourceID.IsNull() {
-		*ancestorResourceID = data.AncestorResourceID.ValueString()
-	} else {
-		ancestorResourceID = nil
+	request, requestDiags := data.ToOperationsGetResourcesRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	cursor := new(string)
-	if !data.Cursor.IsUnknown() && !data.Cursor.IsNull() {
-		*cursor = data.Cursor.ValueString()
-	} else {
-		cursor = nil
-	}
-	pageSize := new(int64)
-	if !data.PageSize.IsUnknown() && !data.PageSize.IsNull() {
-		*pageSize = data.PageSize.ValueInt64()
-	} else {
-		pageSize = nil
-	}
-	parentResourceID := new(string)
-	if !data.ParentResourceID.IsUnknown() && !data.ParentResourceID.IsNull() {
-		*parentResourceID = data.ParentResourceID.ValueString()
-	} else {
-		parentResourceID = nil
-	}
-	var resourceIds []string = []string{}
-	for _, resourceIdsItem := range data.ResourceIds {
-		resourceIds = append(resourceIds, resourceIdsItem.ValueString())
-	}
-	resourceName := new(string)
-	if !data.ResourceName.IsUnknown() && !data.ResourceName.IsNull() {
-		*resourceName = data.ResourceName.ValueString()
-	} else {
-		resourceName = nil
-	}
-	resourceTypeFilter := new(shared.ResourceTypeEnum)
-	if !data.ResourceTypeFilter.IsUnknown() && !data.ResourceTypeFilter.IsNull() {
-		*resourceTypeFilter = shared.ResourceTypeEnum(data.ResourceTypeFilter.ValueString())
-	} else {
-		resourceTypeFilter = nil
-	}
-	request := operations.GetResourcesRequest{
-		AncestorResourceID: ancestorResourceID,
-		Cursor:             cursor,
-		PageSize:           pageSize,
-		ParentResourceID:   parentResourceID,
-		ResourceIds:        resourceIds,
-		ResourceName:       resourceName,
-		ResourceTypeFilter: resourceTypeFilter,
-	}
-	res, err := r.client.Resources.Get(ctx, request)
+	res, err := r.client.Resources.Get(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -720,10 +675,6 @@ func (r *ResourcesListDataSource) Read(ctx context.Context, req datasource.ReadR
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
-		return
-	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

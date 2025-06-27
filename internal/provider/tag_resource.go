@@ -15,7 +15,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/validators"
 )
 
@@ -134,8 +133,13 @@ func (r *TagResource) Create(ctx context.Context, req resource.CreateRequest, re
 		return
 	}
 
-	request := *data.ToSharedCreateTagInfo()
-	res, err := r.client.Tags.CreateTag(ctx, request)
+	request, requestDiags := data.ToSharedCreateTagInfo(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.Tags.CreateTag(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -189,13 +193,13 @@ func (r *TagResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 		return
 	}
 
-	var id string
-	id = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsGetTagByIDRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetTagByIDRequest{
-		ID: id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Tags.GetTagByID(ctx, request)
+	res, err := r.client.Tags.GetTagByID(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -267,13 +271,13 @@ func (r *TagResource) Delete(ctx context.Context, req resource.DeleteRequest, re
 		return
 	}
 
-	var id string
-	id = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsDeleteTagByIDRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.DeleteTagByIDRequest{
-		ID: id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Tags.DeleteTagByID(ctx, request)
+	res, err := r.client.Tags.DeleteTagByID(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

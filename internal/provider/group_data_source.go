@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -424,13 +423,13 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		return
 	}
 
-	var id string
-	id = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsGetGroupRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetGroupRequest{
-		ID: id,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Groups.GetGroup(ctx, request)
+	res, err := r.client.Groups.GetGroup(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -440,10 +439,6 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
-		return
-	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {
@@ -459,13 +454,13 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var id1 string
-	id1 = data.ID.ValueString()
+	request1, request1Diags := data.ToOperationsGetGroupMessageChannelsRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
 
-	request1 := operations.GetGroupMessageChannelsRequest{
-		ID: id1,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res1, err := r.client.Groups.GetMessageChannels(ctx, request1)
+	res1, err := r.client.Groups.GetMessageChannels(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
@@ -475,10 +470,6 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	}
 	if res1 == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
-		return
-	}
-	if res1.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res1.StatusCode != 200 {
@@ -494,13 +485,13 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	var id2 string
-	id2 = data.ID.ValueString()
+	request2, request2Diags := data.ToOperationsGetGroupOnCallSchedulesRequest(ctx)
+	resp.Diagnostics.Append(request2Diags...)
 
-	request2 := operations.GetGroupOnCallSchedulesRequest{
-		ID: id2,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res2, err := r.client.Groups.GetOnCallSchedule(ctx, request2)
+	res2, err := r.client.Groups.GetOnCallSchedule(ctx, *request2)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res2 != nil && res2.RawResponse != nil {
@@ -512,21 +503,17 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res2))
 		return
 	}
-	if res2.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
 	if res2.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
 		return
 	}
-	var id3 string
-	id3 = data.ID.ValueString()
+	request3, request3Diags := data.ToOperationsGetGroupVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request3Diags...)
 
-	request3 := operations.GetGroupVisibilityRequest{
-		ID: id3,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res3, err := r.client.Groups.GetVisibility(ctx, request3)
+	res3, err := r.client.Groups.GetVisibility(ctx, *request3)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res3 != nil && res3.RawResponse != nil {
@@ -536,10 +523,6 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	}
 	if res3 == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res3))
-		return
-	}
-	if res3.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res3.StatusCode != 200 {

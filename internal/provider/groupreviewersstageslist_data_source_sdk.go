@@ -7,8 +7,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
+
+func (r *GroupReviewersStagesListDataSourceModel) ToOperationsGetGroupReviewersStagesRequest(ctx context.Context) (*operations.GetGroupReviewersStagesRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var groupID string
+	groupID = r.GroupID.ValueString()
+
+	out := operations.GetGroupReviewersStagesRequest{
+		GroupID: groupID,
+	}
+
+	return &out, diags
+}
 
 func (r *GroupReviewersStagesListDataSourceModel) RefreshFromSharedReviewerStage(ctx context.Context, resp []shared.ReviewerStage) diag.Diagnostics {
 	var diags diag.Diagnostics
