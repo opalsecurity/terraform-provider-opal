@@ -17,6 +17,7 @@ import (
 	"net/url"
 )
 
+// NonHumanIdentities - Operations related to non-human identities
 type NonHumanIdentities struct {
 	rootSDK          *OpalAPI
 	sdkConfiguration config.SDKConfiguration

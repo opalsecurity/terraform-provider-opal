@@ -28,6 +28,7 @@ func NewMessageChannelResource() resource.Resource {
 
 // MessageChannelResource defines the resource implementation.
 type MessageChannelResource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

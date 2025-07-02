@@ -23,6 +23,7 @@ func NewGroupResourceListDataSource() datasource.DataSource {
 
 // GroupResourceListDataSource is the data source implementation.
 type GroupResourceListDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

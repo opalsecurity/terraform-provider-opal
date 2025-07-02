@@ -23,6 +23,7 @@ func NewResourceDataSource() datasource.DataSource {
 
 // ResourceDataSource is the data source implementation.
 type ResourceDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

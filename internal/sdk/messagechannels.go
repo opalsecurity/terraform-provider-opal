@@ -17,6 +17,7 @@ import (
 	"net/url"
 )
 
+// MessageChannels - Operations related to message channels
 type MessageChannels struct {
 	rootSDK          *OpalAPI
 	sdkConfiguration config.SDKConfiguration

@@ -23,6 +23,7 @@ func NewMessageChannelListDataSource() datasource.DataSource {
 
 // MessageChannelListDataSource is the data source implementation.
 type MessageChannelListDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

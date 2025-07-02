@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: e9e7fdb65ad2f307619a2c6231285ed5
+  docChecksum: b0c0e58d8b78a8124417a3a7b3ba8bda
   docVersion: "1.0"
-  speakeasyVersion: 1.571.1
-  generationVersion: 2.640.2
-  releaseVersion: 0.45.0
-  configChecksum: 97d86a95fd80b7e99dcd40638f48fa2b
+  speakeasyVersion: 1.575.1
+  generationVersion: 2.648.1
+  releaseVersion: 0.45.1
+  configChecksum: c9f9a4cc730f27baac42670cfb5bb79a
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -428,6 +428,7 @@ generatedFiles:
   - internal/sdk/models/operations/getresourcenhis.go
   - internal/sdk/models/operations/getresourcereviewers.go
   - internal/sdk/models/operations/getresources.go
+  - internal/sdk/models/operations/getresourcescopedrolepermissions.go
   - internal/sdk/models/operations/getresourcetags.go
   - internal/sdk/models/operations/getresourceuseraccessstatus.go
   - internal/sdk/models/operations/getresourceusers.go
@@ -446,6 +447,7 @@ generatedFiles:
   - internal/sdk/models/operations/removebundleresource.go
   - internal/sdk/models/operations/removegroupcontaininggroup.go
   - internal/sdk/models/operations/setbundlevisibility.go
+  - internal/sdk/models/operations/setresourcescopedrolepermissions.go
   - internal/sdk/models/operations/updateaccessrule.go
   - internal/sdk/models/operations/updatebundle.go
   - internal/sdk/models/operations/updateconfigurationtemplate.go
@@ -556,9 +558,13 @@ generatedFiles:
   - internal/sdk/models/shared/reviewerstagelist.go
   - internal/sdk/models/shared/reviewstageoperator.go
   - internal/sdk/models/shared/risksensitivityenum.go
+  - internal/sdk/models/shared/rolepermissionnameenum.go
+  - internal/sdk/models/shared/rolepermissiontargettypeenum.go
   - internal/sdk/models/shared/ruleclauses.go
   - internal/sdk/models/shared/ruleconjunction.go
   - internal/sdk/models/shared/ruledisjunction.go
+  - internal/sdk/models/shared/scopedrolepermission.go
+  - internal/sdk/models/shared/scopedrolepermissionlist.go
   - internal/sdk/models/shared/security.go
   - internal/sdk/models/shared/session.go
   - internal/sdk/models/shared/sessionslist.go
@@ -598,6 +604,7 @@ generatedFiles:
   - internal/sdk/requests.go
   - internal/sdk/resources.go
   - internal/sdk/retry/config.go
+  - internal/sdk/scopedrolepermissions.go
   - internal/sdk/sessions.go
   - internal/sdk/tags.go
   - internal/sdk/types/bigint.go
@@ -1546,5 +1553,23 @@ examples:
       responses:
         "200":
           application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"email": "john.doe@company.dev", "first_name": "John", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac", "last_name": "Doe", "full_name": "John Doe", "position": "Senior Engineer"}, {"email": "jane.smith@company.dev", "first_name": "John", "user_id": "e8581682-04f7-473a-a419-472f0fb26d46", "last_name": "Doe", "full_name": "Jane Smith", "position": "Product Marketing Lead"}]}
+  get_resource_scoped_role_permissions:
+    speakeasy-default-get-resource-scoped-role-permissions:
+      parameters:
+        path:
+          resource_id: "1b978423-db0a-4037-a4cf-f79c60cb67b3"
+      responses:
+        "200":
+          application/json: {"permissions": [{"allow_all": true, "permission_name": "READ", "target_ids": ["a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "8294e9c9-deb6-48e9-9c99-da2a1e04a87f"], "target_type": "RESOURCE"}]}
+  set_resource_scoped_role_permissions:
+    speakeasy-default-set-resource-scoped-role-permissions:
+      parameters:
+        path:
+          resource_id: "1b978423-db0a-4037-a4cf-f79c60cb67b3"
+      requestBody:
+        application/json: {"permissions": [{"allow_all": false, "permission_name": "READ", "target_ids": ["a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "8294e9c9-deb6-48e9-9c99-da2a1e04a87f"], "target_type": "RESOURCE"}]}
+      responses:
+        "200":
+          application/json: {"permissions": [{"allow_all": false, "permission_name": "READ", "target_ids": ["a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "8294e9c9-deb6-48e9-9c99-da2a1e04a87f"], "target_type": "RESOURCE"}]}
 examplesVersion: 1.0.2
 generatedTests: {}

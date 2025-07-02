@@ -17,6 +17,7 @@ import (
 	"net/url"
 )
 
+// Sessions - Operations related to sessions
 type Sessions struct {
 	rootSDK          *OpalAPI
 	sdkConfiguration config.SDKConfiguration

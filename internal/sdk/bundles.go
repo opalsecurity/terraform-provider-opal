@@ -17,6 +17,7 @@ import (
 	"net/url"
 )
 
+// Bundles - Operations related to bundles
 type Bundles struct {
 	rootSDK          *OpalAPI
 	sdkConfiguration config.SDKConfiguration

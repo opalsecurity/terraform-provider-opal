@@ -23,6 +23,7 @@ func NewRequestsDataSource() datasource.DataSource {
 
 // RequestsDataSource is the data source implementation.
 type RequestsDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

@@ -17,6 +17,7 @@ import (
 	"net/url"
 )
 
+// Requests - Operations related to requests
 type Requests struct {
 	rootSDK          *OpalAPI
 	sdkConfiguration config.SDKConfiguration

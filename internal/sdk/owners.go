@@ -17,6 +17,7 @@ import (
 	"net/url"
 )
 
+// Owners - Operations related to owners
 type Owners struct {
 	rootSDK          *OpalAPI
 	sdkConfiguration config.SDKConfiguration

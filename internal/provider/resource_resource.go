@@ -48,6 +48,7 @@ func NewResourceResource() resource.Resource {
 
 // ResourceResource defines the resource implementation.
 type ResourceResource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

@@ -14,23 +14,41 @@ servers:
 # keep tags alphabetized, also add any new tags to the list below
 tags:
   - name: access-rules
+    description: Operations related to access rules
   - name: apps
+    description: Operations related to apps
   - name: bundles
+    description: Operations related to bundles
   - name: configuration-templates
+    description: Operations related to configuration templates
   - name: events
+    description: Operations related to events
   - name: groups
+    description: Operations related to groups
   - name: group-bindings
+    description: Operations related to group bindings
   - name: idp-group-mappings
+    description: Operations related to IDP group mappings
   - name: message-channels
+    description: Operations related to message channels
   - name: non-human-identities
+    description: Operations related to non-human identities
   - name: on-call-schedules
+    description: Operations related to on-call schedules
   - name: owners
+    description: Operations related to owners
   - name: requests
+    description: Operations related to requests
   - name: resources
+    description: Operations related to resources
   - name: sessions
+    description: Operations related to sessions
   - name: tags
+    description: Operations related to tags
   - name: uars
+    description: Operations related to UARs
   - name: users
+    description: Operations related to users
 paths:
   /apps:
     get:
@@ -3172,6 +3190,65 @@ paths:
         - resources
       x-speakeasy-name-override: get_tags
       x-speakeasy-entity-operation: ResourceTags#get
+  /resources/{resource_id}/scoped-role-permissions:
+    get:
+      description: Returns all the scoped role permissions that apply to the given resource. Only OPAL_SCOPED_ROLE resource type supports this field.
+      operationId: get_resource_scoped_role_permissions
+      parameters:
+        - description: The ID of the resource whose scoped role permissions belong to.
+          name: resource_id
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          explode: false
+          in: path
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScopedRolePermissionList"
+          description: The role permissions that this Opal Scoped Role has.
+      security:
+        - BearerAuth: []
+      tags:
+        - resources
+        - scoped-role-permissions
+    put:
+      description: Sets all the scoped role permissions on an OPAL_SCOPED_ROLE resource.
+      operationId: set_resource_scoped_role_permissions
+      parameters:
+        - description: The ID of the resource whose scoped role permissions belong to. Must be of OPAL_SCOPED_ROLE resource type.
+          name: resource_id
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          explode: false
+          in: path
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScopedRolePermissionList"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScopedRolePermissionList"
+          description: The role permissions that this Opal Scoped Role has.
+      security:
+        - BearerAuth: []
+      tags:
+        - resources
+        - scoped-role-permissions
   /sessions:
     get:
       description: Returns a list of `Session` objects.
@@ -5852,6 +5929,40 @@ components:
       example: GLOBAL
       type: string
       x-speakeasy-entity: Groups
+    RolePermissionNameEnum:
+      description: The name of the role permission.
+      enum:
+        - READ
+        - READ_ASSIGNMENTS
+        - CREATE
+        - IMPORT
+        - EXPORT
+        - SYNC
+        - DELETE
+        - READ_SETTINGS
+        - EDIT_TAGS
+        - EDIT_SETTINGS
+        - EDIT_SYNC_SETTINGS
+        - EDIT_ASSIGNMENTS
+        - EDIT_REQUEST_CONFIGURATIONS
+        - EDIT_EVENT_STREAM
+        - ASSIGN_UAR_REVIEWERS
+        - SEND_REMINDERS
+        - STOP
+        - REQUEST_ON_BEHALF
+      example: READ
+      type: string
+    RolePermissionTargetTypeEnum:
+      description: The type of the target for the role permission.
+      enum:
+        - RESOURCE
+        - CONNECTION
+        - GROUP
+        - BUNDLE
+        - USER
+        - ACCESS_REVIEW
+      example: RESOURCE
+      type: string
     UpdateGroupResourcesInfo:
       example:
         group_resources:
@@ -9651,6 +9762,44 @@ components:
       type: object
       required:
         - bundle_groups
+    ScopedRolePermissionList:
+      example:
+        permissions:
+          - target_ids:
+              - a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1
+              - 8294e9c9-deb6-48e9-9c99-da2a1e04a87f
+            target_type: RESOURCE
+            permission_name: READ
+      properties:
+        permissions:
+          type: array
+          items:
+            $ref: "#/components/schemas/ScopedRolePermission"
+      type: object
+      required:
+        - permissions
+    ScopedRolePermission:
+      type: object
+      properties:
+        target_ids:
+          description: The IDs of the entities that this permission applies to. If empty of missing, the permission will have untargeted scope.
+          example:
+            - a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1
+            - 8294e9c9-deb6-48e9-9c99-da2a1e04a87f
+          items:
+            type: string
+            format: uuid
+          type: array
+        target_type:
+          $ref: "#/components/schemas/RolePermissionTargetTypeEnum"
+        permission_name:
+          $ref: "#/components/schemas/RolePermissionNameEnum"
+        allow_all:
+          type: boolean
+      required:
+        - target_type
+        - permission_name
+        - allow_all
     BundlesVisibilityTypeEnum:
       description: The visibility level of the entity.
       enum:

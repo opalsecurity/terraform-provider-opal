@@ -2,7 +2,7 @@
 
 package sdk
 
-// Generated from OpenAPI doc version 1.0 and generator version 2.640.2
+// Generated from OpenAPI doc version 1.0 and generator version 2.648.1
 
 import (
 	"context"
@@ -54,25 +54,44 @@ func Pointer[T any](v T) *T { return &v }
 
 // OpalAPI - Opal API: The Opal API is a RESTful API that allows you to interact with the Opal Security platform programmatically.
 type OpalAPI struct {
-	SDKVersion             string
-	AccessRules            *AccessRules
-	Apps                   *Apps
-	Bundles                *Bundles
+	SDKVersion string
+	// Operations related to access rules
+	AccessRules *AccessRules
+	// Operations related to apps
+	Apps *Apps
+	// Operations related to bundles
+	Bundles *Bundles
+	// Operations related to configuration templates
 	ConfigurationTemplates *ConfigurationTemplates
-	Events                 *Events
-	GroupBindings          *GroupBindings
-	Groups                 *Groups
-	IdpGroupMappings       *IdpGroupMappings
-	MessageChannels        *MessageChannels
-	NonHumanIdentities     *NonHumanIdentities
-	OnCallSchedules        *OnCallSchedules
-	Owners                 *Owners
-	Requests               *Requests
-	Resources              *Resources
-	Sessions               *Sessions
-	Tags                   *Tags
-	Uars                   *Uars
-	Users                  *Users
+	// Operations related to events
+	Events *Events
+	// Operations related to group bindings
+	GroupBindings *GroupBindings
+	// Operations related to groups
+	Groups *Groups
+	// Operations related to IDP group mappings
+	IdpGroupMappings *IdpGroupMappings
+	// Operations related to message channels
+	MessageChannels *MessageChannels
+	// Operations related to non-human identities
+	NonHumanIdentities *NonHumanIdentities
+	// Operations related to on-call schedules
+	OnCallSchedules *OnCallSchedules
+	// Operations related to owners
+	Owners *Owners
+	// Operations related to requests
+	Requests *Requests
+	// Operations related to resources
+	Resources             *Resources
+	ScopedRolePermissions *ScopedRolePermissions
+	// Operations related to sessions
+	Sessions *Sessions
+	// Operations related to tags
+	Tags *Tags
+	// Operations related to UARs
+	Uars *Uars
+	// Operations related to users
+	Users *Users
 
 	sdkConfiguration config.SDKConfiguration
 	hooks            *hooks.Hooks
@@ -149,9 +168,9 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *OpalAPI {
 	sdk := &OpalAPI{
-		SDKVersion: "0.45.0",
+		SDKVersion: "0.45.1",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:  "speakeasy-sdk/terraform 0.45.0 2.640.2 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
+			UserAgent:  "speakeasy-sdk/terraform 0.45.1 2.648.1 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
 			ServerList: ServerList,
 		},
 		hooks: hooks.New(),
@@ -186,6 +205,7 @@ func New(opts ...SDKOption) *OpalAPI {
 	sdk.Owners = newOwners(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Requests = newRequests(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Resources = newResources(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.ScopedRolePermissions = newScopedRolePermissions(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Sessions = newSessions(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Tags = newTags(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Uars = newUars(sdk, sdk.sdkConfiguration, sdk.hooks)

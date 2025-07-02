@@ -26,6 +26,7 @@ func NewIdpGroupMappingsResource() resource.Resource {
 
 // IdpGroupMappingsResource defines the resource implementation.
 type IdpGroupMappingsResource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 
