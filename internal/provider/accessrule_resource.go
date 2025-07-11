@@ -32,6 +32,7 @@ func NewAccessRuleResource() resource.Resource {
 
 // AccessRuleResource defines the resource implementation.
 type AccessRuleResource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

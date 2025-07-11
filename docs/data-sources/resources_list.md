@@ -93,6 +93,7 @@ Read-Only:
 - `gcp_sql_instance` (Attributes) Remote info for GCP SQL instance. (see [below for nested schema](#nestedatt--results--remote_info--gcp_sql_instance))
 - `github_repo` (Attributes) Remote info for GitHub repository. (see [below for nested schema](#nestedatt--results--remote_info--github_repo))
 - `gitlab_project` (Attributes) Remote info for Gitlab project. (see [below for nested schema](#nestedatt--results--remote_info--gitlab_project))
+- `google_workspace_role` (Attributes) Remote info for GCP workspace role. (see [below for nested schema](#nestedatt--results--remote_info--google_workspace_role))
 - `okta_app` (Attributes) Remote info for Okta directory app. (see [below for nested schema](#nestedatt--results--remote_info--okta_app))
 - `okta_custom_role` (Attributes) Remote info for Okta directory custom role. (see [below for nested schema](#nestedatt--results--remote_info--okta_custom_role))
 - `okta_standard_role` (Attributes) Remote info for Okta directory standard role. (see [below for nested schema](#nestedatt--results--remote_info--okta_standard_role))
@@ -279,6 +280,14 @@ Read-Only:
 Read-Only:
 
 - `project_id` (String) The id of the project.
+
+
+<a id="nestedatt--results--remote_info--google_workspace_role"></a>
+### Nested Schema for `results.remote_info.google_workspace_role`
+
+Read-Only:
+
+- `role_id` (String) The id of the role.
 
 
 <a id="nestedatt--results--remote_info--okta_app"></a>

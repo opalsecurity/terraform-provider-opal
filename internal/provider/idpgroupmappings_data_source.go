@@ -23,6 +23,7 @@ func NewIdpGroupMappingsDataSource() datasource.DataSource {
 
 // IdpGroupMappingsDataSource is the data source implementation.
 type IdpGroupMappingsDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

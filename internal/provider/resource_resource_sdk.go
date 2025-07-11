@@ -308,6 +308,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				ProjectID: projectId6,
 			}
 		}
+		var googleWorkspaceRole *shared.GoogleWorkspaceRole
+		if r.RemoteInfo.GoogleWorkspaceRole != nil {
+			var roleID string
+			roleID = r.RemoteInfo.GoogleWorkspaceRole.RoleID.ValueString()
+
+			googleWorkspaceRole = &shared.GoogleWorkspaceRole{
+				RoleID: roleID,
+			}
+		}
 		var oktaApp *shared.OktaApp
 		if r.RemoteInfo.OktaApp != nil {
 			var appId1 string
@@ -319,11 +328,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var oktaCustomRole *shared.OktaCustomRole
 		if r.RemoteInfo.OktaCustomRole != nil {
-			var roleID string
-			roleID = r.RemoteInfo.OktaCustomRole.RoleID.ValueString()
+			var roleId1 string
+			roleId1 = r.RemoteInfo.OktaCustomRole.RoleID.ValueString()
 
 			oktaCustomRole = &shared.OktaCustomRole{
-				RoleID: roleID,
+				RoleID: roleId1,
 			}
 		}
 		var oktaStandardRole *shared.OktaStandardRole
@@ -368,11 +377,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var salesforceRole *shared.SalesforceRole
 		if r.RemoteInfo.SalesforceRole != nil {
-			var roleId1 string
-			roleId1 = r.RemoteInfo.SalesforceRole.RoleID.ValueString()
+			var roleId2 string
+			roleId2 = r.RemoteInfo.SalesforceRole.RoleID.ValueString()
 
 			salesforceRole = &shared.SalesforceRole{
-				RoleID: roleId1,
+				RoleID: roleId2,
 			}
 		}
 		var teleportRole *shared.TeleportRole
@@ -405,6 +414,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			GcpSQLInstance:          gcpSQLInstance,
 			GithubRepo:              githubRepo,
 			GitlabProject:           gitlabProject,
+			GoogleWorkspaceRole:     googleWorkspaceRole,
 			OktaApp:                 oktaApp,
 			OktaCustomRole:          oktaCustomRole,
 			OktaStandardRole:        oktaStandardRole,
@@ -861,6 +871,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			} else {
 				r.RemoteInfo.GitlabProject = &tfTypes.GcpProject{}
 				r.RemoteInfo.GitlabProject.ProjectID = types.StringValue(resp.RemoteInfo.GitlabProject.ProjectID)
+			}
+			if resp.RemoteInfo.GoogleWorkspaceRole == nil {
+				r.RemoteInfo.GoogleWorkspaceRole = nil
+			} else {
+				r.RemoteInfo.GoogleWorkspaceRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.GoogleWorkspaceRole.RoleID = types.StringValue(resp.RemoteInfo.GoogleWorkspaceRole.RoleID)
 			}
 			if resp.RemoteInfo.OktaApp == nil {
 				r.RemoteInfo.OktaApp = nil

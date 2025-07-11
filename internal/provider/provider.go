@@ -109,8 +109,8 @@ func (p *OpalProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 		sdk.WithSecurity(security),
 		sdk.WithClient(httpClient),
 	}
-	client := sdk.New(opts...)
 
+	client := sdk.New(opts...)
 	resp.DataSourceData = client
 	resp.EphemeralResourceData = client
 	resp.ResourceData = client

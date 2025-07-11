@@ -23,6 +23,7 @@ func NewGroupUsersDataSource() datasource.DataSource {
 
 // GroupUsersDataSource is the data source implementation.
 type GroupUsersDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

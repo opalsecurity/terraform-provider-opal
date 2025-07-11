@@ -23,6 +23,7 @@ func NewUarDataSource() datasource.DataSource {
 
 // UarDataSource is the data source implementation.
 type UarDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

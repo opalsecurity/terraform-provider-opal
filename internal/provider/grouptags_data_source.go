@@ -23,6 +23,7 @@ func NewGroupTagsDataSource() datasource.DataSource {
 
 // GroupTagsDataSource is the data source implementation.
 type GroupTagsDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

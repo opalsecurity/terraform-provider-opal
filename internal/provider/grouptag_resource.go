@@ -24,6 +24,7 @@ func NewGroupTagResource() resource.Resource {
 
 // GroupTagResource defines the resource implementation.
 type GroupTagResource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

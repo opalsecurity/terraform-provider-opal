@@ -25,6 +25,7 @@ func NewOwnerResource() resource.Resource {
 
 // OwnerResource defines the resource implementation.
 type OwnerResource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

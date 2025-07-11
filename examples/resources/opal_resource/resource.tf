@@ -84,6 +84,9 @@ resource "opal_resource" "my_resource" {
     gitlab_project = {
       project_id = 898931321
     }
+    google_workspace_role = {
+      role_id = "google-workspace-role:01234567890123456"
+    }
     okta_app = {
       app_id = "a9dfas0f678asdf67867"
     }

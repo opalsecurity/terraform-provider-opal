@@ -17,6 +17,7 @@ import (
 	"net/url"
 )
 
+// OnCallSchedules - Operations related to on-call schedules
 type OnCallSchedules struct {
 	rootSDK          *OpalAPI
 	sdkConfiguration config.SDKConfiguration

@@ -88,6 +88,8 @@ Read-Only:
 - `access_level_remote_id` (String) The ID of the access level requested on the remote system.
 - `group_id` (String) The ID of the group requested.
 - `name` (String) The name of the target.
+- `remote_id` (String) The ID of the target on the remote system.
+- `remote_name` (String) The name of the target on the remote system.
 - `resource_id` (String) The ID of the resource requested.
 
 

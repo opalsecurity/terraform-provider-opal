@@ -23,6 +23,7 @@ func NewPaginatedBundleListDataSource() datasource.DataSource {
 
 // PaginatedBundleListDataSource is the data source implementation.
 type PaginatedBundleListDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 
