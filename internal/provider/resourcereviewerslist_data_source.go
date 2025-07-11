@@ -22,6 +22,7 @@ func NewResourceReviewersListDataSource() datasource.DataSource {
 
 // ResourceReviewersListDataSource is the data source implementation.
 type ResourceReviewersListDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

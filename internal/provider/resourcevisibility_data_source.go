@@ -22,6 +22,7 @@ func NewResourceVisibilityDataSource() datasource.DataSource {
 
 // ResourceVisibilityDataSource is the data source implementation.
 type ResourceVisibilityDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

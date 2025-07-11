@@ -48,6 +48,7 @@ func NewResourceResource() resource.Resource {
 
 // ResourceResource defines the resource implementation.
 type ResourceResource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 
@@ -829,6 +830,29 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 							},
 						},
 						Description: `Remote info for Gitlab project. Requires replacement if changed.`,
+					},
+					"google_workspace_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"role_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The id of the role. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for GCP workspace role. Requires replacement if changed.`,
 					},
 					"okta_app": schema.SingleNestedAttribute{
 						Computed: true,

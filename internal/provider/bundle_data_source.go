@@ -22,6 +22,7 @@ func NewBundleDataSource() datasource.DataSource {
 
 // BundleDataSource is the data source implementation.
 type BundleDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

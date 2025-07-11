@@ -23,6 +23,7 @@ func NewAppsDataSource() datasource.DataSource {
 
 // AppsDataSource is the data source implementation.
 type AppsDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

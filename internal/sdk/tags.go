@@ -17,6 +17,7 @@ import (
 	"net/url"
 )
 
+// Tags - Operations related to tags
 type Tags struct {
 	rootSDK          *OpalAPI
 	sdkConfiguration config.SDKConfiguration

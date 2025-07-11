@@ -23,6 +23,7 @@ func NewResourceDataSource() datasource.DataSource {
 
 // ResourceDataSource is the data source implementation.
 type ResourceDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 
@@ -374,6 +375,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for Gitlab project.`,
+					},
+					"google_workspace_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"role_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the role.`,
+							},
+						},
+						Description: `Remote info for GCP workspace role.`,
 					},
 					"okta_app": schema.SingleNestedAttribute{
 						Computed: true,

@@ -28,6 +28,7 @@ func NewOnCallScheduleResource() resource.Resource {
 
 // OnCallScheduleResource defines the resource implementation.
 type OnCallScheduleResource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

@@ -28,6 +28,7 @@ func NewGroupContainingGroupResource() resource.Resource {
 
 // GroupContainingGroupResource defines the resource implementation.
 type GroupContainingGroupResource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 
@@ -274,7 +275,7 @@ func (r *GroupContainingGroupResource) ImportState(ctx context.Context, req reso
 	}
 
 	if err := dec.Decode(&data); err != nil {
-		resp.Diagnostics.AddError("Invalid ID", `The import ID is not valid. It is expected to be a JSON object string with the format: '{ "containing_group_id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5",  "group_id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5"}': `+err.Error())
+		resp.Diagnostics.AddError("Invalid ID", `The import ID is not valid. It is expected to be a JSON object string with the format: '{"containing_group_id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5", "group_id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5"}': `+err.Error())
 		return
 	}
 
@@ -288,5 +289,4 @@ func (r *GroupContainingGroupResource) ImportState(ctx context.Context, req reso
 		return
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("group_id"), data.GroupID)...)
-
 }
