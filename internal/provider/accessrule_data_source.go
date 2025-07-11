@@ -23,6 +23,7 @@ func NewAccessRuleDataSource() datasource.DataSource {
 
 // AccessRuleDataSource is the data source implementation.
 type AccessRuleDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

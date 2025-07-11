@@ -99,6 +99,9 @@ resource "opal_resource" "my_resource" {
     gitlab_project = {
       project_id = 898931321
     }
+    google_workspace_role = {
+      role_id = "google-workspace-role:01234567890123456"
+    }
     okta_app = {
       app_id = "a9dfas0f678asdf67867"
     }
@@ -265,6 +268,7 @@ Optional:
 - `gcp_sql_instance` (Attributes) Remote info for GCP SQL instance. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gcp_sql_instance))
 - `github_repo` (Attributes) Remote info for GitHub repository. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--github_repo))
 - `gitlab_project` (Attributes) Remote info for Gitlab project. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gitlab_project))
+- `google_workspace_role` (Attributes) Remote info for GCP workspace role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--google_workspace_role))
 - `okta_app` (Attributes) Remote info for Okta directory app. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_app))
 - `okta_custom_role` (Attributes) Remote info for Okta directory custom role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_custom_role))
 - `okta_standard_role` (Attributes) Remote info for Okta directory standard role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_standard_role))
@@ -451,6 +455,14 @@ Optional:
 Optional:
 
 - `project_id` (String) The id of the project. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--google_workspace_role"></a>
+### Nested Schema for `remote_info.google_workspace_role`
+
+Optional:
+
+- `role_id` (String) The id of the role. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--okta_app"></a>

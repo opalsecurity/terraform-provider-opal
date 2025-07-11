@@ -17,6 +17,7 @@ import (
 	"net/url"
 )
 
+// AccessRules - Operations related to access rules
 type AccessRules struct {
 	rootSDK          *OpalAPI
 	sdkConfiguration config.SDKConfiguration

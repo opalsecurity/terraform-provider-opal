@@ -433,6 +433,19 @@ func (o *GitlabProject) GetProjectID() string {
 	return o.ProjectID
 }
 
+// GoogleWorkspaceRole - Remote info for GCP workspace role.
+type GoogleWorkspaceRole struct {
+	// The id of the role.
+	RoleID string `json:"role_id"`
+}
+
+func (o *GoogleWorkspaceRole) GetRoleID() string {
+	if o == nil {
+		return ""
+	}
+	return o.RoleID
+}
+
 // OktaApp - Remote info for Okta directory app.
 type OktaApp struct {
 	// The id of the app.
@@ -588,6 +601,8 @@ type ResourceRemoteInfo struct {
 	GithubRepo *GithubRepo `json:"github_repo,omitempty"`
 	// Remote info for Gitlab project.
 	GitlabProject *GitlabProject `json:"gitlab_project,omitempty"`
+	// Remote info for GCP workspace role.
+	GoogleWorkspaceRole *GoogleWorkspaceRole `json:"google_workspace_role,omitempty"`
 	// Remote info for Okta directory app.
 	OktaApp *OktaApp `json:"okta_app,omitempty"`
 	// Remote info for Okta directory custom role.
@@ -744,6 +759,13 @@ func (o *ResourceRemoteInfo) GetGitlabProject() *GitlabProject {
 		return nil
 	}
 	return o.GitlabProject
+}
+
+func (o *ResourceRemoteInfo) GetGoogleWorkspaceRole() *GoogleWorkspaceRole {
+	if o == nil {
+		return nil
+	}
+	return o.GoogleWorkspaceRole
 }
 
 func (o *ResourceRemoteInfo) GetOktaApp() *OktaApp {

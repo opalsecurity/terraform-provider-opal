@@ -31,6 +31,7 @@ func NewBundleResource() resource.Resource {
 
 // BundleResource defines the resource implementation.
 type BundleResource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 
