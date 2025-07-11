@@ -23,6 +23,7 @@ func NewGroupReviewersStagesListDataSource() datasource.DataSource {
 
 // GroupReviewersStagesListDataSource is the data source implementation.
 type GroupReviewersStagesListDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

@@ -746,6 +746,18 @@ actions:
   - target: $["paths"]["/resources/{resource_id}/tags"]["get"]
     update:
       x-speakeasy-entity-operation: ResourceTags#get
+  - target: $["paths"]["/resources/{resource_id}/scoped-role-permissions"]["get"]
+    update:
+      x-speakeasy-name-override: get_scoped_role_permissions
+  - target: $["paths"]["/resources/{resource_id}/scoped-role-permissions"]["get"]
+    update:
+      x-speakeasy-entity-operation: ScopedRolePermissionList#get
+  - target: $["paths"]["/resources/{resource_id}/scoped-role-permissions"]["put"]
+    update:
+      x-speakeasy-name-override: update_scoped_role_permissions
+  - target: $["paths"]["/resources/{resource_id}/scoped-role-permissions"]["put"]
+    update:
+      x-speakeasy-entity-operation: ScopedRolePermissionList#create,update
   - target: $["paths"]["/sessions"]["get"]["operationId"]
     update: getSessions
   - target: $["paths"]["/sessions"]["get"]["responses"]
@@ -1985,6 +1997,9 @@ actions:
   - target: $["components"]["schemas"]["Bundle"]["properties"]["updated_at"]
     update:
       x-speakeasy-param-readonly: true
+  - target: $["components"]["schemas"]["ScopedRolePermissionList"]
+    update:
+      x-speakeasy-entity: ScopedRolePermissionList
   - target: $["components"]["schemas"]
     update:
       BundlesVisibilityTypeEnum:

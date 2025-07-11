@@ -23,6 +23,7 @@ func NewResourcesAccessStatusDataSource() datasource.DataSource {
 
 // ResourcesAccessStatusDataSource is the data source implementation.
 type ResourcesAccessStatusDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

@@ -22,6 +22,7 @@ func NewBundleVisibilityDataSource() datasource.DataSource {
 
 // BundleVisibilityDataSource is the data source implementation.
 type BundleVisibilityDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

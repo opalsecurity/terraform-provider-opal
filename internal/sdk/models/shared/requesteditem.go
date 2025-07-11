@@ -17,6 +17,10 @@ type RequestedItem struct {
 	GroupID *string `json:"group_id,omitempty"`
 	// The name of the target.
 	Name *string `json:"name,omitempty"`
+	// The ID of the target on the remote system.
+	RemoteID *string `json:"remote_id,omitempty"`
+	// The name of the target on the remote system.
+	RemoteName *string `json:"remote_name,omitempty"`
 	// The ID of the resource requested.
 	ResourceID *string `json:"resource_id,omitempty"`
 }
@@ -47,6 +51,20 @@ func (o *RequestedItem) GetName() *string {
 		return nil
 	}
 	return o.Name
+}
+
+func (o *RequestedItem) GetRemoteID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.RemoteID
+}
+
+func (o *RequestedItem) GetRemoteName() *string {
+	if o == nil {
+		return nil
+	}
+	return o.RemoteName
 }
 
 func (o *RequestedItem) GetResourceID() *string {

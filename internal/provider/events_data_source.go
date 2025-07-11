@@ -23,6 +23,7 @@ func NewEventsDataSource() datasource.DataSource {
 
 // EventsDataSource is the data source implementation.
 type EventsDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

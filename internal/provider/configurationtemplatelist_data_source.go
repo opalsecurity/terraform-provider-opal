@@ -23,6 +23,7 @@ func NewConfigurationTemplateListDataSource() datasource.DataSource {
 
 // ConfigurationTemplateListDataSource is the data source implementation.
 type ConfigurationTemplateListDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

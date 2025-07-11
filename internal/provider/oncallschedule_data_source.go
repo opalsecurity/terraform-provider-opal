@@ -22,6 +22,7 @@ func NewOnCallScheduleDataSource() datasource.DataSource {
 
 // OnCallScheduleDataSource is the data source implementation.
 type OnCallScheduleDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

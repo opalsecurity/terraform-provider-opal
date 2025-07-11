@@ -17,6 +17,7 @@ import (
 	"net/url"
 )
 
+// Groups - Operations related to groups
 type Groups struct {
 	rootSDK          *OpalAPI
 	sdkConfiguration config.SDKConfiguration

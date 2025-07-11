@@ -17,6 +17,7 @@ import (
 	"net/url"
 )
 
+// Users - Operations related to users
 type Users struct {
 	rootSDK          *OpalAPI
 	sdkConfiguration config.SDKConfiguration

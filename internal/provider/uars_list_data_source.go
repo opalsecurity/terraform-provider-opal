@@ -23,6 +23,7 @@ func NewUARSListDataSource() datasource.DataSource {
 
 // UARSListDataSource is the data source implementation.
 type UARSListDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

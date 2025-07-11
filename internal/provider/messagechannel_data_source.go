@@ -22,6 +22,7 @@ func NewMessageChannelDataSource() datasource.DataSource {
 
 // MessageChannelDataSource is the data source implementation.
 type MessageChannelDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

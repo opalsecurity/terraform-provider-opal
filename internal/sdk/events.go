@@ -17,6 +17,7 @@ import (
 	"net/url"
 )
 
+// Events - Operations related to events
 type Events struct {
 	rootSDK          *OpalAPI
 	sdkConfiguration config.SDKConfiguration

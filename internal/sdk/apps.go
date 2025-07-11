@@ -17,6 +17,7 @@ import (
 	"net/url"
 )
 
+// Apps - Operations related to apps
 type Apps struct {
 	rootSDK          *OpalAPI
 	sdkConfiguration config.SDKConfiguration

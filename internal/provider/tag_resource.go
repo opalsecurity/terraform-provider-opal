@@ -28,6 +28,7 @@ func NewTagResource() resource.Resource {
 
 // TagResource defines the resource implementation.
 type TagResource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

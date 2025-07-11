@@ -17,6 +17,7 @@ import (
 	"net/url"
 )
 
+// GroupBindings - Operations related to group bindings
 type GroupBindings struct {
 	rootSDK          *OpalAPI
 	sdkConfiguration config.SDKConfiguration

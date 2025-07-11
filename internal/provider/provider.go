@@ -109,8 +109,8 @@ func (p *OpalProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 		sdk.WithSecurity(security),
 		sdk.WithClient(httpClient),
 	}
-	client := sdk.New(opts...)
 
+	client := sdk.New(opts...)
 	resp.DataSourceData = client
 	resp.EphemeralResourceData = client
 	resp.ResourceData = client
@@ -134,6 +134,7 @@ func (p *OpalProvider) Resources(ctx context.Context) []func() resource.Resource
 		NewOwnerResource,
 		NewResourceResource,
 		NewResourceTagResource,
+		NewScopedRolePermissionListResource,
 		NewTagResource,
 		NewTagUserResource,
 	}
@@ -175,6 +176,7 @@ func (p *OpalProvider) DataSources(ctx context.Context) []func() datasource.Data
 		NewResourcesUsersListDataSource,
 		NewResourceTagsDataSource,
 		NewResourceVisibilityDataSource,
+		NewScopedRolePermissionListDataSource,
 		NewSessionsDataSource,
 		NewTagDataSource,
 		NewTagsListDataSource,

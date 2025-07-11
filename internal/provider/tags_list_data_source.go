@@ -23,6 +23,7 @@ func NewTagsListDataSource() datasource.DataSource {
 
 // TagsListDataSource is the data source implementation.
 type TagsListDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

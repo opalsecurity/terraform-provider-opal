@@ -186,6 +186,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.GitlabProject = &tfTypes.GcpProject{}
 				r.RemoteInfo.GitlabProject.ProjectID = types.StringValue(resp.RemoteInfo.GitlabProject.ProjectID)
 			}
+			if resp.RemoteInfo.GoogleWorkspaceRole == nil {
+				r.RemoteInfo.GoogleWorkspaceRole = nil
+			} else {
+				r.RemoteInfo.GoogleWorkspaceRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.GoogleWorkspaceRole.RoleID = types.StringValue(resp.RemoteInfo.GoogleWorkspaceRole.RoleID)
+			}
 			if resp.RemoteInfo.OktaApp == nil {
 				r.RemoteInfo.OktaApp = nil
 			} else {

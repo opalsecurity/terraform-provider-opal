@@ -23,6 +23,7 @@ func NewUsersDataSource() datasource.DataSource {
 
 // UsersDataSource is the data source implementation.
 type UsersDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

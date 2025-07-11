@@ -16,6 +16,7 @@ import (
 	"net/http"
 )
 
+// IdpGroupMappings - Operations related to IDP group mappings
 type IdpGroupMappings struct {
 	rootSDK          *OpalAPI
 	sdkConfiguration config.SDKConfiguration

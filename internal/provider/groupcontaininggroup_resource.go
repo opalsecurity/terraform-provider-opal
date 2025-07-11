@@ -28,6 +28,7 @@ func NewGroupContainingGroupResource() resource.Resource {
 
 // GroupContainingGroupResource defines the resource implementation.
 type GroupContainingGroupResource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 
@@ -288,5 +289,4 @@ func (r *GroupContainingGroupResource) ImportState(ctx context.Context, req reso
 		return
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("group_id"), data.GroupID)...)
-
 }

@@ -23,6 +23,7 @@ func NewRequestsDataSource() datasource.DataSource {
 
 // RequestsDataSource is the data source implementation.
 type RequestsDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 
@@ -125,6 +126,14 @@ func (r *RequestsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 									"name": schema.StringAttribute{
 										Computed:    true,
 										Description: `The name of the target.`,
+									},
+									"remote_id": schema.StringAttribute{
+										Computed:    true,
+										Description: `The ID of the target on the remote system.`,
+									},
+									"remote_name": schema.StringAttribute{
+										Computed:    true,
+										Description: `The name of the target on the remote system.`,
 									},
 									"resource_id": schema.StringAttribute{
 										Computed:    true,

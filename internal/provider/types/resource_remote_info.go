@@ -23,6 +23,7 @@ type ResourceRemoteInfo struct {
 	GcpSQLInstance          *GcpSQLInstance          `tfsdk:"gcp_sql_instance"`
 	GithubRepo              *GithubRepo              `tfsdk:"github_repo"`
 	GitlabProject           *GcpProject              `tfsdk:"gitlab_project"`
+	GoogleWorkspaceRole     *SnowflakeRole           `tfsdk:"google_workspace_role"`
 	OktaApp                 *OktaApp                 `tfsdk:"okta_app"`
 	OktaCustomRole          *SnowflakeRole           `tfsdk:"okta_custom_role"`
 	OktaStandardRole        *OktaStandardRole        `tfsdk:"okta_standard_role"`

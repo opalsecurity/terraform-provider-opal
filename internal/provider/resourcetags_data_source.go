@@ -23,6 +23,7 @@ func NewResourceTagsDataSource() datasource.DataSource {
 
 // ResourceTagsDataSource is the data source implementation.
 type ResourceTagsDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

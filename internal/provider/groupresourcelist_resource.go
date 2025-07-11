@@ -28,6 +28,7 @@ func NewGroupResourceListResource() resource.Resource {
 
 // GroupResourceListResource defines the resource implementation.
 type GroupResourceListResource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

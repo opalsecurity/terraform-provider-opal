@@ -17,6 +17,7 @@ import (
 	"net/url"
 )
 
+// ConfigurationTemplates - Operations related to configuration templates
 type ConfigurationTemplates struct {
 	rootSDK          *OpalAPI
 	sdkConfiguration config.SDKConfiguration

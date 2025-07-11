@@ -22,6 +22,7 @@ func NewOwnerFromNameDataSource() datasource.DataSource {
 
 // OwnerFromNameDataSource is the data source implementation.
 type OwnerFromNameDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

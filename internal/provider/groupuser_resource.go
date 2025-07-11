@@ -32,6 +32,7 @@ func NewGroupUserResource() resource.Resource {
 
 // GroupUserResource defines the resource implementation.
 type GroupUserResource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

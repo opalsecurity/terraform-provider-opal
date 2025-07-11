@@ -22,6 +22,7 @@ func NewGroupContainingGroupDataSource() datasource.DataSource {
 
 // GroupContainingGroupDataSource is the data source implementation.
 type GroupContainingGroupDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

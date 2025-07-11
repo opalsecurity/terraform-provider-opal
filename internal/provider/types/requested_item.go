@@ -11,5 +11,7 @@ type RequestedItem struct {
 	AccessLevelRemoteID types.String `tfsdk:"access_level_remote_id"`
 	GroupID             types.String `tfsdk:"group_id"`
 	Name                types.String `tfsdk:"name"`
+	RemoteID            types.String `tfsdk:"remote_id"`
+	RemoteName          types.String `tfsdk:"remote_name"`
 	ResourceID          types.String `tfsdk:"resource_id"`
 }

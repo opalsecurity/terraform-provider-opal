@@ -36,6 +36,7 @@ func NewConfigurationTemplateResource() resource.Resource {
 
 // ConfigurationTemplateResource defines the resource implementation.
 type ConfigurationTemplateResource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 

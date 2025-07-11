@@ -237,6 +237,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.GitlabProject = &tfTypes.GcpProject{}
 					results.RemoteInfo.GitlabProject.ProjectID = types.StringValue(resultsItem.RemoteInfo.GitlabProject.ProjectID)
 				}
+				if resultsItem.RemoteInfo.GoogleWorkspaceRole == nil {
+					results.RemoteInfo.GoogleWorkspaceRole = nil
+				} else {
+					results.RemoteInfo.GoogleWorkspaceRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.GoogleWorkspaceRole.RoleID = types.StringValue(resultsItem.RemoteInfo.GoogleWorkspaceRole.RoleID)
+				}
 				if resultsItem.RemoteInfo.OktaApp == nil {
 					results.RemoteInfo.OktaApp = nil
 				} else {

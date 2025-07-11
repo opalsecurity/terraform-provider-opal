@@ -5,9 +5,8 @@ package hooks
 import (
 	"context"
 	"errors"
-	"net/http"
-
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/config"
+	"net/http"
 )
 
 type FailEarly struct {

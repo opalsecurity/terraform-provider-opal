@@ -17,6 +17,7 @@ import (
 	"net/url"
 )
 
+// Uars - Operations related to UARs
 type Uars struct {
 	rootSDK          *OpalAPI
 	sdkConfiguration config.SDKConfiguration

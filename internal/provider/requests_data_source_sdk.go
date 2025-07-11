@@ -97,6 +97,8 @@ func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(ctx context.Conte
 				requestedItemsList.AccessLevelRemoteID = types.StringPointerValue(requestedItemsListItem.AccessLevelRemoteID)
 				requestedItemsList.GroupID = types.StringPointerValue(requestedItemsListItem.GroupID)
 				requestedItemsList.Name = types.StringPointerValue(requestedItemsListItem.Name)
+				requestedItemsList.RemoteID = types.StringPointerValue(requestedItemsListItem.RemoteID)
+				requestedItemsList.RemoteName = types.StringPointerValue(requestedItemsListItem.RemoteName)
 				requestedItemsList.ResourceID = types.StringPointerValue(requestedItemsListItem.ResourceID)
 				if requestedItemsListCount+1 > len(requests.RequestedItemsList) {
 					requests.RequestedItemsList = append(requests.RequestedItemsList, requestedItemsList)
@@ -105,6 +107,8 @@ func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(ctx context.Conte
 					requests.RequestedItemsList[requestedItemsListCount].AccessLevelRemoteID = requestedItemsList.AccessLevelRemoteID
 					requests.RequestedItemsList[requestedItemsListCount].GroupID = requestedItemsList.GroupID
 					requests.RequestedItemsList[requestedItemsListCount].Name = requestedItemsList.Name
+					requests.RequestedItemsList[requestedItemsListCount].RemoteID = requestedItemsList.RemoteID
+					requests.RequestedItemsList[requestedItemsListCount].RemoteName = requestedItemsList.RemoteName
 					requests.RequestedItemsList[requestedItemsListCount].ResourceID = requestedItemsList.ResourceID
 				}
 			}

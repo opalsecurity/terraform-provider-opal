@@ -23,6 +23,7 @@ func NewSessionsDataSource() datasource.DataSource {
 
 // SessionsDataSource is the data source implementation.
 type SessionsDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 
