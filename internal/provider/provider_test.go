@@ -13,16 +13,8 @@ var testAccProviderFactories map[string]func() (tfprotov6.ProviderServer, error)
 func init() {
 	// Validate required environment variables first
 	opalTestToken := os.Getenv("OPAL_TEST_TOKEN")
-	if opalTestToken == "" {
-		panic("OPAL_TEST_TOKEN must be set for acceptance tests")
-	}
-
 	opalTestBaseURL := os.Getenv("OPAL_TEST_BASE_URL")
-	if opalTestBaseURL == "" {
-		panic("OPAL_TEST_BASE_URL must be set for acceptance tests")
-	}
 
-	// Now set the provider environment variables
 	os.Setenv("OPAL_AUTH_TOKEN", opalTestToken)
 	os.Setenv("OPAL_BASE_URL", opalTestBaseURL)
 
@@ -32,6 +24,12 @@ func init() {
 }
 
 func testAccPreCheck(t *testing.T) {
+	if os.Getenv("OPAL_TEST_TOKEN") == "" {
+		t.Fatal("OPAL_TEST_TOKEN must be set for acceptance tests")
+	}
+	if os.Getenv("OPAL_TEST_BASE_URL") == "" {
+		t.Fatal("OPAL_TEST_BASE_URL must be set for acceptance tests")
+	}
 	if v := os.Getenv("OPAL_TEST_KNOWN_OPAL_APP_ID"); v == "" {
 		t.Fatal("OPAL_TEST_KNOWN_OPAL_APP_ID must be set for acceptance tests. You should get this value from the Opal product connection in the test organization.")
 	}
