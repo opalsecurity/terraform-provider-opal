@@ -11,6 +11,67 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
+func (r *ConfigurationTemplateResourceModel) RefreshFromSharedConfigurationTemplate(ctx context.Context, resp *shared.ConfigurationTemplate) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
+		r.BreakGlassUserIds = make([]types.String, 0, len(resp.BreakGlassUserIds))
+		for _, v := range resp.BreakGlassUserIds {
+			r.BreakGlassUserIds = append(r.BreakGlassUserIds, types.StringValue(v))
+		}
+		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
+		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
+		r.LinkedAuditMessageChannelIds = make([]types.String, 0, len(resp.LinkedAuditMessageChannelIds))
+		for _, v := range resp.LinkedAuditMessageChannelIds {
+			r.LinkedAuditMessageChannelIds = append(r.LinkedAuditMessageChannelIds, types.StringValue(v))
+		}
+		r.MemberOncallScheduleIds = make([]types.String, 0, len(resp.MemberOncallScheduleIds))
+		for _, v := range resp.MemberOncallScheduleIds {
+			r.MemberOncallScheduleIds = append(r.MemberOncallScheduleIds, types.StringValue(v))
+		}
+		r.Name = types.StringPointerValue(resp.Name)
+		r.RequestConfigurationID = types.StringPointerValue(resp.RequestConfigurationID)
+		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
+		r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
+		if resp.TicketPropagation == nil {
+			r.TicketPropagation = nil
+		} else {
+			r.TicketPropagation = &tfTypes.TicketPropagationConfiguration{}
+			r.TicketPropagation.EnabledOnGrant = types.BoolValue(resp.TicketPropagation.EnabledOnGrant)
+			r.TicketPropagation.EnabledOnRevocation = types.BoolValue(resp.TicketPropagation.EnabledOnRevocation)
+			r.TicketPropagation.TicketProjectID = types.StringPointerValue(resp.TicketPropagation.TicketProjectID)
+			if resp.TicketPropagation.TicketProvider != nil {
+				r.TicketPropagation.TicketProvider = types.StringValue(string(*resp.TicketPropagation.TicketProvider))
+			} else {
+				r.TicketPropagation.TicketProvider = types.StringNull()
+			}
+		}
+		if resp.Visibility != nil {
+			r.Visibility.Visibility = types.StringValue(string(resp.Visibility.Visibility))
+			r.Visibility.VisibilityGroupIds = make([]types.String, 0, len(resp.Visibility.VisibilityGroupIds))
+			for _, v := range resp.Visibility.VisibilityGroupIds {
+				r.Visibility.VisibilityGroupIds = append(r.Visibility.VisibilityGroupIds, types.StringValue(v))
+			}
+		}
+	}
+
+	return diags
+}
+
+func (r *ConfigurationTemplateResourceModel) ToOperationsDeleteConfigurationTemplateRequest(ctx context.Context) (*operations.DeleteConfigurationTemplateRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var configurationTemplateID string
+	configurationTemplateID = r.ConfigurationTemplateID.ValueString()
+
+	out := operations.DeleteConfigurationTemplateRequest{
+		ConfigurationTemplateID: configurationTemplateID,
+	}
+
+	return &out, diags
+}
+
 func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplateInfo(ctx context.Context) (*shared.CreateConfigurationTemplateInfo, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -389,65 +450,4 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 	}
 
 	return &out, diags
-}
-
-func (r *ConfigurationTemplateResourceModel) ToOperationsDeleteConfigurationTemplateRequest(ctx context.Context) (*operations.DeleteConfigurationTemplateRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var configurationTemplateID string
-	configurationTemplateID = r.ConfigurationTemplateID.ValueString()
-
-	out := operations.DeleteConfigurationTemplateRequest{
-		ConfigurationTemplateID: configurationTemplateID,
-	}
-
-	return &out, diags
-}
-
-func (r *ConfigurationTemplateResourceModel) RefreshFromSharedConfigurationTemplate(ctx context.Context, resp *shared.ConfigurationTemplate) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if resp != nil {
-		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
-		r.BreakGlassUserIds = make([]types.String, 0, len(resp.BreakGlassUserIds))
-		for _, v := range resp.BreakGlassUserIds {
-			r.BreakGlassUserIds = append(r.BreakGlassUserIds, types.StringValue(v))
-		}
-		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
-		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
-		r.LinkedAuditMessageChannelIds = make([]types.String, 0, len(resp.LinkedAuditMessageChannelIds))
-		for _, v := range resp.LinkedAuditMessageChannelIds {
-			r.LinkedAuditMessageChannelIds = append(r.LinkedAuditMessageChannelIds, types.StringValue(v))
-		}
-		r.MemberOncallScheduleIds = make([]types.String, 0, len(resp.MemberOncallScheduleIds))
-		for _, v := range resp.MemberOncallScheduleIds {
-			r.MemberOncallScheduleIds = append(r.MemberOncallScheduleIds, types.StringValue(v))
-		}
-		r.Name = types.StringPointerValue(resp.Name)
-		r.RequestConfigurationID = types.StringPointerValue(resp.RequestConfigurationID)
-		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
-		r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
-		if resp.TicketPropagation == nil {
-			r.TicketPropagation = nil
-		} else {
-			r.TicketPropagation = &tfTypes.TicketPropagationConfiguration{}
-			r.TicketPropagation.EnabledOnGrant = types.BoolValue(resp.TicketPropagation.EnabledOnGrant)
-			r.TicketPropagation.EnabledOnRevocation = types.BoolValue(resp.TicketPropagation.EnabledOnRevocation)
-			r.TicketPropagation.TicketProjectID = types.StringPointerValue(resp.TicketPropagation.TicketProjectID)
-			if resp.TicketPropagation.TicketProvider != nil {
-				r.TicketPropagation.TicketProvider = types.StringValue(string(*resp.TicketPropagation.TicketProvider))
-			} else {
-				r.TicketPropagation.TicketProvider = types.StringNull()
-			}
-		}
-		if resp.Visibility != nil {
-			r.Visibility.Visibility = types.StringValue(string(resp.Visibility.Visibility))
-			r.Visibility.VisibilityGroupIds = make([]types.String, 0, len(resp.Visibility.VisibilityGroupIds))
-			for _, v := range resp.Visibility.VisibilityGroupIds {
-				r.Visibility.VisibilityGroupIds = append(r.Visibility.VisibilityGroupIds, types.StringValue(v))
-			}
-		}
-	}
-
-	return diags
 }

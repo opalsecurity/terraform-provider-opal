@@ -12,27 +12,31 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *GroupUserResourceModel) ToOperationsCreateGroupUserRequestBody(ctx context.Context) (*operations.CreateGroupUserRequestBody, diag.Diagnostics) {
+func (r *GroupUserResourceModel) RefreshFromSharedGroupUser(ctx context.Context, resp *shared.GroupUser) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	accessLevelRemoteID := new(string)
-	if !r.AccessLevelRemoteID.IsUnknown() && !r.AccessLevelRemoteID.IsNull() {
-		*accessLevelRemoteID = r.AccessLevelRemoteID.ValueString()
-	} else {
-		accessLevelRemoteID = nil
-	}
-	durationMinutes := new(operations.DurationMinutes)
-	if !r.DurationMinutes.IsUnknown() && !r.DurationMinutes.IsNull() {
-		*durationMinutes = operations.DurationMinutes(r.DurationMinutes.ValueInt64())
-	} else {
-		durationMinutes = nil
-	}
-	out := operations.CreateGroupUserRequestBody{
-		AccessLevelRemoteID: accessLevelRemoteID,
-		DurationMinutes:     durationMinutes,
+	if resp != nil {
+		if resp.AccessLevel == nil {
+			r.AccessLevel = nil
+		} else {
+			r.AccessLevel = &tfTypes.ResourceAccessLevel{}
+			r.AccessLevel.AccessLevelName = types.StringValue(resp.AccessLevel.AccessLevelName)
+			r.AccessLevel.AccessLevelRemoteID = types.StringValue(resp.AccessLevel.AccessLevelRemoteID)
+		}
+		r.Email = types.StringValue(resp.Email)
+		r.ExpirationDate = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resp.ExpirationDate))
+		r.FullName = types.StringValue(resp.FullName)
+		r.GroupID = types.StringValue(resp.GroupID)
+		if resp.PropagationStatus == nil {
+			r.PropagationStatus = nil
+		} else {
+			r.PropagationStatus = &tfTypes.PropagationStatus{}
+			r.PropagationStatus.Status = types.StringValue(string(resp.PropagationStatus.Status))
+		}
+		r.UserID = types.StringValue(resp.UserID)
 	}
 
-	return &out, diags
+	return diags
 }
 
 func (r *GroupUserResourceModel) ToOperationsCreateGroupUserRequest(ctx context.Context) (*operations.CreateGroupUserRequest, diag.Diagnostics) {
@@ -60,6 +64,29 @@ func (r *GroupUserResourceModel) ToOperationsCreateGroupUserRequest(ctx context.
 	return &out, diags
 }
 
+func (r *GroupUserResourceModel) ToOperationsCreateGroupUserRequestBody(ctx context.Context) (*operations.CreateGroupUserRequestBody, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	accessLevelRemoteID := new(string)
+	if !r.AccessLevelRemoteID.IsUnknown() && !r.AccessLevelRemoteID.IsNull() {
+		*accessLevelRemoteID = r.AccessLevelRemoteID.ValueString()
+	} else {
+		accessLevelRemoteID = nil
+	}
+	durationMinutes := new(operations.DurationMinutes)
+	if !r.DurationMinutes.IsUnknown() && !r.DurationMinutes.IsNull() {
+		*durationMinutes = operations.DurationMinutes(r.DurationMinutes.ValueInt64())
+	} else {
+		durationMinutes = nil
+	}
+	out := operations.CreateGroupUserRequestBody{
+		AccessLevelRemoteID: accessLevelRemoteID,
+		DurationMinutes:     durationMinutes,
+	}
+
+	return &out, diags
+}
+
 func (r *GroupUserResourceModel) ToOperationsDeleteGroupUserRequest(ctx context.Context) (*operations.DeleteGroupUserRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -75,31 +102,4 @@ func (r *GroupUserResourceModel) ToOperationsDeleteGroupUserRequest(ctx context.
 	}
 
 	return &out, diags
-}
-
-func (r *GroupUserResourceModel) RefreshFromSharedGroupUser(ctx context.Context, resp *shared.GroupUser) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if resp != nil {
-		if resp.AccessLevel == nil {
-			r.AccessLevel = nil
-		} else {
-			r.AccessLevel = &tfTypes.ResourceAccessLevel{}
-			r.AccessLevel.AccessLevelName = types.StringValue(resp.AccessLevel.AccessLevelName)
-			r.AccessLevel.AccessLevelRemoteID = types.StringValue(resp.AccessLevel.AccessLevelRemoteID)
-		}
-		r.Email = types.StringValue(resp.Email)
-		r.ExpirationDate = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resp.ExpirationDate))
-		r.FullName = types.StringValue(resp.FullName)
-		r.GroupID = types.StringValue(resp.GroupID)
-		if resp.PropagationStatus == nil {
-			r.PropagationStatus = nil
-		} else {
-			r.PropagationStatus = &tfTypes.PropagationStatus{}
-			r.PropagationStatus.Status = types.StringValue(string(resp.PropagationStatus.Status))
-		}
-		r.UserID = types.StringValue(resp.UserID)
-	}
-
-	return diags
 }

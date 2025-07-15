@@ -10,6 +10,26 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
+func (r *UserDataSourceModel) RefreshFromSharedUser(ctx context.Context, resp *shared.User) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.Email = types.StringValue(resp.Email)
+		r.FirstName = types.StringValue(resp.FirstName)
+		if resp.HrIdpStatus != nil {
+			r.HrIdpStatus = types.StringValue(string(*resp.HrIdpStatus))
+		} else {
+			r.HrIdpStatus = types.StringNull()
+		}
+		r.ID = types.StringValue(resp.ID)
+		r.LastName = types.StringValue(resp.LastName)
+		r.Name = types.StringValue(resp.Name)
+		r.Position = types.StringValue(resp.Position)
+	}
+
+	return diags
+}
+
 func (r *UserDataSourceModel) ToOperationsGetUserRequest(ctx context.Context) (*operations.GetUserRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -31,24 +51,4 @@ func (r *UserDataSourceModel) ToOperationsGetUserRequest(ctx context.Context) (*
 	}
 
 	return &out, diags
-}
-
-func (r *UserDataSourceModel) RefreshFromSharedUser(ctx context.Context, resp *shared.User) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if resp != nil {
-		r.Email = types.StringValue(resp.Email)
-		r.FirstName = types.StringValue(resp.FirstName)
-		if resp.HrIdpStatus != nil {
-			r.HrIdpStatus = types.StringValue(string(*resp.HrIdpStatus))
-		} else {
-			r.HrIdpStatus = types.StringNull()
-		}
-		r.ID = types.StringValue(resp.ID)
-		r.LastName = types.StringValue(resp.LastName)
-		r.Name = types.StringValue(resp.Name)
-		r.Position = types.StringValue(resp.Position)
-	}
-
-	return diags
 }

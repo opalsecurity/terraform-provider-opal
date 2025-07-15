@@ -10,19 +10,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *OnCallScheduleDataSourceModel) ToOperationsGetOnCallScheduleIDRequest(ctx context.Context) (*operations.GetOnCallScheduleIDRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.GetOnCallScheduleIDRequest{
-		ID: id,
-	}
-
-	return &out, diags
-}
-
 func (r *OnCallScheduleDataSourceModel) RefreshFromSharedOnCallSchedule(ctx context.Context, resp *shared.OnCallSchedule) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -38,4 +25,17 @@ func (r *OnCallScheduleDataSourceModel) RefreshFromSharedOnCallSchedule(ctx cont
 	}
 
 	return diags
+}
+
+func (r *OnCallScheduleDataSourceModel) ToOperationsGetOnCallScheduleIDRequest(ctx context.Context) (*operations.GetOnCallScheduleIDRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetOnCallScheduleIDRequest{
+		ID: id,
+	}
+
+	return &out, diags
 }

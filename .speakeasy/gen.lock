@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 54027ec6675e9e31cc86de8b6e9be8d4
+  docChecksum: 2673b2f8fb0bf2914cc70fc14504a900
   docVersion: "1.0"
-  speakeasyVersion: 1.581.0
-  generationVersion: 2.656.5
-  releaseVersion: 0.45.1
-  configChecksum: c9f9a4cc730f27baac42670cfb5bb79a
+  speakeasyVersion: 1.582.0
+  generationVersion: 2.657.1
+  releaseVersion: 0.45.3
+  configChecksum: d7d90958f1c6ab112194d94676e1fe62
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -15,7 +15,7 @@ features:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.2
     constsAndDefaults: 0.2.1
-    core: 3.41.15
+    core: 3.41.16
     deprecations: 2.82.0
     globalSecurity: 2.81.12
     globalServerURLs: 2.82.2
@@ -65,6 +65,7 @@ generatedFiles:
   - examples/data-sources/opal_resources_access_status/data-source.tf
   - examples/data-sources/opal_resources_list/data-source.tf
   - examples/data-sources/opal_resources_users_list/data-source.tf
+  - examples/data-sources/opal_scoped_role_permission_list/data-source.tf
   - examples/data-sources/opal_sessions/data-source.tf
   - examples/data-sources/opal_tag/data-source.tf
   - examples/data-sources/opal_tags_list/data-source.tf
@@ -100,6 +101,8 @@ generatedFiles:
   - examples/resources/opal_resource/import.sh
   - examples/resources/opal_resource/resource.tf
   - examples/resources/opal_resource_tag/resource.tf
+  - examples/resources/opal_scoped_role_permission_list/import.sh
+  - examples/resources/opal_scoped_role_permission_list/resource.tf
   - examples/resources/opal_tag/import.sh
   - examples/resources/opal_tag/resource.tf
   - examples/resources/opal_tag_user/resource.tf
@@ -232,6 +235,10 @@ generatedFiles:
   - internal/provider/resourcetags_data_source_sdk.go
   - internal/provider/resourcevisibility_data_source.go
   - internal/provider/resourcevisibility_data_source_sdk.go
+  - internal/provider/scopedrolepermissionlist_data_source.go
+  - internal/provider/scopedrolepermissionlist_data_source_sdk.go
+  - internal/provider/scopedrolepermissionlist_resource.go
+  - internal/provider/scopedrolepermissionlist_resource_sdk.go
   - internal/provider/sessions_data_source.go
   - internal/provider/sessions_data_source_sdk.go
   - internal/provider/tag_data_source.go
@@ -308,6 +315,7 @@ generatedFiles:
   - internal/provider/types/rule_disjunction.go
   - internal/provider/types/salesforce_permission_set.go
   - internal/provider/types/salesforce_profile.go
+  - internal/provider/types/scoped_role_permission.go
   - internal/provider/types/session.go
   - internal/provider/types/snowflake_role.go
   - internal/provider/types/sub_event.go

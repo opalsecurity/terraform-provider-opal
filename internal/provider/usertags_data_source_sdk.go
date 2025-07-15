@@ -12,19 +12,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *UserTagsDataSourceModel) ToOperationsGetUserTagsRequest(ctx context.Context) (*operations.GetUserTagsRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var userID string
-	userID = r.UserID.ValueString()
-
-	out := operations.GetUserTagsRequest{
-		UserID: userID,
-	}
-
-	return &out, diags
-}
-
 func (r *UserTagsDataSourceModel) RefreshFromSharedTagsList(ctx context.Context, resp *shared.TagsList) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -55,4 +42,17 @@ func (r *UserTagsDataSourceModel) RefreshFromSharedTagsList(ctx context.Context,
 	}
 
 	return diags
+}
+
+func (r *UserTagsDataSourceModel) ToOperationsGetUserTagsRequest(ctx context.Context) (*operations.GetUserTagsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var userID string
+	userID = r.UserID.ValueString()
+
+	out := operations.GetUserTagsRequest{
+		UserID: userID,
+	}
+
+	return &out, diags
 }

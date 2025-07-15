@@ -11,19 +11,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *GroupReviewersStagesListDataSourceModel) ToOperationsGetGroupReviewersStagesRequest(ctx context.Context) (*operations.GetGroupReviewersStagesRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var groupID string
-	groupID = r.GroupID.ValueString()
-
-	out := operations.GetGroupReviewersStagesRequest{
-		GroupID: groupID,
-	}
-
-	return &out, diags
-}
-
 func (r *GroupReviewersStagesListDataSourceModel) RefreshFromSharedReviewerStage(ctx context.Context, resp []shared.ReviewerStage) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -55,4 +42,17 @@ func (r *GroupReviewersStagesListDataSourceModel) RefreshFromSharedReviewerStage
 	}
 
 	return diags
+}
+
+func (r *GroupReviewersStagesListDataSourceModel) ToOperationsGetGroupReviewersStagesRequest(ctx context.Context) (*operations.GetGroupReviewersStagesRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var groupID string
+	groupID = r.GroupID.ValueString()
+
+	out := operations.GetGroupReviewersStagesRequest{
+		GroupID: groupID,
+	}
+
+	return &out, diags
 }

@@ -10,17 +10,14 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *GroupContainingGroupResourceModel) ToSharedGroupContainingGroup(ctx context.Context) (*shared.GroupContainingGroup, diag.Diagnostics) {
+func (r *GroupContainingGroupResourceModel) RefreshFromSharedGroupContainingGroup(ctx context.Context, resp *shared.GroupContainingGroup) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	var containingGroupID string
-	containingGroupID = r.ContainingGroupID.ValueString()
-
-	out := shared.GroupContainingGroup{
-		ContainingGroupID: containingGroupID,
+	if resp != nil {
+		r.ContainingGroupID = types.StringValue(resp.ContainingGroupID)
 	}
 
-	return &out, diags
+	return diags
 }
 
 func (r *GroupContainingGroupResourceModel) ToOperationsAddGroupContainingGroupRequest(ctx context.Context) (*operations.AddGroupContainingGroupRequest, diag.Diagnostics) {
@@ -78,12 +75,15 @@ func (r *GroupContainingGroupResourceModel) ToOperationsRemoveGroupContainingGro
 	return &out, diags
 }
 
-func (r *GroupContainingGroupResourceModel) RefreshFromSharedGroupContainingGroup(ctx context.Context, resp *shared.GroupContainingGroup) diag.Diagnostics {
+func (r *GroupContainingGroupResourceModel) ToSharedGroupContainingGroup(ctx context.Context) (*shared.GroupContainingGroup, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if resp != nil {
-		r.ContainingGroupID = types.StringValue(resp.ContainingGroupID)
+	var containingGroupID string
+	containingGroupID = r.ContainingGroupID.ValueString()
+
+	out := shared.GroupContainingGroup{
+		ContainingGroupID: containingGroupID,
 	}
 
-	return diags
+	return &out, diags
 }

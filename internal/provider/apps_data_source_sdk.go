@@ -13,27 +13,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *AppsDataSourceModel) ToOperationsGetAppsRequest(ctx context.Context) (*operations.GetAppsRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	appTypeFilter := make([]shared.AppTypeEnum, 0, len(r.AppTypeFilter))
-	for _, appTypeFilterItem := range r.AppTypeFilter {
-		appTypeFilter = append(appTypeFilter, shared.AppTypeEnum(appTypeFilterItem.ValueString()))
-	}
-	ownerFilter := new(string)
-	if !r.OwnerFilter.IsUnknown() && !r.OwnerFilter.IsNull() {
-		*ownerFilter = r.OwnerFilter.ValueString()
-	} else {
-		ownerFilter = nil
-	}
-	out := operations.GetAppsRequest{
-		AppTypeFilter: appTypeFilter,
-		OwnerFilter:   ownerFilter,
-	}
-
-	return &out, diags
-}
-
 func (r *AppsDataSourceModel) RefreshFromSharedAppsList(ctx context.Context, resp *shared.AppsList) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -86,4 +65,25 @@ func (r *AppsDataSourceModel) RefreshFromSharedAppsList(ctx context.Context, res
 	}
 
 	return diags
+}
+
+func (r *AppsDataSourceModel) ToOperationsGetAppsRequest(ctx context.Context) (*operations.GetAppsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	appTypeFilter := make([]shared.AppTypeEnum, 0, len(r.AppTypeFilter))
+	for _, appTypeFilterItem := range r.AppTypeFilter {
+		appTypeFilter = append(appTypeFilter, shared.AppTypeEnum(appTypeFilterItem.ValueString()))
+	}
+	ownerFilter := new(string)
+	if !r.OwnerFilter.IsUnknown() && !r.OwnerFilter.IsNull() {
+		*ownerFilter = r.OwnerFilter.ValueString()
+	} else {
+		ownerFilter = nil
+	}
+	out := operations.GetAppsRequest{
+		AppTypeFilter: appTypeFilter,
+		OwnerFilter:   ownerFilter,
+	}
+
+	return &out, diags
 }

@@ -8,14 +8,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
-func (r *TagUserResourceModel) ToOperationsCreateUserTagRequestBody(ctx context.Context) (*operations.CreateUserTagRequestBody, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	out := operations.CreateUserTagRequestBody{}
-
-	return &out, diags
-}
-
 func (r *TagUserResourceModel) ToOperationsCreateUserTagRequest(ctx context.Context) (*operations.CreateUserTagRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -37,6 +29,14 @@ func (r *TagUserResourceModel) ToOperationsCreateUserTagRequest(ctx context.Cont
 		TagID:       tagID,
 		UserID:      userID,
 	}
+
+	return &out, diags
+}
+
+func (r *TagUserResourceModel) ToOperationsCreateUserTagRequestBody(ctx context.Context) (*operations.CreateUserTagRequestBody, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	out := operations.CreateUserTagRequestBody{}
 
 	return &out, diags
 }

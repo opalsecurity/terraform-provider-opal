@@ -13,19 +13,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *AppDataSourceModel) ToOperationsGetAppIDRequest(ctx context.Context) (*operations.GetAppIDRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.GetAppIDRequest{
-		ID: id,
-	}
-
-	return &out, diags
-}
-
 func (r *AppDataSourceModel) RefreshFromSharedApp(ctx context.Context, resp *shared.App) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -64,4 +51,17 @@ func (r *AppDataSourceModel) RefreshFromSharedApp(ctx context.Context, resp *sha
 	}
 
 	return diags
+}
+
+func (r *AppDataSourceModel) ToOperationsGetAppIDRequest(ctx context.Context) (*operations.GetAppIDRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetAppIDRequest{
+		ID: id,
+	}
+
+	return &out, diags
 }

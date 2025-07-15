@@ -10,6 +10,81 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
+func (r *OwnerResourceModel) RefreshFromSharedOwner(ctx context.Context, resp *shared.Owner) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.AccessRequestEscalationPeriod = types.Int64PointerValue(resp.AccessRequestEscalationPeriod)
+		r.Description = types.StringPointerValue(resp.Description)
+		r.ID = types.StringValue(resp.ID)
+		r.Name = types.StringPointerValue(resp.Name)
+		r.ReviewerMessageChannelID = types.StringPointerValue(resp.ReviewerMessageChannelID)
+		r.SourceGroupID = types.StringPointerValue(resp.SourceGroupID)
+	}
+
+	return diags
+}
+
+func (r *OwnerResourceModel) RefreshFromSharedUpdateOwnerInfo(ctx context.Context, resp *shared.UpdateOwnerInfo) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	r.AccessRequestEscalationPeriod = types.Int64PointerValue(resp.AccessRequestEscalationPeriod)
+	r.Description = types.StringPointerValue(resp.Description)
+	r.ID = types.StringValue(resp.ID)
+	r.Name = types.StringPointerValue(resp.Name)
+	r.ReviewerMessageChannelID = types.StringPointerValue(resp.ReviewerMessageChannelID)
+	r.SourceGroupID = types.StringPointerValue(resp.SourceGroupID)
+
+	return diags
+}
+
+func (r *OwnerResourceModel) ToOperationsDeleteOwnerRequest(ctx context.Context) (*operations.DeleteOwnerRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.DeleteOwnerRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *OwnerResourceModel) ToOperationsGetOwnerIDRequest(ctx context.Context) (*operations.GetOwnerIDRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetOwnerIDRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *OwnerResourceModel) ToOperationsUpdateOwnerUsersRequest(ctx context.Context) (*operations.UpdateOwnerUsersRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	userIDList, userIDListDiags := r.ToSharedUserIDList(ctx)
+	diags.Append(userIDListDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.UpdateOwnerUsersRequest{
+		UserIDList: *userIDList,
+		ID:         id,
+	}
+
+	return &out, diags
+}
+
 func (r *OwnerResourceModel) ToSharedCreateOwnerInfo(ctx context.Context) (*shared.CreateOwnerInfo, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -133,79 +208,4 @@ func (r *OwnerResourceModel) ToSharedUserIDList(ctx context.Context) (*shared.Us
 	}
 
 	return &out, diags
-}
-
-func (r *OwnerResourceModel) ToOperationsUpdateOwnerUsersRequest(ctx context.Context) (*operations.UpdateOwnerUsersRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	userIDList, userIDListDiags := r.ToSharedUserIDList(ctx)
-	diags.Append(userIDListDiags...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.UpdateOwnerUsersRequest{
-		UserIDList: *userIDList,
-		ID:         id,
-	}
-
-	return &out, diags
-}
-
-func (r *OwnerResourceModel) ToOperationsGetOwnerIDRequest(ctx context.Context) (*operations.GetOwnerIDRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.GetOwnerIDRequest{
-		ID: id,
-	}
-
-	return &out, diags
-}
-
-func (r *OwnerResourceModel) ToOperationsDeleteOwnerRequest(ctx context.Context) (*operations.DeleteOwnerRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.DeleteOwnerRequest{
-		ID: id,
-	}
-
-	return &out, diags
-}
-
-func (r *OwnerResourceModel) RefreshFromSharedOwner(ctx context.Context, resp *shared.Owner) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if resp != nil {
-		r.AccessRequestEscalationPeriod = types.Int64PointerValue(resp.AccessRequestEscalationPeriod)
-		r.Description = types.StringPointerValue(resp.Description)
-		r.ID = types.StringValue(resp.ID)
-		r.Name = types.StringPointerValue(resp.Name)
-		r.ReviewerMessageChannelID = types.StringPointerValue(resp.ReviewerMessageChannelID)
-		r.SourceGroupID = types.StringPointerValue(resp.SourceGroupID)
-	}
-
-	return diags
-}
-
-func (r *OwnerResourceModel) RefreshFromSharedUpdateOwnerInfo(ctx context.Context, resp *shared.UpdateOwnerInfo) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	r.AccessRequestEscalationPeriod = types.Int64PointerValue(resp.AccessRequestEscalationPeriod)
-	r.Description = types.StringPointerValue(resp.Description)
-	r.ID = types.StringValue(resp.ID)
-	r.Name = types.StringPointerValue(resp.Name)
-	r.ReviewerMessageChannelID = types.StringPointerValue(resp.ReviewerMessageChannelID)
-	r.SourceGroupID = types.StringPointerValue(resp.SourceGroupID)
-
-	return diags
 }

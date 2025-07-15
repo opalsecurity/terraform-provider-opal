@@ -11,6 +11,66 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
+func (r *IdpGroupMappingsResourceModel) RefreshFromSharedIdpGroupMappingList(ctx context.Context, resp *shared.IdpGroupMappingList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.Mappings = []tfTypes.Mappings{}
+		if len(r.Mappings) > len(resp.Mappings) {
+			r.Mappings = r.Mappings[:len(resp.Mappings)]
+		}
+		for mappingsCount, mappingsItem := range resp.Mappings {
+			var mappings tfTypes.Mappings
+			mappings.Alias = types.StringPointerValue(mappingsItem.Alias)
+			mappings.GroupID = types.StringValue(mappingsItem.GroupID)
+			mappings.HiddenFromEndUser = types.BoolValue(mappingsItem.HiddenFromEndUser)
+			if mappingsCount+1 > len(r.Mappings) {
+				r.Mappings = append(r.Mappings, mappings)
+			} else {
+				r.Mappings[mappingsCount].Alias = mappings.Alias
+				r.Mappings[mappingsCount].GroupID = mappings.GroupID
+				r.Mappings[mappingsCount].HiddenFromEndUser = mappings.HiddenFromEndUser
+			}
+		}
+	}
+
+	return diags
+}
+
+func (r *IdpGroupMappingsResourceModel) ToOperationsGetIdpGroupMappingsRequest(ctx context.Context) (*operations.GetIdpGroupMappingsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var appResourceID string
+	appResourceID = r.AppResourceID.ValueString()
+
+	out := operations.GetIdpGroupMappingsRequest{
+		AppResourceID: appResourceID,
+	}
+
+	return &out, diags
+}
+
+func (r *IdpGroupMappingsResourceModel) ToOperationsUpdateIdpGroupMappingsRequest(ctx context.Context) (*operations.UpdateIdpGroupMappingsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	requestBody, requestBodyDiags := r.ToOperationsUpdateIdpGroupMappingsRequestBody(ctx)
+	diags.Append(requestBodyDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var appResourceID string
+	appResourceID = r.AppResourceID.ValueString()
+
+	out := operations.UpdateIdpGroupMappingsRequest{
+		RequestBody:   *requestBody,
+		AppResourceID: appResourceID,
+	}
+
+	return &out, diags
+}
+
 func (r *IdpGroupMappingsResourceModel) ToOperationsUpdateIdpGroupMappingsRequestBody(ctx context.Context) (*operations.UpdateIdpGroupMappingsRequestBody, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -45,64 +105,4 @@ func (r *IdpGroupMappingsResourceModel) ToOperationsUpdateIdpGroupMappingsReques
 	}
 
 	return &out, diags
-}
-
-func (r *IdpGroupMappingsResourceModel) ToOperationsUpdateIdpGroupMappingsRequest(ctx context.Context) (*operations.UpdateIdpGroupMappingsRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	requestBody, requestBodyDiags := r.ToOperationsUpdateIdpGroupMappingsRequestBody(ctx)
-	diags.Append(requestBodyDiags...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	var appResourceID string
-	appResourceID = r.AppResourceID.ValueString()
-
-	out := operations.UpdateIdpGroupMappingsRequest{
-		RequestBody:   *requestBody,
-		AppResourceID: appResourceID,
-	}
-
-	return &out, diags
-}
-
-func (r *IdpGroupMappingsResourceModel) ToOperationsGetIdpGroupMappingsRequest(ctx context.Context) (*operations.GetIdpGroupMappingsRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var appResourceID string
-	appResourceID = r.AppResourceID.ValueString()
-
-	out := operations.GetIdpGroupMappingsRequest{
-		AppResourceID: appResourceID,
-	}
-
-	return &out, diags
-}
-
-func (r *IdpGroupMappingsResourceModel) RefreshFromSharedIdpGroupMappingList(ctx context.Context, resp *shared.IdpGroupMappingList) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if resp != nil {
-		r.Mappings = []tfTypes.Mappings{}
-		if len(r.Mappings) > len(resp.Mappings) {
-			r.Mappings = r.Mappings[:len(resp.Mappings)]
-		}
-		for mappingsCount, mappingsItem := range resp.Mappings {
-			var mappings tfTypes.Mappings
-			mappings.Alias = types.StringPointerValue(mappingsItem.Alias)
-			mappings.GroupID = types.StringValue(mappingsItem.GroupID)
-			mappings.HiddenFromEndUser = types.BoolValue(mappingsItem.HiddenFromEndUser)
-			if mappingsCount+1 > len(r.Mappings) {
-				r.Mappings = append(r.Mappings, mappings)
-			} else {
-				r.Mappings[mappingsCount].Alias = mappings.Alias
-				r.Mappings[mappingsCount].GroupID = mappings.GroupID
-				r.Mappings[mappingsCount].HiddenFromEndUser = mappings.HiddenFromEndUser
-			}
-		}
-	}
-
-	return diags
 }

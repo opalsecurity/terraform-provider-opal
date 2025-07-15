@@ -11,19 +11,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *ResourceMessageChannelListDataSourceModel) ToOperationsGetResourceMessageChannelsRequest(ctx context.Context) (*operations.GetResourceMessageChannelsRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var resourceID string
-	resourceID = r.ResourceID.ValueString()
-
-	out := operations.GetResourceMessageChannelsRequest{
-		ResourceID: resourceID,
-	}
-
-	return &out, diags
-}
-
 func (r *ResourceMessageChannelListDataSourceModel) RefreshFromSharedMessageChannelList(ctx context.Context, resp *shared.MessageChannelList) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -56,4 +43,17 @@ func (r *ResourceMessageChannelListDataSourceModel) RefreshFromSharedMessageChan
 	}
 
 	return diags
+}
+
+func (r *ResourceMessageChannelListDataSourceModel) ToOperationsGetResourceMessageChannelsRequest(ctx context.Context) (*operations.GetResourceMessageChannelsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var resourceID string
+	resourceID = r.ResourceID.ValueString()
+
+	out := operations.GetResourceMessageChannelsRequest{
+		ResourceID: resourceID,
+	}
+
+	return &out, diags
 }

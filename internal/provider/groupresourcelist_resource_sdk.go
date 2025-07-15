@@ -11,27 +11,41 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *GroupResourceListResourceModel) ToSharedUpdateGroupResourcesInfo(ctx context.Context) (*shared.UpdateGroupResourcesInfo, diag.Diagnostics) {
+func (r *GroupResourceListResourceModel) RefreshFromSharedGroupResourceList(ctx context.Context, resp *shared.GroupResourceList) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	resources := make([]shared.ResourceWithAccessLevel, 0, len(r.Resources))
-	for _, resourcesItem := range r.Resources {
-		accessLevelRemoteID := new(string)
-		if !resourcesItem.AccessLevelRemoteID.IsUnknown() && !resourcesItem.AccessLevelRemoteID.IsNull() {
-			*accessLevelRemoteID = resourcesItem.AccessLevelRemoteID.ValueString()
-		} else {
-			accessLevelRemoteID = nil
+	if resp != nil {
+		r.GroupResources = []tfTypes.GroupResource{}
+		if len(r.GroupResources) > len(resp.GroupResources) {
+			r.GroupResources = r.GroupResources[:len(resp.GroupResources)]
 		}
-		var resourceID string
-		resourceID = resourcesItem.ResourceID.ValueString()
-
-		resources = append(resources, shared.ResourceWithAccessLevel{
-			AccessLevelRemoteID: accessLevelRemoteID,
-			ResourceID:          resourceID,
-		})
+		for groupResourcesCount, groupResourcesItem := range resp.GroupResources {
+			var groupResources tfTypes.GroupResource
+			groupResources.AccessLevel.AccessLevelName = types.StringValue(groupResourcesItem.AccessLevel.AccessLevelName)
+			groupResources.AccessLevel.AccessLevelRemoteID = types.StringValue(groupResourcesItem.AccessLevel.AccessLevelRemoteID)
+			groupResources.GroupID = types.StringValue(groupResourcesItem.GroupID)
+			groupResources.ResourceID = types.StringValue(groupResourcesItem.ResourceID)
+			if groupResourcesCount+1 > len(r.GroupResources) {
+				r.GroupResources = append(r.GroupResources, groupResources)
+			} else {
+				r.GroupResources[groupResourcesCount].AccessLevel = groupResources.AccessLevel
+				r.GroupResources[groupResourcesCount].GroupID = groupResources.GroupID
+				r.GroupResources[groupResourcesCount].ResourceID = groupResources.ResourceID
+			}
+		}
 	}
-	out := shared.UpdateGroupResourcesInfo{
-		Resources: resources,
+
+	return diags
+}
+
+func (r *GroupResourceListResourceModel) ToOperationsGetGroupResourcesRequest(ctx context.Context) (*operations.GetGroupResourcesRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var groupID string
+	groupID = r.GroupID.ValueString()
+
+	out := operations.GetGroupResourcesRequest{
+		GroupID: groupID,
 	}
 
 	return &out, diags
@@ -58,42 +72,28 @@ func (r *GroupResourceListResourceModel) ToOperationsUpdateGroupResourcesRequest
 	return &out, diags
 }
 
-func (r *GroupResourceListResourceModel) ToOperationsGetGroupResourcesRequest(ctx context.Context) (*operations.GetGroupResourcesRequest, diag.Diagnostics) {
+func (r *GroupResourceListResourceModel) ToSharedUpdateGroupResourcesInfo(ctx context.Context) (*shared.UpdateGroupResourcesInfo, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	var groupID string
-	groupID = r.GroupID.ValueString()
+	resources := make([]shared.ResourceWithAccessLevel, 0, len(r.Resources))
+	for _, resourcesItem := range r.Resources {
+		accessLevelRemoteID := new(string)
+		if !resourcesItem.AccessLevelRemoteID.IsUnknown() && !resourcesItem.AccessLevelRemoteID.IsNull() {
+			*accessLevelRemoteID = resourcesItem.AccessLevelRemoteID.ValueString()
+		} else {
+			accessLevelRemoteID = nil
+		}
+		var resourceID string
+		resourceID = resourcesItem.ResourceID.ValueString()
 
-	out := operations.GetGroupResourcesRequest{
-		GroupID: groupID,
+		resources = append(resources, shared.ResourceWithAccessLevel{
+			AccessLevelRemoteID: accessLevelRemoteID,
+			ResourceID:          resourceID,
+		})
+	}
+	out := shared.UpdateGroupResourcesInfo{
+		Resources: resources,
 	}
 
 	return &out, diags
-}
-
-func (r *GroupResourceListResourceModel) RefreshFromSharedGroupResourceList(ctx context.Context, resp *shared.GroupResourceList) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if resp != nil {
-		r.GroupResources = []tfTypes.GroupResource{}
-		if len(r.GroupResources) > len(resp.GroupResources) {
-			r.GroupResources = r.GroupResources[:len(resp.GroupResources)]
-		}
-		for groupResourcesCount, groupResourcesItem := range resp.GroupResources {
-			var groupResources tfTypes.GroupResource
-			groupResources.AccessLevel.AccessLevelName = types.StringValue(groupResourcesItem.AccessLevel.AccessLevelName)
-			groupResources.AccessLevel.AccessLevelRemoteID = types.StringValue(groupResourcesItem.AccessLevel.AccessLevelRemoteID)
-			groupResources.GroupID = types.StringValue(groupResourcesItem.GroupID)
-			groupResources.ResourceID = types.StringValue(groupResourcesItem.ResourceID)
-			if groupResourcesCount+1 > len(r.GroupResources) {
-				r.GroupResources = append(r.GroupResources, groupResources)
-			} else {
-				r.GroupResources[groupResourcesCount].AccessLevel = groupResources.AccessLevel
-				r.GroupResources[groupResourcesCount].GroupID = groupResources.GroupID
-				r.GroupResources[groupResourcesCount].ResourceID = groupResources.ResourceID
-			}
-		}
-	}
-
-	return diags
 }

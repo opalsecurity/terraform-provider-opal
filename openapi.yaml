@@ -3246,6 +3246,8 @@ paths:
       tags:
         - resources
         - scoped-role-permissions
+      x-speakeasy-name-override: get_scoped_role_permissions
+      x-speakeasy-entity-operation: ScopedRolePermissionList#get
     put:
       description: Sets all the scoped role permissions on an OPAL_SCOPED_ROLE resource.
       operationId: set_resource_scoped_role_permissions
@@ -3278,6 +3280,8 @@ paths:
       tags:
         - resources
         - scoped-role-permissions
+      x-speakeasy-name-override: update_scoped_role_permissions
+      x-speakeasy-entity-operation: ScopedRolePermissionList#create,update
   /sessions:
     get:
       description: Returns a list of `Session` objects.
@@ -9825,6 +9829,7 @@ components:
       type: object
       required:
         - permissions
+      x-speakeasy-entity: ScopedRolePermissionList
     ScopedRolePermission:
       type: object
       properties:

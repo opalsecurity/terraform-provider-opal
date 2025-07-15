@@ -11,56 +11,52 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *GroupDataSourceModel) ToOperationsGetGroupRequest(ctx context.Context) (*operations.GetGroupRequest, diag.Diagnostics) {
+func (r *GroupDataSourceModel) RefreshFromOperationsGetGroupMessageChannelsResponseBody(ctx context.Context, resp *operations.GetGroupMessageChannelsResponseBody) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.GetGroupRequest{
-		ID: id,
+	if resp != nil {
+		r.MessageChannels.Channels = []tfTypes.MessageChannel{}
+		if len(r.MessageChannels.Channels) > len(resp.Channels) {
+			r.MessageChannels.Channels = r.MessageChannels.Channels[:len(resp.Channels)]
+		}
+		for channelsCount, channelsItem := range resp.Channels {
+			var channels tfTypes.MessageChannel
+			channels.ID = types.StringValue(channelsItem.ID)
+			channels.IsPrivate = types.BoolPointerValue(channelsItem.IsPrivate)
+			channels.Name = types.StringPointerValue(channelsItem.Name)
+			channels.RemoteID = types.StringPointerValue(channelsItem.RemoteID)
+			if channelsItem.ThirdPartyProvider != nil {
+				channels.ThirdPartyProvider = types.StringValue(string(*channelsItem.ThirdPartyProvider))
+			} else {
+				channels.ThirdPartyProvider = types.StringNull()
+			}
+			if channelsCount+1 > len(r.MessageChannels.Channels) {
+				r.MessageChannels.Channels = append(r.MessageChannels.Channels, channels)
+			} else {
+				r.MessageChannels.Channels[channelsCount].ID = channels.ID
+				r.MessageChannels.Channels[channelsCount].IsPrivate = channels.IsPrivate
+				r.MessageChannels.Channels[channelsCount].Name = channels.Name
+				r.MessageChannels.Channels[channelsCount].RemoteID = channels.RemoteID
+				r.MessageChannels.Channels[channelsCount].ThirdPartyProvider = channels.ThirdPartyProvider
+			}
+		}
 	}
 
-	return &out, diags
+	return diags
 }
 
-func (r *GroupDataSourceModel) ToOperationsGetGroupMessageChannelsRequest(ctx context.Context) (*operations.GetGroupMessageChannelsRequest, diag.Diagnostics) {
+func (r *GroupDataSourceModel) RefreshFromOperationsGetGroupVisibilityResponseBody(ctx context.Context, resp *operations.GetGroupVisibilityResponseBody) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.GetGroupMessageChannelsRequest{
-		ID: id,
+	if resp != nil {
+		r.Visibility = types.StringValue(string(resp.Visibility))
+		r.VisibilityGroupIds = make([]types.String, 0, len(resp.VisibilityGroupIds))
+		for _, v := range resp.VisibilityGroupIds {
+			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
+		}
 	}
 
-	return &out, diags
-}
-
-func (r *GroupDataSourceModel) ToOperationsGetGroupOnCallSchedulesRequest(ctx context.Context) (*operations.GetGroupOnCallSchedulesRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.GetGroupOnCallSchedulesRequest{
-		ID: id,
-	}
-
-	return &out, diags
-}
-
-func (r *GroupDataSourceModel) ToOperationsGetGroupVisibilityRequest(ctx context.Context) (*operations.GetGroupVisibilityRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.GetGroupVisibilityRequest{
-		ID: id,
-	}
-
-	return &out, diags
+	return diags
 }
 
 func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp *shared.Group) diag.Diagnostics {
@@ -242,50 +238,54 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 	return diags
 }
 
-func (r *GroupDataSourceModel) RefreshFromOperationsGetGroupMessageChannelsResponseBody(ctx context.Context, resp *operations.GetGroupMessageChannelsResponseBody) diag.Diagnostics {
+func (r *GroupDataSourceModel) ToOperationsGetGroupMessageChannelsRequest(ctx context.Context) (*operations.GetGroupMessageChannelsRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if resp != nil {
-		r.MessageChannels.Channels = []tfTypes.MessageChannel{}
-		if len(r.MessageChannels.Channels) > len(resp.Channels) {
-			r.MessageChannels.Channels = r.MessageChannels.Channels[:len(resp.Channels)]
-		}
-		for channelsCount, channelsItem := range resp.Channels {
-			var channels tfTypes.MessageChannel
-			channels.ID = types.StringValue(channelsItem.ID)
-			channels.IsPrivate = types.BoolPointerValue(channelsItem.IsPrivate)
-			channels.Name = types.StringPointerValue(channelsItem.Name)
-			channels.RemoteID = types.StringPointerValue(channelsItem.RemoteID)
-			if channelsItem.ThirdPartyProvider != nil {
-				channels.ThirdPartyProvider = types.StringValue(string(*channelsItem.ThirdPartyProvider))
-			} else {
-				channels.ThirdPartyProvider = types.StringNull()
-			}
-			if channelsCount+1 > len(r.MessageChannels.Channels) {
-				r.MessageChannels.Channels = append(r.MessageChannels.Channels, channels)
-			} else {
-				r.MessageChannels.Channels[channelsCount].ID = channels.ID
-				r.MessageChannels.Channels[channelsCount].IsPrivate = channels.IsPrivate
-				r.MessageChannels.Channels[channelsCount].Name = channels.Name
-				r.MessageChannels.Channels[channelsCount].RemoteID = channels.RemoteID
-				r.MessageChannels.Channels[channelsCount].ThirdPartyProvider = channels.ThirdPartyProvider
-			}
-		}
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetGroupMessageChannelsRequest{
+		ID: id,
 	}
 
-	return diags
+	return &out, diags
 }
 
-func (r *GroupDataSourceModel) RefreshFromOperationsGetGroupVisibilityResponseBody(ctx context.Context, resp *operations.GetGroupVisibilityResponseBody) diag.Diagnostics {
+func (r *GroupDataSourceModel) ToOperationsGetGroupOnCallSchedulesRequest(ctx context.Context) (*operations.GetGroupOnCallSchedulesRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if resp != nil {
-		r.Visibility = types.StringValue(string(resp.Visibility))
-		r.VisibilityGroupIds = make([]types.String, 0, len(resp.VisibilityGroupIds))
-		for _, v := range resp.VisibilityGroupIds {
-			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
-		}
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetGroupOnCallSchedulesRequest{
+		ID: id,
 	}
 
-	return diags
+	return &out, diags
+}
+
+func (r *GroupDataSourceModel) ToOperationsGetGroupRequest(ctx context.Context) (*operations.GetGroupRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetGroupRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupDataSourceModel) ToOperationsGetGroupVisibilityRequest(ctx context.Context) (*operations.GetGroupVisibilityRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetGroupVisibilityRequest{
+		ID: id,
+	}
+
+	return &out, diags
 }
