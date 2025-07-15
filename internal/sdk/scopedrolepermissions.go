@@ -31,8 +31,8 @@ func newScopedRolePermissions(rootSDK *OpalAPI, sdkConfig config.SDKConfiguratio
 	}
 }
 
-// GetResourceScopedRolePermissions - Returns all the scoped role permissions that apply to the given resource. Only OPAL_SCOPED_ROLE resource type supports this field.
-func (s *ScopedRolePermissions) GetResourceScopedRolePermissions(ctx context.Context, request operations.GetResourceScopedRolePermissionsRequest, opts ...operations.Option) (*operations.GetResourceScopedRolePermissionsResponse, error) {
+// GetScopedRolePermissions - Returns all the scoped role permissions that apply to the given resource. Only OPAL_SCOPED_ROLE resource type supports this field.
+func (s *ScopedRolePermissions) GetScopedRolePermissions(ctx context.Context, request operations.GetResourceScopedRolePermissionsRequest, opts ...operations.Option) (*operations.GetResourceScopedRolePermissionsResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -229,8 +229,8 @@ func (s *ScopedRolePermissions) GetResourceScopedRolePermissions(ctx context.Con
 
 }
 
-// SetResourceScopedRolePermissions - Sets all the scoped role permissions on an OPAL_SCOPED_ROLE resource.
-func (s *ScopedRolePermissions) SetResourceScopedRolePermissions(ctx context.Context, request operations.SetResourceScopedRolePermissionsRequest, opts ...operations.Option) (*operations.SetResourceScopedRolePermissionsResponse, error) {
+// UpdateScopedRolePermissions - Sets all the scoped role permissions on an OPAL_SCOPED_ROLE resource.
+func (s *ScopedRolePermissions) UpdateScopedRolePermissions(ctx context.Context, request operations.SetResourceScopedRolePermissionsRequest, opts ...operations.Option) (*operations.SetResourceScopedRolePermissionsResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
