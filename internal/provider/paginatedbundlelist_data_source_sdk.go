@@ -12,36 +12,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *PaginatedBundleListDataSourceModel) ToOperationsGetBundlesRequest(ctx context.Context) (*operations.GetBundlesRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	contains := new(string)
-	if !r.Contains.IsUnknown() && !r.Contains.IsNull() {
-		*contains = r.Contains.ValueString()
-	} else {
-		contains = nil
-	}
-	cursor := new(string)
-	if !r.Cursor.IsUnknown() && !r.Cursor.IsNull() {
-		*cursor = r.Cursor.ValueString()
-	} else {
-		cursor = nil
-	}
-	pageSize := new(int64)
-	if !r.PageSize.IsUnknown() && !r.PageSize.IsNull() {
-		*pageSize = r.PageSize.ValueInt64()
-	} else {
-		pageSize = nil
-	}
-	out := operations.GetBundlesRequest{
-		Contains: contains,
-		Cursor:   cursor,
-		PageSize: pageSize,
-	}
-
-	return &out, diags
-}
-
 func (r *PaginatedBundleListDataSourceModel) RefreshFromSharedPaginatedBundleList(ctx context.Context, resp *shared.PaginatedBundleList) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -81,4 +51,34 @@ func (r *PaginatedBundleListDataSourceModel) RefreshFromSharedPaginatedBundleLis
 	}
 
 	return diags
+}
+
+func (r *PaginatedBundleListDataSourceModel) ToOperationsGetBundlesRequest(ctx context.Context) (*operations.GetBundlesRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	contains := new(string)
+	if !r.Contains.IsUnknown() && !r.Contains.IsNull() {
+		*contains = r.Contains.ValueString()
+	} else {
+		contains = nil
+	}
+	cursor := new(string)
+	if !r.Cursor.IsUnknown() && !r.Cursor.IsNull() {
+		*cursor = r.Cursor.ValueString()
+	} else {
+		cursor = nil
+	}
+	pageSize := new(int64)
+	if !r.PageSize.IsUnknown() && !r.PageSize.IsNull() {
+		*pageSize = r.PageSize.ValueInt64()
+	} else {
+		pageSize = nil
+	}
+	out := operations.GetBundlesRequest{
+		Contains: contains,
+		Cursor:   cursor,
+		PageSize: pageSize,
+	}
+
+	return &out, diags
 }

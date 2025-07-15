@@ -9,6 +9,17 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
 )
 
+func (r *ResourceReviewersListDataSourceModel) RefreshFromString(ctx context.Context, resp []string) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	r.Data = make([]types.String, 0, len(resp))
+	for _, v := range resp {
+		r.Data = append(r.Data, types.StringValue(v))
+	}
+
+	return diags
+}
+
 func (r *ResourceReviewersListDataSourceModel) ToOperationsGetResourceReviewersRequest(ctx context.Context) (*operations.GetResourceReviewersRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -20,15 +31,4 @@ func (r *ResourceReviewersListDataSourceModel) ToOperationsGetResourceReviewersR
 	}
 
 	return &out, diags
-}
-
-func (r *ResourceReviewersListDataSourceModel) RefreshFromString(ctx context.Context, resp []string) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	r.Data = make([]types.String, 0, len(resp))
-	for _, v := range resp {
-		r.Data = append(r.Data, types.StringValue(v))
-	}
-
-	return diags
 }

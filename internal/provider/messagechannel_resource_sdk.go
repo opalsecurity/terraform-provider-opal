@@ -10,34 +10,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *MessageChannelResourceModel) ToSharedCreateMessageChannelInfo(ctx context.Context) (*shared.CreateMessageChannelInfo, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var remoteID string
-	remoteID = r.RemoteID.ValueString()
-
-	thirdPartyProvider := shared.MessageChannelProviderEnum(r.ThirdPartyProvider.ValueString())
-	out := shared.CreateMessageChannelInfo{
-		RemoteID:           remoteID,
-		ThirdPartyProvider: thirdPartyProvider,
-	}
-
-	return &out, diags
-}
-
-func (r *MessageChannelResourceModel) ToOperationsGetMessageChannelIDRequest(ctx context.Context) (*operations.GetMessageChannelIDRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.GetMessageChannelIDRequest{
-		ID: id,
-	}
-
-	return &out, diags
-}
-
 func (r *MessageChannelResourceModel) RefreshFromSharedMessageChannel(ctx context.Context, resp *shared.MessageChannel) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -54,4 +26,32 @@ func (r *MessageChannelResourceModel) RefreshFromSharedMessageChannel(ctx contex
 	}
 
 	return diags
+}
+
+func (r *MessageChannelResourceModel) ToOperationsGetMessageChannelIDRequest(ctx context.Context) (*operations.GetMessageChannelIDRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetMessageChannelIDRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *MessageChannelResourceModel) ToSharedCreateMessageChannelInfo(ctx context.Context) (*shared.CreateMessageChannelInfo, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var remoteID string
+	remoteID = r.RemoteID.ValueString()
+
+	thirdPartyProvider := shared.MessageChannelProviderEnum(r.ThirdPartyProvider.ValueString())
+	out := shared.CreateMessageChannelInfo{
+		RemoteID:           remoteID,
+		ThirdPartyProvider: thirdPartyProvider,
+	}
+
+	return &out, diags
 }

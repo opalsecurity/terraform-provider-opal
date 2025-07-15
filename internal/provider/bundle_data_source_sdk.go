@@ -11,32 +11,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *BundleDataSourceModel) ToOperationsGetBundleRequest(ctx context.Context) (*operations.GetBundleRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var bundleID string
-	bundleID = r.BundleID.ValueString()
-
-	out := operations.GetBundleRequest{
-		BundleID: bundleID,
-	}
-
-	return &out, diags
-}
-
-func (r *BundleDataSourceModel) ToOperationsGetBundleVisibilityRequest(ctx context.Context) (*operations.GetBundleVisibilityRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var bundleID string
-	bundleID = r.BundleID.ValueString()
-
-	out := operations.GetBundleVisibilityRequest{
-		BundleID: bundleID,
-	}
-
-	return &out, diags
-}
-
 func (r *BundleDataSourceModel) RefreshFromSharedBundle(ctx context.Context, resp *shared.Bundle) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -67,4 +41,30 @@ func (r *BundleDataSourceModel) RefreshFromSharedVisibilityInfo(ctx context.Cont
 	}
 
 	return diags
+}
+
+func (r *BundleDataSourceModel) ToOperationsGetBundleRequest(ctx context.Context) (*operations.GetBundleRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var bundleID string
+	bundleID = r.BundleID.ValueString()
+
+	out := operations.GetBundleRequest{
+		BundleID: bundleID,
+	}
+
+	return &out, diags
+}
+
+func (r *BundleDataSourceModel) ToOperationsGetBundleVisibilityRequest(ctx context.Context) (*operations.GetBundleVisibilityRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var bundleID string
+	bundleID = r.BundleID.ValueString()
+
+	out := operations.GetBundleVisibilityRequest{
+		BundleID: bundleID,
+	}
+
+	return &out, diags
 }

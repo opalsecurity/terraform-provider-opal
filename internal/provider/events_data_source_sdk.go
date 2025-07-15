@@ -13,6 +13,65 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
+func (r *EventsDataSourceModel) RefreshFromSharedPaginatedEventList(ctx context.Context, resp *shared.PaginatedEventList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.Next = types.StringPointerValue(resp.Next)
+		r.Previous = types.StringPointerValue(resp.Previous)
+		r.Results = []tfTypes.Event{}
+		if len(r.Results) > len(resp.Results) {
+			r.Results = r.Results[:len(resp.Results)]
+		}
+		for resultsCount, resultsItem := range resp.Results {
+			var results tfTypes.Event
+			results.ActorEmail = types.StringPointerValue(resultsItem.ActorEmail)
+			results.ActorIPAddress = types.StringPointerValue(resultsItem.ActorIPAddress)
+			actorNameResult, _ := json.Marshal(resultsItem.ActorName)
+			results.ActorName = types.StringValue(string(actorNameResult))
+			results.ActorUserID = types.StringValue(resultsItem.ActorUserID)
+			results.APITokenName = types.StringPointerValue(resultsItem.APITokenName)
+			results.APITokenPreview = types.StringPointerValue(resultsItem.APITokenPreview)
+			results.CreatedAt = types.StringValue(typeconvert.TimeToString(resultsItem.CreatedAt))
+			results.EventID = types.StringValue(resultsItem.EventID)
+			results.EventType = types.StringValue(resultsItem.EventType)
+			results.SubEvents = []tfTypes.SubEvent{}
+			for subEventsCount, subEventsItem := range resultsItem.SubEvents {
+				var subEvents tfTypes.SubEvent
+				if subEventsItem.AdditionalProperties == nil {
+					subEvents.AdditionalProperties = types.StringNull()
+				} else {
+					additionalPropertiesResult, _ := json.Marshal(subEventsItem.AdditionalProperties)
+					subEvents.AdditionalProperties = types.StringValue(string(additionalPropertiesResult))
+				}
+				subEvents.SubEventType = types.StringValue(subEventsItem.SubEventType)
+				if subEventsCount+1 > len(results.SubEvents) {
+					results.SubEvents = append(results.SubEvents, subEvents)
+				} else {
+					results.SubEvents[subEventsCount].AdditionalProperties = subEvents.AdditionalProperties
+					results.SubEvents[subEventsCount].SubEventType = subEvents.SubEventType
+				}
+			}
+			if resultsCount+1 > len(r.Results) {
+				r.Results = append(r.Results, results)
+			} else {
+				r.Results[resultsCount].ActorEmail = results.ActorEmail
+				r.Results[resultsCount].ActorIPAddress = results.ActorIPAddress
+				r.Results[resultsCount].ActorName = results.ActorName
+				r.Results[resultsCount].ActorUserID = results.ActorUserID
+				r.Results[resultsCount].APITokenName = results.APITokenName
+				r.Results[resultsCount].APITokenPreview = results.APITokenPreview
+				r.Results[resultsCount].CreatedAt = results.CreatedAt
+				r.Results[resultsCount].EventID = results.EventID
+				r.Results[resultsCount].EventType = results.EventType
+				r.Results[resultsCount].SubEvents = results.SubEvents
+			}
+		}
+	}
+
+	return diags
+}
+
 func (r *EventsDataSourceModel) ToOperationsGetEventsRequest(ctx context.Context) (*operations.GetEventsRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -76,63 +135,4 @@ func (r *EventsDataSourceModel) ToOperationsGetEventsRequest(ctx context.Context
 	}
 
 	return &out, diags
-}
-
-func (r *EventsDataSourceModel) RefreshFromSharedPaginatedEventList(ctx context.Context, resp *shared.PaginatedEventList) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if resp != nil {
-		r.Next = types.StringPointerValue(resp.Next)
-		r.Previous = types.StringPointerValue(resp.Previous)
-		r.Results = []tfTypes.Event{}
-		if len(r.Results) > len(resp.Results) {
-			r.Results = r.Results[:len(resp.Results)]
-		}
-		for resultsCount, resultsItem := range resp.Results {
-			var results tfTypes.Event
-			results.ActorEmail = types.StringPointerValue(resultsItem.ActorEmail)
-			results.ActorIPAddress = types.StringPointerValue(resultsItem.ActorIPAddress)
-			actorNameResult, _ := json.Marshal(resultsItem.ActorName)
-			results.ActorName = types.StringValue(string(actorNameResult))
-			results.ActorUserID = types.StringValue(resultsItem.ActorUserID)
-			results.APITokenName = types.StringPointerValue(resultsItem.APITokenName)
-			results.APITokenPreview = types.StringPointerValue(resultsItem.APITokenPreview)
-			results.CreatedAt = types.StringValue(typeconvert.TimeToString(resultsItem.CreatedAt))
-			results.EventID = types.StringValue(resultsItem.EventID)
-			results.EventType = types.StringValue(resultsItem.EventType)
-			results.SubEvents = []tfTypes.SubEvent{}
-			for subEventsCount, subEventsItem := range resultsItem.SubEvents {
-				var subEvents tfTypes.SubEvent
-				if subEventsItem.AdditionalProperties == nil {
-					subEvents.AdditionalProperties = types.StringNull()
-				} else {
-					additionalPropertiesResult, _ := json.Marshal(subEventsItem.AdditionalProperties)
-					subEvents.AdditionalProperties = types.StringValue(string(additionalPropertiesResult))
-				}
-				subEvents.SubEventType = types.StringValue(subEventsItem.SubEventType)
-				if subEventsCount+1 > len(results.SubEvents) {
-					results.SubEvents = append(results.SubEvents, subEvents)
-				} else {
-					results.SubEvents[subEventsCount].AdditionalProperties = subEvents.AdditionalProperties
-					results.SubEvents[subEventsCount].SubEventType = subEvents.SubEventType
-				}
-			}
-			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results)
-			} else {
-				r.Results[resultsCount].ActorEmail = results.ActorEmail
-				r.Results[resultsCount].ActorIPAddress = results.ActorIPAddress
-				r.Results[resultsCount].ActorName = results.ActorName
-				r.Results[resultsCount].ActorUserID = results.ActorUserID
-				r.Results[resultsCount].APITokenName = results.APITokenName
-				r.Results[resultsCount].APITokenPreview = results.APITokenPreview
-				r.Results[resultsCount].CreatedAt = results.CreatedAt
-				r.Results[resultsCount].EventID = results.EventID
-				r.Results[resultsCount].EventType = results.EventType
-				r.Results[resultsCount].SubEvents = results.SubEvents
-			}
-		}
-	}
-
-	return diags
 }

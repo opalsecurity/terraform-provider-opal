@@ -11,492 +11,52 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shared.CreateGroupInfo, diag.Diagnostics) {
+func (r *GroupResourceModel) RefreshFromOperationsGetGroupMessageChannelsResponseBody(ctx context.Context, resp *operations.GetGroupMessageChannelsResponseBody) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	var appID string
-	appID = r.AppID.ValueString()
-
-	customRequestNotification := new(string)
-	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
-		*customRequestNotification = r.CustomRequestNotification.ValueString()
-	} else {
-		customRequestNotification = nil
-	}
-	description := new(string)
-	if !r.Description.IsUnknown() && !r.Description.IsNull() {
-		*description = r.Description.ValueString()
-	} else {
-		description = nil
-	}
-	groupType := shared.GroupTypeEnum(r.GroupType.ValueString())
-	var name string
-	name = r.Name.ValueString()
-
-	var remoteInfo *shared.GroupRemoteInfo
-	if r.RemoteInfo != nil {
-		var activeDirectoryGroup *shared.ActiveDirectoryGroup
-		if r.RemoteInfo.ActiveDirectoryGroup != nil {
-			var groupID string
-			groupID = r.RemoteInfo.ActiveDirectoryGroup.GroupID.ValueString()
-
-			activeDirectoryGroup = &shared.ActiveDirectoryGroup{
-				GroupID: groupID,
-			}
+	if resp != nil {
+		r.MessageChannels.Channels = []tfTypes.MessageChannel{}
+		if len(r.MessageChannels.Channels) > len(resp.Channels) {
+			r.MessageChannels.Channels = r.MessageChannels.Channels[:len(resp.Channels)]
 		}
-		var azureAdMicrosoft365Group *shared.AzureAdMicrosoft365Group
-		if r.RemoteInfo.AzureAdMicrosoft365Group != nil {
-			var groupId1 string
-			groupId1 = r.RemoteInfo.AzureAdMicrosoft365Group.GroupID.ValueString()
-
-			azureAdMicrosoft365Group = &shared.AzureAdMicrosoft365Group{
-				GroupID: groupId1,
-			}
-		}
-		var azureAdSecurityGroup *shared.AzureAdSecurityGroup
-		if r.RemoteInfo.AzureAdSecurityGroup != nil {
-			var groupId2 string
-			groupId2 = r.RemoteInfo.AzureAdSecurityGroup.GroupID.ValueString()
-
-			azureAdSecurityGroup = &shared.AzureAdSecurityGroup{
-				GroupID: groupId2,
-			}
-		}
-		var duoGroup *shared.DuoGroup
-		if r.RemoteInfo.DuoGroup != nil {
-			var groupId3 string
-			groupId3 = r.RemoteInfo.DuoGroup.GroupID.ValueString()
-
-			duoGroup = &shared.DuoGroup{
-				GroupID: groupId3,
-			}
-		}
-		var githubTeam *shared.GithubTeam
-		if r.RemoteInfo.GithubTeam != nil {
-			var teamSlug string
-			teamSlug = r.RemoteInfo.GithubTeam.TeamSlug.ValueString()
-
-			githubTeam = &shared.GithubTeam{
-				TeamSlug: teamSlug,
-			}
-		}
-		var gitlabGroup *shared.GitlabGroup
-		if r.RemoteInfo.GitlabGroup != nil {
-			var groupId4 string
-			groupId4 = r.RemoteInfo.GitlabGroup.GroupID.ValueString()
-
-			gitlabGroup = &shared.GitlabGroup{
-				GroupID: groupId4,
-			}
-		}
-		var googleGroup *shared.GoogleGroup
-		if r.RemoteInfo.GoogleGroup != nil {
-			var groupId5 string
-			groupId5 = r.RemoteInfo.GoogleGroup.GroupID.ValueString()
-
-			googleGroup = &shared.GoogleGroup{
-				GroupID: groupId5,
-			}
-		}
-		var ldapGroup *shared.LdapGroup
-		if r.RemoteInfo.LdapGroup != nil {
-			var groupId6 string
-			groupId6 = r.RemoteInfo.LdapGroup.GroupID.ValueString()
-
-			ldapGroup = &shared.LdapGroup{
-				GroupID: groupId6,
-			}
-		}
-		var oktaGroup *shared.OktaGroup
-		if r.RemoteInfo.OktaGroup != nil {
-			var groupId7 string
-			groupId7 = r.RemoteInfo.OktaGroup.GroupID.ValueString()
-
-			oktaGroup = &shared.OktaGroup{
-				GroupID: groupId7,
-			}
-		}
-		var oktaGroupRule *shared.OktaGroupRule
-		if r.RemoteInfo.OktaGroupRule != nil {
-			var ruleID string
-			ruleID = r.RemoteInfo.OktaGroupRule.RuleID.ValueString()
-
-			oktaGroupRule = &shared.OktaGroupRule{
-				RuleID: ruleID,
-			}
-		}
-		var snowflakeRole *shared.SnowflakeRole
-		if r.RemoteInfo.SnowflakeRole != nil {
-			var roleID string
-			roleID = r.RemoteInfo.SnowflakeRole.RoleID.ValueString()
-
-			snowflakeRole = &shared.SnowflakeRole{
-				RoleID: roleID,
-			}
-		}
-		var workdayUserSecurityGroup *shared.WorkdayUserSecurityGroup
-		if r.RemoteInfo.WorkdayUserSecurityGroup != nil {
-			var groupId8 string
-			groupId8 = r.RemoteInfo.WorkdayUserSecurityGroup.GroupID.ValueString()
-
-			workdayUserSecurityGroup = &shared.WorkdayUserSecurityGroup{
-				GroupID: groupId8,
-			}
-		}
-		remoteInfo = &shared.GroupRemoteInfo{
-			ActiveDirectoryGroup:     activeDirectoryGroup,
-			AzureAdMicrosoft365Group: azureAdMicrosoft365Group,
-			AzureAdSecurityGroup:     azureAdSecurityGroup,
-			DuoGroup:                 duoGroup,
-			GithubTeam:               githubTeam,
-			GitlabGroup:              gitlabGroup,
-			GoogleGroup:              googleGroup,
-			LdapGroup:                ldapGroup,
-			OktaGroup:                oktaGroup,
-			OktaGroupRule:            oktaGroupRule,
-			SnowflakeRole:            snowflakeRole,
-			WorkdayUserSecurityGroup: workdayUserSecurityGroup,
-		}
-	}
-	riskSensitivityOverride := new(shared.RiskSensitivityEnum)
-	if !r.RiskSensitivityOverride.IsUnknown() && !r.RiskSensitivityOverride.IsNull() {
-		*riskSensitivityOverride = shared.RiskSensitivityEnum(r.RiskSensitivityOverride.ValueString())
-	} else {
-		riskSensitivityOverride = nil
-	}
-	out := shared.CreateGroupInfo{
-		AppID:                     appID,
-		CustomRequestNotification: customRequestNotification,
-		Description:               description,
-		GroupType:                 groupType,
-		Name:                      name,
-		RemoteInfo:                remoteInfo,
-		RiskSensitivityOverride:   riskSensitivityOverride,
-	}
-
-	return &out, diags
-}
-
-func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shared.UpdateGroupInfo, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	adminOwnerID := new(string)
-	if !r.AdminOwnerID.IsUnknown() && !r.AdminOwnerID.IsNull() {
-		*adminOwnerID = r.AdminOwnerID.ValueString()
-	} else {
-		adminOwnerID = nil
-	}
-	customRequestNotification := new(string)
-	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
-		*customRequestNotification = r.CustomRequestNotification.ValueString()
-	} else {
-		customRequestNotification = nil
-	}
-	description := new(string)
-	if !r.Description.IsUnknown() && !r.Description.IsNull() {
-		*description = r.Description.ValueString()
-	} else {
-		description = nil
-	}
-	groupLeaderUserIds := make([]string, 0, len(r.GroupLeaderUserIds))
-	for _, groupLeaderUserIdsItem := range r.GroupLeaderUserIds {
-		groupLeaderUserIds = append(groupLeaderUserIds, groupLeaderUserIdsItem.ValueString())
-	}
-	var id string
-	id = r.ID.ValueString()
-
-	name := new(string)
-	if !r.Name.IsUnknown() && !r.Name.IsNull() {
-		*name = r.Name.ValueString()
-	} else {
-		name = nil
-	}
-	requestConfigurations := make([]shared.RequestConfiguration, 0, len(r.RequestConfigurations))
-	for _, requestConfigurationsItem := range r.RequestConfigurations {
-		var allowRequests bool
-		allowRequests = requestConfigurationsItem.AllowRequests.ValueBool()
-
-		var autoApproval bool
-		autoApproval = requestConfigurationsItem.AutoApproval.ValueBool()
-
-		var condition *shared.Condition
-		if requestConfigurationsItem.Condition != nil {
-			groupIds := make([]string, 0, len(requestConfigurationsItem.Condition.GroupIds))
-			for _, groupIdsItem := range requestConfigurationsItem.Condition.GroupIds {
-				groupIds = append(groupIds, groupIdsItem.ValueString())
-			}
-			roleRemoteIds := make([]string, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
-			for _, roleRemoteIdsItem := range requestConfigurationsItem.Condition.RoleRemoteIds {
-				roleRemoteIds = append(roleRemoteIds, roleRemoteIdsItem.ValueString())
-			}
-			condition = &shared.Condition{
-				GroupIds:      groupIds,
-				RoleRemoteIds: roleRemoteIds,
-			}
-		}
-		maxDuration := new(int64)
-		if !requestConfigurationsItem.MaxDuration.IsUnknown() && !requestConfigurationsItem.MaxDuration.IsNull() {
-			*maxDuration = requestConfigurationsItem.MaxDuration.ValueInt64()
-		} else {
-			maxDuration = nil
-		}
-		var priority int64
-		priority = requestConfigurationsItem.Priority.ValueInt64()
-
-		recommendedDuration := new(int64)
-		if !requestConfigurationsItem.RecommendedDuration.IsUnknown() && !requestConfigurationsItem.RecommendedDuration.IsNull() {
-			*recommendedDuration = requestConfigurationsItem.RecommendedDuration.ValueInt64()
-		} else {
-			recommendedDuration = nil
-		}
-		requestTemplateID := new(string)
-		if !requestConfigurationsItem.RequestTemplateID.IsUnknown() && !requestConfigurationsItem.RequestTemplateID.IsNull() {
-			*requestTemplateID = requestConfigurationsItem.RequestTemplateID.ValueString()
-		} else {
-			requestTemplateID = nil
-		}
-		var requireMfaToRequest bool
-		requireMfaToRequest = requestConfigurationsItem.RequireMfaToRequest.ValueBool()
-
-		var requireSupportTicket bool
-		requireSupportTicket = requestConfigurationsItem.RequireSupportTicket.ValueBool()
-
-		reviewerStages := make([]shared.ReviewerStage, 0, len(requestConfigurationsItem.ReviewerStages))
-		for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
-			operator := new(shared.Operator)
-			if !reviewerStagesItem.Operator.IsUnknown() && !reviewerStagesItem.Operator.IsNull() {
-				*operator = shared.Operator(reviewerStagesItem.Operator.ValueString())
+		for channelsCount, channelsItem := range resp.Channels {
+			var channels tfTypes.MessageChannel
+			channels.ID = types.StringValue(channelsItem.ID)
+			channels.IsPrivate = types.BoolPointerValue(channelsItem.IsPrivate)
+			channels.Name = types.StringPointerValue(channelsItem.Name)
+			channels.RemoteID = types.StringPointerValue(channelsItem.RemoteID)
+			if channelsItem.ThirdPartyProvider != nil {
+				channels.ThirdPartyProvider = types.StringValue(string(*channelsItem.ThirdPartyProvider))
 			} else {
-				operator = nil
+				channels.ThirdPartyProvider = types.StringNull()
 			}
-			ownerIds := make([]string, 0, len(reviewerStagesItem.OwnerIds))
-			for _, ownerIdsItem := range reviewerStagesItem.OwnerIds {
-				ownerIds = append(ownerIds, ownerIdsItem.ValueString())
-			}
-			requireAdminApproval := new(bool)
-			if !reviewerStagesItem.RequireAdminApproval.IsUnknown() && !reviewerStagesItem.RequireAdminApproval.IsNull() {
-				*requireAdminApproval = reviewerStagesItem.RequireAdminApproval.ValueBool()
+			if channelsCount+1 > len(r.MessageChannels.Channels) {
+				r.MessageChannels.Channels = append(r.MessageChannels.Channels, channels)
 			} else {
-				requireAdminApproval = nil
+				r.MessageChannels.Channels[channelsCount].ID = channels.ID
+				r.MessageChannels.Channels[channelsCount].IsPrivate = channels.IsPrivate
+				r.MessageChannels.Channels[channelsCount].Name = channels.Name
+				r.MessageChannels.Channels[channelsCount].RemoteID = channels.RemoteID
+				r.MessageChannels.Channels[channelsCount].ThirdPartyProvider = channels.ThirdPartyProvider
 			}
-			requireManagerApproval := new(bool)
-			if !reviewerStagesItem.RequireManagerApproval.IsUnknown() && !reviewerStagesItem.RequireManagerApproval.IsNull() {
-				*requireManagerApproval = reviewerStagesItem.RequireManagerApproval.ValueBool()
-			} else {
-				requireManagerApproval = nil
-			}
-			reviewerStages = append(reviewerStages, shared.ReviewerStage{
-				Operator:               operator,
-				OwnerIds:               ownerIds,
-				RequireAdminApproval:   requireAdminApproval,
-				RequireManagerApproval: requireManagerApproval,
-			})
 		}
-		requestConfigurations = append(requestConfigurations, shared.RequestConfiguration{
-			AllowRequests:        allowRequests,
-			AutoApproval:         autoApproval,
-			Condition:            condition,
-			MaxDuration:          maxDuration,
-			Priority:             priority,
-			RecommendedDuration:  recommendedDuration,
-			RequestTemplateID:    requestTemplateID,
-			RequireMfaToRequest:  requireMfaToRequest,
-			RequireSupportTicket: requireSupportTicket,
-			ReviewerStages:       reviewerStages,
-		})
-	}
-	requireMfaToApprove := new(bool)
-	if !r.RequireMfaToApprove.IsUnknown() && !r.RequireMfaToApprove.IsNull() {
-		*requireMfaToApprove = r.RequireMfaToApprove.ValueBool()
-	} else {
-		requireMfaToApprove = nil
-	}
-	riskSensitivityOverride := new(shared.RiskSensitivityEnum)
-	if !r.RiskSensitivityOverride.IsUnknown() && !r.RiskSensitivityOverride.IsNull() {
-		*riskSensitivityOverride = shared.RiskSensitivityEnum(r.RiskSensitivityOverride.ValueString())
-	} else {
-		riskSensitivityOverride = nil
-	}
-	out := shared.UpdateGroupInfo{
-		AdminOwnerID:              adminOwnerID,
-		CustomRequestNotification: customRequestNotification,
-		Description:               description,
-		GroupLeaderUserIds:        groupLeaderUserIds,
-		ID:                        id,
-		Name:                      name,
-		RequestConfigurations:     requestConfigurations,
-		RequireMfaToApprove:       requireMfaToApprove,
-		RiskSensitivityOverride:   riskSensitivityOverride,
 	}
 
-	return &out, diags
+	return diags
 }
 
-func (r *GroupResourceModel) ToSharedUpdateGroupInfoList(ctx context.Context) (*shared.UpdateGroupInfoList, diag.Diagnostics) {
+func (r *GroupResourceModel) RefreshFromOperationsGetGroupVisibilityResponseBody(ctx context.Context, resp *operations.GetGroupVisibilityResponseBody) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	groups, groupsDiags := r.ToSharedUpdateGroupInfo(ctx)
-	diags.Append(groupsDiags...)
-
-	if diags.HasError() {
-		return nil, diags
+	if resp != nil {
+		r.Visibility = types.StringValue(string(resp.Visibility))
+		r.VisibilityGroupIds = make([]types.String, 0, len(resp.VisibilityGroupIds))
+		for _, v := range resp.VisibilityGroupIds {
+			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
+		}
 	}
 
-	out := shared.UpdateGroupInfoList{
-		Groups: []shared.UpdateGroupInfo{*groups},
-	}
-
-	return &out, diags
-}
-
-func (r *GroupResourceModel) ToSharedMessageChannelIDList(ctx context.Context) (*shared.MessageChannelIDList, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	messageChannelIds := make([]string, 0, len(r.MessageChannelIds))
-	for _, messageChannelIdsItem := range r.MessageChannelIds {
-		messageChannelIds = append(messageChannelIds, messageChannelIdsItem.ValueString())
-	}
-	out := shared.MessageChannelIDList{
-		MessageChannelIds: messageChannelIds,
-	}
-
-	return &out, diags
-}
-
-func (r *GroupResourceModel) ToOperationsUpdateGroupMessageChannelsRequest(ctx context.Context) (*operations.UpdateGroupMessageChannelsRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	messageChannelIDList, messageChannelIDListDiags := r.ToSharedMessageChannelIDList(ctx)
-	diags.Append(messageChannelIDListDiags...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.UpdateGroupMessageChannelsRequest{
-		MessageChannelIDList: *messageChannelIDList,
-		ID:                   id,
-	}
-
-	return &out, diags
-}
-
-func (r *GroupResourceModel) ToSharedVisibilityInfo(ctx context.Context) (*shared.VisibilityInfo, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	visibility := shared.VisibilityTypeEnum(r.Visibility.ValueString())
-	visibilityGroupIds := make([]string, 0, len(r.VisibilityGroupIds))
-	for _, visibilityGroupIdsItem := range r.VisibilityGroupIds {
-		visibilityGroupIds = append(visibilityGroupIds, visibilityGroupIdsItem.ValueString())
-	}
-	out := shared.VisibilityInfo{
-		Visibility:         visibility,
-		VisibilityGroupIds: visibilityGroupIds,
-	}
-
-	return &out, diags
-}
-
-func (r *GroupResourceModel) ToOperationsUpdateGroupVisibilityRequest(ctx context.Context) (*operations.UpdateGroupVisibilityRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	visibilityInfo, visibilityInfoDiags := r.ToSharedVisibilityInfo(ctx)
-	diags.Append(visibilityInfoDiags...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.UpdateGroupVisibilityRequest{
-		VisibilityInfo: *visibilityInfo,
-		ID:             id,
-	}
-
-	return &out, diags
-}
-
-func (r *GroupResourceModel) ToOperationsUpdateGroupOnCallSchedulesRequest(ctx context.Context) (*operations.UpdateGroupOnCallSchedulesRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.UpdateGroupOnCallSchedulesRequest{
-		ID: id,
-	}
-
-	return &out, diags
-}
-
-func (r *GroupResourceModel) ToOperationsGetGroupRequest(ctx context.Context) (*operations.GetGroupRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.GetGroupRequest{
-		ID: id,
-	}
-
-	return &out, diags
-}
-
-func (r *GroupResourceModel) ToOperationsGetGroupMessageChannelsRequest(ctx context.Context) (*operations.GetGroupMessageChannelsRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.GetGroupMessageChannelsRequest{
-		ID: id,
-	}
-
-	return &out, diags
-}
-
-func (r *GroupResourceModel) ToOperationsGetGroupOnCallSchedulesRequest(ctx context.Context) (*operations.GetGroupOnCallSchedulesRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.GetGroupOnCallSchedulesRequest{
-		ID: id,
-	}
-
-	return &out, diags
-}
-
-func (r *GroupResourceModel) ToOperationsGetGroupVisibilityRequest(ctx context.Context) (*operations.GetGroupVisibilityRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.GetGroupVisibilityRequest{
-		ID: id,
-	}
-
-	return &out, diags
-}
-
-func (r *GroupResourceModel) ToOperationsDeleteGroupRequest(ctx context.Context) (*operations.DeleteGroupRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.DeleteGroupRequest{
-		ID: id,
-	}
-
-	return &out, diags
+	return diags
 }
 
 func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *shared.Group) diag.Diagnostics {
@@ -765,50 +325,490 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(ctx context.Contex
 	return diags
 }
 
-func (r *GroupResourceModel) RefreshFromOperationsGetGroupMessageChannelsResponseBody(ctx context.Context, resp *operations.GetGroupMessageChannelsResponseBody) diag.Diagnostics {
+func (r *GroupResourceModel) ToOperationsDeleteGroupRequest(ctx context.Context) (*operations.DeleteGroupRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if resp != nil {
-		r.MessageChannels.Channels = []tfTypes.MessageChannel{}
-		if len(r.MessageChannels.Channels) > len(resp.Channels) {
-			r.MessageChannels.Channels = r.MessageChannels.Channels[:len(resp.Channels)]
-		}
-		for channelsCount, channelsItem := range resp.Channels {
-			var channels tfTypes.MessageChannel
-			channels.ID = types.StringValue(channelsItem.ID)
-			channels.IsPrivate = types.BoolPointerValue(channelsItem.IsPrivate)
-			channels.Name = types.StringPointerValue(channelsItem.Name)
-			channels.RemoteID = types.StringPointerValue(channelsItem.RemoteID)
-			if channelsItem.ThirdPartyProvider != nil {
-				channels.ThirdPartyProvider = types.StringValue(string(*channelsItem.ThirdPartyProvider))
-			} else {
-				channels.ThirdPartyProvider = types.StringNull()
-			}
-			if channelsCount+1 > len(r.MessageChannels.Channels) {
-				r.MessageChannels.Channels = append(r.MessageChannels.Channels, channels)
-			} else {
-				r.MessageChannels.Channels[channelsCount].ID = channels.ID
-				r.MessageChannels.Channels[channelsCount].IsPrivate = channels.IsPrivate
-				r.MessageChannels.Channels[channelsCount].Name = channels.Name
-				r.MessageChannels.Channels[channelsCount].RemoteID = channels.RemoteID
-				r.MessageChannels.Channels[channelsCount].ThirdPartyProvider = channels.ThirdPartyProvider
-			}
-		}
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.DeleteGroupRequest{
+		ID: id,
 	}
 
-	return diags
+	return &out, diags
 }
 
-func (r *GroupResourceModel) RefreshFromOperationsGetGroupVisibilityResponseBody(ctx context.Context, resp *operations.GetGroupVisibilityResponseBody) diag.Diagnostics {
+func (r *GroupResourceModel) ToOperationsGetGroupMessageChannelsRequest(ctx context.Context) (*operations.GetGroupMessageChannelsRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	if resp != nil {
-		r.Visibility = types.StringValue(string(resp.Visibility))
-		r.VisibilityGroupIds = make([]types.String, 0, len(resp.VisibilityGroupIds))
-		for _, v := range resp.VisibilityGroupIds {
-			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
-		}
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetGroupMessageChannelsRequest{
+		ID: id,
 	}
 
-	return diags
+	return &out, diags
+}
+
+func (r *GroupResourceModel) ToOperationsGetGroupOnCallSchedulesRequest(ctx context.Context) (*operations.GetGroupOnCallSchedulesRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetGroupOnCallSchedulesRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupResourceModel) ToOperationsGetGroupRequest(ctx context.Context) (*operations.GetGroupRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetGroupRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupResourceModel) ToOperationsGetGroupVisibilityRequest(ctx context.Context) (*operations.GetGroupVisibilityRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetGroupVisibilityRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupResourceModel) ToOperationsUpdateGroupMessageChannelsRequest(ctx context.Context) (*operations.UpdateGroupMessageChannelsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	messageChannelIDList, messageChannelIDListDiags := r.ToSharedMessageChannelIDList(ctx)
+	diags.Append(messageChannelIDListDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.UpdateGroupMessageChannelsRequest{
+		MessageChannelIDList: *messageChannelIDList,
+		ID:                   id,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupResourceModel) ToOperationsUpdateGroupOnCallSchedulesRequest(ctx context.Context) (*operations.UpdateGroupOnCallSchedulesRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.UpdateGroupOnCallSchedulesRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupResourceModel) ToOperationsUpdateGroupVisibilityRequest(ctx context.Context) (*operations.UpdateGroupVisibilityRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	visibilityInfo, visibilityInfoDiags := r.ToSharedVisibilityInfo(ctx)
+	diags.Append(visibilityInfoDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.UpdateGroupVisibilityRequest{
+		VisibilityInfo: *visibilityInfo,
+		ID:             id,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shared.CreateGroupInfo, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var appID string
+	appID = r.AppID.ValueString()
+
+	customRequestNotification := new(string)
+	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
+		*customRequestNotification = r.CustomRequestNotification.ValueString()
+	} else {
+		customRequestNotification = nil
+	}
+	description := new(string)
+	if !r.Description.IsUnknown() && !r.Description.IsNull() {
+		*description = r.Description.ValueString()
+	} else {
+		description = nil
+	}
+	groupType := shared.GroupTypeEnum(r.GroupType.ValueString())
+	var name string
+	name = r.Name.ValueString()
+
+	var remoteInfo *shared.GroupRemoteInfo
+	if r.RemoteInfo != nil {
+		var activeDirectoryGroup *shared.ActiveDirectoryGroup
+		if r.RemoteInfo.ActiveDirectoryGroup != nil {
+			var groupID string
+			groupID = r.RemoteInfo.ActiveDirectoryGroup.GroupID.ValueString()
+
+			activeDirectoryGroup = &shared.ActiveDirectoryGroup{
+				GroupID: groupID,
+			}
+		}
+		var azureAdMicrosoft365Group *shared.AzureAdMicrosoft365Group
+		if r.RemoteInfo.AzureAdMicrosoft365Group != nil {
+			var groupId1 string
+			groupId1 = r.RemoteInfo.AzureAdMicrosoft365Group.GroupID.ValueString()
+
+			azureAdMicrosoft365Group = &shared.AzureAdMicrosoft365Group{
+				GroupID: groupId1,
+			}
+		}
+		var azureAdSecurityGroup *shared.AzureAdSecurityGroup
+		if r.RemoteInfo.AzureAdSecurityGroup != nil {
+			var groupId2 string
+			groupId2 = r.RemoteInfo.AzureAdSecurityGroup.GroupID.ValueString()
+
+			azureAdSecurityGroup = &shared.AzureAdSecurityGroup{
+				GroupID: groupId2,
+			}
+		}
+		var duoGroup *shared.DuoGroup
+		if r.RemoteInfo.DuoGroup != nil {
+			var groupId3 string
+			groupId3 = r.RemoteInfo.DuoGroup.GroupID.ValueString()
+
+			duoGroup = &shared.DuoGroup{
+				GroupID: groupId3,
+			}
+		}
+		var githubTeam *shared.GithubTeam
+		if r.RemoteInfo.GithubTeam != nil {
+			var teamSlug string
+			teamSlug = r.RemoteInfo.GithubTeam.TeamSlug.ValueString()
+
+			githubTeam = &shared.GithubTeam{
+				TeamSlug: teamSlug,
+			}
+		}
+		var gitlabGroup *shared.GitlabGroup
+		if r.RemoteInfo.GitlabGroup != nil {
+			var groupId4 string
+			groupId4 = r.RemoteInfo.GitlabGroup.GroupID.ValueString()
+
+			gitlabGroup = &shared.GitlabGroup{
+				GroupID: groupId4,
+			}
+		}
+		var googleGroup *shared.GoogleGroup
+		if r.RemoteInfo.GoogleGroup != nil {
+			var groupId5 string
+			groupId5 = r.RemoteInfo.GoogleGroup.GroupID.ValueString()
+
+			googleGroup = &shared.GoogleGroup{
+				GroupID: groupId5,
+			}
+		}
+		var ldapGroup *shared.LdapGroup
+		if r.RemoteInfo.LdapGroup != nil {
+			var groupId6 string
+			groupId6 = r.RemoteInfo.LdapGroup.GroupID.ValueString()
+
+			ldapGroup = &shared.LdapGroup{
+				GroupID: groupId6,
+			}
+		}
+		var oktaGroup *shared.OktaGroup
+		if r.RemoteInfo.OktaGroup != nil {
+			var groupId7 string
+			groupId7 = r.RemoteInfo.OktaGroup.GroupID.ValueString()
+
+			oktaGroup = &shared.OktaGroup{
+				GroupID: groupId7,
+			}
+		}
+		var oktaGroupRule *shared.OktaGroupRule
+		if r.RemoteInfo.OktaGroupRule != nil {
+			var ruleID string
+			ruleID = r.RemoteInfo.OktaGroupRule.RuleID.ValueString()
+
+			oktaGroupRule = &shared.OktaGroupRule{
+				RuleID: ruleID,
+			}
+		}
+		var snowflakeRole *shared.SnowflakeRole
+		if r.RemoteInfo.SnowflakeRole != nil {
+			var roleID string
+			roleID = r.RemoteInfo.SnowflakeRole.RoleID.ValueString()
+
+			snowflakeRole = &shared.SnowflakeRole{
+				RoleID: roleID,
+			}
+		}
+		var workdayUserSecurityGroup *shared.WorkdayUserSecurityGroup
+		if r.RemoteInfo.WorkdayUserSecurityGroup != nil {
+			var groupId8 string
+			groupId8 = r.RemoteInfo.WorkdayUserSecurityGroup.GroupID.ValueString()
+
+			workdayUserSecurityGroup = &shared.WorkdayUserSecurityGroup{
+				GroupID: groupId8,
+			}
+		}
+		remoteInfo = &shared.GroupRemoteInfo{
+			ActiveDirectoryGroup:     activeDirectoryGroup,
+			AzureAdMicrosoft365Group: azureAdMicrosoft365Group,
+			AzureAdSecurityGroup:     azureAdSecurityGroup,
+			DuoGroup:                 duoGroup,
+			GithubTeam:               githubTeam,
+			GitlabGroup:              gitlabGroup,
+			GoogleGroup:              googleGroup,
+			LdapGroup:                ldapGroup,
+			OktaGroup:                oktaGroup,
+			OktaGroupRule:            oktaGroupRule,
+			SnowflakeRole:            snowflakeRole,
+			WorkdayUserSecurityGroup: workdayUserSecurityGroup,
+		}
+	}
+	riskSensitivityOverride := new(shared.RiskSensitivityEnum)
+	if !r.RiskSensitivityOverride.IsUnknown() && !r.RiskSensitivityOverride.IsNull() {
+		*riskSensitivityOverride = shared.RiskSensitivityEnum(r.RiskSensitivityOverride.ValueString())
+	} else {
+		riskSensitivityOverride = nil
+	}
+	out := shared.CreateGroupInfo{
+		AppID:                     appID,
+		CustomRequestNotification: customRequestNotification,
+		Description:               description,
+		GroupType:                 groupType,
+		Name:                      name,
+		RemoteInfo:                remoteInfo,
+		RiskSensitivityOverride:   riskSensitivityOverride,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupResourceModel) ToSharedMessageChannelIDList(ctx context.Context) (*shared.MessageChannelIDList, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	messageChannelIds := make([]string, 0, len(r.MessageChannelIds))
+	for _, messageChannelIdsItem := range r.MessageChannelIds {
+		messageChannelIds = append(messageChannelIds, messageChannelIdsItem.ValueString())
+	}
+	out := shared.MessageChannelIDList{
+		MessageChannelIds: messageChannelIds,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shared.UpdateGroupInfo, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	adminOwnerID := new(string)
+	if !r.AdminOwnerID.IsUnknown() && !r.AdminOwnerID.IsNull() {
+		*adminOwnerID = r.AdminOwnerID.ValueString()
+	} else {
+		adminOwnerID = nil
+	}
+	customRequestNotification := new(string)
+	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
+		*customRequestNotification = r.CustomRequestNotification.ValueString()
+	} else {
+		customRequestNotification = nil
+	}
+	description := new(string)
+	if !r.Description.IsUnknown() && !r.Description.IsNull() {
+		*description = r.Description.ValueString()
+	} else {
+		description = nil
+	}
+	groupLeaderUserIds := make([]string, 0, len(r.GroupLeaderUserIds))
+	for _, groupLeaderUserIdsItem := range r.GroupLeaderUserIds {
+		groupLeaderUserIds = append(groupLeaderUserIds, groupLeaderUserIdsItem.ValueString())
+	}
+	var id string
+	id = r.ID.ValueString()
+
+	name := new(string)
+	if !r.Name.IsUnknown() && !r.Name.IsNull() {
+		*name = r.Name.ValueString()
+	} else {
+		name = nil
+	}
+	requestConfigurations := make([]shared.RequestConfiguration, 0, len(r.RequestConfigurations))
+	for _, requestConfigurationsItem := range r.RequestConfigurations {
+		var allowRequests bool
+		allowRequests = requestConfigurationsItem.AllowRequests.ValueBool()
+
+		var autoApproval bool
+		autoApproval = requestConfigurationsItem.AutoApproval.ValueBool()
+
+		var condition *shared.Condition
+		if requestConfigurationsItem.Condition != nil {
+			groupIds := make([]string, 0, len(requestConfigurationsItem.Condition.GroupIds))
+			for _, groupIdsItem := range requestConfigurationsItem.Condition.GroupIds {
+				groupIds = append(groupIds, groupIdsItem.ValueString())
+			}
+			roleRemoteIds := make([]string, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
+			for _, roleRemoteIdsItem := range requestConfigurationsItem.Condition.RoleRemoteIds {
+				roleRemoteIds = append(roleRemoteIds, roleRemoteIdsItem.ValueString())
+			}
+			condition = &shared.Condition{
+				GroupIds:      groupIds,
+				RoleRemoteIds: roleRemoteIds,
+			}
+		}
+		maxDuration := new(int64)
+		if !requestConfigurationsItem.MaxDuration.IsUnknown() && !requestConfigurationsItem.MaxDuration.IsNull() {
+			*maxDuration = requestConfigurationsItem.MaxDuration.ValueInt64()
+		} else {
+			maxDuration = nil
+		}
+		var priority int64
+		priority = requestConfigurationsItem.Priority.ValueInt64()
+
+		recommendedDuration := new(int64)
+		if !requestConfigurationsItem.RecommendedDuration.IsUnknown() && !requestConfigurationsItem.RecommendedDuration.IsNull() {
+			*recommendedDuration = requestConfigurationsItem.RecommendedDuration.ValueInt64()
+		} else {
+			recommendedDuration = nil
+		}
+		requestTemplateID := new(string)
+		if !requestConfigurationsItem.RequestTemplateID.IsUnknown() && !requestConfigurationsItem.RequestTemplateID.IsNull() {
+			*requestTemplateID = requestConfigurationsItem.RequestTemplateID.ValueString()
+		} else {
+			requestTemplateID = nil
+		}
+		var requireMfaToRequest bool
+		requireMfaToRequest = requestConfigurationsItem.RequireMfaToRequest.ValueBool()
+
+		var requireSupportTicket bool
+		requireSupportTicket = requestConfigurationsItem.RequireSupportTicket.ValueBool()
+
+		reviewerStages := make([]shared.ReviewerStage, 0, len(requestConfigurationsItem.ReviewerStages))
+		for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
+			operator := new(shared.Operator)
+			if !reviewerStagesItem.Operator.IsUnknown() && !reviewerStagesItem.Operator.IsNull() {
+				*operator = shared.Operator(reviewerStagesItem.Operator.ValueString())
+			} else {
+				operator = nil
+			}
+			ownerIds := make([]string, 0, len(reviewerStagesItem.OwnerIds))
+			for _, ownerIdsItem := range reviewerStagesItem.OwnerIds {
+				ownerIds = append(ownerIds, ownerIdsItem.ValueString())
+			}
+			requireAdminApproval := new(bool)
+			if !reviewerStagesItem.RequireAdminApproval.IsUnknown() && !reviewerStagesItem.RequireAdminApproval.IsNull() {
+				*requireAdminApproval = reviewerStagesItem.RequireAdminApproval.ValueBool()
+			} else {
+				requireAdminApproval = nil
+			}
+			requireManagerApproval := new(bool)
+			if !reviewerStagesItem.RequireManagerApproval.IsUnknown() && !reviewerStagesItem.RequireManagerApproval.IsNull() {
+				*requireManagerApproval = reviewerStagesItem.RequireManagerApproval.ValueBool()
+			} else {
+				requireManagerApproval = nil
+			}
+			reviewerStages = append(reviewerStages, shared.ReviewerStage{
+				Operator:               operator,
+				OwnerIds:               ownerIds,
+				RequireAdminApproval:   requireAdminApproval,
+				RequireManagerApproval: requireManagerApproval,
+			})
+		}
+		requestConfigurations = append(requestConfigurations, shared.RequestConfiguration{
+			AllowRequests:        allowRequests,
+			AutoApproval:         autoApproval,
+			Condition:            condition,
+			MaxDuration:          maxDuration,
+			Priority:             priority,
+			RecommendedDuration:  recommendedDuration,
+			RequestTemplateID:    requestTemplateID,
+			RequireMfaToRequest:  requireMfaToRequest,
+			RequireSupportTicket: requireSupportTicket,
+			ReviewerStages:       reviewerStages,
+		})
+	}
+	requireMfaToApprove := new(bool)
+	if !r.RequireMfaToApprove.IsUnknown() && !r.RequireMfaToApprove.IsNull() {
+		*requireMfaToApprove = r.RequireMfaToApprove.ValueBool()
+	} else {
+		requireMfaToApprove = nil
+	}
+	riskSensitivityOverride := new(shared.RiskSensitivityEnum)
+	if !r.RiskSensitivityOverride.IsUnknown() && !r.RiskSensitivityOverride.IsNull() {
+		*riskSensitivityOverride = shared.RiskSensitivityEnum(r.RiskSensitivityOverride.ValueString())
+	} else {
+		riskSensitivityOverride = nil
+	}
+	out := shared.UpdateGroupInfo{
+		AdminOwnerID:              adminOwnerID,
+		CustomRequestNotification: customRequestNotification,
+		Description:               description,
+		GroupLeaderUserIds:        groupLeaderUserIds,
+		ID:                        id,
+		Name:                      name,
+		RequestConfigurations:     requestConfigurations,
+		RequireMfaToApprove:       requireMfaToApprove,
+		RiskSensitivityOverride:   riskSensitivityOverride,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupResourceModel) ToSharedUpdateGroupInfoList(ctx context.Context) (*shared.UpdateGroupInfoList, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	groups, groupsDiags := r.ToSharedUpdateGroupInfo(ctx)
+	diags.Append(groupsDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	out := shared.UpdateGroupInfoList{
+		Groups: []shared.UpdateGroupInfo{*groups},
+	}
+
+	return &out, diags
+}
+
+func (r *GroupResourceModel) ToSharedVisibilityInfo(ctx context.Context) (*shared.VisibilityInfo, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	visibility := shared.VisibilityTypeEnum(r.Visibility.ValueString())
+	visibilityGroupIds := make([]string, 0, len(r.VisibilityGroupIds))
+	for _, visibilityGroupIdsItem := range r.VisibilityGroupIds {
+		visibilityGroupIds = append(visibilityGroupIds, visibilityGroupIdsItem.ValueString())
+	}
+	out := shared.VisibilityInfo{
+		Visibility:         visibility,
+		VisibilityGroupIds: visibilityGroupIds,
+	}
+
+	return &out, diags
 }

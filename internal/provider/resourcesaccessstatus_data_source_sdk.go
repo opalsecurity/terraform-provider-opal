@@ -12,6 +12,26 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
+func (r *ResourcesAccessStatusDataSourceModel) RefreshFromSharedResourceUserAccessStatus(ctx context.Context, resp *shared.ResourceUserAccessStatus) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		if resp.AccessLevel == nil {
+			r.AccessLevel = nil
+		} else {
+			r.AccessLevel = &tfTypes.ResourceAccessLevel{}
+			r.AccessLevel.AccessLevelName = types.StringValue(resp.AccessLevel.AccessLevelName)
+			r.AccessLevel.AccessLevelRemoteID = types.StringValue(resp.AccessLevel.AccessLevelRemoteID)
+		}
+		r.ExpirationDate = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resp.ExpirationDate))
+		r.ResourceID = types.StringValue(resp.ResourceID)
+		r.Status = types.StringValue(string(resp.Status))
+		r.UserID = types.StringValue(resp.UserID)
+	}
+
+	return diags
+}
+
 func (r *ResourcesAccessStatusDataSourceModel) ToOperationsGetResourceUserAccessStatusRequest(ctx context.Context) (*operations.GetResourceUserAccessStatusRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -48,24 +68,4 @@ func (r *ResourcesAccessStatusDataSourceModel) ToOperationsGetResourceUserAccess
 	}
 
 	return &out, diags
-}
-
-func (r *ResourcesAccessStatusDataSourceModel) RefreshFromSharedResourceUserAccessStatus(ctx context.Context, resp *shared.ResourceUserAccessStatus) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if resp != nil {
-		if resp.AccessLevel == nil {
-			r.AccessLevel = nil
-		} else {
-			r.AccessLevel = &tfTypes.ResourceAccessLevel{}
-			r.AccessLevel.AccessLevelName = types.StringValue(resp.AccessLevel.AccessLevelName)
-			r.AccessLevel.AccessLevelRemoteID = types.StringValue(resp.AccessLevel.AccessLevelRemoteID)
-		}
-		r.ExpirationDate = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resp.ExpirationDate))
-		r.ResourceID = types.StringValue(resp.ResourceID)
-		r.Status = types.StringValue(string(resp.Status))
-		r.UserID = types.StringValue(resp.UserID)
-	}
-
-	return diags
 }

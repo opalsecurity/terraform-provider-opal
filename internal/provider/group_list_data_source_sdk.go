@@ -11,41 +11,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *GroupListDataSourceModel) ToOperationsGetGroupsRequest(ctx context.Context) (*operations.GetGroupsRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	groupIds := make([]string, 0, len(r.GroupIds))
-	for _, groupIdsItem := range r.GroupIds {
-		groupIds = append(groupIds, groupIdsItem.ValueString())
-	}
-	groupName := new(string)
-	if !r.GroupName.IsUnknown() && !r.GroupName.IsNull() {
-		*groupName = r.GroupName.ValueString()
-	} else {
-		groupName = nil
-	}
-	groupTypeFilter := new(shared.GroupTypeEnum)
-	if !r.GroupTypeFilter.IsUnknown() && !r.GroupTypeFilter.IsNull() {
-		*groupTypeFilter = shared.GroupTypeEnum(r.GroupTypeFilter.ValueString())
-	} else {
-		groupTypeFilter = nil
-	}
-	pageSize := new(int64)
-	if !r.PageSize.IsUnknown() && !r.PageSize.IsNull() {
-		*pageSize = r.PageSize.ValueInt64()
-	} else {
-		pageSize = nil
-	}
-	out := operations.GetGroupsRequest{
-		GroupIds:        groupIds,
-		GroupName:       groupName,
-		GroupTypeFilter: groupTypeFilter,
-		PageSize:        pageSize,
-	}
-
-	return &out, diags
-}
-
 func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx context.Context, resp *shared.PaginatedGroupsList) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -246,4 +211,39 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 	}
 
 	return diags
+}
+
+func (r *GroupListDataSourceModel) ToOperationsGetGroupsRequest(ctx context.Context) (*operations.GetGroupsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	groupIds := make([]string, 0, len(r.GroupIds))
+	for _, groupIdsItem := range r.GroupIds {
+		groupIds = append(groupIds, groupIdsItem.ValueString())
+	}
+	groupName := new(string)
+	if !r.GroupName.IsUnknown() && !r.GroupName.IsNull() {
+		*groupName = r.GroupName.ValueString()
+	} else {
+		groupName = nil
+	}
+	groupTypeFilter := new(shared.GroupTypeEnum)
+	if !r.GroupTypeFilter.IsUnknown() && !r.GroupTypeFilter.IsNull() {
+		*groupTypeFilter = shared.GroupTypeEnum(r.GroupTypeFilter.ValueString())
+	} else {
+		groupTypeFilter = nil
+	}
+	pageSize := new(int64)
+	if !r.PageSize.IsUnknown() && !r.PageSize.IsNull() {
+		*pageSize = r.PageSize.ValueInt64()
+	} else {
+		pageSize = nil
+	}
+	out := operations.GetGroupsRequest{
+		GroupIds:        groupIds,
+		GroupName:       groupName,
+		GroupTypeFilter: groupTypeFilter,
+		PageSize:        pageSize,
+	}
+
+	return &out, diags
 }

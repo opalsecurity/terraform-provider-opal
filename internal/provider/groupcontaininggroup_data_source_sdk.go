@@ -10,6 +10,16 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
+func (r *GroupContainingGroupDataSourceModel) RefreshFromSharedGroupContainingGroup(ctx context.Context, resp *shared.GroupContainingGroup) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.ContainingGroupID = types.StringValue(resp.ContainingGroupID)
+	}
+
+	return diags
+}
+
 func (r *GroupContainingGroupDataSourceModel) ToOperationsGetGroupContainingGroupRequest(ctx context.Context) (*operations.GetGroupContainingGroupRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -25,14 +35,4 @@ func (r *GroupContainingGroupDataSourceModel) ToOperationsGetGroupContainingGrou
 	}
 
 	return &out, diags
-}
-
-func (r *GroupContainingGroupDataSourceModel) RefreshFromSharedGroupContainingGroup(ctx context.Context, resp *shared.GroupContainingGroup) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if resp != nil {
-		r.ContainingGroupID = types.StringValue(resp.ContainingGroupID)
-	}
-
-	return diags
 }

@@ -12,19 +12,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *GroupTagsDataSourceModel) ToOperationsGetGroupTagsRequest(ctx context.Context) (*operations.GetGroupTagsRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var groupID string
-	groupID = r.GroupID.ValueString()
-
-	out := operations.GetGroupTagsRequest{
-		GroupID: groupID,
-	}
-
-	return &out, diags
-}
-
 func (r *GroupTagsDataSourceModel) RefreshFromSharedTagsList(ctx context.Context, resp *shared.TagsList) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -55,4 +42,17 @@ func (r *GroupTagsDataSourceModel) RefreshFromSharedTagsList(ctx context.Context
 	}
 
 	return diags
+}
+
+func (r *GroupTagsDataSourceModel) ToOperationsGetGroupTagsRequest(ctx context.Context) (*operations.GetGroupTagsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var groupID string
+	groupID = r.GroupID.ValueString()
+
+	out := operations.GetGroupTagsRequest{
+		GroupID: groupID,
+	}
+
+	return &out, diags
 }

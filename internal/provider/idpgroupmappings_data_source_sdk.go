@@ -11,19 +11,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *IdpGroupMappingsDataSourceModel) ToOperationsGetIdpGroupMappingsRequest(ctx context.Context) (*operations.GetIdpGroupMappingsRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var appResourceID string
-	appResourceID = r.AppResourceID.ValueString()
-
-	out := operations.GetIdpGroupMappingsRequest{
-		AppResourceID: appResourceID,
-	}
-
-	return &out, diags
-}
-
 func (r *IdpGroupMappingsDataSourceModel) RefreshFromSharedIdpGroupMappingList(ctx context.Context, resp *shared.IdpGroupMappingList) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -48,4 +35,17 @@ func (r *IdpGroupMappingsDataSourceModel) RefreshFromSharedIdpGroupMappingList(c
 	}
 
 	return diags
+}
+
+func (r *IdpGroupMappingsDataSourceModel) ToOperationsGetIdpGroupMappingsRequest(ctx context.Context) (*operations.GetIdpGroupMappingsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var appResourceID string
+	appResourceID = r.AppResourceID.ValueString()
+
+	out := operations.GetIdpGroupMappingsRequest{
+		AppResourceID: appResourceID,
+	}
+
+	return &out, diags
 }

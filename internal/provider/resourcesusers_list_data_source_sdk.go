@@ -12,26 +12,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *ResourcesUsersListDataSourceModel) ToOperationsGetResourceUsersRequest(ctx context.Context) (*operations.GetResourceUsersRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	limit := new(int64)
-	if !r.Limit.IsUnknown() && !r.Limit.IsNull() {
-		*limit = r.Limit.ValueInt64()
-	} else {
-		limit = nil
-	}
-	var resourceID string
-	resourceID = r.ResourceID.ValueString()
-
-	out := operations.GetResourceUsersRequest{
-		Limit:      limit,
-		ResourceID: resourceID,
-	}
-
-	return &out, diags
-}
-
 func (r *ResourcesUsersListDataSourceModel) RefreshFromSharedResourceAccessUserList(ctx context.Context, resp *shared.ResourceAccessUserList) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -74,4 +54,24 @@ func (r *ResourcesUsersListDataSourceModel) RefreshFromSharedResourceAccessUserL
 	}
 
 	return diags
+}
+
+func (r *ResourcesUsersListDataSourceModel) ToOperationsGetResourceUsersRequest(ctx context.Context) (*operations.GetResourceUsersRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	limit := new(int64)
+	if !r.Limit.IsUnknown() && !r.Limit.IsNull() {
+		*limit = r.Limit.ValueInt64()
+	} else {
+		limit = nil
+	}
+	var resourceID string
+	resourceID = r.ResourceID.ValueString()
+
+	out := operations.GetResourceUsersRequest{
+		Limit:      limit,
+		ResourceID: resourceID,
+	}
+
+	return &out, diags
 }

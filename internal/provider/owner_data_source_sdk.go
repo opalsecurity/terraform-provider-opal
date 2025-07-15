@@ -10,19 +10,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *OwnerDataSourceModel) ToOperationsGetOwnerIDRequest(ctx context.Context) (*operations.GetOwnerIDRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.GetOwnerIDRequest{
-		ID: id,
-	}
-
-	return &out, diags
-}
-
 func (r *OwnerDataSourceModel) RefreshFromSharedOwner(ctx context.Context, resp *shared.Owner) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -36,4 +23,17 @@ func (r *OwnerDataSourceModel) RefreshFromSharedOwner(ctx context.Context, resp 
 	}
 
 	return diags
+}
+
+func (r *OwnerDataSourceModel) ToOperationsGetOwnerIDRequest(ctx context.Context) (*operations.GetOwnerIDRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetOwnerIDRequest{
+		ID: id,
+	}
+
+	return &out, diags
 }

@@ -10,19 +10,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *MessageChannelDataSourceModel) ToOperationsGetMessageChannelIDRequest(ctx context.Context) (*operations.GetMessageChannelIDRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.GetMessageChannelIDRequest{
-		ID: id,
-	}
-
-	return &out, diags
-}
-
 func (r *MessageChannelDataSourceModel) RefreshFromSharedMessageChannel(ctx context.Context, resp *shared.MessageChannel) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -39,4 +26,17 @@ func (r *MessageChannelDataSourceModel) RefreshFromSharedMessageChannel(ctx cont
 	}
 
 	return diags
+}
+
+func (r *MessageChannelDataSourceModel) ToOperationsGetMessageChannelIDRequest(ctx context.Context) (*operations.GetMessageChannelIDRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetMessageChannelIDRequest{
+		ID: id,
+	}
+
+	return &out, diags
 }

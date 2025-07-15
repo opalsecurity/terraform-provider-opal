@@ -12,19 +12,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *GroupUsersDataSourceModel) ToOperationsGetGroupUsersRequest(ctx context.Context) (*operations.GetGroupUsersRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var groupID string
-	groupID = r.GroupID.ValueString()
-
-	out := operations.GetGroupUsersRequest{
-		GroupID: groupID,
-	}
-
-	return &out, diags
-}
-
 func (r *GroupUsersDataSourceModel) RefreshFromSharedGroupUserList(ctx context.Context, resp *shared.GroupUserList) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -68,4 +55,17 @@ func (r *GroupUsersDataSourceModel) RefreshFromSharedGroupUserList(ctx context.C
 	}
 
 	return diags
+}
+
+func (r *GroupUsersDataSourceModel) ToOperationsGetGroupUsersRequest(ctx context.Context) (*operations.GetGroupUsersRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var groupID string
+	groupID = r.GroupID.ValueString()
+
+	out := operations.GetGroupUsersRequest{
+		GroupID: groupID,
+	}
+
+	return &out, diags
 }

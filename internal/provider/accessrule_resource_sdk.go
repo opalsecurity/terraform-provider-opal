@@ -11,6 +11,124 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
+func (r *AccessRuleResourceModel) RefreshFromSharedAccessRule(ctx context.Context, resp *shared.AccessRule) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.AdminOwnerID = types.StringValue(resp.AdminOwnerID)
+		r.Description = types.StringValue(resp.Description)
+		r.ID = types.StringValue(resp.ID)
+		r.Name = types.StringValue(resp.Name)
+		if resp.RuleClauses.Unless == nil {
+			r.RuleClauses.Unless = nil
+		} else {
+			r.RuleClauses.Unless = &tfTypes.RuleConjunction{}
+			r.RuleClauses.Unless.Clauses = []tfTypes.RuleDisjunction{}
+			if len(r.RuleClauses.Unless.Clauses) > len(resp.RuleClauses.Unless.Clauses) {
+				r.RuleClauses.Unless.Clauses = r.RuleClauses.Unless.Clauses[:len(resp.RuleClauses.Unless.Clauses)]
+			}
+			for clausesCount, clausesItem := range resp.RuleClauses.Unless.Clauses {
+				var clauses tfTypes.RuleDisjunction
+				clauses.Selectors = []tfTypes.TagSelector{}
+				for selectorsCount, selectorsItem := range clausesItem.Selectors {
+					var selectors tfTypes.TagSelector
+					selectors.ConnectionID = types.StringValue(selectorsItem.ConnectionID)
+					selectors.Key = types.StringValue(selectorsItem.Key)
+					selectors.Value = types.StringValue(selectorsItem.Value)
+					if selectorsCount+1 > len(clauses.Selectors) {
+						clauses.Selectors = append(clauses.Selectors, selectors)
+					} else {
+						clauses.Selectors[selectorsCount].ConnectionID = selectors.ConnectionID
+						clauses.Selectors[selectorsCount].Key = selectors.Key
+						clauses.Selectors[selectorsCount].Value = selectors.Value
+					}
+				}
+				if clausesCount+1 > len(r.RuleClauses.Unless.Clauses) {
+					r.RuleClauses.Unless.Clauses = append(r.RuleClauses.Unless.Clauses, clauses)
+				} else {
+					r.RuleClauses.Unless.Clauses[clausesCount].Selectors = clauses.Selectors
+				}
+			}
+		}
+		r.RuleClauses.When.Clauses = []tfTypes.RuleDisjunction{}
+		if len(r.RuleClauses.When.Clauses) > len(resp.RuleClauses.When.Clauses) {
+			r.RuleClauses.When.Clauses = r.RuleClauses.When.Clauses[:len(resp.RuleClauses.When.Clauses)]
+		}
+		for clausesCount1, clausesItem1 := range resp.RuleClauses.When.Clauses {
+			var clauses1 tfTypes.RuleDisjunction
+			clauses1.Selectors = []tfTypes.TagSelector{}
+			for selectorsCount1, selectorsItem1 := range clausesItem1.Selectors {
+				var selectors1 tfTypes.TagSelector
+				selectors1.ConnectionID = types.StringValue(selectorsItem1.ConnectionID)
+				selectors1.Key = types.StringValue(selectorsItem1.Key)
+				selectors1.Value = types.StringValue(selectorsItem1.Value)
+				if selectorsCount1+1 > len(clauses1.Selectors) {
+					clauses1.Selectors = append(clauses1.Selectors, selectors1)
+				} else {
+					clauses1.Selectors[selectorsCount1].ConnectionID = selectors1.ConnectionID
+					clauses1.Selectors[selectorsCount1].Key = selectors1.Key
+					clauses1.Selectors[selectorsCount1].Value = selectors1.Value
+				}
+			}
+			if clausesCount1+1 > len(r.RuleClauses.When.Clauses) {
+				r.RuleClauses.When.Clauses = append(r.RuleClauses.When.Clauses, clauses1)
+			} else {
+				r.RuleClauses.When.Clauses[clausesCount1].Selectors = clauses1.Selectors
+			}
+		}
+		r.Status = types.StringValue(string(resp.Status))
+	}
+
+	return diags
+}
+
+func (r *AccessRuleResourceModel) ToOperationsDeleteGroupRequest(ctx context.Context) (*operations.DeleteGroupRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.DeleteGroupRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *AccessRuleResourceModel) ToOperationsGetAccessRuleRequest(ctx context.Context) (*operations.GetAccessRuleRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetAccessRuleRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *AccessRuleResourceModel) ToOperationsUpdateAccessRuleRequest(ctx context.Context) (*operations.UpdateAccessRuleRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	updateAccessRuleInfo, updateAccessRuleInfoDiags := r.ToSharedUpdateAccessRuleInfo(ctx)
+	diags.Append(updateAccessRuleInfoDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.UpdateAccessRuleRequest{
+		UpdateAccessRuleInfo: *updateAccessRuleInfo,
+		ID:                   id,
+	}
+
+	return &out, diags
+}
+
 func (r *AccessRuleResourceModel) ToSharedUpdateAccessRuleInfo(ctx context.Context) (*shared.UpdateAccessRuleInfo, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -92,122 +210,4 @@ func (r *AccessRuleResourceModel) ToSharedUpdateAccessRuleInfo(ctx context.Conte
 	}
 
 	return &out, diags
-}
-
-func (r *AccessRuleResourceModel) ToOperationsUpdateAccessRuleRequest(ctx context.Context) (*operations.UpdateAccessRuleRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	updateAccessRuleInfo, updateAccessRuleInfoDiags := r.ToSharedUpdateAccessRuleInfo(ctx)
-	diags.Append(updateAccessRuleInfoDiags...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.UpdateAccessRuleRequest{
-		UpdateAccessRuleInfo: *updateAccessRuleInfo,
-		ID:                   id,
-	}
-
-	return &out, diags
-}
-
-func (r *AccessRuleResourceModel) ToOperationsGetAccessRuleRequest(ctx context.Context) (*operations.GetAccessRuleRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.GetAccessRuleRequest{
-		ID: id,
-	}
-
-	return &out, diags
-}
-
-func (r *AccessRuleResourceModel) ToOperationsDeleteGroupRequest(ctx context.Context) (*operations.DeleteGroupRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.DeleteGroupRequest{
-		ID: id,
-	}
-
-	return &out, diags
-}
-
-func (r *AccessRuleResourceModel) RefreshFromSharedAccessRule(ctx context.Context, resp *shared.AccessRule) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if resp != nil {
-		r.AdminOwnerID = types.StringValue(resp.AdminOwnerID)
-		r.Description = types.StringValue(resp.Description)
-		r.ID = types.StringValue(resp.ID)
-		r.Name = types.StringValue(resp.Name)
-		if resp.RuleClauses.Unless == nil {
-			r.RuleClauses.Unless = nil
-		} else {
-			r.RuleClauses.Unless = &tfTypes.RuleConjunction{}
-			r.RuleClauses.Unless.Clauses = []tfTypes.RuleDisjunction{}
-			if len(r.RuleClauses.Unless.Clauses) > len(resp.RuleClauses.Unless.Clauses) {
-				r.RuleClauses.Unless.Clauses = r.RuleClauses.Unless.Clauses[:len(resp.RuleClauses.Unless.Clauses)]
-			}
-			for clausesCount, clausesItem := range resp.RuleClauses.Unless.Clauses {
-				var clauses tfTypes.RuleDisjunction
-				clauses.Selectors = []tfTypes.TagSelector{}
-				for selectorsCount, selectorsItem := range clausesItem.Selectors {
-					var selectors tfTypes.TagSelector
-					selectors.ConnectionID = types.StringValue(selectorsItem.ConnectionID)
-					selectors.Key = types.StringValue(selectorsItem.Key)
-					selectors.Value = types.StringValue(selectorsItem.Value)
-					if selectorsCount+1 > len(clauses.Selectors) {
-						clauses.Selectors = append(clauses.Selectors, selectors)
-					} else {
-						clauses.Selectors[selectorsCount].ConnectionID = selectors.ConnectionID
-						clauses.Selectors[selectorsCount].Key = selectors.Key
-						clauses.Selectors[selectorsCount].Value = selectors.Value
-					}
-				}
-				if clausesCount+1 > len(r.RuleClauses.Unless.Clauses) {
-					r.RuleClauses.Unless.Clauses = append(r.RuleClauses.Unless.Clauses, clauses)
-				} else {
-					r.RuleClauses.Unless.Clauses[clausesCount].Selectors = clauses.Selectors
-				}
-			}
-		}
-		r.RuleClauses.When.Clauses = []tfTypes.RuleDisjunction{}
-		if len(r.RuleClauses.When.Clauses) > len(resp.RuleClauses.When.Clauses) {
-			r.RuleClauses.When.Clauses = r.RuleClauses.When.Clauses[:len(resp.RuleClauses.When.Clauses)]
-		}
-		for clausesCount1, clausesItem1 := range resp.RuleClauses.When.Clauses {
-			var clauses1 tfTypes.RuleDisjunction
-			clauses1.Selectors = []tfTypes.TagSelector{}
-			for selectorsCount1, selectorsItem1 := range clausesItem1.Selectors {
-				var selectors1 tfTypes.TagSelector
-				selectors1.ConnectionID = types.StringValue(selectorsItem1.ConnectionID)
-				selectors1.Key = types.StringValue(selectorsItem1.Key)
-				selectors1.Value = types.StringValue(selectorsItem1.Value)
-				if selectorsCount1+1 > len(clauses1.Selectors) {
-					clauses1.Selectors = append(clauses1.Selectors, selectors1)
-				} else {
-					clauses1.Selectors[selectorsCount1].ConnectionID = selectors1.ConnectionID
-					clauses1.Selectors[selectorsCount1].Key = selectors1.Key
-					clauses1.Selectors[selectorsCount1].Value = selectors1.Value
-				}
-			}
-			if clausesCount1+1 > len(r.RuleClauses.When.Clauses) {
-				r.RuleClauses.When.Clauses = append(r.RuleClauses.When.Clauses, clauses1)
-			} else {
-				r.RuleClauses.When.Clauses[clausesCount1].Selectors = clauses1.Selectors
-			}
-		}
-		r.Status = types.StringValue(string(resp.Status))
-	}
-
-	return diags
 }

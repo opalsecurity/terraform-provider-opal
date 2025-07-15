@@ -11,6 +11,149 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
+func (r *BundleResourceModel) RefreshFromSharedBundle(ctx context.Context, resp *shared.Bundle) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
+		r.BundleID = types.StringPointerValue(resp.BundleID)
+		r.CreatedAt = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resp.CreatedAt))
+		r.Description = types.StringPointerValue(resp.Description)
+		r.Name = types.StringPointerValue(resp.Name)
+		r.TotalNumGroups = types.Int64PointerValue(resp.TotalNumGroups)
+		r.TotalNumItems = types.Int64PointerValue(resp.TotalNumItems)
+		r.TotalNumResources = types.Int64PointerValue(resp.TotalNumResources)
+		r.UpdatedAt = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resp.UpdatedAt))
+	}
+
+	return diags
+}
+
+func (r *BundleResourceModel) RefreshFromSharedVisibilityInfo(ctx context.Context, resp *shared.VisibilityInfo) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.Visibility = types.StringValue(string(resp.Visibility))
+		r.VisibilityGroupIds = make([]types.String, 0, len(resp.VisibilityGroupIds))
+		for _, v := range resp.VisibilityGroupIds {
+			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
+		}
+	}
+
+	return diags
+}
+
+func (r *BundleResourceModel) ToOperationsDeleteBundleRequest(ctx context.Context) (*operations.DeleteBundleRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var bundleID string
+	bundleID = r.BundleID.ValueString()
+
+	out := operations.DeleteBundleRequest{
+		BundleID: bundleID,
+	}
+
+	return &out, diags
+}
+
+func (r *BundleResourceModel) ToOperationsGetBundleRequest(ctx context.Context) (*operations.GetBundleRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var bundleID string
+	bundleID = r.BundleID.ValueString()
+
+	out := operations.GetBundleRequest{
+		BundleID: bundleID,
+	}
+
+	return &out, diags
+}
+
+func (r *BundleResourceModel) ToOperationsGetBundleVisibilityRequest(ctx context.Context) (*operations.GetBundleVisibilityRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var bundleID string
+	bundleID = r.BundleID.ValueString()
+
+	out := operations.GetBundleVisibilityRequest{
+		BundleID: bundleID,
+	}
+
+	return &out, diags
+}
+
+func (r *BundleResourceModel) ToOperationsSetBundleVisibilityRequest(ctx context.Context) (*operations.SetBundleVisibilityRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	visibilityInfo, visibilityInfoDiags := r.ToSharedVisibilityInfo(ctx)
+	diags.Append(visibilityInfoDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var bundleID string
+	bundleID = r.BundleID.ValueString()
+
+	out := operations.SetBundleVisibilityRequest{
+		VisibilityInfo: *visibilityInfo,
+		BundleID:       bundleID,
+	}
+
+	return &out, diags
+}
+
+func (r *BundleResourceModel) ToOperationsUpdateBundleRequest(ctx context.Context) (*operations.UpdateBundleRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	bundle, bundleDiags := r.ToSharedBundleInput(ctx)
+	diags.Append(bundleDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var bundleID string
+	bundleID = r.BundleID.ValueString()
+
+	out := operations.UpdateBundleRequest{
+		Bundle:   *bundle,
+		BundleID: bundleID,
+	}
+
+	return &out, diags
+}
+
+func (r *BundleResourceModel) ToSharedBundleInput(ctx context.Context) (*shared.BundleInput, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	adminOwnerID := new(string)
+	if !r.AdminOwnerID.IsUnknown() && !r.AdminOwnerID.IsNull() {
+		*adminOwnerID = r.AdminOwnerID.ValueString()
+	} else {
+		adminOwnerID = nil
+	}
+	description := new(string)
+	if !r.Description.IsUnknown() && !r.Description.IsNull() {
+		*description = r.Description.ValueString()
+	} else {
+		description = nil
+	}
+	name := new(string)
+	if !r.Name.IsUnknown() && !r.Name.IsNull() {
+		*name = r.Name.ValueString()
+	} else {
+		name = nil
+	}
+	out := shared.BundleInput{
+		AdminOwnerID: adminOwnerID,
+		Description:  description,
+		Name:         name,
+	}
+
+	return &out, diags
+}
+
 func (r *BundleResourceModel) ToSharedCreateBundleInfo(ctx context.Context) (*shared.CreateBundleInfo, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -49,147 +192,4 @@ func (r *BundleResourceModel) ToSharedVisibilityInfo(ctx context.Context) (*shar
 	}
 
 	return &out, diags
-}
-
-func (r *BundleResourceModel) ToOperationsSetBundleVisibilityRequest(ctx context.Context) (*operations.SetBundleVisibilityRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	visibilityInfo, visibilityInfoDiags := r.ToSharedVisibilityInfo(ctx)
-	diags.Append(visibilityInfoDiags...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	var bundleID string
-	bundleID = r.BundleID.ValueString()
-
-	out := operations.SetBundleVisibilityRequest{
-		VisibilityInfo: *visibilityInfo,
-		BundleID:       bundleID,
-	}
-
-	return &out, diags
-}
-
-func (r *BundleResourceModel) ToSharedBundleInput(ctx context.Context) (*shared.BundleInput, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	adminOwnerID := new(string)
-	if !r.AdminOwnerID.IsUnknown() && !r.AdminOwnerID.IsNull() {
-		*adminOwnerID = r.AdminOwnerID.ValueString()
-	} else {
-		adminOwnerID = nil
-	}
-	description := new(string)
-	if !r.Description.IsUnknown() && !r.Description.IsNull() {
-		*description = r.Description.ValueString()
-	} else {
-		description = nil
-	}
-	name := new(string)
-	if !r.Name.IsUnknown() && !r.Name.IsNull() {
-		*name = r.Name.ValueString()
-	} else {
-		name = nil
-	}
-	out := shared.BundleInput{
-		AdminOwnerID: adminOwnerID,
-		Description:  description,
-		Name:         name,
-	}
-
-	return &out, diags
-}
-
-func (r *BundleResourceModel) ToOperationsUpdateBundleRequest(ctx context.Context) (*operations.UpdateBundleRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	bundle, bundleDiags := r.ToSharedBundleInput(ctx)
-	diags.Append(bundleDiags...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	var bundleID string
-	bundleID = r.BundleID.ValueString()
-
-	out := operations.UpdateBundleRequest{
-		Bundle:   *bundle,
-		BundleID: bundleID,
-	}
-
-	return &out, diags
-}
-
-func (r *BundleResourceModel) ToOperationsGetBundleRequest(ctx context.Context) (*operations.GetBundleRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var bundleID string
-	bundleID = r.BundleID.ValueString()
-
-	out := operations.GetBundleRequest{
-		BundleID: bundleID,
-	}
-
-	return &out, diags
-}
-
-func (r *BundleResourceModel) ToOperationsGetBundleVisibilityRequest(ctx context.Context) (*operations.GetBundleVisibilityRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var bundleID string
-	bundleID = r.BundleID.ValueString()
-
-	out := operations.GetBundleVisibilityRequest{
-		BundleID: bundleID,
-	}
-
-	return &out, diags
-}
-
-func (r *BundleResourceModel) ToOperationsDeleteBundleRequest(ctx context.Context) (*operations.DeleteBundleRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var bundleID string
-	bundleID = r.BundleID.ValueString()
-
-	out := operations.DeleteBundleRequest{
-		BundleID: bundleID,
-	}
-
-	return &out, diags
-}
-
-func (r *BundleResourceModel) RefreshFromSharedBundle(ctx context.Context, resp *shared.Bundle) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if resp != nil {
-		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
-		r.BundleID = types.StringPointerValue(resp.BundleID)
-		r.CreatedAt = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resp.CreatedAt))
-		r.Description = types.StringPointerValue(resp.Description)
-		r.Name = types.StringPointerValue(resp.Name)
-		r.TotalNumGroups = types.Int64PointerValue(resp.TotalNumGroups)
-		r.TotalNumItems = types.Int64PointerValue(resp.TotalNumItems)
-		r.TotalNumResources = types.Int64PointerValue(resp.TotalNumResources)
-		r.UpdatedAt = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resp.UpdatedAt))
-	}
-
-	return diags
-}
-
-func (r *BundleResourceModel) RefreshFromSharedVisibilityInfo(ctx context.Context, resp *shared.VisibilityInfo) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if resp != nil {
-		r.Visibility = types.StringValue(string(resp.Visibility))
-		r.VisibilityGroupIds = make([]types.String, 0, len(resp.VisibilityGroupIds))
-		for _, v := range resp.VisibilityGroupIds {
-			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
-		}
-	}
-
-	return diags
 }

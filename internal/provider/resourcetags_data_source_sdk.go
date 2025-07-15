@@ -12,19 +12,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *ResourceTagsDataSourceModel) ToOperationsGetResourceTagsRequest(ctx context.Context) (*operations.GetResourceTagsRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var resourceID string
-	resourceID = r.ResourceID.ValueString()
-
-	out := operations.GetResourceTagsRequest{
-		ResourceID: resourceID,
-	}
-
-	return &out, diags
-}
-
 func (r *ResourceTagsDataSourceModel) RefreshFromSharedTagsList(ctx context.Context, resp *shared.TagsList) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -55,4 +42,17 @@ func (r *ResourceTagsDataSourceModel) RefreshFromSharedTagsList(ctx context.Cont
 	}
 
 	return diags
+}
+
+func (r *ResourceTagsDataSourceModel) ToOperationsGetResourceTagsRequest(ctx context.Context) (*operations.GetResourceTagsRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var resourceID string
+	resourceID = r.ResourceID.ValueString()
+
+	out := operations.GetResourceTagsRequest{
+		ResourceID: resourceID,
+	}
+
+	return &out, diags
 }

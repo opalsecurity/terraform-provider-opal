@@ -11,36 +11,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *OwnersDataSourceModel) ToOperationsGetOwnersRequest(ctx context.Context) (*operations.GetOwnersRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	cursor := new(string)
-	if !r.Cursor.IsUnknown() && !r.Cursor.IsNull() {
-		*cursor = r.Cursor.ValueString()
-	} else {
-		cursor = nil
-	}
-	name := new(string)
-	if !r.Name.IsUnknown() && !r.Name.IsNull() {
-		*name = r.Name.ValueString()
-	} else {
-		name = nil
-	}
-	pageSize := new(int64)
-	if !r.PageSize.IsUnknown() && !r.PageSize.IsNull() {
-		*pageSize = r.PageSize.ValueInt64()
-	} else {
-		pageSize = nil
-	}
-	out := operations.GetOwnersRequest{
-		Cursor:   cursor,
-		Name:     name,
-		PageSize: pageSize,
-	}
-
-	return &out, diags
-}
-
 func (r *OwnersDataSourceModel) RefreshFromSharedPaginatedOwnersList(ctx context.Context, resp *shared.PaginatedOwnersList) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -73,4 +43,34 @@ func (r *OwnersDataSourceModel) RefreshFromSharedPaginatedOwnersList(ctx context
 	}
 
 	return diags
+}
+
+func (r *OwnersDataSourceModel) ToOperationsGetOwnersRequest(ctx context.Context) (*operations.GetOwnersRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	cursor := new(string)
+	if !r.Cursor.IsUnknown() && !r.Cursor.IsNull() {
+		*cursor = r.Cursor.ValueString()
+	} else {
+		cursor = nil
+	}
+	name := new(string)
+	if !r.Name.IsUnknown() && !r.Name.IsNull() {
+		*name = r.Name.ValueString()
+	} else {
+		name = nil
+	}
+	pageSize := new(int64)
+	if !r.PageSize.IsUnknown() && !r.PageSize.IsNull() {
+		*pageSize = r.PageSize.ValueInt64()
+	} else {
+		pageSize = nil
+	}
+	out := operations.GetOwnersRequest{
+		Cursor:   cursor,
+		Name:     name,
+		PageSize: pageSize,
+	}
+
+	return &out, diags
 }

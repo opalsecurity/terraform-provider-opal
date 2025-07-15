@@ -10,6 +10,40 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
+func (r *BundleGroupResourceModel) RefreshFromSharedBundleGroup(ctx context.Context, resp *shared.BundleGroup) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.AccessLevelName = types.StringPointerValue(resp.AccessLevelName)
+		r.AccessLevelRemoteID = types.StringPointerValue(resp.AccessLevelRemoteID)
+		r.BundleID = types.StringPointerValue(resp.BundleID)
+		r.GroupID = types.StringPointerValue(resp.GroupID)
+	}
+
+	return diags
+}
+
+func (r *BundleGroupResourceModel) ToOperationsAddBundleGroupRequest(ctx context.Context) (*operations.AddBundleGroupRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	requestBody, requestBodyDiags := r.ToOperationsAddBundleGroupRequestBody(ctx)
+	diags.Append(requestBodyDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var bundleID string
+	bundleID = r.BundleID.ValueString()
+
+	out := operations.AddBundleGroupRequest{
+		RequestBody: *requestBody,
+		BundleID:    bundleID,
+	}
+
+	return &out, diags
+}
+
 func (r *BundleGroupResourceModel) ToOperationsAddBundleGroupRequestBody(ctx context.Context) (*operations.AddBundleGroupRequestBody, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -37,27 +71,6 @@ func (r *BundleGroupResourceModel) ToOperationsAddBundleGroupRequestBody(ctx con
 	return &out, diags
 }
 
-func (r *BundleGroupResourceModel) ToOperationsAddBundleGroupRequest(ctx context.Context) (*operations.AddBundleGroupRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	requestBody, requestBodyDiags := r.ToOperationsAddBundleGroupRequestBody(ctx)
-	diags.Append(requestBodyDiags...)
-
-	if diags.HasError() {
-		return nil, diags
-	}
-
-	var bundleID string
-	bundleID = r.BundleID.ValueString()
-
-	out := operations.AddBundleGroupRequest{
-		RequestBody: *requestBody,
-		BundleID:    bundleID,
-	}
-
-	return &out, diags
-}
-
 func (r *BundleGroupResourceModel) ToOperationsRemoveBundleGroupRequest(ctx context.Context) (*operations.RemoveBundleGroupRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -80,17 +93,4 @@ func (r *BundleGroupResourceModel) ToOperationsRemoveBundleGroupRequest(ctx cont
 	}
 
 	return &out, diags
-}
-
-func (r *BundleGroupResourceModel) RefreshFromSharedBundleGroup(ctx context.Context, resp *shared.BundleGroup) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if resp != nil {
-		r.AccessLevelName = types.StringPointerValue(resp.AccessLevelName)
-		r.AccessLevelRemoteID = types.StringPointerValue(resp.AccessLevelRemoteID)
-		r.BundleID = types.StringPointerValue(resp.BundleID)
-		r.GroupID = types.StringPointerValue(resp.GroupID)
-	}
-
-	return diags
 }

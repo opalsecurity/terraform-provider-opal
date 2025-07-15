@@ -10,34 +10,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
 )
 
-func (r *OnCallScheduleResourceModel) ToSharedCreateOnCallScheduleInfo(ctx context.Context) (*shared.CreateOnCallScheduleInfo, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var remoteID string
-	remoteID = r.RemoteID.ValueString()
-
-	thirdPartyProvider := shared.OnCallScheduleProviderEnum(r.ThirdPartyProvider.ValueString())
-	out := shared.CreateOnCallScheduleInfo{
-		RemoteID:           remoteID,
-		ThirdPartyProvider: thirdPartyProvider,
-	}
-
-	return &out, diags
-}
-
-func (r *OnCallScheduleResourceModel) ToOperationsGetOnCallScheduleIDRequest(ctx context.Context) (*operations.GetOnCallScheduleIDRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.GetOnCallScheduleIDRequest{
-		ID: id,
-	}
-
-	return &out, diags
-}
-
 func (r *OnCallScheduleResourceModel) RefreshFromSharedOnCallSchedule(ctx context.Context, resp *shared.OnCallSchedule) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -53,4 +25,32 @@ func (r *OnCallScheduleResourceModel) RefreshFromSharedOnCallSchedule(ctx contex
 	}
 
 	return diags
+}
+
+func (r *OnCallScheduleResourceModel) ToOperationsGetOnCallScheduleIDRequest(ctx context.Context) (*operations.GetOnCallScheduleIDRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetOnCallScheduleIDRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *OnCallScheduleResourceModel) ToSharedCreateOnCallScheduleInfo(ctx context.Context) (*shared.CreateOnCallScheduleInfo, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var remoteID string
+	remoteID = r.RemoteID.ValueString()
+
+	thirdPartyProvider := shared.OnCallScheduleProviderEnum(r.ThirdPartyProvider.ValueString())
+	out := shared.CreateOnCallScheduleInfo{
+		RemoteID:           remoteID,
+		ThirdPartyProvider: thirdPartyProvider,
+	}
+
+	return &out, diags
 }
