@@ -12,9 +12,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/plancheck"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/hashicorp/terraform-plugin-testing/tfversion"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/operations"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
 	"github.com/pkg/errors"
 )
 

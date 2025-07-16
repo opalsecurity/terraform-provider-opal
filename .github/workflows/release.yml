@@ -37,6 +37,13 @@ jobs:
           go-version-file: 'go.mod'
           cache: true
       -
+        name: Read current version + create tag
+        run: |
+          TAG=$(yq '.management.releaseVersion' .speakeasy/gen.lock)
+
+          git tag -a v$TAG -m "Release v$TAG"
+          git push origin v$TAG
+      -
         name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v5
         id: import_gpg

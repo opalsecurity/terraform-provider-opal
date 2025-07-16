@@ -15,10 +15,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	speakeasy_setplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/setplanmodifier"
-	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/internal/validators"
+	speakeasy_setplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/setplanmodifier"
+	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/validators"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.

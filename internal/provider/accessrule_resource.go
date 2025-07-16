@@ -14,12 +14,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
-	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	speakeasy_listvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/listvalidators"
-	speakeasy_objectvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/objectvalidators"
-	speakeasy_stringvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/stringvalidators"
+	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
+	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
+	speakeasy_listvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/listvalidators"
+	speakeasy_objectvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/objectvalidators"
+	speakeasy_stringvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/stringvalidators"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.

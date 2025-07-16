@@ -7,7 +7,7 @@ import (
 	"sort"
 
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-	"github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/hashicorp/terraform-plugin-framework-validators/helpers/validatordiag"
 )
 

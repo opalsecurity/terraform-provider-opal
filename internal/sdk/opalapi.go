@@ -7,11 +7,11 @@ package sdk
 import (
 	"context"
 	"fmt"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/config"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/hooks"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/retry"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/config"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/hooks"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/retry"
 	"net/http"
 	"time"
 )
@@ -169,9 +169,9 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *OpalAPI {
 	sdk := &OpalAPI{
-		SDKVersion: "0.45.3",
+		SDKVersion: "3.0.19",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:  "speakeasy-sdk/terraform 0.45.3 2.657.1 1.0 github.com/opalsecurity/terraform-provider-opal/internal/sdk",
+			UserAgent:  "speakeasy-sdk/terraform 3.0.19 2.657.1 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
 			ServerList: ServerList,
 		},
 		hooks: hooks.New(),

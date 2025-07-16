@@ -4,8 +4,8 @@ package operations
 
 import (
 	"errors"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/retry"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/retry"
 	"time"
 )
 
