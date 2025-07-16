@@ -3,7 +3,7 @@
 package typeconvert
 
 import (
-	sdkTypes "github.com/opalsecurity/terraform-provider-opal/internal/sdk/types"
+	sdkTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/types"
 )
 
 // Converts a date types.Date to string.

@@ -5,7 +5,7 @@ package shared
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
 )
 
 // RiskSensitivity - The risk sensitivity level for the group. When an override is set, this field will match that.

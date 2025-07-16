@@ -6,7 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/retry"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/retry"
 	"math"
 	"math/rand"
 	"net/http"

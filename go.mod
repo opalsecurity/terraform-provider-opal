@@ -1,4 +1,4 @@
-module github.com/opalsecurity/terraform-provider-opal
+module github.com/opalsecurity/terraform-provider-opal/v3
 
 go 1.23.0
 

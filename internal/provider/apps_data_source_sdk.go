@@ -7,10 +7,10 @@ import (
 	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
-	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/typeconvert"
+	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/operations"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
 )
 
 func (r *AppsDataSourceModel) RefreshFromSharedAppsList(ctx context.Context, resp *shared.AppsList) diag.Diagnostics {

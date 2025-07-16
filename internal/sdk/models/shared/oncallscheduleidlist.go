@@ -3,7 +3,7 @@
 package shared
 
 import (
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
 )
 
 // OnCallScheduleIDList - A list of on call schedule Opal UUIDs. To get the matching remote IDs, use the /on-call-schedules endpoints.

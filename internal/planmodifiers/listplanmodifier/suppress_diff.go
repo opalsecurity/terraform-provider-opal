@@ -4,7 +4,7 @@ package listplanmodifier
 
 import (
 	"context"
-	"github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/utils"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/utils"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 )

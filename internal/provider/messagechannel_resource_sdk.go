@@ -6,8 +6,8 @@ import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/operations"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
 )
 
 func (r *MessageChannelResourceModel) RefreshFromSharedMessageChannel(ctx context.Context, resp *shared.MessageChannel) diag.Diagnostics {

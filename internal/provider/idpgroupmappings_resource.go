@@ -11,9 +11,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	speakeasy_objectvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/objectvalidators"
+	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
+	speakeasy_objectvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/objectvalidators"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.

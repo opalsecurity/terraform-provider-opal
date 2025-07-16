@@ -6,10 +6,10 @@ import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/opalsecurity/terraform-provider-opal/internal/provider/typeconvert"
-	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/typeconvert"
+	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/operations"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
 )
 
 func (r *GroupTagsDataSourceModel) RefreshFromSharedTagsList(ctx context.Context, resp *shared.TagsList) diag.Diagnostics {

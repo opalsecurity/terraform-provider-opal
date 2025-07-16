@@ -16,14 +16,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	speakeasy_boolplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/boolplanmodifier"
-	speakeasy_objectplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/objectplanmodifier"
-	speakeasy_setplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/setplanmodifier"
-	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
-	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
-	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/boolvalidators"
-	custom_objectvalidators "github.com/opalsecurity/terraform-provider-opal/internal/validators/objectvalidators"
+	speakeasy_boolplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/boolplanmodifier"
+	speakeasy_objectplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/objectplanmodifier"
+	speakeasy_setplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/setplanmodifier"
+	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
+	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
+	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/boolvalidators"
+	custom_objectvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/objectvalidators"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.

@@ -11,11 +11,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	speakeasy_listplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/listplanmodifier"
-	speakeasy_objectplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/objectplanmodifier"
-	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/internal/planmodifiers/stringplanmodifier"
-	tfTypes "github.com/opalsecurity/terraform-provider-opal/internal/provider/types"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk"
+	speakeasy_listplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/listplanmodifier"
+	speakeasy_objectplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/objectplanmodifier"
+	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
+	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.

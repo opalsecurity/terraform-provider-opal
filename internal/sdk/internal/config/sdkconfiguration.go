@@ -4,7 +4,7 @@ package config
 
 import (
 	"context"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/retry"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/retry"
 	"net/http"
 	"time"
 )
