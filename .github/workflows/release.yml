@@ -12,8 +12,10 @@
 name: Release
 on:
   push:
-    tags:
-      - 'v*'
+    paths:
+      - ".speakeasy/gen.lock"
+    branches:
+      - main
 permissions:
   contents: write
 jobs:
