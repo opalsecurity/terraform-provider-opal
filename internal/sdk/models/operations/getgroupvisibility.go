@@ -3,8 +3,8 @@
 package operations
 
 import (
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/shared"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
 	"net/http"
 )
 

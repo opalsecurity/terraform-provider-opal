@@ -5,7 +5,7 @@ package provider
 import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/models/operations"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/operations"
 )
 
 func (r *TagUserResourceModel) ToOperationsCreateUserTagRequest(ctx context.Context) (*operations.CreateUserTagRequest, diag.Diagnostics) {

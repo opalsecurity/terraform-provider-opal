@@ -5,7 +5,7 @@ package shared
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/utils"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
 )
 
 // Operator - The operator of the reviewer stage. Admin and manager approval are also treated as reviewers.

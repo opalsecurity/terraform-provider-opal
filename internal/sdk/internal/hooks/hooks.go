@@ -5,7 +5,7 @@ package hooks
 import (
 	"context"
 	"errors"
-	"github.com/opalsecurity/terraform-provider-opal/internal/sdk/internal/config"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/config"
 	"net/http"
 )
 
