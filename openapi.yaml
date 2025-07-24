@@ -1743,6 +1743,15 @@ paths:
             format: uuid
             type: string
           style: simple
+        - description: The remote ID of the access level for which this user has direct access. If omitted, the default access level remote ID value (empty string) is assumed.
+          example: 30
+          explode: true
+          in: query
+          name: access_level_remote_id
+          required: false
+          schema:
+            type: string
+          style: form
       responses:
         "200":
           description: This user's access was successfully removed from this group.
