@@ -42,7 +42,9 @@ jobs:
         name: Read current version + create tag
         run: |
           TAG=$(yq '.management.releaseVersion' .speakeasy/gen.lock)
-
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          
           git tag -a v$TAG -m "Release v$TAG"
           git push origin v$TAG
       -
