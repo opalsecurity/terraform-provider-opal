@@ -1,4 +1,11 @@
 # Changelog
+## v.3.1.0
+- Bumping minor version due to improvements in release cycle
+- Improvements to documentation
+  
+## v.3.0.19
+- Add support for Scoped Admin Roles
+
 ## v.3.0.17
 - Add support for AWS Organizational Units
 - Add support for hierarchical data to resources
