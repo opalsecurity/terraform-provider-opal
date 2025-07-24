@@ -90,6 +90,12 @@ func (r *GroupUserResourceModel) ToOperationsCreateGroupUserRequestBody(ctx cont
 func (r *GroupUserResourceModel) ToOperationsDeleteGroupUserRequest(ctx context.Context) (*operations.DeleteGroupUserRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	accessLevelRemoteID := new(string)
+	if !r.AccessLevelRemoteID.IsUnknown() && !r.AccessLevelRemoteID.IsNull() {
+		*accessLevelRemoteID = r.AccessLevelRemoteID.ValueString()
+	} else {
+		accessLevelRemoteID = nil
+	}
 	var groupID string
 	groupID = r.GroupID.ValueString()
 
@@ -97,8 +103,9 @@ func (r *GroupUserResourceModel) ToOperationsDeleteGroupUserRequest(ctx context.
 	userID = r.UserID.ValueString()
 
 	out := operations.DeleteGroupUserRequest{
-		GroupID: groupID,
-		UserID:  userID,
+		AccessLevelRemoteID: accessLevelRemoteID,
+		GroupID:             groupID,
+		UserID:              userID,
 	}
 
 	return &out, diags

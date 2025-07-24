@@ -7,10 +7,19 @@ import (
 )
 
 type DeleteGroupUserRequest struct {
+	// The remote ID of the access level for which this user has direct access. If omitted, the default access level remote ID value (empty string) is assumed.
+	AccessLevelRemoteID *string `queryParam:"style=form,explode=true,name=access_level_remote_id"`
 	// The ID of the group.
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
 	// The ID of a user to remove from this group.
 	UserID string `pathParam:"style=simple,explode=false,name=user_id"`
+}
+
+func (o *DeleteGroupUserRequest) GetAccessLevelRemoteID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.AccessLevelRemoteID
 }
 
 func (o *DeleteGroupUserRequest) GetGroupID() string {

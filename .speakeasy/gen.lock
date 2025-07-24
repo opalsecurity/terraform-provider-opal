@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 2673b2f8fb0bf2914cc70fc14504a900
+  docChecksum: 5cc84cf7d95e637de4bc2cb97639da98
   docVersion: "1.0"
-  speakeasyVersion: 1.582.0
-  generationVersion: 2.657.1
-  releaseVersion: 3.0.19
-  configChecksum: a23ee25625e5d1ba06facf759f23abd2
+  speakeasyVersion: 1.588.0
+  generationVersion: 2.663.0
+  releaseVersion: 3.1.0
+  configChecksum: 5b75a68026395ac74ad2ed2c65a83745
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -15,7 +15,7 @@ features:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.2
     constsAndDefaults: 0.2.1
-    core: 3.41.16
+    core: 3.43.0
     deprecations: 2.82.0
     globalSecurity: 2.81.12
     globalServerURLs: 2.82.2
@@ -955,6 +955,8 @@ examples:
         path:
           group_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
           user_id: "f92aa855-cea9-4814-b9d8-f2a60d3e4a06"
+        query:
+          access_level_remote_id: "30"
   getGroup:
     speakeasy-default-get-group:
       parameters:

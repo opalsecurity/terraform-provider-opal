@@ -5,8 +5,10 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
@@ -84,6 +86,9 @@ func (r *EventsDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 			"page_size": schema.Int64Attribute{
 				Optional:    true,
 				Description: `Number of results to return per page. Default is 200.`,
+				Validators: []validator.Int64{
+					int64validator.AtMost(1000),
+				},
 			},
 			"previous": schema.StringAttribute{
 				Computed:    true,

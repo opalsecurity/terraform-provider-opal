@@ -5,8 +5,11 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
@@ -58,11 +61,37 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 			},
 			"group_type_filter": schema.StringAttribute{
 				Optional:    true,
-				Description: `The group type to filter by.`,
+				Description: `The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP"]`,
+				Validators: []validator.String{
+					stringvalidator.OneOf(
+						"ACTIVE_DIRECTORY_GROUP",
+						"AWS_SSO_GROUP",
+						"DATABRICKS_ACCOUNT_GROUP",
+						"DUO_GROUP",
+						"GIT_HUB_TEAM",
+						"GIT_LAB_GROUP",
+						"GOOGLE_GROUPS_GROUP",
+						"GOOGLE_GROUPS_GKE_GROUP",
+						"LDAP_GROUP",
+						"OKTA_GROUP",
+						"OKTA_GROUP_RULE",
+						"TAILSCALE_GROUP",
+						"OPAL_GROUP",
+						"OPAL_ACCESS_RULE",
+						"AZURE_AD_SECURITY_GROUP",
+						"AZURE_AD_MICROSOFT_365_GROUP",
+						"CONNECTOR_GROUP",
+						"SNOWFLAKE_ROLE",
+						"WORKDAY_USER_SECURITY_GROUP",
+					),
+				},
 			},
 			"page_size": schema.Int64Attribute{
 				Optional:    true,
 				Description: `Number of results to return per page. Default is 200.`,
+				Validators: []validator.Int64{
+					int64validator.AtMost(1000),
+				},
 			},
 			"results": schema.ListNestedAttribute{
 				Computed: true,
