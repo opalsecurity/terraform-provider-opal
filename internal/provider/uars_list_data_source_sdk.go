@@ -19,11 +19,10 @@ func (r *UARSListDataSourceModel) RefreshFromSharedPaginatedUARsList(ctx context
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
 		r.Results = []tfTypes.Uar{}
-		if len(r.Results) > len(resp.Results) {
-			r.Results = r.Results[:len(resp.Results)]
-		}
-		for resultsCount, resultsItem := range resp.Results {
+
+		for _, resultsItem := range resp.Results {
 			var results tfTypes.Uar
+
 			results.Deadline = types.StringValue(typeconvert.TimeToString(resultsItem.Deadline))
 			results.Name = types.StringValue(resultsItem.Name)
 			results.ReviewerAssignmentPolicy = types.StringValue(string(resultsItem.ReviewerAssignmentPolicy))
@@ -71,34 +70,22 @@ func (r *UARSListDataSourceModel) RefreshFromSharedPaginatedUARsList(ctx context
 					results.UarScope.ResourceTypes = append(results.UarScope.ResourceTypes, types.StringValue(string(v)))
 				}
 				results.UarScope.Tags = []tfTypes.TagFilter{}
-				for tagsCount, tagsItem := range resultsItem.UarScope.Tags {
+
+				for _, tagsItem := range resultsItem.UarScope.Tags {
 					var tags tfTypes.TagFilter
+
 					tags.Key = types.StringValue(tagsItem.Key)
 					tags.Value = types.StringPointerValue(tagsItem.Value)
-					if tagsCount+1 > len(results.UarScope.Tags) {
-						results.UarScope.Tags = append(results.UarScope.Tags, tags)
-					} else {
-						results.UarScope.Tags[tagsCount].Key = tags.Key
-						results.UarScope.Tags[tagsCount].Value = tags.Value
-					}
+
+					results.UarScope.Tags = append(results.UarScope.Tags, tags)
 				}
 				results.UarScope.Users = make([]types.String, 0, len(resultsItem.UarScope.Users))
 				for _, v := range resultsItem.UarScope.Users {
 					results.UarScope.Users = append(results.UarScope.Users, types.StringValue(v))
 				}
 			}
-			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results)
-			} else {
-				r.Results[resultsCount].Deadline = results.Deadline
-				r.Results[resultsCount].Name = results.Name
-				r.Results[resultsCount].ReviewerAssignmentPolicy = results.ReviewerAssignmentPolicy
-				r.Results[resultsCount].SelfReviewAllowed = results.SelfReviewAllowed
-				r.Results[resultsCount].SendReviewerAssignmentNotification = results.SendReviewerAssignmentNotification
-				r.Results[resultsCount].TimeZone = results.TimeZone
-				r.Results[resultsCount].UarID = results.UarID
-				r.Results[resultsCount].UarScope = results.UarScope
-			}
+
+			r.Results = append(r.Results, results)
 		}
 	}
 

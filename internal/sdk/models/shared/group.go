@@ -109,6 +109,8 @@ type Group struct {
 	GroupType *GroupTypeEnum `json:"group_type,omitempty"`
 	// The ID of the group.
 	ID string `json:"group_id"`
+	// Represents a sync task that has been completed, either successfully or with errors.
+	LastSuccessfulSync *SyncTask `json:"last_successful_sync,omitempty"`
 	// The name of the group.
 	Name *string `json:"name,omitempty"`
 	// Information that defines the remote group. This replaces the deprecated remote_id and metadata fields.
@@ -189,6 +191,13 @@ func (o *Group) GetID() string {
 		return ""
 	}
 	return o.ID
+}
+
+func (o *Group) GetLastSuccessfulSync() *SyncTask {
+	if o == nil {
+		return nil
+	}
+	return o.LastSuccessfulSync
 }
 
 func (o *Group) GetName() *string {

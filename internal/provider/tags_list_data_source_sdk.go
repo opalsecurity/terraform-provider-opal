@@ -19,27 +19,18 @@ func (r *TagsListDataSourceModel) RefreshFromSharedPaginatedTagsList(ctx context
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
 		r.Results = []tfTypes.Tag{}
-		if len(r.Results) > len(resp.Results) {
-			r.Results = r.Results[:len(resp.Results)]
-		}
-		for resultsCount, resultsItem := range resp.Results {
+
+		for _, resultsItem := range resp.Results {
 			var results tfTypes.Tag
+
 			results.CreatedAt = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resultsItem.CreatedAt))
 			results.ID = types.StringValue(resultsItem.ID)
 			results.Key = types.StringPointerValue(resultsItem.Key)
 			results.UpdatedAt = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resultsItem.UpdatedAt))
 			results.UserCreatorID = types.StringPointerValue(resultsItem.UserCreatorID)
 			results.Value = types.StringPointerValue(resultsItem.Value)
-			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results)
-			} else {
-				r.Results[resultsCount].CreatedAt = results.CreatedAt
-				r.Results[resultsCount].ID = results.ID
-				r.Results[resultsCount].Key = results.Key
-				r.Results[resultsCount].UpdatedAt = results.UpdatedAt
-				r.Results[resultsCount].UserCreatorID = results.UserCreatorID
-				r.Results[resultsCount].Value = results.Value
-			}
+
+			r.Results = append(r.Results, results)
 		}
 	}
 

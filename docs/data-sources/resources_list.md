@@ -57,6 +57,7 @@ Read-Only:
 - `descendant_resource_ids` (List of String) List of resource IDs that are descendants of this resource.
 - `description` (String) A description of the resource.
 - `id` (String) The ID of the resource.
+- `last_successful_sync` (Attributes) Represents a sync task that has been completed, either successfully or with errors. (see [below for nested schema](#nestedatt--results--last_successful_sync))
 - `name` (String) The name of the resource.
 - `parent_resource_id` (String) The ID of the parent resource.
 - `remote_info` (Attributes) Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields. (see [below for nested schema](#nestedatt--results--remote_info))
@@ -67,6 +68,15 @@ Read-Only:
 - `risk_sensitivity` (String) The risk sensitivity level for the resource. When an override is set, this field will match that.
 - `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur.
 - `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--results--ticket_propagation))
+
+<a id="nestedatt--results--last_successful_sync"></a>
+### Nested Schema for `results.last_successful_sync`
+
+Read-Only:
+
+- `completed_at` (String) The time when the sync task was completed.
+- `id` (String) The ID of the sync task.
+
 
 <a id="nestedatt--results--remote_info"></a>
 ### Nested Schema for `results.remote_info`

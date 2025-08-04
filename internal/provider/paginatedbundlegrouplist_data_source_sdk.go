@@ -16,23 +16,16 @@ func (r *PaginatedBundleGroupListDataSourceModel) RefreshFromSharedPaginatedBund
 
 	if resp != nil {
 		r.BundleGroups = []tfTypes.BundleGroup{}
-		if len(r.BundleGroups) > len(resp.BundleGroups) {
-			r.BundleGroups = r.BundleGroups[:len(resp.BundleGroups)]
-		}
-		for bundleGroupsCount, bundleGroupsItem := range resp.BundleGroups {
+
+		for _, bundleGroupsItem := range resp.BundleGroups {
 			var bundleGroups tfTypes.BundleGroup
+
 			bundleGroups.AccessLevelName = types.StringPointerValue(bundleGroupsItem.AccessLevelName)
 			bundleGroups.AccessLevelRemoteID = types.StringPointerValue(bundleGroupsItem.AccessLevelRemoteID)
 			bundleGroups.BundleID = types.StringPointerValue(bundleGroupsItem.BundleID)
 			bundleGroups.GroupID = types.StringPointerValue(bundleGroupsItem.GroupID)
-			if bundleGroupsCount+1 > len(r.BundleGroups) {
-				r.BundleGroups = append(r.BundleGroups, bundleGroups)
-			} else {
-				r.BundleGroups[bundleGroupsCount].AccessLevelName = bundleGroups.AccessLevelName
-				r.BundleGroups[bundleGroupsCount].AccessLevelRemoteID = bundleGroups.AccessLevelRemoteID
-				r.BundleGroups[bundleGroupsCount].BundleID = bundleGroups.BundleID
-				r.BundleGroups[bundleGroupsCount].GroupID = bundleGroups.GroupID
-			}
+
+			r.BundleGroups = append(r.BundleGroups, bundleGroups)
 		}
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)

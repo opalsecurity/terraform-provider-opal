@@ -36,6 +36,7 @@ type ResourceDataSourceModel struct {
 	DescendantResourceIds     []types.String                          `tfsdk:"descendant_resource_ids"`
 	Description               types.String                            `tfsdk:"description"`
 	ID                        types.String                            `tfsdk:"id"`
+	LastSuccessfulSync        *tfTypes.SyncTask                       `tfsdk:"last_successful_sync"`
 	Name                      types.String                            `tfsdk:"name"`
 	ParentResourceID          types.String                            `tfsdk:"parent_resource_id"`
 	RemoteInfo                *tfTypes.ResourceRemoteInfo             `tfsdk:"remote_info"`
@@ -88,6 +89,20 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"id": schema.StringAttribute{
 				Required:    true,
 				Description: `The ID of the resource.`,
+			},
+			"last_successful_sync": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"completed_at": schema.StringAttribute{
+						Computed:    true,
+						Description: `The time when the sync task was completed.`,
+					},
+					"id": schema.StringAttribute{
+						Computed:    true,
+						Description: `The ID of the sync task.`,
+					},
+				},
+				Description: `Represents a sync task that has been completed, either successfully or with errors.`,
 			},
 			"name": schema.StringAttribute{
 				Computed:    true,

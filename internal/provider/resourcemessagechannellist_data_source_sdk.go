@@ -16,11 +16,10 @@ func (r *ResourceMessageChannelListDataSourceModel) RefreshFromSharedMessageChan
 
 	if resp != nil {
 		r.Channels = []tfTypes.MessageChannel{}
-		if len(r.Channels) > len(resp.Channels) {
-			r.Channels = r.Channels[:len(resp.Channels)]
-		}
-		for channelsCount, channelsItem := range resp.Channels {
+
+		for _, channelsItem := range resp.Channels {
 			var channels tfTypes.MessageChannel
+
 			channels.ID = types.StringValue(channelsItem.ID)
 			channels.IsPrivate = types.BoolPointerValue(channelsItem.IsPrivate)
 			channels.Name = types.StringPointerValue(channelsItem.Name)
@@ -30,15 +29,8 @@ func (r *ResourceMessageChannelListDataSourceModel) RefreshFromSharedMessageChan
 			} else {
 				channels.ThirdPartyProvider = types.StringNull()
 			}
-			if channelsCount+1 > len(r.Channels) {
-				r.Channels = append(r.Channels, channels)
-			} else {
-				r.Channels[channelsCount].ID = channels.ID
-				r.Channels[channelsCount].IsPrivate = channels.IsPrivate
-				r.Channels[channelsCount].Name = channels.Name
-				r.Channels[channelsCount].RemoteID = channels.RemoteID
-				r.Channels[channelsCount].ThirdPartyProvider = channels.ThirdPartyProvider
-			}
+
+			r.Channels = append(r.Channels, channels)
 		}
 	}
 

@@ -6,6 +6,7 @@ import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
@@ -28,6 +29,13 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 		}
 		r.Description = types.StringPointerValue(resp.Description)
 		r.ID = types.StringValue(resp.ID)
+		if resp.LastSuccessfulSync == nil {
+			r.LastSuccessfulSync = nil
+		} else {
+			r.LastSuccessfulSync = &tfTypes.SyncTask{}
+			r.LastSuccessfulSync.CompletedAt = types.StringValue(typeconvert.TimeToString(resp.LastSuccessfulSync.CompletedAt))
+			r.LastSuccessfulSync.ID = types.StringValue(resp.LastSuccessfulSync.ID)
+		}
 		r.Name = types.StringPointerValue(resp.Name)
 		r.ParentResourceID = types.StringPointerValue(resp.ParentResourceID)
 		if resp.RemoteInfo == nil {
@@ -230,11 +238,10 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			}
 		}
 		r.RequestConfigurations = []tfTypes.RequestConfiguration{}
-		if len(r.RequestConfigurations) > len(resp.RequestConfigurations) {
-			r.RequestConfigurations = r.RequestConfigurations[:len(resp.RequestConfigurations)]
-		}
-		for requestConfigurationsCount, requestConfigurationsItem := range resp.RequestConfigurations {
+
+		for _, requestConfigurationsItem := range resp.RequestConfigurations {
 			var requestConfigurations tfTypes.RequestConfiguration
+
 			requestConfigurations.AllowRequests = types.BoolValue(requestConfigurationsItem.AllowRequests)
 			requestConfigurations.AutoApproval = types.BoolValue(requestConfigurationsItem.AutoApproval)
 			if requestConfigurationsItem.Condition == nil {
@@ -257,8 +264,10 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			requestConfigurations.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
 			requestConfigurations.RequireSupportTicket = types.BoolValue(requestConfigurationsItem.RequireSupportTicket)
 			requestConfigurations.ReviewerStages = []tfTypes.ReviewerStage{}
-			for reviewerStagesCount, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
+
+			for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 				var reviewerStages tfTypes.ReviewerStage
+
 				if reviewerStagesItem.Operator != nil {
 					reviewerStages.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
 				} else {
@@ -270,29 +279,11 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				}
 				reviewerStages.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
 				reviewerStages.RequireManagerApproval = types.BoolPointerValue(reviewerStagesItem.RequireManagerApproval)
-				if reviewerStagesCount+1 > len(requestConfigurations.ReviewerStages) {
-					requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
-				} else {
-					requestConfigurations.ReviewerStages[reviewerStagesCount].Operator = reviewerStages.Operator
-					requestConfigurations.ReviewerStages[reviewerStagesCount].OwnerIds = reviewerStages.OwnerIds
-					requestConfigurations.ReviewerStages[reviewerStagesCount].RequireAdminApproval = reviewerStages.RequireAdminApproval
-					requestConfigurations.ReviewerStages[reviewerStagesCount].RequireManagerApproval = reviewerStages.RequireManagerApproval
-				}
+
+				requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
 			}
-			if requestConfigurationsCount+1 > len(r.RequestConfigurations) {
-				r.RequestConfigurations = append(r.RequestConfigurations, requestConfigurations)
-			} else {
-				r.RequestConfigurations[requestConfigurationsCount].AllowRequests = requestConfigurations.AllowRequests
-				r.RequestConfigurations[requestConfigurationsCount].AutoApproval = requestConfigurations.AutoApproval
-				r.RequestConfigurations[requestConfigurationsCount].Condition = requestConfigurations.Condition
-				r.RequestConfigurations[requestConfigurationsCount].MaxDuration = requestConfigurations.MaxDuration
-				r.RequestConfigurations[requestConfigurationsCount].Priority = requestConfigurations.Priority
-				r.RequestConfigurations[requestConfigurationsCount].RecommendedDuration = requestConfigurations.RecommendedDuration
-				r.RequestConfigurations[requestConfigurationsCount].RequestTemplateID = requestConfigurations.RequestTemplateID
-				r.RequestConfigurations[requestConfigurationsCount].RequireMfaToRequest = requestConfigurations.RequireMfaToRequest
-				r.RequestConfigurations[requestConfigurationsCount].RequireSupportTicket = requestConfigurations.RequireSupportTicket
-				r.RequestConfigurations[requestConfigurationsCount].ReviewerStages = requestConfigurations.ReviewerStages
-			}
+
+			r.RequestConfigurations = append(r.RequestConfigurations, requestConfigurations)
 		}
 		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
 		r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
@@ -338,11 +329,10 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.
 	r.ID = types.StringValue(resp.ID)
 	r.Name = types.StringPointerValue(resp.Name)
 	r.RequestConfigurations = []tfTypes.RequestConfiguration{}
-	if len(r.RequestConfigurations) > len(resp.RequestConfigurations) {
-		r.RequestConfigurations = r.RequestConfigurations[:len(resp.RequestConfigurations)]
-	}
-	for requestConfigurationsCount, requestConfigurationsItem := range resp.RequestConfigurations {
+
+	for _, requestConfigurationsItem := range resp.RequestConfigurations {
 		var requestConfigurations tfTypes.RequestConfiguration
+
 		requestConfigurations.AllowRequests = types.BoolValue(requestConfigurationsItem.AllowRequests)
 		requestConfigurations.AutoApproval = types.BoolValue(requestConfigurationsItem.AutoApproval)
 		if requestConfigurationsItem.Condition == nil {
@@ -365,8 +355,10 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.
 		requestConfigurations.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
 		requestConfigurations.RequireSupportTicket = types.BoolValue(requestConfigurationsItem.RequireSupportTicket)
 		requestConfigurations.ReviewerStages = []tfTypes.ReviewerStage{}
-		for reviewerStagesCount, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
+
+		for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 			var reviewerStages tfTypes.ReviewerStage
+
 			if reviewerStagesItem.Operator != nil {
 				reviewerStages.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
 			} else {
@@ -378,29 +370,11 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.
 			}
 			reviewerStages.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
 			reviewerStages.RequireManagerApproval = types.BoolPointerValue(reviewerStagesItem.RequireManagerApproval)
-			if reviewerStagesCount+1 > len(requestConfigurations.ReviewerStages) {
-				requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
-			} else {
-				requestConfigurations.ReviewerStages[reviewerStagesCount].Operator = reviewerStages.Operator
-				requestConfigurations.ReviewerStages[reviewerStagesCount].OwnerIds = reviewerStages.OwnerIds
-				requestConfigurations.ReviewerStages[reviewerStagesCount].RequireAdminApproval = reviewerStages.RequireAdminApproval
-				requestConfigurations.ReviewerStages[reviewerStagesCount].RequireManagerApproval = reviewerStages.RequireManagerApproval
-			}
+
+			requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
 		}
-		if requestConfigurationsCount+1 > len(r.RequestConfigurations) {
-			r.RequestConfigurations = append(r.RequestConfigurations, requestConfigurations)
-		} else {
-			r.RequestConfigurations[requestConfigurationsCount].AllowRequests = requestConfigurations.AllowRequests
-			r.RequestConfigurations[requestConfigurationsCount].AutoApproval = requestConfigurations.AutoApproval
-			r.RequestConfigurations[requestConfigurationsCount].Condition = requestConfigurations.Condition
-			r.RequestConfigurations[requestConfigurationsCount].MaxDuration = requestConfigurations.MaxDuration
-			r.RequestConfigurations[requestConfigurationsCount].Priority = requestConfigurations.Priority
-			r.RequestConfigurations[requestConfigurationsCount].RecommendedDuration = requestConfigurations.RecommendedDuration
-			r.RequestConfigurations[requestConfigurationsCount].RequestTemplateID = requestConfigurations.RequestTemplateID
-			r.RequestConfigurations[requestConfigurationsCount].RequireMfaToRequest = requestConfigurations.RequireMfaToRequest
-			r.RequestConfigurations[requestConfigurationsCount].RequireSupportTicket = requestConfigurations.RequireSupportTicket
-			r.RequestConfigurations[requestConfigurationsCount].ReviewerStages = requestConfigurations.ReviewerStages
-		}
+
+		r.RequestConfigurations = append(r.RequestConfigurations, requestConfigurations)
 	}
 	r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
 	r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)

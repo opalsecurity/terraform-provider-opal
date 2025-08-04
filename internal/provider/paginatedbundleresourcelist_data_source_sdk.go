@@ -16,23 +16,16 @@ func (r *PaginatedBundleResourceListDataSourceModel) RefreshFromSharedPaginatedB
 
 	if resp != nil {
 		r.BundleResources = []tfTypes.BundleResource{}
-		if len(r.BundleResources) > len(resp.BundleResources) {
-			r.BundleResources = r.BundleResources[:len(resp.BundleResources)]
-		}
-		for bundleResourcesCount, bundleResourcesItem := range resp.BundleResources {
+
+		for _, bundleResourcesItem := range resp.BundleResources {
 			var bundleResources tfTypes.BundleResource
+
 			bundleResources.AccessLevelName = types.StringPointerValue(bundleResourcesItem.AccessLevelName)
 			bundleResources.AccessLevelRemoteID = types.StringPointerValue(bundleResourcesItem.AccessLevelRemoteID)
 			bundleResources.BundleID = types.StringPointerValue(bundleResourcesItem.BundleID)
 			bundleResources.ResourceID = types.StringPointerValue(bundleResourcesItem.ResourceID)
-			if bundleResourcesCount+1 > len(r.BundleResources) {
-				r.BundleResources = append(r.BundleResources, bundleResources)
-			} else {
-				r.BundleResources[bundleResourcesCount].AccessLevelName = bundleResources.AccessLevelName
-				r.BundleResources[bundleResourcesCount].AccessLevelRemoteID = bundleResources.AccessLevelRemoteID
-				r.BundleResources[bundleResourcesCount].BundleID = bundleResources.BundleID
-				r.BundleResources[bundleResourcesCount].ResourceID = bundleResources.ResourceID
-			}
+
+			r.BundleResources = append(r.BundleResources, bundleResources)
 		}
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)

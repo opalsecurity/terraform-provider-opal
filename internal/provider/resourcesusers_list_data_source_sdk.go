@@ -17,11 +17,10 @@ func (r *ResourcesUsersListDataSourceModel) RefreshFromSharedResourceAccessUserL
 
 	if resp != nil {
 		r.Results = []tfTypes.ResourceAccessUser{}
-		if len(r.Results) > len(resp.Results) {
-			r.Results = r.Results[:len(resp.Results)]
-		}
-		for resultsCount, resultsItem := range resp.Results {
+
+		for _, resultsItem := range resp.Results {
 			var results tfTypes.ResourceAccessUser
+
 			results.AccessLevel.AccessLevelName = types.StringValue(resultsItem.AccessLevel.AccessLevelName)
 			results.AccessLevel.AccessLevelRemoteID = types.StringValue(resultsItem.AccessLevel.AccessLevelRemoteID)
 			results.Email = types.StringValue(resultsItem.Email)
@@ -37,19 +36,8 @@ func (r *ResourcesUsersListDataSourceModel) RefreshFromSharedResourceAccessUserL
 			}
 			results.ResourceID = types.StringValue(resultsItem.ResourceID)
 			results.UserID = types.StringValue(resultsItem.UserID)
-			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results)
-			} else {
-				r.Results[resultsCount].AccessLevel = results.AccessLevel
-				r.Results[resultsCount].Email = results.Email
-				r.Results[resultsCount].ExpirationDate = results.ExpirationDate
-				r.Results[resultsCount].FullName = results.FullName
-				r.Results[resultsCount].HasDirectAccess = results.HasDirectAccess
-				r.Results[resultsCount].NumAccessPaths = results.NumAccessPaths
-				r.Results[resultsCount].PropagationStatus = results.PropagationStatus
-				r.Results[resultsCount].ResourceID = results.ResourceID
-				r.Results[resultsCount].UserID = results.UserID
-			}
+
+			r.Results = append(r.Results, results)
 		}
 	}
 

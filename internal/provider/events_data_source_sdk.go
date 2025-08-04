@@ -20,11 +20,10 @@ func (r *EventsDataSourceModel) RefreshFromSharedPaginatedEventList(ctx context.
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
 		r.Results = []tfTypes.Event{}
-		if len(r.Results) > len(resp.Results) {
-			r.Results = r.Results[:len(resp.Results)]
-		}
-		for resultsCount, resultsItem := range resp.Results {
+
+		for _, resultsItem := range resp.Results {
 			var results tfTypes.Event
+
 			results.ActorEmail = types.StringPointerValue(resultsItem.ActorEmail)
 			results.ActorIPAddress = types.StringPointerValue(resultsItem.ActorIPAddress)
 			actorNameResult, _ := json.Marshal(resultsItem.ActorName)
@@ -36,8 +35,10 @@ func (r *EventsDataSourceModel) RefreshFromSharedPaginatedEventList(ctx context.
 			results.EventID = types.StringValue(resultsItem.EventID)
 			results.EventType = types.StringValue(resultsItem.EventType)
 			results.SubEvents = []tfTypes.SubEvent{}
-			for subEventsCount, subEventsItem := range resultsItem.SubEvents {
+
+			for _, subEventsItem := range resultsItem.SubEvents {
 				var subEvents tfTypes.SubEvent
+
 				if subEventsItem.AdditionalProperties == nil {
 					subEvents.AdditionalProperties = types.StringNull()
 				} else {
@@ -45,27 +46,11 @@ func (r *EventsDataSourceModel) RefreshFromSharedPaginatedEventList(ctx context.
 					subEvents.AdditionalProperties = types.StringValue(string(additionalPropertiesResult))
 				}
 				subEvents.SubEventType = types.StringValue(subEventsItem.SubEventType)
-				if subEventsCount+1 > len(results.SubEvents) {
-					results.SubEvents = append(results.SubEvents, subEvents)
-				} else {
-					results.SubEvents[subEventsCount].AdditionalProperties = subEvents.AdditionalProperties
-					results.SubEvents[subEventsCount].SubEventType = subEvents.SubEventType
-				}
+
+				results.SubEvents = append(results.SubEvents, subEvents)
 			}
-			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results)
-			} else {
-				r.Results[resultsCount].ActorEmail = results.ActorEmail
-				r.Results[resultsCount].ActorIPAddress = results.ActorIPAddress
-				r.Results[resultsCount].ActorName = results.ActorName
-				r.Results[resultsCount].ActorUserID = results.ActorUserID
-				r.Results[resultsCount].APITokenName = results.APITokenName
-				r.Results[resultsCount].APITokenPreview = results.APITokenPreview
-				r.Results[resultsCount].CreatedAt = results.CreatedAt
-				r.Results[resultsCount].EventID = results.EventID
-				r.Results[resultsCount].EventType = results.EventType
-				r.Results[resultsCount].SubEvents = results.SubEvents
-			}
+
+			r.Results = append(r.Results, results)
 		}
 	}
 

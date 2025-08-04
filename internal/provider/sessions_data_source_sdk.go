@@ -19,26 +19,18 @@ func (r *SessionsDataSourceModel) RefreshFromSharedSessionsList(ctx context.Cont
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
 		r.Results = []tfTypes.Session{}
-		if len(r.Results) > len(resp.Results) {
-			r.Results = r.Results[:len(resp.Results)]
-		}
-		for resultsCount, resultsItem := range resp.Results {
+
+		for _, resultsItem := range resp.Results {
 			var results tfTypes.Session
+
 			results.AccessLevel.AccessLevelName = types.StringValue(resultsItem.AccessLevel.AccessLevelName)
 			results.AccessLevel.AccessLevelRemoteID = types.StringValue(resultsItem.AccessLevel.AccessLevelRemoteID)
 			results.ConnectionID = types.StringValue(resultsItem.ConnectionID)
 			results.ExpirationDate = types.StringValue(typeconvert.TimeToString(resultsItem.ExpirationDate))
 			results.ResourceID = types.StringValue(resultsItem.ResourceID)
 			results.UserID = types.StringValue(resultsItem.UserID)
-			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results)
-			} else {
-				r.Results[resultsCount].AccessLevel = results.AccessLevel
-				r.Results[resultsCount].ConnectionID = results.ConnectionID
-				r.Results[resultsCount].ExpirationDate = results.ExpirationDate
-				r.Results[resultsCount].ResourceID = results.ResourceID
-				r.Results[resultsCount].UserID = results.UserID
-			}
+
+			r.Results = append(r.Results, results)
 		}
 	}
 

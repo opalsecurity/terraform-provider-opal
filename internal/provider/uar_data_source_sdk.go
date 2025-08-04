@@ -63,19 +63,14 @@ func (r *UarDataSourceModel) RefreshFromSharedUar(ctx context.Context, resp *sha
 				r.UarScope.ResourceTypes = append(r.UarScope.ResourceTypes, types.StringValue(string(v)))
 			}
 			r.UarScope.Tags = []tfTypes.TagFilter{}
-			if len(r.UarScope.Tags) > len(resp.UarScope.Tags) {
-				r.UarScope.Tags = r.UarScope.Tags[:len(resp.UarScope.Tags)]
-			}
-			for tagsCount, tagsItem := range resp.UarScope.Tags {
+
+			for _, tagsItem := range resp.UarScope.Tags {
 				var tags tfTypes.TagFilter
+
 				tags.Key = types.StringValue(tagsItem.Key)
 				tags.Value = types.StringPointerValue(tagsItem.Value)
-				if tagsCount+1 > len(r.UarScope.Tags) {
-					r.UarScope.Tags = append(r.UarScope.Tags, tags)
-				} else {
-					r.UarScope.Tags[tagsCount].Key = tags.Key
-					r.UarScope.Tags[tagsCount].Value = tags.Value
-				}
+
+				r.UarScope.Tags = append(r.UarScope.Tags, tags)
 			}
 			r.UarScope.Users = make([]types.String, 0, len(resp.UarScope.Users))
 			for _, v := range resp.UarScope.Users {

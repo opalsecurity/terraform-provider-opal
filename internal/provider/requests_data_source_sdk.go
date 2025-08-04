@@ -18,15 +18,16 @@ func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(ctx context.Conte
 	if resp != nil {
 		r.Cursor = types.StringPointerValue(resp.Cursor)
 		r.Requests = []tfTypes.Request{}
-		if len(r.Requests) > len(resp.Requests) {
-			r.Requests = r.Requests[:len(resp.Requests)]
-		}
-		for requestsCount, requestsItem := range resp.Requests {
+
+		for _, requestsItem := range resp.Requests {
 			var requests tfTypes.Request
+
 			requests.CreatedAt = types.StringValue(typeconvert.TimeToString(requestsItem.CreatedAt))
 			requests.CustomFieldsResponses = []tfTypes.RequestCustomFieldResponse{}
-			for customFieldsResponsesCount, customFieldsResponsesItem := range requestsItem.CustomFieldsResponses {
+
+			for _, customFieldsResponsesItem := range requestsItem.CustomFieldsResponses {
 				var customFieldsResponses tfTypes.RequestCustomFieldResponse
+
 				customFieldsResponses.FieldName = types.StringValue(customFieldsResponsesItem.FieldName)
 				customFieldsResponses.FieldType = types.StringValue(string(customFieldsResponsesItem.FieldType))
 				if customFieldsResponsesItem.FieldValue.Str != nil {
@@ -35,20 +36,17 @@ func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(ctx context.Conte
 				if customFieldsResponsesItem.FieldValue.Boolean != nil {
 					customFieldsResponses.FieldValue.Boolean = types.BoolPointerValue(customFieldsResponsesItem.FieldValue.Boolean)
 				}
-				if customFieldsResponsesCount+1 > len(requests.CustomFieldsResponses) {
-					requests.CustomFieldsResponses = append(requests.CustomFieldsResponses, customFieldsResponses)
-				} else {
-					requests.CustomFieldsResponses[customFieldsResponsesCount].FieldName = customFieldsResponses.FieldName
-					requests.CustomFieldsResponses[customFieldsResponsesCount].FieldType = customFieldsResponses.FieldType
-					requests.CustomFieldsResponses[customFieldsResponsesCount].FieldValue = customFieldsResponses.FieldValue
-				}
+
+				requests.CustomFieldsResponses = append(requests.CustomFieldsResponses, customFieldsResponses)
 			}
 			requests.DurationMinutes = types.Int64PointerValue(requestsItem.DurationMinutes)
 			requests.ID = types.StringValue(requestsItem.ID)
 			requests.Reason = types.StringValue(requestsItem.Reason)
 			requests.RequestedItemsList = []tfTypes.RequestedItem{}
-			for requestedItemsListCount, requestedItemsListItem := range requestsItem.RequestedItemsList {
+
+			for _, requestedItemsListItem := range requestsItem.RequestedItemsList {
 				var requestedItemsList tfTypes.RequestedItem
+
 				requestedItemsList.AccessLevelName = types.StringPointerValue(requestedItemsListItem.AccessLevelName)
 				requestedItemsList.AccessLevelRemoteID = types.StringPointerValue(requestedItemsListItem.AccessLevelRemoteID)
 				requestedItemsList.GroupID = types.StringPointerValue(requestedItemsListItem.GroupID)
@@ -56,17 +54,8 @@ func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(ctx context.Conte
 				requestedItemsList.RemoteID = types.StringPointerValue(requestedItemsListItem.RemoteID)
 				requestedItemsList.RemoteName = types.StringPointerValue(requestedItemsListItem.RemoteName)
 				requestedItemsList.ResourceID = types.StringPointerValue(requestedItemsListItem.ResourceID)
-				if requestedItemsListCount+1 > len(requests.RequestedItemsList) {
-					requests.RequestedItemsList = append(requests.RequestedItemsList, requestedItemsList)
-				} else {
-					requests.RequestedItemsList[requestedItemsListCount].AccessLevelName = requestedItemsList.AccessLevelName
-					requests.RequestedItemsList[requestedItemsListCount].AccessLevelRemoteID = requestedItemsList.AccessLevelRemoteID
-					requests.RequestedItemsList[requestedItemsListCount].GroupID = requestedItemsList.GroupID
-					requests.RequestedItemsList[requestedItemsListCount].Name = requestedItemsList.Name
-					requests.RequestedItemsList[requestedItemsListCount].RemoteID = requestedItemsList.RemoteID
-					requests.RequestedItemsList[requestedItemsListCount].RemoteName = requestedItemsList.RemoteName
-					requests.RequestedItemsList[requestedItemsListCount].ResourceID = requestedItemsList.ResourceID
-				}
+
+				requests.RequestedItemsList = append(requests.RequestedItemsList, requestedItemsList)
 			}
 			requests.RequesterID = types.StringValue(requestsItem.RequesterID)
 			if requestsItem.Stages == nil {
@@ -76,51 +65,32 @@ func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(ctx context.Conte
 				requests.Stages.RequestedItemName = types.StringValue(requestsItem.Stages.RequestedItemName)
 				requests.Stages.RequestedRoleName = types.StringPointerValue(requestsItem.Stages.RequestedRoleName)
 				requests.Stages.Stages = []tfTypes.RequestStage{}
-				for stagesCount, stagesItem := range requestsItem.Stages.Stages {
+
+				for _, stagesItem := range requestsItem.Stages.Stages {
 					var stages tfTypes.RequestStage
+
 					stages.Operator = types.StringValue(string(stagesItem.Operator))
 					stages.Reviewers = []tfTypes.RequestReviewer{}
-					for reviewersCount, reviewersItem := range stagesItem.Reviewers {
+
+					for _, reviewersItem := range stagesItem.Reviewers {
 						var reviewers tfTypes.RequestReviewer
+
 						reviewers.ID = types.StringValue(reviewersItem.ID)
 						reviewers.Status = types.StringValue(string(reviewersItem.Status))
-						if reviewersCount+1 > len(stages.Reviewers) {
-							stages.Reviewers = append(stages.Reviewers, reviewers)
-						} else {
-							stages.Reviewers[reviewersCount].ID = reviewers.ID
-							stages.Reviewers[reviewersCount].Status = reviewers.Status
-						}
+
+						stages.Reviewers = append(stages.Reviewers, reviewers)
 					}
 					stages.Stage = types.Int64Value(stagesItem.Stage)
-					if stagesCount+1 > len(requests.Stages.Stages) {
-						requests.Stages.Stages = append(requests.Stages.Stages, stages)
-					} else {
-						requests.Stages.Stages[stagesCount].Operator = stages.Operator
-						requests.Stages.Stages[stagesCount].Reviewers = stages.Reviewers
-						requests.Stages.Stages[stagesCount].Stage = stages.Stage
-					}
+
+					requests.Stages.Stages = append(requests.Stages.Stages, stages)
 				}
 			}
 			requests.Status = types.StringValue(string(requestsItem.Status))
 			requests.TargetGroupID = types.StringPointerValue(requestsItem.TargetGroupID)
 			requests.TargetUserID = types.StringPointerValue(requestsItem.TargetUserID)
 			requests.UpdatedAt = types.StringValue(typeconvert.TimeToString(requestsItem.UpdatedAt))
-			if requestsCount+1 > len(r.Requests) {
-				r.Requests = append(r.Requests, requests)
-			} else {
-				r.Requests[requestsCount].CreatedAt = requests.CreatedAt
-				r.Requests[requestsCount].CustomFieldsResponses = requests.CustomFieldsResponses
-				r.Requests[requestsCount].DurationMinutes = requests.DurationMinutes
-				r.Requests[requestsCount].ID = requests.ID
-				r.Requests[requestsCount].Reason = requests.Reason
-				r.Requests[requestsCount].RequestedItemsList = requests.RequestedItemsList
-				r.Requests[requestsCount].RequesterID = requests.RequesterID
-				r.Requests[requestsCount].Stages = requests.Stages
-				r.Requests[requestsCount].Status = requests.Status
-				r.Requests[requestsCount].TargetGroupID = requests.TargetGroupID
-				r.Requests[requestsCount].TargetUserID = requests.TargetUserID
-				r.Requests[requestsCount].UpdatedAt = requests.UpdatedAt
-			}
+
+			r.Requests = append(r.Requests, requests)
 		}
 	}
 
@@ -148,6 +118,12 @@ func (r *RequestsDataSourceModel) ToOperationsGetRequestsRequest(ctx context.Con
 	} else {
 		pageSize = nil
 	}
+	requesterID := new(string)
+	if !r.RequesterID.IsUnknown() && !r.RequesterID.IsNull() {
+		*requesterID = r.RequesterID.ValueString()
+	} else {
+		requesterID = nil
+	}
 	showPendingOnly := new(bool)
 	if !r.ShowPendingOnly.IsUnknown() && !r.ShowPendingOnly.IsNull() {
 		*showPendingOnly = r.ShowPendingOnly.ValueBool()
@@ -160,12 +136,20 @@ func (r *RequestsDataSourceModel) ToOperationsGetRequestsRequest(ctx context.Con
 	} else {
 		startDateFilter = nil
 	}
+	targetUserID := new(string)
+	if !r.TargetUserID.IsUnknown() && !r.TargetUserID.IsNull() {
+		*targetUserID = r.TargetUserID.ValueString()
+	} else {
+		targetUserID = nil
+	}
 	out := operations.GetRequestsRequest{
 		Cursor:          cursor,
 		EndDateFilter:   endDateFilter,
 		PageSize:        pageSize,
+		RequesterID:     requesterID,
 		ShowPendingOnly: showPendingOnly,
 		StartDateFilter: startDateFilter,
+		TargetUserID:    targetUserID,
 	}
 
 	return &out, diags

@@ -34,6 +34,7 @@ data "opal_group" "my_group" {
 - `group_binding_id` (String) The ID of the associated group binding.
 - `group_leader_user_ids` (Set of String) A list of User IDs for the group leaders of the group
 - `group_type` (String) The type of the group.
+- `last_successful_sync` (Attributes) Represents a sync task that has been completed, either successfully or with errors. (see [below for nested schema](#nestedatt--last_successful_sync))
 - `message_channels` (Attributes) The audit and reviewer message channels attached to the group. (see [below for nested schema](#nestedatt--message_channels))
 - `name` (String) The name of the group.
 - `oncall_schedules` (Attributes) The on call schedules attached to the group. (see [below for nested schema](#nestedatt--oncall_schedules))
@@ -45,6 +46,15 @@ data "opal_group" "my_group" {
 - `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur.
 - `visibility` (String) The visibility level of the entity.
 - `visibility_group_ids` (Set of String)
+
+<a id="nestedatt--last_successful_sync"></a>
+### Nested Schema for `last_successful_sync`
+
+Read-Only:
+
+- `completed_at` (String) The time when the sync task was completed.
+- `id` (String) The ID of the sync task.
+
 
 <a id="nestedatt--message_channels"></a>
 ### Nested Schema for `message_channels`

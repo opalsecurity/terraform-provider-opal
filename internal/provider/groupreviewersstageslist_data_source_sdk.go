@@ -15,11 +15,10 @@ func (r *GroupReviewersStagesListDataSourceModel) RefreshFromSharedReviewerStage
 	var diags diag.Diagnostics
 
 	r.Data = []tfTypes.ReviewerStage{}
-	if len(r.Data) > len(resp) {
-		r.Data = r.Data[:len(resp)]
-	}
-	for dataCount, dataItem := range resp {
+
+	for _, dataItem := range resp {
 		var data tfTypes.ReviewerStage
+
 		if dataItem.Operator != nil {
 			data.Operator = types.StringValue(string(*dataItem.Operator))
 		} else {
@@ -31,14 +30,8 @@ func (r *GroupReviewersStagesListDataSourceModel) RefreshFromSharedReviewerStage
 		}
 		data.RequireAdminApproval = types.BoolPointerValue(dataItem.RequireAdminApproval)
 		data.RequireManagerApproval = types.BoolPointerValue(dataItem.RequireManagerApproval)
-		if dataCount+1 > len(r.Data) {
-			r.Data = append(r.Data, data)
-		} else {
-			r.Data[dataCount].Operator = data.Operator
-			r.Data[dataCount].OwnerIds = data.OwnerIds
-			r.Data[dataCount].RequireAdminApproval = data.RequireAdminApproval
-			r.Data[dataCount].RequireManagerApproval = data.RequireManagerApproval
-		}
+
+		r.Data = append(r.Data, data)
 	}
 
 	return diags

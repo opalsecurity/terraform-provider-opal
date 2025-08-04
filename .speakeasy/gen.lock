@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 5cc84cf7d95e637de4bc2cb97639da98
+  docChecksum: c3682ddfc5efca4e8e9ed2b5a7e78cc7
   docVersion: "1.0"
-  speakeasyVersion: 1.588.0
-  generationVersion: 2.663.0
-  releaseVersion: 3.1.0
-  configChecksum: 5b75a68026395ac74ad2ed2c65a83745
+  speakeasyVersion: 1.596.0
+  generationVersion: 2.672.0
+  releaseVersion: 3.1.1
+  configChecksum: e53ccf38145be6edf57ebe8743b18a8a
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -15,7 +15,7 @@ features:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.2
     constsAndDefaults: 0.2.1
-    core: 3.43.0
+    core: 3.43.1
     deprecations: 2.82.0
     globalSecurity: 2.81.12
     globalServerURLs: 2.82.2
@@ -319,6 +319,7 @@ generatedFiles:
   - internal/provider/types/session.go
   - internal/provider/types/snowflake_role.go
   - internal/provider/types/sub_event.go
+  - internal/provider/types/sync_task.go
   - internal/provider/types/tag.go
   - internal/provider/types/tag_filter.go
   - internal/provider/types/tag_selector.go
@@ -429,6 +430,7 @@ generatedFiles:
   - internal/sdk/models/operations/getownerfromname.go
   - internal/sdk/models/operations/getownerid.go
   - internal/sdk/models/operations/getowners.go
+  - internal/sdk/models/operations/getremoteusers.go
   - internal/sdk/models/operations/getrequest.go
   - internal/sdk/models/operations/getrequests.go
   - internal/sdk/models/operations/getrequestsrelay.go
@@ -534,12 +536,14 @@ generatedFiles:
   - internal/sdk/models/shared/paginatedgroupbindingslist.go
   - internal/sdk/models/shared/paginatedgroupslist.go
   - internal/sdk/models/shared/paginatedownerslist.go
+  - internal/sdk/models/shared/paginatedremoteuserslist.go
   - internal/sdk/models/shared/paginatedresourceslist.go
   - internal/sdk/models/shared/paginatedtagslist.go
   - internal/sdk/models/shared/paginateduarslist.go
   - internal/sdk/models/shared/paginateduserslist.go
   - internal/sdk/models/shared/propagationstatus.go
   - internal/sdk/models/shared/propagationstatusenum.go
+  - internal/sdk/models/shared/remoteuser.go
   - internal/sdk/models/shared/request.go
   - internal/sdk/models/shared/requestconfiguration.go
   - internal/sdk/models/shared/requestconnection.go
@@ -580,10 +584,12 @@ generatedFiles:
   - internal/sdk/models/shared/subevent.go
   - internal/sdk/models/shared/syncerror.go
   - internal/sdk/models/shared/syncerrorlist.go
+  - internal/sdk/models/shared/synctask.go
   - internal/sdk/models/shared/tag.go
   - internal/sdk/models/shared/tagfilter.go
   - internal/sdk/models/shared/tagselector.go
   - internal/sdk/models/shared/tagslist.go
+  - internal/sdk/models/shared/thirdpartyproviderenum.go
   - internal/sdk/models/shared/ticketingproviderenum.go
   - internal/sdk/models/shared/ticketpropagationconfiguration.go
   - internal/sdk/models/shared/uar.go
@@ -1253,6 +1259,8 @@ examples:
           end_date_filter: "2021-11-12T00:00:00Z"
           cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
           page_size: 200
+          requester_id: "37cb7e41-12ba-46da-92ff-030abe0450b1"
+          target_user_id: "37cb7e41-12ba-46da-92ff-030abe0450b1"
       responses:
         "200":
           application/json: {"cursor": "eyJjcmVhdGVkX2F0IjoiMjAyMS0wMS0wNlQyMDo0NzowMFoiLCJ2YWx1ZSI6ImFkbWluIn0=", "requests": [{"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "status": "PENDING", "target_group_id": "g86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}]}
@@ -1263,6 +1271,8 @@ examples:
           end_date_filter: "2025-01-01T00:00:00Z"
           cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
           page_size: 200
+          requester_id: "37cb7e41-12ba-46da-92ff-030abe0450b1"
+          target_user_id: "37cb7e41-12ba-46da-92ff-030abe0450b1"
       responses:
         "200":
           application/json: {"cursor": "eyJjcmVhdGVkX2F0IjoiMjAyMS0wMS0wNlQyMDo0NzowMFoiLCJ2YWx1ZSI6ImFkbWluIn0=", "requests": [{"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "status": "CANCELED", "target_group_id": "g86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}]}
@@ -1271,6 +1281,8 @@ examples:
         query:
           cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
           page_size: 200
+          requester_id: "37cb7e41-12ba-46da-92ff-030abe0450b1"
+          target_user_id: "37cb7e41-12ba-46da-92ff-030abe0450b1"
       responses:
         "200":
           application/json: {"cursor": "eyJjcmVhdGVkX2F0IjoiMjAyMS0wMS0wNlQyMDo0NzowMFoiLCJ2YWx1ZSI6ImFkbWluIn0=", "requests": [{"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "status": "PENDING", "target_group_id": "g86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}]}
@@ -1590,5 +1602,17 @@ examples:
       responses:
         "200":
           application/json: {"permissions": [{"allow_all": false, "permission_name": "READ", "target_ids": ["a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "8294e9c9-deb6-48e9-9c99-da2a1e04a87f"], "target_type": "RESOURCE"}]}
+  getRemoteUsers:
+    speakeasy-default-get-remote-users:
+      parameters:
+        query:
+          third_party_provider: ["GIT_HUB"]
+          user_id: ["32acc112-21ff-4669-91c2-21e27683eaa1"]
+          remote_id: ["1234567890"]
+          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+          page_size: 200
+      responses:
+        "200":
+          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"remote_id": "1234567890", "third_party_provider": "GIT_LAB", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}, {"remote_id": "remoteid123", "third_party_provider": "GIT_HUB", "user_id": "29827fb8-f2dd-4e80-9576-238979927392"}]}
 examplesVersion: 1.0.2
 generatedTests: {}

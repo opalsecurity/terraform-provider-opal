@@ -16,11 +16,10 @@ func (r *ScopedRolePermissionListResourceModel) RefreshFromSharedScopedRolePermi
 
 	if resp != nil {
 		r.Permissions = []tfTypes.ScopedRolePermission{}
-		if len(r.Permissions) > len(resp.Permissions) {
-			r.Permissions = r.Permissions[:len(resp.Permissions)]
-		}
-		for permissionsCount, permissionsItem := range resp.Permissions {
+
+		for _, permissionsItem := range resp.Permissions {
 			var permissions tfTypes.ScopedRolePermission
+
 			permissions.AllowAll = types.BoolValue(permissionsItem.AllowAll)
 			permissions.PermissionName = types.StringValue(string(permissionsItem.PermissionName))
 			permissions.TargetIds = make([]types.String, 0, len(permissionsItem.TargetIds))
@@ -28,14 +27,8 @@ func (r *ScopedRolePermissionListResourceModel) RefreshFromSharedScopedRolePermi
 				permissions.TargetIds = append(permissions.TargetIds, types.StringValue(v))
 			}
 			permissions.TargetType = types.StringValue(string(permissionsItem.TargetType))
-			if permissionsCount+1 > len(r.Permissions) {
-				r.Permissions = append(r.Permissions, permissions)
-			} else {
-				r.Permissions[permissionsCount].AllowAll = permissions.AllowAll
-				r.Permissions[permissionsCount].PermissionName = permissions.PermissionName
-				r.Permissions[permissionsCount].TargetIds = permissions.TargetIds
-				r.Permissions[permissionsCount].TargetType = permissions.TargetType
-			}
+
+			r.Permissions = append(r.Permissions, permissions)
 		}
 	}
 

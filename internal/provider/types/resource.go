@@ -14,6 +14,7 @@ type Resource struct {
 	DescendantResourceIds     []types.String                  `tfsdk:"descendant_resource_ids"`
 	Description               types.String                    `tfsdk:"description"`
 	ID                        types.String                    `tfsdk:"id"`
+	LastSuccessfulSync        *SyncTask                       `tfsdk:"last_successful_sync"`
 	Name                      types.String                    `tfsdk:"name"`
 	ParentResourceID          types.String                    `tfsdk:"parent_resource_id"`
 	RemoteInfo                *ResourceRemoteInfo             `tfsdk:"remote_info"`
