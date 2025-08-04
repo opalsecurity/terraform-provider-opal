@@ -2233,6 +2233,24 @@ paths:
           schema:
             type: string
           style: form
+        - description: Filter requests by their requester ID.
+          example: 37cb7e41-12ba-46da-92ff-030abe0450b1
+          in: query
+          name: requester_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
+        - description: Filter requests by their target user ID.
+          example: 37cb7e41-12ba-46da-92ff-030abe0450b1
+          in: query
+          name: target_user_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
         - description: The pagination cursor value.
           example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
           explode: true
@@ -3409,6 +3427,72 @@ paths:
         - users
       x-speakeasy-name-override: get_users
       x-speakeasy-entity-operation: Users#get
+  /users/remote_users:
+    get:
+      description: Returns a list of remote users for your organization.
+      operationId: getRemoteUsers
+      parameters:
+        - description: Filter remote users by their third party provider.
+          example: [GIT_HUB]
+          in: query
+          name: third_party_provider
+          required: false
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/ThirdPartyProviderEnum"
+          style: form
+        - description: Filter remote users by their user ID.
+          example: [32acc112-21ff-4669-91c2-21e27683eaa1]
+          in: query
+          name: user_id
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+          style: form
+        - description: Filter remote users by their remote ID.
+          example: [1234567890]
+          in: query
+          name: remote_id
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+        - description: The pagination cursor value.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          explode: true
+          in: query
+          name: cursor
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: Number of results to return per page. Default is 200.
+          example: 200
+          explode: true
+          in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedRemoteUsersList"
+          description: One page worth users in your organization.
+      security:
+        - BearerAuth: []
+      tags:
+        - users
   /users/{user_id}/tags:
     get:
       description: Returns all tags applied to the user.
@@ -5202,6 +5286,63 @@ components:
       required:
         - results
       x-speakeasy-entity: Users
+    PaginatedRemoteUsersList:
+      example:
+        next: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+        previous: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+        results:
+          - user_id: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+            remote_id: 1234567890
+            third_party_provider: GIT_LAB
+          - user_id: 29827fb8-f2dd-4e80-9576-238979927392
+            remote_id: remoteid123
+            third_party_provider: GIT_HUB
+      properties:
+        next:
+          description: The cursor with which to continue pagination if additional result pages exist.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          nullable: true
+          type: string
+        previous:
+          description: The cursor used to obtain the current result page.
+          example: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: "#/components/schemas/RemoteUser"
+          type: array
+      type: object
+      required:
+        - results
+    RemoteUser:
+      description: |-
+        # RemoteUser Object
+        ### Description
+        The `RemoteUser` object is used to represent a remote user.
+      example:
+        user_id: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+        remote_id: 1234567890
+        third_party_provider: GIT_HUB
+      properties:
+        user_id:
+          description: The ID of the user.
+          example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+          format: uuid
+          type: string
+        remote_id:
+          description: The ID of the remote user.
+          example: 1234567890
+          type: string
+        third_party_provider:
+          description: The third party provider of the remote user.
+          example: GIT_HUB
+          $ref: "#/components/schemas/ThirdPartyProviderEnum"
+      required:
+        - user_id
+        - remote_id
+        - third_party_provider
+      type: object
     User:
       description: |-
         # User Object
@@ -5296,6 +5437,23 @@ components:
       example: ACTIVE
       type: string
       x-speakeasy-entity: Users
+    ThirdPartyProviderEnum:
+      description: The third party provider of the remote user.
+      enum:
+        - AUTH0
+        - SLACK
+        - GOOGLE_CHAT
+        - JIRA
+        - LINEAR
+        - SERVICE_NOW
+        - PAGER_DUTY
+        - OPSGENIE
+        - GIT_HUB
+        - GIT_LAB
+        - GIT_LAB_CONNECTION
+        - TELEPORT
+      example: GIT_HUB
+      type: string
     PaginatedGroupsList:
       example:
         next: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
@@ -5544,6 +5702,10 @@ components:
           allOf:
             - $ref: "#/components/schemas/RiskSensitivityEnum"
           x-speakeasy-param-suppress-computed-diff: true
+        last_successful_sync:
+          readOnly: true
+          description: Information about the last successful sync of this group.
+          $ref: "#/components/schemas/SyncTask"
       required:
         - group_id
       type: object
@@ -5992,6 +6154,7 @@ components:
         - SEND_REMINDERS
         - STOP
         - REQUEST_ON_BEHALF
+        - RESET_MFA
       example: READ
       type: string
     RolePermissionTargetTypeEnum:
@@ -8003,6 +8166,10 @@ components:
             - f454d283-ca67-4a8a-bdbb-df212eca5347
             - f454d283-ca67-4a8a-bdbb-df212eca5348
           x-speakeasy-param-suppress-computed-diff: true
+        last_successful_sync:
+          readOnly: true
+          description: Information about the last successful sync of this resource.
+          $ref: "#/components/schemas/SyncTask"
       required:
         - resource_id
       type: object
@@ -9861,6 +10028,26 @@ components:
         - target_type
         - permission_name
         - allow_all
+    SyncTask:
+      type: object
+      description: Represents a sync task that has been completed, either successfully or with errors.
+      properties:
+        id:
+          description: The ID of the sync task.
+          example: 7c86c85d-0651-43e2-a748-d69d658418e8
+          format: uuid
+          type: string
+        completed_at:
+          description: The time when the sync task was completed.
+          example: 2023-10-01T12:00:00Z
+          type: string
+          format: date-time
+      required:
+        - id
+        - completed_at
+      example:
+        id: 7c86c85d-0651-43e2-a748-d69d658418e8
+        completed_at: 2023-10-01T12:00:00Z
     BundlesVisibilityTypeEnum:
       description: The visibility level of the entity.
       enum:

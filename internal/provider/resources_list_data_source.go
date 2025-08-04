@@ -193,6 +193,20 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 							Computed:    true,
 							Description: `The ID of the resource.`,
 						},
+						"last_successful_sync": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"completed_at": schema.StringAttribute{
+									Computed:    true,
+									Description: `The time when the sync task was completed.`,
+								},
+								"id": schema.StringAttribute{
+									Computed:    true,
+									Description: `The ID of the sync task.`,
+								},
+							},
+							Description: `Represents a sync task that has been completed, either successfully or with errors.`,
+						},
 						"name": schema.StringAttribute{
 							Computed:    true,
 							Description: `The name of the resource.`,

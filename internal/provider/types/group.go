@@ -15,6 +15,7 @@ type Group struct {
 	GroupLeaderUserIds        []types.String         `tfsdk:"group_leader_user_ids"`
 	GroupType                 types.String           `tfsdk:"group_type"`
 	ID                        types.String           `tfsdk:"id"`
+	LastSuccessfulSync        *SyncTask              `tfsdk:"last_successful_sync"`
 	Name                      types.String           `tfsdk:"name"`
 	RemoteInfo                *GroupRemoteInfo       `tfsdk:"remote_info"`
 	RemoteName                types.String           `tfsdk:"remote_name"`

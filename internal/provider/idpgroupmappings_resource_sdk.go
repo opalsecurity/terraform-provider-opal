@@ -16,21 +16,15 @@ func (r *IdpGroupMappingsResourceModel) RefreshFromSharedIdpGroupMappingList(ctx
 
 	if resp != nil {
 		r.Mappings = []tfTypes.Mappings{}
-		if len(r.Mappings) > len(resp.Mappings) {
-			r.Mappings = r.Mappings[:len(resp.Mappings)]
-		}
-		for mappingsCount, mappingsItem := range resp.Mappings {
+
+		for _, mappingsItem := range resp.Mappings {
 			var mappings tfTypes.Mappings
+
 			mappings.Alias = types.StringPointerValue(mappingsItem.Alias)
 			mappings.GroupID = types.StringValue(mappingsItem.GroupID)
 			mappings.HiddenFromEndUser = types.BoolValue(mappingsItem.HiddenFromEndUser)
-			if mappingsCount+1 > len(r.Mappings) {
-				r.Mappings = append(r.Mappings, mappings)
-			} else {
-				r.Mappings[mappingsCount].Alias = mappings.Alias
-				r.Mappings[mappingsCount].GroupID = mappings.GroupID
-				r.Mappings[mappingsCount].HiddenFromEndUser = mappings.HiddenFromEndUser
-			}
+
+			r.Mappings = append(r.Mappings, mappings)
 		}
 	}
 

@@ -14,10 +14,14 @@ type GetRequestsRequest struct {
 	EndDateFilter *string `queryParam:"style=form,explode=true,name=end_date_filter"`
 	// Number of results to return per page. Default is 200.
 	PageSize *int64 `queryParam:"style=form,explode=true,name=page_size"`
+	// Filter requests by their requester ID.
+	RequesterID *string `queryParam:"style=form,explode=true,name=requester_id"`
 	// Boolean toggle for if it should only show pending requests.
 	ShowPendingOnly *bool `queryParam:"style=form,explode=true,name=show_pending_only"`
 	// A start date filter for the events.
 	StartDateFilter *string `queryParam:"style=form,explode=true,name=start_date_filter"`
+	// Filter requests by their target user ID.
+	TargetUserID *string `queryParam:"style=form,explode=true,name=target_user_id"`
 }
 
 func (o *GetRequestsRequest) GetCursor() *string {
@@ -41,6 +45,13 @@ func (o *GetRequestsRequest) GetPageSize() *int64 {
 	return o.PageSize
 }
 
+func (o *GetRequestsRequest) GetRequesterID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.RequesterID
+}
+
 func (o *GetRequestsRequest) GetShowPendingOnly() *bool {
 	if o == nil {
 		return nil
@@ -53,6 +64,13 @@ func (o *GetRequestsRequest) GetStartDateFilter() *string {
 		return nil
 	}
 	return o.StartDateFilter
+}
+
+func (o *GetRequestsRequest) GetTargetUserID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.TargetUserID
 }
 
 type GetRequestsResponse struct {

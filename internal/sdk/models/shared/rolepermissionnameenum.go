@@ -29,6 +29,7 @@ const (
 	RolePermissionNameEnumSendReminders             RolePermissionNameEnum = "SEND_REMINDERS"
 	RolePermissionNameEnumStop                      RolePermissionNameEnum = "STOP"
 	RolePermissionNameEnumRequestOnBehalf           RolePermissionNameEnum = "REQUEST_ON_BEHALF"
+	RolePermissionNameEnumResetMfa                  RolePermissionNameEnum = "RESET_MFA"
 )
 
 func (e RolePermissionNameEnum) ToPointer() *RolePermissionNameEnum {
@@ -75,6 +76,8 @@ func (e *RolePermissionNameEnum) UnmarshalJSON(data []byte) error {
 	case "STOP":
 		fallthrough
 	case "REQUEST_ON_BEHALF":
+		fallthrough
+	case "RESET_MFA":
 		*e = RolePermissionNameEnum(v)
 		return nil
 	default:

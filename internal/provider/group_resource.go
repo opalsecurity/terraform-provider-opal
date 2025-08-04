@@ -29,6 +29,7 @@ import (
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
 	stateupgraders "github.com/opalsecurity/terraform-provider-opal/v3/internal/stateupgraders"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/validators"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/boolvalidators"
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/int64validators"
 	custom_listvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/listvalidators"
@@ -61,6 +62,7 @@ type GroupResourceModel struct {
 	GroupLeaderUserIds        []types.String                              `tfsdk:"group_leader_user_ids"`
 	GroupType                 types.String                                `tfsdk:"group_type"`
 	ID                        types.String                                `tfsdk:"id"`
+	LastSuccessfulSync        *tfTypes.SyncTask                           `tfsdk:"last_successful_sync"`
 	MessageChannelIds         []types.String                              `tfsdk:"message_channel_ids"`
 	MessageChannels           tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
 	Name                      types.String                                `tfsdk:"name"`
@@ -173,6 +175,23 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 				Description: `The ID of the group.`,
+			},
+			"last_successful_sync": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"completed_at": schema.StringAttribute{
+						Computed:    true,
+						Description: `The time when the sync task was completed.`,
+						Validators: []validator.String{
+							validators.IsRFC3339(),
+						},
+					},
+					"id": schema.StringAttribute{
+						Computed:    true,
+						Description: `The ID of the sync task.`,
+					},
+				},
+				Description: `Represents a sync task that has been completed, either successfully or with errors.`,
 			},
 			"message_channel_ids": schema.SetAttribute{
 				Computed:    true,

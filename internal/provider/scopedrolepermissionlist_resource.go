@@ -65,7 +65,7 @@ func (r *ScopedRolePermissionListResource) Schema(ctx context.Context, req resou
 						"permission_name": schema.StringAttribute{
 							Computed:    true,
 							Optional:    true,
-							Description: `The name of the role permission. Not Null; must be one of ["READ", "READ_ASSIGNMENTS", "CREATE", "IMPORT", "EXPORT", "SYNC", "DELETE", "READ_SETTINGS", "EDIT_TAGS", "EDIT_SETTINGS", "EDIT_SYNC_SETTINGS", "EDIT_ASSIGNMENTS", "EDIT_REQUEST_CONFIGURATIONS", "EDIT_EVENT_STREAM", "ASSIGN_UAR_REVIEWERS", "SEND_REMINDERS", "STOP", "REQUEST_ON_BEHALF"]`,
+							Description: `The name of the role permission. Not Null; must be one of ["READ", "READ_ASSIGNMENTS", "CREATE", "IMPORT", "EXPORT", "SYNC", "DELETE", "READ_SETTINGS", "EDIT_TAGS", "EDIT_SETTINGS", "EDIT_SYNC_SETTINGS", "EDIT_ASSIGNMENTS", "EDIT_REQUEST_CONFIGURATIONS", "EDIT_EVENT_STREAM", "ASSIGN_UAR_REVIEWERS", "SEND_REMINDERS", "STOP", "REQUEST_ON_BEHALF", "RESET_MFA"]`,
 							Validators: []validator.String{
 								speakeasy_stringvalidators.NotNull(),
 								stringvalidator.OneOf(
@@ -87,6 +87,7 @@ func (r *ScopedRolePermissionListResource) Schema(ctx context.Context, req resou
 									"SEND_REMINDERS",
 									"STOP",
 									"REQUEST_ON_BEHALF",
+									"RESET_MFA",
 								),
 							},
 						},

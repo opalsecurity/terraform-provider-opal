@@ -17,11 +17,10 @@ func (r *GroupUsersDataSourceModel) RefreshFromSharedGroupUserList(ctx context.C
 
 	if resp != nil {
 		r.Results = []tfTypes.GroupUser{}
-		if len(r.Results) > len(resp.Results) {
-			r.Results = r.Results[:len(resp.Results)]
-		}
-		for resultsCount, resultsItem := range resp.Results {
+
+		for _, resultsItem := range resp.Results {
 			var results tfTypes.GroupUser
+
 			if resultsItem.AccessLevel == nil {
 				results.AccessLevel = nil
 			} else {
@@ -40,17 +39,8 @@ func (r *GroupUsersDataSourceModel) RefreshFromSharedGroupUserList(ctx context.C
 				results.PropagationStatus.Status = types.StringValue(string(resultsItem.PropagationStatus.Status))
 			}
 			results.UserID = types.StringValue(resultsItem.UserID)
-			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results)
-			} else {
-				r.Results[resultsCount].AccessLevel = results.AccessLevel
-				r.Results[resultsCount].Email = results.Email
-				r.Results[resultsCount].ExpirationDate = results.ExpirationDate
-				r.Results[resultsCount].FullName = results.FullName
-				r.Results[resultsCount].GroupID = results.GroupID
-				r.Results[resultsCount].PropagationStatus = results.PropagationStatus
-				r.Results[resultsCount].UserID = results.UserID
-			}
+
+			r.Results = append(r.Results, results)
 		}
 	}
 

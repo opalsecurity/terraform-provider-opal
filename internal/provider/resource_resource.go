@@ -30,6 +30,7 @@ import (
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
 	stateupgraders "github.com/opalsecurity/terraform-provider-opal/v3/internal/stateupgraders"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/validators"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/boolvalidators"
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/int64validators"
 	custom_listvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/listvalidators"
@@ -61,6 +62,7 @@ type ResourceResourceModel struct {
 	DescendantResourceIds     []types.String                          `tfsdk:"descendant_resource_ids"`
 	Description               types.String                            `tfsdk:"description"`
 	ID                        types.String                            `tfsdk:"id"`
+	LastSuccessfulSync        *tfTypes.SyncTask                       `tfsdk:"last_successful_sync"`
 	Name                      types.String                            `tfsdk:"name"`
 	ParentResourceID          types.String                            `tfsdk:"parent_resource_id"`
 	RemoteInfo                *tfTypes.ResourceRemoteInfo             `tfsdk:"remote_info"`
@@ -141,6 +143,23 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 				Description: `The ID of the resource.`,
+			},
+			"last_successful_sync": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"completed_at": schema.StringAttribute{
+						Computed:    true,
+						Description: `The time when the sync task was completed.`,
+						Validators: []validator.String{
+							validators.IsRFC3339(),
+						},
+					},
+					"id": schema.StringAttribute{
+						Computed:    true,
+						Description: `The ID of the sync task.`,
+					},
+				},
+				Description: `Represents a sync task that has been completed, either successfully or with errors.`,
 			},
 			"name": schema.StringAttribute{
 				Required:    true,

@@ -23,11 +23,10 @@ func (r *AppDataSourceModel) RefreshFromSharedApp(ctx context.Context, resp *sha
 		r.Name = types.StringValue(resp.Name)
 		r.Type = types.StringValue(resp.Type)
 		r.Validations = []tfTypes.AppValidation{}
-		if len(r.Validations) > len(resp.Validations) {
-			r.Validations = r.Validations[:len(resp.Validations)]
-		}
-		for validationsCount, validationsItem := range resp.Validations {
+
+		for _, validationsItem := range resp.Validations {
 			var validations tfTypes.AppValidation
+
 			validations.Details = types.StringPointerValue(validationsItem.Details)
 			validations.Key = types.StringValue(validationsItem.Key)
 			nameResult, _ := json.Marshal(validationsItem.Name)
@@ -36,17 +35,8 @@ func (r *AppDataSourceModel) RefreshFromSharedApp(ctx context.Context, resp *sha
 			validations.Status = types.StringValue(string(validationsItem.Status))
 			validations.UpdatedAt = types.StringValue(typeconvert.TimeToString(validationsItem.UpdatedAt))
 			validations.UsageReason = types.StringPointerValue(validationsItem.UsageReason)
-			if validationsCount+1 > len(r.Validations) {
-				r.Validations = append(r.Validations, validations)
-			} else {
-				r.Validations[validationsCount].Details = validations.Details
-				r.Validations[validationsCount].Key = validations.Key
-				r.Validations[validationsCount].Name = validations.Name
-				r.Validations[validationsCount].Severity = validations.Severity
-				r.Validations[validationsCount].Status = validations.Status
-				r.Validations[validationsCount].UpdatedAt = validations.UpdatedAt
-				r.Validations[validationsCount].UsageReason = validations.UsageReason
-			}
+
+			r.Validations = append(r.Validations, validations)
 		}
 	}
 

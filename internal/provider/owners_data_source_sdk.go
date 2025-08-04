@@ -18,27 +18,18 @@ func (r *OwnersDataSourceModel) RefreshFromSharedPaginatedOwnersList(ctx context
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
 		r.Results = []tfTypes.Owner{}
-		if len(r.Results) > len(resp.Results) {
-			r.Results = r.Results[:len(resp.Results)]
-		}
-		for resultsCount, resultsItem := range resp.Results {
+
+		for _, resultsItem := range resp.Results {
 			var results tfTypes.Owner
+
 			results.AccessRequestEscalationPeriod = types.Int64PointerValue(resultsItem.AccessRequestEscalationPeriod)
 			results.Description = types.StringPointerValue(resultsItem.Description)
 			results.ID = types.StringValue(resultsItem.ID)
 			results.Name = types.StringPointerValue(resultsItem.Name)
 			results.ReviewerMessageChannelID = types.StringPointerValue(resultsItem.ReviewerMessageChannelID)
 			results.SourceGroupID = types.StringPointerValue(resultsItem.SourceGroupID)
-			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results)
-			} else {
-				r.Results[resultsCount].AccessRequestEscalationPeriod = results.AccessRequestEscalationPeriod
-				r.Results[resultsCount].Description = results.Description
-				r.Results[resultsCount].ID = results.ID
-				r.Results[resultsCount].Name = results.Name
-				r.Results[resultsCount].ReviewerMessageChannelID = results.ReviewerMessageChannelID
-				r.Results[resultsCount].SourceGroupID = results.SourceGroupID
-			}
+
+			r.Results = append(r.Results, results)
 		}
 	}
 

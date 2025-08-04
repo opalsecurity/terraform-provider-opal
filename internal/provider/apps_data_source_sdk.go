@@ -18,19 +18,20 @@ func (r *AppsDataSourceModel) RefreshFromSharedAppsList(ctx context.Context, res
 
 	if resp != nil {
 		r.Apps = []tfTypes.App{}
-		if len(r.Apps) > len(resp.Apps) {
-			r.Apps = r.Apps[:len(resp.Apps)]
-		}
-		for appsCount, appsItem := range resp.Apps {
+
+		for _, appsItem := range resp.Apps {
 			var apps tfTypes.App
+
 			apps.AdminOwnerID = types.StringValue(appsItem.AdminOwnerID)
 			apps.Description = types.StringValue(appsItem.Description)
 			apps.ID = types.StringValue(appsItem.ID)
 			apps.Name = types.StringValue(appsItem.Name)
 			apps.Type = types.StringValue(appsItem.Type)
 			apps.Validations = []tfTypes.AppValidation{}
-			for validationsCount, validationsItem := range appsItem.Validations {
+
+			for _, validationsItem := range appsItem.Validations {
 				var validations tfTypes.AppValidation
+
 				validations.Details = types.StringPointerValue(validationsItem.Details)
 				validations.Key = types.StringValue(validationsItem.Key)
 				nameResult, _ := json.Marshal(validationsItem.Name)
@@ -39,28 +40,11 @@ func (r *AppsDataSourceModel) RefreshFromSharedAppsList(ctx context.Context, res
 				validations.Status = types.StringValue(string(validationsItem.Status))
 				validations.UpdatedAt = types.StringValue(typeconvert.TimeToString(validationsItem.UpdatedAt))
 				validations.UsageReason = types.StringPointerValue(validationsItem.UsageReason)
-				if validationsCount+1 > len(apps.Validations) {
-					apps.Validations = append(apps.Validations, validations)
-				} else {
-					apps.Validations[validationsCount].Details = validations.Details
-					apps.Validations[validationsCount].Key = validations.Key
-					apps.Validations[validationsCount].Name = validations.Name
-					apps.Validations[validationsCount].Severity = validations.Severity
-					apps.Validations[validationsCount].Status = validations.Status
-					apps.Validations[validationsCount].UpdatedAt = validations.UpdatedAt
-					apps.Validations[validationsCount].UsageReason = validations.UsageReason
-				}
+
+				apps.Validations = append(apps.Validations, validations)
 			}
-			if appsCount+1 > len(r.Apps) {
-				r.Apps = append(r.Apps, apps)
-			} else {
-				r.Apps[appsCount].AdminOwnerID = apps.AdminOwnerID
-				r.Apps[appsCount].Description = apps.Description
-				r.Apps[appsCount].ID = apps.ID
-				r.Apps[appsCount].Name = apps.Name
-				r.Apps[appsCount].Type = apps.Type
-				r.Apps[appsCount].Validations = apps.Validations
-			}
+
+			r.Apps = append(r.Apps, apps)
 		}
 	}
 

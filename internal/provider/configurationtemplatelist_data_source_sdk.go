@@ -15,11 +15,10 @@ func (r *ConfigurationTemplateListDataSourceModel) RefreshFromSharedPaginatedCon
 
 	if resp != nil {
 		r.Results = []tfTypes.ConfigurationTemplate{}
-		if len(r.Results) > len(resp.Results) {
-			r.Results = r.Results[:len(resp.Results)]
-		}
-		for resultsCount, resultsItem := range resp.Results {
+
+		for _, resultsItem := range resp.Results {
 			var results tfTypes.ConfigurationTemplate
+
 			results.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
 			results.BreakGlassUserIds = make([]types.String, 0, len(resultsItem.BreakGlassUserIds))
 			for _, v := range resultsItem.BreakGlassUserIds {
@@ -62,22 +61,8 @@ func (r *ConfigurationTemplateListDataSourceModel) RefreshFromSharedPaginatedCon
 					results.Visibility.VisibilityGroupIds = append(results.Visibility.VisibilityGroupIds, types.StringValue(v))
 				}
 			}
-			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results)
-			} else {
-				r.Results[resultsCount].AdminOwnerID = results.AdminOwnerID
-				r.Results[resultsCount].BreakGlassUserIds = results.BreakGlassUserIds
-				r.Results[resultsCount].ConfigurationTemplateID = results.ConfigurationTemplateID
-				r.Results[resultsCount].CustomRequestNotification = results.CustomRequestNotification
-				r.Results[resultsCount].LinkedAuditMessageChannelIds = results.LinkedAuditMessageChannelIds
-				r.Results[resultsCount].MemberOncallScheduleIds = results.MemberOncallScheduleIds
-				r.Results[resultsCount].Name = results.Name
-				r.Results[resultsCount].RequestConfigurationID = results.RequestConfigurationID
-				r.Results[resultsCount].RequireMfaToApprove = results.RequireMfaToApprove
-				r.Results[resultsCount].RequireMfaToConnect = results.RequireMfaToConnect
-				r.Results[resultsCount].TicketPropagation = results.TicketPropagation
-				r.Results[resultsCount].Visibility = results.Visibility
-			}
+
+			r.Results = append(r.Results, results)
 		}
 	}
 

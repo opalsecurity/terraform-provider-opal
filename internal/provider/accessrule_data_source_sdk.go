@@ -24,57 +24,43 @@ func (r *AccessRuleDataSourceModel) RefreshFromSharedAccessRule(ctx context.Cont
 		} else {
 			r.RuleClauses.Unless = &tfTypes.RuleConjunction{}
 			r.RuleClauses.Unless.Clauses = []tfTypes.RuleDisjunction{}
-			if len(r.RuleClauses.Unless.Clauses) > len(resp.RuleClauses.Unless.Clauses) {
-				r.RuleClauses.Unless.Clauses = r.RuleClauses.Unless.Clauses[:len(resp.RuleClauses.Unless.Clauses)]
-			}
-			for clausesCount, clausesItem := range resp.RuleClauses.Unless.Clauses {
+
+			for _, clausesItem := range resp.RuleClauses.Unless.Clauses {
 				var clauses tfTypes.RuleDisjunction
+
 				clauses.Selectors = []tfTypes.TagSelector{}
-				for selectorsCount, selectorsItem := range clausesItem.Selectors {
+
+				for _, selectorsItem := range clausesItem.Selectors {
 					var selectors tfTypes.TagSelector
+
 					selectors.ConnectionID = types.StringValue(selectorsItem.ConnectionID)
 					selectors.Key = types.StringValue(selectorsItem.Key)
 					selectors.Value = types.StringValue(selectorsItem.Value)
-					if selectorsCount+1 > len(clauses.Selectors) {
-						clauses.Selectors = append(clauses.Selectors, selectors)
-					} else {
-						clauses.Selectors[selectorsCount].ConnectionID = selectors.ConnectionID
-						clauses.Selectors[selectorsCount].Key = selectors.Key
-						clauses.Selectors[selectorsCount].Value = selectors.Value
-					}
+
+					clauses.Selectors = append(clauses.Selectors, selectors)
 				}
-				if clausesCount+1 > len(r.RuleClauses.Unless.Clauses) {
-					r.RuleClauses.Unless.Clauses = append(r.RuleClauses.Unless.Clauses, clauses)
-				} else {
-					r.RuleClauses.Unless.Clauses[clausesCount].Selectors = clauses.Selectors
-				}
+
+				r.RuleClauses.Unless.Clauses = append(r.RuleClauses.Unless.Clauses, clauses)
 			}
 		}
 		r.RuleClauses.When.Clauses = []tfTypes.RuleDisjunction{}
-		if len(r.RuleClauses.When.Clauses) > len(resp.RuleClauses.When.Clauses) {
-			r.RuleClauses.When.Clauses = r.RuleClauses.When.Clauses[:len(resp.RuleClauses.When.Clauses)]
-		}
-		for clausesCount1, clausesItem1 := range resp.RuleClauses.When.Clauses {
+
+		for _, clausesItem1 := range resp.RuleClauses.When.Clauses {
 			var clauses1 tfTypes.RuleDisjunction
+
 			clauses1.Selectors = []tfTypes.TagSelector{}
-			for selectorsCount1, selectorsItem1 := range clausesItem1.Selectors {
+
+			for _, selectorsItem1 := range clausesItem1.Selectors {
 				var selectors1 tfTypes.TagSelector
+
 				selectors1.ConnectionID = types.StringValue(selectorsItem1.ConnectionID)
 				selectors1.Key = types.StringValue(selectorsItem1.Key)
 				selectors1.Value = types.StringValue(selectorsItem1.Value)
-				if selectorsCount1+1 > len(clauses1.Selectors) {
-					clauses1.Selectors = append(clauses1.Selectors, selectors1)
-				} else {
-					clauses1.Selectors[selectorsCount1].ConnectionID = selectors1.ConnectionID
-					clauses1.Selectors[selectorsCount1].Key = selectors1.Key
-					clauses1.Selectors[selectorsCount1].Value = selectors1.Value
-				}
+
+				clauses1.Selectors = append(clauses1.Selectors, selectors1)
 			}
-			if clausesCount1+1 > len(r.RuleClauses.When.Clauses) {
-				r.RuleClauses.When.Clauses = append(r.RuleClauses.When.Clauses, clauses1)
-			} else {
-				r.RuleClauses.When.Clauses[clausesCount1].Selectors = clauses1.Selectors
-			}
+
+			r.RuleClauses.When.Clauses = append(r.RuleClauses.When.Clauses, clauses1)
 		}
 		r.Status = types.StringValue(string(resp.Status))
 	}

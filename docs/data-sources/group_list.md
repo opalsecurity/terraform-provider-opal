@@ -50,6 +50,7 @@ Read-Only:
 - `group_leader_user_ids` (Set of String) A list of User IDs for the group leaders of the group
 - `group_type` (String) The type of the group.
 - `id` (String) The ID of the group.
+- `last_successful_sync` (Attributes) Represents a sync task that has been completed, either successfully or with errors. (see [below for nested schema](#nestedatt--results--last_successful_sync))
 - `name` (String) The name of the group.
 - `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. (see [below for nested schema](#nestedatt--results--remote_info))
 - `remote_name` (String) The name of the remote.
@@ -57,6 +58,15 @@ Read-Only:
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this group.
 - `risk_sensitivity` (String) The risk sensitivity level for the group. When an override is set, this field will match that.
 - `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur.
+
+<a id="nestedatt--results--last_successful_sync"></a>
+### Nested Schema for `results.last_successful_sync`
+
+Read-Only:
+
+- `completed_at` (String) The time when the sync task was completed.
+- `id` (String) The ID of the sync task.
+
 
 <a id="nestedatt--results--remote_info"></a>
 ### Nested Schema for `results.remote_info`

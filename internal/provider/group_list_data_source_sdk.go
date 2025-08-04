@@ -6,6 +6,7 @@ import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
@@ -16,11 +17,10 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 
 	if resp != nil {
 		r.Results = []tfTypes.Group{}
-		if len(r.Results) > len(resp.Results) {
-			r.Results = r.Results[:len(resp.Results)]
-		}
-		for resultsCount, resultsItem := range resp.Results {
+
+		for _, resultsItem := range resp.Results {
 			var results tfTypes.Group
+
 			results.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
 			results.AppID = types.StringPointerValue(resultsItem.AppID)
 			results.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
@@ -36,6 +36,13 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				results.GroupType = types.StringNull()
 			}
 			results.ID = types.StringValue(resultsItem.ID)
+			if resultsItem.LastSuccessfulSync == nil {
+				results.LastSuccessfulSync = nil
+			} else {
+				results.LastSuccessfulSync = &tfTypes.SyncTask{}
+				results.LastSuccessfulSync.CompletedAt = types.StringValue(typeconvert.TimeToString(resultsItem.LastSuccessfulSync.CompletedAt))
+				results.LastSuccessfulSync.ID = types.StringValue(resultsItem.LastSuccessfulSync.ID)
+			}
 			results.Name = types.StringPointerValue(resultsItem.Name)
 			if resultsItem.RemoteInfo == nil {
 				results.RemoteInfo = nil
@@ -116,8 +123,10 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 			}
 			results.RemoteName = types.StringPointerValue(resultsItem.RemoteName)
 			results.RequestConfigurations = []tfTypes.RequestConfiguration{}
-			for requestConfigurationsCount, requestConfigurationsItem := range resultsItem.RequestConfigurations {
+
+			for _, requestConfigurationsItem := range resultsItem.RequestConfigurations {
 				var requestConfigurations tfTypes.RequestConfiguration
+
 				requestConfigurations.AllowRequests = types.BoolValue(requestConfigurationsItem.AllowRequests)
 				requestConfigurations.AutoApproval = types.BoolValue(requestConfigurationsItem.AutoApproval)
 				if requestConfigurationsItem.Condition == nil {
@@ -140,8 +149,10 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				requestConfigurations.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
 				requestConfigurations.RequireSupportTicket = types.BoolValue(requestConfigurationsItem.RequireSupportTicket)
 				requestConfigurations.ReviewerStages = []tfTypes.ReviewerStage{}
-				for reviewerStagesCount, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
+
+				for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 					var reviewerStages tfTypes.ReviewerStage
+
 					if reviewerStagesItem.Operator != nil {
 						reviewerStages.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
 					} else {
@@ -153,29 +164,11 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					}
 					reviewerStages.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
 					reviewerStages.RequireManagerApproval = types.BoolPointerValue(reviewerStagesItem.RequireManagerApproval)
-					if reviewerStagesCount+1 > len(requestConfigurations.ReviewerStages) {
-						requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
-					} else {
-						requestConfigurations.ReviewerStages[reviewerStagesCount].Operator = reviewerStages.Operator
-						requestConfigurations.ReviewerStages[reviewerStagesCount].OwnerIds = reviewerStages.OwnerIds
-						requestConfigurations.ReviewerStages[reviewerStagesCount].RequireAdminApproval = reviewerStages.RequireAdminApproval
-						requestConfigurations.ReviewerStages[reviewerStagesCount].RequireManagerApproval = reviewerStages.RequireManagerApproval
-					}
+
+					requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
 				}
-				if requestConfigurationsCount+1 > len(results.RequestConfigurations) {
-					results.RequestConfigurations = append(results.RequestConfigurations, requestConfigurations)
-				} else {
-					results.RequestConfigurations[requestConfigurationsCount].AllowRequests = requestConfigurations.AllowRequests
-					results.RequestConfigurations[requestConfigurationsCount].AutoApproval = requestConfigurations.AutoApproval
-					results.RequestConfigurations[requestConfigurationsCount].Condition = requestConfigurations.Condition
-					results.RequestConfigurations[requestConfigurationsCount].MaxDuration = requestConfigurations.MaxDuration
-					results.RequestConfigurations[requestConfigurationsCount].Priority = requestConfigurations.Priority
-					results.RequestConfigurations[requestConfigurationsCount].RecommendedDuration = requestConfigurations.RecommendedDuration
-					results.RequestConfigurations[requestConfigurationsCount].RequestTemplateID = requestConfigurations.RequestTemplateID
-					results.RequestConfigurations[requestConfigurationsCount].RequireMfaToRequest = requestConfigurations.RequireMfaToRequest
-					results.RequestConfigurations[requestConfigurationsCount].RequireSupportTicket = requestConfigurations.RequireSupportTicket
-					results.RequestConfigurations[requestConfigurationsCount].ReviewerStages = requestConfigurations.ReviewerStages
-				}
+
+				results.RequestConfigurations = append(results.RequestConfigurations, requestConfigurations)
 			}
 			results.RequireMfaToApprove = types.BoolPointerValue(resultsItem.RequireMfaToApprove)
 			if resultsItem.RiskSensitivity != nil {
@@ -188,25 +181,8 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 			} else {
 				results.RiskSensitivityOverride = types.StringNull()
 			}
-			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results)
-			} else {
-				r.Results[resultsCount].AdminOwnerID = results.AdminOwnerID
-				r.Results[resultsCount].AppID = results.AppID
-				r.Results[resultsCount].CustomRequestNotification = results.CustomRequestNotification
-				r.Results[resultsCount].Description = results.Description
-				r.Results[resultsCount].GroupBindingID = results.GroupBindingID
-				r.Results[resultsCount].GroupLeaderUserIds = results.GroupLeaderUserIds
-				r.Results[resultsCount].GroupType = results.GroupType
-				r.Results[resultsCount].ID = results.ID
-				r.Results[resultsCount].Name = results.Name
-				r.Results[resultsCount].RemoteInfo = results.RemoteInfo
-				r.Results[resultsCount].RemoteName = results.RemoteName
-				r.Results[resultsCount].RequestConfigurations = results.RequestConfigurations
-				r.Results[resultsCount].RequireMfaToApprove = results.RequireMfaToApprove
-				r.Results[resultsCount].RiskSensitivity = results.RiskSensitivity
-				r.Results[resultsCount].RiskSensitivityOverride = results.RiskSensitivityOverride
-			}
+
+			r.Results = append(r.Results, results)
 		}
 	}
 

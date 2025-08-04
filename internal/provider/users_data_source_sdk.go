@@ -18,11 +18,10 @@ func (r *UsersDataSourceModel) RefreshFromSharedPaginatedUsersList(ctx context.C
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
 		r.Results = []tfTypes.User{}
-		if len(r.Results) > len(resp.Results) {
-			r.Results = r.Results[:len(resp.Results)]
-		}
-		for resultsCount, resultsItem := range resp.Results {
+
+		for _, resultsItem := range resp.Results {
 			var results tfTypes.User
+
 			results.Email = types.StringValue(resultsItem.Email)
 			results.FirstName = types.StringValue(resultsItem.FirstName)
 			if resultsItem.HrIdpStatus != nil {
@@ -34,17 +33,8 @@ func (r *UsersDataSourceModel) RefreshFromSharedPaginatedUsersList(ctx context.C
 			results.LastName = types.StringValue(resultsItem.LastName)
 			results.Name = types.StringValue(resultsItem.Name)
 			results.Position = types.StringValue(resultsItem.Position)
-			if resultsCount+1 > len(r.Results) {
-				r.Results = append(r.Results, results)
-			} else {
-				r.Results[resultsCount].Email = results.Email
-				r.Results[resultsCount].FirstName = results.FirstName
-				r.Results[resultsCount].HrIdpStatus = results.HrIdpStatus
-				r.Results[resultsCount].ID = results.ID
-				r.Results[resultsCount].LastName = results.LastName
-				r.Results[resultsCount].Name = results.Name
-				r.Results[resultsCount].Position = results.Position
-			}
+
+			r.Results = append(r.Results, results)
 		}
 	}
 

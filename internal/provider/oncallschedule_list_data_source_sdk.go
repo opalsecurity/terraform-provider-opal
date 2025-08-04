@@ -15,11 +15,10 @@ func (r *OnCallScheduleListDataSourceModel) RefreshFromSharedOnCallScheduleList(
 
 	if resp != nil {
 		r.OnCallSchedules = []tfTypes.GetGroupOnCallSchedulesResponseBody{}
-		if len(r.OnCallSchedules) > len(resp.OnCallSchedules) {
-			r.OnCallSchedules = r.OnCallSchedules[:len(resp.OnCallSchedules)]
-		}
-		for onCallSchedulesCount, onCallSchedulesItem := range resp.OnCallSchedules {
+
+		for _, onCallSchedulesItem := range resp.OnCallSchedules {
 			var onCallSchedules tfTypes.GetGroupOnCallSchedulesResponseBody
+
 			onCallSchedules.ID = types.StringPointerValue(onCallSchedulesItem.ID)
 			onCallSchedules.Name = types.StringPointerValue(onCallSchedulesItem.Name)
 			onCallSchedules.RemoteID = types.StringPointerValue(onCallSchedulesItem.RemoteID)
@@ -28,14 +27,8 @@ func (r *OnCallScheduleListDataSourceModel) RefreshFromSharedOnCallScheduleList(
 			} else {
 				onCallSchedules.ThirdPartyProvider = types.StringNull()
 			}
-			if onCallSchedulesCount+1 > len(r.OnCallSchedules) {
-				r.OnCallSchedules = append(r.OnCallSchedules, onCallSchedules)
-			} else {
-				r.OnCallSchedules[onCallSchedulesCount].ID = onCallSchedules.ID
-				r.OnCallSchedules[onCallSchedulesCount].Name = onCallSchedules.Name
-				r.OnCallSchedules[onCallSchedulesCount].RemoteID = onCallSchedules.RemoteID
-				r.OnCallSchedules[onCallSchedulesCount].ThirdPartyProvider = onCallSchedules.ThirdPartyProvider
-			}
+
+			r.OnCallSchedules = append(r.OnCallSchedules, onCallSchedules)
 		}
 	}
 

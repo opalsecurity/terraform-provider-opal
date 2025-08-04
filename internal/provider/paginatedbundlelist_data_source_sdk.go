@@ -17,11 +17,10 @@ func (r *PaginatedBundleListDataSourceModel) RefreshFromSharedPaginatedBundleLis
 
 	if resp != nil {
 		r.Bundles = []tfTypes.Bundle{}
-		if len(r.Bundles) > len(resp.Bundles) {
-			r.Bundles = r.Bundles[:len(resp.Bundles)]
-		}
-		for bundlesCount, bundlesItem := range resp.Bundles {
+
+		for _, bundlesItem := range resp.Bundles {
 			var bundles tfTypes.Bundle
+
 			bundles.AdminOwnerID = types.StringPointerValue(bundlesItem.AdminOwnerID)
 			bundles.BundleID = types.StringPointerValue(bundlesItem.BundleID)
 			bundles.CreatedAt = types.StringPointerValue(typeconvert.TimePointerToStringPointer(bundlesItem.CreatedAt))
@@ -31,19 +30,8 @@ func (r *PaginatedBundleListDataSourceModel) RefreshFromSharedPaginatedBundleLis
 			bundles.TotalNumItems = types.Int64PointerValue(bundlesItem.TotalNumItems)
 			bundles.TotalNumResources = types.Int64PointerValue(bundlesItem.TotalNumResources)
 			bundles.UpdatedAt = types.StringPointerValue(typeconvert.TimePointerToStringPointer(bundlesItem.UpdatedAt))
-			if bundlesCount+1 > len(r.Bundles) {
-				r.Bundles = append(r.Bundles, bundles)
-			} else {
-				r.Bundles[bundlesCount].AdminOwnerID = bundles.AdminOwnerID
-				r.Bundles[bundlesCount].BundleID = bundles.BundleID
-				r.Bundles[bundlesCount].CreatedAt = bundles.CreatedAt
-				r.Bundles[bundlesCount].Description = bundles.Description
-				r.Bundles[bundlesCount].Name = bundles.Name
-				r.Bundles[bundlesCount].TotalNumGroups = bundles.TotalNumGroups
-				r.Bundles[bundlesCount].TotalNumItems = bundles.TotalNumItems
-				r.Bundles[bundlesCount].TotalNumResources = bundles.TotalNumResources
-				r.Bundles[bundlesCount].UpdatedAt = bundles.UpdatedAt
-			}
+
+			r.Bundles = append(r.Bundles, bundles)
 		}
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)

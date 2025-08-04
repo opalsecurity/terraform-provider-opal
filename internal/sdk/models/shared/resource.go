@@ -107,6 +107,8 @@ type Resource struct {
 	Description *string `json:"description,omitempty"`
 	// The ID of the resource.
 	ID string `json:"resource_id"`
+	// Represents a sync task that has been completed, either successfully or with errors.
+	LastSuccessfulSync *SyncTask `json:"last_successful_sync,omitempty"`
 	// The name of the resource.
 	Name *string `json:"name,omitempty"`
 	// The ID of the parent resource.
@@ -186,6 +188,13 @@ func (o *Resource) GetID() string {
 		return ""
 	}
 	return o.ID
+}
+
+func (o *Resource) GetLastSuccessfulSync() *SyncTask {
+	if o == nil {
+		return nil
+	}
+	return o.LastSuccessfulSync
 }
 
 func (o *Resource) GetName() *string {

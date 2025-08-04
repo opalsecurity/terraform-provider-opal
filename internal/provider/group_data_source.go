@@ -37,6 +37,7 @@ type GroupDataSourceModel struct {
 	GroupLeaderUserIds        []types.String                              `tfsdk:"group_leader_user_ids"`
 	GroupType                 types.String                                `tfsdk:"group_type"`
 	ID                        types.String                                `tfsdk:"id"`
+	LastSuccessfulSync        *tfTypes.SyncTask                           `tfsdk:"last_successful_sync"`
 	MessageChannels           tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
 	Name                      types.String                                `tfsdk:"name"`
 	OncallSchedules           tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"oncall_schedules"`
@@ -93,6 +94,20 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			"id": schema.StringAttribute{
 				Required:    true,
 				Description: `The ID of the group.`,
+			},
+			"last_successful_sync": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"completed_at": schema.StringAttribute{
+						Computed:    true,
+						Description: `The time when the sync task was completed.`,
+					},
+					"id": schema.StringAttribute{
+						Computed:    true,
+						Description: `The ID of the sync task.`,
+					},
+				},
+				Description: `Represents a sync task that has been completed, either successfully or with errors.`,
 			},
 			"message_channels": schema.SingleNestedAttribute{
 				Computed: true,

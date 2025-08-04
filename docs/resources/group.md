@@ -134,6 +134,7 @@ resource "opal_group" "my_group" {
 
 - `group_binding_id` (String) The ID of the associated group binding.
 - `id` (String) The ID of the group.
+- `last_successful_sync` (Attributes) Represents a sync task that has been completed, either successfully or with errors. (see [below for nested schema](#nestedatt--last_successful_sync))
 - `message_channels` (Attributes) The audit and reviewer message channels attached to the group. (see [below for nested schema](#nestedatt--message_channels))
 - `oncall_schedules` (Attributes) The on call schedules attached to the group. (see [below for nested schema](#nestedatt--oncall_schedules))
 - `remote_name` (String) The name of the remote.
@@ -289,6 +290,15 @@ Optional:
 
 - `group_id` (String) The id of the Workday User Security group. Not Null; Requires replacement if changed.
 
+
+
+<a id="nestedatt--last_successful_sync"></a>
+### Nested Schema for `last_successful_sync`
+
+Read-Only:
+
+- `completed_at` (String) The time when the sync task was completed.
+- `id` (String) The ID of the sync task.
 
 
 <a id="nestedatt--message_channels"></a>

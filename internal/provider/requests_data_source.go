@@ -34,9 +34,11 @@ type RequestsDataSourceModel struct {
 	Cursor          types.String      `queryParam:"style=form,explode=true,name=cursor" tfsdk:"cursor"`
 	EndDateFilter   types.String      `queryParam:"style=form,explode=true,name=end_date_filter" tfsdk:"end_date_filter"`
 	PageSize        types.Int64       `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
+	RequesterID     types.String      `queryParam:"style=form,explode=true,name=requester_id" tfsdk:"requester_id"`
 	Requests        []tfTypes.Request `tfsdk:"requests"`
 	ShowPendingOnly types.Bool        `queryParam:"style=form,explode=true,name=show_pending_only" tfsdk:"show_pending_only"`
 	StartDateFilter types.String      `queryParam:"style=form,explode=true,name=start_date_filter" tfsdk:"start_date_filter"`
+	TargetUserID    types.String      `queryParam:"style=form,explode=true,name=target_user_id" tfsdk:"target_user_id"`
 }
 
 // Metadata returns the data source type name.
@@ -65,6 +67,10 @@ func (r *RequestsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Validators: []validator.Int64{
 					int64validator.AtMost(1000),
 				},
+			},
+			"requester_id": schema.StringAttribute{
+				Optional:    true,
+				Description: `Filter requests by their requester ID.`,
 			},
 			"requests": schema.ListNestedAttribute{
 				Computed: true,
@@ -230,6 +236,10 @@ func (r *RequestsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"start_date_filter": schema.StringAttribute{
 				Optional:    true,
 				Description: `A start date filter for the events.`,
+			},
+			"target_user_id": schema.StringAttribute{
+				Optional:    true,
+				Description: `Filter requests by their target user ID.`,
 			},
 		},
 	}
