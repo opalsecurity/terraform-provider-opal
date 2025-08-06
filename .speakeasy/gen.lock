@@ -3,10 +3,10 @@ id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
   docChecksum: c3682ddfc5efca4e8e9ed2b5a7e78cc7
   docVersion: "1.0"
-  speakeasyVersion: 1.596.0
-  generationVersion: 2.672.0
-  releaseVersion: 3.1.1
-  configChecksum: e53ccf38145be6edf57ebe8743b18a8a
+  speakeasyVersion: 1.598.0
+  generationVersion: 2.674.1
+  releaseVersion: 3.2.0
+  configChecksum: 08e5f9d7cef9ec64dd5f8df92461f193
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -18,7 +18,7 @@ features:
     core: 3.43.1
     deprecations: 2.82.0
     globalSecurity: 2.81.12
-    globalServerURLs: 2.82.2
+    globalServerURLs: 2.83.0
     ignores: 2.81.1
     inputOutputModels: 2.83.0
     nameOverrides: 2.81.3

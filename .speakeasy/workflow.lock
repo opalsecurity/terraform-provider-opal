@@ -1,4 +1,4 @@
-speakeasyVersion: 1.596.0
+speakeasyVersion: 1.598.0
 sources:
     opal-terraform-provider:
         sourceNamespace: opal-terraform-provider
@@ -6,7 +6,7 @@ sources:
         sourceBlobDigest: sha256:2cabf82d707832333c0772daa82a9d38ed7f54d0eac76075ed2a688405ff841e
         tags:
             - latest
-            - speakeasy-sdk-regen-1753748434
+            - speakeasy-sdk-regen-1754439543
             - "1.0"
 targets:
     terraform:

@@ -68,10 +68,10 @@ func (p *OpalProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 		return
 	}
 
-	ServerURL := data.ServerURL.ValueString()
+	serverUrl := data.ServerURL.ValueString()
 
-	if ServerURL == "" {
-		ServerURL = "https://api.opal.dev/v1"
+	if serverUrl == "" {
+		serverUrl = "https://api.opal.dev/v1"
 	}
 
 	security := shared.Security{}
@@ -105,7 +105,7 @@ func (p *OpalProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 	httpClient.Transport = NewProviderHTTPTransport(providerHTTPTransportOpts)
 
 	opts := []sdk.SDKOption{
-		sdk.WithServerURL(ServerURL),
+		sdk.WithServerURL(serverUrl),
 		sdk.WithSecurity(security),
 		sdk.WithClient(httpClient),
 	}
