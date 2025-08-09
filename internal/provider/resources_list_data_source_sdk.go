@@ -176,6 +176,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.GcpSQLInstance.InstanceID = types.StringValue(resultsItem.RemoteInfo.GcpSQLInstance.InstanceID)
 					results.RemoteInfo.GcpSQLInstance.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpSQLInstance.ProjectID)
 				}
+				if resultsItem.RemoteInfo.GithubOrgRole == nil {
+					results.RemoteInfo.GithubOrgRole = nil
+				} else {
+					results.RemoteInfo.GithubOrgRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.GithubOrgRole.RoleID = types.StringValue(resultsItem.RemoteInfo.GithubOrgRole.RoleID)
+				}
 				if resultsItem.RemoteInfo.GithubRepo == nil {
 					results.RemoteInfo.GithubRepo = nil
 				} else {
@@ -357,6 +363,12 @@ func (r *ResourcesListDataSourceModel) ToOperationsGetResourcesRequest(ctx conte
 	} else {
 		parentResourceID = nil
 	}
+	remoteID := new(string)
+	if !r.RemoteID.IsUnknown() && !r.RemoteID.IsNull() {
+		*remoteID = r.RemoteID.ValueString()
+	} else {
+		remoteID = nil
+	}
 	resourceIds := make([]string, 0, len(r.ResourceIds))
 	for _, resourceIdsItem := range r.ResourceIds {
 		resourceIds = append(resourceIds, resourceIdsItem.ValueString())
@@ -378,6 +390,7 @@ func (r *ResourcesListDataSourceModel) ToOperationsGetResourcesRequest(ctx conte
 		Cursor:             cursor,
 		PageSize:           pageSize,
 		ParentResourceID:   parentResourceID,
+		RemoteID:           remoteID,
 		ResourceIds:        resourceIds,
 		ResourceName:       resourceName,
 		ResourceTypeFilter: resourceTypeFilter,
