@@ -2490,7 +2490,7 @@ paths:
             type: integer
             maximum: 1000
           style: form
-        - description: The resource type to filter by.
+        - description: The resource type to filter by. Required when remote_id is provided.
           example: AWS_IAM_ROLE
           explode: true
           in: query
@@ -2543,6 +2543,13 @@ paths:
           required: false
           schema:
             format: uuid
+            type: string
+          style: form
+        - description: Filter resources by their remote id. This will return all resources that have a remote id that matches the provided remote id. Note that this requires resource_type_filter to be provided.
+          in: query
+          name: remote_id
+          required: false
+          schema:
             type: string
           style: form
       responses:
@@ -3309,6 +3316,41 @@ paths:
         - scoped-role-permissions
       x-speakeasy-name-override: update_scoped_role_permissions
       x-speakeasy-entity-operation: ScopedRolePermissionList#create,update
+  /resources/users/{user_id}:
+    get:
+      description: Gets the list of resources for this user.
+      operationId: get_user_resources
+      parameters:
+        - description: The ID of the user.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: user_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: Limit the number of results returned.
+          example: 200
+          explode: true
+          in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceAccessUserList"
+          description: List of resources user has access to.
+      security:
+        - BearerAuth: []
+      tags:
+        - resources
   /sessions:
     get:
       description: Returns a list of `Session` objects.
@@ -7050,6 +7092,16 @@ components:
           type: object
           required:
             - repo_name
+        github_org_role:
+          description: Remote info for GitHub organization role.
+          properties:
+            role_id:
+              description: The id of the role.
+              example: 112233
+              type: string
+          type: object
+          required:
+            - role_id
         gitlab_project:
           description: Remote info for Gitlab project.
           properties:

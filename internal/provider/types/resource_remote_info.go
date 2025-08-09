@@ -21,6 +21,7 @@ type ResourceRemoteInfo struct {
 	GcpProject              *GcpProject              `tfsdk:"gcp_project"`
 	GcpServiceAccount       *GcpServiceAccount       `tfsdk:"gcp_service_account"`
 	GcpSQLInstance          *GcpSQLInstance          `tfsdk:"gcp_sql_instance"`
+	GithubOrgRole           *SnowflakeRole           `tfsdk:"github_org_role"`
 	GithubRepo              *GithubRepo              `tfsdk:"github_repo"`
 	GitlabProject           *GcpProject              `tfsdk:"gitlab_project"`
 	GoogleWorkspaceRole     *SnowflakeRole           `tfsdk:"google_workspace_role"`

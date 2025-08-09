@@ -169,6 +169,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.GcpSQLInstance.InstanceID = types.StringValue(resp.RemoteInfo.GcpSQLInstance.InstanceID)
 				r.RemoteInfo.GcpSQLInstance.ProjectID = types.StringValue(resp.RemoteInfo.GcpSQLInstance.ProjectID)
 			}
+			if resp.RemoteInfo.GithubOrgRole == nil {
+				r.RemoteInfo.GithubOrgRole = nil
+			} else {
+				r.RemoteInfo.GithubOrgRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.GithubOrgRole.RoleID = types.StringValue(resp.RemoteInfo.GithubOrgRole.RoleID)
+			}
 			if resp.RemoteInfo.GithubRepo == nil {
 				r.RemoteInfo.GithubRepo = nil
 			} else {
@@ -726,6 +732,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				ProjectID:  projectId5,
 			}
 		}
+		var githubOrgRole *shared.GithubOrgRole
+		if r.RemoteInfo.GithubOrgRole != nil {
+			var roleID string
+			roleID = r.RemoteInfo.GithubOrgRole.RoleID.ValueString()
+
+			githubOrgRole = &shared.GithubOrgRole{
+				RoleID: roleID,
+			}
+		}
 		var githubRepo *shared.GithubRepo
 		if r.RemoteInfo.GithubRepo != nil {
 			var repoName string
@@ -746,11 +761,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var googleWorkspaceRole *shared.GoogleWorkspaceRole
 		if r.RemoteInfo.GoogleWorkspaceRole != nil {
-			var roleID string
-			roleID = r.RemoteInfo.GoogleWorkspaceRole.RoleID.ValueString()
+			var roleId1 string
+			roleId1 = r.RemoteInfo.GoogleWorkspaceRole.RoleID.ValueString()
 
 			googleWorkspaceRole = &shared.GoogleWorkspaceRole{
-				RoleID: roleID,
+				RoleID: roleId1,
 			}
 		}
 		var oktaApp *shared.OktaApp
@@ -764,11 +779,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var oktaCustomRole *shared.OktaCustomRole
 		if r.RemoteInfo.OktaCustomRole != nil {
-			var roleId1 string
-			roleId1 = r.RemoteInfo.OktaCustomRole.RoleID.ValueString()
+			var roleId2 string
+			roleId2 = r.RemoteInfo.OktaCustomRole.RoleID.ValueString()
 
 			oktaCustomRole = &shared.OktaCustomRole{
-				RoleID: roleId1,
+				RoleID: roleId2,
 			}
 		}
 		var oktaStandardRole *shared.OktaStandardRole
@@ -813,11 +828,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var salesforceRole *shared.SalesforceRole
 		if r.RemoteInfo.SalesforceRole != nil {
-			var roleId2 string
-			roleId2 = r.RemoteInfo.SalesforceRole.RoleID.ValueString()
+			var roleId3 string
+			roleId3 = r.RemoteInfo.SalesforceRole.RoleID.ValueString()
 
 			salesforceRole = &shared.SalesforceRole{
-				RoleID: roleId2,
+				RoleID: roleId3,
 			}
 		}
 		var teleportRole *shared.TeleportRole
@@ -848,6 +863,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			GcpProject:              gcpProject,
 			GcpServiceAccount:       gcpServiceAccount,
 			GcpSQLInstance:          gcpSQLInstance,
+			GithubOrgRole:           githubOrgRole,
 			GithubRepo:              githubRepo,
 			GitlabProject:           gitlabProject,
 			GoogleWorkspaceRole:     googleWorkspaceRole,

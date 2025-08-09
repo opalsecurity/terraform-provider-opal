@@ -16,11 +16,13 @@ type GetResourcesRequest struct {
 	PageSize *int64 `queryParam:"style=form,explode=true,name=page_size"`
 	// The parent resource id to filter by.
 	ParentResourceID *string `queryParam:"style=form,explode=false,name=parent_resource_id"`
+	// Filter resources by their remote id. This will return all resources that have a remote id that matches the provided remote id. Note that this requires resource_type_filter to be provided.
+	RemoteID *string `queryParam:"style=form,explode=true,name=remote_id"`
 	// The resource ids to filter by.
 	ResourceIds []string `queryParam:"style=form,explode=false,name=resource_ids"`
 	// Resource name.
 	ResourceName *string `queryParam:"style=form,explode=true,name=resource_name"`
-	// The resource type to filter by.
+	// The resource type to filter by. Required when remote_id is provided.
 	ResourceTypeFilter *shared.ResourceTypeEnum `queryParam:"style=form,explode=true,name=resource_type_filter"`
 }
 
@@ -50,6 +52,13 @@ func (o *GetResourcesRequest) GetParentResourceID() *string {
 		return nil
 	}
 	return o.ParentResourceID
+}
+
+func (o *GetResourcesRequest) GetRemoteID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.RemoteID
 }
 
 func (o *GetResourcesRequest) GetResourceIds() []string {

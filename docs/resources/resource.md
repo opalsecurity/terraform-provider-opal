@@ -93,6 +93,9 @@ resource "opal_resource" "my_resource" {
       instance_id = "example-sql-898931321"
       project_id  = "example-project-898931321"
     }
+    github_org_role = {
+      role_id = 112233
+    }
     github_repo = {
       repo_name = "Opal Security"
     }
@@ -267,6 +270,7 @@ Optional:
 - `gcp_project` (Attributes) Remote info for GCP project. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gcp_project))
 - `gcp_service_account` (Attributes) Remote info for a GCP service account. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gcp_service_account))
 - `gcp_sql_instance` (Attributes) Remote info for GCP SQL instance. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gcp_sql_instance))
+- `github_org_role` (Attributes) Remote info for GitHub organization role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--github_org_role))
 - `github_repo` (Attributes) Remote info for GitHub repository. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--github_repo))
 - `gitlab_project` (Attributes) Remote info for Gitlab project. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gitlab_project))
 - `google_workspace_role` (Attributes) Remote info for GCP workspace role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--google_workspace_role))
@@ -440,6 +444,14 @@ Optional:
 
 - `instance_id` (String) The id of the SQL instance. Not Null; Requires replacement if changed.
 - `project_id` (String) The id of the project the instance is in. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--github_org_role"></a>
+### Nested Schema for `remote_info.github_org_role`
+
+Optional:
+
+- `role_id` (String) The id of the role. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--github_repo"></a>
