@@ -3,10 +3,11 @@
 package types
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 type SubEvent struct {
-	AdditionalProperties types.String `tfsdk:"additional_properties"`
-	SubEventType         types.String `tfsdk:"sub_event_type"`
+	AdditionalProperties jsontypes.Normalized `tfsdk:"additional_properties"`
+	SubEventType         types.String         `tfsdk:"sub_event_type"`
 }

@@ -407,6 +407,19 @@ func (o *GcpSQLInstance) GetProjectID() string {
 	return o.ProjectID
 }
 
+// GithubOrgRole - Remote info for GitHub organization role.
+type GithubOrgRole struct {
+	// The id of the role.
+	RoleID string `json:"role_id"`
+}
+
+func (o *GithubOrgRole) GetRoleID() string {
+	if o == nil {
+		return ""
+	}
+	return o.RoleID
+}
+
 // GithubRepo - Remote info for GitHub repository.
 type GithubRepo struct {
 	// The name of the repository.
@@ -597,6 +610,8 @@ type ResourceRemoteInfo struct {
 	GcpServiceAccount *GcpServiceAccount `json:"gcp_service_account,omitempty"`
 	// Remote info for GCP SQL instance.
 	GcpSQLInstance *GcpSQLInstance `json:"gcp_sql_instance,omitempty"`
+	// Remote info for GitHub organization role.
+	GithubOrgRole *GithubOrgRole `json:"github_org_role,omitempty"`
 	// Remote info for GitHub repository.
 	GithubRepo *GithubRepo `json:"github_repo,omitempty"`
 	// Remote info for Gitlab project.
@@ -745,6 +760,13 @@ func (o *ResourceRemoteInfo) GetGcpSQLInstance() *GcpSQLInstance {
 		return nil
 	}
 	return o.GcpSQLInstance
+}
+
+func (o *ResourceRemoteInfo) GetGithubOrgRole() *GithubOrgRole {
+	if o == nil {
+		return nil
+	}
+	return o.GithubOrgRole
 }
 
 func (o *ResourceRemoteInfo) GetGithubRepo() *GithubRepo {

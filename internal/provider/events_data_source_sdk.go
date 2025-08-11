@@ -5,6 +5,7 @@ package provider
 import (
 	"context"
 	"encoding/json"
+	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/typeconvert"
@@ -27,7 +28,7 @@ func (r *EventsDataSourceModel) RefreshFromSharedPaginatedEventList(ctx context.
 			results.ActorEmail = types.StringPointerValue(resultsItem.ActorEmail)
 			results.ActorIPAddress = types.StringPointerValue(resultsItem.ActorIPAddress)
 			actorNameResult, _ := json.Marshal(resultsItem.ActorName)
-			results.ActorName = types.StringValue(string(actorNameResult))
+			results.ActorName = jsontypes.NewNormalizedValue(string(actorNameResult))
 			results.ActorUserID = types.StringValue(resultsItem.ActorUserID)
 			results.APITokenName = types.StringPointerValue(resultsItem.APITokenName)
 			results.APITokenPreview = types.StringPointerValue(resultsItem.APITokenPreview)
@@ -40,10 +41,10 @@ func (r *EventsDataSourceModel) RefreshFromSharedPaginatedEventList(ctx context.
 				var subEvents tfTypes.SubEvent
 
 				if subEventsItem.AdditionalProperties == nil {
-					subEvents.AdditionalProperties = types.StringNull()
+					subEvents.AdditionalProperties = jsontypes.NewNormalizedNull()
 				} else {
 					additionalPropertiesResult, _ := json.Marshal(subEventsItem.AdditionalProperties)
-					subEvents.AdditionalProperties = types.StringValue(string(additionalPropertiesResult))
+					subEvents.AdditionalProperties = jsontypes.NewNormalizedValue(string(additionalPropertiesResult))
 				}
 				subEvents.SubEventType = types.StringValue(subEventsItem.SubEventType)
 

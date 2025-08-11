@@ -3,6 +3,7 @@ data "opal_resources_list" "my_resources_list" {
   cursor               = "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
   page_size            = 200
   parent_resource_id   = ["4baf8423-db0a-4037-a4cf-f79c60cb67a5"]
+  remote_id            = "...my_remote_id..."
   resource_ids = [
     "1b978423-db0a-4037-a4cf-f79c60cb67b3"
   ]

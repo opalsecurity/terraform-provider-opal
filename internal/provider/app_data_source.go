@@ -5,6 +5,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -81,6 +82,7 @@ func (r *AppDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 							Description: `The key of the app validation. These are not unique IDs between runs.`,
 						},
 						"name": schema.StringAttribute{
+							CustomType:  jsontypes.NormalizedType{},
 							Computed:    true,
 							Description: `The human-readable description of whether the validation has the permissions. Parsed as JSON.`,
 						},
