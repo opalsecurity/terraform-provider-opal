@@ -5,6 +5,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -107,6 +108,7 @@ func (r *EventsDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 							Description: `The IP address of the event actor.`,
 						},
 						"actor_name": schema.StringAttribute{
+							CustomType:  jsontypes.NormalizedType{},
 							Computed:    true,
 							Description: `The name of the actor user. Parsed as JSON.`,
 						},
@@ -139,6 +141,7 @@ func (r *EventsDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"additional_properties": schema.StringAttribute{
+										CustomType:  jsontypes.NormalizedType{},
 										Computed:    true,
 										Description: `Parsed as JSON.`,
 									},

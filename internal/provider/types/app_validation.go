@@ -3,15 +3,16 @@
 package types
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 type AppValidation struct {
-	Details     types.String `tfsdk:"details"`
-	Key         types.String `tfsdk:"key"`
-	Name        types.String `tfsdk:"name"`
-	Severity    types.String `tfsdk:"severity"`
-	Status      types.String `tfsdk:"status"`
-	UpdatedAt   types.String `tfsdk:"updated_at"`
-	UsageReason types.String `tfsdk:"usage_reason"`
+	Details     types.String         `tfsdk:"details"`
+	Key         types.String         `tfsdk:"key"`
+	Name        jsontypes.Normalized `tfsdk:"name"`
+	Severity    types.String         `tfsdk:"severity"`
+	Status      types.String         `tfsdk:"status"`
+	UpdatedAt   types.String         `tfsdk:"updated_at"`
+	UsageReason types.String         `tfsdk:"usage_reason"`
 }

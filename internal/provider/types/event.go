@@ -3,18 +3,19 @@
 package types
 
 import (
+	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 type Event struct {
-	ActorEmail      types.String `tfsdk:"actor_email"`
-	ActorIPAddress  types.String `tfsdk:"actor_ip_address"`
-	ActorName       types.String `tfsdk:"actor_name"`
-	ActorUserID     types.String `tfsdk:"actor_user_id"`
-	APITokenName    types.String `tfsdk:"api_token_name"`
-	APITokenPreview types.String `tfsdk:"api_token_preview"`
-	CreatedAt       types.String `tfsdk:"created_at"`
-	EventID         types.String `tfsdk:"event_id"`
-	EventType       types.String `tfsdk:"event_type"`
-	SubEvents       []SubEvent   `tfsdk:"sub_events"`
+	ActorEmail      types.String         `tfsdk:"actor_email"`
+	ActorIPAddress  types.String         `tfsdk:"actor_ip_address"`
+	ActorName       jsontypes.Normalized `tfsdk:"actor_name"`
+	ActorUserID     types.String         `tfsdk:"actor_user_id"`
+	APITokenName    types.String         `tfsdk:"api_token_name"`
+	APITokenPreview types.String         `tfsdk:"api_token_preview"`
+	CreatedAt       types.String         `tfsdk:"created_at"`
+	EventID         types.String         `tfsdk:"event_id"`
+	EventType       types.String         `tfsdk:"event_type"`
+	SubEvents       []SubEvent           `tfsdk:"sub_events"`
 }

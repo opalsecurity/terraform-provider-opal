@@ -169,6 +169,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.GcpSQLInstance.InstanceID = types.StringValue(resp.RemoteInfo.GcpSQLInstance.InstanceID)
 				r.RemoteInfo.GcpSQLInstance.ProjectID = types.StringValue(resp.RemoteInfo.GcpSQLInstance.ProjectID)
 			}
+			if resp.RemoteInfo.GithubOrgRole == nil {
+				r.RemoteInfo.GithubOrgRole = nil
+			} else {
+				r.RemoteInfo.GithubOrgRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.GithubOrgRole.RoleID = types.StringValue(resp.RemoteInfo.GithubOrgRole.RoleID)
+			}
 			if resp.RemoteInfo.GithubRepo == nil {
 				r.RemoteInfo.GithubRepo = nil
 			} else {

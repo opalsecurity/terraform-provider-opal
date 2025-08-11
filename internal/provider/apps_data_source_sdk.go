@@ -5,6 +5,7 @@ package provider
 import (
 	"context"
 	"encoding/json"
+	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/typeconvert"
@@ -35,7 +36,7 @@ func (r *AppsDataSourceModel) RefreshFromSharedAppsList(ctx context.Context, res
 				validations.Details = types.StringPointerValue(validationsItem.Details)
 				validations.Key = types.StringValue(validationsItem.Key)
 				nameResult, _ := json.Marshal(validationsItem.Name)
-				validations.Name = types.StringValue(string(nameResult))
+				validations.Name = jsontypes.NewNormalizedValue(string(nameResult))
 				validations.Severity = types.StringValue(string(validationsItem.Severity))
 				validations.Status = types.StringValue(string(validationsItem.Status))
 				validations.UpdatedAt = types.StringValue(typeconvert.TimeToString(validationsItem.UpdatedAt))

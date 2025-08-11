@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: c3682ddfc5efca4e8e9ed2b5a7e78cc7
+  docChecksum: a758ef7a3cdb15cf4c1e6bdf359a0c7b
   docVersion: "1.0"
-  speakeasyVersion: 1.596.0
-  generationVersion: 2.672.0
-  releaseVersion: 3.1.1
-  configChecksum: e53ccf38145be6edf57ebe8743b18a8a
+  speakeasyVersion: 1.601.0
+  generationVersion: 2.680.0
+  releaseVersion: 3.1.2
+  configChecksum: 30b502c38da37181b7fd693a9ac69284
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -15,15 +15,15 @@ features:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.2
     constsAndDefaults: 0.2.1
-    core: 3.43.1
+    core: 3.44.0
     deprecations: 2.82.0
     globalSecurity: 2.81.12
-    globalServerURLs: 2.82.2
+    globalServerURLs: 2.83.0
     ignores: 2.81.1
     inputOutputModels: 2.83.0
     nameOverrides: 2.81.3
     nullables: 0.0.0
-    retries: 2.81.3
+    retries: 2.81.4
     serverIDs: 2.81.1
     sets: 0.1.2
     unions: 2.81.17
@@ -451,6 +451,7 @@ generatedFiles:
   - internal/sdk/models/operations/getuarid.go
   - internal/sdk/models/operations/getuars.go
   - internal/sdk/models/operations/getuser.go
+  - internal/sdk/models/operations/getuserresources.go
   - internal/sdk/models/operations/getusers.go
   - internal/sdk/models/operations/getusertags.go
   - internal/sdk/models/operations/options.go
@@ -1614,5 +1615,15 @@ examples:
       responses:
         "200":
           application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"remote_id": "1234567890", "third_party_provider": "GIT_LAB", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}, {"remote_id": "remoteid123", "third_party_provider": "GIT_HUB", "user_id": "29827fb8-f2dd-4e80-9576-238979927392"}]}
+  get_user_resources:
+    speakeasy-default-get-user-resources:
+      parameters:
+        path:
+          user_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+        query:
+          limit: 200
+      responses:
+        "200":
+          application/json: {"results": [{"access_level": {"access_level_name": "AdminRole", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess"}, "email": "jake@company.dev", "expiration_date": "2022-01-23T04:56:07Z", "full_name": "Jake Barnes", "has_direct_access": true, "num_access_paths": 2, "resource_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}, {"access_level": {"access_level_name": "AdminRole", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess"}, "email": "brett@company.dev", "expiration_date": "2022-02-03T12:33:02Z", "full_name": "Brett Ashley", "has_direct_access": true, "num_access_paths": 3, "resource_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "7646aa9a-e2ee-4eb5-8c62-91f29038a373"}]}
 examplesVersion: 1.0.2
 generatedTests: {}

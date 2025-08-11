@@ -77,6 +77,7 @@ Read-Only:
 - `gcp_project` (Attributes) Remote info for GCP project. (see [below for nested schema](#nestedatt--remote_info--gcp_project))
 - `gcp_service_account` (Attributes) Remote info for a GCP service account. (see [below for nested schema](#nestedatt--remote_info--gcp_service_account))
 - `gcp_sql_instance` (Attributes) Remote info for GCP SQL instance. (see [below for nested schema](#nestedatt--remote_info--gcp_sql_instance))
+- `github_org_role` (Attributes) Remote info for GitHub organization role. (see [below for nested schema](#nestedatt--remote_info--github_org_role))
 - `github_repo` (Attributes) Remote info for GitHub repository. (see [below for nested schema](#nestedatt--remote_info--github_repo))
 - `gitlab_project` (Attributes) Remote info for Gitlab project. (see [below for nested schema](#nestedatt--remote_info--gitlab_project))
 - `google_workspace_role` (Attributes) Remote info for GCP workspace role. (see [below for nested schema](#nestedatt--remote_info--google_workspace_role))
@@ -250,6 +251,14 @@ Read-Only:
 
 - `instance_id` (String) The id of the SQL instance.
 - `project_id` (String) The id of the project the instance is in.
+
+
+<a id="nestedatt--remote_info--github_org_role"></a>
+### Nested Schema for `remote_info.github_org_role`
+
+Read-Only:
+
+- `role_id` (String) The id of the role.
 
 
 <a id="nestedatt--remote_info--github_repo"></a>
