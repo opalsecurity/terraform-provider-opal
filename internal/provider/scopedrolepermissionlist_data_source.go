@@ -44,7 +44,7 @@ func (r *ScopedRolePermissionListDataSource) Schema(ctx context.Context, req dat
 		MarkdownDescription: "ScopedRolePermissionList DataSource",
 
 		Attributes: map[string]schema.Attribute{
-			"permissions": schema.ListNestedAttribute{
+			"permissions": schema.SetNestedAttribute{
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -55,7 +55,7 @@ func (r *ScopedRolePermissionListDataSource) Schema(ctx context.Context, req dat
 							Computed:    true,
 							Description: `The name of the role permission.`,
 						},
-						"target_ids": schema.ListAttribute{
+						"target_ids": schema.SetAttribute{
 							Computed:    true,
 							ElementType: types.StringType,
 							Description: `The IDs of the entities that this permission applies to. If empty of missing, the permission will have untargeted scope.`,

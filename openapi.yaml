@@ -10054,6 +10054,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ScopedRolePermission"
+          format: set
       type: object
       required:
         - permissions
@@ -10070,6 +10071,7 @@ components:
             type: string
             format: uuid
           type: array
+          format: set
         target_type:
           $ref: "#/components/schemas/RolePermissionTargetTypeEnum"
         permission_name:

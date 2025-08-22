@@ -2000,6 +2000,12 @@ actions:
   - target: $["components"]["schemas"]["ScopedRolePermissionList"]
     update:
       x-speakeasy-entity: ScopedRolePermissionList
+  - target: $["components"]["schemas"]["ScopedRolePermissionList"]["properties"]["permissions"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["ScopedRolePermission"]["properties"]["target_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]
     update:
       BundlesVisibilityTypeEnum:

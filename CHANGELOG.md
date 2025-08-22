@@ -1,4 +1,8 @@
 # Changelog
+
+## v.3.1.3
+- Fixed a bug where opal_scoped_role_permission_list could show state drift when no changes were made.
+
 ## v.3.1.0
 - Bumping minor version due to improvements in release cycle
 - Improvements to documentation
