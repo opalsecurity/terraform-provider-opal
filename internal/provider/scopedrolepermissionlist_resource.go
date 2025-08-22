@@ -47,7 +47,7 @@ func (r *ScopedRolePermissionListResource) Schema(ctx context.Context, req resou
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "ScopedRolePermissionList Resource",
 		Attributes: map[string]schema.Attribute{
-			"permissions": schema.ListNestedAttribute{
+			"permissions": schema.SetNestedAttribute{
 				Required: true,
 				NestedObject: schema.NestedAttributeObject{
 					Validators: []validator.Object{
@@ -91,7 +91,7 @@ func (r *ScopedRolePermissionListResource) Schema(ctx context.Context, req resou
 								),
 							},
 						},
-						"target_ids": schema.ListAttribute{
+						"target_ids": schema.SetAttribute{
 							Computed:    true,
 							Optional:    true,
 							ElementType: types.StringType,

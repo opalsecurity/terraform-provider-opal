@@ -27,7 +27,7 @@ data "opal_scoped_role_permission_list" "my_scopedrolepermissionlist" {
 
 ### Read-Only
 
-- `permissions` (Attributes List) (see [below for nested schema](#nestedatt--permissions))
+- `permissions` (Attributes Set) (see [below for nested schema](#nestedatt--permissions))
 
 <a id="nestedatt--permissions"></a>
 ### Nested Schema for `permissions`
@@ -36,5 +36,5 @@ Read-Only:
 
 - `allow_all` (Boolean)
 - `permission_name` (String) The name of the role permission.
-- `target_ids` (List of String) The IDs of the entities that this permission applies to. If empty of missing, the permission will have untargeted scope.
+- `target_ids` (Set of String) The IDs of the entities that this permission applies to. If empty of missing, the permission will have untargeted scope.
 - `target_type` (String) The type of the target for the role permission.
