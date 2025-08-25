@@ -32,6 +32,8 @@ data "opal_resources_users_list" "my_resourcesusers_list" {
 
 ### Read-Only
 
+- `next` (String) The cursor with which to continue pagination if additional result pages exist.
+- `previous` (String) The cursor used to obtain the current result page.
 - `results` (Attributes List) (see [below for nested schema](#nestedatt--results))
 
 <a id="nestedatt--results"></a>

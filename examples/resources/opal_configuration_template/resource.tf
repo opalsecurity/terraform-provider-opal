@@ -1,14 +1,17 @@
 resource "opal_configuration_template" "my_configurationtemplate" {
   admin_owner_id = "7c86c85d-0651-43e2-a748-d69d658418e8"
   break_glass_user_ids = [
-    "363ceb0c-fb02-4f61-9943-5ac9e969aba2"
+    "37cb7e41-12ba-46da-92ff-030abe0450b1",
+    "37cb7e41-12ba-46da-92ff-030abe0450b2",
   ]
   custom_request_notification = "Check your email to register your account."
   linked_audit_message_channel_ids = [
-    "85b8103e-608c-4d47-9207-1aa604564cf3"
+    "37cb7e41-12ba-46da-92ff-030abe0450b1",
+    "37cb7e41-12ba-46da-92ff-030abe0450b2",
   ]
   member_oncall_schedule_ids = [
-    "b5dab04b-c577-4029-899d-37113cdd854c"
+    "37cb7e41-12ba-46da-92ff-030abe0450b1",
+    "37cb7e41-12ba-46da-92ff-030abe0450b2",
   ]
   name = "Prod AWS Template"
   request_configurations = [
@@ -17,10 +20,10 @@ resource "opal_configuration_template" "my_configurationtemplate" {
       auto_approval  = false
       condition = {
         group_ids = [
-          "1c5f9802-81cc-4f6d-a68f-50913fa8d0d4"
+          "1b978423-db0a-4037-a4cf-f79c60cb67b3",
         ]
         role_remote_ids = [
-          "..."
+          "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]
       }
       max_duration           = 120

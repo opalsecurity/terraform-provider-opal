@@ -3340,6 +3340,24 @@ paths:
           schema:
             type: integer
           style: form
+        - description: The pagination cursor value.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          explode: true
+          in: query
+          name: cursor
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: Include user's access to unmanaged resources.
+          example: false
+          explode: true
+          in: query
+          name: include_unmanaged
+          required: false
+          schema:
+            type: boolean
+          style: form
       responses:
         "200":
           content:
@@ -4923,6 +4941,16 @@ components:
             has_direct_access: true
             num_access_paths: 3
       properties:
+        next:
+          description: The cursor with which to continue pagination if additional result pages exist.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          nullable: true
+          type: string
+        previous:
+          description: The cursor used to obtain the current result page.
+          example: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+          nullable: true
+          type: string
         results:
           items:
             $ref: "#/components/schemas/ResourceAccessUser"

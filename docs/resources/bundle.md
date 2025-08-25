@@ -51,6 +51,17 @@ resource "opal_bundle" "my_bundle" {
 
 Import is supported using the following syntax:
 
+In Terraform v1.5.0 and later, the [`import` block](https://developer.hashicorp.com/terraform/language/import) can be used with the `id` attribute, for example:
+
+```terraform
+import {
+  to = opal_bundle.my_opal_bundle
+  id = "32acc112-21ff-4669-91c2-21e27683eaa1"
+}
+```
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
 ```shell
 terraform import opal_bundle.my_opal_bundle "32acc112-21ff-4669-91c2-21e27683eaa1"
 ```

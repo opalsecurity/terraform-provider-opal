@@ -3,7 +3,25 @@
 package shared
 
 type ResourceAccessUserList struct {
-	Results []ResourceAccessUser `json:"results,omitempty"`
+	// The cursor with which to continue pagination if additional result pages exist.
+	Next *string `json:"next,omitempty"`
+	// The cursor used to obtain the current result page.
+	Previous *string              `json:"previous,omitempty"`
+	Results  []ResourceAccessUser `json:"results,omitempty"`
+}
+
+func (o *ResourceAccessUserList) GetNext() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Next
+}
+
+func (o *ResourceAccessUserList) GetPrevious() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Previous
 }
 
 func (o *ResourceAccessUserList) GetResults() []ResourceAccessUser {

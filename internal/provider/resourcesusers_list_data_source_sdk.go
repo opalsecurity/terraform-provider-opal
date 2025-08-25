@@ -16,6 +16,8 @@ func (r *ResourcesUsersListDataSourceModel) RefreshFromSharedResourceAccessUserL
 	var diags diag.Diagnostics
 
 	if resp != nil {
+		r.Next = types.StringPointerValue(resp.Next)
+		r.Previous = types.StringPointerValue(resp.Previous)
 		r.Results = []tfTypes.ResourceAccessUser{}
 
 		for _, resultsItem := range resp.Results {
