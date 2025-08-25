@@ -46,6 +46,17 @@ Optional:
 
 Import is supported using the following syntax:
 
+In Terraform v1.5.0 and later, the [`import` block](https://developer.hashicorp.com/terraform/language/import) can be used with the `id` attribute, for example:
+
+```terraform
+import {
+  to = opal_idp_group_mappings.my_opal_idp_group_mappings
+  id = "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+}
+```
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
 ```shell
 terraform import opal_idp_group_mappings.my_opal_idp_group_mappings "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
 ```

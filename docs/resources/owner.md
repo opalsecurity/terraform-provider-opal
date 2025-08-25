@@ -20,7 +20,8 @@ resource "opal_owner" "my_owner" {
   reviewer_message_channel_id      = "37cb7e41-12ba-46da-92ff-030abe0450b1"
   source_group_id                  = "1b978423-db0a-4037-a4cf-f79c60cb67b3"
   user_ids = [
-    "8303c22a-4931-4ddc-9800-a14c8ba3f46f"
+    "7870617d-e72a-47f5-a84c-693817ab4567",
+    "1520617d-e72a-47f5-a84c-693817ab48ad2",
   ]
 }
 ```
@@ -47,6 +48,17 @@ resource "opal_owner" "my_owner" {
 ## Import
 
 Import is supported using the following syntax:
+
+In Terraform v1.5.0 and later, the [`import` block](https://developer.hashicorp.com/terraform/language/import) can be used with the `id` attribute, for example:
+
+```terraform
+import {
+  to = opal_owner.my_opal_owner
+  id = "32acc112-21ff-4669-91c2-21e27683eaa1"
+}
+```
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
 
 ```shell
 terraform import opal_owner.my_opal_owner "32acc112-21ff-4669-91c2-21e27683eaa1"

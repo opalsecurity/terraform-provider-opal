@@ -31,6 +31,20 @@ resource "opal_group_containing_group" "my_groupcontaininggroup" {
 
 Import is supported using the following syntax:
 
+In Terraform v1.5.0 and later, the [`import` block](https://developer.hashicorp.com/terraform/language/import) can be used with the `id` attribute, for example:
+
+```terraform
+import {
+  to = opal_group_containing_group.my_opal_group_containing_group
+  id = jsonencode({
+    containing_group_id = "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+    group_id = "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+  })
+}
+```
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
 ```shell
 terraform import opal_group_containing_group.my_opal_group_containing_group '{"containing_group_id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5", "group_id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5"}'
 ```

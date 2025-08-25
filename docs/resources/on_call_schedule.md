@@ -36,6 +36,17 @@ resource "opal_on_call_schedule" "my_oncallschedule" {
 
 Import is supported using the following syntax:
 
+In Terraform v1.5.0 and later, the [`import` block](https://developer.hashicorp.com/terraform/language/import) can be used with the `id` attribute, for example:
+
+```terraform
+import {
+  to = opal_on_call_schedule.my_opal_on_call_schedule
+  id = "9546209c-42c2-4801-96d7-9ec42df0f59c"
+}
+```
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
 ```shell
 terraform import opal_on_call_schedule.my_opal_on_call_schedule "9546209c-42c2-4801-96d7-9ec42df0f59c"
 ```
