@@ -73,10 +73,10 @@ resource "opal_group" "my_group" {
       auto_approval  = false
       condition = {
         group_ids = [
-          "ea350457-6b03-4f86-8810-12ec5b59be85"
+          "1b978423-db0a-4037-a4cf-f79c60cb67b3",
         ]
         role_remote_ids = [
-          "..."
+          "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]
       }
       max_duration           = 120
@@ -334,6 +334,17 @@ Read-Only:
 ## Import
 
 Import is supported using the following syntax:
+
+In Terraform v1.5.0 and later, the [`import` block](https://developer.hashicorp.com/terraform/language/import) can be used with the `id` attribute, for example:
+
+```terraform
+import {
+  to = opal_group.my_opal_group
+  id = "32acc112-21ff-4669-91c2-21e27683eaa1"
+}
+```
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
 
 ```shell
 terraform import opal_group.my_opal_group "32acc112-21ff-4669-91c2-21e27683eaa1"

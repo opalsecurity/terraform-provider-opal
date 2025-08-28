@@ -32,7 +32,7 @@ func (r ResourceNHI) MarshalJSON() ([]byte, error) {
 }
 
 func (r *ResourceNHI) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &r, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &r, "", false, []string{"non_human_identity_id", "resource_id"}); err != nil {
 		return err
 	}
 	return nil

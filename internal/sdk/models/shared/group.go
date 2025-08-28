@@ -131,7 +131,7 @@ func (g Group) MarshalJSON() ([]byte, error) {
 }
 
 func (g *Group) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &g, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &g, "", false, []string{"group_id"}); err != nil {
 		return err
 	}
 	return nil

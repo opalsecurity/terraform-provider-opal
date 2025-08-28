@@ -43,7 +43,7 @@ func (a Access) MarshalJSON() ([]byte, error) {
 }
 
 func (a *Access) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &a, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &a, "", false, []string{"entity_id", "entity_type", "has_direct_access", "num_access_paths", "principal_id", "principal_type"}); err != nil {
 		return err
 	}
 	return nil

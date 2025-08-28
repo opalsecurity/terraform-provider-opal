@@ -20,7 +20,7 @@ func (s SyncTask) MarshalJSON() ([]byte, error) {
 }
 
 func (s *SyncTask) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &s, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &s, "", false, []string{"completed_at", "id"}); err != nil {
 		return err
 	}
 	return nil

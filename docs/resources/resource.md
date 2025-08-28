@@ -137,10 +137,10 @@ resource "opal_resource" "my_resource" {
       auto_approval  = false
       condition = {
         group_ids = [
-          "9dbe7525-2a4a-45cb-9a76-3f3e0873641f"
+          "1b978423-db0a-4037-a4cf-f79c60cb67b3",
         ]
         role_remote_ids = [
-          "..."
+          "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]
       }
       max_duration           = 120
@@ -566,6 +566,17 @@ Read-Only:
 ## Import
 
 Import is supported using the following syntax:
+
+In Terraform v1.5.0 and later, the [`import` block](https://developer.hashicorp.com/terraform/language/import) can be used with the `id` attribute, for example:
+
+```terraform
+import {
+  to = opal_resource.my_opal_resource
+  id = "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+}
+```
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
 
 ```shell
 terraform import opal_resource.my_opal_resource "4baf8423-db0a-4037-a4cf-f79c60cb67a5"

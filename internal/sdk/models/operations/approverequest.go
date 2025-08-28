@@ -3,45 +3,16 @@
 package operations
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
 	"net/http"
 )
-
-// Level - The decision level for the approval
-type Level string
-
-const (
-	LevelRegular Level = "REGULAR"
-	LevelAdmin   Level = "ADMIN"
-)
-
-func (e Level) ToPointer() *Level {
-	return &e
-}
-func (e *Level) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "REGULAR":
-		fallthrough
-	case "ADMIN":
-		*e = Level(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for Level: %v", v)
-	}
-}
 
 // ApproveRequestRequestBody - Approval parameters
 type ApproveRequestRequestBody struct {
 	// Optional comment for the approval
 	Comment *string `json:"comment,omitempty"`
 	// The decision level for the approval
-	Level Level `json:"level"`
+	Level shared.RequestApprovalEnum `json:"level"`
 }
 
 func (o *ApproveRequestRequestBody) GetComment() *string {
@@ -51,9 +22,9 @@ func (o *ApproveRequestRequestBody) GetComment() *string {
 	return o.Comment
 }
 
-func (o *ApproveRequestRequestBody) GetLevel() Level {
+func (o *ApproveRequestRequestBody) GetLevel() shared.RequestApprovalEnum {
 	if o == nil {
-		return Level("")
+		return shared.RequestApprovalEnum("")
 	}
 	return o.Level
 }
@@ -88,8 +59,6 @@ type ApproveRequestResponseBody struct {
 	// ### Usage Example
 	// Returned from the `GET Requests` endpoint.
 	Request *shared.Request `json:"request,omitempty"`
-	// ID of the task created for propagating access
-	TaskID *string `json:"taskId,omitempty"`
 }
 
 func (o *ApproveRequestResponseBody) GetRequest() *shared.Request {
@@ -97,13 +66,6 @@ func (o *ApproveRequestResponseBody) GetRequest() *shared.Request {
 		return nil
 	}
 	return o.Request
-}
-
-func (o *ApproveRequestResponseBody) GetTaskID() *string {
-	if o == nil {
-		return nil
-	}
-	return o.TaskID
 }
 
 type ApproveRequestResponse struct {

@@ -58,10 +58,10 @@ resource "opal_group" "my_group" {
       auto_approval  = false
       condition = {
         group_ids = [
-          "ea350457-6b03-4f86-8810-12ec5b59be85"
+          "1b978423-db0a-4037-a4cf-f79c60cb67b3",
         ]
         role_remote_ids = [
-          "..."
+          "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]
       }
       max_duration           = 120

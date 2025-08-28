@@ -30,6 +30,8 @@ type ResourcesUsersListDataSource struct {
 // ResourcesUsersListDataSourceModel describes the data model.
 type ResourcesUsersListDataSourceModel struct {
 	Limit      types.Int64                  `queryParam:"style=form,explode=true,name=limit" tfsdk:"limit"`
+	Next       types.String                 `tfsdk:"next"`
+	Previous   types.String                 `tfsdk:"previous"`
 	ResourceID types.String                 `tfsdk:"resource_id"`
 	Results    []tfTypes.ResourceAccessUser `tfsdk:"results"`
 }
@@ -48,6 +50,14 @@ func (r *ResourcesUsersListDataSource) Schema(ctx context.Context, req datasourc
 			"limit": schema.Int64Attribute{
 				Optional:    true,
 				Description: `Limit the number of results returned.`,
+			},
+			"next": schema.StringAttribute{
+				Computed:    true,
+				Description: `The cursor with which to continue pagination if additional result pages exist.`,
+			},
+			"previous": schema.StringAttribute{
+				Computed:    true,
+				Description: `The cursor used to obtain the current result page.`,
 			},
 			"resource_id": schema.StringAttribute{
 				Required:    true,

@@ -135,7 +135,7 @@ func (r Resource) MarshalJSON() ([]byte, error) {
 }
 
 func (r *Resource) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &r, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &r, "", false, []string{"resource_id"}); err != nil {
 		return err
 	}
 	return nil

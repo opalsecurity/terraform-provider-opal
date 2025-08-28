@@ -41,6 +41,17 @@ resource "opal_tag" "my_tag" {
 
 Import is supported using the following syntax:
 
+In Terraform v1.5.0 and later, the [`import` block](https://developer.hashicorp.com/terraform/language/import) can be used with the `id` attribute, for example:
+
+```terraform
+import {
+  to = opal_tag.my_opal_tag
+  id = "1b978423-db0a-4037-a4cf-f79c60cb67b3"
+}
+```
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
 ```shell
 terraform import opal_tag.my_opal_tag "1b978423-db0a-4037-a4cf-f79c60cb67b3"
 ```

@@ -32,7 +32,7 @@ func (c CreateUARInfo) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateUARInfo) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &c, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &c, "", false, []string{"deadline", "name", "reviewer_assignment_policy", "self_review_allowed", "send_reviewer_assignment_notification", "time_zone"}); err != nil {
 		return err
 	}
 	return nil
