@@ -50,7 +50,7 @@ func (r Request) MarshalJSON() ([]byte, error) {
 }
 
 func (r *Request) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &r, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &r, "", false, []string{"created_at", "id", "reason", "requester_id", "status", "updated_at"}); err != nil {
 		return err
 	}
 	return nil

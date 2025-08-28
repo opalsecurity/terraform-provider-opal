@@ -36,7 +36,7 @@ func (u UpdateResourceInfo) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateResourceInfo) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &u, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &u, "", false, []string{"resource_id", "request_configurations"}); err != nil {
 		return err
 	}
 	return nil

@@ -2,7 +2,7 @@
 
 package sdk
 
-// Generated from OpenAPI doc version 1.0 and generator version 2.680.0
+// Generated from OpenAPI doc version 1.0 and generator version 2.687.13
 
 import (
 	"context"
@@ -169,9 +169,9 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *OpalAPI {
 	sdk := &OpalAPI{
-		SDKVersion: "3.1.3",
+		SDKVersion: "3.1.4",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:  "speakeasy-sdk/terraform 3.1.3 2.680.0 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
+			UserAgent:  "speakeasy-sdk/terraform 3.1.4 2.687.13 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
 			ServerList: ServerList,
 		},
 		hooks: hooks.New(),

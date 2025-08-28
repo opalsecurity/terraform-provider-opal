@@ -45,7 +45,7 @@ func (r ResourceAccessUser) MarshalJSON() ([]byte, error) {
 }
 
 func (r *ResourceAccessUser) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &r, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &r, "", false, []string{"access_level", "email", "full_name", "has_direct_access", "num_access_paths", "resource_id", "user_id"}); err != nil {
 		return err
 	}
 	return nil

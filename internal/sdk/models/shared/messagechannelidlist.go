@@ -16,7 +16,7 @@ func (m MessageChannelIDList) MarshalJSON() ([]byte, error) {
 }
 
 func (m *MessageChannelIDList) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &m, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &m, "", false, nil); err != nil {
 		return err
 	}
 	return nil

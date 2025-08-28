@@ -34,7 +34,7 @@ func (u UpdateGroupInfo) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateGroupInfo) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &u, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &u, "", false, []string{"group_id", "request_configurations"}); err != nil {
 		return err
 	}
 	return nil

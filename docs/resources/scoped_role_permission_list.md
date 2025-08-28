@@ -19,7 +19,8 @@ resource "opal_scoped_role_permission_list" "my_scopedrolepermissionlist" {
       allow_all       = true
       permission_name = "READ"
       target_ids = [
-        "cfc2dc81-05b3-4559-9210-8a3a9661acd2"
+        "a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1",
+        "8294e9c9-deb6-48e9-9c99-da2a1e04a87f",
       ]
       target_type = "RESOURCE"
     }
@@ -49,6 +50,17 @@ Optional:
 ## Import
 
 Import is supported using the following syntax:
+
+In Terraform v1.5.0 and later, the [`import` block](https://developer.hashicorp.com/terraform/language/import) can be used with the `id` attribute, for example:
+
+```terraform
+import {
+  to = opal_scoped_role_permission_list.my_opal_scoped_role_permission_list
+  id = "1b978423-db0a-4037-a4cf-f79c60cb67b3"
+}
+```
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
 
 ```shell
 terraform import opal_scoped_role_permission_list.my_opal_scoped_role_permission_list "1b978423-db0a-4037-a4cf-f79c60cb67b3"

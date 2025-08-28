@@ -2437,10 +2437,7 @@ paths:
               type: object
               properties:
                 level:
-                  type: string
-                  enum: [REGULAR, ADMIN]
-                  description: "The decision level for the approval"
-                  example: "REGULAR"
+                  $ref: "#/components/schemas/RequestApprovalEnum"
                 comment:
                   type: string
                   description: "Optional comment for the approval"
@@ -2457,11 +2454,6 @@ paths:
                 properties:
                   request:
                     $ref: "#/components/schemas/Request"
-                  taskId:
-                    type: string
-                    format: uuid
-                    description: "ID of the task created for propagating access"
-                    example: "c6f85bfb-3fe7-4936-a68d-7a5e1e3d0f6a"
       security:
         - BearerAuth: []
       tags:
@@ -3339,6 +3331,24 @@ paths:
           required: false
           schema:
             type: integer
+          style: form
+        - description: The pagination cursor value.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          explode: true
+          in: query
+          name: cursor
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: Include user's access to unmanaged resources.
+          example: false
+          explode: true
+          in: query
+          name: include_unmanaged
+          required: false
+          schema:
+            type: boolean
           style: form
       responses:
         "200":
@@ -4923,6 +4933,16 @@ components:
             has_direct_access: true
             num_access_paths: 3
       properties:
+        next:
+          description: The cursor with which to continue pagination if additional result pages exist.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          nullable: true
+          type: string
+        previous:
+          description: The cursor used to obtain the current result page.
+          example: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+          nullable: true
+          type: string
         results:
           items:
             $ref: "#/components/schemas/ResourceAccessUser"
@@ -10102,6 +10122,11 @@ components:
       example:
         id: 7c86c85d-0651-43e2-a748-d69d658418e8
         completed_at: 2023-10-01T12:00:00Z
+    RequestApprovalEnum:
+      type: string
+      enum: [REGULAR, ADMIN]
+      description: "The decision level for the approval"
+      example: "REGULAR"
     BundlesVisibilityTypeEnum:
       description: The visibility level of the entity.
       enum:

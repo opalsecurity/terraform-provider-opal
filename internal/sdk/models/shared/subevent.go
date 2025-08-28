@@ -23,7 +23,7 @@ func (s SubEvent) MarshalJSON() ([]byte, error) {
 }
 
 func (s *SubEvent) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &s, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &s, "", false, []string{"sub_event_type"}); err != nil {
 		return err
 	}
 	return nil

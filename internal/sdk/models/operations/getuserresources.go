@@ -8,10 +8,28 @@ import (
 )
 
 type GetUserResourcesRequest struct {
+	// The pagination cursor value.
+	Cursor *string `queryParam:"style=form,explode=true,name=cursor"`
+	// Include user's access to unmanaged resources.
+	IncludeUnmanaged *bool `queryParam:"style=form,explode=true,name=include_unmanaged"`
 	// Limit the number of results returned.
 	Limit *int64 `queryParam:"style=form,explode=true,name=limit"`
 	// The ID of the user.
 	UserID string `pathParam:"style=simple,explode=false,name=user_id"`
+}
+
+func (o *GetUserResourcesRequest) GetCursor() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Cursor
+}
+
+func (o *GetUserResourcesRequest) GetIncludeUnmanaged() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.IncludeUnmanaged
 }
 
 func (o *GetUserResourcesRequest) GetLimit() *int64 {

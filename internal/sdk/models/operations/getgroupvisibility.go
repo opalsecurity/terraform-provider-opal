@@ -32,7 +32,7 @@ func (g GetGroupVisibilityResponseBody) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetGroupVisibilityResponseBody) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &g, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &g, "", false, []string{"visibility"}); err != nil {
 		return err
 	}
 	return nil

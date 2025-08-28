@@ -33,7 +33,7 @@ func (t Tag) MarshalJSON() ([]byte, error) {
 }
 
 func (t *Tag) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &t, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &t, "", false, []string{"tag_id"}); err != nil {
 		return err
 	}
 	return nil
