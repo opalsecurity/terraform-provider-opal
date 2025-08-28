@@ -12,7 +12,7 @@ type ConfigurationTemplate struct {
 	ConfigurationTemplateID      types.String                    `tfsdk:"configuration_template_id"`
 	CustomRequestNotification    types.String                    `tfsdk:"custom_request_notification"`
 	LinkedAuditMessageChannelIds []types.String                  `tfsdk:"linked_audit_message_channel_ids"`
-	MemberOncallScheduleIds      []types.String                  `tfsdk:"member_oncall_schedule_ids"`
+	MemberOnCallScheduleIds      []types.String                  `tfsdk:"member_on_call_schedule_ids"`
 	Name                         types.String                    `tfsdk:"name"`
 	RequestConfigurationID       types.String                    `tfsdk:"request_configuration_id"`
 	RequireMfaToApprove          types.Bool                      `tfsdk:"require_mfa_to_approve"`

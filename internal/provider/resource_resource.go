@@ -55,26 +55,27 @@ type ResourceResource struct {
 
 // ResourceResourceModel describes the resource data model.
 type ResourceResourceModel struct {
-	AdminOwnerID              types.String                            `tfsdk:"admin_owner_id"`
-	AncestorResourceIds       []types.String                          `tfsdk:"ancestor_resource_ids"`
-	AppID                     types.String                            `tfsdk:"app_id"`
-	CustomRequestNotification types.String                            `tfsdk:"custom_request_notification"`
-	DescendantResourceIds     []types.String                          `tfsdk:"descendant_resource_ids"`
-	Description               types.String                            `tfsdk:"description"`
-	ID                        types.String                            `tfsdk:"id"`
-	LastSuccessfulSync        *tfTypes.SyncTask                       `tfsdk:"last_successful_sync"`
-	Name                      types.String                            `tfsdk:"name"`
-	ParentResourceID          types.String                            `tfsdk:"parent_resource_id"`
-	RemoteInfo                *tfTypes.ResourceRemoteInfo             `tfsdk:"remote_info"`
-	RequestConfigurations     []tfTypes.RequestConfiguration          `tfsdk:"request_configurations"`
-	RequireMfaToApprove       types.Bool                              `tfsdk:"require_mfa_to_approve"`
-	RequireMfaToConnect       types.Bool                              `tfsdk:"require_mfa_to_connect"`
-	ResourceType              types.String                            `tfsdk:"resource_type"`
-	RiskSensitivity           types.String                            `tfsdk:"risk_sensitivity"`
-	RiskSensitivityOverride   types.String                            `tfsdk:"risk_sensitivity_override"`
-	TicketPropagation         *tfTypes.TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
-	Visibility                types.String                            `tfsdk:"visibility"`
-	VisibilityGroupIds        []types.String                          `tfsdk:"visibility_group_ids"`
+	AdminOwnerID                types.String                            `tfsdk:"admin_owner_id"`
+	AncestorResourceIds         []types.String                          `tfsdk:"ancestor_resource_ids"`
+	AppID                       types.String                            `tfsdk:"app_id"`
+	CustomRequestNotification   types.String                            `tfsdk:"custom_request_notification"`
+	DescendantResourceIds       []types.String                          `tfsdk:"descendant_resource_ids"`
+	Description                 types.String                            `tfsdk:"description"`
+	ExtensionsDurationInMinutes types.Int64                             `tfsdk:"extensions_duration_in_minutes"`
+	ID                          types.String                            `tfsdk:"id"`
+	LastSuccessfulSync          *tfTypes.SyncTask                       `tfsdk:"last_successful_sync"`
+	Name                        types.String                            `tfsdk:"name"`
+	ParentResourceID            types.String                            `tfsdk:"parent_resource_id"`
+	RemoteInfo                  *tfTypes.ResourceRemoteInfo             `tfsdk:"remote_info"`
+	RequestConfigurations       []tfTypes.RequestConfiguration          `tfsdk:"request_configurations"`
+	RequireMfaToApprove         types.Bool                              `tfsdk:"require_mfa_to_approve"`
+	RequireMfaToConnect         types.Bool                              `tfsdk:"require_mfa_to_connect"`
+	ResourceType                types.String                            `tfsdk:"resource_type"`
+	RiskSensitivity             types.String                            `tfsdk:"risk_sensitivity"`
+	RiskSensitivityOverride     types.String                            `tfsdk:"risk_sensitivity_override"`
+	TicketPropagation           *tfTypes.TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
+	Visibility                  types.String                            `tfsdk:"visibility"`
+	VisibilityGroupIds          []types.String                          `tfsdk:"visibility_group_ids"`
 }
 
 func (r *ResourceResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -136,6 +137,11 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 				Description: `A description of the remote resource.`,
+			},
+			"extensions_duration_in_minutes": schema.Int64Attribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `The duration for which access can be extended (in minutes).`,
 			},
 			"id": schema.StringAttribute{
 				Computed: true,
@@ -1137,6 +1143,11 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 									Description: `The list of role remote IDs to match.`,
 								},
 							},
+						},
+						"extensions_duration_in_minutes": schema.Int64Attribute{
+							Computed:    true,
+							Optional:    true,
+							Description: `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
 						},
 						"max_duration": schema.Int64Attribute{
 							Computed: true,

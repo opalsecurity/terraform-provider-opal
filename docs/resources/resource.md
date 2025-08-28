@@ -14,11 +14,12 @@ Resource Resource
 
 ```terraform
 resource "opal_resource" "my_resource" {
-  admin_owner_id              = "7c86c85d-0651-43e2-a748-d69d658418e8"
-  app_id                      = "f454d283-ca87-4a8a-bdbb-df212eca5353"
-  custom_request_notification = "Check your email to register your account."
-  description                 = "Engineering team Okta role."
-  name                        = "mongo-db-prod"
+  admin_owner_id                 = "7c86c85d-0651-43e2-a748-d69d658418e8"
+  app_id                         = "f454d283-ca87-4a8a-bdbb-df212eca5353"
+  custom_request_notification    = "Check your email to register your account."
+  description                    = "Engineering team Okta role."
+  extensions_duration_in_minutes = 120
+  name                           = "mongo-db-prod"
   remote_info = {
     aws_account = {
       account_id             = 234234234234
@@ -143,12 +144,13 @@ resource "opal_resource" "my_resource" {
           "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]
       }
-      max_duration           = 120
-      priority               = 1
-      recommended_duration   = 120
-      request_template_id    = "06851574-e50d-40ca-8c78-f72ae6ab4304"
-      require_mfa_to_request = false
-      require_support_ticket = false
+      extensions_duration_in_minutes = 120
+      max_duration                   = 120
+      priority                       = 1
+      recommended_duration           = 120
+      request_template_id            = "06851574-e50d-40ca-8c78-f72ae6ab4304"
+      require_mfa_to_request         = false
+      require_support_ticket         = false
       reviewer_stages = [
         {
           operator = "AND"
@@ -194,6 +196,7 @@ resource "opal_resource" "my_resource" {
 - `admin_owner_id` (String) The ID of the owner of the resource.
 - `custom_request_notification` (String) Custom request notification sent upon request approval.
 - `description` (String) A description of the remote resource.
+- `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes).
 - `remote_info` (Attributes) Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this resource. Default: false
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to this resource.
@@ -218,6 +221,7 @@ Optional:
 - `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource. Not Null
 - `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource. Not Null
 - `condition` (Attributes) (see [below for nested schema](#nestedatt--request_configurations--condition))
+- `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
 - `priority` (Number) The priority of the request configuration. Not Null
 - `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.

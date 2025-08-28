@@ -47,6 +47,7 @@ Read-Only:
 - `app_id` (String) The ID of the group's app.
 - `custom_request_notification` (String) Custom request notification sent to the requester when the request is approved.
 - `description` (String) A description of the group.
+- `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 - `group_binding_id` (String) The ID of the associated group binding.
 - `group_leader_user_ids` (Set of String) A list of User IDs for the group leaders of the group
 - `group_type` (String) The type of the group.
@@ -192,6 +193,7 @@ Read-Only:
 - `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource.
 - `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource.
 - `condition` (Attributes) (see [below for nested schema](#nestedatt--results--request_configurations--condition))
+- `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
 - `priority` (Number) The priority of the request configuration.
 - `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.

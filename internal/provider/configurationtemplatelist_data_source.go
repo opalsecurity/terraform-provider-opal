@@ -69,7 +69,7 @@ func (r *ConfigurationTemplateListDataSource) Schema(ctx context.Context, req da
 							ElementType: types.StringType,
 							Description: `The IDs of the audit message channels linked to the configuration template.`,
 						},
-						"member_oncall_schedule_ids": schema.SetAttribute{
+						"member_on_call_schedule_ids": schema.SetAttribute{
 							Computed:    true,
 							ElementType: types.StringType,
 							Description: `The IDs of the on-call schedules linked to the configuration template.`,

@@ -29,7 +29,7 @@ type OnCallScheduleListDataSource struct {
 
 // OnCallScheduleListDataSourceModel describes the data model.
 type OnCallScheduleListDataSourceModel struct {
-	OnCallSchedules []tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"on_call_schedules"`
+	OnCallSchedules []tfTypes.OnCallSchedule `tfsdk:"on_call_schedules"`
 }
 
 // Metadata returns the data source type name.

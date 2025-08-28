@@ -218,7 +218,7 @@ actions:
     update:
       allOf:
         - $ref: "#/components/schemas/OnCallScheduleList"
-        - x-speakeasy-wrapped-attribute: "oncall_schedules"
+        - x-speakeasy-wrapped-attribute: "on_call_schedules"
         - x-speakeasy-param-suppress-computed-diff: true
   - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]["$ref"]
     remove: true
@@ -228,7 +228,7 @@ actions:
         description: Not Found
   - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["get"]
     update:
-      x-speakeasy-name-override: get_on_call_schedule
+      x-speakeasy-name-override: get_on_call_schedules
   - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["get"]
     update:
       x-speakeasy-entity-operation: Group#read#3
@@ -244,7 +244,7 @@ actions:
     remove: true
   - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["put"]
     update:
-      x-speakeasy-name-override: update_on_call_schedule
+      x-speakeasy-name-override: update_on_call_schedules
   - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["put"]
     update:
       x-speakeasy-entity-operation:
@@ -1290,7 +1290,9 @@ actions:
         - GroupMessageChannels
   - target: $["components"]["schemas"]["OnCallScheduleList"]
     update:
-      x-speakeasy-entity: OnCallSchedule_list
+      x-speakeasy-entity:
+        - OnCallScheduleList
+        - GroupOnCallSchedules
   - target: $["components"]["schemas"]["VisibilityInfo"]["properties"]["visibility_group_ids"]
     update:
       format: set
@@ -1329,7 +1331,9 @@ actions:
       default: []
   - target: $["components"]["schemas"]["OnCallScheduleIDList"]
     update:
-      x-speakeasy-entity: GroupOnCallSchedule
+      x-speakeasy-entity:
+        - OnCallScheduleList
+        - GroupOnCallSchedules
   - target: $["components"]["schemas"]["ReviewerIDList"]["properties"]["reviewer_ids"]
     update:
       format: set
@@ -1933,6 +1937,9 @@ actions:
   - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["member_oncall_schedule_ids"]
     update:
       default: []
+  - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["member_oncall_schedule_ids"]
+    update:
+      x-speakeasy-name-override: member_on_call_schedule_ids
   - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["break_glass_user_ids"]
     update:
       format: set
@@ -1955,6 +1962,9 @@ actions:
   - target: $["components"]["schemas"]["ConfigurationTemplate"]["properties"]["member_oncall_schedule_ids"]
     update:
       format: set
+  - target: $["components"]["schemas"]["ConfigurationTemplate"]["properties"]["member_oncall_schedule_ids"]
+    update:
+      x-speakeasy-name-override: member_on_call_schedule_ids
   - target: $["components"]["schemas"]["ConfigurationTemplate"]["properties"]["break_glass_user_ids"]
     update:
       format: set
@@ -1973,6 +1983,9 @@ actions:
   - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]["properties"]["member_oncall_schedule_ids"]
     update:
       format: set
+  - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]["properties"]["member_oncall_schedule_ids"]
+    update:
+      x-speakeasy-name-override: member_on_call_schedule_ids
   - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]["properties"]["break_glass_user_ids"]
     update:
       format: set
@@ -1997,12 +2010,12 @@ actions:
   - target: $["components"]["schemas"]["Bundle"]["properties"]["updated_at"]
     update:
       x-speakeasy-param-readonly: true
-  - target: $["components"]["schemas"]["ScopedRolePermissionList"]
-    update:
-      x-speakeasy-entity: ScopedRolePermissionList
   - target: $["components"]["schemas"]["ScopedRolePermissionList"]["properties"]["permissions"]
     update:
       format: set
+  - target: $["components"]["schemas"]["ScopedRolePermissionList"]
+    update:
+      x-speakeasy-entity: ScopedRolePermissionList
   - target: $["components"]["schemas"]["ScopedRolePermission"]["properties"]["target_ids"]
     update:
       format: set

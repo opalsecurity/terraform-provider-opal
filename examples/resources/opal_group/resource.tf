@@ -1,8 +1,9 @@
 resource "opal_group" "my_group" {
-  admin_owner_id              = "7c86c85d-0651-43e2-a748-d69d658418e8"
-  app_id                      = "f454d283-ca87-4a8a-bdbb-df212eca5353"
-  custom_request_notification = "Check your email to register your account."
-  description                 = "Engineering team Okta group."
+  admin_owner_id                 = "7c86c85d-0651-43e2-a748-d69d658418e8"
+  app_id                         = "f454d283-ca87-4a8a-bdbb-df212eca5353"
+  custom_request_notification    = "Check your email to register your account."
+  description                    = "Engineering team Okta group."
+  extensions_duration_in_minutes = 120
   group_leader_user_ids = [
     "23ac9822-9f43-4e31-a31d-6a6109f207ae"
   ]
@@ -64,12 +65,13 @@ resource "opal_group" "my_group" {
           "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]
       }
-      max_duration           = 120
-      priority               = 1
-      recommended_duration   = 120
-      request_template_id    = "06851574-e50d-40ca-8c78-f72ae6ab4304"
-      require_mfa_to_request = false
-      require_support_ticket = false
+      extensions_duration_in_minutes = 120
+      max_duration                   = 120
+      priority                       = 1
+      recommended_duration           = 120
+      request_template_id            = "06851574-e50d-40ca-8c78-f72ae6ab4304"
+      require_mfa_to_request         = false
+      require_support_ticket         = false
       reviewer_stages = [
         {
           operator = "AND"

@@ -29,26 +29,27 @@ type GroupDataSource struct {
 
 // GroupDataSourceModel describes the data model.
 type GroupDataSourceModel struct {
-	AdminOwnerID              types.String                                `tfsdk:"admin_owner_id"`
-	AppID                     types.String                                `tfsdk:"app_id"`
-	CustomRequestNotification types.String                                `tfsdk:"custom_request_notification"`
-	Description               types.String                                `tfsdk:"description"`
-	GroupBindingID            types.String                                `tfsdk:"group_binding_id"`
-	GroupLeaderUserIds        []types.String                              `tfsdk:"group_leader_user_ids"`
-	GroupType                 types.String                                `tfsdk:"group_type"`
-	ID                        types.String                                `tfsdk:"id"`
-	LastSuccessfulSync        *tfTypes.SyncTask                           `tfsdk:"last_successful_sync"`
-	MessageChannels           tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
-	Name                      types.String                                `tfsdk:"name"`
-	OncallSchedules           tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"oncall_schedules"`
-	RemoteInfo                *tfTypes.GroupRemoteInfo                    `tfsdk:"remote_info"`
-	RemoteName                types.String                                `tfsdk:"remote_name"`
-	RequestConfigurations     []tfTypes.RequestConfiguration              `tfsdk:"request_configurations"`
-	RequireMfaToApprove       types.Bool                                  `tfsdk:"require_mfa_to_approve"`
-	RiskSensitivity           types.String                                `tfsdk:"risk_sensitivity"`
-	RiskSensitivityOverride   types.String                                `tfsdk:"risk_sensitivity_override"`
-	Visibility                types.String                                `tfsdk:"visibility"`
-	VisibilityGroupIds        []types.String                              `tfsdk:"visibility_group_ids"`
+	AdminOwnerID                types.String                                `tfsdk:"admin_owner_id"`
+	AppID                       types.String                                `tfsdk:"app_id"`
+	CustomRequestNotification   types.String                                `tfsdk:"custom_request_notification"`
+	Description                 types.String                                `tfsdk:"description"`
+	ExtensionsDurationInMinutes types.Int64                                 `tfsdk:"extensions_duration_in_minutes"`
+	GroupBindingID              types.String                                `tfsdk:"group_binding_id"`
+	GroupLeaderUserIds          []types.String                              `tfsdk:"group_leader_user_ids"`
+	GroupType                   types.String                                `tfsdk:"group_type"`
+	ID                          types.String                                `tfsdk:"id"`
+	LastSuccessfulSync          *tfTypes.SyncTask                           `tfsdk:"last_successful_sync"`
+	MessageChannels             tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
+	Name                        types.String                                `tfsdk:"name"`
+	OnCallSchedules             tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"on_call_schedules"`
+	RemoteInfo                  *tfTypes.GroupRemoteInfo                    `tfsdk:"remote_info"`
+	RemoteName                  types.String                                `tfsdk:"remote_name"`
+	RequestConfigurations       []tfTypes.RequestConfiguration              `tfsdk:"request_configurations"`
+	RequireMfaToApprove         types.Bool                                  `tfsdk:"require_mfa_to_approve"`
+	RiskSensitivity             types.String                                `tfsdk:"risk_sensitivity"`
+	RiskSensitivityOverride     types.String                                `tfsdk:"risk_sensitivity_override"`
+	Visibility                  types.String                                `tfsdk:"visibility"`
+	VisibilityGroupIds          []types.String                              `tfsdk:"visibility_group_ids"`
 }
 
 // Metadata returns the data source type name.
@@ -77,6 +78,10 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			"description": schema.StringAttribute{
 				Computed:    true,
 				Description: `A description of the group.`,
+			},
+			"extensions_duration_in_minutes": schema.Int64Attribute{
+				Computed:    true,
+				Description: `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
 			},
 			"group_binding_id": schema.StringAttribute{
 				Computed:    true,
@@ -146,24 +151,31 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Computed:    true,
 				Description: `The name of the group.`,
 			},
-			"oncall_schedules": schema.SingleNestedAttribute{
+			"on_call_schedules": schema.SingleNestedAttribute{
 				Computed: true,
 				Attributes: map[string]schema.Attribute{
-					"id": schema.StringAttribute{
-						Computed:    true,
-						Description: `The ID of the on-call schedule.`,
-					},
-					"name": schema.StringAttribute{
-						Computed:    true,
-						Description: `The name of the on call schedule.`,
-					},
-					"remote_id": schema.StringAttribute{
-						Computed:    true,
-						Description: `The remote ID of the on call schedule`,
-					},
-					"third_party_provider": schema.StringAttribute{
-						Computed:    true,
-						Description: `The third party provider of the on call schedule.`,
+					"on_call_schedules": schema.ListNestedAttribute{
+						Computed: true,
+						NestedObject: schema.NestedAttributeObject{
+							Attributes: map[string]schema.Attribute{
+								"id": schema.StringAttribute{
+									Computed:    true,
+									Description: `The ID of the on-call schedule.`,
+								},
+								"name": schema.StringAttribute{
+									Computed:    true,
+									Description: `The name of the on call schedule.`,
+								},
+								"remote_id": schema.StringAttribute{
+									Computed:    true,
+									Description: `The remote ID of the on call schedule`,
+								},
+								"third_party_provider": schema.StringAttribute{
+									Computed:    true,
+									Description: `The third party provider of the on call schedule.`,
+								},
+							},
+						},
 					},
 				},
 				Description: `The on call schedules attached to the group.`,
@@ -324,6 +336,10 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 									Description: `The list of role remote IDs to match.`,
 								},
 							},
+						},
+						"extensions_duration_in_minutes": schema.Int64Attribute{
+							Computed:    true,
+							Description: `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
 						},
 						"max_duration": schema.Int64Attribute{
 							Computed:    true,
@@ -507,7 +523,7 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res2, err := r.client.Groups.GetOnCallSchedule(ctx, *request2)
+	res2, err := r.client.Groups.GetOnCallSchedules(ctx, *request2)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res2 != nil && res2.RawResponse != nil {
@@ -521,6 +537,15 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	}
 	if res2.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
+		return
+	}
+	if !(res2.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res2.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupOnCallSchedulesResponseBody(ctx, res2.Object)...)
+
+	if resp.Diagnostics.HasError() {
 		return
 	}
 	request3, request3Diags := data.ToOperationsGetGroupVisibilityRequest(ctx)

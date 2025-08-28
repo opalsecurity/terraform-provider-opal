@@ -1813,8 +1813,8 @@ func (s *Groups) GetMessageChannels(ctx context.Context, request operations.GetG
 
 }
 
-// GetOnCallSchedule - Gets the list of on call schedules attached to a group.
-func (s *Groups) GetOnCallSchedule(ctx context.Context, request operations.GetGroupOnCallSchedulesRequest, opts ...operations.Option) (*operations.GetGroupOnCallSchedulesResponse, error) {
+// GetOnCallSchedules - Gets the list of on call schedules attached to a group.
+func (s *Groups) GetOnCallSchedules(ctx context.Context, request operations.GetGroupOnCallSchedulesRequest, opts ...operations.Option) (*operations.GetGroupOnCallSchedulesResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -3985,8 +3985,8 @@ func (s *Groups) UpdateMessageChannels(ctx context.Context, request operations.U
 
 }
 
-// UpdateOnCallSchedule - Sets the list of on call schedules attached to a group.
-func (s *Groups) UpdateOnCallSchedule(ctx context.Context, request operations.UpdateGroupOnCallSchedulesRequest, opts ...operations.Option) (*operations.UpdateGroupOnCallSchedulesResponse, error) {
+// UpdateOnCallSchedules - Sets the list of on call schedules attached to a group.
+func (s *Groups) UpdateOnCallSchedules(ctx context.Context, request operations.UpdateGroupOnCallSchedulesRequest, opts ...operations.Option) (*operations.UpdateGroupOnCallSchedulesResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,

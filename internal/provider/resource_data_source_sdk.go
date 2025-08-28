@@ -28,6 +28,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			r.DescendantResourceIds = append(r.DescendantResourceIds, types.StringValue(v))
 		}
 		r.Description = types.StringPointerValue(resp.Description)
+		r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)
 		r.ID = types.StringValue(resp.ID)
 		if resp.LastSuccessfulSync == nil {
 			r.LastSuccessfulSync = nil
@@ -263,6 +264,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 					requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 				}
 			}
+			requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 			requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 			requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
 			requestConfigurations.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)

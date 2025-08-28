@@ -34,7 +34,7 @@ Read-Only:
 - `configuration_template_id` (String) The ID of the configuration template.
 - `custom_request_notification` (String) Custom request notification sent upon request approval for this configuration template.
 - `linked_audit_message_channel_ids` (Set of String) The IDs of the audit message channels linked to the configuration template.
-- `member_oncall_schedule_ids` (Set of String) The IDs of the on-call schedules linked to the configuration template.
+- `member_on_call_schedule_ids` (Set of String) The IDs of the on-call schedules linked to the configuration template.
 - `name` (String) The name of the configuration template.
 - `request_configuration_id` (String) The ID of the request configuration linked to the configuration template.
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template.

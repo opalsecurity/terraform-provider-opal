@@ -16,6 +16,8 @@ type UpdateGroupInfo struct {
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the group.
 	Description *string `json:"description,omitempty"`
+	// The duration for which access can be extended (in minutes).
+	ExtensionsDurationInMinutes *int64 `json:"extensions_duration_in_minutes,omitempty"`
 	// A list of User IDs for the group leaders of the group
 	GroupLeaderUserIds []string `json:"group_leader_user_ids,omitempty"`
 	// The ID of the group.
@@ -59,6 +61,13 @@ func (o *UpdateGroupInfo) GetDescription() *string {
 		return nil
 	}
 	return o.Description
+}
+
+func (o *UpdateGroupInfo) GetExtensionsDurationInMinutes() *int64 {
+	if o == nil {
+		return nil
+	}
+	return o.ExtensionsDurationInMinutes
 }
 
 func (o *UpdateGroupInfo) GetGroupLeaderUserIds() []string {

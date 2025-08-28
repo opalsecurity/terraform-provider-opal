@@ -14,10 +14,10 @@ func (r *OnCallScheduleListDataSourceModel) RefreshFromSharedOnCallScheduleList(
 	var diags diag.Diagnostics
 
 	if resp != nil {
-		r.OnCallSchedules = []tfTypes.GetGroupOnCallSchedulesResponseBody{}
+		r.OnCallSchedules = []tfTypes.OnCallSchedule{}
 
 		for _, onCallSchedulesItem := range resp.OnCallSchedules {
-			var onCallSchedules tfTypes.GetGroupOnCallSchedulesResponseBody
+			var onCallSchedules tfTypes.OnCallSchedule
 
 			onCallSchedules.ID = types.StringPointerValue(onCallSchedulesItem.ID)
 			onCallSchedules.Name = types.StringPointerValue(onCallSchedulesItem.Name)

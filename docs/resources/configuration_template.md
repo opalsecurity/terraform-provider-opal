@@ -24,7 +24,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
     "37cb7e41-12ba-46da-92ff-030abe0450b1",
     "37cb7e41-12ba-46da-92ff-030abe0450b2",
   ]
-  member_oncall_schedule_ids = [
+  member_on_call_schedule_ids = [
     "37cb7e41-12ba-46da-92ff-030abe0450b1",
     "37cb7e41-12ba-46da-92ff-030abe0450b2",
   ]
@@ -41,12 +41,13 @@ resource "opal_configuration_template" "my_configurationtemplate" {
           "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]
       }
-      max_duration           = 120
-      priority               = 1
-      recommended_duration   = 120
-      request_template_id    = "06851574-e50d-40ca-8c78-f72ae6ab4304"
-      require_mfa_to_request = false
-      require_support_ticket = false
+      extensions_duration_in_minutes = 120
+      max_duration                   = 120
+      priority                       = 1
+      recommended_duration           = 120
+      request_template_id            = "06851574-e50d-40ca-8c78-f72ae6ab4304"
+      require_mfa_to_request         = false
+      require_support_ticket         = false
       reviewer_stages = [
         {
           operator = "AND"
@@ -91,7 +92,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
 - `break_glass_user_ids` (Set of String) The IDs of the break glass users linked to the configuration template.
 - `custom_request_notification` (String) Custom request notification sent upon request approval for this configuration template.
 - `linked_audit_message_channel_ids` (Set of String) The IDs of the audit message channels linked to the configuration template.
-- `member_oncall_schedule_ids` (Set of String) The IDs of the on-call schedules linked to the configuration template.
+- `member_on_call_schedule_ids` (Set of String) The IDs of the on-call schedules linked to the configuration template.
 - `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template. Default: false
 - `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--ticket_propagation))
@@ -127,6 +128,7 @@ Required:
 Optional:
 
 - `condition` (Attributes) (see [below for nested schema](#nestedatt--request_configurations--condition))
+- `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
 - `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
 - `request_template_id` (String) The ID of the associated request template.

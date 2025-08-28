@@ -14,6 +14,8 @@ type RequestConfiguration struct {
 	// A bool representing whether or not to automatically approve requests for this resource.
 	AutoApproval bool       `json:"auto_approval"`
 	Condition    *Condition `json:"condition,omitempty"`
+	// The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
+	ExtensionsDurationInMinutes *int64 `json:"extensions_duration_in_minutes,omitempty"`
 	// The maximum duration for which the resource can be requested (in minutes).
 	MaxDuration *int64 `json:"max_duration_minutes,omitempty"`
 	// The priority of the request configuration.
@@ -49,6 +51,13 @@ func (o *RequestConfiguration) GetCondition() *Condition {
 		return nil
 	}
 	return o.Condition
+}
+
+func (o *RequestConfiguration) GetExtensionsDurationInMinutes() *int64 {
+	if o == nil {
+		return nil
+	}
+	return o.ExtensionsDurationInMinutes
 }
 
 func (o *RequestConfiguration) GetMaxDuration() *int64 {

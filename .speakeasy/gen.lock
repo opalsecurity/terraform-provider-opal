@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 5a3e608af7ea2b087a25ffd793dbbf86
+  docChecksum: b1612f0500e3b5cdc5cee48e8bb98ca0
   docVersion: "1.0"
   speakeasyVersion: 1.606.8
   generationVersion: 2.687.13
-  releaseVersion: 3.1.4
-  configChecksum: 81687ea608ba91bc399030509d126bde
+  releaseVersion: 3.2.0
+  configChecksum: 08e5f9d7cef9ec64dd5f8df92461f193
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -306,6 +306,7 @@ generatedFiles:
   - internal/provider/types/okta_app.go
   - internal/provider/types/okta_group_rule.go
   - internal/provider/types/okta_standard_role.go
+  - internal/provider/types/on_call_schedule.go
   - internal/provider/types/owner.go
   - internal/provider/types/pagerduty_role.go
   - internal/provider/types/propagation_status.go
@@ -389,6 +390,7 @@ generatedFiles:
   - internal/sdk/models/operations/creategroupresources.go
   - internal/sdk/models/operations/creategrouptag.go
   - internal/sdk/models/operations/creategroupuser.go
+  - internal/sdk/models/operations/createidpgroupmapping.go
   - internal/sdk/models/operations/createmessagechannel.go
   - internal/sdk/models/operations/createoncallschedule.go
   - internal/sdk/models/operations/createowner.go
@@ -1640,6 +1642,14 @@ examples:
       responses:
         "200":
           application/json: {"results": [{"access_level": {"access_level_name": "AdminRole", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess"}, "email": "jake@company.dev", "expiration_date": "2022-01-23T04:56:07Z", "full_name": "Jake Barnes", "has_direct_access": true, "num_access_paths": 2, "resource_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}, {"access_level": {"access_level_name": "AdminRole", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess"}, "email": "brett@company.dev", "expiration_date": "2022-02-03T12:33:02Z", "full_name": "Brett Ashley", "has_direct_access": true, "num_access_paths": 3, "resource_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "7646aa9a-e2ee-4eb5-8c62-91f29038a373"}]}
+  createIdpGroupMapping:
+    speakeasy-default-create-idp-group-mapping:
+      parameters:
+        path:
+          app_resource_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+          group_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+      responses:
+        "200":
+          application/json: {"alias": "finance-team", "group_id": "6f99639b-7928-4043-8184-47cbc6766145", "hidden_from_end_user": false}
 examplesVersion: 1.0.2
 generatedTests: {}
-releaseNotes: "## SDK Changes Detected:\n* `Opal-API.requests.approveRequest()`:  `response.taskId` **Removed** **Breaking** :warning:\n* `Opal-API.resources.get_user_resources()`: \n  *  `request` **Changed**\n  *  `response` **Changed**\n* `Opal-API.resources.get_users()`:  `response` **Changed**\n"

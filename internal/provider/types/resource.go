@@ -7,22 +7,23 @@ import (
 )
 
 type Resource struct {
-	AdminOwnerID              types.String                    `tfsdk:"admin_owner_id"`
-	AncestorResourceIds       []types.String                  `tfsdk:"ancestor_resource_ids"`
-	AppID                     types.String                    `tfsdk:"app_id"`
-	CustomRequestNotification types.String                    `tfsdk:"custom_request_notification"`
-	DescendantResourceIds     []types.String                  `tfsdk:"descendant_resource_ids"`
-	Description               types.String                    `tfsdk:"description"`
-	ID                        types.String                    `tfsdk:"id"`
-	LastSuccessfulSync        *SyncTask                       `tfsdk:"last_successful_sync"`
-	Name                      types.String                    `tfsdk:"name"`
-	ParentResourceID          types.String                    `tfsdk:"parent_resource_id"`
-	RemoteInfo                *ResourceRemoteInfo             `tfsdk:"remote_info"`
-	RequestConfigurations     []RequestConfiguration          `tfsdk:"request_configurations"`
-	RequireMfaToApprove       types.Bool                      `tfsdk:"require_mfa_to_approve"`
-	RequireMfaToConnect       types.Bool                      `tfsdk:"require_mfa_to_connect"`
-	ResourceType              types.String                    `tfsdk:"resource_type"`
-	RiskSensitivity           types.String                    `tfsdk:"risk_sensitivity"`
-	RiskSensitivityOverride   types.String                    `tfsdk:"risk_sensitivity_override"`
-	TicketPropagation         *TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
+	AdminOwnerID                types.String                    `tfsdk:"admin_owner_id"`
+	AncestorResourceIds         []types.String                  `tfsdk:"ancestor_resource_ids"`
+	AppID                       types.String                    `tfsdk:"app_id"`
+	CustomRequestNotification   types.String                    `tfsdk:"custom_request_notification"`
+	DescendantResourceIds       []types.String                  `tfsdk:"descendant_resource_ids"`
+	Description                 types.String                    `tfsdk:"description"`
+	ExtensionsDurationInMinutes types.Int64                     `tfsdk:"extensions_duration_in_minutes"`
+	ID                          types.String                    `tfsdk:"id"`
+	LastSuccessfulSync          *SyncTask                       `tfsdk:"last_successful_sync"`
+	Name                        types.String                    `tfsdk:"name"`
+	ParentResourceID            types.String                    `tfsdk:"parent_resource_id"`
+	RemoteInfo                  *ResourceRemoteInfo             `tfsdk:"remote_info"`
+	RequestConfigurations       []RequestConfiguration          `tfsdk:"request_configurations"`
+	RequireMfaToApprove         types.Bool                      `tfsdk:"require_mfa_to_approve"`
+	RequireMfaToConnect         types.Bool                      `tfsdk:"require_mfa_to_connect"`
+	ResourceType                types.String                    `tfsdk:"resource_type"`
+	RiskSensitivity             types.String                    `tfsdk:"risk_sensitivity"`
+	RiskSensitivityOverride     types.String                    `tfsdk:"risk_sensitivity_override"`
+	TicketPropagation           *TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
 }

@@ -28,6 +28,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			r.DescendantResourceIds = append(r.DescendantResourceIds, types.StringValue(v))
 		}
 		r.Description = types.StringPointerValue(resp.Description)
+		r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)
 		r.ID = types.StringValue(resp.ID)
 		if resp.LastSuccessfulSync == nil {
 			r.LastSuccessfulSync = nil
@@ -263,6 +264,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 					requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 				}
 			}
+			requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 			requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 			requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
 			requestConfigurations.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)
@@ -332,6 +334,7 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.
 	r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 	r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 	r.Description = types.StringPointerValue(resp.Description)
+	r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)
 	r.ID = types.StringValue(resp.ID)
 	r.Name = types.StringPointerValue(resp.Name)
 	r.RequestConfigurations = []tfTypes.RequestConfiguration{}
@@ -354,6 +357,7 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.
 				requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 			}
 		}
+		requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 		requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 		requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
 		requestConfigurations.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)
@@ -918,6 +922,12 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 	} else {
 		description = nil
 	}
+	extensionsDurationInMinutes := new(int64)
+	if !r.ExtensionsDurationInMinutes.IsUnknown() && !r.ExtensionsDurationInMinutes.IsNull() {
+		*extensionsDurationInMinutes = r.ExtensionsDurationInMinutes.ValueInt64()
+	} else {
+		extensionsDurationInMinutes = nil
+	}
 	var id string
 	id = r.ID.ValueString()
 
@@ -949,6 +959,12 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 				GroupIds:      groupIds,
 				RoleRemoteIds: roleRemoteIds,
 			}
+		}
+		extensionsDurationInMinutes1 := new(int64)
+		if !requestConfigurationsItem.ExtensionsDurationInMinutes.IsUnknown() && !requestConfigurationsItem.ExtensionsDurationInMinutes.IsNull() {
+			*extensionsDurationInMinutes1 = requestConfigurationsItem.ExtensionsDurationInMinutes.ValueInt64()
+		} else {
+			extensionsDurationInMinutes1 = nil
 		}
 		maxDuration := new(int64)
 		if !requestConfigurationsItem.MaxDuration.IsUnknown() && !requestConfigurationsItem.MaxDuration.IsNull() {
@@ -1009,16 +1025,17 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 			})
 		}
 		requestConfigurations = append(requestConfigurations, shared.RequestConfiguration{
-			AllowRequests:        allowRequests,
-			AutoApproval:         autoApproval,
-			Condition:            condition,
-			MaxDuration:          maxDuration,
-			Priority:             priority,
-			RecommendedDuration:  recommendedDuration,
-			RequestTemplateID:    requestTemplateID,
-			RequireMfaToRequest:  requireMfaToRequest,
-			RequireSupportTicket: requireSupportTicket,
-			ReviewerStages:       reviewerStages,
+			AllowRequests:               allowRequests,
+			AutoApproval:                autoApproval,
+			Condition:                   condition,
+			ExtensionsDurationInMinutes: extensionsDurationInMinutes1,
+			MaxDuration:                 maxDuration,
+			Priority:                    priority,
+			RecommendedDuration:         recommendedDuration,
+			RequestTemplateID:           requestTemplateID,
+			RequireMfaToRequest:         requireMfaToRequest,
+			RequireSupportTicket:        requireSupportTicket,
+			ReviewerStages:              reviewerStages,
 		})
 	}
 	requireMfaToApprove := new(bool)
@@ -1067,16 +1084,17 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 		}
 	}
 	out := shared.UpdateResourceInfo{
-		AdminOwnerID:              adminOwnerID,
-		CustomRequestNotification: customRequestNotification,
-		Description:               description,
-		ID:                        id,
-		Name:                      name,
-		RequestConfigurations:     requestConfigurations,
-		RequireMfaToApprove:       requireMfaToApprove,
-		RequireMfaToConnect:       requireMfaToConnect,
-		RiskSensitivityOverride:   riskSensitivityOverride,
-		TicketPropagation:         ticketPropagation,
+		AdminOwnerID:                adminOwnerID,
+		CustomRequestNotification:   customRequestNotification,
+		Description:                 description,
+		ExtensionsDurationInMinutes: extensionsDurationInMinutes,
+		ID:                          id,
+		Name:                        name,
+		RequestConfigurations:       requestConfigurations,
+		RequireMfaToApprove:         requireMfaToApprove,
+		RequireMfaToConnect:         requireMfaToConnect,
+		RiskSensitivityOverride:     riskSensitivityOverride,
+		TicketPropagation:           ticketPropagation,
 	}
 
 	return &out, diags

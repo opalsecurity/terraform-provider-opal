@@ -22,7 +22,7 @@ type CreateConfigurationTemplateInfo struct {
 	// The IDs of the audit message channels linked to the configuration template.
 	LinkedAuditMessageChannelIds []string `json:"linked_audit_message_channel_ids,omitempty"`
 	// The IDs of the on-call schedules linked to the configuration template.
-	MemberOncallScheduleIds []string `json:"member_oncall_schedule_ids"`
+	MemberOnCallScheduleIds []string `json:"member_oncall_schedule_ids"`
 	// The name of the configuration template.
 	Name string `json:"name"`
 	// The request configuration list of the configuration template. If not provided, the default request configuration will be used.
@@ -76,11 +76,11 @@ func (o *CreateConfigurationTemplateInfo) GetLinkedAuditMessageChannelIds() []st
 	return o.LinkedAuditMessageChannelIds
 }
 
-func (o *CreateConfigurationTemplateInfo) GetMemberOncallScheduleIds() []string {
+func (o *CreateConfigurationTemplateInfo) GetMemberOnCallScheduleIds() []string {
 	if o == nil {
 		return nil
 	}
-	return o.MemberOncallScheduleIds
+	return o.MemberOnCallScheduleIds
 }
 
 func (o *CreateConfigurationTemplateInfo) GetName() string {

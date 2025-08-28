@@ -2,13 +2,6 @@
 
 package types
 
-import (
-	"github.com/hashicorp/terraform-plugin-framework/types"
-)
-
 type GetGroupOnCallSchedulesResponseBody struct {
-	ID                 types.String `tfsdk:"id"`
-	Name               types.String `tfsdk:"name"`
-	RemoteID           types.String `tfsdk:"remote_id"`
-	ThirdPartyProvider types.String `tfsdk:"third_party_provider"`
+	OnCallSchedules []OnCallSchedule `tfsdk:"on_call_schedules"`
 }

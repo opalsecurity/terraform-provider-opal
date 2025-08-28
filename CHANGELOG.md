@@ -1,5 +1,20 @@
 # Changelog
 
+## v3.2.0
+- Fixes a bug where on_call_schedule_ids were not being set correctly.
+- Adds support for request_extension.
+- Adds support for IDP Group Mappings.
+
+### Breaking Changes in v3.2.0:
+  - All references to `oncall_schedule` have been replaced with `on_call_schedule` for consistency across the provider. 
+  - This affects the following resources:
+    - `opal_configuration_template`: `member_oncall_schedule_ids` => `member_on_call_schedule_ids`
+    - Note: The `opal_group` *resource* is unaffected by this change as it already uses `on_call_schedule_ids`.
+  - This affects the following data sources:
+    - `opal_group`: `oncall_schedules` => `on_call_schedules`
+    - `opal_configuration_template`: `member_oncall_schedule_ids` => `member_on_call_schedule_ids`
+  
+
 ## v.3.1.3
 - Fixed a bug where opal_scoped_role_permission_list could show state drift when no changes were made.
 

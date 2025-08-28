@@ -26,9 +26,9 @@ func (r *ConfigurationTemplateResourceModel) RefreshFromSharedConfigurationTempl
 		for _, v := range resp.LinkedAuditMessageChannelIds {
 			r.LinkedAuditMessageChannelIds = append(r.LinkedAuditMessageChannelIds, types.StringValue(v))
 		}
-		r.MemberOncallScheduleIds = make([]types.String, 0, len(resp.MemberOncallScheduleIds))
-		for _, v := range resp.MemberOncallScheduleIds {
-			r.MemberOncallScheduleIds = append(r.MemberOncallScheduleIds, types.StringValue(v))
+		r.MemberOnCallScheduleIds = make([]types.String, 0, len(resp.MemberOnCallScheduleIds))
+		for _, v := range resp.MemberOnCallScheduleIds {
+			r.MemberOnCallScheduleIds = append(r.MemberOnCallScheduleIds, types.StringValue(v))
 		}
 		r.Name = types.StringPointerValue(resp.Name)
 		r.RequestConfigurationID = types.StringPointerValue(resp.RequestConfigurationID)
@@ -92,9 +92,9 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 	for _, linkedAuditMessageChannelIdsItem := range r.LinkedAuditMessageChannelIds {
 		linkedAuditMessageChannelIds = append(linkedAuditMessageChannelIds, linkedAuditMessageChannelIdsItem.ValueString())
 	}
-	memberOncallScheduleIds := make([]string, 0, len(r.MemberOncallScheduleIds))
-	for _, memberOncallScheduleIdsItem := range r.MemberOncallScheduleIds {
-		memberOncallScheduleIds = append(memberOncallScheduleIds, memberOncallScheduleIdsItem.ValueString())
+	memberOnCallScheduleIds := make([]string, 0, len(r.MemberOnCallScheduleIds))
+	for _, memberOnCallScheduleIdsItem := range r.MemberOnCallScheduleIds {
+		memberOnCallScheduleIds = append(memberOnCallScheduleIds, memberOnCallScheduleIdsItem.ValueString())
 	}
 	var name string
 	name = r.Name.ValueString()
@@ -121,6 +121,12 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 				GroupIds:      groupIds,
 				RoleRemoteIds: roleRemoteIds,
 			}
+		}
+		extensionsDurationInMinutes := new(int64)
+		if !requestConfigurationsItem.ExtensionsDurationInMinutes.IsUnknown() && !requestConfigurationsItem.ExtensionsDurationInMinutes.IsNull() {
+			*extensionsDurationInMinutes = requestConfigurationsItem.ExtensionsDurationInMinutes.ValueInt64()
+		} else {
+			extensionsDurationInMinutes = nil
 		}
 		maxDuration := new(int64)
 		if !requestConfigurationsItem.MaxDuration.IsUnknown() && !requestConfigurationsItem.MaxDuration.IsNull() {
@@ -181,16 +187,17 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 			})
 		}
 		requestConfigurations = append(requestConfigurations, shared.RequestConfiguration{
-			AllowRequests:        allowRequests,
-			AutoApproval:         autoApproval,
-			Condition:            condition,
-			MaxDuration:          maxDuration,
-			Priority:             priority,
-			RecommendedDuration:  recommendedDuration,
-			RequestTemplateID:    requestTemplateID,
-			RequireMfaToRequest:  requireMfaToRequest,
-			RequireSupportTicket: requireSupportTicket,
-			ReviewerStages:       reviewerStages,
+			AllowRequests:               allowRequests,
+			AutoApproval:                autoApproval,
+			Condition:                   condition,
+			ExtensionsDurationInMinutes: extensionsDurationInMinutes,
+			MaxDuration:                 maxDuration,
+			Priority:                    priority,
+			RecommendedDuration:         recommendedDuration,
+			RequestTemplateID:           requestTemplateID,
+			RequireMfaToRequest:         requireMfaToRequest,
+			RequireSupportTicket:        requireSupportTicket,
+			ReviewerStages:              reviewerStages,
 		})
 	}
 	requireMfaToApprove := new(bool)
@@ -243,7 +250,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 		BreakGlassUserIds:            breakGlassUserIds,
 		CustomRequestNotification:    customRequestNotification,
 		LinkedAuditMessageChannelIds: linkedAuditMessageChannelIds,
-		MemberOncallScheduleIds:      memberOncallScheduleIds,
+		MemberOnCallScheduleIds:      memberOnCallScheduleIds,
 		Name:                         name,
 		RequestConfigurations:        requestConfigurations,
 		RequireMfaToApprove:          requireMfaToApprove,
@@ -281,9 +288,9 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 	for _, linkedAuditMessageChannelIdsItem := range r.LinkedAuditMessageChannelIds {
 		linkedAuditMessageChannelIds = append(linkedAuditMessageChannelIds, linkedAuditMessageChannelIdsItem.ValueString())
 	}
-	memberOncallScheduleIds := make([]string, 0, len(r.MemberOncallScheduleIds))
-	for _, memberOncallScheduleIdsItem := range r.MemberOncallScheduleIds {
-		memberOncallScheduleIds = append(memberOncallScheduleIds, memberOncallScheduleIdsItem.ValueString())
+	memberOnCallScheduleIds := make([]string, 0, len(r.MemberOnCallScheduleIds))
+	for _, memberOnCallScheduleIdsItem := range r.MemberOnCallScheduleIds {
+		memberOnCallScheduleIds = append(memberOnCallScheduleIds, memberOnCallScheduleIdsItem.ValueString())
 	}
 	name := new(string)
 	if !r.Name.IsUnknown() && !r.Name.IsNull() {
@@ -313,6 +320,12 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 				GroupIds:      groupIds,
 				RoleRemoteIds: roleRemoteIds,
 			}
+		}
+		extensionsDurationInMinutes := new(int64)
+		if !requestConfigurationsItem.ExtensionsDurationInMinutes.IsUnknown() && !requestConfigurationsItem.ExtensionsDurationInMinutes.IsNull() {
+			*extensionsDurationInMinutes = requestConfigurationsItem.ExtensionsDurationInMinutes.ValueInt64()
+		} else {
+			extensionsDurationInMinutes = nil
 		}
 		maxDuration := new(int64)
 		if !requestConfigurationsItem.MaxDuration.IsUnknown() && !requestConfigurationsItem.MaxDuration.IsNull() {
@@ -373,16 +386,17 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 			})
 		}
 		requestConfigurations = append(requestConfigurations, shared.RequestConfiguration{
-			AllowRequests:        allowRequests,
-			AutoApproval:         autoApproval,
-			Condition:            condition,
-			MaxDuration:          maxDuration,
-			Priority:             priority,
-			RecommendedDuration:  recommendedDuration,
-			RequestTemplateID:    requestTemplateID,
-			RequireMfaToRequest:  requireMfaToRequest,
-			RequireSupportTicket: requireSupportTicket,
-			ReviewerStages:       reviewerStages,
+			AllowRequests:               allowRequests,
+			AutoApproval:                autoApproval,
+			Condition:                   condition,
+			ExtensionsDurationInMinutes: extensionsDurationInMinutes,
+			MaxDuration:                 maxDuration,
+			Priority:                    priority,
+			RecommendedDuration:         recommendedDuration,
+			RequestTemplateID:           requestTemplateID,
+			RequireMfaToRequest:         requireMfaToRequest,
+			RequireSupportTicket:        requireSupportTicket,
+			ReviewerStages:              reviewerStages,
 		})
 	}
 	requireMfaToApprove := new(bool)
@@ -440,7 +454,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 		ConfigurationTemplateID:      configurationTemplateID,
 		CustomRequestNotification:    customRequestNotification,
 		LinkedAuditMessageChannelIds: linkedAuditMessageChannelIds,
-		MemberOncallScheduleIds:      memberOncallScheduleIds,
+		MemberOnCallScheduleIds:      memberOnCallScheduleIds,
 		Name:                         name,
 		RequestConfigurations:        requestConfigurations,
 		RequireMfaToApprove:          requireMfaToApprove,

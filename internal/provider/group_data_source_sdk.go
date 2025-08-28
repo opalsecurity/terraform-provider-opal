@@ -38,6 +38,31 @@ func (r *GroupDataSourceModel) RefreshFromOperationsGetGroupMessageChannelsRespo
 	return diags
 }
 
+func (r *GroupDataSourceModel) RefreshFromOperationsGetGroupOnCallSchedulesResponseBody(ctx context.Context, resp *operations.GetGroupOnCallSchedulesResponseBody) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.OnCallSchedules.OnCallSchedules = []tfTypes.OnCallSchedule{}
+
+		for _, onCallSchedulesItem := range resp.OnCallSchedules {
+			var onCallSchedules tfTypes.OnCallSchedule
+
+			onCallSchedules.ID = types.StringPointerValue(onCallSchedulesItem.ID)
+			onCallSchedules.Name = types.StringPointerValue(onCallSchedulesItem.Name)
+			onCallSchedules.RemoteID = types.StringPointerValue(onCallSchedulesItem.RemoteID)
+			if onCallSchedulesItem.ThirdPartyProvider != nil {
+				onCallSchedules.ThirdPartyProvider = types.StringValue(string(*onCallSchedulesItem.ThirdPartyProvider))
+			} else {
+				onCallSchedules.ThirdPartyProvider = types.StringNull()
+			}
+
+			r.OnCallSchedules.OnCallSchedules = append(r.OnCallSchedules.OnCallSchedules, onCallSchedules)
+		}
+	}
+
+	return diags
+}
+
 func (r *GroupDataSourceModel) RefreshFromOperationsGetGroupVisibilityResponseBody(ctx context.Context, resp *operations.GetGroupVisibilityResponseBody) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -60,6 +85,7 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 		r.AppID = types.StringPointerValue(resp.AppID)
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.Description = types.StringPointerValue(resp.Description)
+		r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)
 		r.GroupBindingID = types.StringPointerValue(resp.GroupBindingID)
 		r.GroupLeaderUserIds = make([]types.String, 0, len(resp.GroupLeaderUserIds))
 		for _, v := range resp.GroupLeaderUserIds {
@@ -177,6 +203,7 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 					requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 				}
 			}
+			requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 			requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 			requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
 			requestConfigurations.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)
