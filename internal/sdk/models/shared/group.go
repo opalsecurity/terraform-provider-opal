@@ -101,6 +101,8 @@ type Group struct {
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the group.
 	Description *string `json:"description,omitempty"`
+	// The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
+	ExtensionsDurationInMinutes *int64 `json:"extensions_duration_in_minutes,omitempty"`
 	// The ID of the associated group binding.
 	GroupBindingID *string `json:"group_binding_id,omitempty"`
 	// A list of User IDs for the group leaders of the group
@@ -163,6 +165,13 @@ func (o *Group) GetDescription() *string {
 		return nil
 	}
 	return o.Description
+}
+
+func (o *Group) GetExtensionsDurationInMinutes() *int64 {
+	if o == nil {
+		return nil
+	}
+	return o.ExtensionsDurationInMinutes
 }
 
 func (o *Group) GetGroupBindingID() *string {

@@ -1,9 +1,10 @@
 resource "opal_resource" "my_resource" {
-  admin_owner_id              = "7c86c85d-0651-43e2-a748-d69d658418e8"
-  app_id                      = "f454d283-ca87-4a8a-bdbb-df212eca5353"
-  custom_request_notification = "Check your email to register your account."
-  description                 = "Engineering team Okta role."
-  name                        = "mongo-db-prod"
+  admin_owner_id                 = "7c86c85d-0651-43e2-a748-d69d658418e8"
+  app_id                         = "f454d283-ca87-4a8a-bdbb-df212eca5353"
+  custom_request_notification    = "Check your email to register your account."
+  description                    = "Engineering team Okta role."
+  extensions_duration_in_minutes = 120
+  name                           = "mongo-db-prod"
   remote_info = {
     aws_account = {
       account_id             = 234234234234
@@ -128,12 +129,13 @@ resource "opal_resource" "my_resource" {
           "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]
       }
-      max_duration           = 120
-      priority               = 1
-      recommended_duration   = 120
-      request_template_id    = "06851574-e50d-40ca-8c78-f72ae6ab4304"
-      require_mfa_to_request = false
-      require_support_ticket = false
+      extensions_duration_in_minutes = 120
+      max_duration                   = 120
+      priority                       = 1
+      recommended_duration           = 120
+      request_template_id            = "06851574-e50d-40ca-8c78-f72ae6ab4304"
+      require_mfa_to_request         = false
+      require_support_ticket         = false
       reviewer_stages = [
         {
           operator = "AND"

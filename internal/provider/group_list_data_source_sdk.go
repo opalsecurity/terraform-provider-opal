@@ -25,6 +25,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 			results.AppID = types.StringPointerValue(resultsItem.AppID)
 			results.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
 			results.Description = types.StringPointerValue(resultsItem.Description)
+			results.ExtensionsDurationInMinutes = types.Int64PointerValue(resultsItem.ExtensionsDurationInMinutes)
 			results.GroupBindingID = types.StringPointerValue(resultsItem.GroupBindingID)
 			results.GroupLeaderUserIds = make([]types.String, 0, len(resultsItem.GroupLeaderUserIds))
 			for _, v := range resultsItem.GroupLeaderUserIds {
@@ -142,6 +143,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 						requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 					}
 				}
+				requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 				requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 				requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
 				requestConfigurations.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)

@@ -35,6 +35,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				results.DescendantResourceIds = append(results.DescendantResourceIds, types.StringValue(v))
 			}
 			results.Description = types.StringPointerValue(resultsItem.Description)
+			results.ExtensionsDurationInMinutes = types.Int64PointerValue(resultsItem.ExtensionsDurationInMinutes)
 			results.ID = types.StringValue(resultsItem.ID)
 			if resultsItem.LastSuccessfulSync == nil {
 				results.LastSuccessfulSync = nil
@@ -270,6 +271,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 						requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 					}
 				}
+				requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 				requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 				requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
 				requestConfigurations.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)

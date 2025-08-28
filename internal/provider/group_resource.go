@@ -54,28 +54,29 @@ type GroupResource struct {
 
 // GroupResourceModel describes the resource data model.
 type GroupResourceModel struct {
-	AdminOwnerID              types.String                                `tfsdk:"admin_owner_id"`
-	AppID                     types.String                                `tfsdk:"app_id"`
-	CustomRequestNotification types.String                                `tfsdk:"custom_request_notification"`
-	Description               types.String                                `tfsdk:"description"`
-	GroupBindingID            types.String                                `tfsdk:"group_binding_id"`
-	GroupLeaderUserIds        []types.String                              `tfsdk:"group_leader_user_ids"`
-	GroupType                 types.String                                `tfsdk:"group_type"`
-	ID                        types.String                                `tfsdk:"id"`
-	LastSuccessfulSync        *tfTypes.SyncTask                           `tfsdk:"last_successful_sync"`
-	MessageChannelIds         []types.String                              `tfsdk:"message_channel_ids"`
-	MessageChannels           tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
-	Name                      types.String                                `tfsdk:"name"`
-	OnCallScheduleIds         []types.String                              `tfsdk:"on_call_schedule_ids"`
-	OncallSchedules           tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"oncall_schedules"`
-	RemoteInfo                *tfTypes.GroupRemoteInfo                    `tfsdk:"remote_info"`
-	RemoteName                types.String                                `tfsdk:"remote_name"`
-	RequestConfigurations     []tfTypes.RequestConfiguration              `tfsdk:"request_configurations"`
-	RequireMfaToApprove       types.Bool                                  `tfsdk:"require_mfa_to_approve"`
-	RiskSensitivity           types.String                                `tfsdk:"risk_sensitivity"`
-	RiskSensitivityOverride   types.String                                `tfsdk:"risk_sensitivity_override"`
-	Visibility                types.String                                `tfsdk:"visibility"`
-	VisibilityGroupIds        []types.String                              `tfsdk:"visibility_group_ids"`
+	AdminOwnerID                types.String                                `tfsdk:"admin_owner_id"`
+	AppID                       types.String                                `tfsdk:"app_id"`
+	CustomRequestNotification   types.String                                `tfsdk:"custom_request_notification"`
+	Description                 types.String                                `tfsdk:"description"`
+	ExtensionsDurationInMinutes types.Int64                                 `tfsdk:"extensions_duration_in_minutes"`
+	GroupBindingID              types.String                                `tfsdk:"group_binding_id"`
+	GroupLeaderUserIds          []types.String                              `tfsdk:"group_leader_user_ids"`
+	GroupType                   types.String                                `tfsdk:"group_type"`
+	ID                          types.String                                `tfsdk:"id"`
+	LastSuccessfulSync          *tfTypes.SyncTask                           `tfsdk:"last_successful_sync"`
+	MessageChannelIds           []types.String                              `tfsdk:"message_channel_ids"`
+	MessageChannels             tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
+	Name                        types.String                                `tfsdk:"name"`
+	OnCallScheduleIds           []types.String                              `tfsdk:"on_call_schedule_ids"`
+	OnCallSchedules             tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"on_call_schedules"`
+	RemoteInfo                  *tfTypes.GroupRemoteInfo                    `tfsdk:"remote_info"`
+	RemoteName                  types.String                                `tfsdk:"remote_name"`
+	RequestConfigurations       []tfTypes.RequestConfiguration              `tfsdk:"request_configurations"`
+	RequireMfaToApprove         types.Bool                                  `tfsdk:"require_mfa_to_approve"`
+	RiskSensitivity             types.String                                `tfsdk:"risk_sensitivity"`
+	RiskSensitivityOverride     types.String                                `tfsdk:"risk_sensitivity_override"`
+	Visibility                  types.String                                `tfsdk:"visibility"`
+	VisibilityGroupIds          []types.String                              `tfsdk:"visibility_group_ids"`
 }
 
 func (r *GroupResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -121,6 +122,11 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 				Description: `A description of the remote group.`,
+			},
+			"extensions_duration_in_minutes": schema.Int64Attribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `The duration for which access can be extended (in minutes).`,
 			},
 			"group_binding_id": schema.StringAttribute{
 				Computed: true,
@@ -269,44 +275,57 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 				ElementType: types.StringType,
 			},
-			"oncall_schedules": schema.SingleNestedAttribute{
+			"on_call_schedules": schema.SingleNestedAttribute{
 				Computed: true,
 				PlanModifiers: []planmodifier.Object{
 					speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 				},
 				Attributes: map[string]schema.Attribute{
-					"id": schema.StringAttribute{
+					"on_call_schedules": schema.ListNestedAttribute{
 						Computed: true,
-						PlanModifiers: []planmodifier.String{
-							speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+						PlanModifiers: []planmodifier.List{
+							speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
 						},
-						Description: `The ID of the on-call schedule.`,
-					},
-					"name": schema.StringAttribute{
-						Computed: true,
-						PlanModifiers: []planmodifier.String{
-							speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-						},
-						Description: `The name of the on call schedule.`,
-					},
-					"remote_id": schema.StringAttribute{
-						Computed: true,
-						PlanModifiers: []planmodifier.String{
-							speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-						},
-						Description: `The remote ID of the on call schedule`,
-					},
-					"third_party_provider": schema.StringAttribute{
-						Computed: true,
-						PlanModifiers: []planmodifier.String{
-							speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-						},
-						Description: `The third party provider of the on call schedule. must be one of ["OPSGENIE", "PAGER_DUTY"]`,
-						Validators: []validator.String{
-							stringvalidator.OneOf(
-								"OPSGENIE",
-								"PAGER_DUTY",
-							),
+						NestedObject: schema.NestedAttributeObject{
+							PlanModifiers: []planmodifier.Object{
+								speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+							},
+							Attributes: map[string]schema.Attribute{
+								"id": schema.StringAttribute{
+									Computed: true,
+									PlanModifiers: []planmodifier.String{
+										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+									},
+									Description: `The ID of the on-call schedule.`,
+								},
+								"name": schema.StringAttribute{
+									Computed: true,
+									PlanModifiers: []planmodifier.String{
+										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+									},
+									Description: `The name of the on call schedule.`,
+								},
+								"remote_id": schema.StringAttribute{
+									Computed: true,
+									PlanModifiers: []planmodifier.String{
+										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+									},
+									Description: `The remote ID of the on call schedule`,
+								},
+								"third_party_provider": schema.StringAttribute{
+									Computed: true,
+									PlanModifiers: []planmodifier.String{
+										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+									},
+									Description: `The third party provider of the on call schedule. must be one of ["OPSGENIE", "PAGER_DUTY"]`,
+									Validators: []validator.String{
+										stringvalidator.OneOf(
+											"OPSGENIE",
+											"PAGER_DUTY",
+										),
+									},
+								},
+							},
 						},
 					},
 				},
@@ -649,6 +668,11 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 								},
 							},
 						},
+						"extensions_duration_in_minutes": schema.Int64Attribute{
+							Computed:    true,
+							Optional:    true,
+							Description: `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
+						},
 						"max_duration": schema.Int64Attribute{
 							Computed: true,
 							Optional: true,
@@ -978,7 +1002,7 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res3, err := r.client.Groups.UpdateOnCallSchedule(ctx, *request3)
+	res3, err := r.client.Groups.UpdateOnCallSchedules(ctx, *request3)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res3 != nil && res3.RawResponse != nil {
@@ -1108,7 +1132,7 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res7, err := r.client.Groups.GetOnCallSchedule(ctx, *request7)
+	res7, err := r.client.Groups.GetOnCallSchedules(ctx, *request7)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res7 != nil && res7.RawResponse != nil {
@@ -1122,6 +1146,15 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	}
 	if res7.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res7.StatusCode), debugResponse(res7.RawResponse))
+		return
+	}
+	if !(res7.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res7.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupOnCallSchedulesResponseBody(ctx, res7.Object)...)
+
+	if resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -1266,7 +1299,7 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res2, err := r.client.Groups.GetOnCallSchedule(ctx, *request2)
+	res2, err := r.client.Groups.GetOnCallSchedules(ctx, *request2)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res2 != nil && res2.RawResponse != nil {
@@ -1284,6 +1317,15 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 	}
 	if res2.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
+		return
+	}
+	if !(res2.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res2.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupOnCallSchedulesResponseBody(ctx, res2.Object)...)
+
+	if resp.Diagnostics.HasError() {
 		return
 	}
 	request3, request3Diags := data.ToOperationsGetGroupVisibilityRequest(ctx)
@@ -1411,7 +1453,7 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res2, err := r.client.Groups.UpdateOnCallSchedule(ctx, *request2)
+	res2, err := r.client.Groups.UpdateOnCallSchedules(ctx, *request2)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res2 != nil && res2.RawResponse != nil {
@@ -1541,7 +1583,7 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res6, err := r.client.Groups.GetOnCallSchedule(ctx, *request6)
+	res6, err := r.client.Groups.GetOnCallSchedules(ctx, *request6)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res6 != nil && res6.RawResponse != nil {
@@ -1555,6 +1597,15 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	}
 	if res6.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res6.StatusCode), debugResponse(res6.RawResponse))
+		return
+	}
+	if !(res6.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res6.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupOnCallSchedulesResponseBody(ctx, res6.Object)...)
+
+	if resp.Diagnostics.HasError() {
 		return
 	}
 

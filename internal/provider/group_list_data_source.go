@@ -113,6 +113,10 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							Computed:    true,
 							Description: `A description of the group.`,
 						},
+						"extensions_duration_in_minutes": schema.Int64Attribute{
+							Computed:    true,
+							Description: `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
+						},
 						"group_binding_id": schema.StringAttribute{
 							Computed:    true,
 							Description: `The ID of the associated group binding.`,
@@ -304,6 +308,10 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 												Description: `The list of role remote IDs to match.`,
 											},
 										},
+									},
+									"extensions_duration_in_minutes": schema.Int64Attribute{
+										Computed:    true,
+										Description: `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
 									},
 									"max_duration": schema.Int64Attribute{
 										Computed:    true,

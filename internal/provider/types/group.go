@@ -7,20 +7,21 @@ import (
 )
 
 type Group struct {
-	AdminOwnerID              types.String           `tfsdk:"admin_owner_id"`
-	AppID                     types.String           `tfsdk:"app_id"`
-	CustomRequestNotification types.String           `tfsdk:"custom_request_notification"`
-	Description               types.String           `tfsdk:"description"`
-	GroupBindingID            types.String           `tfsdk:"group_binding_id"`
-	GroupLeaderUserIds        []types.String         `tfsdk:"group_leader_user_ids"`
-	GroupType                 types.String           `tfsdk:"group_type"`
-	ID                        types.String           `tfsdk:"id"`
-	LastSuccessfulSync        *SyncTask              `tfsdk:"last_successful_sync"`
-	Name                      types.String           `tfsdk:"name"`
-	RemoteInfo                *GroupRemoteInfo       `tfsdk:"remote_info"`
-	RemoteName                types.String           `tfsdk:"remote_name"`
-	RequestConfigurations     []RequestConfiguration `tfsdk:"request_configurations"`
-	RequireMfaToApprove       types.Bool             `tfsdk:"require_mfa_to_approve"`
-	RiskSensitivity           types.String           `tfsdk:"risk_sensitivity"`
-	RiskSensitivityOverride   types.String           `tfsdk:"risk_sensitivity_override"`
+	AdminOwnerID                types.String           `tfsdk:"admin_owner_id"`
+	AppID                       types.String           `tfsdk:"app_id"`
+	CustomRequestNotification   types.String           `tfsdk:"custom_request_notification"`
+	Description                 types.String           `tfsdk:"description"`
+	ExtensionsDurationInMinutes types.Int64            `tfsdk:"extensions_duration_in_minutes"`
+	GroupBindingID              types.String           `tfsdk:"group_binding_id"`
+	GroupLeaderUserIds          []types.String         `tfsdk:"group_leader_user_ids"`
+	GroupType                   types.String           `tfsdk:"group_type"`
+	ID                          types.String           `tfsdk:"id"`
+	LastSuccessfulSync          *SyncTask              `tfsdk:"last_successful_sync"`
+	Name                        types.String           `tfsdk:"name"`
+	RemoteInfo                  *GroupRemoteInfo       `tfsdk:"remote_info"`
+	RemoteName                  types.String           `tfsdk:"remote_name"`
+	RequestConfigurations       []RequestConfiguration `tfsdk:"request_configurations"`
+	RequireMfaToApprove         types.Bool             `tfsdk:"require_mfa_to_approve"`
+	RiskSensitivity             types.String           `tfsdk:"risk_sensitivity"`
+	RiskSensitivityOverride     types.String           `tfsdk:"risk_sensitivity_override"`
 }

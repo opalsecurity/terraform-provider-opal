@@ -9,7 +9,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
     "37cb7e41-12ba-46da-92ff-030abe0450b1",
     "37cb7e41-12ba-46da-92ff-030abe0450b2",
   ]
-  member_oncall_schedule_ids = [
+  member_on_call_schedule_ids = [
     "37cb7e41-12ba-46da-92ff-030abe0450b1",
     "37cb7e41-12ba-46da-92ff-030abe0450b2",
   ]
@@ -26,12 +26,13 @@ resource "opal_configuration_template" "my_configurationtemplate" {
           "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]
       }
-      max_duration           = 120
-      priority               = 1
-      recommended_duration   = 120
-      request_template_id    = "06851574-e50d-40ca-8c78-f72ae6ab4304"
-      require_mfa_to_request = false
-      require_support_ticket = false
+      extensions_duration_in_minutes = 120
+      max_duration                   = 120
+      priority                       = 1
+      recommended_duration           = 120
+      request_template_id            = "06851574-e50d-40ca-8c78-f72ae6ab4304"
+      require_mfa_to_request         = false
+      require_support_ticket         = false
       reviewer_stages = [
         {
           operator = "AND"

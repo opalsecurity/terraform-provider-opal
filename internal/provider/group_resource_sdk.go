@@ -38,6 +38,31 @@ func (r *GroupResourceModel) RefreshFromOperationsGetGroupMessageChannelsRespons
 	return diags
 }
 
+func (r *GroupResourceModel) RefreshFromOperationsGetGroupOnCallSchedulesResponseBody(ctx context.Context, resp *operations.GetGroupOnCallSchedulesResponseBody) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.OnCallSchedules.OnCallSchedules = []tfTypes.OnCallSchedule{}
+
+		for _, onCallSchedulesItem := range resp.OnCallSchedules {
+			var onCallSchedules tfTypes.OnCallSchedule
+
+			onCallSchedules.ID = types.StringPointerValue(onCallSchedulesItem.ID)
+			onCallSchedules.Name = types.StringPointerValue(onCallSchedulesItem.Name)
+			onCallSchedules.RemoteID = types.StringPointerValue(onCallSchedulesItem.RemoteID)
+			if onCallSchedulesItem.ThirdPartyProvider != nil {
+				onCallSchedules.ThirdPartyProvider = types.StringValue(string(*onCallSchedulesItem.ThirdPartyProvider))
+			} else {
+				onCallSchedules.ThirdPartyProvider = types.StringNull()
+			}
+
+			r.OnCallSchedules.OnCallSchedules = append(r.OnCallSchedules.OnCallSchedules, onCallSchedules)
+		}
+	}
+
+	return diags
+}
+
 func (r *GroupResourceModel) RefreshFromOperationsGetGroupVisibilityResponseBody(ctx context.Context, resp *operations.GetGroupVisibilityResponseBody) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -60,6 +85,7 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 		r.AppID = types.StringPointerValue(resp.AppID)
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.Description = types.StringPointerValue(resp.Description)
+		r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)
 		r.GroupBindingID = types.StringPointerValue(resp.GroupBindingID)
 		r.GroupLeaderUserIds = make([]types.String, 0, len(resp.GroupLeaderUserIds))
 		for _, v := range resp.GroupLeaderUserIds {
@@ -177,6 +203,7 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 					requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 				}
 			}
+			requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 			requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 			requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
 			requestConfigurations.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)
@@ -227,6 +254,7 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(ctx context.Contex
 	r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 	r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 	r.Description = types.StringPointerValue(resp.Description)
+	r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)
 	r.GroupLeaderUserIds = make([]types.String, 0, len(resp.GroupLeaderUserIds))
 	for _, v := range resp.GroupLeaderUserIds {
 		r.GroupLeaderUserIds = append(r.GroupLeaderUserIds, types.StringValue(v))
@@ -253,6 +281,7 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(ctx context.Contex
 				requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 			}
 		}
+		requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 		requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 		requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
 		requestConfigurations.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)
@@ -380,11 +409,19 @@ func (r *GroupResourceModel) ToOperationsUpdateGroupMessageChannelsRequest(ctx c
 func (r *GroupResourceModel) ToOperationsUpdateGroupOnCallSchedulesRequest(ctx context.Context) (*operations.UpdateGroupOnCallSchedulesRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	onCallScheduleIDList, onCallScheduleIDListDiags := r.ToSharedOnCallScheduleIDList(ctx)
+	diags.Append(onCallScheduleIDListDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
 	var id string
 	id = r.ID.ValueString()
 
 	out := operations.UpdateGroupOnCallSchedulesRequest{
-		ID: id,
+		OnCallScheduleIDList: *onCallScheduleIDList,
+		ID:                   id,
 	}
 
 	return &out, diags
@@ -591,6 +628,20 @@ func (r *GroupResourceModel) ToSharedMessageChannelIDList(ctx context.Context) (
 	return &out, diags
 }
 
+func (r *GroupResourceModel) ToSharedOnCallScheduleIDList(ctx context.Context) (*shared.OnCallScheduleIDList, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	onCallScheduleIds := make([]string, 0, len(r.OnCallScheduleIds))
+	for _, onCallScheduleIdsItem := range r.OnCallScheduleIds {
+		onCallScheduleIds = append(onCallScheduleIds, onCallScheduleIdsItem.ValueString())
+	}
+	out := shared.OnCallScheduleIDList{
+		OnCallScheduleIds: onCallScheduleIds,
+	}
+
+	return &out, diags
+}
+
 func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shared.UpdateGroupInfo, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -611,6 +662,12 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 		*description = r.Description.ValueString()
 	} else {
 		description = nil
+	}
+	extensionsDurationInMinutes := new(int64)
+	if !r.ExtensionsDurationInMinutes.IsUnknown() && !r.ExtensionsDurationInMinutes.IsNull() {
+		*extensionsDurationInMinutes = r.ExtensionsDurationInMinutes.ValueInt64()
+	} else {
+		extensionsDurationInMinutes = nil
 	}
 	groupLeaderUserIds := make([]string, 0, len(r.GroupLeaderUserIds))
 	for _, groupLeaderUserIdsItem := range r.GroupLeaderUserIds {
@@ -647,6 +704,12 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 				GroupIds:      groupIds,
 				RoleRemoteIds: roleRemoteIds,
 			}
+		}
+		extensionsDurationInMinutes1 := new(int64)
+		if !requestConfigurationsItem.ExtensionsDurationInMinutes.IsUnknown() && !requestConfigurationsItem.ExtensionsDurationInMinutes.IsNull() {
+			*extensionsDurationInMinutes1 = requestConfigurationsItem.ExtensionsDurationInMinutes.ValueInt64()
+		} else {
+			extensionsDurationInMinutes1 = nil
 		}
 		maxDuration := new(int64)
 		if !requestConfigurationsItem.MaxDuration.IsUnknown() && !requestConfigurationsItem.MaxDuration.IsNull() {
@@ -707,16 +770,17 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 			})
 		}
 		requestConfigurations = append(requestConfigurations, shared.RequestConfiguration{
-			AllowRequests:        allowRequests,
-			AutoApproval:         autoApproval,
-			Condition:            condition,
-			MaxDuration:          maxDuration,
-			Priority:             priority,
-			RecommendedDuration:  recommendedDuration,
-			RequestTemplateID:    requestTemplateID,
-			RequireMfaToRequest:  requireMfaToRequest,
-			RequireSupportTicket: requireSupportTicket,
-			ReviewerStages:       reviewerStages,
+			AllowRequests:               allowRequests,
+			AutoApproval:                autoApproval,
+			Condition:                   condition,
+			ExtensionsDurationInMinutes: extensionsDurationInMinutes1,
+			MaxDuration:                 maxDuration,
+			Priority:                    priority,
+			RecommendedDuration:         recommendedDuration,
+			RequestTemplateID:           requestTemplateID,
+			RequireMfaToRequest:         requireMfaToRequest,
+			RequireSupportTicket:        requireSupportTicket,
+			ReviewerStages:              reviewerStages,
 		})
 	}
 	requireMfaToApprove := new(bool)
@@ -732,15 +796,16 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 		riskSensitivityOverride = nil
 	}
 	out := shared.UpdateGroupInfo{
-		AdminOwnerID:              adminOwnerID,
-		CustomRequestNotification: customRequestNotification,
-		Description:               description,
-		GroupLeaderUserIds:        groupLeaderUserIds,
-		ID:                        id,
-		Name:                      name,
-		RequestConfigurations:     requestConfigurations,
-		RequireMfaToApprove:       requireMfaToApprove,
-		RiskSensitivityOverride:   riskSensitivityOverride,
+		AdminOwnerID:                adminOwnerID,
+		CustomRequestNotification:   customRequestNotification,
+		Description:                 description,
+		ExtensionsDurationInMinutes: extensionsDurationInMinutes,
+		GroupLeaderUserIds:          groupLeaderUserIds,
+		ID:                          id,
+		Name:                        name,
+		RequestConfigurations:       requestConfigurations,
+		RequireMfaToApprove:         requireMfaToApprove,
+		RiskSensitivityOverride:     riskSensitivityOverride,
 	}
 
 	return &out, diags

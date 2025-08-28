@@ -105,6 +105,8 @@ type Resource struct {
 	DescendantResourceIds []string `json:"descendant_resource_ids,omitempty"`
 	// A description of the resource.
 	Description *string `json:"description,omitempty"`
+	// The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
+	ExtensionsDurationInMinutes *int64 `json:"extensions_duration_in_minutes,omitempty"`
 	// The ID of the resource.
 	ID string `json:"resource_id"`
 	// Represents a sync task that has been completed, either successfully or with errors.
@@ -181,6 +183,13 @@ func (o *Resource) GetDescription() *string {
 		return nil
 	}
 	return o.Description
+}
+
+func (o *Resource) GetExtensionsDurationInMinutes() *int64 {
+	if o == nil {
+		return nil
+	}
+	return o.ExtensionsDurationInMinutes
 }
 
 func (o *Resource) GetID() string {

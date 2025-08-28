@@ -1048,7 +1048,7 @@ paths:
               schema:
                 allOf:
                   - $ref: "#/components/schemas/OnCallScheduleList"
-                  - x-speakeasy-wrapped-attribute: "oncall_schedules"
+                  - x-speakeasy-wrapped-attribute: "on_call_schedules"
                   - x-speakeasy-param-suppress-computed-diff: true
           description: The on call schedules attached to the group.
         "404":
@@ -1057,7 +1057,7 @@ paths:
         - BearerAuth: []
       tags:
         - groups
-      x-speakeasy-name-override: get_on_call_schedule
+      x-speakeasy-name-override: get_on_call_schedules
       x-speakeasy-entity-operation: Group#read#3
     put:
       description: Sets the list of on call schedules attached to a group.
@@ -1090,7 +1090,7 @@ paths:
         - BearerAuth: []
       tags:
         - groups
-      x-speakeasy-name-override: update_on_call_schedule
+      x-speakeasy-name-override: update_on_call_schedules
       x-speakeasy-entity-operation:
         - Group#create#4
         - Group#update#3
@@ -1954,6 +1954,65 @@ paths:
         - idp-group-mappings
       x-speakeasy-entity-operation: IdpGroupMappings#create,update
   /idp-group-mappings/{app_resource_id}/{group_id}/:
+    post:
+      description: |
+        Creates or updates an individual `IdpGroupMapping` object (upsert operation).
+
+        **Behavior:**
+        - If the mapping doesn't exist, it will be created with the provided values
+        - If the mapping exists, only the fields provided in the request will be updated
+      operationId: createIdpGroupMapping
+      parameters:
+        - description: The ID of the Okta app.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: app_resource_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              properties:
+                alias:
+                  description: Optional alias for the group mapping
+                  type: string
+                  nullable: true
+                hidden_from_end_user:
+                  description: |
+                    Whether this mapping should be hidden from end users.
+                    - **New mappings**: If not provided, defaults to `false`
+                    - **Existing mappings**: If not provided, existing value is preserved (no change)
+                    - **Explicit values**: If provided, value is updated to the specified boolean
+                  type: boolean
+                  nullable: true
+              type: object
+      responses:
+        "200":
+          description: The IDP group mapping was successfully created or updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IdpGroupMapping"
+      security:
+        - BearerAuth: []
+      tags:
+        - idp-group-mappings
     delete:
       description: Deletes an `IdpGroupMapping` object.
       operationId: delete_idp_group_mappings
@@ -5673,6 +5732,10 @@ components:
           type: integer
           example: 120
           x-speakeasy-ignore: true
+        extensions_duration_in_minutes:
+          description: The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
+          type: integer
+          example: 120
         require_manager_approval:
           description: A bool representing whether or not access requests to the group require manager approval.
           example: False
@@ -6038,6 +6101,10 @@ components:
           type: array
           format: set
           x-speakeasy-param-suppress-computed-diff: true
+        extensions_duration_in_minutes:
+          description: The duration for which access can be extended (in minutes).
+          type: integer
+          example: 120
         request_configurations:
           type: array
           items:
@@ -6368,7 +6435,9 @@ components:
       type: object
       required:
         - on_call_schedules
-      x-speakeasy-entity: OnCallSchedule_list
+      x-speakeasy-entity:
+        - OnCallScheduleList
+        - GroupOnCallSchedules
     VisibilityInfo:
       description: Visibility infomation of an entity.
       example:
@@ -6433,7 +6502,9 @@ components:
       type: object
       required:
         - on_call_schedule_ids
-      x-speakeasy-entity: GroupOnCallSchedule
+      x-speakeasy-entity:
+        - OnCallScheduleList
+        - GroupOnCallSchedules
     ReviewerIDList:
       description: A list of reviewer IDs.
       example:
@@ -8117,6 +8188,10 @@ components:
           type: integer
           example: 120
           x-speakeasy-ignore: true
+        extensions_duration_in_minutes:
+          description: The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
+          type: integer
+          example: 120
         require_manager_approval:
           description: A bool representing whether or not access requests to the resource require manager approval.
           example: False
@@ -8400,6 +8475,10 @@ components:
           type: boolean
           deprecated: true
           x-speakeasy-ignore: true
+        extensions_duration_in_minutes:
+          description: The duration for which access can be extended (in minutes).
+          type: integer
+          example: 120
         request_configurations:
           type: array
           items:
@@ -9200,6 +9279,10 @@ components:
           description: A bool representing whether or not access requests to the resource require an access ticket.
           example: False
           type: boolean
+        extensions_duration_in_minutes:
+          description: The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
+          type: integer
+          example: 120
         request_template_id:
           description: The ID of the associated request template.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -9350,6 +9433,7 @@ components:
           type: array
           format: set
           default: []
+          x-speakeasy-name-override: member_on_call_schedule_ids
         break_glass_user_ids:
           description: The IDs of the break glass users linked to the configuration template.
           example:
@@ -9498,6 +9582,7 @@ components:
             format: uuid
           type: array
           format: set
+          x-speakeasy-name-override: member_on_call_schedule_ids
         break_glass_user_ids:
           description: The IDs of the break glass users linked to the configuration template.
           example:
@@ -9652,6 +9737,7 @@ components:
             format: uuid
           type: array
           format: set
+          x-speakeasy-name-override: member_on_call_schedule_ids
         break_glass_user_ids:
           description: The IDs of the break glass users linked to the configuration template.
           example:

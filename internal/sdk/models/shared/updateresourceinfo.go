@@ -16,6 +16,8 @@ type UpdateResourceInfo struct {
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the resource.
 	Description *string `json:"description,omitempty"`
+	// The duration for which access can be extended (in minutes).
+	ExtensionsDurationInMinutes *int64 `json:"extensions_duration_in_minutes,omitempty"`
 	// The ID of the resource.
 	ID string `json:"resource_id"`
 	// The name of the resource.
@@ -61,6 +63,13 @@ func (o *UpdateResourceInfo) GetDescription() *string {
 		return nil
 	}
 	return o.Description
+}
+
+func (o *UpdateResourceInfo) GetExtensionsDurationInMinutes() *int64 {
+	if o == nil {
+		return nil
+	}
+	return o.ExtensionsDurationInMinutes
 }
 
 func (o *UpdateResourceInfo) GetID() string {

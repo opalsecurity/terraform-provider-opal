@@ -29,24 +29,25 @@ type ResourceDataSource struct {
 
 // ResourceDataSourceModel describes the data model.
 type ResourceDataSourceModel struct {
-	AdminOwnerID              types.String                            `tfsdk:"admin_owner_id"`
-	AncestorResourceIds       []types.String                          `tfsdk:"ancestor_resource_ids"`
-	AppID                     types.String                            `tfsdk:"app_id"`
-	CustomRequestNotification types.String                            `tfsdk:"custom_request_notification"`
-	DescendantResourceIds     []types.String                          `tfsdk:"descendant_resource_ids"`
-	Description               types.String                            `tfsdk:"description"`
-	ID                        types.String                            `tfsdk:"id"`
-	LastSuccessfulSync        *tfTypes.SyncTask                       `tfsdk:"last_successful_sync"`
-	Name                      types.String                            `tfsdk:"name"`
-	ParentResourceID          types.String                            `tfsdk:"parent_resource_id"`
-	RemoteInfo                *tfTypes.ResourceRemoteInfo             `tfsdk:"remote_info"`
-	RequestConfigurations     []tfTypes.RequestConfiguration          `tfsdk:"request_configurations"`
-	RequireMfaToApprove       types.Bool                              `tfsdk:"require_mfa_to_approve"`
-	RequireMfaToConnect       types.Bool                              `tfsdk:"require_mfa_to_connect"`
-	ResourceType              types.String                            `tfsdk:"resource_type"`
-	RiskSensitivity           types.String                            `tfsdk:"risk_sensitivity"`
-	RiskSensitivityOverride   types.String                            `tfsdk:"risk_sensitivity_override"`
-	TicketPropagation         *tfTypes.TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
+	AdminOwnerID                types.String                            `tfsdk:"admin_owner_id"`
+	AncestorResourceIds         []types.String                          `tfsdk:"ancestor_resource_ids"`
+	AppID                       types.String                            `tfsdk:"app_id"`
+	CustomRequestNotification   types.String                            `tfsdk:"custom_request_notification"`
+	DescendantResourceIds       []types.String                          `tfsdk:"descendant_resource_ids"`
+	Description                 types.String                            `tfsdk:"description"`
+	ExtensionsDurationInMinutes types.Int64                             `tfsdk:"extensions_duration_in_minutes"`
+	ID                          types.String                            `tfsdk:"id"`
+	LastSuccessfulSync          *tfTypes.SyncTask                       `tfsdk:"last_successful_sync"`
+	Name                        types.String                            `tfsdk:"name"`
+	ParentResourceID            types.String                            `tfsdk:"parent_resource_id"`
+	RemoteInfo                  *tfTypes.ResourceRemoteInfo             `tfsdk:"remote_info"`
+	RequestConfigurations       []tfTypes.RequestConfiguration          `tfsdk:"request_configurations"`
+	RequireMfaToApprove         types.Bool                              `tfsdk:"require_mfa_to_approve"`
+	RequireMfaToConnect         types.Bool                              `tfsdk:"require_mfa_to_connect"`
+	ResourceType                types.String                            `tfsdk:"resource_type"`
+	RiskSensitivity             types.String                            `tfsdk:"risk_sensitivity"`
+	RiskSensitivityOverride     types.String                            `tfsdk:"risk_sensitivity_override"`
+	TicketPropagation           *tfTypes.TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
 }
 
 // Metadata returns the data source type name.
@@ -85,6 +86,10 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"description": schema.StringAttribute{
 				Computed:    true,
 				Description: `A description of the resource.`,
+			},
+			"extensions_duration_in_minutes": schema.Int64Attribute{
+				Computed:    true,
+				Description: `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
 			},
 			"id": schema.StringAttribute{
 				Required:    true,
@@ -524,6 +529,10 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 									Description: `The list of role remote IDs to match.`,
 								},
 							},
+						},
+						"extensions_duration_in_minutes": schema.Int64Attribute{
+							Computed:    true,
+							Description: `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
 						},
 						"max_duration": schema.Int64Attribute{
 							Computed:    true,

@@ -23,6 +23,7 @@ var knownOpalAppAdminOwnerID = os.Getenv("OPAL_TEST_KNOWN_OPAL_APP_ADMIN_OWNER_I
 var knownOpalGroupID = os.Getenv("OPAL_TEST_KNOWN_OPAL_GROUP_ID")
 var knownOpalGithubTeamSlug = os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_TEAM_SLUG")
 var knownGithubAppID = os.Getenv("OPAL_TEST_KNOWN_GITHUB_APP_ID")
+var knownOnCallScheduleID = os.Getenv("OPAL_TEST_KNOWN_ON_CALL_SCHEDULE_ID")
 
 func generateBaseNameAndResourceName() (string, string) {
 	baseName := "tf_acc_group_test_" + acctest.RandStringFromCharSet(10, acctest.CharSetAlphaNum)
@@ -205,6 +206,42 @@ func TestAccGroup_Visibility(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "visibility", "LIMITED"),
 					resource.TestCheckResourceAttr(resourceName, "visibility_group_ids.#", "1"),
 					resource.TestCheckResourceAttr(resourceName, "visibility_group_ids.0", knownOpalGroupID),
+				),
+			},
+		},
+	})
+}
+
+func TestAccGroup_OnCallSchedules(t *testing.T) {
+	t.Parallel()
+	baseName, resourceName := generateBaseNameAndResourceName()
+	config := generateSimpleOpalGroupConfig(baseName, baseName)
+
+	config.OnCallScheduleIDs = []string{knownOnCallScheduleID}
+	configString := GenerateGroupResource(&config)
+	dataConfig := fmt.Sprintf(`
+		data "opal_group" "%s" {
+			id = opal_group.%s.id
+		}
+	`, baseName, baseName)
+	fullConfig := configString + dataConfig
+	dataResourceName := "data.opal_group." + baseName
+
+	resource.Test(t, resource.TestCase{
+		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
+			tfversion.SkipBelow(tfversion.Version1_0_0),
+		},
+		ProtoV6ProviderFactories: testAccProviderFactories,
+		PreCheck:                 func() { testAccPreCheck(t) },
+		CheckDestroy:             testAccCheckGroupDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: fullConfig,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(resourceName, "name", config.Name),
+					resource.TestCheckResourceAttr(resourceName, "app_id", config.AppID),
+					resource.TestCheckResourceAttr(dataResourceName, "on_call_schedules.on_call_schedules.#", "1"),
+					resource.TestCheckResourceAttr(dataResourceName, "on_call_schedules.on_call_schedules.0.id", knownOnCallScheduleID),
 				),
 			},
 		},

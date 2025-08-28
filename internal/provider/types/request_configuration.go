@@ -7,14 +7,15 @@ import (
 )
 
 type RequestConfiguration struct {
-	AllowRequests        types.Bool      `tfsdk:"allow_requests"`
-	AutoApproval         types.Bool      `tfsdk:"auto_approval"`
-	Condition            *Condition      `tfsdk:"condition"`
-	MaxDuration          types.Int64     `tfsdk:"max_duration"`
-	Priority             types.Int64     `tfsdk:"priority"`
-	RecommendedDuration  types.Int64     `tfsdk:"recommended_duration"`
-	RequestTemplateID    types.String    `tfsdk:"request_template_id"`
-	RequireMfaToRequest  types.Bool      `tfsdk:"require_mfa_to_request"`
-	RequireSupportTicket types.Bool      `tfsdk:"require_support_ticket"`
-	ReviewerStages       []ReviewerStage `tfsdk:"reviewer_stages"`
+	AllowRequests               types.Bool      `tfsdk:"allow_requests"`
+	AutoApproval                types.Bool      `tfsdk:"auto_approval"`
+	Condition                   *Condition      `tfsdk:"condition"`
+	ExtensionsDurationInMinutes types.Int64     `tfsdk:"extensions_duration_in_minutes"`
+	MaxDuration                 types.Int64     `tfsdk:"max_duration"`
+	Priority                    types.Int64     `tfsdk:"priority"`
+	RecommendedDuration         types.Int64     `tfsdk:"recommended_duration"`
+	RequestTemplateID           types.String    `tfsdk:"request_template_id"`
+	RequireMfaToRequest         types.Bool      `tfsdk:"require_mfa_to_request"`
+	RequireSupportTicket        types.Bool      `tfsdk:"require_support_ticket"`
+	ReviewerStages              []ReviewerStage `tfsdk:"reviewer_stages"`
 }

@@ -47,7 +47,7 @@ type ConfigurationTemplateResourceModel struct {
 	ConfigurationTemplateID      types.String                            `tfsdk:"configuration_template_id"`
 	CustomRequestNotification    types.String                            `tfsdk:"custom_request_notification"`
 	LinkedAuditMessageChannelIds []types.String                          `tfsdk:"linked_audit_message_channel_ids"`
-	MemberOncallScheduleIds      []types.String                          `tfsdk:"member_oncall_schedule_ids"`
+	MemberOnCallScheduleIds      []types.String                          `tfsdk:"member_on_call_schedule_ids"`
 	Name                         types.String                            `tfsdk:"name"`
 	RequestConfigurationID       types.String                            `tfsdk:"request_configuration_id"`
 	RequestConfigurations        []tfTypes.RequestConfiguration          `tfsdk:"request_configurations"`
@@ -93,7 +93,7 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 				ElementType: types.StringType,
 				Description: `The IDs of the audit message channels linked to the configuration template.`,
 			},
-			"member_oncall_schedule_ids": schema.SetAttribute{
+			"member_on_call_schedule_ids": schema.SetAttribute{
 				Computed:    true,
 				Optional:    true,
 				Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
@@ -138,6 +138,10 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 									Description: `The list of role remote IDs to match.`,
 								},
 							},
+						},
+						"extensions_duration_in_minutes": schema.Int64Attribute{
+							Optional:    true,
+							Description: `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
 						},
 						"max_duration": schema.Int64Attribute{
 							Optional:    true,

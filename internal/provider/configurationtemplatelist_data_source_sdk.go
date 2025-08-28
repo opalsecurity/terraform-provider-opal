@@ -30,9 +30,9 @@ func (r *ConfigurationTemplateListDataSourceModel) RefreshFromSharedPaginatedCon
 			for _, v := range resultsItem.LinkedAuditMessageChannelIds {
 				results.LinkedAuditMessageChannelIds = append(results.LinkedAuditMessageChannelIds, types.StringValue(v))
 			}
-			results.MemberOncallScheduleIds = make([]types.String, 0, len(resultsItem.MemberOncallScheduleIds))
-			for _, v := range resultsItem.MemberOncallScheduleIds {
-				results.MemberOncallScheduleIds = append(results.MemberOncallScheduleIds, types.StringValue(v))
+			results.MemberOnCallScheduleIds = make([]types.String, 0, len(resultsItem.MemberOnCallScheduleIds))
+			for _, v := range resultsItem.MemberOnCallScheduleIds {
+				results.MemberOnCallScheduleIds = append(results.MemberOnCallScheduleIds, types.StringValue(v))
 			}
 			results.Name = types.StringPointerValue(resultsItem.Name)
 			results.RequestConfigurationID = types.StringPointerValue(resultsItem.RequestConfigurationID)

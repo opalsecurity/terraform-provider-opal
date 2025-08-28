@@ -194,6 +194,10 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 							Computed:    true,
 							Description: `A description of the resource.`,
 						},
+						"extensions_duration_in_minutes": schema.Int64Attribute{
+							Computed:    true,
+							Description: `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
+						},
 						"id": schema.StringAttribute{
 							Computed:    true,
 							Description: `The ID of the resource.`,
@@ -632,6 +636,10 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 												Description: `The list of role remote IDs to match.`,
 											},
 										},
+									},
+									"extensions_duration_in_minutes": schema.Int64Attribute{
+										Computed:    true,
+										Description: `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
 									},
 									"max_duration": schema.Int64Attribute{
 										Computed:    true,

@@ -20,7 +20,7 @@ type ConfigurationTemplate struct {
 	// The IDs of the audit message channels linked to the configuration template.
 	LinkedAuditMessageChannelIds []string `json:"linked_audit_message_channel_ids,omitempty"`
 	// The IDs of the on-call schedules linked to the configuration template.
-	MemberOncallScheduleIds []string `json:"member_oncall_schedule_ids,omitempty"`
+	MemberOnCallScheduleIds []string `json:"member_oncall_schedule_ids,omitempty"`
 	// The name of the configuration template.
 	Name *string `json:"name,omitempty"`
 	// The ID of the request configuration linked to the configuration template.
@@ -70,11 +70,11 @@ func (o *ConfigurationTemplate) GetLinkedAuditMessageChannelIds() []string {
 	return o.LinkedAuditMessageChannelIds
 }
 
-func (o *ConfigurationTemplate) GetMemberOncallScheduleIds() []string {
+func (o *ConfigurationTemplate) GetMemberOnCallScheduleIds() []string {
 	if o == nil {
 		return nil
 	}
-	return o.MemberOncallScheduleIds
+	return o.MemberOnCallScheduleIds
 }
 
 func (o *ConfigurationTemplate) GetName() *string {
