@@ -102,6 +102,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.CustomConnector.CanHaveUsageEvents = types.BoolValue(resp.RemoteInfo.CustomConnector.CanHaveUsageEvents)
 				r.RemoteInfo.CustomConnector.RemoteResourceID = types.StringValue(resp.RemoteInfo.CustomConnector.RemoteResourceID)
 			}
+			if resp.RemoteInfo.DatastaxAstraRole == nil {
+				r.RemoteInfo.DatastaxAstraRole = nil
+			} else {
+				r.RemoteInfo.DatastaxAstraRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.DatastaxAstraRole.RoleID = types.StringValue(resp.RemoteInfo.DatastaxAstraRole.RoleID)
+			}
 			if resp.RemoteInfo.GcpBigQueryDataset == nil {
 				r.RemoteInfo.GcpBigQueryDataset = nil
 			} else {
@@ -614,6 +620,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				RemoteResourceID:   remoteResourceID,
 			}
 		}
+		var datastaxAstraRole *shared.DatastaxAstraRole
+		if r.RemoteInfo.DatastaxAstraRole != nil {
+			var roleID string
+			roleID = r.RemoteInfo.DatastaxAstraRole.RoleID.ValueString()
+
+			datastaxAstraRole = &shared.DatastaxAstraRole{
+				RoleID: roleID,
+			}
+		}
 		var gcpBigQueryDataset *shared.GcpBigQueryDataset
 		if r.RemoteInfo.GcpBigQueryDataset != nil {
 			var datasetID string
@@ -738,11 +753,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var githubOrgRole *shared.GithubOrgRole
 		if r.RemoteInfo.GithubOrgRole != nil {
-			var roleID string
-			roleID = r.RemoteInfo.GithubOrgRole.RoleID.ValueString()
+			var roleId1 string
+			roleId1 = r.RemoteInfo.GithubOrgRole.RoleID.ValueString()
 
 			githubOrgRole = &shared.GithubOrgRole{
-				RoleID: roleID,
+				RoleID: roleId1,
 			}
 		}
 		var githubRepo *shared.GithubRepo
@@ -765,11 +780,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var googleWorkspaceRole *shared.GoogleWorkspaceRole
 		if r.RemoteInfo.GoogleWorkspaceRole != nil {
-			var roleId1 string
-			roleId1 = r.RemoteInfo.GoogleWorkspaceRole.RoleID.ValueString()
+			var roleId2 string
+			roleId2 = r.RemoteInfo.GoogleWorkspaceRole.RoleID.ValueString()
 
 			googleWorkspaceRole = &shared.GoogleWorkspaceRole{
-				RoleID: roleId1,
+				RoleID: roleId2,
 			}
 		}
 		var oktaApp *shared.OktaApp
@@ -783,11 +798,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var oktaCustomRole *shared.OktaCustomRole
 		if r.RemoteInfo.OktaCustomRole != nil {
-			var roleId2 string
-			roleId2 = r.RemoteInfo.OktaCustomRole.RoleID.ValueString()
+			var roleId3 string
+			roleId3 = r.RemoteInfo.OktaCustomRole.RoleID.ValueString()
 
 			oktaCustomRole = &shared.OktaCustomRole{
-				RoleID: roleId2,
+				RoleID: roleId3,
 			}
 		}
 		var oktaStandardRole *shared.OktaStandardRole
@@ -832,11 +847,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var salesforceRole *shared.SalesforceRole
 		if r.RemoteInfo.SalesforceRole != nil {
-			var roleId3 string
-			roleId3 = r.RemoteInfo.SalesforceRole.RoleID.ValueString()
+			var roleId4 string
+			roleId4 = r.RemoteInfo.SalesforceRole.RoleID.ValueString()
 
 			salesforceRole = &shared.SalesforceRole{
-				RoleID: roleId3,
+				RoleID: roleId4,
 			}
 		}
 		var teleportRole *shared.TeleportRole
@@ -857,6 +872,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			AwsPermissionSet:        awsPermissionSet,
 			AwsRdsInstance:          awsRdsInstance,
 			CustomConnector:         customConnector,
+			DatastaxAstraRole:       datastaxAstraRole,
 			GcpBigQueryDataset:      gcpBigQueryDataset,
 			GcpBigQueryTable:        gcpBigQueryTable,
 			GcpBucket:               gcpBucket,

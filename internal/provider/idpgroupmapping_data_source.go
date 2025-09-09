@@ -9,73 +9,63 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ datasource.DataSource = &IdpGroupMappingsDataSource{}
-var _ datasource.DataSourceWithConfigure = &IdpGroupMappingsDataSource{}
+var _ datasource.DataSource = &IdpGroupMappingDataSource{}
+var _ datasource.DataSourceWithConfigure = &IdpGroupMappingDataSource{}
 
-func NewIdpGroupMappingsDataSource() datasource.DataSource {
-	return &IdpGroupMappingsDataSource{}
+func NewIdpGroupMappingDataSource() datasource.DataSource {
+	return &IdpGroupMappingDataSource{}
 }
 
-// IdpGroupMappingsDataSource is the data source implementation.
-type IdpGroupMappingsDataSource struct {
+// IdpGroupMappingDataSource is the data source implementation.
+type IdpGroupMappingDataSource struct {
 	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 
-// IdpGroupMappingsDataSourceModel describes the data model.
-type IdpGroupMappingsDataSourceModel struct {
-	AppResourceID types.String              `tfsdk:"app_resource_id"`
-	Mappings      []tfTypes.IdpGroupMapping `tfsdk:"mappings"`
+// IdpGroupMappingDataSourceModel describes the data model.
+type IdpGroupMappingDataSourceModel struct {
+	Alias             types.String `tfsdk:"alias"`
+	AppResourceID     types.String `tfsdk:"app_resource_id"`
+	GroupID           types.String `tfsdk:"group_id"`
+	HiddenFromEndUser types.Bool   `tfsdk:"hidden_from_end_user"`
 }
 
 // Metadata returns the data source type name.
-func (r *IdpGroupMappingsDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_idp_group_mappings"
+func (r *IdpGroupMappingDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_idp_group_mapping"
 }
 
 // Schema defines the schema for the data source.
-func (r *IdpGroupMappingsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (r *IdpGroupMappingDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "IdpGroupMappings DataSource",
+		MarkdownDescription: "IdpGroupMapping DataSource",
 
 		Attributes: map[string]schema.Attribute{
+			"alias": schema.StringAttribute{
+				Computed:    true,
+				Description: `The alias of the group.`,
+			},
 			"app_resource_id": schema.StringAttribute{
 				Required:    true,
 				Description: `The ID of the Okta app.`,
 			},
-			"mappings": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"alias": schema.StringAttribute{
-							Computed:    true,
-							Description: `The alias of the group.`,
-						},
-						"app_resource_id": schema.StringAttribute{
-							Computed:    true,
-							Description: `The ID of the Okta app.`,
-						},
-						"group_id": schema.StringAttribute{
-							Computed:    true,
-							Description: `The ID of the group.`,
-						},
-						"hidden_from_end_user": schema.BoolAttribute{
-							Computed:    true,
-							Description: `A bool representing whether or not the group is hidden from the end user.`,
-						},
-					},
-				},
+			"group_id": schema.StringAttribute{
+				Computed:    true,
+				Description: `The ID of the group.`,
+			},
+			"hidden_from_end_user": schema.BoolAttribute{
+				Computed:    true,
+				Description: `A bool representing whether or not the group is hidden from the end user.`,
 			},
 		},
 	}
 }
 
-func (r *IdpGroupMappingsDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (r *IdpGroupMappingDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -95,8 +85,8 @@ func (r *IdpGroupMappingsDataSource) Configure(ctx context.Context, req datasour
 	r.client = client
 }
 
-func (r *IdpGroupMappingsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data *IdpGroupMappingsDataSourceModel
+func (r *IdpGroupMappingDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var data *IdpGroupMappingDataSourceModel
 	var item types.Object
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &item)...)
@@ -135,11 +125,11 @@ func (r *IdpGroupMappingsDataSource) Read(ctx context.Context, req datasource.Re
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.IdpGroupMappingList != nil) {
+	if !(res.IdpGroupMappingList != nil && len(res.IdpGroupMappingList.Mappings) > 0) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedIdpGroupMappingList(ctx, res.IdpGroupMappingList)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedIdpGroupMapping(ctx, &res.IdpGroupMappingList.Mappings[0])...)
 
 	if resp.Diagnostics.HasError() {
 		return

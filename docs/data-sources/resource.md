@@ -68,6 +68,7 @@ Read-Only:
 - `aws_permission_set` (Attributes) Remote info for AWS Identity Center permission set. (see [below for nested schema](#nestedatt--remote_info--aws_permission_set))
 - `aws_rds_instance` (Attributes) Remote info for AWS RDS instance. (see [below for nested schema](#nestedatt--remote_info--aws_rds_instance))
 - `custom_connector` (Attributes) Remote info for a custom connector resource. (see [below for nested schema](#nestedatt--remote_info--custom_connector))
+- `datastax_astra_role` (Attributes) Remote info for an Astra role. (see [below for nested schema](#nestedatt--remote_info--datastax_astra_role))
 - `gcp_big_query_dataset` (Attributes) Remote info for GCP BigQuery Dataset. (see [below for nested schema](#nestedatt--remote_info--gcp_big_query_dataset))
 - `gcp_big_query_table` (Attributes) Remote info for GCP BigQuery Table. (see [below for nested schema](#nestedatt--remote_info--gcp_big_query_table))
 - `gcp_bucket` (Attributes) Remote info for GCP bucket. (see [below for nested schema](#nestedatt--remote_info--gcp_bucket))
@@ -164,6 +165,14 @@ Read-Only:
 
 - `can_have_usage_events` (Boolean) A bool representing whether or not the resource can have usage data.
 - `remote_resource_id` (String) The id of the resource in the end system
+
+
+<a id="nestedatt--remote_info--datastax_astra_role"></a>
+### Nested Schema for `remote_info.datastax_astra_role`
+
+Read-Only:
+
+- `role_id` (String) The id of the role.
 
 
 <a id="nestedatt--remote_info--gcp_big_query_dataset"></a>

@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: b1612f0500e3b5cdc5cee48e8bb98ca0
+  docChecksum: d5a9593c57b32e4bb717c2704f2a8d51
   docVersion: "1.0"
-  speakeasyVersion: 1.606.8
-  generationVersion: 2.687.13
-  releaseVersion: 3.2.0
-  configChecksum: 08e5f9d7cef9ec64dd5f8df92461f193
+  speakeasyVersion: 1.613.0
+  generationVersion: 2.696.0
+  releaseVersion: 3.3.2
+  configChecksum: 9edf3aff4ba077aed2c01133838d7330
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -17,7 +17,7 @@ features:
     constsAndDefaults: 0.2.1
     core: 3.44.1
     deprecations: 2.82.0
-    globalSecurity: 2.81.12
+    globalSecurity: 2.82.0
     globalServerURLs: 2.83.0
     ignores: 2.81.1
     inputOutputModels: 2.83.0
@@ -45,6 +45,7 @@ generatedFiles:
   - examples/data-sources/opal_group_reviewers_stages_list/data-source.tf
   - examples/data-sources/opal_group_tags/data-source.tf
   - examples/data-sources/opal_group_users/data-source.tf
+  - examples/data-sources/opal_idp_group_mapping/data-source.tf
   - examples/data-sources/opal_idp_group_mappings/data-source.tf
   - examples/data-sources/opal_message_channel/data-source.tf
   - examples/data-sources/opal_message_channel_list/data-source.tf
@@ -95,6 +96,9 @@ generatedFiles:
   - examples/resources/opal_group_resource_list/resource.tf
   - examples/resources/opal_group_tag/resource.tf
   - examples/resources/opal_group_user/resource.tf
+  - examples/resources/opal_idp_group_mapping/import-by-string-id.tf
+  - examples/resources/opal_idp_group_mapping/import.sh
+  - examples/resources/opal_idp_group_mapping/resource.tf
   - examples/resources/opal_idp_group_mappings/import-by-string-id.tf
   - examples/resources/opal_idp_group_mappings/import.sh
   - examples/resources/opal_idp_group_mappings/resource.tf
@@ -180,6 +184,10 @@ generatedFiles:
   - internal/provider/groupuser_resource_sdk.go
   - internal/provider/groupusers_data_source.go
   - internal/provider/groupusers_data_source_sdk.go
+  - internal/provider/idpgroupmapping_data_source.go
+  - internal/provider/idpgroupmapping_data_source_sdk.go
+  - internal/provider/idpgroupmapping_resource.go
+  - internal/provider/idpgroupmapping_resource_sdk.go
   - internal/provider/idpgroupmappings_data_source.go
   - internal/provider/idpgroupmappings_data_source_sdk.go
   - internal/provider/idpgroupmappings_resource.go
@@ -635,7 +643,6 @@ generatedFiles:
   - internal/sdk/requests.go
   - internal/sdk/resources.go
   - internal/sdk/retry/config.go
-  - internal/sdk/scopedrolepermissions.go
   - internal/sdk/sessions.go
   - internal/sdk/tags.go
   - internal/sdk/types/bigint.go
@@ -1138,7 +1145,7 @@ examples:
           app_resource_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
       responses:
         "200":
-          application/json: {"mappings": [{"alias": "finance-team", "group_id": "6f99639b-7928-4043-8184-47cbc6766145", "hidden_from_end_user": false}, {"alias": "engineering-team", "group_id": "7870617d-e72a-47f5-a84c-693817ab4567", "hidden_from_end_user": false}]}
+          application/json: {"mappings": [{"alias": "finance-team", "app_resource_id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5", "group_id": "6f99639b-7928-4043-8184-47cbc6766145", "hidden_from_end_user": false}, {"alias": "engineering-team", "app_resource_id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5", "group_id": "7870617d-e72a-47f5-a84c-693817ab4567", "hidden_from_end_user": false}]}
   updateIdpGroupMappings:
     speakeasy-default-update-idp-group-mappings:
       parameters:
@@ -1650,6 +1657,6 @@ examples:
           group_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
       responses:
         "200":
-          application/json: {"alias": "finance-team", "group_id": "6f99639b-7928-4043-8184-47cbc6766145", "hidden_from_end_user": false}
+          application/json: {"alias": "finance-team", "app_resource_id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5", "group_id": "6f99639b-7928-4043-8184-47cbc6766145", "hidden_from_end_user": false}
 examplesVersion: 1.0.2
 generatedTests: {}

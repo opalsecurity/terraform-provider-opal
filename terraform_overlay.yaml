@@ -463,10 +463,18 @@ actions:
         description: Not Found
   - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["get"]
     update:
-      x-speakeasy-entity-operation: IdpGroupMappings#get
+      x-speakeasy-entity-operation:
+        - IdpGroupMappings#get
+        - IdpGroupMapping#read
   - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["put"]
     update:
       x-speakeasy-entity-operation: IdpGroupMappings#create,update
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}/{group_id}/"]["post"]
+    update:
+      x-speakeasy-entity-operation: IdpGroupMapping#create,update
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}/{group_id}/"]["delete"]
+    update:
+      x-speakeasy-entity-operation: IdpGroupMapping#delete
   - target: $["paths"]["/owners"]["get"]["operationId"]
     update: getOwners
   - target: $["paths"]["/owners"]["get"]["responses"]
@@ -2032,6 +2040,26 @@ actions:
     remove: true
   - target: $["components"]["schemas"]["GroupContainingGroupList"]
     remove: true
+  - target: $["components"]["schemas"]["IdpGroupMapping"]
+    update:
+      x-speakeasy-entity: IdpGroupMapping
+  - target: $["components"]["schemas"]["IdpGroupMapping"]["properties"]
+    update:
+      app_resource_id:
+        description: The ID of the Okta app.
+        example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+        format: uuid
+        type: string
+  - target: $["components"]["schemas"]["IdpGroupMapping"]["required"]
+    update:
+      - app_resource_id
+      - group_id
+  - target: $["components"]["schemas"]["IdpGroupMapping"]["properties"]["app_resource_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["IdpGroupMapping"]["properties"]["group_id"]
+    update:
+      x-speakeasy-param-force-new: true
   - target: $
     update:
       x-speakeasy-retries:

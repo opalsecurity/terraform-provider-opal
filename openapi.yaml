@@ -41,8 +41,6 @@ tags:
     description: Operations related to requests
   - name: resources
     description: Operations related to resources
-  - name: scoped-role-permissions
-    description: Operations related to scoped role permissions
   - name: sessions
     description: Operations related to sessions
   - name: tags
@@ -1909,7 +1907,9 @@ paths:
         - BearerAuth: []
       tags:
         - idp-group-mappings
-      x-speakeasy-entity-operation: IdpGroupMappings#get
+      x-speakeasy-entity-operation:
+        - IdpGroupMappings#get
+        - IdpGroupMapping#read
     put:
       description: Updates the list of available `IdpGroupMapping` objects for an Okta app.
       operationId: updateIdpGroupMappings
@@ -2013,6 +2013,7 @@ paths:
         - BearerAuth: []
       tags:
         - idp-group-mappings
+      x-speakeasy-entity-operation: IdpGroupMapping#create,update
     delete:
       description: Deletes an `IdpGroupMapping` object.
       operationId: delete_idp_group_mappings
@@ -2044,6 +2045,7 @@ paths:
         - BearerAuth: []
       tags:
         - idp-group-mappings
+      x-speakeasy-entity-operation: IdpGroupMapping#delete
   /owners:
     get:
       description: Returns a list of `Owner` objects.
@@ -3330,7 +3332,6 @@ paths:
         - BearerAuth: []
       tags:
         - resources
-        - scoped-role-permissions
       x-speakeasy-name-override: get_scoped_role_permissions
       x-speakeasy-entity-operation: ScopedRolePermissionList#get
     put:
@@ -3364,7 +3365,6 @@ paths:
         - BearerAuth: []
       tags:
         - resources
-        - scoped-role-permissions
       x-speakeasy-name-override: update_scoped_role_permissions
       x-speakeasy-entity-operation: ScopedRolePermissionList#create,update
   /resources/users/{user_id}:
@@ -6252,6 +6252,8 @@ components:
         - MARIADB_INSTANCE
         - POSTGRES_INSTANCE
         - TELEPORT_ROLE
+        - ILEVEL_ADVANCED_ROLE
+        - DATASTAX_ASTRA_ROLE
       example: AWS_IAM_ROLE
       type: string
     VisibilityTypeEnum:
@@ -6325,6 +6327,7 @@ components:
           example: 6f99639b-7928-4043-8184-47cbc6766145
           format: uuid
           type: string
+          x-speakeasy-param-force-new: true
         alias:
           description: The alias of the group.
           example: finance-team
@@ -6333,10 +6336,19 @@ components:
           description: A bool representing whether or not the group is hidden from the end user.
           example: False
           type: boolean
+        app_resource_id:
+          description: The ID of the Okta app.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          format: uuid
+          type: string
+          x-speakeasy-param-force-new: true
       required:
         - group_id
         - hidden_from_end_user
+        - app_resource_id
+        - group_id
       type: object
+      x-speakeasy-entity: IdpGroupMapping
     IdpGroupMappingList:
       example:
         mappings:
@@ -7298,6 +7310,16 @@ components:
           type: object
           required:
             - role_name
+        datastax_astra_role:
+          description: Remote info for an Astra role.
+          properties:
+            role_id:
+              description: The id of the role.
+              example: 123e4567-e89b-12d3-a456-426614174000
+              type: string
+          type: object
+          required:
+            - role_id
       type: object
     RiskSensitivityEnum:
       type: string

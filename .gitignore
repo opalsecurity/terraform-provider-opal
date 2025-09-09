@@ -1,3 +1,6 @@
+.env
+.env.local
+.cursor/
 **/.speakeasy/temp/
 **/.speakeasy/logs/
 .terraform

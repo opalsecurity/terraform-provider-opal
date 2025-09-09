@@ -15,6 +15,7 @@ Opal API: The Opal API is a RESTful API that allows you to interact with the Opa
 * [Terraform provider for Opal](#terraform-provider-for-opal)
   * [SDK Generation](#sdk-generation)
   * [Installation](#installation)
+  * [Authentication](#authentication)
   * [Available Resources and Data Sources](#available-resources-and-data-sources)
   * [Testing the provider locally](#testing-the-provider-locally)
 
@@ -30,7 +31,7 @@ terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "3.2.0"
+      version = "3.3.2"
     }
   }
 }
@@ -41,6 +42,23 @@ provider "opal" {
 ```
 <!-- End Installation [installation] -->
 
+
+<!-- Start Authentication [security] -->
+## Authentication
+
+This provider supports authentication configuration via environment variables and provider configuration.
+
+The configuration precedence is:
+
+- Provider configuration
+- Environment variables
+
+Available configuration:
+
+| Provider Attribute | Description |
+|---|---|
+| `bearer_auth` | HTTP Bearer. Configurable via environment variable `OPAL_AUTH_TOKEN`. |
+<!-- End Authentication [security] -->
 
 <!-- Start Available Resources and Data Sources [operations] -->
 ## Available Resources and Data Sources
@@ -57,6 +75,7 @@ provider "opal" {
 * [opal_group_resource_list](docs/resources/group_resource_list.md)
 * [opal_group_tag](docs/resources/group_tag.md)
 * [opal_group_user](docs/resources/group_user.md)
+* [opal_idp_group_mapping](docs/resources/idp_group_mapping.md)
 * [opal_idp_group_mappings](docs/resources/idp_group_mappings.md)
 * [opal_message_channel](docs/resources/message_channel.md)
 * [opal_on_call_schedule](docs/resources/on_call_schedule.md)
@@ -82,6 +101,7 @@ provider "opal" {
 * [opal_group_reviewers_stages_list](docs/data-sources/group_reviewers_stages_list.md)
 * [opal_group_tags](docs/data-sources/group_tags.md)
 * [opal_group_users](docs/data-sources/group_users.md)
+* [opal_idp_group_mapping](docs/data-sources/idp_group_mapping.md)
 * [opal_idp_group_mappings](docs/data-sources/idp_group_mappings.md)
 * [opal_message_channel](docs/data-sources/message_channel.md)
 * [opal_message_channel_list](docs/data-sources/message_channel_list.md)

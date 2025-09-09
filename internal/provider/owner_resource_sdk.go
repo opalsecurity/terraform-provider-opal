@@ -38,6 +38,15 @@ func (r *OwnerResourceModel) RefreshFromSharedUpdateOwnerInfo(ctx context.Contex
 	return diags
 }
 
+func (r *OwnerResourceModel) RefreshFromSharedUserList(ctx context.Context, resp *shared.UserList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+	}
+
+	return diags
+}
+
 func (r *OwnerResourceModel) ToOperationsDeleteOwnerRequest(ctx context.Context) (*operations.DeleteOwnerRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 

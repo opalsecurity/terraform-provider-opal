@@ -10,86 +10,76 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
-	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
-	speakeasy_objectvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/objectvalidators"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &IdpGroupMappingsResource{}
-var _ resource.ResourceWithImportState = &IdpGroupMappingsResource{}
+var _ resource.Resource = &IdpGroupMappingResource{}
+var _ resource.ResourceWithImportState = &IdpGroupMappingResource{}
 
-func NewIdpGroupMappingsResource() resource.Resource {
-	return &IdpGroupMappingsResource{}
+func NewIdpGroupMappingResource() resource.Resource {
+	return &IdpGroupMappingResource{}
 }
 
-// IdpGroupMappingsResource defines the resource implementation.
-type IdpGroupMappingsResource struct {
+// IdpGroupMappingResource defines the resource implementation.
+type IdpGroupMappingResource struct {
 	// Provider configured SDK client.
 	client *sdk.OpalAPI
 }
 
-// IdpGroupMappingsResourceModel describes the resource data model.
-type IdpGroupMappingsResourceModel struct {
-	AppResourceID types.String       `tfsdk:"app_resource_id"`
-	Mappings      []tfTypes.Mappings `tfsdk:"mappings"`
+// IdpGroupMappingResourceModel describes the resource data model.
+type IdpGroupMappingResourceModel struct {
+	Alias             types.String `tfsdk:"alias"`
+	AppResourceID     types.String `tfsdk:"app_resource_id"`
+	GroupID           types.String `tfsdk:"group_id"`
+	HiddenFromEndUser types.Bool   `tfsdk:"hidden_from_end_user"`
 }
 
-func (r *IdpGroupMappingsResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_idp_group_mappings"
+func (r *IdpGroupMappingResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_idp_group_mapping"
 }
 
-func (r *IdpGroupMappingsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *IdpGroupMappingResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "IdpGroupMappings Resource",
+		MarkdownDescription: "IdpGroupMapping Resource",
 		Attributes: map[string]schema.Attribute{
-			"app_resource_id": schema.StringAttribute{
-				Required:    true,
-				Description: `The ID of the Okta app.`,
+			"alias": schema.StringAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `Optional alias for the group mapping`,
 			},
-			"mappings": schema.ListNestedAttribute{
+			"app_resource_id": schema.StringAttribute{
 				Required: true,
-				NestedObject: schema.NestedAttributeObject{
-					Validators: []validator.Object{
-						speakeasy_objectvalidators.NotNull(),
-					},
-					Attributes: map[string]schema.Attribute{
-						"alias": schema.StringAttribute{
-							Computed: true,
-							Optional: true,
-						},
-						"app_resource_id": schema.StringAttribute{
-							Computed: true,
-							PlanModifiers: []planmodifier.String{
-								speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-							},
-							Description: `The ID of the Okta app.`,
-						},
-						"group_id": schema.StringAttribute{
-							Computed: true,
-							Optional: true,
-							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.RequiresReplaceIfConfigured(),
-								speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-							},
-							Description: `Requires replacement if changed.`,
-						},
-						"hidden_from_end_user": schema.BoolAttribute{
-							Computed: true,
-							Optional: true,
-						},
-					},
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplaceIfConfigured(),
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
+				Description: `The ID of the Okta app. Requires replacement if changed.`,
+			},
+			"group_id": schema.StringAttribute{
+				Required: true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplaceIfConfigured(),
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
+				Description: `The ID of the group. Requires replacement if changed.`,
+			},
+			"hidden_from_end_user": schema.BoolAttribute{
+				Computed: true,
+				Optional: true,
+				MarkdownDescription: `Whether this mapping should be hidden from end users.` + "\n" +
+					`- **New mappings**: If not provided, defaults to ` + "`" + `false` + "`" + `` + "\n" +
+					`- **Existing mappings**: If not provided, existing value is preserved (no change)` + "\n" +
+					`- **Explicit values**: If provided, value is updated to the specified boolean`,
 			},
 		},
 	}
 }
 
-func (r *IdpGroupMappingsResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *IdpGroupMappingResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -109,8 +99,8 @@ func (r *IdpGroupMappingsResource) Configure(ctx context.Context, req resource.C
 	r.client = client
 }
 
-func (r *IdpGroupMappingsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data *IdpGroupMappingsResourceModel
+func (r *IdpGroupMappingResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var data *IdpGroupMappingResourceModel
 	var plan types.Object
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
@@ -127,13 +117,13 @@ func (r *IdpGroupMappingsResource) Create(ctx context.Context, req resource.Crea
 		return
 	}
 
-	request, requestDiags := data.ToOperationsUpdateIdpGroupMappingsRequest(ctx)
+	request, requestDiags := data.ToOperationsCreateIdpGroupMappingRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.IdpGroupMappings.UpdateIdpGroupMappings(ctx, *request)
+	res, err := r.client.IdpGroupMappings.CreateIdpGroupMapping(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -149,6 +139,15 @@ func (r *IdpGroupMappingsResource) Create(ctx context.Context, req resource.Crea
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
+	if !(res.IdpGroupMapping != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromSharedIdpGroupMapping(ctx, res.IdpGroupMapping)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
 
@@ -160,8 +159,8 @@ func (r *IdpGroupMappingsResource) Create(ctx context.Context, req resource.Crea
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *IdpGroupMappingsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data *IdpGroupMappingsResourceModel
+func (r *IdpGroupMappingResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var data *IdpGroupMappingResourceModel
 	var item types.Object
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &item)...)
@@ -204,11 +203,11 @@ func (r *IdpGroupMappingsResource) Read(ctx context.Context, req resource.ReadRe
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.IdpGroupMappingList != nil) {
+	if !(res.IdpGroupMappingList != nil && len(res.IdpGroupMappingList.Mappings) > 0) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedIdpGroupMappingList(ctx, res.IdpGroupMappingList)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedIdpGroupMapping(ctx, &res.IdpGroupMappingList.Mappings[0])...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -218,8 +217,8 @@ func (r *IdpGroupMappingsResource) Read(ctx context.Context, req resource.ReadRe
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *IdpGroupMappingsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data *IdpGroupMappingsResourceModel
+func (r *IdpGroupMappingResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var data *IdpGroupMappingResourceModel
 	var plan types.Object
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
@@ -232,13 +231,13 @@ func (r *IdpGroupMappingsResource) Update(ctx context.Context, req resource.Upda
 		return
 	}
 
-	request, requestDiags := data.ToOperationsUpdateIdpGroupMappingsRequest(ctx)
+	request, requestDiags := data.ToOperationsCreateIdpGroupMappingRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.IdpGroupMappings.UpdateIdpGroupMappings(ctx, *request)
+	res, err := r.client.IdpGroupMappings.CreateIdpGroupMapping(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -254,6 +253,15 @@ func (r *IdpGroupMappingsResource) Update(ctx context.Context, req resource.Upda
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
+	if !(res.IdpGroupMapping != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromSharedIdpGroupMapping(ctx, res.IdpGroupMapping)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
 
@@ -265,8 +273,8 @@ func (r *IdpGroupMappingsResource) Update(ctx context.Context, req resource.Upda
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *IdpGroupMappingsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data *IdpGroupMappingsResourceModel
+func (r *IdpGroupMappingResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var data *IdpGroupMappingResourceModel
 	var item types.Object
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &item)...)
@@ -283,9 +291,31 @@ func (r *IdpGroupMappingsResource) Delete(ctx context.Context, req resource.Dele
 		return
 	}
 
-	// Not Implemented; entity does not have a configured DELETE operation
+	request, requestDiags := data.ToOperationsDeleteIdpGroupMappingsRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.IdpGroupMappings.DeleteIdpGroupMappings(ctx, *request)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res != nil && res.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
+		}
+		return
+	}
+	if res == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
+		return
+	}
+
 }
 
-func (r *IdpGroupMappingsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *IdpGroupMappingResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("app_resource_id"), req.ID)...)
 }

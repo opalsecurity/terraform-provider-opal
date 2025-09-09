@@ -109,6 +109,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.CustomConnector.CanHaveUsageEvents = types.BoolValue(resultsItem.RemoteInfo.CustomConnector.CanHaveUsageEvents)
 					results.RemoteInfo.CustomConnector.RemoteResourceID = types.StringValue(resultsItem.RemoteInfo.CustomConnector.RemoteResourceID)
 				}
+				if resultsItem.RemoteInfo.DatastaxAstraRole == nil {
+					results.RemoteInfo.DatastaxAstraRole = nil
+				} else {
+					results.RemoteInfo.DatastaxAstraRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.DatastaxAstraRole.RoleID = types.StringValue(resultsItem.RemoteInfo.DatastaxAstraRole.RoleID)
+				}
 				if resultsItem.RemoteInfo.GcpBigQueryDataset == nil {
 					results.RemoteInfo.GcpBigQueryDataset = nil
 				} else {

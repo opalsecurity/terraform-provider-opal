@@ -71,6 +71,8 @@ const (
 	ResourceTypeEnumMariadbInstance                   ResourceTypeEnum = "MARIADB_INSTANCE"
 	ResourceTypeEnumPostgresInstance                  ResourceTypeEnum = "POSTGRES_INSTANCE"
 	ResourceTypeEnumTeleportRole                      ResourceTypeEnum = "TELEPORT_ROLE"
+	ResourceTypeEnumIlevelAdvancedRole                ResourceTypeEnum = "ILEVEL_ADVANCED_ROLE"
+	ResourceTypeEnumDatastaxAstraRole                 ResourceTypeEnum = "DATASTAX_ASTRA_ROLE"
 )
 
 func (e ResourceTypeEnum) ToPointer() *ResourceTypeEnum {
@@ -201,6 +203,10 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "POSTGRES_INSTANCE":
 		fallthrough
 	case "TELEPORT_ROLE":
+		fallthrough
+	case "ILEVEL_ADVANCED_ROLE":
+		fallthrough
+	case "DATASTAX_ASTRA_ROLE":
 		*e = ResourceTypeEnum(v)
 		return nil
 	default:
