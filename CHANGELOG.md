@@ -1,5 +1,11 @@
 # Changelog
 
+## v.3.2.2
+- Fixes a bug scoped role permissions with no target_ids were causing state drift.
+
+## v.3.2.1
+- Adds support for Datastax Astra Roles
+
 ## v3.2.0
 - Fixes a bug where on_call_schedule_ids were not being set correctly.
 - Adds support for request_extension.
