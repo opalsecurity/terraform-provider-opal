@@ -41,6 +41,9 @@ resource "opal_resource" "my_resource" {
       can_have_usage_events = false
       remote_resource_id    = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
+    datastax_astra_role = {
+      role_id = "123e4567-e89b-12d3-a456-426614174000"
+    }
     gcp_big_query_dataset = {
       dataset_id = "example-dataset-898931321"
       project_id = "example-project-898931321"

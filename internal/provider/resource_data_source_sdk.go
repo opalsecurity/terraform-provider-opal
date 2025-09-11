@@ -102,6 +102,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.CustomConnector.CanHaveUsageEvents = types.BoolValue(resp.RemoteInfo.CustomConnector.CanHaveUsageEvents)
 				r.RemoteInfo.CustomConnector.RemoteResourceID = types.StringValue(resp.RemoteInfo.CustomConnector.RemoteResourceID)
 			}
+			if resp.RemoteInfo.DatastaxAstraRole == nil {
+				r.RemoteInfo.DatastaxAstraRole = nil
+			} else {
+				r.RemoteInfo.DatastaxAstraRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.DatastaxAstraRole.RoleID = types.StringValue(resp.RemoteInfo.DatastaxAstraRole.RoleID)
+			}
 			if resp.RemoteInfo.GcpBigQueryDataset == nil {
 				r.RemoteInfo.GcpBigQueryDataset = nil
 			} else {

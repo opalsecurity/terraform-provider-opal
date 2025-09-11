@@ -15,6 +15,7 @@ Opal API: The Opal API is a RESTful API that allows you to interact with the Opa
 * [Terraform provider for Opal](#terraform-provider-for-opal)
   * [SDK Generation](#sdk-generation)
   * [Installation](#installation)
+  * [Authentication](#authentication)
   * [Available Resources and Data Sources](#available-resources-and-data-sources)
   * [Testing the provider locally](#testing-the-provider-locally)
 
@@ -30,7 +31,7 @@ terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "3.2.0"
+      version = "3.2.1"
     }
   }
 }
@@ -41,6 +42,23 @@ provider "opal" {
 ```
 <!-- End Installation [installation] -->
 
+
+<!-- Start Authentication [security] -->
+## Authentication
+
+This provider supports authentication configuration via environment variables and provider configuration.
+
+The configuration precedence is:
+
+- Provider configuration
+- Environment variables
+
+Available configuration:
+
+| Provider Attribute | Description |
+|---|---|
+| `bearer_auth` | HTTP Bearer. Configurable via environment variable `OPAL_AUTH_TOKEN`. |
+<!-- End Authentication [security] -->
 
 <!-- Start Available Resources and Data Sources [operations] -->
 ## Available Resources and Data Sources

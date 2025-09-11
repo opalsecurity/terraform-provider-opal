@@ -205,6 +205,19 @@ func (o *CustomConnector) GetRemoteResourceID() string {
 	return o.RemoteResourceID
 }
 
+// DatastaxAstraRole - Remote info for an Astra role.
+type DatastaxAstraRole struct {
+	// The id of the role.
+	RoleID string `json:"role_id"`
+}
+
+func (o *DatastaxAstraRole) GetRoleID() string {
+	if o == nil {
+		return ""
+	}
+	return o.RoleID
+}
+
 // GcpBigQueryDataset - Remote info for GCP BigQuery Dataset.
 type GcpBigQueryDataset struct {
 	// The id of the dataset.
@@ -590,6 +603,8 @@ type ResourceRemoteInfo struct {
 	AwsRdsInstance *AwsRdsInstance `json:"aws_rds_instance,omitempty"`
 	// Remote info for a custom connector resource.
 	CustomConnector *CustomConnector `json:"custom_connector,omitempty"`
+	// Remote info for an Astra role.
+	DatastaxAstraRole *DatastaxAstraRole `json:"datastax_astra_role,omitempty"`
 	// Remote info for GCP BigQuery Dataset.
 	GcpBigQueryDataset *GcpBigQueryDataset `json:"gcp_big_query_dataset,omitempty"`
 	// Remote info for GCP BigQuery Table.
@@ -690,6 +705,13 @@ func (o *ResourceRemoteInfo) GetCustomConnector() *CustomConnector {
 		return nil
 	}
 	return o.CustomConnector
+}
+
+func (o *ResourceRemoteInfo) GetDatastaxAstraRole() *DatastaxAstraRole {
+	if o == nil {
+		return nil
+	}
+	return o.DatastaxAstraRole
 }
 
 func (o *ResourceRemoteInfo) GetGcpBigQueryDataset() *GcpBigQueryDataset {

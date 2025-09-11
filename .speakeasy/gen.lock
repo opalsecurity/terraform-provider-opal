@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: b1612f0500e3b5cdc5cee48e8bb98ca0
+  docChecksum: 8958de0d471ad5e6ee9233a4f61b0fce
   docVersion: "1.0"
-  speakeasyVersion: 1.606.8
-  generationVersion: 2.687.13
-  releaseVersion: 3.2.0
-  configChecksum: 08e5f9d7cef9ec64dd5f8df92461f193
+  speakeasyVersion: 1.615.1
+  generationVersion: 2.698.4
+  releaseVersion: 3.2.1
+  configChecksum: f96e50cfe7a13f4157560c393c6f5010
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -17,7 +17,7 @@ features:
     constsAndDefaults: 0.2.1
     core: 3.44.1
     deprecations: 2.82.0
-    globalSecurity: 2.81.12
+    globalSecurity: 2.82.1
     globalServerURLs: 2.83.0
     ignores: 2.81.1
     inputOutputModels: 2.83.0
@@ -635,7 +635,6 @@ generatedFiles:
   - internal/sdk/requests.go
   - internal/sdk/resources.go
   - internal/sdk/retry/config.go
-  - internal/sdk/scopedrolepermissions.go
   - internal/sdk/sessions.go
   - internal/sdk/tags.go
   - internal/sdk/types/bigint.go
@@ -1653,3 +1652,4 @@ examples:
           application/json: {"alias": "finance-team", "group_id": "6f99639b-7928-4043-8184-47cbc6766145", "hidden_from_end_user": false}
 examplesVersion: 1.0.2
 generatedTests: {}
+releaseNotes: "## Terraform SDK Changes Detected:\n* `Opal-API.scoped-role-permissions.get_scoped_role_permissions()`: **Deleted** **Breaking** :warning:\n* `Opal-API.scoped-role-permissions.update_scoped_role_permissions()`: **Deleted** **Breaking** :warning:\n* `Opal-API.non-human-identities.get_nhis()`:  `response.results.[].remote_info.datastax_astra_role` **Added**\n* `Opal-API.resources.create()`: \n  *  `request.remote_info.datastax_astra_role` **Added**\n  *  `response.remote_info.datastax_astra_role` **Added**\n* `Opal-API.resources.get()`: \n  *  `request.resource_type_filter` **Changed**\n  *  `response.results.[].remote_info.datastax_astra_role` **Added**\n* `Opal-API.resources.get_id()`:  `response.remote_info.datastax_astra_role` **Added**\n"

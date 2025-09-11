@@ -11,6 +11,7 @@ type ResourceRemoteInfo struct {
 	AwsPermissionSet        *AwsPermissionSet        `tfsdk:"aws_permission_set"`
 	AwsRdsInstance          *AwsRdsInstance          `tfsdk:"aws_rds_instance"`
 	CustomConnector         *CustomConnector         `tfsdk:"custom_connector"`
+	DatastaxAstraRole       *SnowflakeRole           `tfsdk:"datastax_astra_role"`
 	GcpBigQueryDataset      *GcpBigQueryDataset      `tfsdk:"gcp_big_query_dataset"`
 	GcpBigQueryTable        *GcpBigQueryTable        `tfsdk:"gcp_big_query_table"`
 	GcpBucket               *GcpBucket               `tfsdk:"gcp_bucket"`
