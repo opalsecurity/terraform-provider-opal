@@ -2,14 +2,29 @@
 
 package shared
 
+import (
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
+)
+
 type ScopedRolePermission struct {
 	AllowAll bool `json:"allow_all"`
 	// The name of the role permission.
 	PermissionName RolePermissionNameEnum `json:"permission_name"`
 	// The IDs of the entities that this permission applies to. If empty of missing, the permission will have untargeted scope.
-	TargetIds []string `json:"target_ids,omitempty"`
+	TargetIds []string `json:"target_ids"`
 	// The type of the target for the role permission.
 	TargetType RolePermissionTargetTypeEnum `json:"target_type"`
+}
+
+func (s ScopedRolePermission) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(s, "", false)
+}
+
+func (s *ScopedRolePermission) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &s, "", false, []string{"allow_all", "permission_name", "target_type"}); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *ScopedRolePermission) GetAllowAll() bool {
