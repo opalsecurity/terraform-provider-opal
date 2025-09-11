@@ -18,30 +18,30 @@ type GetConfigurationTemplatesResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetConfigurationTemplatesResponse) GetContentType() string {
-	if o == nil {
+func (g *GetConfigurationTemplatesResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetConfigurationTemplatesResponse) GetPaginatedConfigurationTemplateList() *shared.PaginatedConfigurationTemplateList {
-	if o == nil {
+func (g *GetConfigurationTemplatesResponse) GetPaginatedConfigurationTemplateList() *shared.PaginatedConfigurationTemplateList {
+	if g == nil {
 		return nil
 	}
-	return o.PaginatedConfigurationTemplateList
+	return g.PaginatedConfigurationTemplateList
 }
 
-func (o *GetConfigurationTemplatesResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetConfigurationTemplatesResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetConfigurationTemplatesResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetConfigurationTemplatesResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

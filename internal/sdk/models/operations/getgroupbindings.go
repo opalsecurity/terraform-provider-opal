@@ -14,18 +14,18 @@ type GetGroupBindingsRequest struct {
 	PageSize *int64 `queryParam:"style=form,explode=true,name=page_size"`
 }
 
-func (o *GetGroupBindingsRequest) GetCursor() *string {
-	if o == nil {
+func (g *GetGroupBindingsRequest) GetCursor() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Cursor
+	return g.Cursor
 }
 
-func (o *GetGroupBindingsRequest) GetPageSize() *int64 {
-	if o == nil {
+func (g *GetGroupBindingsRequest) GetPageSize() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.PageSize
+	return g.PageSize
 }
 
 type GetGroupBindingsResponse struct {
@@ -39,30 +39,30 @@ type GetGroupBindingsResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetGroupBindingsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetGroupBindingsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetGroupBindingsResponse) GetPaginatedGroupBindingsList() *shared.PaginatedGroupBindingsList {
-	if o == nil {
+func (g *GetGroupBindingsResponse) GetPaginatedGroupBindingsList() *shared.PaginatedGroupBindingsList {
+	if g == nil {
 		return nil
 	}
-	return o.PaginatedGroupBindingsList
+	return g.PaginatedGroupBindingsList
 }
 
-func (o *GetGroupBindingsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetGroupBindingsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetGroupBindingsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetGroupBindingsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

@@ -415,7 +415,8 @@ func (s *Owners) Delete(ctx context.Context, request operations.DeleteOwnerReque
 
 }
 
-// Get - Returns a list of `Owner` objects.
+// Get owners
+// Returns a list of `Owner` objects.
 func (s *Owners) Get(ctx context.Context, request operations.GetOwnersRequest, opts ...operations.Option) (*operations.GetOwnersResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -817,7 +818,8 @@ func (s *Owners) GetFromName(ctx context.Context, request operations.GetOwnerFro
 
 }
 
-// GetID - Returns an `Owner` object.
+// GetID - Get owner by ID
+// Returns an `Owner` object.
 func (s *Owners) GetID(ctx context.Context, request operations.GetOwnerIDRequest, opts ...operations.Option) (*operations.GetOwnerIDResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{

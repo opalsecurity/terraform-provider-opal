@@ -12,11 +12,11 @@ type GetResourceMessageChannelsRequest struct {
 	ResourceID string `pathParam:"style=simple,explode=false,name=resource_id"`
 }
 
-func (o *GetResourceMessageChannelsRequest) GetResourceID() string {
-	if o == nil {
+func (g *GetResourceMessageChannelsRequest) GetResourceID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ResourceID
+	return g.ResourceID
 }
 
 type GetResourceMessageChannelsResponse struct {
@@ -30,30 +30,30 @@ type GetResourceMessageChannelsResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetResourceMessageChannelsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetResourceMessageChannelsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetResourceMessageChannelsResponse) GetMessageChannelList() *shared.MessageChannelList {
-	if o == nil {
+func (g *GetResourceMessageChannelsResponse) GetMessageChannelList() *shared.MessageChannelList {
+	if g == nil {
 		return nil
 	}
-	return o.MessageChannelList
+	return g.MessageChannelList
 }
 
-func (o *GetResourceMessageChannelsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetResourceMessageChannelsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetResourceMessageChannelsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetResourceMessageChannelsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

@@ -11,11 +11,11 @@ type DeleteGroupBindingRequest struct {
 	GroupBindingID string `pathParam:"style=simple,explode=false,name=group_binding_id"`
 }
 
-func (o *DeleteGroupBindingRequest) GetGroupBindingID() string {
-	if o == nil {
+func (d *DeleteGroupBindingRequest) GetGroupBindingID() string {
+	if d == nil {
 		return ""
 	}
-	return o.GroupBindingID
+	return d.GroupBindingID
 }
 
 type DeleteGroupBindingResponse struct {
@@ -27,23 +27,23 @@ type DeleteGroupBindingResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *DeleteGroupBindingResponse) GetContentType() string {
-	if o == nil {
+func (d *DeleteGroupBindingResponse) GetContentType() string {
+	if d == nil {
 		return ""
 	}
-	return o.ContentType
+	return d.ContentType
 }
 
-func (o *DeleteGroupBindingResponse) GetStatusCode() int {
-	if o == nil {
+func (d *DeleteGroupBindingResponse) GetStatusCode() int {
+	if d == nil {
 		return 0
 	}
-	return o.StatusCode
+	return d.StatusCode
 }
 
-func (o *DeleteGroupBindingResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (d *DeleteGroupBindingResponse) GetRawResponse() *http.Response {
+	if d == nil {
 		return nil
 	}
-	return o.RawResponse
+	return d.RawResponse
 }

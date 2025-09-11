@@ -29,16 +29,16 @@ func (s *SubEvent) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *SubEvent) GetAdditionalProperties() any {
-	if o == nil {
+func (s *SubEvent) GetAdditionalProperties() any {
+	if s == nil {
 		return nil
 	}
-	return o.AdditionalProperties
+	return s.AdditionalProperties
 }
 
-func (o *SubEvent) GetSubEventType() string {
-	if o == nil {
+func (s *SubEvent) GetSubEventType() string {
+	if s == nil {
 		return ""
 	}
-	return o.SubEventType
+	return s.SubEventType
 }

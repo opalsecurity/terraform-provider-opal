@@ -12,9 +12,9 @@ type PaginatedConfigurationTemplateList struct {
 	Results []ConfigurationTemplate `json:"results,omitempty"`
 }
 
-func (o *PaginatedConfigurationTemplateList) GetResults() []ConfigurationTemplate {
-	if o == nil {
+func (p *PaginatedConfigurationTemplateList) GetResults() []ConfigurationTemplate {
+	if p == nil {
 		return nil
 	}
-	return o.Results
+	return p.Results
 }

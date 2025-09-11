@@ -7,9 +7,9 @@ type UpdateOwnerInfoList struct {
 	Owners []UpdateOwnerInfo `json:"owners"`
 }
 
-func (o *UpdateOwnerInfoList) GetOwners() []UpdateOwnerInfo {
-	if o == nil {
+func (u *UpdateOwnerInfoList) GetOwners() []UpdateOwnerInfo {
+	if u == nil {
 		return []UpdateOwnerInfo{}
 	}
-	return o.Owners
+	return u.Owners
 }

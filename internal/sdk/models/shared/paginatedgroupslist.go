@@ -6,9 +6,9 @@ type PaginatedGroupsList struct {
 	Results []Group `json:"results"`
 }
 
-func (o *PaginatedGroupsList) GetResults() []Group {
-	if o == nil {
+func (p *PaginatedGroupsList) GetResults() []Group {
+	if p == nil {
 		return []Group{}
 	}
-	return o.Results
+	return p.Results
 }

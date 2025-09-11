@@ -15,18 +15,18 @@ type ApproveRequestRequestBody struct {
 	Level shared.RequestApprovalEnum `json:"level"`
 }
 
-func (o *ApproveRequestRequestBody) GetComment() *string {
-	if o == nil {
+func (a *ApproveRequestRequestBody) GetComment() *string {
+	if a == nil {
 		return nil
 	}
-	return o.Comment
+	return a.Comment
 }
 
-func (o *ApproveRequestRequestBody) GetLevel() shared.RequestApprovalEnum {
-	if o == nil {
+func (a *ApproveRequestRequestBody) GetLevel() shared.RequestApprovalEnum {
+	if a == nil {
 		return shared.RequestApprovalEnum("")
 	}
-	return o.Level
+	return a.Level
 }
 
 type ApproveRequestRequest struct {
@@ -36,18 +36,18 @@ type ApproveRequestRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=id"`
 }
 
-func (o *ApproveRequestRequest) GetRequestBody() ApproveRequestRequestBody {
-	if o == nil {
+func (a *ApproveRequestRequest) GetRequestBody() ApproveRequestRequestBody {
+	if a == nil {
 		return ApproveRequestRequestBody{}
 	}
-	return o.RequestBody
+	return a.RequestBody
 }
 
-func (o *ApproveRequestRequest) GetID() string {
-	if o == nil {
+func (a *ApproveRequestRequest) GetID() string {
+	if a == nil {
 		return ""
 	}
-	return o.ID
+	return a.ID
 }
 
 // ApproveRequestResponseBody - Request successfully approved
@@ -61,11 +61,11 @@ type ApproveRequestResponseBody struct {
 	Request *shared.Request `json:"request,omitempty"`
 }
 
-func (o *ApproveRequestResponseBody) GetRequest() *shared.Request {
-	if o == nil {
+func (a *ApproveRequestResponseBody) GetRequest() *shared.Request {
+	if a == nil {
 		return nil
 	}
-	return o.Request
+	return a.Request
 }
 
 type ApproveRequestResponse struct {
@@ -79,30 +79,30 @@ type ApproveRequestResponse struct {
 	Object *ApproveRequestResponseBody
 }
 
-func (o *ApproveRequestResponse) GetContentType() string {
-	if o == nil {
+func (a *ApproveRequestResponse) GetContentType() string {
+	if a == nil {
 		return ""
 	}
-	return o.ContentType
+	return a.ContentType
 }
 
-func (o *ApproveRequestResponse) GetStatusCode() int {
-	if o == nil {
+func (a *ApproveRequestResponse) GetStatusCode() int {
+	if a == nil {
 		return 0
 	}
-	return o.StatusCode
+	return a.StatusCode
 }
 
-func (o *ApproveRequestResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (a *ApproveRequestResponse) GetRawResponse() *http.Response {
+	if a == nil {
 		return nil
 	}
-	return o.RawResponse
+	return a.RawResponse
 }
 
-func (o *ApproveRequestResponse) GetObject() *ApproveRequestResponseBody {
-	if o == nil {
+func (a *ApproveRequestResponse) GetObject() *ApproveRequestResponseBody {
+	if a == nil {
 		return nil
 	}
-	return o.Object
+	return a.Object
 }

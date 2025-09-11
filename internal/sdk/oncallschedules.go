@@ -237,7 +237,8 @@ func (s *OnCallSchedules) Create(ctx context.Context, request shared.CreateOnCal
 
 }
 
-// Get - Returns a list of `OnCallSchedule` objects.
+// Get on call schedules
+// Returns a list of `OnCallSchedule` objects.
 func (s *OnCallSchedules) Get(ctx context.Context, opts ...operations.Option) (*operations.GetOnCallScheduleResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -436,7 +437,8 @@ func (s *OnCallSchedules) Get(ctx context.Context, opts ...operations.Option) (*
 
 }
 
-// GetID - Gets a `OnCallSchedule` object.
+// GetID - Get on call schedule by ID
+// Gets a `OnCallSchedule` object.
 func (s *OnCallSchedules) GetID(ctx context.Context, request operations.GetOnCallScheduleIDRequest, opts ...operations.Option) (*operations.GetOnCallScheduleIDResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{

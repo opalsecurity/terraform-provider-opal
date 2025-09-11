@@ -20,23 +20,23 @@ type GroupResource struct {
 	ResourceID string `json:"resource_id"`
 }
 
-func (o *GroupResource) GetAccessLevel() ResourceAccessLevel {
-	if o == nil {
+func (g *GroupResource) GetAccessLevel() ResourceAccessLevel {
+	if g == nil {
 		return ResourceAccessLevel{}
 	}
-	return o.AccessLevel
+	return g.AccessLevel
 }
 
-func (o *GroupResource) GetGroupID() string {
-	if o == nil {
+func (g *GroupResource) GetGroupID() string {
+	if g == nil {
 		return ""
 	}
-	return o.GroupID
+	return g.GroupID
 }
 
-func (o *GroupResource) GetResourceID() string {
-	if o == nil {
+func (g *GroupResource) GetResourceID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ResourceID
+	return g.ResourceID
 }

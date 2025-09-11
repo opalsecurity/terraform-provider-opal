@@ -16,25 +16,25 @@ type GetSyncErrorsRequest struct {
 	ResourceID *string `queryParam:"style=form,explode=false,name=resource_id"`
 }
 
-func (o *GetSyncErrorsRequest) GetAppID() *string {
-	if o == nil {
+func (g *GetSyncErrorsRequest) GetAppID() *string {
+	if g == nil {
 		return nil
 	}
-	return o.AppID
+	return g.AppID
 }
 
-func (o *GetSyncErrorsRequest) GetGroupID() *string {
-	if o == nil {
+func (g *GetSyncErrorsRequest) GetGroupID() *string {
+	if g == nil {
 		return nil
 	}
-	return o.GroupID
+	return g.GroupID
 }
 
-func (o *GetSyncErrorsRequest) GetResourceID() *string {
-	if o == nil {
+func (g *GetSyncErrorsRequest) GetResourceID() *string {
+	if g == nil {
 		return nil
 	}
-	return o.ResourceID
+	return g.ResourceID
 }
 
 type GetSyncErrorsResponse struct {
@@ -48,30 +48,30 @@ type GetSyncErrorsResponse struct {
 	Classes []shared.SyncErrorList
 }
 
-func (o *GetSyncErrorsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetSyncErrorsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetSyncErrorsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetSyncErrorsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetSyncErrorsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetSyncErrorsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetSyncErrorsResponse) GetClasses() []shared.SyncErrorList {
-	if o == nil {
+func (g *GetSyncErrorsResponse) GetClasses() []shared.SyncErrorList {
+	if g == nil {
 		return nil
 	}
-	return o.Classes
+	return g.Classes
 }

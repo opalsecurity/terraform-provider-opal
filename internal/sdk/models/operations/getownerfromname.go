@@ -12,11 +12,11 @@ type GetOwnerFromNameRequest struct {
 	OwnerName string `pathParam:"style=simple,explode=true,name=owner_name"`
 }
 
-func (o *GetOwnerFromNameRequest) GetOwnerName() string {
-	if o == nil {
+func (g *GetOwnerFromNameRequest) GetOwnerName() string {
+	if g == nil {
 		return ""
 	}
-	return o.OwnerName
+	return g.OwnerName
 }
 
 type GetOwnerFromNameResponse struct {
@@ -30,30 +30,30 @@ type GetOwnerFromNameResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetOwnerFromNameResponse) GetContentType() string {
-	if o == nil {
+func (g *GetOwnerFromNameResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetOwnerFromNameResponse) GetOwner() *shared.Owner {
-	if o == nil {
+func (g *GetOwnerFromNameResponse) GetOwner() *shared.Owner {
+	if g == nil {
 		return nil
 	}
-	return o.Owner
+	return g.Owner
 }
 
-func (o *GetOwnerFromNameResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetOwnerFromNameResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetOwnerFromNameResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetOwnerFromNameResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

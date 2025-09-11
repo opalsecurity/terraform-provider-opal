@@ -12,16 +12,16 @@ type CreateOnCallScheduleInfo struct {
 	ThirdPartyProvider OnCallScheduleProviderEnum `json:"third_party_provider"`
 }
 
-func (o *CreateOnCallScheduleInfo) GetRemoteID() string {
-	if o == nil {
+func (c *CreateOnCallScheduleInfo) GetRemoteID() string {
+	if c == nil {
 		return ""
 	}
-	return o.RemoteID
+	return c.RemoteID
 }
 
-func (o *CreateOnCallScheduleInfo) GetThirdPartyProvider() OnCallScheduleProviderEnum {
-	if o == nil {
+func (c *CreateOnCallScheduleInfo) GetThirdPartyProvider() OnCallScheduleProviderEnum {
+	if c == nil {
 		return OnCallScheduleProviderEnum("")
 	}
-	return o.ThirdPartyProvider
+	return c.ThirdPartyProvider
 }

@@ -17,23 +17,23 @@ type CreateBundleInfo struct {
 	Name string `json:"name"`
 }
 
-func (o *CreateBundleInfo) GetAdminOwnerID() string {
-	if o == nil {
+func (c *CreateBundleInfo) GetAdminOwnerID() string {
+	if c == nil {
 		return ""
 	}
-	return o.AdminOwnerID
+	return c.AdminOwnerID
 }
 
-func (o *CreateBundleInfo) GetDescription() *string {
-	if o == nil {
+func (c *CreateBundleInfo) GetDescription() *string {
+	if c == nil {
 		return nil
 	}
-	return o.Description
+	return c.Description
 }
 
-func (o *CreateBundleInfo) GetName() string {
-	if o == nil {
+func (c *CreateBundleInfo) GetName() string {
+	if c == nil {
 		return ""
 	}
-	return o.Name
+	return c.Name
 }

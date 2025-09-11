@@ -12,11 +12,11 @@ type GetResourceTagsRequest struct {
 	ResourceID string `pathParam:"style=simple,explode=false,name=resource_id"`
 }
 
-func (o *GetResourceTagsRequest) GetResourceID() string {
-	if o == nil {
+func (g *GetResourceTagsRequest) GetResourceID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ResourceID
+	return g.ResourceID
 }
 
 type GetResourceTagsResponse struct {
@@ -30,30 +30,30 @@ type GetResourceTagsResponse struct {
 	TagsList *shared.TagsList
 }
 
-func (o *GetResourceTagsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetResourceTagsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetResourceTagsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetResourceTagsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetResourceTagsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetResourceTagsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetResourceTagsResponse) GetTagsList() *shared.TagsList {
-	if o == nil {
+func (g *GetResourceTagsResponse) GetTagsList() *shared.TagsList {
+	if g == nil {
 		return nil
 	}
-	return o.TagsList
+	return g.TagsList
 }

@@ -13,18 +13,18 @@ type DeleteUserTagRequest struct {
 	UserID string `pathParam:"style=simple,explode=false,name=user_id"`
 }
 
-func (o *DeleteUserTagRequest) GetTagID() string {
-	if o == nil {
+func (d *DeleteUserTagRequest) GetTagID() string {
+	if d == nil {
 		return ""
 	}
-	return o.TagID
+	return d.TagID
 }
 
-func (o *DeleteUserTagRequest) GetUserID() string {
-	if o == nil {
+func (d *DeleteUserTagRequest) GetUserID() string {
+	if d == nil {
 		return ""
 	}
-	return o.UserID
+	return d.UserID
 }
 
 type DeleteUserTagResponse struct {
@@ -36,23 +36,23 @@ type DeleteUserTagResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *DeleteUserTagResponse) GetContentType() string {
-	if o == nil {
+func (d *DeleteUserTagResponse) GetContentType() string {
+	if d == nil {
 		return ""
 	}
-	return o.ContentType
+	return d.ContentType
 }
 
-func (o *DeleteUserTagResponse) GetStatusCode() int {
-	if o == nil {
+func (d *DeleteUserTagResponse) GetStatusCode() int {
+	if d == nil {
 		return 0
 	}
-	return o.StatusCode
+	return d.StatusCode
 }
 
-func (o *DeleteUserTagResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (d *DeleteUserTagResponse) GetRawResponse() *http.Response {
+	if d == nil {
 		return nil
 	}
-	return o.RawResponse
+	return d.RawResponse
 }

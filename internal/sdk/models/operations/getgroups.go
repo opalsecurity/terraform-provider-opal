@@ -18,32 +18,32 @@ type GetGroupsRequest struct {
 	PageSize *int64 `queryParam:"style=form,explode=true,name=page_size"`
 }
 
-func (o *GetGroupsRequest) GetGroupIds() []string {
-	if o == nil {
+func (g *GetGroupsRequest) GetGroupIds() []string {
+	if g == nil {
 		return nil
 	}
-	return o.GroupIds
+	return g.GroupIds
 }
 
-func (o *GetGroupsRequest) GetGroupName() *string {
-	if o == nil {
+func (g *GetGroupsRequest) GetGroupName() *string {
+	if g == nil {
 		return nil
 	}
-	return o.GroupName
+	return g.GroupName
 }
 
-func (o *GetGroupsRequest) GetGroupTypeFilter() *shared.GroupTypeEnum {
-	if o == nil {
+func (g *GetGroupsRequest) GetGroupTypeFilter() *shared.GroupTypeEnum {
+	if g == nil {
 		return nil
 	}
-	return o.GroupTypeFilter
+	return g.GroupTypeFilter
 }
 
-func (o *GetGroupsRequest) GetPageSize() *int64 {
-	if o == nil {
+func (g *GetGroupsRequest) GetPageSize() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.PageSize
+	return g.PageSize
 }
 
 type GetGroupsResponse struct {
@@ -57,30 +57,30 @@ type GetGroupsResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetGroupsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetGroupsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetGroupsResponse) GetPaginatedGroupsList() *shared.PaginatedGroupsList {
-	if o == nil {
+func (g *GetGroupsResponse) GetPaginatedGroupsList() *shared.PaginatedGroupsList {
+	if g == nil {
 		return nil
 	}
-	return o.PaginatedGroupsList
+	return g.PaginatedGroupsList
 }
 
-func (o *GetGroupsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetGroupsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetGroupsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetGroupsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

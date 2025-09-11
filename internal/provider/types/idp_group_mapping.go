@@ -8,6 +8,7 @@ import (
 
 type IdpGroupMapping struct {
 	Alias             types.String `tfsdk:"alias"`
+	AppResourceID     types.String `tfsdk:"app_resource_id"`
 	GroupID           types.String `tfsdk:"group_id"`
 	HiddenFromEndUser types.Bool   `tfsdk:"hidden_from_end_user"`
 }

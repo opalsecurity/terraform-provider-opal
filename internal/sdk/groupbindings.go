@@ -415,7 +415,8 @@ func (s *GroupBindings) DeleteGroupBinding(ctx context.Context, request operatio
 
 }
 
-// GetGroupBinding - Returns a `GroupBinding` object.
+// GetGroupBinding - Get group binding by ID
+// Returns a `GroupBinding` object.
 func (s *GroupBindings) GetGroupBinding(ctx context.Context, request operations.GetGroupBindingRequest, opts ...operations.Option) (*operations.GetGroupBindingResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -614,7 +615,8 @@ func (s *GroupBindings) GetGroupBinding(ctx context.Context, request operations.
 
 }
 
-// GetGroupBindings - Returns a list of `GroupBinding` objects.
+// GetGroupBindings - Get group bindings
+// Returns a list of `GroupBinding` objects.
 func (s *GroupBindings) GetGroupBindings(ctx context.Context, request operations.GetGroupBindingsRequest, opts ...operations.Option) (*operations.GetGroupBindingsResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{

@@ -37,6 +37,9 @@ resource "opal_resource" "my_resource" {
       region      = "us-east-2"
       resource_id = "db-AOO8V0XUCNU13XLZXQDQRSN0NQ"
     }
+    coupa_role = {
+      role_id = 999
+    }
     custom_connector = {
       can_have_usage_events = false
       remote_resource_id    = "01fa7402-01d8-103b-8deb-5f3a0ab7884"

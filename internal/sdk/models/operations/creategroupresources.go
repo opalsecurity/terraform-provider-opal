@@ -14,18 +14,18 @@ type CreateGroupResourcesRequestBody struct {
 	DurationMinutes *int64 `json:"duration_minutes,omitempty"`
 }
 
-func (o *CreateGroupResourcesRequestBody) GetAccessLevelRemoteID() *string {
-	if o == nil {
+func (c *CreateGroupResourcesRequestBody) GetAccessLevelRemoteID() *string {
+	if c == nil {
 		return nil
 	}
-	return o.AccessLevelRemoteID
+	return c.AccessLevelRemoteID
 }
 
-func (o *CreateGroupResourcesRequestBody) GetDurationMinutes() *int64 {
-	if o == nil {
+func (c *CreateGroupResourcesRequestBody) GetDurationMinutes() *int64 {
+	if c == nil {
 		return nil
 	}
-	return o.DurationMinutes
+	return c.DurationMinutes
 }
 
 type CreateGroupResourcesRequest struct {
@@ -40,32 +40,32 @@ type CreateGroupResourcesRequest struct {
 	ResourceID string `pathParam:"style=simple,explode=false,name=resource_id"`
 }
 
-func (o *CreateGroupResourcesRequest) GetRequestBody() *CreateGroupResourcesRequestBody {
-	if o == nil {
+func (c *CreateGroupResourcesRequest) GetRequestBody() *CreateGroupResourcesRequestBody {
+	if c == nil {
 		return nil
 	}
-	return o.RequestBody
+	return c.RequestBody
 }
 
-func (o *CreateGroupResourcesRequest) GetAccessLevelRemoteID() *string {
-	if o == nil {
+func (c *CreateGroupResourcesRequest) GetAccessLevelRemoteID() *string {
+	if c == nil {
 		return nil
 	}
-	return o.AccessLevelRemoteID
+	return c.AccessLevelRemoteID
 }
 
-func (o *CreateGroupResourcesRequest) GetGroupID() string {
-	if o == nil {
+func (c *CreateGroupResourcesRequest) GetGroupID() string {
+	if c == nil {
 		return ""
 	}
-	return o.GroupID
+	return c.GroupID
 }
 
-func (o *CreateGroupResourcesRequest) GetResourceID() string {
-	if o == nil {
+func (c *CreateGroupResourcesRequest) GetResourceID() string {
+	if c == nil {
 		return ""
 	}
-	return o.ResourceID
+	return c.ResourceID
 }
 
 type CreateGroupResourcesResponse struct {
@@ -79,30 +79,30 @@ type CreateGroupResourcesResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *CreateGroupResourcesResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateGroupResourcesResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateGroupResourcesResponse) GetGroupResource() *shared.GroupResource {
-	if o == nil {
+func (c *CreateGroupResourcesResponse) GetGroupResource() *shared.GroupResource {
+	if c == nil {
 		return nil
 	}
-	return o.GroupResource
+	return c.GroupResource
 }
 
-func (o *CreateGroupResourcesResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateGroupResourcesResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateGroupResourcesResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateGroupResourcesResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }

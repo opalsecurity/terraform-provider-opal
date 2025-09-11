@@ -6,9 +6,9 @@ type AccessList struct {
 	Results []Access `json:"results,omitempty"`
 }
 
-func (o *AccessList) GetResults() []Access {
-	if o == nil {
+func (a *AccessList) GetResults() []Access {
+	if a == nil {
 		return nil
 	}
-	return o.Results
+	return a.Results
 }

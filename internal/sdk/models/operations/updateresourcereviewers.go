@@ -13,18 +13,18 @@ type UpdateResourceReviewersRequest struct {
 	ResourceID string `pathParam:"style=simple,explode=false,name=resource_id"`
 }
 
-func (o *UpdateResourceReviewersRequest) GetReviewerIDList() shared.ReviewerIDList {
-	if o == nil {
+func (u *UpdateResourceReviewersRequest) GetReviewerIDList() shared.ReviewerIDList {
+	if u == nil {
 		return shared.ReviewerIDList{}
 	}
-	return o.ReviewerIDList
+	return u.ReviewerIDList
 }
 
-func (o *UpdateResourceReviewersRequest) GetResourceID() string {
-	if o == nil {
+func (u *UpdateResourceReviewersRequest) GetResourceID() string {
+	if u == nil {
 		return ""
 	}
-	return o.ResourceID
+	return u.ResourceID
 }
 
 type UpdateResourceReviewersResponse struct {
@@ -38,30 +38,30 @@ type UpdateResourceReviewersResponse struct {
 	Strings []string
 }
 
-func (o *UpdateResourceReviewersResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateResourceReviewersResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateResourceReviewersResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateResourceReviewersResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateResourceReviewersResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateResourceReviewersResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }
 
-func (o *UpdateResourceReviewersResponse) GetStrings() []string {
-	if o == nil {
+func (u *UpdateResourceReviewersResponse) GetStrings() []string {
+	if u == nil {
 		return nil
 	}
-	return o.Strings
+	return u.Strings
 }

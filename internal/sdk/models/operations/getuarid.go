@@ -12,11 +12,11 @@ type GetUARIDRequest struct {
 	UarID string `pathParam:"style=simple,explode=false,name=uar_id"`
 }
 
-func (o *GetUARIDRequest) GetUarID() string {
-	if o == nil {
+func (g *GetUARIDRequest) GetUarID() string {
+	if g == nil {
 		return ""
 	}
-	return o.UarID
+	return g.UarID
 }
 
 type GetUARIDResponse struct {
@@ -30,30 +30,30 @@ type GetUARIDResponse struct {
 	Uar *shared.Uar
 }
 
-func (o *GetUARIDResponse) GetContentType() string {
-	if o == nil {
+func (g *GetUARIDResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetUARIDResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetUARIDResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetUARIDResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetUARIDResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetUARIDResponse) GetUar() *shared.Uar {
-	if o == nil {
+func (g *GetUARIDResponse) GetUar() *shared.Uar {
+	if g == nil {
 		return nil
 	}
-	return o.Uar
+	return g.Uar
 }

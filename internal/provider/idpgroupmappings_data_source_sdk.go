@@ -21,6 +21,7 @@ func (r *IdpGroupMappingsDataSourceModel) RefreshFromSharedIdpGroupMappingList(c
 			var mappings tfTypes.IdpGroupMapping
 
 			mappings.Alias = types.StringPointerValue(mappingsItem.Alias)
+			mappings.AppResourceID = types.StringPointerValue(mappingsItem.AppResourceID)
 			mappings.GroupID = types.StringValue(mappingsItem.GroupID)
 			mappings.HiddenFromEndUser = types.BoolValue(mappingsItem.HiddenFromEndUser)
 

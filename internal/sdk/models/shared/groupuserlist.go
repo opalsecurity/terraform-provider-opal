@@ -3,12 +3,30 @@
 package shared
 
 type GroupUserList struct {
-	Results []GroupUser `json:"results,omitempty"`
+	// The cursor with which to continue pagination if additional result pages exist.
+	Next *string `json:"next,omitempty"`
+	// The cursor used to obtain the current result page.
+	Previous *string     `json:"previous,omitempty"`
+	Results  []GroupUser `json:"results,omitempty"`
 }
 
-func (o *GroupUserList) GetResults() []GroupUser {
-	if o == nil {
+func (g *GroupUserList) GetNext() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Results
+	return g.Next
+}
+
+func (g *GroupUserList) GetPrevious() *string {
+	if g == nil {
+		return nil
+	}
+	return g.Previous
+}
+
+func (g *GroupUserList) GetResults() []GroupUser {
+	if g == nil {
+		return nil
+	}
+	return g.Results
 }

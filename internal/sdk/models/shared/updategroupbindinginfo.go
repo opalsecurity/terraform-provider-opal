@@ -7,11 +7,11 @@ type UpdateGroupBindingInfoGroups struct {
 	GroupID string `json:"group_id"`
 }
 
-func (o *UpdateGroupBindingInfoGroups) GetGroupID() string {
-	if o == nil {
+func (u *UpdateGroupBindingInfoGroups) GetGroupID() string {
+	if u == nil {
 		return ""
 	}
-	return o.GroupID
+	return u.GroupID
 }
 
 // # UpdateGroupBindingInfo Object
@@ -26,23 +26,23 @@ type UpdateGroupBindingInfo struct {
 	SourceGroupID string `json:"source_group_id"`
 }
 
-func (o *UpdateGroupBindingInfo) GetGroupBindingID() string {
-	if o == nil {
+func (u *UpdateGroupBindingInfo) GetGroupBindingID() string {
+	if u == nil {
 		return ""
 	}
-	return o.GroupBindingID
+	return u.GroupBindingID
 }
 
-func (o *UpdateGroupBindingInfo) GetGroups() []UpdateGroupBindingInfoGroups {
-	if o == nil {
+func (u *UpdateGroupBindingInfo) GetGroups() []UpdateGroupBindingInfoGroups {
+	if u == nil {
 		return []UpdateGroupBindingInfoGroups{}
 	}
-	return o.Groups
+	return u.Groups
 }
 
-func (o *UpdateGroupBindingInfo) GetSourceGroupID() string {
-	if o == nil {
+func (u *UpdateGroupBindingInfo) GetSourceGroupID() string {
+	if u == nil {
 		return ""
 	}
-	return o.SourceGroupID
+	return u.SourceGroupID
 }

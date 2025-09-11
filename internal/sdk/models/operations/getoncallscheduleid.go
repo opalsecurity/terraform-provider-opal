@@ -12,11 +12,11 @@ type GetOnCallScheduleIDRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=on_call_schedule_id"`
 }
 
-func (o *GetOnCallScheduleIDRequest) GetID() string {
-	if o == nil {
+func (g *GetOnCallScheduleIDRequest) GetID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ID
+	return g.ID
 }
 
 type GetOnCallScheduleIDResponse struct {
@@ -30,30 +30,30 @@ type GetOnCallScheduleIDResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetOnCallScheduleIDResponse) GetContentType() string {
-	if o == nil {
+func (g *GetOnCallScheduleIDResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetOnCallScheduleIDResponse) GetOnCallSchedule() *shared.OnCallSchedule {
-	if o == nil {
+func (g *GetOnCallScheduleIDResponse) GetOnCallSchedule() *shared.OnCallSchedule {
+	if g == nil {
 		return nil
 	}
-	return o.OnCallSchedule
+	return g.OnCallSchedule
 }
 
-func (o *GetOnCallScheduleIDResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetOnCallScheduleIDResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetOnCallScheduleIDResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetOnCallScheduleIDResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

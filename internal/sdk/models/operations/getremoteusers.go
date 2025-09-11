@@ -20,39 +20,39 @@ type GetRemoteUsersRequest struct {
 	UserID []string `queryParam:"style=form,explode=true,name=user_id"`
 }
 
-func (o *GetRemoteUsersRequest) GetCursor() *string {
-	if o == nil {
+func (g *GetRemoteUsersRequest) GetCursor() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Cursor
+	return g.Cursor
 }
 
-func (o *GetRemoteUsersRequest) GetPageSize() *int64 {
-	if o == nil {
+func (g *GetRemoteUsersRequest) GetPageSize() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.PageSize
+	return g.PageSize
 }
 
-func (o *GetRemoteUsersRequest) GetRemoteID() []string {
-	if o == nil {
+func (g *GetRemoteUsersRequest) GetRemoteID() []string {
+	if g == nil {
 		return nil
 	}
-	return o.RemoteID
+	return g.RemoteID
 }
 
-func (o *GetRemoteUsersRequest) GetThirdPartyProvider() []shared.ThirdPartyProviderEnum {
-	if o == nil {
+func (g *GetRemoteUsersRequest) GetThirdPartyProvider() []shared.ThirdPartyProviderEnum {
+	if g == nil {
 		return nil
 	}
-	return o.ThirdPartyProvider
+	return g.ThirdPartyProvider
 }
 
-func (o *GetRemoteUsersRequest) GetUserID() []string {
-	if o == nil {
+func (g *GetRemoteUsersRequest) GetUserID() []string {
+	if g == nil {
 		return nil
 	}
-	return o.UserID
+	return g.UserID
 }
 
 type GetRemoteUsersResponse struct {
@@ -66,30 +66,30 @@ type GetRemoteUsersResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetRemoteUsersResponse) GetContentType() string {
-	if o == nil {
+func (g *GetRemoteUsersResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetRemoteUsersResponse) GetPaginatedRemoteUsersList() *shared.PaginatedRemoteUsersList {
-	if o == nil {
+func (g *GetRemoteUsersResponse) GetPaginatedRemoteUsersList() *shared.PaginatedRemoteUsersList {
+	if g == nil {
 		return nil
 	}
-	return o.PaginatedRemoteUsersList
+	return g.PaginatedRemoteUsersList
 }
 
-func (o *GetRemoteUsersResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetRemoteUsersResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetRemoteUsersResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetRemoteUsersResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

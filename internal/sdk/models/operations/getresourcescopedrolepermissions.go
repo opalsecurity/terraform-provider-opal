@@ -12,11 +12,11 @@ type GetResourceScopedRolePermissionsRequest struct {
 	ResourceID string `pathParam:"style=simple,explode=false,name=resource_id"`
 }
 
-func (o *GetResourceScopedRolePermissionsRequest) GetResourceID() string {
-	if o == nil {
+func (g *GetResourceScopedRolePermissionsRequest) GetResourceID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ResourceID
+	return g.ResourceID
 }
 
 type GetResourceScopedRolePermissionsResponse struct {
@@ -30,30 +30,30 @@ type GetResourceScopedRolePermissionsResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetResourceScopedRolePermissionsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetResourceScopedRolePermissionsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetResourceScopedRolePermissionsResponse) GetScopedRolePermissionList() *shared.ScopedRolePermissionList {
-	if o == nil {
+func (g *GetResourceScopedRolePermissionsResponse) GetScopedRolePermissionList() *shared.ScopedRolePermissionList {
+	if g == nil {
 		return nil
 	}
-	return o.ScopedRolePermissionList
+	return g.ScopedRolePermissionList
 }
 
-func (o *GetResourceScopedRolePermissionsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetResourceScopedRolePermissionsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetResourceScopedRolePermissionsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetResourceScopedRolePermissionsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

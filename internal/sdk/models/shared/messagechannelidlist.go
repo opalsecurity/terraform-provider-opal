@@ -22,9 +22,9 @@ func (m *MessageChannelIDList) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *MessageChannelIDList) GetMessageChannelIds() []string {
-	if o == nil {
+func (m *MessageChannelIDList) GetMessageChannelIds() []string {
+	if m == nil {
 		return nil
 	}
-	return o.MessageChannelIds
+	return m.MessageChannelIds
 }

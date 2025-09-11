@@ -13,18 +13,18 @@ type CreateResourceTagRequest struct {
 	TagID string `pathParam:"style=simple,explode=false,name=tag_id"`
 }
 
-func (o *CreateResourceTagRequest) GetResourceID() string {
-	if o == nil {
+func (c *CreateResourceTagRequest) GetResourceID() string {
+	if c == nil {
 		return ""
 	}
-	return o.ResourceID
+	return c.ResourceID
 }
 
-func (o *CreateResourceTagRequest) GetTagID() string {
-	if o == nil {
+func (c *CreateResourceTagRequest) GetTagID() string {
+	if c == nil {
 		return ""
 	}
-	return o.TagID
+	return c.TagID
 }
 
 type CreateResourceTagResponse struct {
@@ -36,23 +36,23 @@ type CreateResourceTagResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *CreateResourceTagResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateResourceTagResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateResourceTagResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateResourceTagResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateResourceTagResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateResourceTagResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }

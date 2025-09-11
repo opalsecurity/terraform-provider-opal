@@ -18,30 +18,30 @@ type GetOnCallScheduleResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetOnCallScheduleResponse) GetContentType() string {
-	if o == nil {
+func (g *GetOnCallScheduleResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetOnCallScheduleResponse) GetOnCallScheduleList() *shared.OnCallScheduleList {
-	if o == nil {
+func (g *GetOnCallScheduleResponse) GetOnCallScheduleList() *shared.OnCallScheduleList {
+	if g == nil {
 		return nil
 	}
-	return o.OnCallScheduleList
+	return g.OnCallScheduleList
 }
 
-func (o *GetOnCallScheduleResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetOnCallScheduleResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetOnCallScheduleResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetOnCallScheduleResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

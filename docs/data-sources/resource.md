@@ -67,6 +67,7 @@ Read-Only:
 - `aws_organizational_unit` (Attributes) Remote info for AWS organizational unit. (see [below for nested schema](#nestedatt--remote_info--aws_organizational_unit))
 - `aws_permission_set` (Attributes) Remote info for AWS Identity Center permission set. (see [below for nested schema](#nestedatt--remote_info--aws_permission_set))
 - `aws_rds_instance` (Attributes) Remote info for AWS RDS instance. (see [below for nested schema](#nestedatt--remote_info--aws_rds_instance))
+- `coupa_role` (Attributes) Remote info for Coupa role. (see [below for nested schema](#nestedatt--remote_info--coupa_role))
 - `custom_connector` (Attributes) Remote info for a custom connector resource. (see [below for nested schema](#nestedatt--remote_info--custom_connector))
 - `datastax_astra_role` (Attributes) Remote info for an Astra role. (see [below for nested schema](#nestedatt--remote_info--datastax_astra_role))
 - `gcp_big_query_dataset` (Attributes) Remote info for GCP BigQuery Dataset. (see [below for nested schema](#nestedatt--remote_info--gcp_big_query_dataset))
@@ -156,6 +157,14 @@ Read-Only:
 - `instance_id` (String) The instanceId of the RDS instance.
 - `region` (String) The region of the RDS instance.
 - `resource_id` (String) The resourceId of the RDS instance.
+
+
+<a id="nestedatt--remote_info--coupa_role"></a>
+### Nested Schema for `remote_info.coupa_role`
+
+Read-Only:
+
+- `role_id` (String) The id of the role.
 
 
 <a id="nestedatt--remote_info--custom_connector"></a>

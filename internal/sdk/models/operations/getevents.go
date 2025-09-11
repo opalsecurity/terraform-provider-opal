@@ -26,60 +26,60 @@ type GetEventsRequest struct {
 	StartDateFilter *string `queryParam:"style=form,explode=true,name=start_date_filter"`
 }
 
-func (o *GetEventsRequest) GetActorFilter() *string {
-	if o == nil {
+func (g *GetEventsRequest) GetActorFilter() *string {
+	if g == nil {
 		return nil
 	}
-	return o.ActorFilter
+	return g.ActorFilter
 }
 
-func (o *GetEventsRequest) GetAPITokenFilter() *string {
-	if o == nil {
+func (g *GetEventsRequest) GetAPITokenFilter() *string {
+	if g == nil {
 		return nil
 	}
-	return o.APITokenFilter
+	return g.APITokenFilter
 }
 
-func (o *GetEventsRequest) GetCursor() *string {
-	if o == nil {
+func (g *GetEventsRequest) GetCursor() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Cursor
+	return g.Cursor
 }
 
-func (o *GetEventsRequest) GetEndDateFilter() *string {
-	if o == nil {
+func (g *GetEventsRequest) GetEndDateFilter() *string {
+	if g == nil {
 		return nil
 	}
-	return o.EndDateFilter
+	return g.EndDateFilter
 }
 
-func (o *GetEventsRequest) GetEventTypeFilter() *string {
-	if o == nil {
+func (g *GetEventsRequest) GetEventTypeFilter() *string {
+	if g == nil {
 		return nil
 	}
-	return o.EventTypeFilter
+	return g.EventTypeFilter
 }
 
-func (o *GetEventsRequest) GetObjectFilter() *string {
-	if o == nil {
+func (g *GetEventsRequest) GetObjectFilter() *string {
+	if g == nil {
 		return nil
 	}
-	return o.ObjectFilter
+	return g.ObjectFilter
 }
 
-func (o *GetEventsRequest) GetPageSize() *int64 {
-	if o == nil {
+func (g *GetEventsRequest) GetPageSize() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.PageSize
+	return g.PageSize
 }
 
-func (o *GetEventsRequest) GetStartDateFilter() *string {
-	if o == nil {
+func (g *GetEventsRequest) GetStartDateFilter() *string {
+	if g == nil {
 		return nil
 	}
-	return o.StartDateFilter
+	return g.StartDateFilter
 }
 
 type GetEventsResponse struct {
@@ -93,30 +93,30 @@ type GetEventsResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetEventsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetEventsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetEventsResponse) GetPaginatedEventList() *shared.PaginatedEventList {
-	if o == nil {
+func (g *GetEventsResponse) GetPaginatedEventList() *shared.PaginatedEventList {
+	if g == nil {
 		return nil
 	}
-	return o.PaginatedEventList
+	return g.PaginatedEventList
 }
 
-func (o *GetEventsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetEventsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetEventsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetEventsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

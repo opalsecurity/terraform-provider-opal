@@ -802,7 +802,8 @@ func (s *Resources) DeleteResourceNhi(ctx context.Context, request operations.De
 
 }
 
-// Get - Returns a list of resources for your organization.
+// Get resources
+// Returns a list of resources for your organization.
 func (s *Resources) Get(ctx context.Context, request operations.GetResourcesRequest, opts ...operations.Option) (*operations.GetResourcesResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -1210,7 +1211,8 @@ func (s *Resources) GetAccessStatus(ctx context.Context, request operations.GetR
 
 }
 
-// GetID - Retrieves a resource.
+// GetID - Get resource by ID
+// Retrieves a resource.
 func (s *Resources) GetID(ctx context.Context, request operations.GetResourceIDRequest, opts ...operations.Option) (*operations.GetResourceIDResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -2609,7 +2611,8 @@ func (s *Resources) GetUserResources(ctx context.Context, request operations.Get
 
 }
 
-// GetUsers - Gets the list of users for this resource.
+// GetUsers - Get resource users
+// Gets the list of users for this resource.
 func (s *Resources) GetUsers(ctx context.Context, request operations.GetResourceUsersRequest, opts ...operations.Option) (*operations.GetResourceUsersResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{

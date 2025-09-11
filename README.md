@@ -31,7 +31,7 @@ terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "3.2.2"
+      version = "3.3.0"
     }
   }
 }
@@ -70,7 +70,9 @@ Available configuration:
 * [opal_bundle_group](docs/resources/bundle_group.md)
 * [opal_bundle_resource](docs/resources/bundle_resource.md)
 * [opal_configuration_template](docs/resources/configuration_template.md)
+* [opal_delegation](docs/resources/delegation.md)
 * [opal_group](docs/resources/group.md)
+* [opal_group_catalog_mapping](docs/resources/group_catalog_mapping.md)
 * [opal_group_containing_group](docs/resources/group_containing_group.md)
 * [opal_group_resource_list](docs/resources/group_resource_list.md)
 * [opal_group_tag](docs/resources/group_tag.md)
@@ -92,9 +94,12 @@ Available configuration:
 * [opal_bundle](docs/data-sources/bundle.md)
 * [opal_bundle_visibility](docs/data-sources/bundle_visibility.md)
 * [opal_configuration_template_list](docs/data-sources/configuration_template_list.md)
+* [opal_delegation](docs/data-sources/delegation.md)
+* [opal_delegations](docs/data-sources/delegations.md)
 * [opal_events](docs/data-sources/events.md)
 * [opal_group](docs/data-sources/group.md)
 * [opal_group_list](docs/data-sources/group_list.md)
+* [opal_group_catalog_mapping](docs/data-sources/group_catalog_mapping.md)
 * [opal_group_containing_group](docs/data-sources/group_containing_group.md)
 * [opal_group_resource_list](docs/data-sources/group_resource_list.md)
 * [opal_group_reviewers_stages_list](docs/data-sources/group_reviewers_stages_list.md)

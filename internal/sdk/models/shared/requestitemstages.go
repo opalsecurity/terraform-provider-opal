@@ -3,6 +3,8 @@
 package shared
 
 // RequestItemStages - The stages configuration for a request item
+//
+// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
 type RequestItemStages struct {
 	// The name of the requested item
 	RequestedItemName string `json:"requestedItemName"`
@@ -12,23 +14,23 @@ type RequestItemStages struct {
 	Stages []RequestStage `json:"stages"`
 }
 
-func (o *RequestItemStages) GetRequestedItemName() string {
-	if o == nil {
+func (r *RequestItemStages) GetRequestedItemName() string {
+	if r == nil {
 		return ""
 	}
-	return o.RequestedItemName
+	return r.RequestedItemName
 }
 
-func (o *RequestItemStages) GetRequestedRoleName() *string {
-	if o == nil {
+func (r *RequestItemStages) GetRequestedRoleName() *string {
+	if r == nil {
 		return nil
 	}
-	return o.RequestedRoleName
+	return r.RequestedRoleName
 }
 
-func (o *RequestItemStages) GetStages() []RequestStage {
-	if o == nil {
+func (r *RequestItemStages) GetStages() []RequestStage {
+	if r == nil {
 		return []RequestStage{}
 	}
-	return o.Stages
+	return r.Stages
 }

@@ -18,30 +18,30 @@ type CreateAccessRuleResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *CreateAccessRuleResponse) GetAccessRule() *shared.AccessRule {
-	if o == nil {
+func (c *CreateAccessRuleResponse) GetAccessRule() *shared.AccessRule {
+	if c == nil {
 		return nil
 	}
-	return o.AccessRule
+	return c.AccessRule
 }
 
-func (o *CreateAccessRuleResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateAccessRuleResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateAccessRuleResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateAccessRuleResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateAccessRuleResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateAccessRuleResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }

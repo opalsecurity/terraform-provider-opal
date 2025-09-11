@@ -11,23 +11,23 @@ type PaginatedUARsList struct {
 	Results  []Uar   `json:"results"`
 }
 
-func (o *PaginatedUARsList) GetNext() *string {
-	if o == nil {
+func (p *PaginatedUARsList) GetNext() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Next
+	return p.Next
 }
 
-func (o *PaginatedUARsList) GetPrevious() *string {
-	if o == nil {
+func (p *PaginatedUARsList) GetPrevious() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Previous
+	return p.Previous
 }
 
-func (o *PaginatedUARsList) GetResults() []Uar {
-	if o == nil {
+func (p *PaginatedUARsList) GetResults() []Uar {
+	if p == nil {
 		return []Uar{}
 	}
-	return o.Results
+	return p.Results
 }

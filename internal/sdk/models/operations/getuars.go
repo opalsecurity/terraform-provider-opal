@@ -14,18 +14,18 @@ type GetUARsRequest struct {
 	PageSize *int64 `queryParam:"style=form,explode=true,name=page_size"`
 }
 
-func (o *GetUARsRequest) GetCursor() *string {
-	if o == nil {
+func (g *GetUARsRequest) GetCursor() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Cursor
+	return g.Cursor
 }
 
-func (o *GetUARsRequest) GetPageSize() *int64 {
-	if o == nil {
+func (g *GetUARsRequest) GetPageSize() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.PageSize
+	return g.PageSize
 }
 
 type GetUARsResponse struct {
@@ -39,30 +39,30 @@ type GetUARsResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetUARsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetUARsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetUARsResponse) GetPaginatedUARsList() *shared.PaginatedUARsList {
-	if o == nil {
+func (g *GetUARsResponse) GetPaginatedUARsList() *shared.PaginatedUARsList {
+	if g == nil {
 		return nil
 	}
-	return o.PaginatedUARsList
+	return g.PaginatedUARsList
 }
 
-func (o *GetUARsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetUARsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetUARsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetUARsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
