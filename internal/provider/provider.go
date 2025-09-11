@@ -42,8 +42,9 @@ func (p *OpalProvider) Schema(ctx context.Context, req provider.SchemaRequest, r
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"bearer_auth": schema.StringAttribute{
-				Optional:  true,
-				Sensitive: true,
+				MarkdownDescription: `HTTP Bearer. Configurable via environment variable ` + "`" + `OPAL_AUTH_TOKEN` + "`" + `.`,
+				Optional:            true,
+				Sensitive:           true,
 			},
 			"http_headers": schema.MapAttribute{
 				Description: `HTTP headers to include in all requests`,

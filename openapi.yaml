@@ -41,8 +41,6 @@ tags:
     description: Operations related to requests
   - name: resources
     description: Operations related to resources
-  - name: scoped-role-permissions
-    description: Operations related to scoped role permissions
   - name: sessions
     description: Operations related to sessions
   - name: tags
@@ -3330,7 +3328,6 @@ paths:
         - BearerAuth: []
       tags:
         - resources
-        - scoped-role-permissions
       x-speakeasy-name-override: get_scoped_role_permissions
       x-speakeasy-entity-operation: ScopedRolePermissionList#get
     put:
@@ -3364,7 +3361,6 @@ paths:
         - BearerAuth: []
       tags:
         - resources
-        - scoped-role-permissions
       x-speakeasy-name-override: update_scoped_role_permissions
       x-speakeasy-entity-operation: ScopedRolePermissionList#create,update
   /resources/users/{user_id}:
@@ -6252,6 +6248,8 @@ components:
         - MARIADB_INSTANCE
         - POSTGRES_INSTANCE
         - TELEPORT_ROLE
+        - ILEVEL_ADVANCED_ROLE
+        - DATASTAX_ASTRA_ROLE
       example: AWS_IAM_ROLE
       type: string
     VisibilityTypeEnum:
@@ -7298,6 +7296,16 @@ components:
           type: object
           required:
             - role_name
+        datastax_astra_role:
+          description: Remote info for an Astra role.
+          properties:
+            role_id:
+              description: The id of the role.
+              example: 123e4567-e89b-12d3-a456-426614174000
+              type: string
+          type: object
+          required:
+            - role_id
       type: object
     RiskSensitivityEnum:
       type: string
