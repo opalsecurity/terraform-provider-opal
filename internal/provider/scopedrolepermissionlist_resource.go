@@ -6,9 +6,11 @@ import (
 	"context"
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setdefault"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -94,6 +96,7 @@ func (r *ScopedRolePermissionListResource) Schema(ctx context.Context, req resou
 						"target_ids": schema.SetAttribute{
 							Computed:    true,
 							Optional:    true,
+							Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 							ElementType: types.StringType,
 							Description: `The IDs of the entities that this permission applies to. If empty of missing, the permission will have untargeted scope.`,
 						},

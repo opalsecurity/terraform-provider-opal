@@ -10186,6 +10186,7 @@ components:
             format: uuid
           type: array
           format: set
+          default: []
         target_type:
           $ref: "#/components/schemas/RolePermissionTargetTypeEnum"
         permission_name:

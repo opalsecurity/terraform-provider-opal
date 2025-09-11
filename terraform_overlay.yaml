@@ -2019,6 +2019,9 @@ actions:
   - target: $["components"]["schemas"]["ScopedRolePermission"]["properties"]["target_ids"]
     update:
       format: set
+  - target: $["components"]["schemas"]["ScopedRolePermission"]["properties"]["target_ids"]
+    update:
+      default: []
   - target: $["components"]["schemas"]
     update:
       BundlesVisibilityTypeEnum:

@@ -1,19 +1,18 @@
-speakeasyVersion: 1.615.1
+speakeasyVersion: 1.615.2
 sources:
     opal-terraform-provider:
         sourceNamespace: opal-terraform-provider
-        sourceRevisionDigest: sha256:8cc264fd9dca5876edbb7856fc4e2f46ce2d42ac75d7ec5fb7ead4592f8473bc
-        sourceBlobDigest: sha256:d814ecf331a26d80cdf923519706007990ae76fba72974f437fc9e71c3daa670
+        sourceRevisionDigest: sha256:fdf71b3e0586b0e44336ba5d3b69fe41ce3a2c608693b9521c9a9d23d2d090a2
+        sourceBlobDigest: sha256:2117637a34f4f120ead91bc905f5ac0646c3774bb7f53bb4b5fafe3f8a80e2c7
         tags:
             - latest
-            - speakeasy-sdk-regen-1756512973
             - "1.0"
 targets:
     terraform:
         source: opal-terraform-provider
         sourceNamespace: opal-terraform-provider
-        sourceRevisionDigest: sha256:8cc264fd9dca5876edbb7856fc4e2f46ce2d42ac75d7ec5fb7ead4592f8473bc
-        sourceBlobDigest: sha256:d814ecf331a26d80cdf923519706007990ae76fba72974f437fc9e71c3daa670
+        sourceRevisionDigest: sha256:fdf71b3e0586b0e44336ba5d3b69fe41ce3a2c608693b9521c9a9d23d2d090a2
+        sourceBlobDigest: sha256:2117637a34f4f120ead91bc905f5ac0646c3774bb7f53bb4b5fafe3f8a80e2c7
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
