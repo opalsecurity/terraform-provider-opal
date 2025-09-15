@@ -6,6 +6,8 @@ package shared
 type IdpGroupMapping struct {
 	// The alias of the group.
 	Alias *string `json:"alias,omitempty"`
+	// The ID of the Okta app.
+	AppResourceID string `json:"app_resource_id"`
 	// The ID of the group.
 	GroupID string `json:"group_id"`
 	// A bool representing whether or not the group is hidden from the end user.
@@ -17,6 +19,13 @@ func (o *IdpGroupMapping) GetAlias() *string {
 		return nil
 	}
 	return o.Alias
+}
+
+func (o *IdpGroupMapping) GetAppResourceID() string {
+	if o == nil {
+		return ""
+	}
+	return o.AppResourceID
 }
 
 func (o *IdpGroupMapping) GetGroupID() string {

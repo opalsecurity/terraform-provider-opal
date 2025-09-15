@@ -1,7 +1,7 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 99e16eecc7fb450bc6c1509e21c6686e
+  docChecksum: e63e7ceb2f530b3f76844634eb3c52bb
   docVersion: "1.0"
   speakeasyVersion: 1.615.2
   generationVersion: 2.698.4
@@ -45,6 +45,7 @@ generatedFiles:
   - examples/data-sources/opal_group_reviewers_stages_list/data-source.tf
   - examples/data-sources/opal_group_tags/data-source.tf
   - examples/data-sources/opal_group_users/data-source.tf
+  - examples/data-sources/opal_idp_group_mapping/data-source.tf
   - examples/data-sources/opal_idp_group_mappings/data-source.tf
   - examples/data-sources/opal_message_channel/data-source.tf
   - examples/data-sources/opal_message_channel_list/data-source.tf
@@ -95,6 +96,9 @@ generatedFiles:
   - examples/resources/opal_group_resource_list/resource.tf
   - examples/resources/opal_group_tag/resource.tf
   - examples/resources/opal_group_user/resource.tf
+  - examples/resources/opal_idp_group_mapping/import-by-string-id.tf
+  - examples/resources/opal_idp_group_mapping/import.sh
+  - examples/resources/opal_idp_group_mapping/resource.tf
   - examples/resources/opal_idp_group_mappings/import-by-string-id.tf
   - examples/resources/opal_idp_group_mappings/import.sh
   - examples/resources/opal_idp_group_mappings/resource.tf
@@ -180,6 +184,10 @@ generatedFiles:
   - internal/provider/groupuser_resource_sdk.go
   - internal/provider/groupusers_data_source.go
   - internal/provider/groupusers_data_source_sdk.go
+  - internal/provider/idpgroupmapping_data_source.go
+  - internal/provider/idpgroupmapping_data_source_sdk.go
+  - internal/provider/idpgroupmapping_resource.go
+  - internal/provider/idpgroupmapping_resource_sdk.go
   - internal/provider/idpgroupmappings_data_source.go
   - internal/provider/idpgroupmappings_data_source_sdk.go
   - internal/provider/idpgroupmappings_resource.go
@@ -315,6 +323,7 @@ generatedFiles:
   - internal/provider/types/request_custom_field_response.go
   - internal/provider/types/request_item_stages.go
   - internal/provider/types/request_reviewer.go
+  - internal/provider/types/request_reviewer_stages.go
   - internal/provider/types/request_stage.go
   - internal/provider/types/requested_item.go
   - internal/provider/types/resource.go
@@ -357,6 +366,7 @@ generatedFiles:
   - internal/sdk/apps.go
   - internal/sdk/bundles.go
   - internal/sdk/configurationtemplates.go
+  - internal/sdk/delegations.go
   - internal/sdk/docs/models/operations/option.md
   - internal/sdk/events.go
   - internal/sdk/groupbindings.go
@@ -385,6 +395,7 @@ generatedFiles:
   - internal/sdk/models/operations/createaccessrule.go
   - internal/sdk/models/operations/createbundle.go
   - internal/sdk/models/operations/createconfigurationtemplate.go
+  - internal/sdk/models/operations/createdelegation.go
   - internal/sdk/models/operations/creategroup.go
   - internal/sdk/models/operations/creategroupbinding.go
   - internal/sdk/models/operations/creategroupresources.go
@@ -395,6 +406,7 @@ generatedFiles:
   - internal/sdk/models/operations/createoncallschedule.go
   - internal/sdk/models/operations/createowner.go
   - internal/sdk/models/operations/createrequest.go
+  - internal/sdk/models/operations/createrequestcomment.go
   - internal/sdk/models/operations/createresource.go
   - internal/sdk/models/operations/createresourcetag.go
   - internal/sdk/models/operations/createtag.go
@@ -402,6 +414,7 @@ generatedFiles:
   - internal/sdk/models/operations/createusertag.go
   - internal/sdk/models/operations/deletebundle.go
   - internal/sdk/models/operations/deleteconfigurationtemplate.go
+  - internal/sdk/models/operations/deletedelegation.go
   - internal/sdk/models/operations/deletegroup.go
   - internal/sdk/models/operations/deletegroupbinding.go
   - internal/sdk/models/operations/deletegrouptag.go
@@ -413,6 +426,7 @@ generatedFiles:
   - internal/sdk/models/operations/deleteresourcetag.go
   - internal/sdk/models/operations/deletetagbyid.go
   - internal/sdk/models/operations/deleteusertag.go
+  - internal/sdk/models/operations/denyrequest.go
   - internal/sdk/models/operations/getaccessrule.go
   - internal/sdk/models/operations/getappid.go
   - internal/sdk/models/operations/getapps.go
@@ -422,6 +436,8 @@ generatedFiles:
   - internal/sdk/models/operations/getbundles.go
   - internal/sdk/models/operations/getbundlevisibility.go
   - internal/sdk/models/operations/getconfigurationtemplates.go
+  - internal/sdk/models/operations/getdelegation.go
+  - internal/sdk/models/operations/getdelegations.go
   - internal/sdk/models/operations/getevents.go
   - internal/sdk/models/operations/getgroup.go
   - internal/sdk/models/operations/getgroupbinding.go
@@ -435,6 +451,7 @@ generatedFiles:
   - internal/sdk/models/operations/getgrouptags.go
   - internal/sdk/models/operations/getgroupusers.go
   - internal/sdk/models/operations/getgroupvisibility.go
+  - internal/sdk/models/operations/getidpgroupmapping.go
   - internal/sdk/models/operations/getidpgroupmappings.go
   - internal/sdk/models/operations/getmessagechannelid.go
   - internal/sdk/models/operations/getmessagechannels.go
@@ -446,6 +463,7 @@ generatedFiles:
   - internal/sdk/models/operations/getowners.go
   - internal/sdk/models/operations/getremoteusers.go
   - internal/sdk/models/operations/getrequest.go
+  - internal/sdk/models/operations/getrequestcomments.go
   - internal/sdk/models/operations/getrequests.go
   - internal/sdk/models/operations/getrequestsrelay.go
   - internal/sdk/models/operations/getresourceid.go
@@ -465,6 +483,7 @@ generatedFiles:
   - internal/sdk/models/operations/getuarid.go
   - internal/sdk/models/operations/getuars.go
   - internal/sdk/models/operations/getuser.go
+  - internal/sdk/models/operations/getusergroups.go
   - internal/sdk/models/operations/getuserresources.go
   - internal/sdk/models/operations/getusers.go
   - internal/sdk/models/operations/getusertags.go
@@ -509,6 +528,7 @@ generatedFiles:
   - internal/sdk/models/shared/configurationtemplate.go
   - internal/sdk/models/shared/createbundleinfo.go
   - internal/sdk/models/shared/createconfigurationtemplateinfo.go
+  - internal/sdk/models/shared/createdelegationrequest.go
   - internal/sdk/models/shared/creategroupbindinginfo.go
   - internal/sdk/models/shared/creategroupinfo.go
   - internal/sdk/models/shared/createmessagechannelinfo.go
@@ -518,6 +538,7 @@ generatedFiles:
   - internal/sdk/models/shared/createresourceinfo.go
   - internal/sdk/models/shared/createtaginfo.go
   - internal/sdk/models/shared/createuarinfo.go
+  - internal/sdk/models/shared/delegation.go
   - internal/sdk/models/shared/entitytypeenum.go
   - internal/sdk/models/shared/event.go
   - internal/sdk/models/shared/group.go
@@ -547,6 +568,7 @@ generatedFiles:
   - internal/sdk/models/shared/paginatedbundlelist.go
   - internal/sdk/models/shared/paginatedbundleresourcelist.go
   - internal/sdk/models/shared/paginatedconfigurationtemplatelist.go
+  - internal/sdk/models/shared/paginateddelegationslist.go
   - internal/sdk/models/shared/paginatedeventlist.go
   - internal/sdk/models/shared/paginatedgroupbindingslist.go
   - internal/sdk/models/shared/paginatedgroupslist.go
@@ -561,6 +583,8 @@ generatedFiles:
   - internal/sdk/models/shared/remoteuser.go
   - internal/sdk/models/shared/request.go
   - internal/sdk/models/shared/requestapprovalenum.go
+  - internal/sdk/models/shared/requestcomment.go
+  - internal/sdk/models/shared/requestcommentlist.go
   - internal/sdk/models/shared/requestconfiguration.go
   - internal/sdk/models/shared/requestconnection.go
   - internal/sdk/models/shared/requestcustomfieldresponse.go
@@ -569,6 +593,7 @@ generatedFiles:
   - internal/sdk/models/shared/requestitemstages.go
   - internal/sdk/models/shared/requestlist.go
   - internal/sdk/models/shared/requestreviewer.go
+  - internal/sdk/models/shared/requestreviewerstages.go
   - internal/sdk/models/shared/requeststage.go
   - internal/sdk/models/shared/requeststatusenum.go
   - internal/sdk/models/shared/requesttemplatecustomfieldtypeenum.go
@@ -1040,9 +1065,12 @@ examples:
       parameters:
         path:
           group_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+        query:
+          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+          page_size: 200
       responses:
         "200":
-          application/json: {"results": [{"email": "jake@company.dev", "expiration_date": "2022-01-23T04:56:07Z", "full_name": "Jake Barnes", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}, {"email": "brett@company.dev", "expiration_date": "2022-02-03T12:33:02Z", "full_name": "Brett Ashley", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "7646aa9a-e2ee-4eb5-8c62-91f29038a373"}]}
+          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"email": "jake@company.dev", "expiration_date": "2022-01-23T04:56:07Z", "full_name": "Jake Barnes", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}, {"email": "brett@company.dev", "expiration_date": "2022-02-03T12:33:02Z", "full_name": "Brett Ashley", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "7646aa9a-e2ee-4eb5-8c62-91f29038a373"}]}
   getGroupVisibility:
     speakeasy-default-get-group-visibility:
       parameters:
@@ -1137,7 +1165,7 @@ examples:
           app_resource_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
       responses:
         "200":
-          application/json: {"mappings": [{"alias": "finance-team", "group_id": "6f99639b-7928-4043-8184-47cbc6766145", "hidden_from_end_user": false}, {"alias": "engineering-team", "group_id": "7870617d-e72a-47f5-a84c-693817ab4567", "hidden_from_end_user": false}]}
+          application/json: {"mappings": [{"alias": "finance-team", "app_resource_id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5", "group_id": "6f99639b-7928-4043-8184-47cbc6766145", "hidden_from_end_user": false}, {"alias": "engineering-team", "app_resource_id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5", "group_id": "7870617d-e72a-47f5-a84c-693817ab4567", "hidden_from_end_user": false}]}
   updateIdpGroupMappings:
     speakeasy-default-update-idp-group-mappings:
       parameters:
@@ -1258,7 +1286,7 @@ examples:
         application/json: {"comment": "Approved after security review", "level": "REGULAR"}
       responses:
         "200":
-          application/json: {"request": {"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "stages": {"requestedItemName": "AWS Production Account", "requestedRoleName": "Admin", "stages": [{"operator": "AND", "reviewers": [{"id": "7c86c85d-0651-43e2-a748-d69d658418e8", "status": "PENDING"}], "stage": 1}, {"operator": "OR", "reviewers": [{"id": "8d86c85d-0651-43e2-a748-d69d658418e9", "status": "APPROVED"}], "stage": 2}]}, "status": "DENIED", "target_group_id": "r86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}}
+          application/json: {"request": {"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "reviewer_stages": [{"item_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "item_name": "<value>", "stages": [{"operator": "AND", "reviewers": [{"id": "7c86c85d-0651-43e2-a748-d69d658418e8", "status": "PENDING"}], "stage": 1}, {"operator": "OR", "reviewers": [{"id": "8d86c85d-0651-43e2-a748-d69d658418e9", "status": "APPROVED"}], "stage": 2}]}], "status": "DENIED", "target_group_id": "r86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}}
   createRequest:
     speakeasy-default-create-request:
       requestBody:
@@ -1598,7 +1626,7 @@ examples:
           id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
       responses:
         "200":
-          application/json: {"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "stages": {"requestedItemName": "AWS Production Account", "requestedRoleName": "Admin", "stages": [{"operator": "AND", "reviewers": [{"id": "7c86c85d-0651-43e2-a748-d69d658418e8", "status": "PENDING"}], "stage": 1}, {"operator": "OR", "reviewers": [{"id": "8d86c85d-0651-43e2-a748-d69d658418e9", "status": "APPROVED"}], "stage": 2}]}, "status": "APPROVED", "target_group_id": "r86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}
+          application/json: {"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "reviewer_stages": [{"item_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "item_name": "<value>", "stages": [{"operator": "AND", "reviewers": [{"id": "7c86c85d-0651-43e2-a748-d69d658418e8", "status": "PENDING"}], "stage": 1}, {"operator": "OR", "reviewers": [{"id": "8d86c85d-0651-43e2-a748-d69d658418e9", "status": "APPROVED"}], "stage": 2}]}], "status": "APPROVED", "target_group_id": "r86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}
   get_resource_scoped_role_permissions:
     speakeasy-default-get-resource-scoped-role-permissions:
       parameters:
@@ -1649,6 +1677,85 @@ examples:
           group_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
       responses:
         "200":
-          application/json: {"alias": "finance-team", "group_id": "6f99639b-7928-4043-8184-47cbc6766145", "hidden_from_end_user": false}
+          application/json: {"alias": "finance-team", "app_resource_id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5", "group_id": "6f99639b-7928-4043-8184-47cbc6766145", "hidden_from_end_user": false}
+  createDelegation:
+    speakeasy-default-create-delegation:
+      requestBody:
+        application/json: {"delegate_user_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "delegator_user_id": "123e4567-e89b-12d3-a456-426614174000", "end_time": "2023-10-01T12:00:00Z", "reason": "I need to be out of the office", "start_time": "2023-10-01T12:00:00Z"}
+      responses:
+        "200":
+          application/json: {"created_at": "2023-10-01T12:00:00Z", "delegate_user_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "delegator_user_id": "123e4567-e89b-12d3-a456-426614174000", "end_time": "2023-10-01T12:00:00Z", "id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "reason": "I need to be out of the office", "start_time": "2023-10-01T12:00:00Z", "updated_at": "2023-10-01T12:00:00Z"}
+  deleteDelegation:
+    speakeasy-default-delete-delegation:
+      parameters:
+        path:
+          delegation_id: "32acc112-21ff-4669-91c2-21e27683eaa1"
+  getDelegations:
+    speakeasy-default-get-delegations:
+      parameters:
+        query:
+          delegator_user_id: "29827fb8-f2dd-4e80-9576-28e31e9934ac"
+          delegate_user_id: "29827fb8-f2dd-4e80-9576-28e31e9934ac"
+          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+          page_size: 200
+      responses:
+        "200":
+          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"created_at": "2023-10-01T12:00:00Z", "delegate_user_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "delegator_user_id": "123e4567-e89b-12d3-a456-426614174000", "end_time": "2023-10-01T12:00:00Z", "id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "reason": "I need to be out of the office", "start_time": "2023-10-01T12:00:00Z", "updated_at": "2023-10-01T12:00:00Z"}], "total_count": 2}
+  getDelegation:
+    speakeasy-default-get-delegation:
+      parameters:
+        path:
+          delegation_id: "32acc112-21ff-4669-91c2-21e27683eaa1"
+      responses:
+        "200":
+          application/json: {"created_at": "2023-10-01T12:00:00Z", "delegate_user_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "delegator_user_id": "123e4567-e89b-12d3-a456-426614174000", "end_time": "2023-10-01T12:00:00Z", "id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "reason": "I need to be out of the office", "start_time": "2023-10-01T12:00:00Z", "updated_at": "2023-10-01T12:00:00Z"}
+  get_user_groups:
+    speakeasy-default-get-user-groups:
+      parameters:
+        path:
+          user_id: "1b978423-db0a-4037-a4cf-f79c60cb67b3"
+        query:
+          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+          page_size: 200
+      responses:
+        "200":
+          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"email": "jake@company.dev", "expiration_date": "2022-01-23T04:56:07Z", "full_name": "Jake Barnes", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}, {"email": "brett@company.dev", "expiration_date": "2022-02-03T12:33:02Z", "full_name": "Brett Ashley", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "7646aa9a-e2ee-4eb5-8c62-91f29038a373"}]}
+  getIdpGroupMapping:
+    speakeasy-default-get-idp-group-mapping:
+      parameters:
+        path:
+          app_resource_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+          group_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+      responses:
+        "200":
+          application/json: {"alias": "finance-team", "app_resource_id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5", "group_id": "6f99639b-7928-4043-8184-47cbc6766145", "hidden_from_end_user": false}
+  createRequestComment:
+    speakeasy-default-create-request-comment:
+      parameters:
+        path:
+          id: "4a929b40-a2e3-4dca-b8ec-1af35bdc7e43"
+      requestBody:
+        application/json: {"comment": "The Apollotech B340 is an affordable wireless mouse with reliable connectivity, 12 months battery life and modern design"}
+      responses:
+        "200":
+          application/json: {"request": {"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "reviewer_stages": [{"item_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "item_name": "<value>", "stages": [{"operator": "AND", "reviewers": [{"id": "7c86c85d-0651-43e2-a748-d69d658418e8", "status": "PENDING"}], "stage": 1}, {"operator": "OR", "reviewers": [{"id": "8d86c85d-0651-43e2-a748-d69d658418e9", "status": "APPROVED"}], "stage": 2}]}], "status": "DENIED", "target_group_id": "r86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}}
+  denyRequest:
+    speakeasy-default-deny-request:
+      parameters:
+        path:
+          id: "83015915-58ae-4cce-b92d-608ff073ece1"
+      requestBody:
+        application/json: {"comment": "Denied due to insufficient justification"}
+      responses:
+        "200":
+          application/json: {"request": {"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "reviewer_stages": [{"item_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "item_name": "<value>", "stages": [{"operator": "AND", "reviewers": [{"id": "7c86c85d-0651-43e2-a748-d69d658418e8", "status": "PENDING"}], "stage": 1}, {"operator": "OR", "reviewers": [{"id": "8d86c85d-0651-43e2-a748-d69d658418e9", "status": "APPROVED"}], "stage": 2}]}], "status": "CANCELED", "target_group_id": "r86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}}
+  getRequestComments:
+    speakeasy-default-get-request-comments:
+      parameters:
+        path:
+          id: "bfb1ef34-8ecf-46e5-bdf4-38abe7c6da89"
+      responses:
+        "200":
+          application/json: {"comments": [{"comment": "This is a comment.", "created_at": "2021-01-06T20:00:00Z", "request_id": "4c86c85d-0651-43e2-a748-d69d658418e8", "user_id": "c86c85d-0651-43e2-a748-d69d658418e8"}]}
 examplesVersion: 1.0.2
 generatedTests: {}

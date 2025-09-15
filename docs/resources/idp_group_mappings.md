@@ -39,8 +39,12 @@ resource "opal_idp_group_mappings" "my_idpgroupmappings" {
 Optional:
 
 - `alias` (String)
-- `group_id` (String)
+- `group_id` (String) Requires replacement if changed.
 - `hidden_from_end_user` (Boolean)
+
+Read-Only:
+
+- `app_resource_id` (String) The ID of the Okta app.
 
 ## Import
 

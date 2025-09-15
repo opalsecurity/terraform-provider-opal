@@ -14,7 +14,9 @@ GroupUsers DataSource
 
 ```terraform
 data "opal_group_users" "my_groupusers" {
-  group_id = "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+  cursor    = "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+  group_id  = "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+  page_size = 200
 }
 ```
 
@@ -25,8 +27,15 @@ data "opal_group_users" "my_groupusers" {
 
 - `group_id` (String) The ID of the group.
 
+### Optional
+
+- `cursor` (String) The pagination cursor value.
+- `page_size` (Number) Number of results to return per page. Default is 200.
+
 ### Read-Only
 
+- `next` (String) The cursor with which to continue pagination if additional result pages exist.
+- `previous` (String) The cursor used to obtain the current result page.
 - `results` (Attributes List) (see [below for nested schema](#nestedatt--results))
 
 <a id="nestedatt--results"></a>

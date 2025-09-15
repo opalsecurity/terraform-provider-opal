@@ -3,6 +3,8 @@
 package shared
 
 // RequestItemStages - The stages configuration for a request item
+//
+// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
 type RequestItemStages struct {
 	// The name of the requested item
 	RequestedItemName string `json:"requestedItemName"`

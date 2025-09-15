@@ -28,7 +28,11 @@ type Request struct {
 	RequestedItemsList []RequestedItem `json:"requested_items_list,omitempty"`
 	// The unique identifier of the user who created the request.
 	RequesterID string `json:"requester_id"`
+	// The configured reviewer stages for every item in this request
+	ReviewerStages []RequestReviewerStages `json:"reviewer_stages,omitempty"`
 	// The stages configuration for a request item
+	//
+	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
 	Stages *RequestItemStages `json:"stages,omitempty"`
 	// # Request Status
 	// ### Description
@@ -103,6 +107,13 @@ func (o *Request) GetRequesterID() string {
 		return ""
 	}
 	return o.RequesterID
+}
+
+func (o *Request) GetReviewerStages() []RequestReviewerStages {
+	if o == nil {
+		return nil
+	}
+	return o.ReviewerStages
 }
 
 func (o *Request) GetStages() *RequestItemStages {

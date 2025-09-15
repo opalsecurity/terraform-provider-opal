@@ -63,6 +63,8 @@ type OpalAPI struct {
 	Bundles *Bundles
 	// Operations related to configuration templates
 	ConfigurationTemplates *ConfigurationTemplates
+	// Operations related to request reviewer delegations
+	Delegations *Delegations
 	// Operations related to events
 	Events *Events
 	// Operations related to group bindings
@@ -194,6 +196,7 @@ func New(opts ...SDKOption) *OpalAPI {
 	sdk.Apps = newApps(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Bundles = newBundles(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.ConfigurationTemplates = newConfigurationTemplates(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Delegations = newDelegations(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Events = newEvents(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.GroupBindings = newGroupBindings(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Groups = newGroups(sdk, sdk.sdkConfiguration, sdk.hooks)

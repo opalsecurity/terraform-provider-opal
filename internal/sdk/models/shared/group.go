@@ -115,7 +115,7 @@ type Group struct {
 	LastSuccessfulSync *SyncTask `json:"last_successful_sync,omitempty"`
 	// The name of the group.
 	Name *string `json:"name,omitempty"`
-	// Information that defines the remote group. This replaces the deprecated remote_id and metadata fields.
+	// Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided.
 	RemoteInfo *GroupRemoteInfo `json:"remote_info,omitempty"`
 	// The name of the remote.
 	RemoteName *string `json:"remote_name,omitempty"`

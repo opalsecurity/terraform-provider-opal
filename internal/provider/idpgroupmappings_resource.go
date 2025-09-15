@@ -8,9 +8,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
 	speakeasy_objectvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/objectvalidators"
@@ -59,9 +62,21 @@ func (r *IdpGroupMappingsResource) Schema(ctx context.Context, req resource.Sche
 							Computed: true,
 							Optional: true,
 						},
+						"app_resource_id": schema.StringAttribute{
+							Computed: true,
+							PlanModifiers: []planmodifier.String{
+								speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+							},
+							Description: `The ID of the Okta app.`,
+						},
 						"group_id": schema.StringAttribute{
 							Computed: true,
 							Optional: true,
+							PlanModifiers: []planmodifier.String{
+								stringplanmodifier.RequiresReplaceIfConfigured(),
+								speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+							},
+							Description: `Requires replacement if changed.`,
 						},
 						"hidden_from_end_user": schema.BoolAttribute{
 							Computed: true,

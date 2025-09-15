@@ -56,6 +56,10 @@ func (r *IdpGroupMappingsDataSource) Schema(ctx context.Context, req datasource.
 							Computed:    true,
 							Description: `The alias of the group.`,
 						},
+						"app_resource_id": schema.StringAttribute{
+							Computed:    true,
+							Description: `The ID of the Okta app.`,
+						},
 						"group_id": schema.StringAttribute{
 							Computed:    true,
 							Description: `The ID of the group.`,

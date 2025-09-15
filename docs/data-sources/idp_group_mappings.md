@@ -35,5 +35,6 @@ data "opal_idp_group_mappings" "my_idpgroupmappings" {
 Read-Only:
 
 - `alias` (String) The alias of the group.
+- `app_resource_id` (String) The ID of the Okta app.
 - `group_id` (String) The ID of the group.
 - `hidden_from_end_user` (Boolean) A bool representing whether or not the group is hidden from the end user.

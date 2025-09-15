@@ -8,8 +8,19 @@ import (
 )
 
 type GetGroupUsersRequest struct {
+	// The pagination cursor value.
+	Cursor *string `queryParam:"style=form,explode=true,name=cursor"`
 	// The ID of the group.
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
+	// Number of results to return per page. Default is 200.
+	PageSize *int64 `queryParam:"style=form,explode=true,name=page_size"`
+}
+
+func (o *GetGroupUsersRequest) GetCursor() *string {
+	if o == nil {
+		return nil
+	}
+	return o.Cursor
 }
 
 func (o *GetGroupUsersRequest) GetGroupID() string {
@@ -17,6 +28,13 @@ func (o *GetGroupUsersRequest) GetGroupID() string {
 		return ""
 	}
 	return o.GroupID
+}
+
+func (o *GetGroupUsersRequest) GetPageSize() *int64 {
+	if o == nil {
+		return nil
+	}
+	return o.PageSize
 }
 
 type GetGroupUsersResponse struct {

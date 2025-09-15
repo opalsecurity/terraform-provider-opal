@@ -16,6 +16,8 @@ func (r *GroupUsersDataSourceModel) RefreshFromSharedGroupUserList(ctx context.C
 	var diags diag.Diagnostics
 
 	if resp != nil {
+		r.Next = types.StringPointerValue(resp.Next)
+		r.Previous = types.StringPointerValue(resp.Previous)
 		r.Results = []tfTypes.GroupUser{}
 
 		for _, resultsItem := range resp.Results {
@@ -50,11 +52,25 @@ func (r *GroupUsersDataSourceModel) RefreshFromSharedGroupUserList(ctx context.C
 func (r *GroupUsersDataSourceModel) ToOperationsGetGroupUsersRequest(ctx context.Context) (*operations.GetGroupUsersRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	cursor := new(string)
+	if !r.Cursor.IsUnknown() && !r.Cursor.IsNull() {
+		*cursor = r.Cursor.ValueString()
+	} else {
+		cursor = nil
+	}
 	var groupID string
 	groupID = r.GroupID.ValueString()
 
+	pageSize := new(int64)
+	if !r.PageSize.IsUnknown() && !r.PageSize.IsNull() {
+		*pageSize = r.PageSize.ValueInt64()
+	} else {
+		pageSize = nil
+	}
 	out := operations.GetGroupUsersRequest{
-		GroupID: groupID,
+		Cursor:   cursor,
+		GroupID:  groupID,
+		PageSize: pageSize,
 	}
 
 	return &out, diags
