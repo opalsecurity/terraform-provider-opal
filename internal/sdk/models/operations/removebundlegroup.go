@@ -15,25 +15,25 @@ type RemoveBundleGroupRequest struct {
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (o *RemoveBundleGroupRequest) GetAccessLevelRemoteID() *string {
-	if o == nil {
+func (r *RemoveBundleGroupRequest) GetAccessLevelRemoteID() *string {
+	if r == nil {
 		return nil
 	}
-	return o.AccessLevelRemoteID
+	return r.AccessLevelRemoteID
 }
 
-func (o *RemoveBundleGroupRequest) GetBundleID() string {
-	if o == nil {
+func (r *RemoveBundleGroupRequest) GetBundleID() string {
+	if r == nil {
 		return ""
 	}
-	return o.BundleID
+	return r.BundleID
 }
 
-func (o *RemoveBundleGroupRequest) GetGroupID() string {
-	if o == nil {
+func (r *RemoveBundleGroupRequest) GetGroupID() string {
+	if r == nil {
 		return ""
 	}
-	return o.GroupID
+	return r.GroupID
 }
 
 type RemoveBundleGroupResponse struct {
@@ -45,23 +45,23 @@ type RemoveBundleGroupResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *RemoveBundleGroupResponse) GetContentType() string {
-	if o == nil {
+func (r *RemoveBundleGroupResponse) GetContentType() string {
+	if r == nil {
 		return ""
 	}
-	return o.ContentType
+	return r.ContentType
 }
 
-func (o *RemoveBundleGroupResponse) GetStatusCode() int {
-	if o == nil {
+func (r *RemoveBundleGroupResponse) GetStatusCode() int {
+	if r == nil {
 		return 0
 	}
-	return o.StatusCode
+	return r.StatusCode
 }
 
-func (o *RemoveBundleGroupResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (r *RemoveBundleGroupResponse) GetRawResponse() *http.Response {
+	if r == nil {
 		return nil
 	}
-	return o.RawResponse
+	return r.RawResponse
 }

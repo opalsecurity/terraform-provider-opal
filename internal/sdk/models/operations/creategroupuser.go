@@ -52,18 +52,18 @@ func (c *CreateGroupUserRequestBody) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *CreateGroupUserRequestBody) GetAccessLevelRemoteID() *string {
-	if o == nil {
+func (c *CreateGroupUserRequestBody) GetAccessLevelRemoteID() *string {
+	if c == nil {
 		return nil
 	}
-	return o.AccessLevelRemoteID
+	return c.AccessLevelRemoteID
 }
 
-func (o *CreateGroupUserRequestBody) GetDurationMinutes() *DurationMinutes {
-	if o == nil {
+func (c *CreateGroupUserRequestBody) GetDurationMinutes() *DurationMinutes {
+	if c == nil {
 		return nil
 	}
-	return o.DurationMinutes
+	return c.DurationMinutes
 }
 
 type CreateGroupUserRequest struct {
@@ -74,25 +74,25 @@ type CreateGroupUserRequest struct {
 	UserID string `pathParam:"style=simple,explode=false,name=user_id"`
 }
 
-func (o *CreateGroupUserRequest) GetRequestBody() CreateGroupUserRequestBody {
-	if o == nil {
+func (c *CreateGroupUserRequest) GetRequestBody() CreateGroupUserRequestBody {
+	if c == nil {
 		return CreateGroupUserRequestBody{}
 	}
-	return o.RequestBody
+	return c.RequestBody
 }
 
-func (o *CreateGroupUserRequest) GetGroupID() string {
-	if o == nil {
+func (c *CreateGroupUserRequest) GetGroupID() string {
+	if c == nil {
 		return ""
 	}
-	return o.GroupID
+	return c.GroupID
 }
 
-func (o *CreateGroupUserRequest) GetUserID() string {
-	if o == nil {
+func (c *CreateGroupUserRequest) GetUserID() string {
+	if c == nil {
 		return ""
 	}
-	return o.UserID
+	return c.UserID
 }
 
 type CreateGroupUserResponse struct {
@@ -106,30 +106,30 @@ type CreateGroupUserResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *CreateGroupUserResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateGroupUserResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateGroupUserResponse) GetGroupUser() *shared.GroupUser {
-	if o == nil {
+func (c *CreateGroupUserResponse) GetGroupUser() *shared.GroupUser {
+	if c == nil {
 		return nil
 	}
-	return o.GroupUser
+	return c.GroupUser
 }
 
-func (o *CreateGroupUserResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateGroupUserResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateGroupUserResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateGroupUserResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }

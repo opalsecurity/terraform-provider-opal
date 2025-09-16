@@ -7,16 +7,16 @@ type RuleClauses struct {
 	When   RuleConjunction  `json:"when"`
 }
 
-func (o *RuleClauses) GetUnless() *RuleConjunction {
-	if o == nil {
+func (r *RuleClauses) GetUnless() *RuleConjunction {
+	if r == nil {
 		return nil
 	}
-	return o.Unless
+	return r.Unless
 }
 
-func (o *RuleClauses) GetWhen() RuleConjunction {
-	if o == nil {
+func (r *RuleClauses) GetWhen() RuleConjunction {
+	if r == nil {
 		return RuleConjunction{}
 	}
-	return o.When
+	return r.When
 }

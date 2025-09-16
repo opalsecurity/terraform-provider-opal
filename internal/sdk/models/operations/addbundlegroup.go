@@ -16,25 +16,25 @@ type AddBundleGroupRequestBody struct {
 	GroupID string `json:"group_id"`
 }
 
-func (o *AddBundleGroupRequestBody) GetAccessLevelName() *string {
-	if o == nil {
+func (a *AddBundleGroupRequestBody) GetAccessLevelName() *string {
+	if a == nil {
 		return nil
 	}
-	return o.AccessLevelName
+	return a.AccessLevelName
 }
 
-func (o *AddBundleGroupRequestBody) GetAccessLevelRemoteID() *string {
-	if o == nil {
+func (a *AddBundleGroupRequestBody) GetAccessLevelRemoteID() *string {
+	if a == nil {
 		return nil
 	}
-	return o.AccessLevelRemoteID
+	return a.AccessLevelRemoteID
 }
 
-func (o *AddBundleGroupRequestBody) GetGroupID() string {
-	if o == nil {
+func (a *AddBundleGroupRequestBody) GetGroupID() string {
+	if a == nil {
 		return ""
 	}
-	return o.GroupID
+	return a.GroupID
 }
 
 type AddBundleGroupRequest struct {
@@ -43,18 +43,18 @@ type AddBundleGroupRequest struct {
 	BundleID string `pathParam:"style=simple,explode=false,name=bundle_id"`
 }
 
-func (o *AddBundleGroupRequest) GetRequestBody() AddBundleGroupRequestBody {
-	if o == nil {
+func (a *AddBundleGroupRequest) GetRequestBody() AddBundleGroupRequestBody {
+	if a == nil {
 		return AddBundleGroupRequestBody{}
 	}
-	return o.RequestBody
+	return a.RequestBody
 }
 
-func (o *AddBundleGroupRequest) GetBundleID() string {
-	if o == nil {
+func (a *AddBundleGroupRequest) GetBundleID() string {
+	if a == nil {
 		return ""
 	}
-	return o.BundleID
+	return a.BundleID
 }
 
 type AddBundleGroupResponse struct {
@@ -68,30 +68,30 @@ type AddBundleGroupResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *AddBundleGroupResponse) GetBundleGroup() *shared.BundleGroup {
-	if o == nil {
+func (a *AddBundleGroupResponse) GetBundleGroup() *shared.BundleGroup {
+	if a == nil {
 		return nil
 	}
-	return o.BundleGroup
+	return a.BundleGroup
 }
 
-func (o *AddBundleGroupResponse) GetContentType() string {
-	if o == nil {
+func (a *AddBundleGroupResponse) GetContentType() string {
+	if a == nil {
 		return ""
 	}
-	return o.ContentType
+	return a.ContentType
 }
 
-func (o *AddBundleGroupResponse) GetStatusCode() int {
-	if o == nil {
+func (a *AddBundleGroupResponse) GetStatusCode() int {
+	if a == nil {
 		return 0
 	}
-	return o.StatusCode
+	return a.StatusCode
 }
 
-func (o *AddBundleGroupResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (a *AddBundleGroupResponse) GetRawResponse() *http.Response {
+	if a == nil {
 		return nil
 	}
-	return o.RawResponse
+	return a.RawResponse
 }

@@ -15,16 +15,16 @@ type GroupBindingGroup struct {
 	GroupType GroupTypeEnum `json:"group_type"`
 }
 
-func (o *GroupBindingGroup) GetGroupID() string {
-	if o == nil {
+func (g *GroupBindingGroup) GetGroupID() string {
+	if g == nil {
 		return ""
 	}
-	return o.GroupID
+	return g.GroupID
 }
 
-func (o *GroupBindingGroup) GetGroupType() GroupTypeEnum {
-	if o == nil {
+func (g *GroupBindingGroup) GetGroupType() GroupTypeEnum {
+	if g == nil {
 		return GroupTypeEnum("")
 	}
-	return o.GroupType
+	return g.GroupType
 }

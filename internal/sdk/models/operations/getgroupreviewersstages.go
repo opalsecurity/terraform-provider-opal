@@ -12,11 +12,11 @@ type GetGroupReviewersStagesRequest struct {
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (o *GetGroupReviewersStagesRequest) GetGroupID() string {
-	if o == nil {
+func (g *GetGroupReviewersStagesRequest) GetGroupID() string {
+	if g == nil {
 		return ""
 	}
-	return o.GroupID
+	return g.GroupID
 }
 
 type GetGroupReviewersStagesResponse struct {
@@ -30,30 +30,30 @@ type GetGroupReviewersStagesResponse struct {
 	Classes []shared.ReviewerStage
 }
 
-func (o *GetGroupReviewersStagesResponse) GetContentType() string {
-	if o == nil {
+func (g *GetGroupReviewersStagesResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetGroupReviewersStagesResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetGroupReviewersStagesResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetGroupReviewersStagesResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetGroupReviewersStagesResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetGroupReviewersStagesResponse) GetClasses() []shared.ReviewerStage {
-	if o == nil {
+func (g *GetGroupReviewersStagesResponse) GetClasses() []shared.ReviewerStage {
+	if g == nil {
 		return nil
 	}
-	return o.Classes
+	return g.Classes
 }

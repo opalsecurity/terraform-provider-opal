@@ -7,9 +7,9 @@ type ReviewerIDList struct {
 	ReviewerIds []string `json:"reviewer_ids"`
 }
 
-func (o *ReviewerIDList) GetReviewerIds() []string {
-	if o == nil {
+func (r *ReviewerIDList) GetReviewerIds() []string {
+	if r == nil {
 		return []string{}
 	}
-	return o.ReviewerIds
+	return r.ReviewerIds
 }

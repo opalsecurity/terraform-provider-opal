@@ -39,22 +39,31 @@ func (e *RequestReviewerStatus) UnmarshalJSON(data []byte) error {
 
 // RequestReviewer - A reviewer in a request stage
 type RequestReviewer struct {
+	// The user's full name.
+	FullName *string `json:"full_name,omitempty"`
 	// The unique identifier of the reviewer
 	ID string `json:"id"`
 	// The status of this reviewer's review
 	Status RequestReviewerStatus `json:"status"`
 }
 
-func (o *RequestReviewer) GetID() string {
-	if o == nil {
-		return ""
+func (r *RequestReviewer) GetFullName() *string {
+	if r == nil {
+		return nil
 	}
-	return o.ID
+	return r.FullName
 }
 
-func (o *RequestReviewer) GetStatus() RequestReviewerStatus {
-	if o == nil {
+func (r *RequestReviewer) GetID() string {
+	if r == nil {
+		return ""
+	}
+	return r.ID
+}
+
+func (r *RequestReviewer) GetStatus() RequestReviewerStatus {
+	if r == nil {
 		return RequestReviewerStatus("")
 	}
-	return o.Status
+	return r.Status
 }

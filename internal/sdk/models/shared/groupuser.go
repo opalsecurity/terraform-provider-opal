@@ -47,51 +47,51 @@ func (g *GroupUser) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *GroupUser) GetAccessLevel() *GroupAccessLevel {
-	if o == nil {
+func (g *GroupUser) GetAccessLevel() *GroupAccessLevel {
+	if g == nil {
 		return nil
 	}
-	return o.AccessLevel
+	return g.AccessLevel
 }
 
-func (o *GroupUser) GetEmail() string {
-	if o == nil {
+func (g *GroupUser) GetEmail() string {
+	if g == nil {
 		return ""
 	}
-	return o.Email
+	return g.Email
 }
 
-func (o *GroupUser) GetExpirationDate() *time.Time {
-	if o == nil {
+func (g *GroupUser) GetExpirationDate() *time.Time {
+	if g == nil {
 		return nil
 	}
-	return o.ExpirationDate
+	return g.ExpirationDate
 }
 
-func (o *GroupUser) GetFullName() string {
-	if o == nil {
+func (g *GroupUser) GetFullName() string {
+	if g == nil {
 		return ""
 	}
-	return o.FullName
+	return g.FullName
 }
 
-func (o *GroupUser) GetGroupID() string {
-	if o == nil {
+func (g *GroupUser) GetGroupID() string {
+	if g == nil {
 		return ""
 	}
-	return o.GroupID
+	return g.GroupID
 }
 
-func (o *GroupUser) GetPropagationStatus() *PropagationStatus {
-	if o == nil {
+func (g *GroupUser) GetPropagationStatus() *PropagationStatus {
+	if g == nil {
 		return nil
 	}
-	return o.PropagationStatus
+	return g.PropagationStatus
 }
 
-func (o *GroupUser) GetUserID() string {
-	if o == nil {
+func (g *GroupUser) GetUserID() string {
+	if g == nil {
 		return ""
 	}
-	return o.UserID
+	return g.UserID
 }

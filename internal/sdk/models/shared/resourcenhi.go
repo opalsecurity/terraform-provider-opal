@@ -38,30 +38,30 @@ func (r *ResourceNHI) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *ResourceNHI) GetAccessLevel() *ResourceAccessLevel {
-	if o == nil {
+func (r *ResourceNHI) GetAccessLevel() *ResourceAccessLevel {
+	if r == nil {
 		return nil
 	}
-	return o.AccessLevel
+	return r.AccessLevel
 }
 
-func (o *ResourceNHI) GetExpirationDate() *time.Time {
-	if o == nil {
+func (r *ResourceNHI) GetExpirationDate() *time.Time {
+	if r == nil {
 		return nil
 	}
-	return o.ExpirationDate
+	return r.ExpirationDate
 }
 
-func (o *ResourceNHI) GetNonHumanIdentityID() string {
-	if o == nil {
+func (r *ResourceNHI) GetNonHumanIdentityID() string {
+	if r == nil {
 		return ""
 	}
-	return o.NonHumanIdentityID
+	return r.NonHumanIdentityID
 }
 
-func (o *ResourceNHI) GetResourceID() string {
-	if o == nil {
+func (r *ResourceNHI) GetResourceID() string {
+	if r == nil {
 		return ""
 	}
-	return o.ResourceID
+	return r.ResourceID
 }

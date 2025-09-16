@@ -12,11 +12,11 @@ type GetBundleVisibilityRequest struct {
 	BundleID string `pathParam:"style=simple,explode=false,name=bundle_id"`
 }
 
-func (o *GetBundleVisibilityRequest) GetBundleID() string {
-	if o == nil {
+func (g *GetBundleVisibilityRequest) GetBundleID() string {
+	if g == nil {
 		return ""
 	}
-	return o.BundleID
+	return g.BundleID
 }
 
 type GetBundleVisibilityResponse struct {
@@ -30,30 +30,30 @@ type GetBundleVisibilityResponse struct {
 	VisibilityInfo *shared.VisibilityInfo
 }
 
-func (o *GetBundleVisibilityResponse) GetContentType() string {
-	if o == nil {
+func (g *GetBundleVisibilityResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetBundleVisibilityResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetBundleVisibilityResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetBundleVisibilityResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetBundleVisibilityResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetBundleVisibilityResponse) GetVisibilityInfo() *shared.VisibilityInfo {
-	if o == nil {
+func (g *GetBundleVisibilityResponse) GetVisibilityInfo() *shared.VisibilityInfo {
+	if g == nil {
 		return nil
 	}
-	return o.VisibilityInfo
+	return g.VisibilityInfo
 }

@@ -6,9 +6,9 @@ type IdpGroupMappingList struct {
 	Mappings []IdpGroupMapping `json:"mappings"`
 }
 
-func (o *IdpGroupMappingList) GetMappings() []IdpGroupMapping {
-	if o == nil {
+func (i *IdpGroupMappingList) GetMappings() []IdpGroupMapping {
+	if i == nil {
 		return []IdpGroupMapping{}
 	}
-	return o.Mappings
+	return i.Mappings
 }

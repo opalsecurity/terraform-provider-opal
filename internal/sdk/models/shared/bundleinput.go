@@ -11,23 +11,23 @@ type BundleInput struct {
 	Name *string `json:"name,omitempty"`
 }
 
-func (o *BundleInput) GetAdminOwnerID() *string {
-	if o == nil {
+func (b *BundleInput) GetAdminOwnerID() *string {
+	if b == nil {
 		return nil
 	}
-	return o.AdminOwnerID
+	return b.AdminOwnerID
 }
 
-func (o *BundleInput) GetDescription() *string {
-	if o == nil {
+func (b *BundleInput) GetDescription() *string {
+	if b == nil {
 		return nil
 	}
-	return o.Description
+	return b.Description
 }
 
-func (o *BundleInput) GetName() *string {
-	if o == nil {
+func (b *BundleInput) GetName() *string {
+	if b == nil {
 		return nil
 	}
-	return o.Name
+	return b.Name
 }

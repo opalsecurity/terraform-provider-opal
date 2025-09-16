@@ -39,44 +39,44 @@ func (t *Tag) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Tag) GetCreatedAt() *time.Time {
-	if o == nil {
+func (t *Tag) GetCreatedAt() *time.Time {
+	if t == nil {
 		return nil
 	}
-	return o.CreatedAt
+	return t.CreatedAt
 }
 
-func (o *Tag) GetID() string {
-	if o == nil {
+func (t *Tag) GetID() string {
+	if t == nil {
 		return ""
 	}
-	return o.ID
+	return t.ID
 }
 
-func (o *Tag) GetKey() *string {
-	if o == nil {
+func (t *Tag) GetKey() *string {
+	if t == nil {
 		return nil
 	}
-	return o.Key
+	return t.Key
 }
 
-func (o *Tag) GetUpdatedAt() *time.Time {
-	if o == nil {
+func (t *Tag) GetUpdatedAt() *time.Time {
+	if t == nil {
 		return nil
 	}
-	return o.UpdatedAt
+	return t.UpdatedAt
 }
 
-func (o *Tag) GetUserCreatorID() *string {
-	if o == nil {
+func (t *Tag) GetUserCreatorID() *string {
+	if t == nil {
 		return nil
 	}
-	return o.UserCreatorID
+	return t.UserCreatorID
 }
 
-func (o *Tag) GetValue() *string {
-	if o == nil {
+func (t *Tag) GetValue() *string {
+	if t == nil {
 		return nil
 	}
-	return o.Value
+	return t.Value
 }

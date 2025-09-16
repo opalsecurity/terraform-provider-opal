@@ -14,18 +14,18 @@ type GetResourceUsersRequest struct {
 	ResourceID string `pathParam:"style=simple,explode=false,name=resource_id"`
 }
 
-func (o *GetResourceUsersRequest) GetLimit() *int64 {
-	if o == nil {
+func (g *GetResourceUsersRequest) GetLimit() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.Limit
+	return g.Limit
 }
 
-func (o *GetResourceUsersRequest) GetResourceID() string {
-	if o == nil {
+func (g *GetResourceUsersRequest) GetResourceID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ResourceID
+	return g.ResourceID
 }
 
 type GetResourceUsersResponse struct {
@@ -39,30 +39,30 @@ type GetResourceUsersResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetResourceUsersResponse) GetContentType() string {
-	if o == nil {
+func (g *GetResourceUsersResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetResourceUsersResponse) GetResourceAccessUserList() *shared.ResourceAccessUserList {
-	if o == nil {
+func (g *GetResourceUsersResponse) GetResourceAccessUserList() *shared.ResourceAccessUserList {
+	if g == nil {
 		return nil
 	}
-	return o.ResourceAccessUserList
+	return g.ResourceAccessUserList
 }
 
-func (o *GetResourceUsersResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetResourceUsersResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetResourceUsersResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetResourceUsersResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

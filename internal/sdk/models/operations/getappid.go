@@ -12,11 +12,11 @@ type GetAppIDRequest struct {
 	ID string `pathParam:"style=simple,explode=true,name=app_id"`
 }
 
-func (o *GetAppIDRequest) GetID() string {
-	if o == nil {
+func (g *GetAppIDRequest) GetID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ID
+	return g.ID
 }
 
 type GetAppIDResponse struct {
@@ -30,30 +30,30 @@ type GetAppIDResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetAppIDResponse) GetApp() *shared.App {
-	if o == nil {
+func (g *GetAppIDResponse) GetApp() *shared.App {
+	if g == nil {
 		return nil
 	}
-	return o.App
+	return g.App
 }
 
-func (o *GetAppIDResponse) GetContentType() string {
-	if o == nil {
+func (g *GetAppIDResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetAppIDResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetAppIDResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetAppIDResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetAppIDResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

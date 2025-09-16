@@ -7,9 +7,9 @@ type UpdateGroupInfoList struct {
 	Groups []UpdateGroupInfo `json:"groups"`
 }
 
-func (o *UpdateGroupInfoList) GetGroups() []UpdateGroupInfo {
-	if o == nil {
+func (u *UpdateGroupInfoList) GetGroups() []UpdateGroupInfo {
+	if u == nil {
 		return []UpdateGroupInfo{}
 	}
-	return o.Groups
+	return u.Groups
 }

@@ -18,30 +18,30 @@ type UpdateGroupsResponse struct {
 	UpdateGroupInfoList *shared.UpdateGroupInfoList
 }
 
-func (o *UpdateGroupsResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateGroupsResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateGroupsResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateGroupsResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateGroupsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateGroupsResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }
 
-func (o *UpdateGroupsResponse) GetUpdateGroupInfoList() *shared.UpdateGroupInfoList {
-	if o == nil {
+func (u *UpdateGroupsResponse) GetUpdateGroupInfoList() *shared.UpdateGroupInfoList {
+	if u == nil {
 		return nil
 	}
-	return o.UpdateGroupInfoList
+	return u.UpdateGroupInfoList
 }

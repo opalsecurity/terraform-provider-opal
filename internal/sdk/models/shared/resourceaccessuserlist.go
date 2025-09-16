@@ -10,23 +10,23 @@ type ResourceAccessUserList struct {
 	Results  []ResourceAccessUser `json:"results,omitempty"`
 }
 
-func (o *ResourceAccessUserList) GetNext() *string {
-	if o == nil {
+func (r *ResourceAccessUserList) GetNext() *string {
+	if r == nil {
 		return nil
 	}
-	return o.Next
+	return r.Next
 }
 
-func (o *ResourceAccessUserList) GetPrevious() *string {
-	if o == nil {
+func (r *ResourceAccessUserList) GetPrevious() *string {
+	if r == nil {
 		return nil
 	}
-	return o.Previous
+	return r.Previous
 }
 
-func (o *ResourceAccessUserList) GetResults() []ResourceAccessUser {
-	if o == nil {
+func (r *ResourceAccessUserList) GetResults() []ResourceAccessUser {
+	if r == nil {
 		return nil
 	}
-	return o.Results
+	return r.Results
 }

@@ -6,9 +6,9 @@ type RuleDisjunction struct {
 	Selectors []TagSelector `json:"selectors"`
 }
 
-func (o *RuleDisjunction) GetSelectors() []TagSelector {
-	if o == nil {
+func (r *RuleDisjunction) GetSelectors() []TagSelector {
+	if r == nil {
 		return []TagSelector{}
 	}
-	return o.Selectors
+	return r.Selectors
 }

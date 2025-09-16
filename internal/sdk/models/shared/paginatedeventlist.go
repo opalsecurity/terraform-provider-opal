@@ -10,23 +10,23 @@ type PaginatedEventList struct {
 	Results  []Event `json:"results,omitempty"`
 }
 
-func (o *PaginatedEventList) GetNext() *string {
-	if o == nil {
+func (p *PaginatedEventList) GetNext() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Next
+	return p.Next
 }
 
-func (o *PaginatedEventList) GetPrevious() *string {
-	if o == nil {
+func (p *PaginatedEventList) GetPrevious() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Previous
+	return p.Previous
 }
 
-func (o *PaginatedEventList) GetResults() []Event {
-	if o == nil {
+func (p *PaginatedEventList) GetResults() []Event {
+	if p == nil {
 		return nil
 	}
-	return o.Results
+	return p.Results
 }

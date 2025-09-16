@@ -7,6 +7,7 @@ import (
 )
 
 type RequestReviewer struct {
-	ID     types.String `tfsdk:"id"`
-	Status types.String `tfsdk:"status"`
+	FullName types.String `tfsdk:"full_name"`
+	ID       types.String `tfsdk:"id"`
+	Status   types.String `tfsdk:"status"`
 }

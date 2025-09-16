@@ -9,23 +9,23 @@ type RequestConnection struct {
 	TotalCount int64 `json:"totalCount"`
 }
 
-func (o *RequestConnection) GetEdges() []RequestEdge {
-	if o == nil {
+func (r *RequestConnection) GetEdges() []RequestEdge {
+	if r == nil {
 		return []RequestEdge{}
 	}
-	return o.Edges
+	return r.Edges
 }
 
-func (o *RequestConnection) GetPageInfo() PageInfo {
-	if o == nil {
+func (r *RequestConnection) GetPageInfo() PageInfo {
+	if r == nil {
 		return PageInfo{}
 	}
-	return o.PageInfo
+	return r.PageInfo
 }
 
-func (o *RequestConnection) GetTotalCount() int64 {
-	if o == nil {
+func (r *RequestConnection) GetTotalCount() int64 {
+	if r == nil {
 		return 0
 	}
-	return o.TotalCount
+	return r.TotalCount
 }

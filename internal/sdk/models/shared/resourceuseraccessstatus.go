@@ -43,37 +43,37 @@ func (r *ResourceUserAccessStatus) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *ResourceUserAccessStatus) GetAccessLevel() *ResourceAccessLevel {
-	if o == nil {
+func (r *ResourceUserAccessStatus) GetAccessLevel() *ResourceAccessLevel {
+	if r == nil {
 		return nil
 	}
-	return o.AccessLevel
+	return r.AccessLevel
 }
 
-func (o *ResourceUserAccessStatus) GetExpirationDate() *time.Time {
-	if o == nil {
+func (r *ResourceUserAccessStatus) GetExpirationDate() *time.Time {
+	if r == nil {
 		return nil
 	}
-	return o.ExpirationDate
+	return r.ExpirationDate
 }
 
-func (o *ResourceUserAccessStatus) GetResourceID() string {
-	if o == nil {
+func (r *ResourceUserAccessStatus) GetResourceID() string {
+	if r == nil {
 		return ""
 	}
-	return o.ResourceID
+	return r.ResourceID
 }
 
-func (o *ResourceUserAccessStatus) GetStatus() ResourceUserAccessStatusEnum {
-	if o == nil {
+func (r *ResourceUserAccessStatus) GetStatus() ResourceUserAccessStatusEnum {
+	if r == nil {
 		return ResourceUserAccessStatusEnum("")
 	}
-	return o.Status
+	return r.Status
 }
 
-func (o *ResourceUserAccessStatus) GetUserID() string {
-	if o == nil {
+func (r *ResourceUserAccessStatus) GetUserID() string {
+	if r == nil {
 		return ""
 	}
-	return o.UserID
+	return r.UserID
 }

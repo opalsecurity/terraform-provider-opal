@@ -199,7 +199,7 @@ resource "opal_resource" "my_resource" {
 - `admin_owner_id` (String) The ID of the owner of the resource.
 - `custom_request_notification` (String) Custom request notification sent upon request approval.
 - `description` (String) A description of the remote resource.
-- `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes).
+- `extensions_duration_in_minutes` (Number, Deprecated) The duration for which access can be extended (in minutes). Deprecated, set the extension duration in the request_configuration you want it to apply to.
 - `remote_info` (Attributes) Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this resource. Default: false
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to this resource.

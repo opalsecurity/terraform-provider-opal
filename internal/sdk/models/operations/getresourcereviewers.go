@@ -11,11 +11,11 @@ type GetResourceReviewersRequest struct {
 	ResourceID string `pathParam:"style=simple,explode=false,name=resource_id"`
 }
 
-func (o *GetResourceReviewersRequest) GetResourceID() string {
-	if o == nil {
+func (g *GetResourceReviewersRequest) GetResourceID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ResourceID
+	return g.ResourceID
 }
 
 type GetResourceReviewersResponse struct {
@@ -29,30 +29,30 @@ type GetResourceReviewersResponse struct {
 	Strings []string
 }
 
-func (o *GetResourceReviewersResponse) GetContentType() string {
-	if o == nil {
+func (g *GetResourceReviewersResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetResourceReviewersResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetResourceReviewersResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetResourceReviewersResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetResourceReviewersResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetResourceReviewersResponse) GetStrings() []string {
-	if o == nil {
+func (g *GetResourceReviewersResponse) GetStrings() []string {
+	if g == nil {
 		return nil
 	}
-	return o.Strings
+	return g.Strings
 }

@@ -12,11 +12,11 @@ type GetUserTagsRequest struct {
 	UserID string `pathParam:"style=simple,explode=false,name=user_id"`
 }
 
-func (o *GetUserTagsRequest) GetUserID() string {
-	if o == nil {
+func (g *GetUserTagsRequest) GetUserID() string {
+	if g == nil {
 		return ""
 	}
-	return o.UserID
+	return g.UserID
 }
 
 type GetUserTagsResponse struct {
@@ -30,30 +30,30 @@ type GetUserTagsResponse struct {
 	TagsList *shared.TagsList
 }
 
-func (o *GetUserTagsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetUserTagsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetUserTagsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetUserTagsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetUserTagsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetUserTagsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetUserTagsResponse) GetTagsList() *shared.TagsList {
-	if o == nil {
+func (g *GetUserTagsResponse) GetTagsList() *shared.TagsList {
+	if g == nil {
 		return nil
 	}
-	return o.TagsList
+	return g.TagsList
 }

@@ -18,30 +18,30 @@ type UpdateResourcesResponse struct {
 	UpdateResourceInfoList *shared.UpdateResourceInfoList
 }
 
-func (o *UpdateResourcesResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateResourcesResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateResourcesResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateResourcesResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateResourcesResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateResourcesResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }
 
-func (o *UpdateResourcesResponse) GetUpdateResourceInfoList() *shared.UpdateResourceInfoList {
-	if o == nil {
+func (u *UpdateResourcesResponse) GetUpdateResourceInfoList() *shared.UpdateResourceInfoList {
+	if u == nil {
 		return nil
 	}
-	return o.UpdateResourceInfoList
+	return u.UpdateResourceInfoList
 }

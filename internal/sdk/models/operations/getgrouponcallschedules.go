@@ -12,11 +12,11 @@ type GetGroupOnCallSchedulesRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (o *GetGroupOnCallSchedulesRequest) GetID() string {
-	if o == nil {
+func (g *GetGroupOnCallSchedulesRequest) GetID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ID
+	return g.ID
 }
 
 // GetGroupOnCallSchedulesResponseBody - The on call schedules attached to the group.
@@ -24,11 +24,11 @@ type GetGroupOnCallSchedulesResponseBody struct {
 	OnCallSchedules []shared.OnCallSchedule `json:"on_call_schedules"`
 }
 
-func (o *GetGroupOnCallSchedulesResponseBody) GetOnCallSchedules() []shared.OnCallSchedule {
-	if o == nil {
+func (g *GetGroupOnCallSchedulesResponseBody) GetOnCallSchedules() []shared.OnCallSchedule {
+	if g == nil {
 		return []shared.OnCallSchedule{}
 	}
-	return o.OnCallSchedules
+	return g.OnCallSchedules
 }
 
 type GetGroupOnCallSchedulesResponse struct {
@@ -42,30 +42,30 @@ type GetGroupOnCallSchedulesResponse struct {
 	Object *GetGroupOnCallSchedulesResponseBody
 }
 
-func (o *GetGroupOnCallSchedulesResponse) GetContentType() string {
-	if o == nil {
+func (g *GetGroupOnCallSchedulesResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetGroupOnCallSchedulesResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetGroupOnCallSchedulesResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetGroupOnCallSchedulesResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetGroupOnCallSchedulesResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetGroupOnCallSchedulesResponse) GetObject() *GetGroupOnCallSchedulesResponseBody {
-	if o == nil {
+func (g *GetGroupOnCallSchedulesResponse) GetObject() *GetGroupOnCallSchedulesResponseBody {
+	if g == nil {
 		return nil
 	}
-	return o.Object
+	return g.Object
 }

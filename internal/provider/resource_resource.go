@@ -139,9 +139,10 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Description: `A description of the remote resource.`,
 			},
 			"extensions_duration_in_minutes": schema.Int64Attribute{
-				Computed:    true,
-				Optional:    true,
-				Description: `The duration for which access can be extended (in minutes).`,
+				Computed:           true,
+				Optional:           true,
+				DeprecationMessage: `This will be removed in a future release, please migrate away from it as soon as possible`,
+				Description:        `The duration for which access can be extended (in minutes). Deprecated, set the extension duration in the request_configuration you want it to apply to.`,
 			},
 			"id": schema.StringAttribute{
 				Computed: true,

@@ -12,30 +12,30 @@ type PaginatedBundleGroupList struct {
 	TotalCount *int64 `json:"total_count,omitempty"`
 }
 
-func (o *PaginatedBundleGroupList) GetBundleGroups() []BundleGroup {
-	if o == nil {
+func (p *PaginatedBundleGroupList) GetBundleGroups() []BundleGroup {
+	if p == nil {
 		return []BundleGroup{}
 	}
-	return o.BundleGroups
+	return p.BundleGroups
 }
 
-func (o *PaginatedBundleGroupList) GetNext() *string {
-	if o == nil {
+func (p *PaginatedBundleGroupList) GetNext() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Next
+	return p.Next
 }
 
-func (o *PaginatedBundleGroupList) GetPrevious() *string {
-	if o == nil {
+func (p *PaginatedBundleGroupList) GetPrevious() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Previous
+	return p.Previous
 }
 
-func (o *PaginatedBundleGroupList) GetTotalCount() *int64 {
-	if o == nil {
+func (p *PaginatedBundleGroupList) GetTotalCount() *int64 {
+	if p == nil {
 		return nil
 	}
-	return o.TotalCount
+	return p.TotalCount
 }

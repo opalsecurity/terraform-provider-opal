@@ -15,16 +15,16 @@ type RequestList struct {
 	Requests []Request `json:"requests,omitempty"`
 }
 
-func (o *RequestList) GetCursor() *string {
-	if o == nil {
+func (r *RequestList) GetCursor() *string {
+	if r == nil {
 		return nil
 	}
-	return o.Cursor
+	return r.Cursor
 }
 
-func (o *RequestList) GetRequests() []Request {
-	if o == nil {
+func (r *RequestList) GetRequests() []Request {
+	if r == nil {
 		return nil
 	}
-	return o.Requests
+	return r.Requests
 }

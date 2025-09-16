@@ -21,6 +21,8 @@ tags:
     description: Operations related to bundles
   - name: configuration-templates
     description: Operations related to configuration templates
+  - name: delegations
+    description: Operations related to request reviewer delegations
   - name: events
     description: Operations related to events
   - name: groups
@@ -1577,6 +1579,25 @@ paths:
             format: uuid
             type: string
           style: simple
+        - description: The pagination cursor value.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          explode: true
+          in: query
+          name: cursor
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: Number of results to return per page. Default is 200.
+          example: 200
+          explode: true
+          in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+          style: form
       responses:
         "200":
           content:
@@ -1759,6 +1780,51 @@ paths:
         - groups
       x-speakeasy-name-override: delete_user
       x-speakeasy-entity-operation: GroupUser#delete
+  /groups/users/{user_id}:
+    get:
+      description: Returns all groups that the user is a member of.
+      operationId: get_user_groups
+      parameters:
+        - description: The ID of the user whose groups to return.
+          name: user_id
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          explode: false
+          in: path
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The pagination cursor value.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          explode: true
+          in: query
+          name: cursor
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: Number of results to return per page. Default is 200.
+          example: 200
+          explode: true
+          in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupUserList"
+          description: The groups that the user is a member of.
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
   /group-bindings:
     get:
       description: Returns a list of `GroupBinding` objects.
@@ -1952,6 +2018,41 @@ paths:
         - idp-group-mappings
       x-speakeasy-entity-operation: IdpGroupMappings#create,update
   /idp-group-mappings/{app_resource_id}/{group_id}/:
+    get:
+      description: Gets an `IdpGroupMapping` object for an Okta app and group.
+      operationId: getIdpGroupMapping
+      parameters:
+        - description: The ID of the Okta app.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: app_resource_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IdpGroupMapping"
+          description: The `IdpGroupMapping` object for the Okta app and group.
+      security:
+        - BearerAuth: []
+      tags:
+        - idp-group-mappings
     post:
       description: |
         Creates or updates an individual `IdpGroupMapping` object (upsert operation).
@@ -2504,6 +2605,108 @@ paths:
       responses:
         "200":
           description: "Request successfully approved"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  request:
+                    $ref: "#/components/schemas/Request"
+      security:
+        - BearerAuth: []
+      tags:
+        - requests
+  /requests/{id}/deny:
+    post:
+      description: "Deny an access request"
+      operationId: "denyRequest"
+      parameters:
+        - description: "The ID of the request to deny"
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Denial parameters
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: string
+                  description: "Comment for the denial"
+                  example: "Denied due to insufficient justification"
+              required:
+                - comment
+      responses:
+        "200":
+          description: "Request successfully denied"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  request:
+                    $ref: "#/components/schemas/Request"
+      security:
+        - BearerAuth: []
+      tags:
+        - requests
+  /requests/{id}/comments:
+    get:
+      description: Returns a list of comments for a specific request.
+      operationId: getRequestComments
+      parameters:
+        - description: "The ID of the request to get comments for"
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: A list of comments associated with the specified request.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/RequestCommentList"
+      security:
+        - BearerAuth: []
+      tags:
+        - requests
+    post:
+      description: "Comment on an access request"
+      operationId: "createRequestComment"
+      parameters:
+        - description: "The ID of the request to comment on"
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Comment parameters
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: string
+                  description: "comment"
+              required:
+                - comment
+      responses:
+        "200":
+          description: "Request successfully commented"
           content:
             application/json:
               schema:
@@ -4320,6 +4523,131 @@ paths:
         - BearerAuth: []
       tags:
         - apps
+  /delegations:
+    get:
+      description: Returns a list of request reviewer delegations configured for your organization.
+      operationId: getDelegations
+      parameters:
+        - description: The delegator user ID to filter delegations by the user delegating their access review requests.
+          example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+          explode: true
+          in: query
+          name: delegator_user_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
+        - description: The delegate user ID to filter delegations by the user being delegated to.
+          example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+          explode: true
+          in: query
+          name: delegate_user_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
+        - description: A cursor to indicate where to start fetching results.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          explode: true
+          in: query
+          name: cursor
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: The maximum number of results to return per page. The default is 200.
+          example: 200
+          explode: true
+          in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedDelegationsList"
+          description: A list of delegations for your organization.
+      security:
+        - BearerAuth: []
+      tags:
+        - delegations
+    post:
+      description: Creates a new request reviewer delegation to delegate access review requests from one user to another.
+      operationId: createDelegation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateDelegationRequest"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Delegation"
+          description: Delegation created successfully.
+      security:
+        - BearerAuth: []
+      tags:
+        - delegations
+      x-speakeasy-entity-operation: Delegation#create
+  /delegations/{delegation_id}:
+    get:
+      description: Returns a specific delegation by its ID.
+      operationId: getDelegation
+      parameters:
+        - description: The ID of the delegation to retrieve.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: true
+          in: path
+          name: delegation_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Delegation"
+          description: The requested delegation.
+      security:
+        - BearerAuth: []
+      tags:
+        - delegations
+      x-speakeasy-entity-operation: DelegationList#get
+    delete:
+      description: Deletes a delegation by its ID.
+      operationId: deleteDelegation
+      parameters:
+        - description: The ID of the delegation to remove.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: true
+          in: path
+          name: delegation_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          description: Delegation removed successfully
+      security:
+        - BearerAuth: []
+      tags:
+        - delegations
+      x-speakeasy-entity-operation: Delegation#delete
 components:
   schemas:
     PaginatedAssignedRequestList:
@@ -5834,6 +6162,8 @@ components:
       x-speakeasy-entity-version: 1
     GroupUserList:
       example:
+        next: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+        previous: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
         results:
           - full_name: Jake Barnes
             user_id: 29827fb8-f2dd-4e80-9576-28e31e9934ac
@@ -5850,6 +6180,16 @@ components:
           items:
             $ref: "#/components/schemas/GroupUser"
           type: array
+        next:
+          description: The cursor with which to continue pagination if additional result pages exist.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          nullable: true
+          type: string
+        previous:
+          description: The cursor used to obtain the current result page.
+          example: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+          nullable: true
+          type: string
       type: object
       x-speakeasy-entity: GroupUsers
     GroupAccessLevel:
@@ -6098,9 +6438,10 @@ components:
           format: set
           x-speakeasy-param-suppress-computed-diff: true
         extensions_duration_in_minutes:
-          description: The duration for which access can be extended (in minutes).
+          description: The duration for which access can be extended (in minutes). Deprecated, set the extension duration in the request_configuration you want it to apply to.
           type: integer
           example: 120
+          deprecated: true
         request_configurations:
           type: array
           items:
@@ -6713,7 +7054,7 @@ components:
       example: LINEAR
       type: string
     GroupRemoteInfo:
-      description: Information that defines the remote group. This replaces the deprecated remote_id and metadata fields.
+      description: Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided.
       properties:
         active_directory_group:
           description: Remote info for Active Directory group.
@@ -7872,20 +8213,20 @@ components:
             request_id: 4c86c85d-0651-43e2-a748-d69d658418e8
             user_id: c86c85d-0651-43e2-a748-d69d658418e8
             comment: This is a comment.
-        stages:
-          requestedRoleName: "Admin"
-          requestedItemName: "AWS Production Account"
-          stages:
-            - stage: 1
-              operator: AND
-              reviewers:
-                - id: 7c86c85d-0651-43e2-a748-d69d658418e8
-                  status: PENDING
-            - stage: 2
-              operator: OR
-              reviewers:
-                - id: 8d86c85d-0651-43e2-a748-d69d658418e9
-                  status: APPROVED
+        reviewer_stages:
+          - requestedRoleName: "Admin"
+            requestedItemName: "AWS Production Account"
+            stages:
+              - stage: 1
+                operator: AND
+                reviewers:
+                  - id: 7c86c85d-0651-43e2-a748-d69d658418e8
+                    status: PENDING
+              - stage: 2
+                operator: OR
+                reviewers:
+                  - id: 8d86c85d-0651-43e2-a748-d69d658418e9
+                    status: APPROVED
         type: object
       properties:
         id:
@@ -7941,8 +8282,14 @@ components:
           items:
             $ref: "#/components/schemas/RequestCustomFieldResponse"
         stages:
+          deprecated: true
           description: The stages configuration for this request
           $ref: "#/components/schemas/RequestItemStages"
+        reviewer_stages:
+          description: The configured reviewer stages for every item in this request
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestReviewerStages"
       required:
         - id
         - created_at
@@ -7952,9 +8299,101 @@ components:
         - reason
       x-speakeasy-entity: Requests
       type: object
+    RequestCommentList:
+      description: A paginated list of request comments
+      type: object
+      example:
+        comments:
+          - created_at: 2021-01-06T20:00:00Z
+            request_id: 4c86c85d-0651-43e2-a748-d69d658418e8
+            user_id: c86c85d-0651-43e2-a748-d69d658418e8
+            comment: This is a comment.
+      properties:
+        comments:
+          items:
+            $ref: "#/components/schemas/RequestComment"
+          type: array
+      required:
+        - comments
+    RequestComment:
+      description: |-
+        # Request Comment Object
+        ### Description
+        The `RequestComment` object is used to represent a comment on a request.
+
+        ### Usage Example
+        Returned from the `GET Requests` endpoint as part of a `Request` object.
+      example:
+        created_at: 2021-01-06T20:00:00Z
+        request_id: 4c86c85d-0651-43e2-a748-d69d658418e8
+        user_id: c86c85d-0651-43e2-a748-d69d658418e8
+        comment: This is a comment.
+      properties:
+        created_at:
+          description: The date and time the comment was created.
+          example: 2021-01-06T20:00:00Z
+          format: date-time
+          type: string
+        request_id:
+          description: The unique identifier of the request the comment is associated with.
+          example: 7c86c85d-0651-43e2-a748-d69d658418e8
+          format: uuid
+          type: string
+        user_id:
+          description: The unique identifier of the user who made the comment.
+          example: 7c86c85d-0651-43e2-a748-d69d658418e8
+          format: uuid
+          type: string
+        user_full_name:
+          description: The user's full name.
+          example: Jake Barnes
+          type: string
+        user_email:
+          description: The user's email address.
+          example: jake.barnes@company.com
+          type: string
+        comment:
+          description: The content of the comment.
+          example: This is a comment.
+          type: string
+      required:
+        - created_at
+        - request_id
+        - user_id
+        - comment
+    RequestReviewerStages:
+      description: The stages configuration for a request item
+      type: object
+      properties:
+        access_level_name:
+          description: The name of the access level requested.
+          example: admin
+          type: string
+        access_level_remote_id:
+          description: The ID of the access level requested on the remote system.
+          example: arn:aws:iam::490306337630:role/SupportUser
+          type: string
+        item_name:
+          description: The name of the requested item
+          type: string
+        item_id:
+          description: The ID of the resource requested.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          format: uuid
+          type: string
+        stages:
+          description: The stages of review for this request
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestStage"
+      required:
+        - item_name
+        - item_id
+        - stages
     RequestItemStages:
       description: The stages configuration for a request item
       type: object
+      deprecated: true
       properties:
         requestedRoleName:
           description: The name of the requested role
@@ -8003,6 +8442,10 @@ components:
           description: The unique identifier of the reviewer
           type: string
           format: uuid
+        full_name:
+          description: The user's full name.
+          example: Jake Barnes
+          type: string
         status:
           description: The status of this reviewer's review
           type: string
@@ -8484,9 +8927,10 @@ components:
           deprecated: true
           x-speakeasy-ignore: true
         extensions_duration_in_minutes:
-          description: The duration for which access can be extended (in minutes).
+          description: The duration for which access can be extended (in minutes). Deprecated, set the extension duration in the request_configuration you want it to apply to.
           type: integer
           example: 120
+          deprecated: true
         request_configurations:
           type: array
           items:
@@ -10222,6 +10666,125 @@ components:
       enum: [REGULAR, ADMIN]
       description: "The decision level for the approval"
       example: "REGULAR"
+    Delegation:
+      type: object
+      description: |-
+        # Delegation Object
+        ### Description
+        The `Delegation` object represents a delegation of access review requests from one user to another.
+
+        ### Usage Example
+        List from the `GET Delegations` endpoint.
+        Get from the `GET Delegation` endpoint.
+      properties:
+        id:
+          description: The ID of the delegation.
+          example: 4aed3e8a-727b-4d72-8010-3b8710c50bec
+          format: uuid
+          type: string
+        delegator_user_id:
+          description: The ID of the user delegating their access review requests.
+          example: 123e4567-e89b-12d3-a456-426614174000
+          format: uuid
+          type: string
+          x-speakeasy-param-force-new: true
+        delegate_user_id:
+          description: The ID of the user being delegated to.
+          example: 7c86c85d-0651-43e2-a748-d69d658418e8
+          format: uuid
+          type: string
+          x-speakeasy-param-force-new: true
+        start_time:
+          description: The start time of the delegation.
+          example: 2023-10-01T12:00:00Z
+          type: string
+          format: date-time
+        end_time:
+          description: The end time of the delegation.
+          example: 2023-10-01T12:00:00Z
+          type: string
+          format: date-time
+        reason:
+          description: The reason for the delegation.
+          example: "I need to be out of the office"
+          type: string
+        created_at:
+          description: The creation time of the delegation.
+          example: 2023-10-01T12:00:00Z
+          type: string
+          format: date-time
+        updated_at:
+          description: The last updated time of the delegation.
+          example: 2023-10-01T12:00:00Z
+          type: string
+          format: date-time
+      required:
+        - id
+        - delegator_user_id
+        - delegate_user_id
+        - start_time
+        - end_time
+        - reason
+        - created_at
+        - updated_at
+      x-speakeasy-entity: Delegation
+    PaginatedDelegationsList:
+      type: object
+      description: A list of delegations for your organization.
+      properties:
+        results:
+          description: The delegations in the result set.
+          type: array
+          items:
+            $ref: "#/components/schemas/Delegation"
+        next:
+          description: The cursor with which to continue pagination if additional result pages exist.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          nullable: true
+          type: string
+        previous:
+          description: The cursor used to obtain the current result page.
+          example: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+          nullable: true
+          type: string
+        total_count:
+          description: The total number of items in the result set.
+          example: 2
+          type: integer
+    CreateDelegationRequest:
+      type: object
+      description: Request body for creating a new delegation of access review requests from one user to another.
+      properties:
+        delegator_user_id:
+          description: The ID of the user delegating their access review requests.
+          example: 123e4567-e89b-12d3-a456-426614174000
+          format: uuid
+          type: string
+        delegate_user_id:
+          description: The ID of the user being delegated to.
+          example: 7c86c85d-0651-43e2-a748-d69d658418e8
+          format: uuid
+          type: string
+        start_time:
+          description: The start time of the delegation.
+          example: 2023-10-01T12:00:00Z
+          type: string
+          format: date-time
+        end_time:
+          description: The end time of the delegation.
+          example: 2023-10-01T12:00:00Z
+          type: string
+          format: date-time
+        reason:
+          description: The reason for the delegation.
+          example: "I need to be out of the office"
+          type: string
+      required:
+        - delegator_user_id
+        - delegate_user_id
+        - start_time
+        - end_time
+        - reason
     BundlesVisibilityTypeEnum:
       description: The visibility level of the entity.
       enum:

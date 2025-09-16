@@ -49,58 +49,58 @@ func (a *Access) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Access) GetAccessLevel() *ResourceAccessLevel {
-	if o == nil {
+func (a *Access) GetAccessLevel() *ResourceAccessLevel {
+	if a == nil {
 		return nil
 	}
-	return o.AccessLevel
+	return a.AccessLevel
 }
 
-func (o *Access) GetEntityID() string {
-	if o == nil {
+func (a *Access) GetEntityID() string {
+	if a == nil {
 		return ""
 	}
-	return o.EntityID
+	return a.EntityID
 }
 
-func (o *Access) GetEntityType() EntityTypeEnum {
-	if o == nil {
+func (a *Access) GetEntityType() EntityTypeEnum {
+	if a == nil {
 		return EntityTypeEnum("")
 	}
-	return o.EntityType
+	return a.EntityType
 }
 
-func (o *Access) GetExpirationDate() *time.Time {
-	if o == nil {
+func (a *Access) GetExpirationDate() *time.Time {
+	if a == nil {
 		return nil
 	}
-	return o.ExpirationDate
+	return a.ExpirationDate
 }
 
-func (o *Access) GetHasDirectAccess() bool {
-	if o == nil {
+func (a *Access) GetHasDirectAccess() bool {
+	if a == nil {
 		return false
 	}
-	return o.HasDirectAccess
+	return a.HasDirectAccess
 }
 
-func (o *Access) GetNumAccessPaths() int {
-	if o == nil {
+func (a *Access) GetNumAccessPaths() int {
+	if a == nil {
 		return 0
 	}
-	return o.NumAccessPaths
+	return a.NumAccessPaths
 }
 
-func (o *Access) GetPrincipalID() string {
-	if o == nil {
+func (a *Access) GetPrincipalID() string {
+	if a == nil {
 		return ""
 	}
-	return o.PrincipalID
+	return a.PrincipalID
 }
 
-func (o *Access) GetPrincipalType() EntityTypeEnum {
-	if o == nil {
+func (a *Access) GetPrincipalType() EntityTypeEnum {
+	if a == nil {
 		return EntityTypeEnum("")
 	}
-	return o.PrincipalType
+	return a.PrincipalType
 }

@@ -16,16 +16,16 @@ type GroupAccessLevel struct {
 	AccessLevelRemoteID string `json:"access_level_remote_id"`
 }
 
-func (o *GroupAccessLevel) GetAccessLevelName() string {
-	if o == nil {
+func (g *GroupAccessLevel) GetAccessLevelName() string {
+	if g == nil {
 		return ""
 	}
-	return o.AccessLevelName
+	return g.AccessLevelName
 }
 
-func (o *GroupAccessLevel) GetAccessLevelRemoteID() string {
-	if o == nil {
+func (g *GroupAccessLevel) GetAccessLevelRemoteID() string {
+	if g == nil {
 		return ""
 	}
-	return o.AccessLevelRemoteID
+	return g.AccessLevelRemoteID
 }

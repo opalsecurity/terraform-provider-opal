@@ -26,60 +26,60 @@ type GetResourcesRequest struct {
 	ResourceTypeFilter *shared.ResourceTypeEnum `queryParam:"style=form,explode=true,name=resource_type_filter"`
 }
 
-func (o *GetResourcesRequest) GetAncestorResourceID() *string {
-	if o == nil {
+func (g *GetResourcesRequest) GetAncestorResourceID() *string {
+	if g == nil {
 		return nil
 	}
-	return o.AncestorResourceID
+	return g.AncestorResourceID
 }
 
-func (o *GetResourcesRequest) GetCursor() *string {
-	if o == nil {
+func (g *GetResourcesRequest) GetCursor() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Cursor
+	return g.Cursor
 }
 
-func (o *GetResourcesRequest) GetPageSize() *int64 {
-	if o == nil {
+func (g *GetResourcesRequest) GetPageSize() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.PageSize
+	return g.PageSize
 }
 
-func (o *GetResourcesRequest) GetParentResourceID() *string {
-	if o == nil {
+func (g *GetResourcesRequest) GetParentResourceID() *string {
+	if g == nil {
 		return nil
 	}
-	return o.ParentResourceID
+	return g.ParentResourceID
 }
 
-func (o *GetResourcesRequest) GetRemoteID() *string {
-	if o == nil {
+func (g *GetResourcesRequest) GetRemoteID() *string {
+	if g == nil {
 		return nil
 	}
-	return o.RemoteID
+	return g.RemoteID
 }
 
-func (o *GetResourcesRequest) GetResourceIds() []string {
-	if o == nil {
+func (g *GetResourcesRequest) GetResourceIds() []string {
+	if g == nil {
 		return nil
 	}
-	return o.ResourceIds
+	return g.ResourceIds
 }
 
-func (o *GetResourcesRequest) GetResourceName() *string {
-	if o == nil {
+func (g *GetResourcesRequest) GetResourceName() *string {
+	if g == nil {
 		return nil
 	}
-	return o.ResourceName
+	return g.ResourceName
 }
 
-func (o *GetResourcesRequest) GetResourceTypeFilter() *shared.ResourceTypeEnum {
-	if o == nil {
+func (g *GetResourcesRequest) GetResourceTypeFilter() *shared.ResourceTypeEnum {
+	if g == nil {
 		return nil
 	}
-	return o.ResourceTypeFilter
+	return g.ResourceTypeFilter
 }
 
 type GetResourcesResponse struct {
@@ -93,30 +93,30 @@ type GetResourcesResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetResourcesResponse) GetContentType() string {
-	if o == nil {
+func (g *GetResourcesResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetResourcesResponse) GetPaginatedResourcesList() *shared.PaginatedResourcesList {
-	if o == nil {
+func (g *GetResourcesResponse) GetPaginatedResourcesList() *shared.PaginatedResourcesList {
+	if g == nil {
 		return nil
 	}
-	return o.PaginatedResourcesList
+	return g.PaginatedResourcesList
 }
 
-func (o *GetResourcesResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetResourcesResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetResourcesResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetResourcesResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

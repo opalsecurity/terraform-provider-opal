@@ -12,11 +12,11 @@ type GetAccessRuleRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=access_rule_id"`
 }
 
-func (o *GetAccessRuleRequest) GetID() string {
-	if o == nil {
+func (g *GetAccessRuleRequest) GetID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ID
+	return g.ID
 }
 
 type GetAccessRuleResponse struct {
@@ -30,30 +30,30 @@ type GetAccessRuleResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetAccessRuleResponse) GetAccessRule() *shared.AccessRule {
-	if o == nil {
+func (g *GetAccessRuleResponse) GetAccessRule() *shared.AccessRule {
+	if g == nil {
 		return nil
 	}
-	return o.AccessRule
+	return g.AccessRule
 }
 
-func (o *GetAccessRuleResponse) GetContentType() string {
-	if o == nil {
+func (g *GetAccessRuleResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetAccessRuleResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetAccessRuleResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetAccessRuleResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetAccessRuleResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

@@ -15,16 +15,16 @@ type CreateTagInfo struct {
 	Value *string `json:"tag_value,omitempty"`
 }
 
-func (o *CreateTagInfo) GetKey() string {
-	if o == nil {
+func (c *CreateTagInfo) GetKey() string {
+	if c == nil {
 		return ""
 	}
-	return o.Key
+	return c.Key
 }
 
-func (o *CreateTagInfo) GetValue() *string {
-	if o == nil {
+func (c *CreateTagInfo) GetValue() *string {
+	if c == nil {
 		return nil
 	}
-	return o.Value
+	return c.Value
 }

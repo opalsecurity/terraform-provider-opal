@@ -7,9 +7,9 @@ type AppsList struct {
 	Apps []App `json:"apps"`
 }
 
-func (o *AppsList) GetApps() []App {
-	if o == nil {
+func (a *AppsList) GetApps() []App {
+	if a == nil {
 		return []App{}
 	}
-	return o.Apps
+	return a.Apps
 }

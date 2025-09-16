@@ -12,11 +12,11 @@ type GetResourceVisibilityRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=resource_id"`
 }
 
-func (o *GetResourceVisibilityRequest) GetID() string {
-	if o == nil {
+func (g *GetResourceVisibilityRequest) GetID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ID
+	return g.ID
 }
 
 type GetResourceVisibilityResponse struct {
@@ -30,30 +30,30 @@ type GetResourceVisibilityResponse struct {
 	VisibilityInfo *shared.VisibilityInfo
 }
 
-func (o *GetResourceVisibilityResponse) GetContentType() string {
-	if o == nil {
+func (g *GetResourceVisibilityResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetResourceVisibilityResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetResourceVisibilityResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetResourceVisibilityResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetResourceVisibilityResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetResourceVisibilityResponse) GetVisibilityInfo() *shared.VisibilityInfo {
-	if o == nil {
+func (g *GetResourceVisibilityResponse) GetVisibilityInfo() *shared.VisibilityInfo {
+	if g == nil {
 		return nil
 	}
-	return o.VisibilityInfo
+	return g.VisibilityInfo
 }

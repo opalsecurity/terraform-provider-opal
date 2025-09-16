@@ -10,23 +10,23 @@ type PaginatedGroupBindingsList struct {
 	Results  []GroupBinding `json:"results"`
 }
 
-func (o *PaginatedGroupBindingsList) GetNext() *string {
-	if o == nil {
+func (p *PaginatedGroupBindingsList) GetNext() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Next
+	return p.Next
 }
 
-func (o *PaginatedGroupBindingsList) GetPrevious() *string {
-	if o == nil {
+func (p *PaginatedGroupBindingsList) GetPrevious() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Previous
+	return p.Previous
 }
 
-func (o *PaginatedGroupBindingsList) GetResults() []GroupBinding {
-	if o == nil {
+func (p *PaginatedGroupBindingsList) GetResults() []GroupBinding {
+	if p == nil {
 		return []GroupBinding{}
 	}
-	return o.Results
+	return p.Results
 }

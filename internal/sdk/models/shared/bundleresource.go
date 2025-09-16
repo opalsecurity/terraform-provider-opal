@@ -13,30 +13,30 @@ type BundleResource struct {
 	ResourceID *string `json:"resource_id,omitempty"`
 }
 
-func (o *BundleResource) GetAccessLevelName() *string {
-	if o == nil {
+func (b *BundleResource) GetAccessLevelName() *string {
+	if b == nil {
 		return nil
 	}
-	return o.AccessLevelName
+	return b.AccessLevelName
 }
 
-func (o *BundleResource) GetAccessLevelRemoteID() *string {
-	if o == nil {
+func (b *BundleResource) GetAccessLevelRemoteID() *string {
+	if b == nil {
 		return nil
 	}
-	return o.AccessLevelRemoteID
+	return b.AccessLevelRemoteID
 }
 
-func (o *BundleResource) GetBundleID() *string {
-	if o == nil {
+func (b *BundleResource) GetBundleID() *string {
+	if b == nil {
 		return nil
 	}
-	return o.BundleID
+	return b.BundleID
 }
 
-func (o *BundleResource) GetResourceID() *string {
-	if o == nil {
+func (b *BundleResource) GetResourceID() *string {
+	if b == nil {
 		return nil
 	}
-	return o.ResourceID
+	return b.ResourceID
 }

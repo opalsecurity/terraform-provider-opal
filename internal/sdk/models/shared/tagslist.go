@@ -6,9 +6,9 @@ type TagsList struct {
 	Tags []Tag `json:"tags"`
 }
 
-func (o *TagsList) GetTags() []Tag {
-	if o == nil {
+func (t *TagsList) GetTags() []Tag {
+	if t == nil {
 		return []Tag{}
 	}
-	return o.Tags
+	return t.Tags
 }

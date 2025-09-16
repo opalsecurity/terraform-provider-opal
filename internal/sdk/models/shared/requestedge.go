@@ -14,16 +14,16 @@ type RequestEdge struct {
 	Node Request `json:"node"`
 }
 
-func (o *RequestEdge) GetCursor() string {
-	if o == nil {
+func (r *RequestEdge) GetCursor() string {
+	if r == nil {
 		return ""
 	}
-	return o.Cursor
+	return r.Cursor
 }
 
-func (o *RequestEdge) GetNode() Request {
-	if o == nil {
+func (r *RequestEdge) GetNode() Request {
+	if r == nil {
 		return Request{}
 	}
-	return o.Node
+	return r.Node
 }

@@ -13,30 +13,30 @@ type BundleGroup struct {
 	GroupID *string `json:"group_id,omitempty"`
 }
 
-func (o *BundleGroup) GetAccessLevelName() *string {
-	if o == nil {
+func (b *BundleGroup) GetAccessLevelName() *string {
+	if b == nil {
 		return nil
 	}
-	return o.AccessLevelName
+	return b.AccessLevelName
 }
 
-func (o *BundleGroup) GetAccessLevelRemoteID() *string {
-	if o == nil {
+func (b *BundleGroup) GetAccessLevelRemoteID() *string {
+	if b == nil {
 		return nil
 	}
-	return o.AccessLevelRemoteID
+	return b.AccessLevelRemoteID
 }
 
-func (o *BundleGroup) GetBundleID() *string {
-	if o == nil {
+func (b *BundleGroup) GetBundleID() *string {
+	if b == nil {
 		return nil
 	}
-	return o.BundleID
+	return b.BundleID
 }
 
-func (o *BundleGroup) GetGroupID() *string {
-	if o == nil {
+func (b *BundleGroup) GetGroupID() *string {
+	if b == nil {
 		return nil
 	}
-	return o.GroupID
+	return b.GroupID
 }
