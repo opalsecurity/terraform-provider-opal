@@ -18,30 +18,30 @@ type CreateMessageChannelResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *CreateMessageChannelResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateMessageChannelResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateMessageChannelResponse) GetMessageChannel() *shared.MessageChannel {
-	if o == nil {
+func (c *CreateMessageChannelResponse) GetMessageChannel() *shared.MessageChannel {
+	if c == nil {
 		return nil
 	}
-	return o.MessageChannel
+	return c.MessageChannel
 }
 
-func (o *CreateMessageChannelResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateMessageChannelResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateMessageChannelResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateMessageChannelResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }

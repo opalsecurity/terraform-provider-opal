@@ -57,30 +57,30 @@ func (r *ReviewerStage) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *ReviewerStage) GetOperator() *Operator {
-	if o == nil {
+func (r *ReviewerStage) GetOperator() *Operator {
+	if r == nil {
 		return nil
 	}
-	return o.Operator
+	return r.Operator
 }
 
-func (o *ReviewerStage) GetOwnerIds() []string {
-	if o == nil {
+func (r *ReviewerStage) GetOwnerIds() []string {
+	if r == nil {
 		return []string{}
 	}
-	return o.OwnerIds
+	return r.OwnerIds
 }
 
-func (o *ReviewerStage) GetRequireAdminApproval() *bool {
-	if o == nil {
+func (r *ReviewerStage) GetRequireAdminApproval() *bool {
+	if r == nil {
 		return nil
 	}
-	return o.RequireAdminApproval
+	return r.RequireAdminApproval
 }
 
-func (o *ReviewerStage) GetRequireManagerApproval() *bool {
-	if o == nil {
+func (r *ReviewerStage) GetRequireManagerApproval() *bool {
+	if r == nil {
 		return nil
 	}
-	return o.RequireManagerApproval
+	return r.RequireManagerApproval
 }

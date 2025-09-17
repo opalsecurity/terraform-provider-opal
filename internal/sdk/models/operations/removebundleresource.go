@@ -15,25 +15,25 @@ type RemoveBundleResourceRequest struct {
 	ResourceID string `pathParam:"style=simple,explode=false,name=resource_id"`
 }
 
-func (o *RemoveBundleResourceRequest) GetAccessLevelRemoteID() *string {
-	if o == nil {
+func (r *RemoveBundleResourceRequest) GetAccessLevelRemoteID() *string {
+	if r == nil {
 		return nil
 	}
-	return o.AccessLevelRemoteID
+	return r.AccessLevelRemoteID
 }
 
-func (o *RemoveBundleResourceRequest) GetBundleID() string {
-	if o == nil {
+func (r *RemoveBundleResourceRequest) GetBundleID() string {
+	if r == nil {
 		return ""
 	}
-	return o.BundleID
+	return r.BundleID
 }
 
-func (o *RemoveBundleResourceRequest) GetResourceID() string {
-	if o == nil {
+func (r *RemoveBundleResourceRequest) GetResourceID() string {
+	if r == nil {
 		return ""
 	}
-	return o.ResourceID
+	return r.ResourceID
 }
 
 type RemoveBundleResourceResponse struct {
@@ -45,23 +45,23 @@ type RemoveBundleResourceResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *RemoveBundleResourceResponse) GetContentType() string {
-	if o == nil {
+func (r *RemoveBundleResourceResponse) GetContentType() string {
+	if r == nil {
 		return ""
 	}
-	return o.ContentType
+	return r.ContentType
 }
 
-func (o *RemoveBundleResourceResponse) GetStatusCode() int {
-	if o == nil {
+func (r *RemoveBundleResourceResponse) GetStatusCode() int {
+	if r == nil {
 		return 0
 	}
-	return o.StatusCode
+	return r.StatusCode
 }
 
-func (o *RemoveBundleResourceResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (r *RemoveBundleResourceResponse) GetRawResponse() *http.Response {
+	if r == nil {
 		return nil
 	}
-	return o.RawResponse
+	return r.RawResponse
 }

@@ -11,11 +11,11 @@ type DeleteOwnerRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=owner_id"`
 }
 
-func (o *DeleteOwnerRequest) GetID() string {
-	if o == nil {
+func (d *DeleteOwnerRequest) GetID() string {
+	if d == nil {
 		return ""
 	}
-	return o.ID
+	return d.ID
 }
 
 type DeleteOwnerResponse struct {
@@ -27,23 +27,23 @@ type DeleteOwnerResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *DeleteOwnerResponse) GetContentType() string {
-	if o == nil {
+func (d *DeleteOwnerResponse) GetContentType() string {
+	if d == nil {
 		return ""
 	}
-	return o.ContentType
+	return d.ContentType
 }
 
-func (o *DeleteOwnerResponse) GetStatusCode() int {
-	if o == nil {
+func (d *DeleteOwnerResponse) GetStatusCode() int {
+	if d == nil {
 		return 0
 	}
-	return o.StatusCode
+	return d.StatusCode
 }
 
-func (o *DeleteOwnerResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (d *DeleteOwnerResponse) GetRawResponse() *http.Response {
+	if d == nil {
 		return nil
 	}
-	return o.RawResponse
+	return d.RawResponse
 }

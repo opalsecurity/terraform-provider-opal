@@ -16,25 +16,25 @@ type GetOwnersRequest struct {
 	PageSize *int64 `queryParam:"style=form,explode=true,name=page_size"`
 }
 
-func (o *GetOwnersRequest) GetCursor() *string {
-	if o == nil {
+func (g *GetOwnersRequest) GetCursor() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Cursor
+	return g.Cursor
 }
 
-func (o *GetOwnersRequest) GetName() *string {
-	if o == nil {
+func (g *GetOwnersRequest) GetName() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Name
+	return g.Name
 }
 
-func (o *GetOwnersRequest) GetPageSize() *int64 {
-	if o == nil {
+func (g *GetOwnersRequest) GetPageSize() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.PageSize
+	return g.PageSize
 }
 
 type GetOwnersResponse struct {
@@ -48,30 +48,30 @@ type GetOwnersResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetOwnersResponse) GetContentType() string {
-	if o == nil {
+func (g *GetOwnersResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetOwnersResponse) GetPaginatedOwnersList() *shared.PaginatedOwnersList {
-	if o == nil {
+func (g *GetOwnersResponse) GetPaginatedOwnersList() *shared.PaginatedOwnersList {
+	if g == nil {
 		return nil
 	}
-	return o.PaginatedOwnersList
+	return g.PaginatedOwnersList
 }
 
-func (o *GetOwnersResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetOwnersResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetOwnersResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetOwnersResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

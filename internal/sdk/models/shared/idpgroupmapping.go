@@ -12,23 +12,23 @@ type IdpGroupMapping struct {
 	HiddenFromEndUser bool `json:"hidden_from_end_user"`
 }
 
-func (o *IdpGroupMapping) GetAlias() *string {
-	if o == nil {
+func (i *IdpGroupMapping) GetAlias() *string {
+	if i == nil {
 		return nil
 	}
-	return o.Alias
+	return i.Alias
 }
 
-func (o *IdpGroupMapping) GetGroupID() string {
-	if o == nil {
+func (i *IdpGroupMapping) GetGroupID() string {
+	if i == nil {
 		return ""
 	}
-	return o.GroupID
+	return i.GroupID
 }
 
-func (o *IdpGroupMapping) GetHiddenFromEndUser() bool {
-	if o == nil {
+func (i *IdpGroupMapping) GetHiddenFromEndUser() bool {
+	if i == nil {
 		return false
 	}
-	return o.HiddenFromEndUser
+	return i.HiddenFromEndUser
 }

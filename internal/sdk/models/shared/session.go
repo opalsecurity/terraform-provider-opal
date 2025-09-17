@@ -43,37 +43,37 @@ func (s *Session) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Session) GetAccessLevel() ResourceAccessLevel {
-	if o == nil {
+func (s *Session) GetAccessLevel() ResourceAccessLevel {
+	if s == nil {
 		return ResourceAccessLevel{}
 	}
-	return o.AccessLevel
+	return s.AccessLevel
 }
 
-func (o *Session) GetConnectionID() string {
-	if o == nil {
+func (s *Session) GetConnectionID() string {
+	if s == nil {
 		return ""
 	}
-	return o.ConnectionID
+	return s.ConnectionID
 }
 
-func (o *Session) GetExpirationDate() time.Time {
-	if o == nil {
+func (s *Session) GetExpirationDate() time.Time {
+	if s == nil {
 		return time.Time{}
 	}
-	return o.ExpirationDate
+	return s.ExpirationDate
 }
 
-func (o *Session) GetResourceID() string {
-	if o == nil {
+func (s *Session) GetResourceID() string {
+	if s == nil {
 		return ""
 	}
-	return o.ResourceID
+	return s.ResourceID
 }
 
-func (o *Session) GetUserID() string {
-	if o == nil {
+func (s *Session) GetUserID() string {
+	if s == nil {
 		return ""
 	}
-	return o.UserID
+	return s.UserID
 }

@@ -8,9 +8,9 @@ type PropagationStatus struct {
 	Status PropagationStatusEnum `json:"status"`
 }
 
-func (o *PropagationStatus) GetStatus() PropagationStatusEnum {
-	if o == nil {
+func (p *PropagationStatus) GetStatus() PropagationStatusEnum {
+	if p == nil {
 		return PropagationStatusEnum("")
 	}
-	return o.Status
+	return p.Status
 }

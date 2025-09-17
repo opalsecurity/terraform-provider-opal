@@ -12,23 +12,23 @@ type RequestStage struct {
 	Stage int64 `json:"stage"`
 }
 
-func (o *RequestStage) GetOperator() ReviewStageOperator {
-	if o == nil {
+func (r *RequestStage) GetOperator() ReviewStageOperator {
+	if r == nil {
 		return ReviewStageOperator("")
 	}
-	return o.Operator
+	return r.Operator
 }
 
-func (o *RequestStage) GetReviewers() []RequestReviewer {
-	if o == nil {
+func (r *RequestStage) GetReviewers() []RequestReviewer {
+	if r == nil {
 		return []RequestReviewer{}
 	}
-	return o.Reviewers
+	return r.Reviewers
 }
 
-func (o *RequestStage) GetStage() int64 {
-	if o == nil {
+func (r *RequestStage) GetStage() int64 {
+	if r == nil {
 		return 0
 	}
-	return o.Stage
+	return r.Stage
 }

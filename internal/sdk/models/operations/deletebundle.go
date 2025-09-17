@@ -11,11 +11,11 @@ type DeleteBundleRequest struct {
 	BundleID string `pathParam:"style=simple,explode=true,name=bundle_id"`
 }
 
-func (o *DeleteBundleRequest) GetBundleID() string {
-	if o == nil {
+func (d *DeleteBundleRequest) GetBundleID() string {
+	if d == nil {
 		return ""
 	}
-	return o.BundleID
+	return d.BundleID
 }
 
 type DeleteBundleResponse struct {
@@ -27,23 +27,23 @@ type DeleteBundleResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *DeleteBundleResponse) GetContentType() string {
-	if o == nil {
+func (d *DeleteBundleResponse) GetContentType() string {
+	if d == nil {
 		return ""
 	}
-	return o.ContentType
+	return d.ContentType
 }
 
-func (o *DeleteBundleResponse) GetStatusCode() int {
-	if o == nil {
+func (d *DeleteBundleResponse) GetStatusCode() int {
+	if d == nil {
 		return 0
 	}
-	return o.StatusCode
+	return d.StatusCode
 }
 
-func (o *DeleteBundleResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (d *DeleteBundleResponse) GetRawResponse() *http.Response {
+	if d == nil {
 		return nil
 	}
-	return o.RawResponse
+	return d.RawResponse
 }

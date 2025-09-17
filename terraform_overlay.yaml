@@ -7,6 +7,46 @@ actions:
   - target: $["servers"][0]
     update:
       x-speakeasy-server-id: prod
+  - target: $["tags"][*]
+    remove: true
+  - target: $["tags"]
+    update:
+      - name: access-rules
+        description: Operations related to access rules
+      - name: apps
+        description: Operations related to apps
+      - name: bundles
+        description: Operations related to bundles
+      - name: configuration-templates
+        description: Operations related to configuration templates
+      - name: events
+        description: Operations related to events
+      - name: groups
+        description: Operations related to groups
+      - name: group-bindings
+        description: Operations related to group bindings
+      - name: idp-group-mappings
+        description: Operations related to IDP group mappings
+      - name: message-channels
+        description: Operations related to message channels
+      - name: non-human-identities
+        description: Operations related to non-human identities
+      - name: on-call-schedules
+        description: Operations related to on-call schedules
+      - name: owners
+        description: Operations related to owners
+      - name: requests
+        description: Operations related to requests
+      - name: resources
+        description: Operations related to resources
+      - name: sessions
+        description: Operations related to sessions
+      - name: tags
+        description: Operations related to tags
+      - name: uars
+        description: Operations related to UARs
+      - name: users
+        description: Operations related to users
   - target: $["paths"]["/apps"]["get"]["responses"]
     update:
       "404":
@@ -35,12 +75,16 @@ actions:
   - target: $["paths"]["/bundles"]["get"]
     update:
       x-speakeasy-entity-operation: PaginatedBundleList#read
+  - target: $["paths"]["/bundles"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/bundles"]["post"]
     update:
       x-speakeasy-entity-operation: Bundle#create
   - target: $["paths"]["/bundles/{bundle_id}"]["get"]
     update:
       x-speakeasy-entity-operation: Bundle#read
+  - target: $["paths"]["/bundles/{bundle_id}"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/bundles/{bundle_id}"]["delete"]
     update:
       x-speakeasy-entity-operation: Bundle#delete
@@ -129,6 +173,8 @@ actions:
     update:
       x-speakeasy-entity-operation:
         - Group_list#read
+  - target: $["paths"]["/groups"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/groups"]["put"]
     update:
       x-speakeasy-name-override: update
@@ -155,6 +201,8 @@ actions:
   - target: $["paths"]["/groups/{group_id}"]["get"]
     update:
       x-speakeasy-entity-operation: Group#read
+  - target: $["paths"]["/groups/{group_id}"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/groups/{group_id}"]["delete"]["operationId"]
     update: deleteGroup
   - target: $["paths"]["/groups/{group_id}"]["delete"]["parameters"][0]
@@ -282,6 +330,8 @@ actions:
   - target: $["paths"]["/groups/{group_id}/containing-groups/{containing_group_id}"]["get"]
     update:
       x-speakeasy-entity-operation: GroupContainingGroup#read
+  - target: $["paths"]["/groups/{group_id}/containing-groups/{containing_group_id}"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/groups/{group_id}/containing-groups/{containing_group_id}"]["delete"]
     update:
       x-speakeasy-entity-operation: GroupContainingGroup#delete
@@ -380,6 +430,20 @@ actions:
       x-speakeasy-entity-operation: GroupTags#get
   - target: $["paths"]["/groups/{group_id}/users"]["get"]["operationId"]
     update: getGroupUsers
+  - target: $["paths"]["/groups/{group_id}/users"]["get"]["parameters"][*]
+    remove: true
+  - target: $["paths"]["/groups/{group_id}/users"]["get"]["parameters"]
+    update:
+      - description: The ID of the group.
+        example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+        explode: false
+        in: path
+        name: group_id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
   - target: $["paths"]["/groups/{group_id}/users"]["get"]["responses"]
     update:
       "404":
@@ -457,16 +521,113 @@ actions:
     update:
       "404":
         description: Not Found
+  - target: $["paths"]["/group-bindings"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/group-bindings/{group_binding_id}"]["get"]["responses"]
     update:
       "404":
         description: Not Found
+  - target: $["paths"]["/group-bindings/{group_binding_id}"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["get"]
     update:
       x-speakeasy-entity-operation: IdpGroupMappings#get
   - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["put"]
     update:
       x-speakeasy-entity-operation: IdpGroupMappings#create,update
+  - target: $["paths"]
+    update:
+      /idp-group-mappings/{app_resource_id}/{group_id}/:
+        post:
+          description: |
+            Creates or updates an individual `IdpGroupMapping` object (upsert operation).
+
+            **Behavior:**
+            - If the mapping doesn't exist, it will be created with the provided values
+            - If the mapping exists, only the fields provided in the request will be updated
+          operationId: createIdpGroupMapping
+          parameters:
+            - description: The ID of the Okta app.
+              example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+              explode: false
+              in: path
+              name: app_resource_id
+              required: true
+              schema:
+                format: uuid
+                type: string
+              style: simple
+            - description: The ID of the group.
+              example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+              explode: false
+              in: path
+              name: group_id
+              required: true
+              schema:
+                format: uuid
+                type: string
+              style: simple
+          requestBody:
+            required: false
+            content:
+              application/json:
+                schema:
+                  properties:
+                    alias:
+                      description: Optional alias for the group mapping
+                      type: string
+                      nullable: true
+                    hidden_from_end_user:
+                      description: |
+                        Whether this mapping should be hidden from end users.
+                        - **New mappings**: If not provided, defaults to `false`
+                        - **Existing mappings**: If not provided, existing value is preserved (no change)
+                        - **Explicit values**: If provided, value is updated to the specified boolean
+                      type: boolean
+                      nullable: true
+                  type: object
+          responses:
+            "200":
+              description: The IDP group mapping was successfully created or updated.
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/IdpGroupMapping"
+          security:
+            - BearerAuth: []
+          tags:
+            - idp-group-mappings
+        delete:
+          description: Deletes an `IdpGroupMapping` object.
+          operationId: delete_idp_group_mappings
+          parameters:
+            - description: The ID of the Okta app.
+              example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+              explode: false
+              in: path
+              name: app_resource_id
+              required: true
+              schema:
+                format: uuid
+                type: string
+              style: simple
+            - description: The ID of the group.
+              example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+              explode: false
+              in: path
+              name: group_id
+              required: true
+              schema:
+                format: uuid
+                type: string
+              style: simple
+          responses:
+            "200":
+              description: The IDP group mapping was successfully deleted.
+          security:
+            - BearerAuth: []
+          tags:
+            - idp-group-mappings
   - target: $["paths"]["/owners"]["get"]["operationId"]
     update: getOwners
   - target: $["paths"]["/owners"]["get"]["responses"]
@@ -479,6 +640,8 @@ actions:
   - target: $["paths"]["/owners"]["get"]
     update:
       x-speakeasy-entity-operation: Owners#get
+  - target: $["paths"]["/owners"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/owners"]["post"]
     update:
       x-speakeasy-name-override: create
@@ -506,6 +669,8 @@ actions:
   - target: $["paths"]["/owners/{owner_id}"]["get"]
     update:
       x-speakeasy-entity-operation: Owner#get
+  - target: $["paths"]["/owners/{owner_id}"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/owners/{owner_id}"]["delete"]["operationId"]
     update: deleteOwner
   - target: $["paths"]["/owners/{owner_id}"]["delete"]["parameters"][0]
@@ -553,6 +718,12 @@ actions:
   - target: $["paths"]["/requests"]["get"]
     update:
       x-speakeasy-entity-operation: Requests#get
+  - target: $["paths"]["/requests"]["get"]["summary"]
+    remove: true
+  - target: $["paths"]["/requests/relay"]["get"]["summary"]
+    remove: true
+  - target: $["paths"]["/requests/{id}"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/resources"]["get"]["responses"]
     update:
       "404":
@@ -563,6 +734,8 @@ actions:
   - target: $["paths"]["/resources"]["get"]
     update:
       x-speakeasy-entity-operation: Resources_list#get
+  - target: $["paths"]["/resources"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/resources"]["put"]
     update:
       x-speakeasy-name-override: update
@@ -592,6 +765,8 @@ actions:
   - target: $["paths"]["/resources/{resource_id}"]["get"]
     update:
       x-speakeasy-entity-operation: Resource#get
+  - target: $["paths"]["/resources/{resource_id}"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/resources/{resource_id}"]["delete"]["operationId"]
     update: deleteResource
   - target: $["paths"]["/resources/{resource_id}"]["delete"]["parameters"][0]
@@ -722,6 +897,8 @@ actions:
   - target: $["paths"]["/resources/{resource_id}/users"]["get"]
     update:
       x-speakeasy-entity-operation: ResourcesUsers_list#get
+  - target: $["paths"]["/resources/{resource_id}/users"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/resource-user-access-status/{resource_id}/{user_id}"]["get"]["operationId"]
     update: getResourceUserAccessStatus
   - target: $["paths"]["/resource-user-access-status/{resource_id}/{user_id}"]["get"]["responses"]
@@ -832,6 +1009,8 @@ actions:
   - target: $["paths"]["/tag/{tag_id}"]["get"]
     update:
       x-speakeasy-entity-operation: Tag#read
+  - target: $["paths"]["/tag/{tag_id}"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/tag/{tag_id}"]["delete"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
@@ -859,6 +1038,8 @@ actions:
   - target: $["paths"]["/tags"]["get"]
     update:
       x-speakeasy-entity-operation: Tags_list#get
+  - target: $["paths"]["/tags"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/tags/{tag_id}/users/{user_id}"]["post"]["operationId"]
     update: createUserTag
   - target: $["paths"]["/tags/{tag_id}/users/{user_id}"]["post"]
@@ -919,6 +1100,8 @@ actions:
   - target: $["paths"]["/message-channels"]["get"]
     update:
       x-speakeasy-entity-operation: MessageChannelList#get
+  - target: $["paths"]["/message-channels"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/message-channels"]["post"]["operationId"]
     update: createMessageChannel
   - target: $["paths"]["/message-channels"]["post"]
@@ -942,6 +1125,8 @@ actions:
   - target: $["paths"]["/message-channels/{message_channel_id}"]["get"]
     update:
       x-speakeasy-entity-operation: MessageChannel#get
+  - target: $["paths"]["/message-channels/{message_channel_id}"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/on-call-schedules"]["get"]["operationId"]
     update: getOnCallSchedule
   - target: $["paths"]["/on-call-schedules"]["get"]["responses"]
@@ -954,6 +1139,8 @@ actions:
   - target: $["paths"]["/on-call-schedules"]["get"]
     update:
       x-speakeasy-entity-operation: OnCallSchedule_list#get
+  - target: $["paths"]["/on-call-schedules"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/on-call-schedules"]["post"]["operationId"]
     update: createOnCallSchedule
   - target: $["paths"]["/on-call-schedules"]["post"]
@@ -977,6 +1164,8 @@ actions:
   - target: $["paths"]["/on-call-schedules/{on_call_schedule_id}"]["get"]
     update:
       x-speakeasy-entity-operation: OnCallSchedule#get
+  - target: $["paths"]["/on-call-schedules/{on_call_schedule_id}"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/uars"]["get"]["responses"]
     update:
       "404":
@@ -1004,7 +1193,19 @@ actions:
   - target: $["paths"]["/uar/{uar_id}"]["get"]
     update:
       x-speakeasy-entity-operation: UAR#get
+  - target: $["paths"]["/groups/users/{user_id}"]
+    remove: true
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}/groups/{group_id}"]
+    remove: true
+  - target: $["paths"]["/requests/{id}/deny"]
+    remove: true
+  - target: $["paths"]["/requests/{id}/comments"]
+    remove: true
   - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]
+    remove: true
+  - target: $["paths"]["/delegations"]
+    remove: true
+  - target: $["paths"]["/delegations/{delegation_id}"]
     remove: true
   - target: $["components"]["schemas"]["PaginatedUARsList"]
     update:
@@ -1192,6 +1393,14 @@ actions:
   - target: $["components"]["schemas"]["Group"]
     update:
       x-speakeasy-entity-version: 1
+  - target: $["components"]["schemas"]["GroupUserList"]["example"]["next"]
+    remove: true
+  - target: $["components"]["schemas"]["GroupUserList"]["example"]["previous"]
+    remove: true
+  - target: $["components"]["schemas"]["GroupUserList"]["properties"]["next"]
+    remove: true
+  - target: $["components"]["schemas"]["GroupUserList"]["properties"]["previous"]
+    remove: true
   - target: $["components"]["schemas"]["GroupUserList"]
     update:
       x-speakeasy-entity: GroupUsers
@@ -1258,6 +1467,10 @@ actions:
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["group_leader_user_ids"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["extensions_duration_in_minutes"]["description"]
+    update: The duration for which access can be extended (in minutes).
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["extensions_duration_in_minutes"]["deprecated"]
+    remove: true
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_configurations"]
     update:
       x-speakeasy-plan-validators: RequestConfigurations
@@ -1270,12 +1483,82 @@ actions:
   - target: $["components"]["schemas"]["UpdateGroupInfo"]
     update:
       x-speakeasy-entity: Group
+  - target: $["components"]["schemas"]["ResourceTypeEnum"]["enum"][*]
+    remove: true
+  - target: $["components"]["schemas"]["ResourceTypeEnum"]["enum"]
+    update:
+      - AWS_IAM_ROLE
+      - AWS_EC2_INSTANCE
+      - AWS_EKS_CLUSTER
+      - AWS_RDS_POSTGRES_CLUSTER
+      - AWS_RDS_POSTGRES_INSTANCE
+      - AWS_RDS_MYSQL_CLUSTER
+      - AWS_RDS_MYSQL_INSTANCE
+      - AWS_ACCOUNT
+      - AWS_SSO_PERMISSION_SET
+      - AWS_ORGANIZATIONAL_UNIT
+      - AZURE_MANAGEMENT_GROUP
+      - AZURE_RESOURCE_GROUP
+      - AZURE_SUBSCRIPTION
+      - AZURE_VIRTUAL_MACHINE
+      - AZURE_STORAGE_ACCOUNT
+      - AZURE_STORAGE_CONTAINER
+      - AZURE_SQL_SERVER
+      - AZURE_SQL_MANAGED_INSTANCE
+      - AZURE_SQL_DATABASE
+      - AZURE_SQL_MANAGED_DATABASE
+      - AZURE_USER_ASSIGNED_MANAGED_Identity
+      - AZURE_ENTRA_ID_ROLE
+      - AZURE_ENTERPRISE_APP
+      - CUSTOM
+      - CUSTOM_CONNECTOR
+      - DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL
+      - GCP_ORGANIZATION
+      - GCP_BUCKET
+      - GCP_COMPUTE_INSTANCE
+      - GCP_FOLDER
+      - GCP_GKE_CLUSTER
+      - GCP_PROJECT
+      - GCP_CLOUD_SQL_POSTGRES_INSTANCE
+      - GCP_CLOUD_SQL_MYSQL_INSTANCE
+      - GCP_BIG_QUERY_DATASET
+      - GCP_BIG_QUERY_TABLE
+      - GCP_SERVICE_ACCOUNT
+      - GIT_HUB_REPO
+      - GIT_HUB_ORG_ROLE
+      - GIT_LAB_PROJECT
+      - GOOGLE_WORKSPACE_ROLE
+      - MONGO_INSTANCE
+      - MONGO_ATLAS_INSTANCE
+      - OKTA_APP
+      - OKTA_ROLE
+      - OPAL_ROLE
+      - OPAL_SCOPED_ROLE
+      - PAGERDUTY_ROLE
+      - TAILSCALE_SSH
+      - SALESFORCE_PERMISSION_SET
+      - SALESFORCE_PROFILE
+      - SALESFORCE_ROLE
+      - SNOWFLAKE_DATABASE
+      - SNOWFLAKE_SCHEMA
+      - SNOWFLAKE_TABLE
+      - WORKDAY_ROLE
+      - MYSQL_INSTANCE
+      - MARIADB_INSTANCE
+      - POSTGRES_INSTANCE
+      - TELEPORT_ROLE
+      - ILEVEL_ADVANCED_ROLE
+      - DATASTAX_ASTRA_ROLE
   - target: $["components"]["schemas"]["VisibilityTypeEnum"]
     update:
       x-speakeasy-entity: Groups
   - target: $["components"]["schemas"]["UpdateGroupResourcesInfo"]
     update:
       x-speakeasy-entity: GroupResourceList
+  - target: $["components"]["schemas"]["IdpGroupMapping"]["example"]["app_resource_id"]
+    remove: true
+  - target: $["components"]["schemas"]["IdpGroupMapping"]["properties"]["app_resource_id"]
+    remove: true
   - target: $["components"]["schemas"]["GroupResourceList"]["properties"]["group_resources"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
@@ -1407,6 +1690,8 @@ actions:
   - target: $["components"]["schemas"]["OnCallScheduleProviderEnum"]
     update:
       x-speakeasy-entity: OnCallSchedule
+  - target: $["components"]["schemas"]["GroupRemoteInfo"]["description"]
+    update: Information that defines the remote group. This replaces the deprecated remote_id and metadata fields.
   - target: $["components"]["schemas"]["GroupRemoteInfo"]["properties"]["active_directory_group"]
     update:
       x-speakeasy-param-force-new: true
@@ -1566,6 +1851,8 @@ actions:
   - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["teleport_role"]["properties"]["role_name"]
     update:
       x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["coupa_role"]
+    remove: true
   - target: $["components"]["schemas"]["CreateResourceInfo"]["properties"]["resource_type"]
     update:
       x-speakeasy-param-force-new: true
@@ -1613,13 +1900,39 @@ actions:
       x-speakeasy-entity: Requests
   - target: $["components"]["schemas"]["Request"]["example"]
     update:
+      stages:
+        requestedRoleName: "Admin"
+        requestedItemName: "AWS Production Account"
+        stages:
+          - stage: 1
+            operator: AND
+            reviewers:
+              - id: 7c86c85d-0651-43e2-a748-d69d658418e8
+                status: PENDING
+          - stage: 2
+            operator: OR
+            reviewers:
+              - id: 8d86c85d-0651-43e2-a748-d69d658418e9
+                status: APPROVED
+  - target: $["components"]["schemas"]["Request"]["example"]
+    update:
       type: object
+  - target: $["components"]["schemas"]["Request"]["example"]["reviewer_stages"]
+    remove: true
+  - target: $["components"]["schemas"]["Request"]["properties"]["stages"]["deprecated"]
+    remove: true
+  - target: $["components"]["schemas"]["Request"]["properties"]["reviewer_stages"]
+    remove: true
   - target: $["components"]["schemas"]["Request"]
     update:
       x-speakeasy-entity: Requests
   - target: $["components"]["schemas"]["Request"]
     update:
       type: object
+  - target: $["components"]["schemas"]["RequestItemStages"]["deprecated"]
+    remove: true
+  - target: $["components"]["schemas"]["RequestReviewer"]["properties"]["full_name"]
+    remove: true
   - target: $["components"]["schemas"]["RequestedItem"]
     update:
       x-speakeasy-entity: Requests
@@ -1795,6 +2108,10 @@ actions:
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["is_requestable"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["extensions_duration_in_minutes"]["description"]
+    update: The duration for which access can be extended (in minutes).
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["extensions_duration_in_minutes"]["deprecated"]
+    remove: true
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_configurations"]
     update:
       x-speakeasy-plan-validators: RequestConfigurations
@@ -2034,6 +2351,18 @@ actions:
   - target: $["components"]["schemas"]["GroupWithAccessLevel"]
     remove: true
   - target: $["components"]["schemas"]["GroupContainingGroupList"]
+    remove: true
+  - target: $["components"]["schemas"]["RequestCommentList"]
+    remove: true
+  - target: $["components"]["schemas"]["RequestComment"]
+    remove: true
+  - target: $["components"]["schemas"]["RequestReviewerStages"]
+    remove: true
+  - target: $["components"]["schemas"]["Delegation"]
+    remove: true
+  - target: $["components"]["schemas"]["PaginatedDelegationsList"]
+    remove: true
+  - target: $["components"]["schemas"]["CreateDelegationRequest"]
     remove: true
   - target: $
     update:

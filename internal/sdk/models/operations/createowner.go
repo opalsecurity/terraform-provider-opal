@@ -18,30 +18,30 @@ type CreateOwnerResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *CreateOwnerResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateOwnerResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateOwnerResponse) GetOwner() *shared.Owner {
-	if o == nil {
+func (c *CreateOwnerResponse) GetOwner() *shared.Owner {
+	if c == nil {
 		return nil
 	}
-	return o.Owner
+	return c.Owner
 }
 
-func (o *CreateOwnerResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateOwnerResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateOwnerResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateOwnerResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }

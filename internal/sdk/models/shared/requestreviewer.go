@@ -45,16 +45,16 @@ type RequestReviewer struct {
 	Status RequestReviewerStatus `json:"status"`
 }
 
-func (o *RequestReviewer) GetID() string {
-	if o == nil {
+func (r *RequestReviewer) GetID() string {
+	if r == nil {
 		return ""
 	}
-	return o.ID
+	return r.ID
 }
 
-func (o *RequestReviewer) GetStatus() RequestReviewerStatus {
-	if o == nil {
+func (r *RequestReviewer) GetStatus() RequestReviewerStatus {
+	if r == nil {
 		return RequestReviewerStatus("")
 	}
-	return o.Status
+	return r.Status
 }

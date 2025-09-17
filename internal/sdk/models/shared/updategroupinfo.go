@@ -42,72 +42,72 @@ func (u *UpdateGroupInfo) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *UpdateGroupInfo) GetAdminOwnerID() *string {
-	if o == nil {
+func (u *UpdateGroupInfo) GetAdminOwnerID() *string {
+	if u == nil {
 		return nil
 	}
-	return o.AdminOwnerID
+	return u.AdminOwnerID
 }
 
-func (o *UpdateGroupInfo) GetCustomRequestNotification() *string {
-	if o == nil {
+func (u *UpdateGroupInfo) GetCustomRequestNotification() *string {
+	if u == nil {
 		return nil
 	}
-	return o.CustomRequestNotification
+	return u.CustomRequestNotification
 }
 
-func (o *UpdateGroupInfo) GetDescription() *string {
-	if o == nil {
+func (u *UpdateGroupInfo) GetDescription() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Description
+	return u.Description
 }
 
-func (o *UpdateGroupInfo) GetExtensionsDurationInMinutes() *int64 {
-	if o == nil {
+func (u *UpdateGroupInfo) GetExtensionsDurationInMinutes() *int64 {
+	if u == nil {
 		return nil
 	}
-	return o.ExtensionsDurationInMinutes
+	return u.ExtensionsDurationInMinutes
 }
 
-func (o *UpdateGroupInfo) GetGroupLeaderUserIds() []string {
-	if o == nil {
+func (u *UpdateGroupInfo) GetGroupLeaderUserIds() []string {
+	if u == nil {
 		return nil
 	}
-	return o.GroupLeaderUserIds
+	return u.GroupLeaderUserIds
 }
 
-func (o *UpdateGroupInfo) GetID() string {
-	if o == nil {
+func (u *UpdateGroupInfo) GetID() string {
+	if u == nil {
 		return ""
 	}
-	return o.ID
+	return u.ID
 }
 
-func (o *UpdateGroupInfo) GetName() *string {
-	if o == nil {
+func (u *UpdateGroupInfo) GetName() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Name
+	return u.Name
 }
 
-func (o *UpdateGroupInfo) GetRequestConfigurations() []RequestConfiguration {
-	if o == nil {
+func (u *UpdateGroupInfo) GetRequestConfigurations() []RequestConfiguration {
+	if u == nil {
 		return []RequestConfiguration{}
 	}
-	return o.RequestConfigurations
+	return u.RequestConfigurations
 }
 
-func (o *UpdateGroupInfo) GetRequireMfaToApprove() *bool {
-	if o == nil {
+func (u *UpdateGroupInfo) GetRequireMfaToApprove() *bool {
+	if u == nil {
 		return nil
 	}
-	return o.RequireMfaToApprove
+	return u.RequireMfaToApprove
 }
 
-func (o *UpdateGroupInfo) GetRiskSensitivityOverride() *RiskSensitivityEnum {
-	if o == nil {
+func (u *UpdateGroupInfo) GetRiskSensitivityOverride() *RiskSensitivityEnum {
+	if u == nil {
 		return nil
 	}
-	return o.RiskSensitivityOverride
+	return u.RiskSensitivityOverride
 }

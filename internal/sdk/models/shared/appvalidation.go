@@ -41,51 +41,51 @@ func (a *AppValidation) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *AppValidation) GetDetails() *string {
-	if o == nil {
+func (a *AppValidation) GetDetails() *string {
+	if a == nil {
 		return nil
 	}
-	return o.Details
+	return a.Details
 }
 
-func (o *AppValidation) GetKey() string {
-	if o == nil {
+func (a *AppValidation) GetKey() string {
+	if a == nil {
 		return ""
 	}
-	return o.Key
+	return a.Key
 }
 
-func (o *AppValidation) GetName() any {
-	if o == nil {
+func (a *AppValidation) GetName() any {
+	if a == nil {
 		return nil
 	}
-	return o.Name
+	return a.Name
 }
 
-func (o *AppValidation) GetSeverity() AppValidationSeverityEnum {
-	if o == nil {
+func (a *AppValidation) GetSeverity() AppValidationSeverityEnum {
+	if a == nil {
 		return AppValidationSeverityEnum("")
 	}
-	return o.Severity
+	return a.Severity
 }
 
-func (o *AppValidation) GetStatus() AppValidationStatusEnum {
-	if o == nil {
+func (a *AppValidation) GetStatus() AppValidationStatusEnum {
+	if a == nil {
 		return AppValidationStatusEnum("")
 	}
-	return o.Status
+	return a.Status
 }
 
-func (o *AppValidation) GetUpdatedAt() time.Time {
-	if o == nil {
+func (a *AppValidation) GetUpdatedAt() time.Time {
+	if a == nil {
 		return time.Time{}
 	}
-	return o.UpdatedAt
+	return a.UpdatedAt
 }
 
-func (o *AppValidation) GetUsageReason() *string {
-	if o == nil {
+func (a *AppValidation) GetUsageReason() *string {
+	if a == nil {
 		return nil
 	}
-	return o.UsageReason
+	return a.UsageReason
 }

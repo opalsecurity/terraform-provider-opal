@@ -14,18 +14,18 @@ type GetNhisRequest struct {
 	PageSize *int64 `queryParam:"style=form,explode=true,name=page_size"`
 }
 
-func (o *GetNhisRequest) GetCursor() *string {
-	if o == nil {
+func (g *GetNhisRequest) GetCursor() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Cursor
+	return g.Cursor
 }
 
-func (o *GetNhisRequest) GetPageSize() *int64 {
-	if o == nil {
+func (g *GetNhisRequest) GetPageSize() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.PageSize
+	return g.PageSize
 }
 
 type GetNhisResponse struct {
@@ -39,30 +39,30 @@ type GetNhisResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetNhisResponse) GetContentType() string {
-	if o == nil {
+func (g *GetNhisResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetNhisResponse) GetPaginatedResourcesList() *shared.PaginatedResourcesList {
-	if o == nil {
+func (g *GetNhisResponse) GetPaginatedResourcesList() *shared.PaginatedResourcesList {
+	if g == nil {
 		return nil
 	}
-	return o.PaginatedResourcesList
+	return g.PaginatedResourcesList
 }
 
-func (o *GetNhisResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetNhisResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetNhisResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetNhisResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

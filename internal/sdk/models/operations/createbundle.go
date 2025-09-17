@@ -18,30 +18,30 @@ type CreateBundleResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *CreateBundleResponse) GetBundle() *shared.Bundle {
-	if o == nil {
+func (c *CreateBundleResponse) GetBundle() *shared.Bundle {
+	if c == nil {
 		return nil
 	}
-	return o.Bundle
+	return c.Bundle
 }
 
-func (o *CreateBundleResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateBundleResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateBundleResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateBundleResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateBundleResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateBundleResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }

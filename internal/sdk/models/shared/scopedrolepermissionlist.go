@@ -6,9 +6,9 @@ type ScopedRolePermissionList struct {
 	Permissions []ScopedRolePermission `json:"permissions"`
 }
 
-func (o *ScopedRolePermissionList) GetPermissions() []ScopedRolePermission {
-	if o == nil {
+func (s *ScopedRolePermissionList) GetPermissions() []ScopedRolePermission {
+	if s == nil {
 		return []ScopedRolePermission{}
 	}
-	return o.Permissions
+	return s.Permissions
 }

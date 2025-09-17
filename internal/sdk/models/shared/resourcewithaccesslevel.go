@@ -10,16 +10,16 @@ type ResourceWithAccessLevel struct {
 	ResourceID string `json:"resource_id"`
 }
 
-func (o *ResourceWithAccessLevel) GetAccessLevelRemoteID() *string {
-	if o == nil {
+func (r *ResourceWithAccessLevel) GetAccessLevelRemoteID() *string {
+	if r == nil {
 		return nil
 	}
-	return o.AccessLevelRemoteID
+	return r.AccessLevelRemoteID
 }
 
-func (o *ResourceWithAccessLevel) GetResourceID() string {
-	if o == nil {
+func (r *ResourceWithAccessLevel) GetResourceID() string {
+	if r == nil {
 		return ""
 	}
-	return o.ResourceID
+	return r.ResourceID
 }

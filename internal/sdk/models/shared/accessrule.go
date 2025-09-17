@@ -54,44 +54,44 @@ type AccessRule struct {
 	Status Status `json:"status"`
 }
 
-func (o *AccessRule) GetAdminOwnerID() string {
-	if o == nil {
+func (a *AccessRule) GetAdminOwnerID() string {
+	if a == nil {
 		return ""
 	}
-	return o.AdminOwnerID
+	return a.AdminOwnerID
 }
 
-func (o *AccessRule) GetDescription() string {
-	if o == nil {
+func (a *AccessRule) GetDescription() string {
+	if a == nil {
 		return ""
 	}
-	return o.Description
+	return a.Description
 }
 
-func (o *AccessRule) GetID() string {
-	if o == nil {
+func (a *AccessRule) GetID() string {
+	if a == nil {
 		return ""
 	}
-	return o.ID
+	return a.ID
 }
 
-func (o *AccessRule) GetName() string {
-	if o == nil {
+func (a *AccessRule) GetName() string {
+	if a == nil {
 		return ""
 	}
-	return o.Name
+	return a.Name
 }
 
-func (o *AccessRule) GetRuleClauses() RuleClauses {
-	if o == nil {
+func (a *AccessRule) GetRuleClauses() RuleClauses {
+	if a == nil {
 		return RuleClauses{}
 	}
-	return o.RuleClauses
+	return a.RuleClauses
 }
 
-func (o *AccessRule) GetStatus() Status {
-	if o == nil {
+func (a *AccessRule) GetStatus() Status {
+	if a == nil {
 		return Status("")
 	}
-	return o.Status
+	return a.Status
 }

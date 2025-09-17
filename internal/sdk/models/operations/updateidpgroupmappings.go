@@ -12,36 +12,36 @@ type Mappings struct {
 	HiddenFromEndUser *bool   `json:"hidden_from_end_user,omitempty"`
 }
 
-func (o *Mappings) GetAlias() *string {
-	if o == nil {
+func (m *Mappings) GetAlias() *string {
+	if m == nil {
 		return nil
 	}
-	return o.Alias
+	return m.Alias
 }
 
-func (o *Mappings) GetGroupID() *string {
-	if o == nil {
+func (m *Mappings) GetGroupID() *string {
+	if m == nil {
 		return nil
 	}
-	return o.GroupID
+	return m.GroupID
 }
 
-func (o *Mappings) GetHiddenFromEndUser() *bool {
-	if o == nil {
+func (m *Mappings) GetHiddenFromEndUser() *bool {
+	if m == nil {
 		return nil
 	}
-	return o.HiddenFromEndUser
+	return m.HiddenFromEndUser
 }
 
 type UpdateIdpGroupMappingsRequestBody struct {
 	Mappings []Mappings `json:"mappings"`
 }
 
-func (o *UpdateIdpGroupMappingsRequestBody) GetMappings() []Mappings {
-	if o == nil {
+func (u *UpdateIdpGroupMappingsRequestBody) GetMappings() []Mappings {
+	if u == nil {
 		return []Mappings{}
 	}
-	return o.Mappings
+	return u.Mappings
 }
 
 type UpdateIdpGroupMappingsRequest struct {
@@ -50,18 +50,18 @@ type UpdateIdpGroupMappingsRequest struct {
 	AppResourceID string `pathParam:"style=simple,explode=false,name=app_resource_id"`
 }
 
-func (o *UpdateIdpGroupMappingsRequest) GetRequestBody() UpdateIdpGroupMappingsRequestBody {
-	if o == nil {
+func (u *UpdateIdpGroupMappingsRequest) GetRequestBody() UpdateIdpGroupMappingsRequestBody {
+	if u == nil {
 		return UpdateIdpGroupMappingsRequestBody{}
 	}
-	return o.RequestBody
+	return u.RequestBody
 }
 
-func (o *UpdateIdpGroupMappingsRequest) GetAppResourceID() string {
-	if o == nil {
+func (u *UpdateIdpGroupMappingsRequest) GetAppResourceID() string {
+	if u == nil {
 		return ""
 	}
-	return o.AppResourceID
+	return u.AppResourceID
 }
 
 type UpdateIdpGroupMappingsResponse struct {
@@ -73,23 +73,23 @@ type UpdateIdpGroupMappingsResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *UpdateIdpGroupMappingsResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateIdpGroupMappingsResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateIdpGroupMappingsResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateIdpGroupMappingsResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateIdpGroupMappingsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateIdpGroupMappingsResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }

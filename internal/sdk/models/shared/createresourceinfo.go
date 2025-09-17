@@ -24,51 +24,51 @@ type CreateResourceInfo struct {
 	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
 }
 
-func (o *CreateResourceInfo) GetAppID() string {
-	if o == nil {
+func (c *CreateResourceInfo) GetAppID() string {
+	if c == nil {
 		return ""
 	}
-	return o.AppID
+	return c.AppID
 }
 
-func (o *CreateResourceInfo) GetCustomRequestNotification() *string {
-	if o == nil {
+func (c *CreateResourceInfo) GetCustomRequestNotification() *string {
+	if c == nil {
 		return nil
 	}
-	return o.CustomRequestNotification
+	return c.CustomRequestNotification
 }
 
-func (o *CreateResourceInfo) GetDescription() *string {
-	if o == nil {
+func (c *CreateResourceInfo) GetDescription() *string {
+	if c == nil {
 		return nil
 	}
-	return o.Description
+	return c.Description
 }
 
-func (o *CreateResourceInfo) GetName() string {
-	if o == nil {
+func (c *CreateResourceInfo) GetName() string {
+	if c == nil {
 		return ""
 	}
-	return o.Name
+	return c.Name
 }
 
-func (o *CreateResourceInfo) GetRemoteInfo() *ResourceRemoteInfo {
-	if o == nil {
+func (c *CreateResourceInfo) GetRemoteInfo() *ResourceRemoteInfo {
+	if c == nil {
 		return nil
 	}
-	return o.RemoteInfo
+	return c.RemoteInfo
 }
 
-func (o *CreateResourceInfo) GetResourceType() ResourceTypeEnum {
-	if o == nil {
+func (c *CreateResourceInfo) GetResourceType() ResourceTypeEnum {
+	if c == nil {
 		return ResourceTypeEnum("")
 	}
-	return o.ResourceType
+	return c.ResourceType
 }
 
-func (o *CreateResourceInfo) GetRiskSensitivityOverride() *RiskSensitivityEnum {
-	if o == nil {
+func (c *CreateResourceInfo) GetRiskSensitivityOverride() *RiskSensitivityEnum {
+	if c == nil {
 		return nil
 	}
-	return o.RiskSensitivityOverride
+	return c.RiskSensitivityOverride
 }

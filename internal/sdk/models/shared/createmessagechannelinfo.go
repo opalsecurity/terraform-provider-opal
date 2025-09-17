@@ -12,16 +12,16 @@ type CreateMessageChannelInfo struct {
 	ThirdPartyProvider MessageChannelProviderEnum `json:"third_party_provider"`
 }
 
-func (o *CreateMessageChannelInfo) GetRemoteID() string {
-	if o == nil {
+func (c *CreateMessageChannelInfo) GetRemoteID() string {
+	if c == nil {
 		return ""
 	}
-	return o.RemoteID
+	return c.RemoteID
 }
 
-func (o *CreateMessageChannelInfo) GetThirdPartyProvider() MessageChannelProviderEnum {
-	if o == nil {
+func (c *CreateMessageChannelInfo) GetThirdPartyProvider() MessageChannelProviderEnum {
+	if c == nil {
 		return MessageChannelProviderEnum("")
 	}
-	return o.ThirdPartyProvider
+	return c.ThirdPartyProvider
 }

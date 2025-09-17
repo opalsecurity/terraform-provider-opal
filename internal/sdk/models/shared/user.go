@@ -25,51 +25,51 @@ type User struct {
 	Position string `json:"position"`
 }
 
-func (o *User) GetEmail() string {
-	if o == nil {
+func (u *User) GetEmail() string {
+	if u == nil {
 		return ""
 	}
-	return o.Email
+	return u.Email
 }
 
-func (o *User) GetFirstName() string {
-	if o == nil {
+func (u *User) GetFirstName() string {
+	if u == nil {
 		return ""
 	}
-	return o.FirstName
+	return u.FirstName
 }
 
-func (o *User) GetHrIdpStatus() *UserHrIdpStatusEnum {
-	if o == nil {
+func (u *User) GetHrIdpStatus() *UserHrIdpStatusEnum {
+	if u == nil {
 		return nil
 	}
-	return o.HrIdpStatus
+	return u.HrIdpStatus
 }
 
-func (o *User) GetID() string {
-	if o == nil {
+func (u *User) GetID() string {
+	if u == nil {
 		return ""
 	}
-	return o.ID
+	return u.ID
 }
 
-func (o *User) GetLastName() string {
-	if o == nil {
+func (u *User) GetLastName() string {
+	if u == nil {
 		return ""
 	}
-	return o.LastName
+	return u.LastName
 }
 
-func (o *User) GetName() string {
-	if o == nil {
+func (u *User) GetName() string {
+	if u == nil {
 		return ""
 	}
-	return o.Name
+	return u.Name
 }
 
-func (o *User) GetPosition() string {
-	if o == nil {
+func (u *User) GetPosition() string {
+	if u == nil {
 		return ""
 	}
-	return o.Position
+	return u.Position
 }

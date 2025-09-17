@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 99e16eecc7fb450bc6c1509e21c6686e
+  docChecksum: d72d573a9b5c9cc35c4cebf0f517e374
   docVersion: "1.0"
-  speakeasyVersion: 1.615.2
-  generationVersion: 2.698.4
-  releaseVersion: 3.2.2
-  configChecksum: c46b31f4ac9b84ad755d8bb0f4f845d3
+  speakeasyVersion: 1.618.0
+  generationVersion: 2.702.0
+  releaseVersion: 3.3.0
+  configChecksum: 167e7537c4fcf5e533e4b149bb906e1c
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -14,8 +14,8 @@ features:
   terraform:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.2
-    constsAndDefaults: 0.2.1
-    core: 3.44.1
+    constsAndDefaults: 0.3.0
+    core: 3.44.3
     deprecations: 2.82.0
     globalSecurity: 2.82.1
     globalServerURLs: 2.83.0
@@ -30,7 +30,6 @@ features:
 generatedFiles:
   - .gitattributes
   - USAGE.md
-  - examples/README.md
   - examples/data-sources/opal_access_rule/data-source.tf
   - examples/data-sources/opal_app/data-source.tf
   - examples/data-sources/opal_apps/data-source.tf
@@ -631,6 +630,8 @@ generatedFiles:
   - internal/sdk/nonhumanidentities.go
   - internal/sdk/oncallschedules.go
   - internal/sdk/opalapi.go
+  - internal/sdk/optionalnullable/optionalnullable.go
+  - internal/sdk/optionalnullable/optionalnullable_test.go
   - internal/sdk/owners.go
   - internal/sdk/requests.go
   - internal/sdk/resources.go

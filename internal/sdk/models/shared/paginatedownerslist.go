@@ -10,23 +10,23 @@ type PaginatedOwnersList struct {
 	Results  []Owner `json:"results"`
 }
 
-func (o *PaginatedOwnersList) GetNext() *string {
-	if o == nil {
+func (p *PaginatedOwnersList) GetNext() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Next
+	return p.Next
 }
 
-func (o *PaginatedOwnersList) GetPrevious() *string {
-	if o == nil {
+func (p *PaginatedOwnersList) GetPrevious() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Previous
+	return p.Previous
 }
 
-func (o *PaginatedOwnersList) GetResults() []Owner {
-	if o == nil {
+func (p *PaginatedOwnersList) GetResults() []Owner {
+	if p == nil {
 		return []Owner{}
 	}
-	return o.Results
+	return p.Results
 }

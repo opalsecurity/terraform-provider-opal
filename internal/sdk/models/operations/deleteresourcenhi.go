@@ -15,25 +15,25 @@ type DeleteResourceNhiRequest struct {
 	ResourceID string `pathParam:"style=simple,explode=false,name=resource_id"`
 }
 
-func (o *DeleteResourceNhiRequest) GetAccessLevelRemoteID() *string {
-	if o == nil {
+func (d *DeleteResourceNhiRequest) GetAccessLevelRemoteID() *string {
+	if d == nil {
 		return nil
 	}
-	return o.AccessLevelRemoteID
+	return d.AccessLevelRemoteID
 }
 
-func (o *DeleteResourceNhiRequest) GetNonHumanIdentityID() string {
-	if o == nil {
+func (d *DeleteResourceNhiRequest) GetNonHumanIdentityID() string {
+	if d == nil {
 		return ""
 	}
-	return o.NonHumanIdentityID
+	return d.NonHumanIdentityID
 }
 
-func (o *DeleteResourceNhiRequest) GetResourceID() string {
-	if o == nil {
+func (d *DeleteResourceNhiRequest) GetResourceID() string {
+	if d == nil {
 		return ""
 	}
-	return o.ResourceID
+	return d.ResourceID
 }
 
 type DeleteResourceNhiResponse struct {
@@ -45,23 +45,23 @@ type DeleteResourceNhiResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *DeleteResourceNhiResponse) GetContentType() string {
-	if o == nil {
+func (d *DeleteResourceNhiResponse) GetContentType() string {
+	if d == nil {
 		return ""
 	}
-	return o.ContentType
+	return d.ContentType
 }
 
-func (o *DeleteResourceNhiResponse) GetStatusCode() int {
-	if o == nil {
+func (d *DeleteResourceNhiResponse) GetStatusCode() int {
+	if d == nil {
 		return 0
 	}
-	return o.StatusCode
+	return d.StatusCode
 }
 
-func (o *DeleteResourceNhiResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (d *DeleteResourceNhiResponse) GetRawResponse() *http.Response {
+	if d == nil {
 		return nil
 	}
-	return o.RawResponse
+	return d.RawResponse
 }

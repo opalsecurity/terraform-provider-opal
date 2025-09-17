@@ -6,9 +6,9 @@ type GroupUserList struct {
 	Results []GroupUser `json:"results,omitempty"`
 }
 
-func (o *GroupUserList) GetResults() []GroupUser {
-	if o == nil {
+func (g *GroupUserList) GetResults() []GroupUser {
+	if g == nil {
 		return nil
 	}
-	return o.Results
+	return g.Results
 }

@@ -12,11 +12,11 @@ type GetIdpGroupMappingsRequest struct {
 	AppResourceID string `pathParam:"style=simple,explode=false,name=app_resource_id"`
 }
 
-func (o *GetIdpGroupMappingsRequest) GetAppResourceID() string {
-	if o == nil {
+func (g *GetIdpGroupMappingsRequest) GetAppResourceID() string {
+	if g == nil {
 		return ""
 	}
-	return o.AppResourceID
+	return g.AppResourceID
 }
 
 type GetIdpGroupMappingsResponse struct {
@@ -30,30 +30,30 @@ type GetIdpGroupMappingsResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetIdpGroupMappingsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetIdpGroupMappingsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetIdpGroupMappingsResponse) GetIdpGroupMappingList() *shared.IdpGroupMappingList {
-	if o == nil {
+func (g *GetIdpGroupMappingsResponse) GetIdpGroupMappingList() *shared.IdpGroupMappingList {
+	if g == nil {
 		return nil
 	}
-	return o.IdpGroupMappingList
+	return g.IdpGroupMappingList
 }
 
-func (o *GetIdpGroupMappingsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetIdpGroupMappingsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetIdpGroupMappingsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetIdpGroupMappingsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

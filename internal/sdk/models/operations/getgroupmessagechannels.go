@@ -12,11 +12,11 @@ type GetGroupMessageChannelsRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (o *GetGroupMessageChannelsRequest) GetID() string {
-	if o == nil {
+func (g *GetGroupMessageChannelsRequest) GetID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ID
+	return g.ID
 }
 
 // GetGroupMessageChannelsResponseBody - The audit and reviewer message channels attached to the group.
@@ -24,11 +24,11 @@ type GetGroupMessageChannelsResponseBody struct {
 	Channels []shared.MessageChannel `json:"channels"`
 }
 
-func (o *GetGroupMessageChannelsResponseBody) GetChannels() []shared.MessageChannel {
-	if o == nil {
+func (g *GetGroupMessageChannelsResponseBody) GetChannels() []shared.MessageChannel {
+	if g == nil {
 		return []shared.MessageChannel{}
 	}
-	return o.Channels
+	return g.Channels
 }
 
 type GetGroupMessageChannelsResponse struct {
@@ -42,30 +42,30 @@ type GetGroupMessageChannelsResponse struct {
 	Object *GetGroupMessageChannelsResponseBody
 }
 
-func (o *GetGroupMessageChannelsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetGroupMessageChannelsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetGroupMessageChannelsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetGroupMessageChannelsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetGroupMessageChannelsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetGroupMessageChannelsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetGroupMessageChannelsResponse) GetObject() *GetGroupMessageChannelsResponseBody {
-	if o == nil {
+func (g *GetGroupMessageChannelsResponse) GetObject() *GetGroupMessageChannelsResponseBody {
+	if g == nil {
 		return nil
 	}
-	return o.Object
+	return g.Object
 }

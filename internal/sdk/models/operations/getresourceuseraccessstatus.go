@@ -20,39 +20,39 @@ type GetResourceUserAccessStatusRequest struct {
 	UserID string `pathParam:"style=simple,explode=false,name=user_id"`
 }
 
-func (o *GetResourceUserAccessStatusRequest) GetAccessLevelRemoteID() *string {
-	if o == nil {
+func (g *GetResourceUserAccessStatusRequest) GetAccessLevelRemoteID() *string {
+	if g == nil {
 		return nil
 	}
-	return o.AccessLevelRemoteID
+	return g.AccessLevelRemoteID
 }
 
-func (o *GetResourceUserAccessStatusRequest) GetCursor() *string {
-	if o == nil {
+func (g *GetResourceUserAccessStatusRequest) GetCursor() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Cursor
+	return g.Cursor
 }
 
-func (o *GetResourceUserAccessStatusRequest) GetPageSize() *int64 {
-	if o == nil {
+func (g *GetResourceUserAccessStatusRequest) GetPageSize() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.PageSize
+	return g.PageSize
 }
 
-func (o *GetResourceUserAccessStatusRequest) GetResourceID() string {
-	if o == nil {
+func (g *GetResourceUserAccessStatusRequest) GetResourceID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ResourceID
+	return g.ResourceID
 }
 
-func (o *GetResourceUserAccessStatusRequest) GetUserID() string {
-	if o == nil {
+func (g *GetResourceUserAccessStatusRequest) GetUserID() string {
+	if g == nil {
 		return ""
 	}
-	return o.UserID
+	return g.UserID
 }
 
 type GetResourceUserAccessStatusResponse struct {
@@ -66,30 +66,30 @@ type GetResourceUserAccessStatusResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetResourceUserAccessStatusResponse) GetContentType() string {
-	if o == nil {
+func (g *GetResourceUserAccessStatusResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetResourceUserAccessStatusResponse) GetResourceUserAccessStatus() *shared.ResourceUserAccessStatus {
-	if o == nil {
+func (g *GetResourceUserAccessStatusResponse) GetResourceUserAccessStatus() *shared.ResourceUserAccessStatus {
+	if g == nil {
 		return nil
 	}
-	return o.ResourceUserAccessStatus
+	return g.ResourceUserAccessStatus
 }
 
-func (o *GetResourceUserAccessStatusResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetResourceUserAccessStatusResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetResourceUserAccessStatusResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetResourceUserAccessStatusResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

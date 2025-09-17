@@ -18,18 +18,18 @@ type CreateIdpGroupMappingRequestBody struct {
 	HiddenFromEndUser *bool `json:"hidden_from_end_user,omitempty"`
 }
 
-func (o *CreateIdpGroupMappingRequestBody) GetAlias() *string {
-	if o == nil {
+func (c *CreateIdpGroupMappingRequestBody) GetAlias() *string {
+	if c == nil {
 		return nil
 	}
-	return o.Alias
+	return c.Alias
 }
 
-func (o *CreateIdpGroupMappingRequestBody) GetHiddenFromEndUser() *bool {
-	if o == nil {
+func (c *CreateIdpGroupMappingRequestBody) GetHiddenFromEndUser() *bool {
+	if c == nil {
 		return nil
 	}
-	return o.HiddenFromEndUser
+	return c.HiddenFromEndUser
 }
 
 type CreateIdpGroupMappingRequest struct {
@@ -40,25 +40,25 @@ type CreateIdpGroupMappingRequest struct {
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (o *CreateIdpGroupMappingRequest) GetRequestBody() *CreateIdpGroupMappingRequestBody {
-	if o == nil {
+func (c *CreateIdpGroupMappingRequest) GetRequestBody() *CreateIdpGroupMappingRequestBody {
+	if c == nil {
 		return nil
 	}
-	return o.RequestBody
+	return c.RequestBody
 }
 
-func (o *CreateIdpGroupMappingRequest) GetAppResourceID() string {
-	if o == nil {
+func (c *CreateIdpGroupMappingRequest) GetAppResourceID() string {
+	if c == nil {
 		return ""
 	}
-	return o.AppResourceID
+	return c.AppResourceID
 }
 
-func (o *CreateIdpGroupMappingRequest) GetGroupID() string {
-	if o == nil {
+func (c *CreateIdpGroupMappingRequest) GetGroupID() string {
+	if c == nil {
 		return ""
 	}
-	return o.GroupID
+	return c.GroupID
 }
 
 type CreateIdpGroupMappingResponse struct {
@@ -72,30 +72,30 @@ type CreateIdpGroupMappingResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *CreateIdpGroupMappingResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateIdpGroupMappingResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateIdpGroupMappingResponse) GetIdpGroupMapping() *shared.IdpGroupMapping {
-	if o == nil {
+func (c *CreateIdpGroupMappingResponse) GetIdpGroupMapping() *shared.IdpGroupMapping {
+	if c == nil {
 		return nil
 	}
-	return o.IdpGroupMapping
+	return c.IdpGroupMapping
 }
 
-func (o *CreateIdpGroupMappingResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateIdpGroupMappingResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateIdpGroupMappingResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateIdpGroupMappingResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }

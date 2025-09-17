@@ -8,23 +8,23 @@ type TagSelector struct {
 	Value        string `json:"value"`
 }
 
-func (o *TagSelector) GetConnectionID() string {
-	if o == nil {
+func (t *TagSelector) GetConnectionID() string {
+	if t == nil {
 		return ""
 	}
-	return o.ConnectionID
+	return t.ConnectionID
 }
 
-func (o *TagSelector) GetKey() string {
-	if o == nil {
+func (t *TagSelector) GetKey() string {
+	if t == nil {
 		return ""
 	}
-	return o.Key
+	return t.Key
 }
 
-func (o *TagSelector) GetValue() string {
-	if o == nil {
+func (t *TagSelector) GetValue() string {
+	if t == nil {
 		return ""
 	}
-	return o.Value
+	return t.Value
 }

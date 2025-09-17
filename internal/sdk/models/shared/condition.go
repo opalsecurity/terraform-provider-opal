@@ -24,16 +24,16 @@ func (c *Condition) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Condition) GetGroupIds() []string {
-	if o == nil {
+func (c *Condition) GetGroupIds() []string {
+	if c == nil {
 		return nil
 	}
-	return o.GroupIds
+	return c.GroupIds
 }
 
-func (o *Condition) GetRoleRemoteIds() []string {
-	if o == nil {
+func (c *Condition) GetRoleRemoteIds() []string {
+	if c == nil {
 		return nil
 	}
-	return o.RoleRemoteIds
+	return c.RoleRemoteIds
 }

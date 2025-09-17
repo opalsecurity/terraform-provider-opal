@@ -35,86 +35,86 @@ type ConfigurationTemplate struct {
 	Visibility *VisibilityInfo `json:"visibility,omitempty"`
 }
 
-func (o *ConfigurationTemplate) GetAdminOwnerID() *string {
-	if o == nil {
+func (c *ConfigurationTemplate) GetAdminOwnerID() *string {
+	if c == nil {
 		return nil
 	}
-	return o.AdminOwnerID
+	return c.AdminOwnerID
 }
 
-func (o *ConfigurationTemplate) GetBreakGlassUserIds() []string {
-	if o == nil {
+func (c *ConfigurationTemplate) GetBreakGlassUserIds() []string {
+	if c == nil {
 		return nil
 	}
-	return o.BreakGlassUserIds
+	return c.BreakGlassUserIds
 }
 
-func (o *ConfigurationTemplate) GetConfigurationTemplateID() *string {
-	if o == nil {
+func (c *ConfigurationTemplate) GetConfigurationTemplateID() *string {
+	if c == nil {
 		return nil
 	}
-	return o.ConfigurationTemplateID
+	return c.ConfigurationTemplateID
 }
 
-func (o *ConfigurationTemplate) GetCustomRequestNotification() *string {
-	if o == nil {
+func (c *ConfigurationTemplate) GetCustomRequestNotification() *string {
+	if c == nil {
 		return nil
 	}
-	return o.CustomRequestNotification
+	return c.CustomRequestNotification
 }
 
-func (o *ConfigurationTemplate) GetLinkedAuditMessageChannelIds() []string {
-	if o == nil {
+func (c *ConfigurationTemplate) GetLinkedAuditMessageChannelIds() []string {
+	if c == nil {
 		return nil
 	}
-	return o.LinkedAuditMessageChannelIds
+	return c.LinkedAuditMessageChannelIds
 }
 
-func (o *ConfigurationTemplate) GetMemberOnCallScheduleIds() []string {
-	if o == nil {
+func (c *ConfigurationTemplate) GetMemberOnCallScheduleIds() []string {
+	if c == nil {
 		return nil
 	}
-	return o.MemberOnCallScheduleIds
+	return c.MemberOnCallScheduleIds
 }
 
-func (o *ConfigurationTemplate) GetName() *string {
-	if o == nil {
+func (c *ConfigurationTemplate) GetName() *string {
+	if c == nil {
 		return nil
 	}
-	return o.Name
+	return c.Name
 }
 
-func (o *ConfigurationTemplate) GetRequestConfigurationID() *string {
-	if o == nil {
+func (c *ConfigurationTemplate) GetRequestConfigurationID() *string {
+	if c == nil {
 		return nil
 	}
-	return o.RequestConfigurationID
+	return c.RequestConfigurationID
 }
 
-func (o *ConfigurationTemplate) GetRequireMfaToApprove() *bool {
-	if o == nil {
+func (c *ConfigurationTemplate) GetRequireMfaToApprove() *bool {
+	if c == nil {
 		return nil
 	}
-	return o.RequireMfaToApprove
+	return c.RequireMfaToApprove
 }
 
-func (o *ConfigurationTemplate) GetRequireMfaToConnect() *bool {
-	if o == nil {
+func (c *ConfigurationTemplate) GetRequireMfaToConnect() *bool {
+	if c == nil {
 		return nil
 	}
-	return o.RequireMfaToConnect
+	return c.RequireMfaToConnect
 }
 
-func (o *ConfigurationTemplate) GetTicketPropagation() *TicketPropagationConfiguration {
-	if o == nil {
+func (c *ConfigurationTemplate) GetTicketPropagation() *TicketPropagationConfiguration {
+	if c == nil {
 		return nil
 	}
-	return o.TicketPropagation
+	return c.TicketPropagation
 }
 
-func (o *ConfigurationTemplate) GetVisibility() *VisibilityInfo {
-	if o == nil {
+func (c *ConfigurationTemplate) GetVisibility() *VisibilityInfo {
+	if c == nil {
 		return nil
 	}
-	return o.Visibility
+	return c.Visibility
 }

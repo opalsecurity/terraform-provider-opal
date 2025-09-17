@@ -24,51 +24,51 @@ type CreateGroupInfo struct {
 	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
 }
 
-func (o *CreateGroupInfo) GetAppID() string {
-	if o == nil {
+func (c *CreateGroupInfo) GetAppID() string {
+	if c == nil {
 		return ""
 	}
-	return o.AppID
+	return c.AppID
 }
 
-func (o *CreateGroupInfo) GetCustomRequestNotification() *string {
-	if o == nil {
+func (c *CreateGroupInfo) GetCustomRequestNotification() *string {
+	if c == nil {
 		return nil
 	}
-	return o.CustomRequestNotification
+	return c.CustomRequestNotification
 }
 
-func (o *CreateGroupInfo) GetDescription() *string {
-	if o == nil {
+func (c *CreateGroupInfo) GetDescription() *string {
+	if c == nil {
 		return nil
 	}
-	return o.Description
+	return c.Description
 }
 
-func (o *CreateGroupInfo) GetGroupType() GroupTypeEnum {
-	if o == nil {
+func (c *CreateGroupInfo) GetGroupType() GroupTypeEnum {
+	if c == nil {
 		return GroupTypeEnum("")
 	}
-	return o.GroupType
+	return c.GroupType
 }
 
-func (o *CreateGroupInfo) GetName() string {
-	if o == nil {
+func (c *CreateGroupInfo) GetName() string {
+	if c == nil {
 		return ""
 	}
-	return o.Name
+	return c.Name
 }
 
-func (o *CreateGroupInfo) GetRemoteInfo() *GroupRemoteInfo {
-	if o == nil {
+func (c *CreateGroupInfo) GetRemoteInfo() *GroupRemoteInfo {
+	if c == nil {
 		return nil
 	}
-	return o.RemoteInfo
+	return c.RemoteInfo
 }
 
-func (o *CreateGroupInfo) GetRiskSensitivityOverride() *RiskSensitivityEnum {
-	if o == nil {
+func (c *CreateGroupInfo) GetRiskSensitivityOverride() *RiskSensitivityEnum {
+	if c == nil {
 		return nil
 	}
-	return o.RiskSensitivityOverride
+	return c.RiskSensitivityOverride
 }

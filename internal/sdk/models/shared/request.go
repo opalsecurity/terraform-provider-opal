@@ -56,86 +56,86 @@ func (r *Request) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Request) GetCreatedAt() time.Time {
-	if o == nil {
+func (r *Request) GetCreatedAt() time.Time {
+	if r == nil {
 		return time.Time{}
 	}
-	return o.CreatedAt
+	return r.CreatedAt
 }
 
-func (o *Request) GetCustomFieldsResponses() []RequestCustomFieldResponse {
-	if o == nil {
+func (r *Request) GetCustomFieldsResponses() []RequestCustomFieldResponse {
+	if r == nil {
 		return nil
 	}
-	return o.CustomFieldsResponses
+	return r.CustomFieldsResponses
 }
 
-func (o *Request) GetDurationMinutes() *int64 {
-	if o == nil {
+func (r *Request) GetDurationMinutes() *int64 {
+	if r == nil {
 		return nil
 	}
-	return o.DurationMinutes
+	return r.DurationMinutes
 }
 
-func (o *Request) GetID() string {
-	if o == nil {
+func (r *Request) GetID() string {
+	if r == nil {
 		return ""
 	}
-	return o.ID
+	return r.ID
 }
 
-func (o *Request) GetReason() string {
-	if o == nil {
+func (r *Request) GetReason() string {
+	if r == nil {
 		return ""
 	}
-	return o.Reason
+	return r.Reason
 }
 
-func (o *Request) GetRequestedItemsList() []RequestedItem {
-	if o == nil {
+func (r *Request) GetRequestedItemsList() []RequestedItem {
+	if r == nil {
 		return nil
 	}
-	return o.RequestedItemsList
+	return r.RequestedItemsList
 }
 
-func (o *Request) GetRequesterID() string {
-	if o == nil {
+func (r *Request) GetRequesterID() string {
+	if r == nil {
 		return ""
 	}
-	return o.RequesterID
+	return r.RequesterID
 }
 
-func (o *Request) GetStages() *RequestItemStages {
-	if o == nil {
+func (r *Request) GetStages() *RequestItemStages {
+	if r == nil {
 		return nil
 	}
-	return o.Stages
+	return r.Stages
 }
 
-func (o *Request) GetStatus() RequestStatusEnum {
-	if o == nil {
+func (r *Request) GetStatus() RequestStatusEnum {
+	if r == nil {
 		return RequestStatusEnum("")
 	}
-	return o.Status
+	return r.Status
 }
 
-func (o *Request) GetTargetGroupID() *string {
-	if o == nil {
+func (r *Request) GetTargetGroupID() *string {
+	if r == nil {
 		return nil
 	}
-	return o.TargetGroupID
+	return r.TargetGroupID
 }
 
-func (o *Request) GetTargetUserID() *string {
-	if o == nil {
+func (r *Request) GetTargetUserID() *string {
+	if r == nil {
 		return nil
 	}
-	return o.TargetUserID
+	return r.TargetUserID
 }
 
-func (o *Request) GetUpdatedAt() time.Time {
-	if o == nil {
+func (r *Request) GetUpdatedAt() time.Time {
+	if r == nil {
 		return time.Time{}
 	}
-	return o.UpdatedAt
+	return r.UpdatedAt
 }

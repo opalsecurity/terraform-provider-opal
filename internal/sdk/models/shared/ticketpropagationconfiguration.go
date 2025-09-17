@@ -11,30 +11,30 @@ type TicketPropagationConfiguration struct {
 	TicketProvider *TicketingProviderEnum `json:"ticket_provider,omitempty"`
 }
 
-func (o *TicketPropagationConfiguration) GetEnabledOnGrant() bool {
-	if o == nil {
+func (t *TicketPropagationConfiguration) GetEnabledOnGrant() bool {
+	if t == nil {
 		return false
 	}
-	return o.EnabledOnGrant
+	return t.EnabledOnGrant
 }
 
-func (o *TicketPropagationConfiguration) GetEnabledOnRevocation() bool {
-	if o == nil {
+func (t *TicketPropagationConfiguration) GetEnabledOnRevocation() bool {
+	if t == nil {
 		return false
 	}
-	return o.EnabledOnRevocation
+	return t.EnabledOnRevocation
 }
 
-func (o *TicketPropagationConfiguration) GetTicketProjectID() *string {
-	if o == nil {
+func (t *TicketPropagationConfiguration) GetTicketProjectID() *string {
+	if t == nil {
 		return nil
 	}
-	return o.TicketProjectID
+	return t.TicketProjectID
 }
 
-func (o *TicketPropagationConfiguration) GetTicketProvider() *TicketingProviderEnum {
-	if o == nil {
+func (t *TicketPropagationConfiguration) GetTicketProvider() *TicketingProviderEnum {
+	if t == nil {
 		return nil
 	}
-	return o.TicketProvider
+	return t.TicketProvider
 }

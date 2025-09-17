@@ -1951,97 +1951,6 @@ paths:
       tags:
         - idp-group-mappings
       x-speakeasy-entity-operation: IdpGroupMappings#create,update
-  /idp-group-mappings/{app_resource_id}/{group_id}/:
-    post:
-      description: |
-        Creates or updates an individual `IdpGroupMapping` object (upsert operation).
-
-        **Behavior:**
-        - If the mapping doesn't exist, it will be created with the provided values
-        - If the mapping exists, only the fields provided in the request will be updated
-      operationId: createIdpGroupMapping
-      parameters:
-        - description: The ID of the Okta app.
-          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
-          explode: false
-          in: path
-          name: app_resource_id
-          required: true
-          schema:
-            format: uuid
-            type: string
-          style: simple
-        - description: The ID of the group.
-          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
-          explode: false
-          in: path
-          name: group_id
-          required: true
-          schema:
-            format: uuid
-            type: string
-          style: simple
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              properties:
-                alias:
-                  description: Optional alias for the group mapping
-                  type: string
-                  nullable: true
-                hidden_from_end_user:
-                  description: |
-                    Whether this mapping should be hidden from end users.
-                    - **New mappings**: If not provided, defaults to `false`
-                    - **Existing mappings**: If not provided, existing value is preserved (no change)
-                    - **Explicit values**: If provided, value is updated to the specified boolean
-                  type: boolean
-                  nullable: true
-              type: object
-      responses:
-        "200":
-          description: The IDP group mapping was successfully created or updated.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/IdpGroupMapping"
-      security:
-        - BearerAuth: []
-      tags:
-        - idp-group-mappings
-    delete:
-      description: Deletes an `IdpGroupMapping` object.
-      operationId: delete_idp_group_mappings
-      parameters:
-        - description: The ID of the Okta app.
-          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
-          explode: false
-          in: path
-          name: app_resource_id
-          required: true
-          schema:
-            format: uuid
-            type: string
-          style: simple
-        - description: The ID of the group.
-          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
-          explode: false
-          in: path
-          name: group_id
-          required: true
-          schema:
-            format: uuid
-            type: string
-          style: simple
-      responses:
-        "200":
-          description: The IDP group mapping was successfully deleted.
-      security:
-        - BearerAuth: []
-      tags:
-        - idp-group-mappings
   /owners:
     get:
       description: Returns a list of `Owner` objects.
@@ -4320,6 +4229,97 @@ paths:
         - BearerAuth: []
       tags:
         - apps
+  /idp-group-mappings/{app_resource_id}/{group_id}/:
+    post:
+      description: |
+        Creates or updates an individual `IdpGroupMapping` object (upsert operation).
+
+        **Behavior:**
+        - If the mapping doesn't exist, it will be created with the provided values
+        - If the mapping exists, only the fields provided in the request will be updated
+      operationId: createIdpGroupMapping
+      parameters:
+        - description: The ID of the Okta app.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: app_resource_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              properties:
+                alias:
+                  description: Optional alias for the group mapping
+                  type: string
+                  nullable: true
+                hidden_from_end_user:
+                  description: |
+                    Whether this mapping should be hidden from end users.
+                    - **New mappings**: If not provided, defaults to `false`
+                    - **Existing mappings**: If not provided, existing value is preserved (no change)
+                    - **Explicit values**: If provided, value is updated to the specified boolean
+                  type: boolean
+                  nullable: true
+              type: object
+      responses:
+        "200":
+          description: The IDP group mapping was successfully created or updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IdpGroupMapping"
+      security:
+        - BearerAuth: []
+      tags:
+        - idp-group-mappings
+    delete:
+      description: Deletes an `IdpGroupMapping` object.
+      operationId: delete_idp_group_mappings
+      parameters:
+        - description: The ID of the Okta app.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: app_resource_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          description: The IDP group mapping was successfully deleted.
+      security:
+        - BearerAuth: []
+      tags:
+        - idp-group-mappings
 components:
   schemas:
     PaginatedAssignedRequestList:

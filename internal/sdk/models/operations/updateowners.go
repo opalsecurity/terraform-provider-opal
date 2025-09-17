@@ -18,30 +18,30 @@ type UpdateOwnersResponse struct {
 	UpdateOwnerInfoList *shared.UpdateOwnerInfoList
 }
 
-func (o *UpdateOwnersResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateOwnersResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateOwnersResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateOwnersResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateOwnersResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateOwnersResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }
 
-func (o *UpdateOwnersResponse) GetUpdateOwnerInfoList() *shared.UpdateOwnerInfoList {
-	if o == nil {
+func (u *UpdateOwnersResponse) GetUpdateOwnerInfoList() *shared.UpdateOwnerInfoList {
+	if u == nil {
 		return nil
 	}
-	return o.UpdateOwnerInfoList
+	return u.UpdateOwnerInfoList
 }

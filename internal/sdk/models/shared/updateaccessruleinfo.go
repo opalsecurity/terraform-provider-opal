@@ -49,37 +49,37 @@ type UpdateAccessRuleInfo struct {
 	Status UpdateAccessRuleInfoStatus `json:"status"`
 }
 
-func (o *UpdateAccessRuleInfo) GetAdminOwnerID() string {
-	if o == nil {
+func (u *UpdateAccessRuleInfo) GetAdminOwnerID() string {
+	if u == nil {
 		return ""
 	}
-	return o.AdminOwnerID
+	return u.AdminOwnerID
 }
 
-func (o *UpdateAccessRuleInfo) GetDescription() string {
-	if o == nil {
+func (u *UpdateAccessRuleInfo) GetDescription() string {
+	if u == nil {
 		return ""
 	}
-	return o.Description
+	return u.Description
 }
 
-func (o *UpdateAccessRuleInfo) GetName() string {
-	if o == nil {
+func (u *UpdateAccessRuleInfo) GetName() string {
+	if u == nil {
 		return ""
 	}
-	return o.Name
+	return u.Name
 }
 
-func (o *UpdateAccessRuleInfo) GetRuleClauses() RuleClauses {
-	if o == nil {
+func (u *UpdateAccessRuleInfo) GetRuleClauses() RuleClauses {
+	if u == nil {
 		return RuleClauses{}
 	}
-	return o.RuleClauses
+	return u.RuleClauses
 }
 
-func (o *UpdateAccessRuleInfo) GetStatus() UpdateAccessRuleInfoStatus {
-	if o == nil {
+func (u *UpdateAccessRuleInfo) GetStatus() UpdateAccessRuleInfoStatus {
+	if u == nil {
 		return UpdateAccessRuleInfoStatus("")
 	}
-	return o.Status
+	return u.Status
 }

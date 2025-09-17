@@ -13,18 +13,18 @@ type UpdateBundleRequest struct {
 	BundleID string `pathParam:"style=simple,explode=false,name=bundle_id"`
 }
 
-func (o *UpdateBundleRequest) GetBundle() shared.BundleInput {
-	if o == nil {
+func (u *UpdateBundleRequest) GetBundle() shared.BundleInput {
+	if u == nil {
 		return shared.BundleInput{}
 	}
-	return o.Bundle
+	return u.Bundle
 }
 
-func (o *UpdateBundleRequest) GetBundleID() string {
-	if o == nil {
+func (u *UpdateBundleRequest) GetBundleID() string {
+	if u == nil {
 		return ""
 	}
-	return o.BundleID
+	return u.BundleID
 }
 
 type UpdateBundleResponse struct {
@@ -38,30 +38,30 @@ type UpdateBundleResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *UpdateBundleResponse) GetBundle() *shared.Bundle {
-	if o == nil {
+func (u *UpdateBundleResponse) GetBundle() *shared.Bundle {
+	if u == nil {
 		return nil
 	}
-	return o.Bundle
+	return u.Bundle
 }
 
-func (o *UpdateBundleResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateBundleResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateBundleResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateBundleResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateBundleResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateBundleResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }

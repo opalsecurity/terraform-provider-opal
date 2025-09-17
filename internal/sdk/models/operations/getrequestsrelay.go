@@ -24,53 +24,53 @@ type GetRequestsRelayRequest struct {
 	To *string `queryParam:"style=form,explode=true,name=to"`
 }
 
-func (o *GetRequestsRelayRequest) GetAfter() *string {
-	if o == nil {
+func (g *GetRequestsRelayRequest) GetAfter() *string {
+	if g == nil {
 		return nil
 	}
-	return o.After
+	return g.After
 }
 
-func (o *GetRequestsRelayRequest) GetBefore() *string {
-	if o == nil {
+func (g *GetRequestsRelayRequest) GetBefore() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Before
+	return g.Before
 }
 
-func (o *GetRequestsRelayRequest) GetFirst() *int64 {
-	if o == nil {
+func (g *GetRequestsRelayRequest) GetFirst() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.First
+	return g.First
 }
 
-func (o *GetRequestsRelayRequest) GetFrom() *string {
-	if o == nil {
+func (g *GetRequestsRelayRequest) GetFrom() *string {
+	if g == nil {
 		return nil
 	}
-	return o.From
+	return g.From
 }
 
-func (o *GetRequestsRelayRequest) GetLast() *int64 {
-	if o == nil {
+func (g *GetRequestsRelayRequest) GetLast() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.Last
+	return g.Last
 }
 
-func (o *GetRequestsRelayRequest) GetStatus() *shared.RequestStatusEnum {
-	if o == nil {
+func (g *GetRequestsRelayRequest) GetStatus() *shared.RequestStatusEnum {
+	if g == nil {
 		return nil
 	}
-	return o.Status
+	return g.Status
 }
 
-func (o *GetRequestsRelayRequest) GetTo() *string {
-	if o == nil {
+func (g *GetRequestsRelayRequest) GetTo() *string {
+	if g == nil {
 		return nil
 	}
-	return o.To
+	return g.To
 }
 
 type GetRequestsRelayResponse struct {
@@ -84,30 +84,30 @@ type GetRequestsRelayResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetRequestsRelayResponse) GetContentType() string {
-	if o == nil {
+func (g *GetRequestsRelayResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetRequestsRelayResponse) GetRequestConnection() *shared.RequestConnection {
-	if o == nil {
+func (g *GetRequestsRelayResponse) GetRequestConnection() *shared.RequestConnection {
+	if g == nil {
 		return nil
 	}
-	return o.RequestConnection
+	return g.RequestConnection
 }
 
-func (o *GetRequestsRelayResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetRequestsRelayResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetRequestsRelayResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetRequestsRelayResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

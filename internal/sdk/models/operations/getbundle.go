@@ -12,11 +12,11 @@ type GetBundleRequest struct {
 	BundleID string `pathParam:"style=simple,explode=true,name=bundle_id"`
 }
 
-func (o *GetBundleRequest) GetBundleID() string {
-	if o == nil {
+func (g *GetBundleRequest) GetBundleID() string {
+	if g == nil {
 		return ""
 	}
-	return o.BundleID
+	return g.BundleID
 }
 
 type GetBundleResponse struct {
@@ -30,30 +30,30 @@ type GetBundleResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetBundleResponse) GetBundle() *shared.Bundle {
-	if o == nil {
+func (g *GetBundleResponse) GetBundle() *shared.Bundle {
+	if g == nil {
 		return nil
 	}
-	return o.Bundle
+	return g.Bundle
 }
 
-func (o *GetBundleResponse) GetContentType() string {
-	if o == nil {
+func (g *GetBundleResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetBundleResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetBundleResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetBundleResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetBundleResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

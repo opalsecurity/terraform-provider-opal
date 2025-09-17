@@ -12,11 +12,11 @@ type GetResourceIDRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=resource_id"`
 }
 
-func (o *GetResourceIDRequest) GetID() string {
-	if o == nil {
+func (g *GetResourceIDRequest) GetID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ID
+	return g.ID
 }
 
 type GetResourceIDResponse struct {
@@ -30,30 +30,30 @@ type GetResourceIDResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetResourceIDResponse) GetContentType() string {
-	if o == nil {
+func (g *GetResourceIDResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetResourceIDResponse) GetResource() *shared.Resource {
-	if o == nil {
+func (g *GetResourceIDResponse) GetResource() *shared.Resource {
+	if g == nil {
 		return nil
 	}
-	return o.Resource
+	return g.Resource
 }
 
-func (o *GetResourceIDResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetResourceIDResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetResourceIDResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetResourceIDResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

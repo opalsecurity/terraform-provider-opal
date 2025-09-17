@@ -21,37 +21,37 @@ type MessageChannel struct {
 	ThirdPartyProvider *MessageChannelProviderEnum `json:"third_party_provider,omitempty"`
 }
 
-func (o *MessageChannel) GetID() string {
-	if o == nil {
+func (m *MessageChannel) GetID() string {
+	if m == nil {
 		return ""
 	}
-	return o.ID
+	return m.ID
 }
 
-func (o *MessageChannel) GetIsPrivate() *bool {
-	if o == nil {
+func (m *MessageChannel) GetIsPrivate() *bool {
+	if m == nil {
 		return nil
 	}
-	return o.IsPrivate
+	return m.IsPrivate
 }
 
-func (o *MessageChannel) GetName() *string {
-	if o == nil {
+func (m *MessageChannel) GetName() *string {
+	if m == nil {
 		return nil
 	}
-	return o.Name
+	return m.Name
 }
 
-func (o *MessageChannel) GetRemoteID() *string {
-	if o == nil {
+func (m *MessageChannel) GetRemoteID() *string {
+	if m == nil {
 		return nil
 	}
-	return o.RemoteID
+	return m.RemoteID
 }
 
-func (o *MessageChannel) GetThirdPartyProvider() *MessageChannelProviderEnum {
-	if o == nil {
+func (m *MessageChannel) GetThirdPartyProvider() *MessageChannelProviderEnum {
+	if m == nil {
 		return nil
 	}
-	return o.ThirdPartyProvider
+	return m.ThirdPartyProvider
 }

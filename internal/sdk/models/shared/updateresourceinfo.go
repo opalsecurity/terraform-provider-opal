@@ -44,79 +44,79 @@ func (u *UpdateResourceInfo) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *UpdateResourceInfo) GetAdminOwnerID() *string {
-	if o == nil {
+func (u *UpdateResourceInfo) GetAdminOwnerID() *string {
+	if u == nil {
 		return nil
 	}
-	return o.AdminOwnerID
+	return u.AdminOwnerID
 }
 
-func (o *UpdateResourceInfo) GetCustomRequestNotification() *string {
-	if o == nil {
+func (u *UpdateResourceInfo) GetCustomRequestNotification() *string {
+	if u == nil {
 		return nil
 	}
-	return o.CustomRequestNotification
+	return u.CustomRequestNotification
 }
 
-func (o *UpdateResourceInfo) GetDescription() *string {
-	if o == nil {
+func (u *UpdateResourceInfo) GetDescription() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Description
+	return u.Description
 }
 
-func (o *UpdateResourceInfo) GetExtensionsDurationInMinutes() *int64 {
-	if o == nil {
+func (u *UpdateResourceInfo) GetExtensionsDurationInMinutes() *int64 {
+	if u == nil {
 		return nil
 	}
-	return o.ExtensionsDurationInMinutes
+	return u.ExtensionsDurationInMinutes
 }
 
-func (o *UpdateResourceInfo) GetID() string {
-	if o == nil {
+func (u *UpdateResourceInfo) GetID() string {
+	if u == nil {
 		return ""
 	}
-	return o.ID
+	return u.ID
 }
 
-func (o *UpdateResourceInfo) GetName() *string {
-	if o == nil {
+func (u *UpdateResourceInfo) GetName() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Name
+	return u.Name
 }
 
-func (o *UpdateResourceInfo) GetRequestConfigurations() []RequestConfiguration {
-	if o == nil {
+func (u *UpdateResourceInfo) GetRequestConfigurations() []RequestConfiguration {
+	if u == nil {
 		return []RequestConfiguration{}
 	}
-	return o.RequestConfigurations
+	return u.RequestConfigurations
 }
 
-func (o *UpdateResourceInfo) GetRequireMfaToApprove() *bool {
-	if o == nil {
+func (u *UpdateResourceInfo) GetRequireMfaToApprove() *bool {
+	if u == nil {
 		return nil
 	}
-	return o.RequireMfaToApprove
+	return u.RequireMfaToApprove
 }
 
-func (o *UpdateResourceInfo) GetRequireMfaToConnect() *bool {
-	if o == nil {
+func (u *UpdateResourceInfo) GetRequireMfaToConnect() *bool {
+	if u == nil {
 		return nil
 	}
-	return o.RequireMfaToConnect
+	return u.RequireMfaToConnect
 }
 
-func (o *UpdateResourceInfo) GetRiskSensitivityOverride() *RiskSensitivityEnum {
-	if o == nil {
+func (u *UpdateResourceInfo) GetRiskSensitivityOverride() *RiskSensitivityEnum {
+	if u == nil {
 		return nil
 	}
-	return o.RiskSensitivityOverride
+	return u.RiskSensitivityOverride
 }
 
-func (o *UpdateResourceInfo) GetTicketPropagation() *TicketPropagationConfiguration {
-	if o == nil {
+func (u *UpdateResourceInfo) GetTicketPropagation() *TicketPropagationConfiguration {
+	if u == nil {
 		return nil
 	}
-	return o.TicketPropagation
+	return u.TicketPropagation
 }

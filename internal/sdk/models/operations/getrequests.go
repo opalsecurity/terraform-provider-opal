@@ -24,53 +24,53 @@ type GetRequestsRequest struct {
 	TargetUserID *string `queryParam:"style=form,explode=true,name=target_user_id"`
 }
 
-func (o *GetRequestsRequest) GetCursor() *string {
-	if o == nil {
+func (g *GetRequestsRequest) GetCursor() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Cursor
+	return g.Cursor
 }
 
-func (o *GetRequestsRequest) GetEndDateFilter() *string {
-	if o == nil {
+func (g *GetRequestsRequest) GetEndDateFilter() *string {
+	if g == nil {
 		return nil
 	}
-	return o.EndDateFilter
+	return g.EndDateFilter
 }
 
-func (o *GetRequestsRequest) GetPageSize() *int64 {
-	if o == nil {
+func (g *GetRequestsRequest) GetPageSize() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.PageSize
+	return g.PageSize
 }
 
-func (o *GetRequestsRequest) GetRequesterID() *string {
-	if o == nil {
+func (g *GetRequestsRequest) GetRequesterID() *string {
+	if g == nil {
 		return nil
 	}
-	return o.RequesterID
+	return g.RequesterID
 }
 
-func (o *GetRequestsRequest) GetShowPendingOnly() *bool {
-	if o == nil {
+func (g *GetRequestsRequest) GetShowPendingOnly() *bool {
+	if g == nil {
 		return nil
 	}
-	return o.ShowPendingOnly
+	return g.ShowPendingOnly
 }
 
-func (o *GetRequestsRequest) GetStartDateFilter() *string {
-	if o == nil {
+func (g *GetRequestsRequest) GetStartDateFilter() *string {
+	if g == nil {
 		return nil
 	}
-	return o.StartDateFilter
+	return g.StartDateFilter
 }
 
-func (o *GetRequestsRequest) GetTargetUserID() *string {
-	if o == nil {
+func (g *GetRequestsRequest) GetTargetUserID() *string {
+	if g == nil {
 		return nil
 	}
-	return o.TargetUserID
+	return g.TargetUserID
 }
 
 type GetRequestsResponse struct {
@@ -84,30 +84,30 @@ type GetRequestsResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetRequestsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetRequestsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetRequestsResponse) GetRequestList() *shared.RequestList {
-	if o == nil {
+func (g *GetRequestsResponse) GetRequestList() *shared.RequestList {
+	if g == nil {
 		return nil
 	}
-	return o.RequestList
+	return g.RequestList
 }
 
-func (o *GetRequestsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetRequestsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetRequestsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetRequestsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

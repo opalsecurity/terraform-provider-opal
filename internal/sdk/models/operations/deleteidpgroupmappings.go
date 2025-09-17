@@ -13,18 +13,18 @@ type DeleteIdpGroupMappingsRequest struct {
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (o *DeleteIdpGroupMappingsRequest) GetAppResourceID() string {
-	if o == nil {
+func (d *DeleteIdpGroupMappingsRequest) GetAppResourceID() string {
+	if d == nil {
 		return ""
 	}
-	return o.AppResourceID
+	return d.AppResourceID
 }
 
-func (o *DeleteIdpGroupMappingsRequest) GetGroupID() string {
-	if o == nil {
+func (d *DeleteIdpGroupMappingsRequest) GetGroupID() string {
+	if d == nil {
 		return ""
 	}
-	return o.GroupID
+	return d.GroupID
 }
 
 type DeleteIdpGroupMappingsResponse struct {
@@ -36,23 +36,23 @@ type DeleteIdpGroupMappingsResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *DeleteIdpGroupMappingsResponse) GetContentType() string {
-	if o == nil {
+func (d *DeleteIdpGroupMappingsResponse) GetContentType() string {
+	if d == nil {
 		return ""
 	}
-	return o.ContentType
+	return d.ContentType
 }
 
-func (o *DeleteIdpGroupMappingsResponse) GetStatusCode() int {
-	if o == nil {
+func (d *DeleteIdpGroupMappingsResponse) GetStatusCode() int {
+	if d == nil {
 		return 0
 	}
-	return o.StatusCode
+	return d.StatusCode
 }
 
-func (o *DeleteIdpGroupMappingsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (d *DeleteIdpGroupMappingsResponse) GetRawResponse() *http.Response {
+	if d == nil {
 		return nil
 	}
-	return o.RawResponse
+	return d.RawResponse
 }

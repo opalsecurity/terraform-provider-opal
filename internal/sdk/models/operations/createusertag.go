@@ -17,25 +17,25 @@ type CreateUserTagRequest struct {
 	UserID string `pathParam:"style=simple,explode=false,name=user_id"`
 }
 
-func (o *CreateUserTagRequest) GetRequestBody() *CreateUserTagRequestBody {
-	if o == nil {
+func (c *CreateUserTagRequest) GetRequestBody() *CreateUserTagRequestBody {
+	if c == nil {
 		return nil
 	}
-	return o.RequestBody
+	return c.RequestBody
 }
 
-func (o *CreateUserTagRequest) GetTagID() string {
-	if o == nil {
+func (c *CreateUserTagRequest) GetTagID() string {
+	if c == nil {
 		return ""
 	}
-	return o.TagID
+	return c.TagID
 }
 
-func (o *CreateUserTagRequest) GetUserID() string {
-	if o == nil {
+func (c *CreateUserTagRequest) GetUserID() string {
+	if c == nil {
 		return ""
 	}
-	return o.UserID
+	return c.UserID
 }
 
 type CreateUserTagResponse struct {
@@ -47,23 +47,23 @@ type CreateUserTagResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *CreateUserTagResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateUserTagResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateUserTagResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateUserTagResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateUserTagResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateUserTagResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }

@@ -8,11 +8,11 @@ type ActiveDirectoryGroup struct {
 	GroupID string `json:"group_id"`
 }
 
-func (o *ActiveDirectoryGroup) GetGroupID() string {
-	if o == nil {
+func (a *ActiveDirectoryGroup) GetGroupID() string {
+	if a == nil {
 		return ""
 	}
-	return o.GroupID
+	return a.GroupID
 }
 
 // AzureAdMicrosoft365Group - Remote info for Microsoft Entra ID Microsoft 365 group.
@@ -21,11 +21,11 @@ type AzureAdMicrosoft365Group struct {
 	GroupID string `json:"group_id"`
 }
 
-func (o *AzureAdMicrosoft365Group) GetGroupID() string {
-	if o == nil {
+func (a *AzureAdMicrosoft365Group) GetGroupID() string {
+	if a == nil {
 		return ""
 	}
-	return o.GroupID
+	return a.GroupID
 }
 
 // AzureAdSecurityGroup - Remote info for Microsoft Entra ID Security group.
@@ -34,11 +34,11 @@ type AzureAdSecurityGroup struct {
 	GroupID string `json:"group_id"`
 }
 
-func (o *AzureAdSecurityGroup) GetGroupID() string {
-	if o == nil {
+func (a *AzureAdSecurityGroup) GetGroupID() string {
+	if a == nil {
 		return ""
 	}
-	return o.GroupID
+	return a.GroupID
 }
 
 // DuoGroup - Remote info for Duo Security group.
@@ -47,11 +47,11 @@ type DuoGroup struct {
 	GroupID string `json:"group_id"`
 }
 
-func (o *DuoGroup) GetGroupID() string {
-	if o == nil {
+func (d *DuoGroup) GetGroupID() string {
+	if d == nil {
 		return ""
 	}
-	return o.GroupID
+	return d.GroupID
 }
 
 // GithubTeam - Remote info for GitHub team.
@@ -60,11 +60,11 @@ type GithubTeam struct {
 	TeamSlug string `json:"team_slug"`
 }
 
-func (o *GithubTeam) GetTeamSlug() string {
-	if o == nil {
+func (g *GithubTeam) GetTeamSlug() string {
+	if g == nil {
 		return ""
 	}
-	return o.TeamSlug
+	return g.TeamSlug
 }
 
 // GitlabGroup - Remote info for Gitlab group.
@@ -73,11 +73,11 @@ type GitlabGroup struct {
 	GroupID string `json:"group_id"`
 }
 
-func (o *GitlabGroup) GetGroupID() string {
-	if o == nil {
+func (g *GitlabGroup) GetGroupID() string {
+	if g == nil {
 		return ""
 	}
-	return o.GroupID
+	return g.GroupID
 }
 
 // GoogleGroup - Remote info for Google group.
@@ -86,11 +86,11 @@ type GoogleGroup struct {
 	GroupID string `json:"group_id"`
 }
 
-func (o *GoogleGroup) GetGroupID() string {
-	if o == nil {
+func (g *GoogleGroup) GetGroupID() string {
+	if g == nil {
 		return ""
 	}
-	return o.GroupID
+	return g.GroupID
 }
 
 // LdapGroup - Remote info for LDAP group.
@@ -99,11 +99,11 @@ type LdapGroup struct {
 	GroupID string `json:"group_id"`
 }
 
-func (o *LdapGroup) GetGroupID() string {
-	if o == nil {
+func (l *LdapGroup) GetGroupID() string {
+	if l == nil {
 		return ""
 	}
-	return o.GroupID
+	return l.GroupID
 }
 
 // OktaGroup - Remote info for Okta Directory group.
@@ -138,11 +138,11 @@ type SnowflakeRole struct {
 	RoleID string `json:"role_id"`
 }
 
-func (o *SnowflakeRole) GetRoleID() string {
-	if o == nil {
+func (s *SnowflakeRole) GetRoleID() string {
+	if s == nil {
 		return ""
 	}
-	return o.RoleID
+	return s.RoleID
 }
 
 // WorkdayUserSecurityGroup - Remote info for Workday User Security group.
@@ -151,11 +151,11 @@ type WorkdayUserSecurityGroup struct {
 	GroupID string `json:"group_id"`
 }
 
-func (o *WorkdayUserSecurityGroup) GetGroupID() string {
-	if o == nil {
+func (w *WorkdayUserSecurityGroup) GetGroupID() string {
+	if w == nil {
 		return ""
 	}
-	return o.GroupID
+	return w.GroupID
 }
 
 // GroupRemoteInfo - Information that defines the remote group. This replaces the deprecated remote_id and metadata fields.
@@ -186,86 +186,86 @@ type GroupRemoteInfo struct {
 	WorkdayUserSecurityGroup *WorkdayUserSecurityGroup `json:"workday_user_security_group,omitempty"`
 }
 
-func (o *GroupRemoteInfo) GetActiveDirectoryGroup() *ActiveDirectoryGroup {
-	if o == nil {
+func (g *GroupRemoteInfo) GetActiveDirectoryGroup() *ActiveDirectoryGroup {
+	if g == nil {
 		return nil
 	}
-	return o.ActiveDirectoryGroup
+	return g.ActiveDirectoryGroup
 }
 
-func (o *GroupRemoteInfo) GetAzureAdMicrosoft365Group() *AzureAdMicrosoft365Group {
-	if o == nil {
+func (g *GroupRemoteInfo) GetAzureAdMicrosoft365Group() *AzureAdMicrosoft365Group {
+	if g == nil {
 		return nil
 	}
-	return o.AzureAdMicrosoft365Group
+	return g.AzureAdMicrosoft365Group
 }
 
-func (o *GroupRemoteInfo) GetAzureAdSecurityGroup() *AzureAdSecurityGroup {
-	if o == nil {
+func (g *GroupRemoteInfo) GetAzureAdSecurityGroup() *AzureAdSecurityGroup {
+	if g == nil {
 		return nil
 	}
-	return o.AzureAdSecurityGroup
+	return g.AzureAdSecurityGroup
 }
 
-func (o *GroupRemoteInfo) GetDuoGroup() *DuoGroup {
-	if o == nil {
+func (g *GroupRemoteInfo) GetDuoGroup() *DuoGroup {
+	if g == nil {
 		return nil
 	}
-	return o.DuoGroup
+	return g.DuoGroup
 }
 
-func (o *GroupRemoteInfo) GetGithubTeam() *GithubTeam {
-	if o == nil {
+func (g *GroupRemoteInfo) GetGithubTeam() *GithubTeam {
+	if g == nil {
 		return nil
 	}
-	return o.GithubTeam
+	return g.GithubTeam
 }
 
-func (o *GroupRemoteInfo) GetGitlabGroup() *GitlabGroup {
-	if o == nil {
+func (g *GroupRemoteInfo) GetGitlabGroup() *GitlabGroup {
+	if g == nil {
 		return nil
 	}
-	return o.GitlabGroup
+	return g.GitlabGroup
 }
 
-func (o *GroupRemoteInfo) GetGoogleGroup() *GoogleGroup {
-	if o == nil {
+func (g *GroupRemoteInfo) GetGoogleGroup() *GoogleGroup {
+	if g == nil {
 		return nil
 	}
-	return o.GoogleGroup
+	return g.GoogleGroup
 }
 
-func (o *GroupRemoteInfo) GetLdapGroup() *LdapGroup {
-	if o == nil {
+func (g *GroupRemoteInfo) GetLdapGroup() *LdapGroup {
+	if g == nil {
 		return nil
 	}
-	return o.LdapGroup
+	return g.LdapGroup
 }
 
-func (o *GroupRemoteInfo) GetOktaGroup() *OktaGroup {
-	if o == nil {
+func (g *GroupRemoteInfo) GetOktaGroup() *OktaGroup {
+	if g == nil {
 		return nil
 	}
-	return o.OktaGroup
+	return g.OktaGroup
 }
 
-func (o *GroupRemoteInfo) GetOktaGroupRule() *OktaGroupRule {
-	if o == nil {
+func (g *GroupRemoteInfo) GetOktaGroupRule() *OktaGroupRule {
+	if g == nil {
 		return nil
 	}
-	return o.OktaGroupRule
+	return g.OktaGroupRule
 }
 
-func (o *GroupRemoteInfo) GetSnowflakeRole() *SnowflakeRole {
-	if o == nil {
+func (g *GroupRemoteInfo) GetSnowflakeRole() *SnowflakeRole {
+	if g == nil {
 		return nil
 	}
-	return o.SnowflakeRole
+	return g.SnowflakeRole
 }
 
-func (o *GroupRemoteInfo) GetWorkdayUserSecurityGroup() *WorkdayUserSecurityGroup {
-	if o == nil {
+func (g *GroupRemoteInfo) GetWorkdayUserSecurityGroup() *WorkdayUserSecurityGroup {
+	if g == nil {
 		return nil
 	}
-	return o.WorkdayUserSecurityGroup
+	return g.WorkdayUserSecurityGroup
 }

@@ -7,9 +7,9 @@ type UpdateGroupBindingInfoList struct {
 	GroupBindings []UpdateGroupBindingInfo `json:"group_bindings"`
 }
 
-func (o *UpdateGroupBindingInfoList) GetGroupBindings() []UpdateGroupBindingInfo {
-	if o == nil {
+func (u *UpdateGroupBindingInfoList) GetGroupBindings() []UpdateGroupBindingInfo {
+	if u == nil {
 		return []UpdateGroupBindingInfo{}
 	}
-	return o.GroupBindings
+	return u.GroupBindings
 }
