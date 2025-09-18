@@ -13,18 +13,18 @@ type UpdateGroupMessageChannelsRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (o *UpdateGroupMessageChannelsRequest) GetMessageChannelIDList() shared.MessageChannelIDList {
-	if o == nil {
+func (u *UpdateGroupMessageChannelsRequest) GetMessageChannelIDList() shared.MessageChannelIDList {
+	if u == nil {
 		return shared.MessageChannelIDList{}
 	}
-	return o.MessageChannelIDList
+	return u.MessageChannelIDList
 }
 
-func (o *UpdateGroupMessageChannelsRequest) GetID() string {
-	if o == nil {
+func (u *UpdateGroupMessageChannelsRequest) GetID() string {
+	if u == nil {
 		return ""
 	}
-	return o.ID
+	return u.ID
 }
 
 type UpdateGroupMessageChannelsResponse struct {
@@ -36,23 +36,23 @@ type UpdateGroupMessageChannelsResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *UpdateGroupMessageChannelsResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateGroupMessageChannelsResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateGroupMessageChannelsResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateGroupMessageChannelsResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateGroupMessageChannelsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateGroupMessageChannelsResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }

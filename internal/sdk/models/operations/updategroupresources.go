@@ -13,18 +13,18 @@ type UpdateGroupResourcesRequest struct {
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (o *UpdateGroupResourcesRequest) GetUpdateGroupResourcesInfo() shared.UpdateGroupResourcesInfo {
-	if o == nil {
+func (u *UpdateGroupResourcesRequest) GetUpdateGroupResourcesInfo() shared.UpdateGroupResourcesInfo {
+	if u == nil {
 		return shared.UpdateGroupResourcesInfo{}
 	}
-	return o.UpdateGroupResourcesInfo
+	return u.UpdateGroupResourcesInfo
 }
 
-func (o *UpdateGroupResourcesRequest) GetGroupID() string {
-	if o == nil {
+func (u *UpdateGroupResourcesRequest) GetGroupID() string {
+	if u == nil {
 		return ""
 	}
-	return o.GroupID
+	return u.GroupID
 }
 
 type UpdateGroupResourcesResponse struct {
@@ -36,23 +36,23 @@ type UpdateGroupResourcesResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *UpdateGroupResourcesResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateGroupResourcesResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateGroupResourcesResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateGroupResourcesResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateGroupResourcesResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateGroupResourcesResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }

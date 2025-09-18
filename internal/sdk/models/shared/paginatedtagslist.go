@@ -10,23 +10,23 @@ type PaginatedTagsList struct {
 	Results  []Tag   `json:"results"`
 }
 
-func (o *PaginatedTagsList) GetNext() *string {
-	if o == nil {
+func (p *PaginatedTagsList) GetNext() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Next
+	return p.Next
 }
 
-func (o *PaginatedTagsList) GetPrevious() *string {
-	if o == nil {
+func (p *PaginatedTagsList) GetPrevious() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Previous
+	return p.Previous
 }
 
-func (o *PaginatedTagsList) GetResults() []Tag {
-	if o == nil {
+func (p *PaginatedTagsList) GetResults() []Tag {
+	if p == nil {
 		return []Tag{}
 	}
-	return o.Results
+	return p.Results
 }

@@ -13,30 +13,30 @@ type PageInfo struct {
 	StartCursor string `json:"startCursor"`
 }
 
-func (o *PageInfo) GetEndCursor() string {
-	if o == nil {
+func (p *PageInfo) GetEndCursor() string {
+	if p == nil {
 		return ""
 	}
-	return o.EndCursor
+	return p.EndCursor
 }
 
-func (o *PageInfo) GetHasNextPage() bool {
-	if o == nil {
+func (p *PageInfo) GetHasNextPage() bool {
+	if p == nil {
 		return false
 	}
-	return o.HasNextPage
+	return p.HasNextPage
 }
 
-func (o *PageInfo) GetHasPreviousPage() bool {
-	if o == nil {
+func (p *PageInfo) GetHasPreviousPage() bool {
+	if p == nil {
 		return false
 	}
-	return o.HasPreviousPage
+	return p.HasPreviousPage
 }
 
-func (o *PageInfo) GetStartCursor() string {
-	if o == nil {
+func (p *PageInfo) GetStartCursor() string {
+	if p == nil {
 		return ""
 	}
-	return o.StartCursor
+	return p.StartCursor
 }

@@ -18,30 +18,30 @@ type GetMessageChannelsResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetMessageChannelsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetMessageChannelsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetMessageChannelsResponse) GetMessageChannelList() *shared.MessageChannelList {
-	if o == nil {
+func (g *GetMessageChannelsResponse) GetMessageChannelList() *shared.MessageChannelList {
+	if g == nil {
 		return nil
 	}
-	return o.MessageChannelList
+	return g.MessageChannelList
 }
 
-func (o *GetMessageChannelsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetMessageChannelsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetMessageChannelsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetMessageChannelsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

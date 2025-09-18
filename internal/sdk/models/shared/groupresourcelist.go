@@ -6,9 +6,9 @@ type GroupResourceList struct {
 	GroupResources []GroupResource `json:"group_resources"`
 }
 
-func (o *GroupResourceList) GetGroupResources() []GroupResource {
-	if o == nil {
+func (g *GroupResourceList) GetGroupResources() []GroupResource {
+	if g == nil {
 		return []GroupResource{}
 	}
-	return o.GroupResources
+	return g.GroupResources
 }

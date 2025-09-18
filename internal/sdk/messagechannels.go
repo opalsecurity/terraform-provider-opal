@@ -237,7 +237,8 @@ func (s *MessageChannels) Create(ctx context.Context, request shared.CreateMessa
 
 }
 
-// Get - Returns a list of `MessageChannel` objects.
+// Get message channels
+// Returns a list of `MessageChannel` objects.
 func (s *MessageChannels) Get(ctx context.Context, opts ...operations.Option) (*operations.GetMessageChannelsResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -436,7 +437,8 @@ func (s *MessageChannels) Get(ctx context.Context, opts ...operations.Option) (*
 
 }
 
-// GetID - Gets a `MessageChannel` object.
+// GetID - Get message channel by ID
+// Gets a `MessageChannel` object.
 func (s *MessageChannels) GetID(ctx context.Context, request operations.GetMessageChannelIDRequest, opts ...operations.Option) (*operations.GetMessageChannelIDResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{

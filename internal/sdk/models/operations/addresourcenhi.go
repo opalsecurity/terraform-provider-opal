@@ -14,18 +14,18 @@ type AddResourceNhiRequestBody struct {
 	DurationMinutes int64 `json:"duration_minutes"`
 }
 
-func (o *AddResourceNhiRequestBody) GetAccessLevelRemoteID() *string {
-	if o == nil {
+func (a *AddResourceNhiRequestBody) GetAccessLevelRemoteID() *string {
+	if a == nil {
 		return nil
 	}
-	return o.AccessLevelRemoteID
+	return a.AccessLevelRemoteID
 }
 
-func (o *AddResourceNhiRequestBody) GetDurationMinutes() int64 {
-	if o == nil {
+func (a *AddResourceNhiRequestBody) GetDurationMinutes() int64 {
+	if a == nil {
 		return 0
 	}
-	return o.DurationMinutes
+	return a.DurationMinutes
 }
 
 type AddResourceNhiRequest struct {
@@ -36,25 +36,25 @@ type AddResourceNhiRequest struct {
 	ResourceID string `pathParam:"style=simple,explode=false,name=resource_id"`
 }
 
-func (o *AddResourceNhiRequest) GetRequestBody() *AddResourceNhiRequestBody {
-	if o == nil {
+func (a *AddResourceNhiRequest) GetRequestBody() *AddResourceNhiRequestBody {
+	if a == nil {
 		return nil
 	}
-	return o.RequestBody
+	return a.RequestBody
 }
 
-func (o *AddResourceNhiRequest) GetNonHumanIdentityID() string {
-	if o == nil {
+func (a *AddResourceNhiRequest) GetNonHumanIdentityID() string {
+	if a == nil {
 		return ""
 	}
-	return o.NonHumanIdentityID
+	return a.NonHumanIdentityID
 }
 
-func (o *AddResourceNhiRequest) GetResourceID() string {
-	if o == nil {
+func (a *AddResourceNhiRequest) GetResourceID() string {
+	if a == nil {
 		return ""
 	}
-	return o.ResourceID
+	return a.ResourceID
 }
 
 type AddResourceNhiResponse struct {
@@ -68,30 +68,30 @@ type AddResourceNhiResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *AddResourceNhiResponse) GetContentType() string {
-	if o == nil {
+func (a *AddResourceNhiResponse) GetContentType() string {
+	if a == nil {
 		return ""
 	}
-	return o.ContentType
+	return a.ContentType
 }
 
-func (o *AddResourceNhiResponse) GetResourceNHI() *shared.ResourceNHI {
-	if o == nil {
+func (a *AddResourceNhiResponse) GetResourceNHI() *shared.ResourceNHI {
+	if a == nil {
 		return nil
 	}
-	return o.ResourceNHI
+	return a.ResourceNHI
 }
 
-func (o *AddResourceNhiResponse) GetStatusCode() int {
-	if o == nil {
+func (a *AddResourceNhiResponse) GetStatusCode() int {
+	if a == nil {
 		return 0
 	}
-	return o.StatusCode
+	return a.StatusCode
 }
 
-func (o *AddResourceNhiResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (a *AddResourceNhiResponse) GetRawResponse() *http.Response {
+	if a == nil {
 		return nil
 	}
-	return o.RawResponse
+	return a.RawResponse
 }

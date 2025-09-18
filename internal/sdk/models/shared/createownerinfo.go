@@ -23,44 +23,44 @@ type CreateOwnerInfo struct {
 	UserIds []string `json:"user_ids"`
 }
 
-func (o *CreateOwnerInfo) GetAccessRequestEscalationPeriod() *int64 {
-	if o == nil {
+func (c *CreateOwnerInfo) GetAccessRequestEscalationPeriod() *int64 {
+	if c == nil {
 		return nil
 	}
-	return o.AccessRequestEscalationPeriod
+	return c.AccessRequestEscalationPeriod
 }
 
-func (o *CreateOwnerInfo) GetDescription() *string {
-	if o == nil {
+func (c *CreateOwnerInfo) GetDescription() *string {
+	if c == nil {
 		return nil
 	}
-	return o.Description
+	return c.Description
 }
 
-func (o *CreateOwnerInfo) GetName() string {
-	if o == nil {
+func (c *CreateOwnerInfo) GetName() string {
+	if c == nil {
 		return ""
 	}
-	return o.Name
+	return c.Name
 }
 
-func (o *CreateOwnerInfo) GetReviewerMessageChannelID() *string {
-	if o == nil {
+func (c *CreateOwnerInfo) GetReviewerMessageChannelID() *string {
+	if c == nil {
 		return nil
 	}
-	return o.ReviewerMessageChannelID
+	return c.ReviewerMessageChannelID
 }
 
-func (o *CreateOwnerInfo) GetSourceGroupID() *string {
-	if o == nil {
+func (c *CreateOwnerInfo) GetSourceGroupID() *string {
+	if c == nil {
 		return nil
 	}
-	return o.SourceGroupID
+	return c.SourceGroupID
 }
 
-func (o *CreateOwnerInfo) GetUserIds() []string {
-	if o == nil {
+func (c *CreateOwnerInfo) GetUserIds() []string {
+	if c == nil {
 		return []string{}
 	}
-	return o.UserIds
+	return c.UserIds
 }

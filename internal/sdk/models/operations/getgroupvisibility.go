@@ -13,11 +13,11 @@ type GetGroupVisibilityRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (o *GetGroupVisibilityRequest) GetID() string {
-	if o == nil {
+func (g *GetGroupVisibilityRequest) GetID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ID
+	return g.ID
 }
 
 // GetGroupVisibilityResponseBody - Visibility infomation of an entity.
@@ -38,18 +38,18 @@ func (g *GetGroupVisibilityResponseBody) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *GetGroupVisibilityResponseBody) GetVisibility() shared.VisibilityTypeEnum {
-	if o == nil {
+func (g *GetGroupVisibilityResponseBody) GetVisibility() shared.VisibilityTypeEnum {
+	if g == nil {
 		return shared.VisibilityTypeEnum("")
 	}
-	return o.Visibility
+	return g.Visibility
 }
 
-func (o *GetGroupVisibilityResponseBody) GetVisibilityGroupIds() []string {
-	if o == nil {
+func (g *GetGroupVisibilityResponseBody) GetVisibilityGroupIds() []string {
+	if g == nil {
 		return nil
 	}
-	return o.VisibilityGroupIds
+	return g.VisibilityGroupIds
 }
 
 type GetGroupVisibilityResponse struct {
@@ -63,30 +63,30 @@ type GetGroupVisibilityResponse struct {
 	Object *GetGroupVisibilityResponseBody
 }
 
-func (o *GetGroupVisibilityResponse) GetContentType() string {
-	if o == nil {
+func (g *GetGroupVisibilityResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetGroupVisibilityResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetGroupVisibilityResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetGroupVisibilityResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetGroupVisibilityResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetGroupVisibilityResponse) GetObject() *GetGroupVisibilityResponseBody {
-	if o == nil {
+func (g *GetGroupVisibilityResponse) GetObject() *GetGroupVisibilityResponseBody {
+	if g == nil {
 		return nil
 	}
-	return o.Object
+	return g.Object
 }

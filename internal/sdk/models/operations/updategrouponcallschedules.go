@@ -13,18 +13,18 @@ type UpdateGroupOnCallSchedulesRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (o *UpdateGroupOnCallSchedulesRequest) GetOnCallScheduleIDList() shared.OnCallScheduleIDList {
-	if o == nil {
+func (u *UpdateGroupOnCallSchedulesRequest) GetOnCallScheduleIDList() shared.OnCallScheduleIDList {
+	if u == nil {
 		return shared.OnCallScheduleIDList{}
 	}
-	return o.OnCallScheduleIDList
+	return u.OnCallScheduleIDList
 }
 
-func (o *UpdateGroupOnCallSchedulesRequest) GetID() string {
-	if o == nil {
+func (u *UpdateGroupOnCallSchedulesRequest) GetID() string {
+	if u == nil {
 		return ""
 	}
-	return o.ID
+	return u.ID
 }
 
 type UpdateGroupOnCallSchedulesResponse struct {
@@ -36,23 +36,23 @@ type UpdateGroupOnCallSchedulesResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *UpdateGroupOnCallSchedulesResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateGroupOnCallSchedulesResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateGroupOnCallSchedulesResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateGroupOnCallSchedulesResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateGroupOnCallSchedulesResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateGroupOnCallSchedulesResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }

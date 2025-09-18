@@ -53,7 +53,8 @@ Read-Only:
 - `reason` (String) The reason for the request.
 - `requested_items_list` (Attributes List) The list of targets for the request. (see [below for nested schema](#nestedatt--requests--requested_items_list))
 - `requester_id` (String) The unique identifier of the user who created the request.
-- `stages` (Attributes) The stages configuration for a request item (see [below for nested schema](#nestedatt--requests--stages))
+- `reviewer_stages` (Attributes List) The configured reviewer stages for every item in this request (see [below for nested schema](#nestedatt--requests--reviewer_stages))
+- `stages` (Attributes, Deprecated) The stages configuration for a request item (see [below for nested schema](#nestedatt--requests--stages))
 - `status` (String) # Request Status
 ### Description
 The `RequestStatus` enum is used to represent the status of a request.
@@ -97,6 +98,38 @@ Read-Only:
 - `resource_id` (String) The ID of the resource requested.
 
 
+<a id="nestedatt--requests--reviewer_stages"></a>
+### Nested Schema for `requests.reviewer_stages`
+
+Read-Only:
+
+- `access_level_name` (String) The name of the access level requested.
+- `access_level_remote_id` (String) The ID of the access level requested on the remote system.
+- `item_id` (String) The ID of the resource requested.
+- `item_name` (String) The name of the requested item
+- `stages` (Attributes List) The stages of review for this request (see [below for nested schema](#nestedatt--requests--reviewer_stages--stages))
+
+<a id="nestedatt--requests--reviewer_stages--stages"></a>
+### Nested Schema for `requests.reviewer_stages.stages`
+
+Read-Only:
+
+- `operator` (String) The operator to apply to reviewers in a stage
+- `reviewers` (Attributes List) The reviewers for this stage (see [below for nested schema](#nestedatt--requests--reviewer_stages--stages--reviewers))
+- `stage` (Number) The stage number
+
+<a id="nestedatt--requests--reviewer_stages--stages--reviewers"></a>
+### Nested Schema for `requests.reviewer_stages.stages.reviewers`
+
+Read-Only:
+
+- `full_name` (String) The user's full name.
+- `id` (String) The unique identifier of the reviewer
+- `status` (String) The status of this reviewer's review
+
+
+
+
 <a id="nestedatt--requests--stages"></a>
 ### Nested Schema for `requests.stages`
 
@@ -120,5 +153,6 @@ Read-Only:
 
 Read-Only:
 
+- `full_name` (String) The user's full name.
 - `id` (String) The unique identifier of the reviewer
 - `status` (String) The status of this reviewer's review

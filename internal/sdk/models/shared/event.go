@@ -46,72 +46,72 @@ func (e *Event) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Event) GetActorEmail() *string {
-	if o == nil {
+func (e *Event) GetActorEmail() *string {
+	if e == nil {
 		return nil
 	}
-	return o.ActorEmail
+	return e.ActorEmail
 }
 
-func (o *Event) GetActorIPAddress() *string {
-	if o == nil {
+func (e *Event) GetActorIPAddress() *string {
+	if e == nil {
 		return nil
 	}
-	return o.ActorIPAddress
+	return e.ActorIPAddress
 }
 
-func (o *Event) GetActorName() any {
-	if o == nil {
+func (e *Event) GetActorName() any {
+	if e == nil {
 		return nil
 	}
-	return o.ActorName
+	return e.ActorName
 }
 
-func (o *Event) GetActorUserID() string {
-	if o == nil {
+func (e *Event) GetActorUserID() string {
+	if e == nil {
 		return ""
 	}
-	return o.ActorUserID
+	return e.ActorUserID
 }
 
-func (o *Event) GetAPITokenName() *string {
-	if o == nil {
+func (e *Event) GetAPITokenName() *string {
+	if e == nil {
 		return nil
 	}
-	return o.APITokenName
+	return e.APITokenName
 }
 
-func (o *Event) GetAPITokenPreview() *string {
-	if o == nil {
+func (e *Event) GetAPITokenPreview() *string {
+	if e == nil {
 		return nil
 	}
-	return o.APITokenPreview
+	return e.APITokenPreview
 }
 
-func (o *Event) GetCreatedAt() time.Time {
-	if o == nil {
+func (e *Event) GetCreatedAt() time.Time {
+	if e == nil {
 		return time.Time{}
 	}
-	return o.CreatedAt
+	return e.CreatedAt
 }
 
-func (o *Event) GetEventID() string {
-	if o == nil {
+func (e *Event) GetEventID() string {
+	if e == nil {
 		return ""
 	}
-	return o.EventID
+	return e.EventID
 }
 
-func (o *Event) GetEventType() string {
-	if o == nil {
+func (e *Event) GetEventType() string {
+	if e == nil {
 		return ""
 	}
-	return o.EventType
+	return e.EventType
 }
 
-func (o *Event) GetSubEvents() []SubEvent {
-	if o == nil {
+func (e *Event) GetSubEvents() []SubEvent {
+	if e == nil {
 		return nil
 	}
-	return o.SubEvents
+	return e.SubEvents
 }

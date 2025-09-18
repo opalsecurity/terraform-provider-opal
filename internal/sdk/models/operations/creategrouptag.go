@@ -13,18 +13,18 @@ type CreateGroupTagRequest struct {
 	TagID string `pathParam:"style=simple,explode=false,name=tag_id"`
 }
 
-func (o *CreateGroupTagRequest) GetGroupID() string {
-	if o == nil {
+func (c *CreateGroupTagRequest) GetGroupID() string {
+	if c == nil {
 		return ""
 	}
-	return o.GroupID
+	return c.GroupID
 }
 
-func (o *CreateGroupTagRequest) GetTagID() string {
-	if o == nil {
+func (c *CreateGroupTagRequest) GetTagID() string {
+	if c == nil {
 		return ""
 	}
-	return o.TagID
+	return c.TagID
 }
 
 type CreateGroupTagResponse struct {
@@ -36,23 +36,23 @@ type CreateGroupTagResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *CreateGroupTagResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateGroupTagResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateGroupTagResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateGroupTagResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateGroupTagResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateGroupTagResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }

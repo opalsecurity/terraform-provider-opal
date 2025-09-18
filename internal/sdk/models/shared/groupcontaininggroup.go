@@ -10,9 +10,9 @@ type GroupContainingGroup struct {
 	ContainingGroupID string `json:"containing_group_id"`
 }
 
-func (o *GroupContainingGroup) GetContainingGroupID() string {
-	if o == nil {
+func (g *GroupContainingGroup) GetContainingGroupID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContainingGroupID
+	return g.ContainingGroupID
 }

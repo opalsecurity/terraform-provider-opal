@@ -18,30 +18,30 @@ type CreateResourceResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *CreateResourceResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateResourceResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateResourceResponse) GetResource() *shared.Resource {
-	if o == nil {
+func (c *CreateResourceResponse) GetResource() *shared.Resource {
+	if c == nil {
 		return nil
 	}
-	return o.Resource
+	return c.Resource
 }
 
-func (o *CreateResourceResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateResourceResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateResourceResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateResourceResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }

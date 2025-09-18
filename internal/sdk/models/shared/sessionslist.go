@@ -10,23 +10,23 @@ type SessionsList struct {
 	Results  []Session `json:"results,omitempty"`
 }
 
-func (o *SessionsList) GetNext() *string {
-	if o == nil {
+func (s *SessionsList) GetNext() *string {
+	if s == nil {
 		return nil
 	}
-	return o.Next
+	return s.Next
 }
 
-func (o *SessionsList) GetPrevious() *string {
-	if o == nil {
+func (s *SessionsList) GetPrevious() *string {
+	if s == nil {
 		return nil
 	}
-	return o.Previous
+	return s.Previous
 }
 
-func (o *SessionsList) GetResults() []Session {
-	if o == nil {
+func (s *SessionsList) GetResults() []Session {
+	if s == nil {
 		return nil
 	}
-	return o.Results
+	return s.Results
 }

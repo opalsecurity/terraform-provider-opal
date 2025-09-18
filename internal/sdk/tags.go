@@ -1490,7 +1490,8 @@ func (s *Tags) DeleteTagByID(ctx context.Context, request operations.DeleteTagBy
 
 }
 
-// GetTagByID - UNSTABLE. May be removed at any time. Gets a tag with the given id.
+// GetTagByID - Get tag by ID
+// UNSTABLE. May be removed at any time. Gets a tag with the given id.
 func (s *Tags) GetTagByID(ctx context.Context, request operations.GetTagByIDRequest, opts ...operations.Option) (*operations.GetTagByIDResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -1689,7 +1690,8 @@ func (s *Tags) GetTagByID(ctx context.Context, request operations.GetTagByIDRequ
 
 }
 
-// GetTags - Returns a list of tags created by your organization.
+// GetTags - Get tags
+// Returns a list of tags created by your organization.
 func (s *Tags) GetTags(ctx context.Context, request operations.GetTagsRequest, opts ...operations.Option) (*operations.GetTagsResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{

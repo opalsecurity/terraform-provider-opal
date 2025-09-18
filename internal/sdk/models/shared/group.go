@@ -115,7 +115,7 @@ type Group struct {
 	LastSuccessfulSync *SyncTask `json:"last_successful_sync,omitempty"`
 	// The name of the group.
 	Name *string `json:"name,omitempty"`
-	// Information that defines the remote group. This replaces the deprecated remote_id and metadata fields.
+	// Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided.
 	RemoteInfo *GroupRemoteInfo `json:"remote_info,omitempty"`
 	// The name of the remote.
 	RemoteName *string `json:"remote_name,omitempty"`
@@ -139,121 +139,121 @@ func (g *Group) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Group) GetAdminOwnerID() *string {
-	if o == nil {
+func (g *Group) GetAdminOwnerID() *string {
+	if g == nil {
 		return nil
 	}
-	return o.AdminOwnerID
+	return g.AdminOwnerID
 }
 
-func (o *Group) GetAppID() *string {
-	if o == nil {
+func (g *Group) GetAppID() *string {
+	if g == nil {
 		return nil
 	}
-	return o.AppID
+	return g.AppID
 }
 
-func (o *Group) GetCustomRequestNotification() *string {
-	if o == nil {
+func (g *Group) GetCustomRequestNotification() *string {
+	if g == nil {
 		return nil
 	}
-	return o.CustomRequestNotification
+	return g.CustomRequestNotification
 }
 
-func (o *Group) GetDescription() *string {
-	if o == nil {
+func (g *Group) GetDescription() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Description
+	return g.Description
 }
 
-func (o *Group) GetExtensionsDurationInMinutes() *int64 {
-	if o == nil {
+func (g *Group) GetExtensionsDurationInMinutes() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.ExtensionsDurationInMinutes
+	return g.ExtensionsDurationInMinutes
 }
 
-func (o *Group) GetGroupBindingID() *string {
-	if o == nil {
+func (g *Group) GetGroupBindingID() *string {
+	if g == nil {
 		return nil
 	}
-	return o.GroupBindingID
+	return g.GroupBindingID
 }
 
-func (o *Group) GetGroupLeaderUserIds() []string {
-	if o == nil {
+func (g *Group) GetGroupLeaderUserIds() []string {
+	if g == nil {
 		return nil
 	}
-	return o.GroupLeaderUserIds
+	return g.GroupLeaderUserIds
 }
 
-func (o *Group) GetGroupType() *GroupTypeEnum {
-	if o == nil {
+func (g *Group) GetGroupType() *GroupTypeEnum {
+	if g == nil {
 		return nil
 	}
-	return o.GroupType
+	return g.GroupType
 }
 
-func (o *Group) GetID() string {
-	if o == nil {
+func (g *Group) GetID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ID
+	return g.ID
 }
 
-func (o *Group) GetLastSuccessfulSync() *SyncTask {
-	if o == nil {
+func (g *Group) GetLastSuccessfulSync() *SyncTask {
+	if g == nil {
 		return nil
 	}
-	return o.LastSuccessfulSync
+	return g.LastSuccessfulSync
 }
 
-func (o *Group) GetName() *string {
-	if o == nil {
+func (g *Group) GetName() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Name
+	return g.Name
 }
 
-func (o *Group) GetRemoteInfo() *GroupRemoteInfo {
-	if o == nil {
+func (g *Group) GetRemoteInfo() *GroupRemoteInfo {
+	if g == nil {
 		return nil
 	}
-	return o.RemoteInfo
+	return g.RemoteInfo
 }
 
-func (o *Group) GetRemoteName() *string {
-	if o == nil {
+func (g *Group) GetRemoteName() *string {
+	if g == nil {
 		return nil
 	}
-	return o.RemoteName
+	return g.RemoteName
 }
 
-func (o *Group) GetRequestConfigurations() []RequestConfiguration {
-	if o == nil {
+func (g *Group) GetRequestConfigurations() []RequestConfiguration {
+	if g == nil {
 		return nil
 	}
-	return o.RequestConfigurations
+	return g.RequestConfigurations
 }
 
-func (o *Group) GetRequireMfaToApprove() *bool {
-	if o == nil {
+func (g *Group) GetRequireMfaToApprove() *bool {
+	if g == nil {
 		return nil
 	}
-	return o.RequireMfaToApprove
+	return g.RequireMfaToApprove
 }
 
-func (o *Group) GetRiskSensitivity() *RiskSensitivity {
-	if o == nil {
+func (g *Group) GetRiskSensitivity() *RiskSensitivity {
+	if g == nil {
 		return nil
 	}
-	return o.RiskSensitivity
+	return g.RiskSensitivity
 }
 
-func (o *Group) GetRiskSensitivityOverride() *RiskSensitivityOverride {
-	if o == nil {
+func (g *Group) GetRiskSensitivityOverride() *RiskSensitivityOverride {
+	if g == nil {
 		return nil
 	}
-	return o.RiskSensitivityOverride
+	return g.RiskSensitivityOverride
 }

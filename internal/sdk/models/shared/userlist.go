@@ -7,9 +7,9 @@ type UserList struct {
 	Users []User `json:"users"`
 }
 
-func (o *UserList) GetUsers() []User {
-	if o == nil {
+func (u *UserList) GetUsers() []User {
+	if u == nil {
 		return []User{}
 	}
-	return o.Users
+	return u.Users
 }

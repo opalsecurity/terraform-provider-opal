@@ -12,11 +12,11 @@ type GetGroupTagsRequest struct {
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (o *GetGroupTagsRequest) GetGroupID() string {
-	if o == nil {
+func (g *GetGroupTagsRequest) GetGroupID() string {
+	if g == nil {
 		return ""
 	}
-	return o.GroupID
+	return g.GroupID
 }
 
 type GetGroupTagsResponse struct {
@@ -30,30 +30,30 @@ type GetGroupTagsResponse struct {
 	TagsList *shared.TagsList
 }
 
-func (o *GetGroupTagsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetGroupTagsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetGroupTagsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetGroupTagsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetGroupTagsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetGroupTagsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }
 
-func (o *GetGroupTagsResponse) GetTagsList() *shared.TagsList {
-	if o == nil {
+func (g *GetGroupTagsResponse) GetTagsList() *shared.TagsList {
+	if g == nil {
 		return nil
 	}
-	return o.TagsList
+	return g.TagsList
 }

@@ -89,79 +89,79 @@ type UARScope struct {
 	Users []string `json:"users,omitempty"`
 }
 
-func (o *UARScope) GetAdmins() []string {
-	if o == nil {
+func (u *UARScope) GetAdmins() []string {
+	if u == nil {
 		return nil
 	}
-	return o.Admins
+	return u.Admins
 }
 
-func (o *UARScope) GetApps() []string {
-	if o == nil {
+func (u *UARScope) GetApps() []string {
+	if u == nil {
 		return nil
 	}
-	return o.Apps
+	return u.Apps
 }
 
-func (o *UARScope) GetEntities() []string {
-	if o == nil {
+func (u *UARScope) GetEntities() []string {
+	if u == nil {
 		return nil
 	}
-	return o.Entities
+	return u.Entities
 }
 
-func (o *UARScope) GetFilterOperator() *FilterOperator {
-	if o == nil {
+func (u *UARScope) GetFilterOperator() *FilterOperator {
+	if u == nil {
 		return nil
 	}
-	return o.FilterOperator
+	return u.FilterOperator
 }
 
-func (o *UARScope) GetGroupTypes() []GroupTypeEnum {
-	if o == nil {
+func (u *UARScope) GetGroupTypes() []GroupTypeEnum {
+	if u == nil {
 		return nil
 	}
-	return o.GroupTypes
+	return u.GroupTypes
 }
 
-func (o *UARScope) GetGroupVisibility() *GroupVisibility {
-	if o == nil {
+func (u *UARScope) GetGroupVisibility() *GroupVisibility {
+	if u == nil {
 		return nil
 	}
-	return o.GroupVisibility
+	return u.GroupVisibility
 }
 
-func (o *UARScope) GetIncludeGroupBindings() *bool {
-	if o == nil {
+func (u *UARScope) GetIncludeGroupBindings() *bool {
+	if u == nil {
 		return nil
 	}
-	return o.IncludeGroupBindings
+	return u.IncludeGroupBindings
 }
 
-func (o *UARScope) GetNames() []string {
-	if o == nil {
+func (u *UARScope) GetNames() []string {
+	if u == nil {
 		return nil
 	}
-	return o.Names
+	return u.Names
 }
 
-func (o *UARScope) GetResourceTypes() []ResourceTypeEnum {
-	if o == nil {
+func (u *UARScope) GetResourceTypes() []ResourceTypeEnum {
+	if u == nil {
 		return nil
 	}
-	return o.ResourceTypes
+	return u.ResourceTypes
 }
 
-func (o *UARScope) GetTags() []TagFilter {
-	if o == nil {
+func (u *UARScope) GetTags() []TagFilter {
+	if u == nil {
 		return nil
 	}
-	return o.Tags
+	return u.Tags
 }
 
-func (o *UARScope) GetUsers() []string {
-	if o == nil {
+func (u *UARScope) GetUsers() []string {
+	if u == nil {
 		return nil
 	}
-	return o.Users
+	return u.Users
 }

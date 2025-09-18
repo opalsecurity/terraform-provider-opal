@@ -11,11 +11,11 @@ type CreateRequestResponseBody struct {
 	ID *string `json:"id,omitempty"`
 }
 
-func (o *CreateRequestResponseBody) GetID() *string {
-	if o == nil {
+func (c *CreateRequestResponseBody) GetID() *string {
+	if c == nil {
 		return nil
 	}
-	return o.ID
+	return c.ID
 }
 
 type CreateRequestResponse struct {
@@ -29,30 +29,30 @@ type CreateRequestResponse struct {
 	Object *CreateRequestResponseBody
 }
 
-func (o *CreateRequestResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateRequestResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateRequestResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateRequestResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateRequestResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateRequestResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }
 
-func (o *CreateRequestResponse) GetObject() *CreateRequestResponseBody {
-	if o == nil {
+func (c *CreateRequestResponse) GetObject() *CreateRequestResponseBody {
+	if c == nil {
 		return nil
 	}
-	return o.Object
+	return c.Object
 }

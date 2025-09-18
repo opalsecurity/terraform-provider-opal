@@ -14,23 +14,23 @@ type RemoteUser struct {
 	UserID string `json:"user_id"`
 }
 
-func (o *RemoteUser) GetRemoteID() string {
-	if o == nil {
+func (r *RemoteUser) GetRemoteID() string {
+	if r == nil {
 		return ""
 	}
-	return o.RemoteID
+	return r.RemoteID
 }
 
-func (o *RemoteUser) GetThirdPartyProvider() ThirdPartyProviderEnum {
-	if o == nil {
+func (r *RemoteUser) GetThirdPartyProvider() ThirdPartyProviderEnum {
+	if r == nil {
 		return ThirdPartyProviderEnum("")
 	}
-	return o.ThirdPartyProvider
+	return r.ThirdPartyProvider
 }
 
-func (o *RemoteUser) GetUserID() string {
-	if o == nil {
+func (r *RemoteUser) GetUserID() string {
+	if r == nil {
 		return ""
 	}
-	return o.UserID
+	return r.UserID
 }

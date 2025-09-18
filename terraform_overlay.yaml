@@ -464,9 +464,40 @@ actions:
   - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["get"]
     update:
       x-speakeasy-entity-operation: IdpGroupMappings#get
+      deprecated: true
   - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["put"]
     update:
+      deprecated: true
       x-speakeasy-entity-operation: IdpGroupMappings#create,update
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}/groups/{group_id}"]["post"]
+    update:
+      x-speakeasy-entity-operation:
+        - GroupCatalogMapping#create
+        - GroupCatalogMapping#update
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}/groups/{group_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: GroupCatalogMapping#read
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}/groups/{group_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: GroupCatalogMapping#delete
+  - target: $["paths"]["/delegations"]["get"]
+    update:
+      x-speakeasy-entity-operation: Delegations#get
+  - target: $["paths"]["/delegations"]["post"]
+    update:
+      x-speakeasy-entity-operation: Delegation#create
+  - target: $["paths"]["/delegations/{delegation_id}"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/delegations/{delegation_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: Delegation#read
+  - target: $["paths"]["/delegations/{delegation_id}"]["delete"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/delegations/{delegation_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: Delegation#delete
   - target: $["paths"]["/owners"]["get"]["operationId"]
     update: getOwners
   - target: $["paths"]["/owners"]["get"]["responses"]
@@ -2035,6 +2066,15 @@ actions:
     remove: true
   - target: $["components"]["schemas"]["GroupContainingGroupList"]
     remove: true
+  - target: $["components"]["schemas"]["IdpGroupMapping"]
+    update:
+      x-speakeasy-entity: GroupCatalogMapping
+  - target: $["components"]["schemas"]["Delegation"]
+    update:
+      x-speakeasy-entity: Delegation
+  - target: $["components"]["schemas"]["CreateDelegationRequest"]
+    update:
+      x-speakeasy-entity: Delegation
   - target: $
     update:
       x-speakeasy-retries:

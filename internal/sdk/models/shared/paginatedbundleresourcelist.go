@@ -12,30 +12,30 @@ type PaginatedBundleResourceList struct {
 	TotalCount *int64 `json:"total_count,omitempty"`
 }
 
-func (o *PaginatedBundleResourceList) GetBundleResources() []BundleResource {
-	if o == nil {
+func (p *PaginatedBundleResourceList) GetBundleResources() []BundleResource {
+	if p == nil {
 		return []BundleResource{}
 	}
-	return o.BundleResources
+	return p.BundleResources
 }
 
-func (o *PaginatedBundleResourceList) GetNext() *string {
-	if o == nil {
+func (p *PaginatedBundleResourceList) GetNext() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Next
+	return p.Next
 }
 
-func (o *PaginatedBundleResourceList) GetPrevious() *string {
-	if o == nil {
+func (p *PaginatedBundleResourceList) GetPrevious() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Previous
+	return p.Previous
 }
 
-func (o *PaginatedBundleResourceList) GetTotalCount() *int64 {
-	if o == nil {
+func (p *PaginatedBundleResourceList) GetTotalCount() *int64 {
+	if p == nil {
 		return nil
 	}
-	return o.TotalCount
+	return p.TotalCount
 }

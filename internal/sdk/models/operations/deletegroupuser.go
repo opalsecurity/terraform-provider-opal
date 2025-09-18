@@ -15,25 +15,25 @@ type DeleteGroupUserRequest struct {
 	UserID string `pathParam:"style=simple,explode=false,name=user_id"`
 }
 
-func (o *DeleteGroupUserRequest) GetAccessLevelRemoteID() *string {
-	if o == nil {
+func (d *DeleteGroupUserRequest) GetAccessLevelRemoteID() *string {
+	if d == nil {
 		return nil
 	}
-	return o.AccessLevelRemoteID
+	return d.AccessLevelRemoteID
 }
 
-func (o *DeleteGroupUserRequest) GetGroupID() string {
-	if o == nil {
+func (d *DeleteGroupUserRequest) GetGroupID() string {
+	if d == nil {
 		return ""
 	}
-	return o.GroupID
+	return d.GroupID
 }
 
-func (o *DeleteGroupUserRequest) GetUserID() string {
-	if o == nil {
+func (d *DeleteGroupUserRequest) GetUserID() string {
+	if d == nil {
 		return ""
 	}
-	return o.UserID
+	return d.UserID
 }
 
 type DeleteGroupUserResponse struct {
@@ -45,23 +45,23 @@ type DeleteGroupUserResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *DeleteGroupUserResponse) GetContentType() string {
-	if o == nil {
+func (d *DeleteGroupUserResponse) GetContentType() string {
+	if d == nil {
 		return ""
 	}
-	return o.ContentType
+	return d.ContentType
 }
 
-func (o *DeleteGroupUserResponse) GetStatusCode() int {
-	if o == nil {
+func (d *DeleteGroupUserResponse) GetStatusCode() int {
+	if d == nil {
 		return 0
 	}
-	return o.StatusCode
+	return d.StatusCode
 }
 
-func (o *DeleteGroupUserResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (d *DeleteGroupUserResponse) GetRawResponse() *http.Response {
+	if d == nil {
 		return nil
 	}
-	return o.RawResponse
+	return d.RawResponse
 }

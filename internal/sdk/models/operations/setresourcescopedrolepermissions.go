@@ -13,18 +13,18 @@ type SetResourceScopedRolePermissionsRequest struct {
 	ResourceID string `pathParam:"style=simple,explode=false,name=resource_id"`
 }
 
-func (o *SetResourceScopedRolePermissionsRequest) GetScopedRolePermissionList() shared.ScopedRolePermissionList {
-	if o == nil {
+func (s *SetResourceScopedRolePermissionsRequest) GetScopedRolePermissionList() shared.ScopedRolePermissionList {
+	if s == nil {
 		return shared.ScopedRolePermissionList{}
 	}
-	return o.ScopedRolePermissionList
+	return s.ScopedRolePermissionList
 }
 
-func (o *SetResourceScopedRolePermissionsRequest) GetResourceID() string {
-	if o == nil {
+func (s *SetResourceScopedRolePermissionsRequest) GetResourceID() string {
+	if s == nil {
 		return ""
 	}
-	return o.ResourceID
+	return s.ResourceID
 }
 
 type SetResourceScopedRolePermissionsResponse struct {
@@ -38,30 +38,30 @@ type SetResourceScopedRolePermissionsResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *SetResourceScopedRolePermissionsResponse) GetContentType() string {
-	if o == nil {
+func (s *SetResourceScopedRolePermissionsResponse) GetContentType() string {
+	if s == nil {
 		return ""
 	}
-	return o.ContentType
+	return s.ContentType
 }
 
-func (o *SetResourceScopedRolePermissionsResponse) GetScopedRolePermissionList() *shared.ScopedRolePermissionList {
-	if o == nil {
+func (s *SetResourceScopedRolePermissionsResponse) GetScopedRolePermissionList() *shared.ScopedRolePermissionList {
+	if s == nil {
 		return nil
 	}
-	return o.ScopedRolePermissionList
+	return s.ScopedRolePermissionList
 }
 
-func (o *SetResourceScopedRolePermissionsResponse) GetStatusCode() int {
-	if o == nil {
+func (s *SetResourceScopedRolePermissionsResponse) GetStatusCode() int {
+	if s == nil {
 		return 0
 	}
-	return o.StatusCode
+	return s.StatusCode
 }
 
-func (o *SetResourceScopedRolePermissionsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (s *SetResourceScopedRolePermissionsResponse) GetRawResponse() *http.Response {
+	if s == nil {
 		return nil
 	}
-	return o.RawResponse
+	return s.RawResponse
 }

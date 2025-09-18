@@ -24,16 +24,16 @@ func (v *VisibilityInfo) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *VisibilityInfo) GetVisibility() VisibilityTypeEnum {
-	if o == nil {
+func (v *VisibilityInfo) GetVisibility() VisibilityTypeEnum {
+	if v == nil {
 		return VisibilityTypeEnum("")
 	}
-	return o.Visibility
+	return v.Visibility
 }
 
-func (o *VisibilityInfo) GetVisibilityGroupIds() []string {
-	if o == nil {
+func (v *VisibilityInfo) GetVisibilityGroupIds() []string {
+	if v == nil {
 		return nil
 	}
-	return o.VisibilityGroupIds
+	return v.VisibilityGroupIds
 }

@@ -35,30 +35,30 @@ func (s *SyncError) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *SyncError) GetAppID() *string {
-	if o == nil {
+func (s *SyncError) GetAppID() *string {
+	if s == nil {
 		return nil
 	}
-	return o.AppID
+	return s.AppID
 }
 
-func (o *SyncError) GetErrorMessage() string {
-	if o == nil {
+func (s *SyncError) GetErrorMessage() string {
+	if s == nil {
 		return ""
 	}
-	return o.ErrorMessage
+	return s.ErrorMessage
 }
 
-func (o *SyncError) GetFirstSeen() time.Time {
-	if o == nil {
+func (s *SyncError) GetFirstSeen() time.Time {
+	if s == nil {
 		return time.Time{}
 	}
-	return o.FirstSeen
+	return s.FirstSeen
 }
 
-func (o *SyncError) GetLastSeen() time.Time {
-	if o == nil {
+func (s *SyncError) GetLastSeen() time.Time {
+	if s == nil {
 		return time.Time{}
 	}
-	return o.LastSeen
+	return s.LastSeen
 }

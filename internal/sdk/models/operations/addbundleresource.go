@@ -16,25 +16,25 @@ type AddBundleResourceRequestBody struct {
 	ResourceID string `json:"resource_id"`
 }
 
-func (o *AddBundleResourceRequestBody) GetAccessLevelName() *string {
-	if o == nil {
+func (a *AddBundleResourceRequestBody) GetAccessLevelName() *string {
+	if a == nil {
 		return nil
 	}
-	return o.AccessLevelName
+	return a.AccessLevelName
 }
 
-func (o *AddBundleResourceRequestBody) GetAccessLevelRemoteID() *string {
-	if o == nil {
+func (a *AddBundleResourceRequestBody) GetAccessLevelRemoteID() *string {
+	if a == nil {
 		return nil
 	}
-	return o.AccessLevelRemoteID
+	return a.AccessLevelRemoteID
 }
 
-func (o *AddBundleResourceRequestBody) GetResourceID() string {
-	if o == nil {
+func (a *AddBundleResourceRequestBody) GetResourceID() string {
+	if a == nil {
 		return ""
 	}
-	return o.ResourceID
+	return a.ResourceID
 }
 
 type AddBundleResourceRequest struct {
@@ -43,18 +43,18 @@ type AddBundleResourceRequest struct {
 	BundleID string `pathParam:"style=simple,explode=false,name=bundle_id"`
 }
 
-func (o *AddBundleResourceRequest) GetRequestBody() *AddBundleResourceRequestBody {
-	if o == nil {
+func (a *AddBundleResourceRequest) GetRequestBody() *AddBundleResourceRequestBody {
+	if a == nil {
 		return nil
 	}
-	return o.RequestBody
+	return a.RequestBody
 }
 
-func (o *AddBundleResourceRequest) GetBundleID() string {
-	if o == nil {
+func (a *AddBundleResourceRequest) GetBundleID() string {
+	if a == nil {
 		return ""
 	}
-	return o.BundleID
+	return a.BundleID
 }
 
 type AddBundleResourceResponse struct {
@@ -68,30 +68,30 @@ type AddBundleResourceResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *AddBundleResourceResponse) GetBundleResource() *shared.BundleResource {
-	if o == nil {
+func (a *AddBundleResourceResponse) GetBundleResource() *shared.BundleResource {
+	if a == nil {
 		return nil
 	}
-	return o.BundleResource
+	return a.BundleResource
 }
 
-func (o *AddBundleResourceResponse) GetContentType() string {
-	if o == nil {
+func (a *AddBundleResourceResponse) GetContentType() string {
+	if a == nil {
 		return ""
 	}
-	return o.ContentType
+	return a.ContentType
 }
 
-func (o *AddBundleResourceResponse) GetStatusCode() int {
-	if o == nil {
+func (a *AddBundleResourceResponse) GetStatusCode() int {
+	if a == nil {
 		return 0
 	}
-	return o.StatusCode
+	return a.StatusCode
 }
 
-func (o *AddBundleResourceResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (a *AddBundleResourceResponse) GetRawResponse() *http.Response {
+	if a == nil {
 		return nil
 	}
-	return o.RawResponse
+	return a.RawResponse
 }

@@ -13,18 +13,18 @@ type UpdateAccessRuleRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=access_rule_id"`
 }
 
-func (o *UpdateAccessRuleRequest) GetUpdateAccessRuleInfo() shared.UpdateAccessRuleInfo {
-	if o == nil {
+func (u *UpdateAccessRuleRequest) GetUpdateAccessRuleInfo() shared.UpdateAccessRuleInfo {
+	if u == nil {
 		return shared.UpdateAccessRuleInfo{}
 	}
-	return o.UpdateAccessRuleInfo
+	return u.UpdateAccessRuleInfo
 }
 
-func (o *UpdateAccessRuleRequest) GetID() string {
-	if o == nil {
+func (u *UpdateAccessRuleRequest) GetID() string {
+	if u == nil {
 		return ""
 	}
-	return o.ID
+	return u.ID
 }
 
 type UpdateAccessRuleResponse struct {
@@ -38,30 +38,30 @@ type UpdateAccessRuleResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *UpdateAccessRuleResponse) GetAccessRule() *shared.AccessRule {
-	if o == nil {
+func (u *UpdateAccessRuleResponse) GetAccessRule() *shared.AccessRule {
+	if u == nil {
 		return nil
 	}
-	return o.AccessRule
+	return u.AccessRule
 }
 
-func (o *UpdateAccessRuleResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateAccessRuleResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateAccessRuleResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateAccessRuleResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateAccessRuleResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateAccessRuleResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }

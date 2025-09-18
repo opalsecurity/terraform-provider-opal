@@ -6,9 +6,9 @@ type RuleConjunction struct {
 	Clauses []RuleDisjunction `json:"clauses"`
 }
 
-func (o *RuleConjunction) GetClauses() []RuleDisjunction {
-	if o == nil {
+func (r *RuleConjunction) GetClauses() []RuleDisjunction {
+	if r == nil {
 		return []RuleDisjunction{}
 	}
-	return o.Clauses
+	return r.Clauses
 }

@@ -6,9 +6,9 @@ type SyncErrorList struct {
 	SyncErrors []SyncError `json:"sync_errors"`
 }
 
-func (o *SyncErrorList) GetSyncErrors() []SyncError {
-	if o == nil {
+func (s *SyncErrorList) GetSyncErrors() []SyncError {
+	if s == nil {
 		return []SyncError{}
 	}
-	return o.SyncErrors
+	return s.SyncErrors
 }

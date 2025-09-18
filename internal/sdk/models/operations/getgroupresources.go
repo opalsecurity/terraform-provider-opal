@@ -12,11 +12,11 @@ type GetGroupResourcesRequest struct {
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (o *GetGroupResourcesRequest) GetGroupID() string {
-	if o == nil {
+func (g *GetGroupResourcesRequest) GetGroupID() string {
+	if g == nil {
 		return ""
 	}
-	return o.GroupID
+	return g.GroupID
 }
 
 type GetGroupResourcesResponse struct {
@@ -30,30 +30,30 @@ type GetGroupResourcesResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetGroupResourcesResponse) GetContentType() string {
-	if o == nil {
+func (g *GetGroupResourcesResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetGroupResourcesResponse) GetGroupResourceList() *shared.GroupResourceList {
-	if o == nil {
+func (g *GetGroupResourcesResponse) GetGroupResourceList() *shared.GroupResourceList {
+	if g == nil {
 		return nil
 	}
-	return o.GroupResourceList
+	return g.GroupResourceList
 }
 
-func (o *GetGroupResourcesResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetGroupResourcesResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetGroupResourcesResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetGroupResourcesResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

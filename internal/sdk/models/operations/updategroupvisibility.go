@@ -13,18 +13,18 @@ type UpdateGroupVisibilityRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (o *UpdateGroupVisibilityRequest) GetVisibilityInfo() shared.VisibilityInfo {
-	if o == nil {
+func (u *UpdateGroupVisibilityRequest) GetVisibilityInfo() shared.VisibilityInfo {
+	if u == nil {
 		return shared.VisibilityInfo{}
 	}
-	return o.VisibilityInfo
+	return u.VisibilityInfo
 }
 
-func (o *UpdateGroupVisibilityRequest) GetID() string {
-	if o == nil {
+func (u *UpdateGroupVisibilityRequest) GetID() string {
+	if u == nil {
 		return ""
 	}
-	return o.ID
+	return u.ID
 }
 
 type UpdateGroupVisibilityResponse struct {
@@ -36,23 +36,23 @@ type UpdateGroupVisibilityResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *UpdateGroupVisibilityResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateGroupVisibilityResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateGroupVisibilityResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateGroupVisibilityResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateGroupVisibilityResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateGroupVisibilityResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }

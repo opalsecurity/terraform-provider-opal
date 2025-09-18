@@ -11,11 +11,11 @@ type DeleteGroupRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (o *DeleteGroupRequest) GetID() string {
-	if o == nil {
+func (d *DeleteGroupRequest) GetID() string {
+	if d == nil {
 		return ""
 	}
-	return o.ID
+	return d.ID
 }
 
 type DeleteGroupResponse struct {
@@ -27,23 +27,23 @@ type DeleteGroupResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *DeleteGroupResponse) GetContentType() string {
-	if o == nil {
+func (d *DeleteGroupResponse) GetContentType() string {
+	if d == nil {
 		return ""
 	}
-	return o.ContentType
+	return d.ContentType
 }
 
-func (o *DeleteGroupResponse) GetStatusCode() int {
-	if o == nil {
+func (d *DeleteGroupResponse) GetStatusCode() int {
+	if d == nil {
 		return 0
 	}
-	return o.StatusCode
+	return d.StatusCode
 }
 
-func (o *DeleteGroupResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (d *DeleteGroupResponse) GetRawResponse() *http.Response {
+	if d == nil {
 		return nil
 	}
-	return o.RawResponse
+	return d.RawResponse
 }

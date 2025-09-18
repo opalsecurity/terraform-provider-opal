@@ -18,30 +18,30 @@ type CreateGroupBindingResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *CreateGroupBindingResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateGroupBindingResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateGroupBindingResponse) GetGroupBinding() *shared.GroupBinding {
-	if o == nil {
+func (c *CreateGroupBindingResponse) GetGroupBinding() *shared.GroupBinding {
+	if c == nil {
 		return nil
 	}
-	return o.GroupBinding
+	return c.GroupBinding
 }
 
-func (o *CreateGroupBindingResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateGroupBindingResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateGroupBindingResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateGroupBindingResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }

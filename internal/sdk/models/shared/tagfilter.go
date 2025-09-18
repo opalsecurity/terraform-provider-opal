@@ -10,16 +10,16 @@ type TagFilter struct {
 	Value *string `json:"value,omitempty"`
 }
 
-func (o *TagFilter) GetKey() string {
-	if o == nil {
+func (t *TagFilter) GetKey() string {
+	if t == nil {
 		return ""
 	}
-	return o.Key
+	return t.Key
 }
 
-func (o *TagFilter) GetValue() *string {
-	if o == nil {
+func (t *TagFilter) GetValue() *string {
+	if t == nil {
 		return nil
 	}
-	return o.Value
+	return t.Value
 }

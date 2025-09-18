@@ -27,30 +27,30 @@ func (s *ScopedRolePermission) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *ScopedRolePermission) GetAllowAll() bool {
-	if o == nil {
+func (s *ScopedRolePermission) GetAllowAll() bool {
+	if s == nil {
 		return false
 	}
-	return o.AllowAll
+	return s.AllowAll
 }
 
-func (o *ScopedRolePermission) GetPermissionName() RolePermissionNameEnum {
-	if o == nil {
+func (s *ScopedRolePermission) GetPermissionName() RolePermissionNameEnum {
+	if s == nil {
 		return RolePermissionNameEnum("")
 	}
-	return o.PermissionName
+	return s.PermissionName
 }
 
-func (o *ScopedRolePermission) GetTargetIds() []string {
-	if o == nil {
+func (s *ScopedRolePermission) GetTargetIds() []string {
+	if s == nil {
 		return nil
 	}
-	return o.TargetIds
+	return s.TargetIds
 }
 
-func (o *ScopedRolePermission) GetTargetType() RolePermissionTargetTypeEnum {
-	if o == nil {
+func (s *ScopedRolePermission) GetTargetType() RolePermissionTargetTypeEnum {
+	if s == nil {
 		return RolePermissionTargetTypeEnum("")
 	}
-	return o.TargetType
+	return s.TargetType
 }

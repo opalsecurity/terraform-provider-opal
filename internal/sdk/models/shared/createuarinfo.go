@@ -38,65 +38,65 @@ func (c *CreateUARInfo) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *CreateUARInfo) GetDeadline() time.Time {
-	if o == nil {
+func (c *CreateUARInfo) GetDeadline() time.Time {
+	if c == nil {
 		return time.Time{}
 	}
-	return o.Deadline
+	return c.Deadline
 }
 
-func (o *CreateUARInfo) GetName() string {
-	if o == nil {
+func (c *CreateUARInfo) GetName() string {
+	if c == nil {
 		return ""
 	}
-	return o.Name
+	return c.Name
 }
 
-func (o *CreateUARInfo) GetReminderIncludeManager() *bool {
-	if o == nil {
+func (c *CreateUARInfo) GetReminderIncludeManager() *bool {
+	if c == nil {
 		return nil
 	}
-	return o.ReminderIncludeManager
+	return c.ReminderIncludeManager
 }
 
-func (o *CreateUARInfo) GetReminderSchedule() []int64 {
-	if o == nil {
+func (c *CreateUARInfo) GetReminderSchedule() []int64 {
+	if c == nil {
 		return nil
 	}
-	return o.ReminderSchedule
+	return c.ReminderSchedule
 }
 
-func (o *CreateUARInfo) GetReviewerAssignmentPolicy() UARReviewerAssignmentPolicyEnum {
-	if o == nil {
+func (c *CreateUARInfo) GetReviewerAssignmentPolicy() UARReviewerAssignmentPolicyEnum {
+	if c == nil {
 		return UARReviewerAssignmentPolicyEnum("")
 	}
-	return o.ReviewerAssignmentPolicy
+	return c.ReviewerAssignmentPolicy
 }
 
-func (o *CreateUARInfo) GetSelfReviewAllowed() bool {
-	if o == nil {
+func (c *CreateUARInfo) GetSelfReviewAllowed() bool {
+	if c == nil {
 		return false
 	}
-	return o.SelfReviewAllowed
+	return c.SelfReviewAllowed
 }
 
-func (o *CreateUARInfo) GetSendReviewerAssignmentNotification() bool {
-	if o == nil {
+func (c *CreateUARInfo) GetSendReviewerAssignmentNotification() bool {
+	if c == nil {
 		return false
 	}
-	return o.SendReviewerAssignmentNotification
+	return c.SendReviewerAssignmentNotification
 }
 
-func (o *CreateUARInfo) GetTimeZone() string {
-	if o == nil {
+func (c *CreateUARInfo) GetTimeZone() string {
+	if c == nil {
 		return ""
 	}
-	return o.TimeZone
+	return c.TimeZone
 }
 
-func (o *CreateUARInfo) GetUarScope() *UARScope {
-	if o == nil {
+func (c *CreateUARInfo) GetUarScope() *UARScope {
+	if c == nil {
 		return nil
 	}
-	return o.UarScope
+	return c.UarScope
 }

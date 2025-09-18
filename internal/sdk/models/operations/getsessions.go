@@ -14,18 +14,18 @@ type GetSessionsRequest struct {
 	UserID *string `queryParam:"style=form,explode=true,name=user_id"`
 }
 
-func (o *GetSessionsRequest) GetResourceID() string {
-	if o == nil {
+func (g *GetSessionsRequest) GetResourceID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ResourceID
+	return g.ResourceID
 }
 
-func (o *GetSessionsRequest) GetUserID() *string {
-	if o == nil {
+func (g *GetSessionsRequest) GetUserID() *string {
+	if g == nil {
 		return nil
 	}
-	return o.UserID
+	return g.UserID
 }
 
 type GetSessionsResponse struct {
@@ -39,30 +39,30 @@ type GetSessionsResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetSessionsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetSessionsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetSessionsResponse) GetSessionsList() *shared.SessionsList {
-	if o == nil {
+func (g *GetSessionsResponse) GetSessionsList() *shared.SessionsList {
+	if g == nil {
 		return nil
 	}
-	return o.SessionsList
+	return g.SessionsList
 }
 
-func (o *GetSessionsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetSessionsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetSessionsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetSessionsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

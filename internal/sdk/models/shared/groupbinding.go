@@ -37,37 +37,37 @@ func (g *GroupBinding) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *GroupBinding) GetCreatedAt() time.Time {
-	if o == nil {
+func (g *GroupBinding) GetCreatedAt() time.Time {
+	if g == nil {
 		return time.Time{}
 	}
-	return o.CreatedAt
+	return g.CreatedAt
 }
 
-func (o *GroupBinding) GetCreatedByID() string {
-	if o == nil {
+func (g *GroupBinding) GetCreatedByID() string {
+	if g == nil {
 		return ""
 	}
-	return o.CreatedByID
+	return g.CreatedByID
 }
 
-func (o *GroupBinding) GetGroupBindingID() string {
-	if o == nil {
+func (g *GroupBinding) GetGroupBindingID() string {
+	if g == nil {
 		return ""
 	}
-	return o.GroupBindingID
+	return g.GroupBindingID
 }
 
-func (o *GroupBinding) GetGroups() []GroupBindingGroup {
-	if o == nil {
+func (g *GroupBinding) GetGroups() []GroupBindingGroup {
+	if g == nil {
 		return []GroupBindingGroup{}
 	}
-	return o.Groups
+	return g.Groups
 }
 
-func (o *GroupBinding) GetSourceGroupID() string {
-	if o == nil {
+func (g *GroupBinding) GetSourceGroupID() string {
+	if g == nil {
 		return ""
 	}
-	return o.SourceGroupID
+	return g.SourceGroupID
 }

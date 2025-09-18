@@ -16,7 +16,9 @@ type UpdateGroupInfo struct {
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the group.
 	Description *string `json:"description,omitempty"`
-	// The duration for which access can be extended (in minutes).
+	// The duration for which access can be extended (in minutes). Deprecated, set the extension duration in the request_configuration you want it to apply to.
+	//
+	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
 	ExtensionsDurationInMinutes *int64 `json:"extensions_duration_in_minutes,omitempty"`
 	// A list of User IDs for the group leaders of the group
 	GroupLeaderUserIds []string `json:"group_leader_user_ids,omitempty"`
@@ -42,72 +44,72 @@ func (u *UpdateGroupInfo) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *UpdateGroupInfo) GetAdminOwnerID() *string {
-	if o == nil {
+func (u *UpdateGroupInfo) GetAdminOwnerID() *string {
+	if u == nil {
 		return nil
 	}
-	return o.AdminOwnerID
+	return u.AdminOwnerID
 }
 
-func (o *UpdateGroupInfo) GetCustomRequestNotification() *string {
-	if o == nil {
+func (u *UpdateGroupInfo) GetCustomRequestNotification() *string {
+	if u == nil {
 		return nil
 	}
-	return o.CustomRequestNotification
+	return u.CustomRequestNotification
 }
 
-func (o *UpdateGroupInfo) GetDescription() *string {
-	if o == nil {
+func (u *UpdateGroupInfo) GetDescription() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Description
+	return u.Description
 }
 
-func (o *UpdateGroupInfo) GetExtensionsDurationInMinutes() *int64 {
-	if o == nil {
+func (u *UpdateGroupInfo) GetExtensionsDurationInMinutes() *int64 {
+	if u == nil {
 		return nil
 	}
-	return o.ExtensionsDurationInMinutes
+	return u.ExtensionsDurationInMinutes
 }
 
-func (o *UpdateGroupInfo) GetGroupLeaderUserIds() []string {
-	if o == nil {
+func (u *UpdateGroupInfo) GetGroupLeaderUserIds() []string {
+	if u == nil {
 		return nil
 	}
-	return o.GroupLeaderUserIds
+	return u.GroupLeaderUserIds
 }
 
-func (o *UpdateGroupInfo) GetID() string {
-	if o == nil {
+func (u *UpdateGroupInfo) GetID() string {
+	if u == nil {
 		return ""
 	}
-	return o.ID
+	return u.ID
 }
 
-func (o *UpdateGroupInfo) GetName() *string {
-	if o == nil {
+func (u *UpdateGroupInfo) GetName() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Name
+	return u.Name
 }
 
-func (o *UpdateGroupInfo) GetRequestConfigurations() []RequestConfiguration {
-	if o == nil {
+func (u *UpdateGroupInfo) GetRequestConfigurations() []RequestConfiguration {
+	if u == nil {
 		return []RequestConfiguration{}
 	}
-	return o.RequestConfigurations
+	return u.RequestConfigurations
 }
 
-func (o *UpdateGroupInfo) GetRequireMfaToApprove() *bool {
-	if o == nil {
+func (u *UpdateGroupInfo) GetRequireMfaToApprove() *bool {
+	if u == nil {
 		return nil
 	}
-	return o.RequireMfaToApprove
+	return u.RequireMfaToApprove
 }
 
-func (o *UpdateGroupInfo) GetRiskSensitivityOverride() *RiskSensitivityEnum {
-	if o == nil {
+func (u *UpdateGroupInfo) GetRiskSensitivityOverride() *RiskSensitivityEnum {
+	if u == nil {
 		return nil
 	}
-	return o.RiskSensitivityOverride
+	return u.RiskSensitivityOverride
 }
