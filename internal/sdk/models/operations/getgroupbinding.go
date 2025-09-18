@@ -12,11 +12,11 @@ type GetGroupBindingRequest struct {
 	GroupBindingID string `pathParam:"style=simple,explode=true,name=group_binding_id"`
 }
 
-func (o *GetGroupBindingRequest) GetGroupBindingID() string {
-	if o == nil {
+func (g *GetGroupBindingRequest) GetGroupBindingID() string {
+	if g == nil {
 		return ""
 	}
-	return o.GroupBindingID
+	return g.GroupBindingID
 }
 
 type GetGroupBindingResponse struct {
@@ -30,30 +30,30 @@ type GetGroupBindingResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetGroupBindingResponse) GetContentType() string {
-	if o == nil {
+func (g *GetGroupBindingResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetGroupBindingResponse) GetGroupBinding() *shared.GroupBinding {
-	if o == nil {
+func (g *GetGroupBindingResponse) GetGroupBinding() *shared.GroupBinding {
+	if g == nil {
 		return nil
 	}
-	return o.GroupBinding
+	return g.GroupBinding
 }
 
-func (o *GetGroupBindingResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetGroupBindingResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetGroupBindingResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetGroupBindingResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

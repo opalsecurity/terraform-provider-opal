@@ -18,30 +18,30 @@ type CreateUARResponse struct {
 	Uar *shared.Uar
 }
 
-func (o *CreateUARResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateUARResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateUARResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateUARResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateUARResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateUARResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }
 
-func (o *CreateUARResponse) GetUar() *shared.Uar {
-	if o == nil {
+func (c *CreateUARResponse) GetUar() *shared.Uar {
+	if c == nil {
 		return nil
 	}
-	return o.Uar
+	return c.Uar
 }

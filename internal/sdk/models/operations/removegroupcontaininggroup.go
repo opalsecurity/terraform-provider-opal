@@ -13,18 +13,18 @@ type RemoveGroupContainingGroupRequest struct {
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (o *RemoveGroupContainingGroupRequest) GetContainingGroupID() string {
-	if o == nil {
+func (r *RemoveGroupContainingGroupRequest) GetContainingGroupID() string {
+	if r == nil {
 		return ""
 	}
-	return o.ContainingGroupID
+	return r.ContainingGroupID
 }
 
-func (o *RemoveGroupContainingGroupRequest) GetGroupID() string {
-	if o == nil {
+func (r *RemoveGroupContainingGroupRequest) GetGroupID() string {
+	if r == nil {
 		return ""
 	}
-	return o.GroupID
+	return r.GroupID
 }
 
 type RemoveGroupContainingGroupResponse struct {
@@ -36,23 +36,23 @@ type RemoveGroupContainingGroupResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *RemoveGroupContainingGroupResponse) GetContentType() string {
-	if o == nil {
+func (r *RemoveGroupContainingGroupResponse) GetContentType() string {
+	if r == nil {
 		return ""
 	}
-	return o.ContentType
+	return r.ContentType
 }
 
-func (o *RemoveGroupContainingGroupResponse) GetStatusCode() int {
-	if o == nil {
+func (r *RemoveGroupContainingGroupResponse) GetStatusCode() int {
+	if r == nil {
 		return 0
 	}
-	return o.StatusCode
+	return r.StatusCode
 }
 
-func (o *RemoveGroupContainingGroupResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (r *RemoveGroupContainingGroupResponse) GetRawResponse() *http.Response {
+	if r == nil {
 		return nil
 	}
-	return o.RawResponse
+	return r.RawResponse
 }

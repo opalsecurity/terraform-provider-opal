@@ -13,18 +13,18 @@ type UpdateOwnerUsersRequest struct {
 	ID string `pathParam:"style=simple,explode=false,name=owner_id"`
 }
 
-func (o *UpdateOwnerUsersRequest) GetUserIDList() shared.UserIDList {
-	if o == nil {
+func (u *UpdateOwnerUsersRequest) GetUserIDList() shared.UserIDList {
+	if u == nil {
 		return shared.UserIDList{}
 	}
-	return o.UserIDList
+	return u.UserIDList
 }
 
-func (o *UpdateOwnerUsersRequest) GetID() string {
-	if o == nil {
+func (u *UpdateOwnerUsersRequest) GetID() string {
+	if u == nil {
 		return ""
 	}
-	return o.ID
+	return u.ID
 }
 
 type UpdateOwnerUsersResponse struct {
@@ -38,30 +38,30 @@ type UpdateOwnerUsersResponse struct {
 	UserList *shared.UserList
 }
 
-func (o *UpdateOwnerUsersResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateOwnerUsersResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateOwnerUsersResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateOwnerUsersResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateOwnerUsersResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateOwnerUsersResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }
 
-func (o *UpdateOwnerUsersResponse) GetUserList() *shared.UserList {
-	if o == nil {
+func (u *UpdateOwnerUsersResponse) GetUserList() *shared.UserList {
+	if u == nil {
 		return nil
 	}
-	return o.UserList
+	return u.UserList
 }

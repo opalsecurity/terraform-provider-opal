@@ -20,44 +20,44 @@ type UpdateOwnerInfo struct {
 	SourceGroupID *string `json:"source_group_id,omitempty"`
 }
 
-func (o *UpdateOwnerInfo) GetAccessRequestEscalationPeriod() *int64 {
-	if o == nil {
+func (u *UpdateOwnerInfo) GetAccessRequestEscalationPeriod() *int64 {
+	if u == nil {
 		return nil
 	}
-	return o.AccessRequestEscalationPeriod
+	return u.AccessRequestEscalationPeriod
 }
 
-func (o *UpdateOwnerInfo) GetDescription() *string {
-	if o == nil {
+func (u *UpdateOwnerInfo) GetDescription() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Description
+	return u.Description
 }
 
-func (o *UpdateOwnerInfo) GetID() string {
-	if o == nil {
+func (u *UpdateOwnerInfo) GetID() string {
+	if u == nil {
 		return ""
 	}
-	return o.ID
+	return u.ID
 }
 
-func (o *UpdateOwnerInfo) GetName() *string {
-	if o == nil {
+func (u *UpdateOwnerInfo) GetName() *string {
+	if u == nil {
 		return nil
 	}
-	return o.Name
+	return u.Name
 }
 
-func (o *UpdateOwnerInfo) GetReviewerMessageChannelID() *string {
-	if o == nil {
+func (u *UpdateOwnerInfo) GetReviewerMessageChannelID() *string {
+	if u == nil {
 		return nil
 	}
-	return o.ReviewerMessageChannelID
+	return u.ReviewerMessageChannelID
 }
 
-func (o *UpdateOwnerInfo) GetSourceGroupID() *string {
-	if o == nil {
+func (u *UpdateOwnerInfo) GetSourceGroupID() *string {
+	if u == nil {
 		return nil
 	}
-	return o.SourceGroupID
+	return u.SourceGroupID
 }

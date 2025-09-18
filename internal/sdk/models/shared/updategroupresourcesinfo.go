@@ -6,9 +6,9 @@ type UpdateGroupResourcesInfo struct {
 	Resources []ResourceWithAccessLevel `json:"resources"`
 }
 
-func (o *UpdateGroupResourcesInfo) GetResources() []ResourceWithAccessLevel {
-	if o == nil {
+func (u *UpdateGroupResourcesInfo) GetResources() []ResourceWithAccessLevel {
+	if u == nil {
 		return []ResourceWithAccessLevel{}
 	}
-	return o.Resources
+	return u.Resources
 }

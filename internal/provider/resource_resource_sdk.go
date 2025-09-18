@@ -95,6 +95,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.AwsRdsInstance.Region = types.StringValue(resp.RemoteInfo.AwsRdsInstance.Region)
 				r.RemoteInfo.AwsRdsInstance.ResourceID = types.StringValue(resp.RemoteInfo.AwsRdsInstance.ResourceID)
 			}
+			if resp.RemoteInfo.CoupaRole == nil {
+				r.RemoteInfo.CoupaRole = nil
+			} else {
+				r.RemoteInfo.CoupaRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.CoupaRole.RoleID = types.StringValue(resp.RemoteInfo.CoupaRole.RoleID)
+			}
 			if resp.RemoteInfo.CustomConnector == nil {
 				r.RemoteInfo.CustomConnector = nil
 			} else {
@@ -607,6 +613,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				ResourceID: resourceID,
 			}
 		}
+		var coupaRole *shared.CoupaRole
+		if r.RemoteInfo.CoupaRole != nil {
+			var roleID string
+			roleID = r.RemoteInfo.CoupaRole.RoleID.ValueString()
+
+			coupaRole = &shared.CoupaRole{
+				RoleID: roleID,
+			}
+		}
 		var customConnector *shared.CustomConnector
 		if r.RemoteInfo.CustomConnector != nil {
 			var canHaveUsageEvents bool
@@ -622,11 +637,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var datastaxAstraRole *shared.DatastaxAstraRole
 		if r.RemoteInfo.DatastaxAstraRole != nil {
-			var roleID string
-			roleID = r.RemoteInfo.DatastaxAstraRole.RoleID.ValueString()
+			var roleId1 string
+			roleId1 = r.RemoteInfo.DatastaxAstraRole.RoleID.ValueString()
 
 			datastaxAstraRole = &shared.DatastaxAstraRole{
-				RoleID: roleID,
+				RoleID: roleId1,
 			}
 		}
 		var gcpBigQueryDataset *shared.GcpBigQueryDataset
@@ -753,11 +768,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var githubOrgRole *shared.GithubOrgRole
 		if r.RemoteInfo.GithubOrgRole != nil {
-			var roleId1 string
-			roleId1 = r.RemoteInfo.GithubOrgRole.RoleID.ValueString()
+			var roleId2 string
+			roleId2 = r.RemoteInfo.GithubOrgRole.RoleID.ValueString()
 
 			githubOrgRole = &shared.GithubOrgRole{
-				RoleID: roleId1,
+				RoleID: roleId2,
 			}
 		}
 		var githubRepo *shared.GithubRepo
@@ -780,11 +795,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var googleWorkspaceRole *shared.GoogleWorkspaceRole
 		if r.RemoteInfo.GoogleWorkspaceRole != nil {
-			var roleId2 string
-			roleId2 = r.RemoteInfo.GoogleWorkspaceRole.RoleID.ValueString()
+			var roleId3 string
+			roleId3 = r.RemoteInfo.GoogleWorkspaceRole.RoleID.ValueString()
 
 			googleWorkspaceRole = &shared.GoogleWorkspaceRole{
-				RoleID: roleId2,
+				RoleID: roleId3,
 			}
 		}
 		var oktaApp *shared.OktaApp
@@ -798,11 +813,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var oktaCustomRole *shared.OktaCustomRole
 		if r.RemoteInfo.OktaCustomRole != nil {
-			var roleId3 string
-			roleId3 = r.RemoteInfo.OktaCustomRole.RoleID.ValueString()
+			var roleId4 string
+			roleId4 = r.RemoteInfo.OktaCustomRole.RoleID.ValueString()
 
 			oktaCustomRole = &shared.OktaCustomRole{
-				RoleID: roleId3,
+				RoleID: roleId4,
 			}
 		}
 		var oktaStandardRole *shared.OktaStandardRole
@@ -847,11 +862,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var salesforceRole *shared.SalesforceRole
 		if r.RemoteInfo.SalesforceRole != nil {
-			var roleId4 string
-			roleId4 = r.RemoteInfo.SalesforceRole.RoleID.ValueString()
+			var roleId5 string
+			roleId5 = r.RemoteInfo.SalesforceRole.RoleID.ValueString()
 
 			salesforceRole = &shared.SalesforceRole{
-				RoleID: roleId4,
+				RoleID: roleId5,
 			}
 		}
 		var teleportRole *shared.TeleportRole
@@ -871,6 +886,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			AwsOrganizationalUnit:   awsOrganizationalUnit,
 			AwsPermissionSet:        awsPermissionSet,
 			AwsRdsInstance:          awsRdsInstance,
+			CoupaRole:               coupaRole,
 			CustomConnector:         customConnector,
 			DatastaxAstraRole:       datastaxAstraRole,
 			GcpBigQueryDataset:      gcpBigQueryDataset,

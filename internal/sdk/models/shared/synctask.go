@@ -26,16 +26,16 @@ func (s *SyncTask) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *SyncTask) GetCompletedAt() time.Time {
-	if o == nil {
+func (s *SyncTask) GetCompletedAt() time.Time {
+	if s == nil {
 		return time.Time{}
 	}
-	return o.CompletedAt
+	return s.CompletedAt
 }
 
-func (o *SyncTask) GetID() string {
-	if o == nil {
+func (s *SyncTask) GetID() string {
+	if s == nil {
 		return ""
 	}
-	return o.ID
+	return s.ID
 }

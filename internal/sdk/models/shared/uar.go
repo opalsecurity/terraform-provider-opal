@@ -38,58 +38,58 @@ func (u *Uar) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Uar) GetDeadline() time.Time {
-	if o == nil {
+func (u *Uar) GetDeadline() time.Time {
+	if u == nil {
 		return time.Time{}
 	}
-	return o.Deadline
+	return u.Deadline
 }
 
-func (o *Uar) GetName() string {
-	if o == nil {
+func (u *Uar) GetName() string {
+	if u == nil {
 		return ""
 	}
-	return o.Name
+	return u.Name
 }
 
-func (o *Uar) GetReviewerAssignmentPolicy() UARReviewerAssignmentPolicyEnum {
-	if o == nil {
+func (u *Uar) GetReviewerAssignmentPolicy() UARReviewerAssignmentPolicyEnum {
+	if u == nil {
 		return UARReviewerAssignmentPolicyEnum("")
 	}
-	return o.ReviewerAssignmentPolicy
+	return u.ReviewerAssignmentPolicy
 }
 
-func (o *Uar) GetSelfReviewAllowed() bool {
-	if o == nil {
+func (u *Uar) GetSelfReviewAllowed() bool {
+	if u == nil {
 		return false
 	}
-	return o.SelfReviewAllowed
+	return u.SelfReviewAllowed
 }
 
-func (o *Uar) GetSendReviewerAssignmentNotification() bool {
-	if o == nil {
+func (u *Uar) GetSendReviewerAssignmentNotification() bool {
+	if u == nil {
 		return false
 	}
-	return o.SendReviewerAssignmentNotification
+	return u.SendReviewerAssignmentNotification
 }
 
-func (o *Uar) GetTimeZone() string {
-	if o == nil {
+func (u *Uar) GetTimeZone() string {
+	if u == nil {
 		return ""
 	}
-	return o.TimeZone
+	return u.TimeZone
 }
 
-func (o *Uar) GetUarID() string {
-	if o == nil {
+func (u *Uar) GetUarID() string {
+	if u == nil {
 		return ""
 	}
-	return o.UarID
+	return u.UarID
 }
 
-func (o *Uar) GetUarScope() *UARScope {
-	if o == nil {
+func (u *Uar) GetUarScope() *UARScope {
+	if u == nil {
 		return nil
 	}
-	return o.UarScope
+	return u.UarScope
 }

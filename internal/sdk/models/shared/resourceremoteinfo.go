@@ -10,18 +10,18 @@ type AwsAccount struct {
 	OrganizationalUnitID *string `json:"organizational_unit_id,omitempty"`
 }
 
-func (o *AwsAccount) GetAccountID() string {
-	if o == nil {
+func (a *AwsAccount) GetAccountID() string {
+	if a == nil {
 		return ""
 	}
-	return o.AccountID
+	return a.AccountID
 }
 
-func (o *AwsAccount) GetOrganizationalUnitID() *string {
-	if o == nil {
+func (a *AwsAccount) GetOrganizationalUnitID() *string {
+	if a == nil {
 		return nil
 	}
-	return o.OrganizationalUnitID
+	return a.OrganizationalUnitID
 }
 
 // AwsEc2Instance - Remote info for AWS EC2 instance.
@@ -34,25 +34,25 @@ type AwsEc2Instance struct {
 	Region string `json:"region"`
 }
 
-func (o *AwsEc2Instance) GetAccountID() *string {
-	if o == nil {
+func (a *AwsEc2Instance) GetAccountID() *string {
+	if a == nil {
 		return nil
 	}
-	return o.AccountID
+	return a.AccountID
 }
 
-func (o *AwsEc2Instance) GetInstanceID() string {
-	if o == nil {
+func (a *AwsEc2Instance) GetInstanceID() string {
+	if a == nil {
 		return ""
 	}
-	return o.InstanceID
+	return a.InstanceID
 }
 
-func (o *AwsEc2Instance) GetRegion() string {
-	if o == nil {
+func (a *AwsEc2Instance) GetRegion() string {
+	if a == nil {
 		return ""
 	}
-	return o.Region
+	return a.Region
 }
 
 // AwsEksCluster - Remote info for AWS EKS cluster.
@@ -63,18 +63,18 @@ type AwsEksCluster struct {
 	Arn string `json:"arn"`
 }
 
-func (o *AwsEksCluster) GetAccountID() *string {
-	if o == nil {
+func (a *AwsEksCluster) GetAccountID() *string {
+	if a == nil {
 		return nil
 	}
-	return o.AccountID
+	return a.AccountID
 }
 
-func (o *AwsEksCluster) GetArn() string {
-	if o == nil {
+func (a *AwsEksCluster) GetArn() string {
+	if a == nil {
 		return ""
 	}
-	return o.Arn
+	return a.Arn
 }
 
 // AwsIamRole - Remote info for AWS IAM role.
@@ -85,18 +85,18 @@ type AwsIamRole struct {
 	Arn string `json:"arn"`
 }
 
-func (o *AwsIamRole) GetAccountID() *string {
-	if o == nil {
+func (a *AwsIamRole) GetAccountID() *string {
+	if a == nil {
 		return nil
 	}
-	return o.AccountID
+	return a.AccountID
 }
 
-func (o *AwsIamRole) GetArn() string {
-	if o == nil {
+func (a *AwsIamRole) GetArn() string {
+	if a == nil {
 		return ""
 	}
-	return o.Arn
+	return a.Arn
 }
 
 // AwsOrganizationalUnit - Remote info for AWS organizational unit.
@@ -107,18 +107,18 @@ type AwsOrganizationalUnit struct {
 	ParentID *string `json:"parent_id,omitempty"`
 }
 
-func (o *AwsOrganizationalUnit) GetOrganizationalUnitID() string {
-	if o == nil {
+func (a *AwsOrganizationalUnit) GetOrganizationalUnitID() string {
+	if a == nil {
 		return ""
 	}
-	return o.OrganizationalUnitID
+	return a.OrganizationalUnitID
 }
 
-func (o *AwsOrganizationalUnit) GetParentID() *string {
-	if o == nil {
+func (a *AwsOrganizationalUnit) GetParentID() *string {
+	if a == nil {
 		return nil
 	}
-	return o.ParentID
+	return a.ParentID
 }
 
 // AwsPermissionSet - Remote info for AWS Identity Center permission set.
@@ -129,18 +129,18 @@ type AwsPermissionSet struct {
 	Arn string `json:"arn"`
 }
 
-func (o *AwsPermissionSet) GetAccountID() string {
-	if o == nil {
+func (a *AwsPermissionSet) GetAccountID() string {
+	if a == nil {
 		return ""
 	}
-	return o.AccountID
+	return a.AccountID
 }
 
-func (o *AwsPermissionSet) GetArn() string {
-	if o == nil {
+func (a *AwsPermissionSet) GetArn() string {
+	if a == nil {
 		return ""
 	}
-	return o.Arn
+	return a.Arn
 }
 
 // AwsRdsInstance - Remote info for AWS RDS instance.
@@ -155,32 +155,45 @@ type AwsRdsInstance struct {
 	ResourceID string `json:"resource_id"`
 }
 
-func (o *AwsRdsInstance) GetAccountID() *string {
-	if o == nil {
+func (a *AwsRdsInstance) GetAccountID() *string {
+	if a == nil {
 		return nil
 	}
-	return o.AccountID
+	return a.AccountID
 }
 
-func (o *AwsRdsInstance) GetInstanceID() string {
-	if o == nil {
+func (a *AwsRdsInstance) GetInstanceID() string {
+	if a == nil {
 		return ""
 	}
-	return o.InstanceID
+	return a.InstanceID
 }
 
-func (o *AwsRdsInstance) GetRegion() string {
-	if o == nil {
+func (a *AwsRdsInstance) GetRegion() string {
+	if a == nil {
 		return ""
 	}
-	return o.Region
+	return a.Region
 }
 
-func (o *AwsRdsInstance) GetResourceID() string {
-	if o == nil {
+func (a *AwsRdsInstance) GetResourceID() string {
+	if a == nil {
 		return ""
 	}
-	return o.ResourceID
+	return a.ResourceID
+}
+
+// CoupaRole - Remote info for Coupa role.
+type CoupaRole struct {
+	// The id of the role.
+	RoleID string `json:"role_id"`
+}
+
+func (c *CoupaRole) GetRoleID() string {
+	if c == nil {
+		return ""
+	}
+	return c.RoleID
 }
 
 // CustomConnector - Remote info for a custom connector resource.
@@ -191,18 +204,18 @@ type CustomConnector struct {
 	RemoteResourceID string `json:"remote_resource_id"`
 }
 
-func (o *CustomConnector) GetCanHaveUsageEvents() bool {
-	if o == nil {
+func (c *CustomConnector) GetCanHaveUsageEvents() bool {
+	if c == nil {
 		return false
 	}
-	return o.CanHaveUsageEvents
+	return c.CanHaveUsageEvents
 }
 
-func (o *CustomConnector) GetRemoteResourceID() string {
-	if o == nil {
+func (c *CustomConnector) GetRemoteResourceID() string {
+	if c == nil {
 		return ""
 	}
-	return o.RemoteResourceID
+	return c.RemoteResourceID
 }
 
 // DatastaxAstraRole - Remote info for an Astra role.
@@ -211,11 +224,11 @@ type DatastaxAstraRole struct {
 	RoleID string `json:"role_id"`
 }
 
-func (o *DatastaxAstraRole) GetRoleID() string {
-	if o == nil {
+func (d *DatastaxAstraRole) GetRoleID() string {
+	if d == nil {
 		return ""
 	}
-	return o.RoleID
+	return d.RoleID
 }
 
 // GcpBigQueryDataset - Remote info for GCP BigQuery Dataset.
@@ -226,18 +239,18 @@ type GcpBigQueryDataset struct {
 	ProjectID string `json:"project_id"`
 }
 
-func (o *GcpBigQueryDataset) GetDatasetID() string {
-	if o == nil {
+func (g *GcpBigQueryDataset) GetDatasetID() string {
+	if g == nil {
 		return ""
 	}
-	return o.DatasetID
+	return g.DatasetID
 }
 
-func (o *GcpBigQueryDataset) GetProjectID() string {
-	if o == nil {
+func (g *GcpBigQueryDataset) GetProjectID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ProjectID
+	return g.ProjectID
 }
 
 // GcpBigQueryTable - Remote info for GCP BigQuery Table.
@@ -250,25 +263,25 @@ type GcpBigQueryTable struct {
 	TableID string `json:"table_id"`
 }
 
-func (o *GcpBigQueryTable) GetDatasetID() string {
-	if o == nil {
+func (g *GcpBigQueryTable) GetDatasetID() string {
+	if g == nil {
 		return ""
 	}
-	return o.DatasetID
+	return g.DatasetID
 }
 
-func (o *GcpBigQueryTable) GetProjectID() string {
-	if o == nil {
+func (g *GcpBigQueryTable) GetProjectID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ProjectID
+	return g.ProjectID
 }
 
-func (o *GcpBigQueryTable) GetTableID() string {
-	if o == nil {
+func (g *GcpBigQueryTable) GetTableID() string {
+	if g == nil {
 		return ""
 	}
-	return o.TableID
+	return g.TableID
 }
 
 // GcpBucket - Remote info for GCP bucket.
@@ -277,11 +290,11 @@ type GcpBucket struct {
 	BucketID string `json:"bucket_id"`
 }
 
-func (o *GcpBucket) GetBucketID() string {
-	if o == nil {
+func (g *GcpBucket) GetBucketID() string {
+	if g == nil {
 		return ""
 	}
-	return o.BucketID
+	return g.BucketID
 }
 
 // GcpComputeInstance - Remote info for GCP compute instance.
@@ -294,25 +307,25 @@ type GcpComputeInstance struct {
 	Zone string `json:"zone"`
 }
 
-func (o *GcpComputeInstance) GetInstanceID() string {
-	if o == nil {
+func (g *GcpComputeInstance) GetInstanceID() string {
+	if g == nil {
 		return ""
 	}
-	return o.InstanceID
+	return g.InstanceID
 }
 
-func (o *GcpComputeInstance) GetProjectID() string {
-	if o == nil {
+func (g *GcpComputeInstance) GetProjectID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ProjectID
+	return g.ProjectID
 }
 
-func (o *GcpComputeInstance) GetZone() string {
-	if o == nil {
+func (g *GcpComputeInstance) GetZone() string {
+	if g == nil {
 		return ""
 	}
-	return o.Zone
+	return g.Zone
 }
 
 // GcpFolder - Remote info for GCP folder.
@@ -321,11 +334,11 @@ type GcpFolder struct {
 	FolderID string `json:"folder_id"`
 }
 
-func (o *GcpFolder) GetFolderID() string {
-	if o == nil {
+func (g *GcpFolder) GetFolderID() string {
+	if g == nil {
 		return ""
 	}
-	return o.FolderID
+	return g.FolderID
 }
 
 // GcpGkeCluster - Remote info for GCP GKE cluster.
@@ -334,11 +347,11 @@ type GcpGkeCluster struct {
 	ClusterName string `json:"cluster_name"`
 }
 
-func (o *GcpGkeCluster) GetClusterName() string {
-	if o == nil {
+func (g *GcpGkeCluster) GetClusterName() string {
+	if g == nil {
 		return ""
 	}
-	return o.ClusterName
+	return g.ClusterName
 }
 
 // GcpOrganization - Remote info for GCP organization.
@@ -347,11 +360,11 @@ type GcpOrganization struct {
 	OrganizationID string `json:"organization_id"`
 }
 
-func (o *GcpOrganization) GetOrganizationID() string {
-	if o == nil {
+func (g *GcpOrganization) GetOrganizationID() string {
+	if g == nil {
 		return ""
 	}
-	return o.OrganizationID
+	return g.OrganizationID
 }
 
 // GcpProject - Remote info for GCP project.
@@ -360,11 +373,11 @@ type GcpProject struct {
 	ProjectID string `json:"project_id"`
 }
 
-func (o *GcpProject) GetProjectID() string {
-	if o == nil {
+func (g *GcpProject) GetProjectID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ProjectID
+	return g.ProjectID
 }
 
 // GcpServiceAccount - Remote info for a GCP service account.
@@ -377,25 +390,25 @@ type GcpServiceAccount struct {
 	ServiceAccountID string `json:"service_account_id"`
 }
 
-func (o *GcpServiceAccount) GetEmail() string {
-	if o == nil {
+func (g *GcpServiceAccount) GetEmail() string {
+	if g == nil {
 		return ""
 	}
-	return o.Email
+	return g.Email
 }
 
-func (o *GcpServiceAccount) GetProjectID() string {
-	if o == nil {
+func (g *GcpServiceAccount) GetProjectID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ProjectID
+	return g.ProjectID
 }
 
-func (o *GcpServiceAccount) GetServiceAccountID() string {
-	if o == nil {
+func (g *GcpServiceAccount) GetServiceAccountID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ServiceAccountID
+	return g.ServiceAccountID
 }
 
 // GcpSQLInstance - Remote info for GCP SQL instance.
@@ -406,18 +419,18 @@ type GcpSQLInstance struct {
 	ProjectID string `json:"project_id"`
 }
 
-func (o *GcpSQLInstance) GetInstanceID() string {
-	if o == nil {
+func (g *GcpSQLInstance) GetInstanceID() string {
+	if g == nil {
 		return ""
 	}
-	return o.InstanceID
+	return g.InstanceID
 }
 
-func (o *GcpSQLInstance) GetProjectID() string {
-	if o == nil {
+func (g *GcpSQLInstance) GetProjectID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ProjectID
+	return g.ProjectID
 }
 
 // GithubOrgRole - Remote info for GitHub organization role.
@@ -426,11 +439,11 @@ type GithubOrgRole struct {
 	RoleID string `json:"role_id"`
 }
 
-func (o *GithubOrgRole) GetRoleID() string {
-	if o == nil {
+func (g *GithubOrgRole) GetRoleID() string {
+	if g == nil {
 		return ""
 	}
-	return o.RoleID
+	return g.RoleID
 }
 
 // GithubRepo - Remote info for GitHub repository.
@@ -439,11 +452,11 @@ type GithubRepo struct {
 	RepoName string `json:"repo_name"`
 }
 
-func (o *GithubRepo) GetRepoName() string {
-	if o == nil {
+func (g *GithubRepo) GetRepoName() string {
+	if g == nil {
 		return ""
 	}
-	return o.RepoName
+	return g.RepoName
 }
 
 // GitlabProject - Remote info for Gitlab project.
@@ -452,11 +465,11 @@ type GitlabProject struct {
 	ProjectID string `json:"project_id"`
 }
 
-func (o *GitlabProject) GetProjectID() string {
-	if o == nil {
+func (g *GitlabProject) GetProjectID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ProjectID
+	return g.ProjectID
 }
 
 // GoogleWorkspaceRole - Remote info for GCP workspace role.
@@ -465,11 +478,11 @@ type GoogleWorkspaceRole struct {
 	RoleID string `json:"role_id"`
 }
 
-func (o *GoogleWorkspaceRole) GetRoleID() string {
-	if o == nil {
+func (g *GoogleWorkspaceRole) GetRoleID() string {
+	if g == nil {
 		return ""
 	}
-	return o.RoleID
+	return g.RoleID
 }
 
 // OktaApp - Remote info for Okta directory app.
@@ -517,11 +530,11 @@ type PagerdutyRole struct {
 	RoleName string `json:"role_name"`
 }
 
-func (o *PagerdutyRole) GetRoleName() string {
-	if o == nil {
+func (p *PagerdutyRole) GetRoleName() string {
+	if p == nil {
 		return ""
 	}
-	return o.RoleName
+	return p.RoleName
 }
 
 // SalesforcePermissionSet - Remote info for Salesforce permission set.
@@ -530,11 +543,11 @@ type SalesforcePermissionSet struct {
 	PermissionSetID string `json:"permission_set_id"`
 }
 
-func (o *SalesforcePermissionSet) GetPermissionSetID() string {
-	if o == nil {
+func (s *SalesforcePermissionSet) GetPermissionSetID() string {
+	if s == nil {
 		return ""
 	}
-	return o.PermissionSetID
+	return s.PermissionSetID
 }
 
 // SalesforceProfile - Remote info for Salesforce profile.
@@ -545,18 +558,18 @@ type SalesforceProfile struct {
 	UserLicenseID string `json:"user_license_id"`
 }
 
-func (o *SalesforceProfile) GetProfileID() string {
-	if o == nil {
+func (s *SalesforceProfile) GetProfileID() string {
+	if s == nil {
 		return ""
 	}
-	return o.ProfileID
+	return s.ProfileID
 }
 
-func (o *SalesforceProfile) GetUserLicenseID() string {
-	if o == nil {
+func (s *SalesforceProfile) GetUserLicenseID() string {
+	if s == nil {
 		return ""
 	}
-	return o.UserLicenseID
+	return s.UserLicenseID
 }
 
 // SalesforceRole - Remote info for Salesforce role.
@@ -565,11 +578,11 @@ type SalesforceRole struct {
 	RoleID string `json:"role_id"`
 }
 
-func (o *SalesforceRole) GetRoleID() string {
-	if o == nil {
+func (s *SalesforceRole) GetRoleID() string {
+	if s == nil {
 		return ""
 	}
-	return o.RoleID
+	return s.RoleID
 }
 
 // TeleportRole - Remote info for Teleport role.
@@ -578,11 +591,11 @@ type TeleportRole struct {
 	RoleName string `json:"role_name"`
 }
 
-func (o *TeleportRole) GetRoleName() string {
-	if o == nil {
+func (t *TeleportRole) GetRoleName() string {
+	if t == nil {
 		return ""
 	}
-	return o.RoleName
+	return t.RoleName
 }
 
 // ResourceRemoteInfo - Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields.
@@ -601,6 +614,8 @@ type ResourceRemoteInfo struct {
 	AwsPermissionSet *AwsPermissionSet `json:"aws_permission_set,omitempty"`
 	// Remote info for AWS RDS instance.
 	AwsRdsInstance *AwsRdsInstance `json:"aws_rds_instance,omitempty"`
+	// Remote info for Coupa role.
+	CoupaRole *CoupaRole `json:"coupa_role,omitempty"`
 	// Remote info for a custom connector resource.
 	CustomConnector *CustomConnector `json:"custom_connector,omitempty"`
 	// Remote info for an Astra role.
@@ -651,219 +666,226 @@ type ResourceRemoteInfo struct {
 	TeleportRole *TeleportRole `json:"teleport_role,omitempty"`
 }
 
-func (o *ResourceRemoteInfo) GetAwsAccount() *AwsAccount {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetAwsAccount() *AwsAccount {
+	if r == nil {
 		return nil
 	}
-	return o.AwsAccount
+	return r.AwsAccount
 }
 
-func (o *ResourceRemoteInfo) GetAwsEc2Instance() *AwsEc2Instance {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetAwsEc2Instance() *AwsEc2Instance {
+	if r == nil {
 		return nil
 	}
-	return o.AwsEc2Instance
+	return r.AwsEc2Instance
 }
 
-func (o *ResourceRemoteInfo) GetAwsEksCluster() *AwsEksCluster {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetAwsEksCluster() *AwsEksCluster {
+	if r == nil {
 		return nil
 	}
-	return o.AwsEksCluster
+	return r.AwsEksCluster
 }
 
-func (o *ResourceRemoteInfo) GetAwsIamRole() *AwsIamRole {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetAwsIamRole() *AwsIamRole {
+	if r == nil {
 		return nil
 	}
-	return o.AwsIamRole
+	return r.AwsIamRole
 }
 
-func (o *ResourceRemoteInfo) GetAwsOrganizationalUnit() *AwsOrganizationalUnit {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetAwsOrganizationalUnit() *AwsOrganizationalUnit {
+	if r == nil {
 		return nil
 	}
-	return o.AwsOrganizationalUnit
+	return r.AwsOrganizationalUnit
 }
 
-func (o *ResourceRemoteInfo) GetAwsPermissionSet() *AwsPermissionSet {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetAwsPermissionSet() *AwsPermissionSet {
+	if r == nil {
 		return nil
 	}
-	return o.AwsPermissionSet
+	return r.AwsPermissionSet
 }
 
-func (o *ResourceRemoteInfo) GetAwsRdsInstance() *AwsRdsInstance {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetAwsRdsInstance() *AwsRdsInstance {
+	if r == nil {
 		return nil
 	}
-	return o.AwsRdsInstance
+	return r.AwsRdsInstance
 }
 
-func (o *ResourceRemoteInfo) GetCustomConnector() *CustomConnector {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetCoupaRole() *CoupaRole {
+	if r == nil {
 		return nil
 	}
-	return o.CustomConnector
+	return r.CoupaRole
 }
 
-func (o *ResourceRemoteInfo) GetDatastaxAstraRole() *DatastaxAstraRole {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetCustomConnector() *CustomConnector {
+	if r == nil {
 		return nil
 	}
-	return o.DatastaxAstraRole
+	return r.CustomConnector
 }
 
-func (o *ResourceRemoteInfo) GetGcpBigQueryDataset() *GcpBigQueryDataset {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetDatastaxAstraRole() *DatastaxAstraRole {
+	if r == nil {
 		return nil
 	}
-	return o.GcpBigQueryDataset
+	return r.DatastaxAstraRole
 }
 
-func (o *ResourceRemoteInfo) GetGcpBigQueryTable() *GcpBigQueryTable {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetGcpBigQueryDataset() *GcpBigQueryDataset {
+	if r == nil {
 		return nil
 	}
-	return o.GcpBigQueryTable
+	return r.GcpBigQueryDataset
 }
 
-func (o *ResourceRemoteInfo) GetGcpBucket() *GcpBucket {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetGcpBigQueryTable() *GcpBigQueryTable {
+	if r == nil {
 		return nil
 	}
-	return o.GcpBucket
+	return r.GcpBigQueryTable
 }
 
-func (o *ResourceRemoteInfo) GetGcpComputeInstance() *GcpComputeInstance {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetGcpBucket() *GcpBucket {
+	if r == nil {
 		return nil
 	}
-	return o.GcpComputeInstance
+	return r.GcpBucket
 }
 
-func (o *ResourceRemoteInfo) GetGcpFolder() *GcpFolder {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetGcpComputeInstance() *GcpComputeInstance {
+	if r == nil {
 		return nil
 	}
-	return o.GcpFolder
+	return r.GcpComputeInstance
 }
 
-func (o *ResourceRemoteInfo) GetGcpGkeCluster() *GcpGkeCluster {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetGcpFolder() *GcpFolder {
+	if r == nil {
 		return nil
 	}
-	return o.GcpGkeCluster
+	return r.GcpFolder
 }
 
-func (o *ResourceRemoteInfo) GetGcpOrganization() *GcpOrganization {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetGcpGkeCluster() *GcpGkeCluster {
+	if r == nil {
 		return nil
 	}
-	return o.GcpOrganization
+	return r.GcpGkeCluster
 }
 
-func (o *ResourceRemoteInfo) GetGcpProject() *GcpProject {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetGcpOrganization() *GcpOrganization {
+	if r == nil {
 		return nil
 	}
-	return o.GcpProject
+	return r.GcpOrganization
 }
 
-func (o *ResourceRemoteInfo) GetGcpServiceAccount() *GcpServiceAccount {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetGcpProject() *GcpProject {
+	if r == nil {
 		return nil
 	}
-	return o.GcpServiceAccount
+	return r.GcpProject
 }
 
-func (o *ResourceRemoteInfo) GetGcpSQLInstance() *GcpSQLInstance {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetGcpServiceAccount() *GcpServiceAccount {
+	if r == nil {
 		return nil
 	}
-	return o.GcpSQLInstance
+	return r.GcpServiceAccount
 }
 
-func (o *ResourceRemoteInfo) GetGithubOrgRole() *GithubOrgRole {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetGcpSQLInstance() *GcpSQLInstance {
+	if r == nil {
 		return nil
 	}
-	return o.GithubOrgRole
+	return r.GcpSQLInstance
 }
 
-func (o *ResourceRemoteInfo) GetGithubRepo() *GithubRepo {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetGithubOrgRole() *GithubOrgRole {
+	if r == nil {
 		return nil
 	}
-	return o.GithubRepo
+	return r.GithubOrgRole
 }
 
-func (o *ResourceRemoteInfo) GetGitlabProject() *GitlabProject {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetGithubRepo() *GithubRepo {
+	if r == nil {
 		return nil
 	}
-	return o.GitlabProject
+	return r.GithubRepo
 }
 
-func (o *ResourceRemoteInfo) GetGoogleWorkspaceRole() *GoogleWorkspaceRole {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetGitlabProject() *GitlabProject {
+	if r == nil {
 		return nil
 	}
-	return o.GoogleWorkspaceRole
+	return r.GitlabProject
 }
 
-func (o *ResourceRemoteInfo) GetOktaApp() *OktaApp {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetGoogleWorkspaceRole() *GoogleWorkspaceRole {
+	if r == nil {
 		return nil
 	}
-	return o.OktaApp
+	return r.GoogleWorkspaceRole
 }
 
-func (o *ResourceRemoteInfo) GetOktaCustomRole() *OktaCustomRole {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetOktaApp() *OktaApp {
+	if r == nil {
 		return nil
 	}
-	return o.OktaCustomRole
+	return r.OktaApp
 }
 
-func (o *ResourceRemoteInfo) GetOktaStandardRole() *OktaStandardRole {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetOktaCustomRole() *OktaCustomRole {
+	if r == nil {
 		return nil
 	}
-	return o.OktaStandardRole
+	return r.OktaCustomRole
 }
 
-func (o *ResourceRemoteInfo) GetPagerdutyRole() *PagerdutyRole {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetOktaStandardRole() *OktaStandardRole {
+	if r == nil {
 		return nil
 	}
-	return o.PagerdutyRole
+	return r.OktaStandardRole
 }
 
-func (o *ResourceRemoteInfo) GetSalesforcePermissionSet() *SalesforcePermissionSet {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetPagerdutyRole() *PagerdutyRole {
+	if r == nil {
 		return nil
 	}
-	return o.SalesforcePermissionSet
+	return r.PagerdutyRole
 }
 
-func (o *ResourceRemoteInfo) GetSalesforceProfile() *SalesforceProfile {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetSalesforcePermissionSet() *SalesforcePermissionSet {
+	if r == nil {
 		return nil
 	}
-	return o.SalesforceProfile
+	return r.SalesforcePermissionSet
 }
 
-func (o *ResourceRemoteInfo) GetSalesforceRole() *SalesforceRole {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetSalesforceProfile() *SalesforceProfile {
+	if r == nil {
 		return nil
 	}
-	return o.SalesforceRole
+	return r.SalesforceProfile
 }
 
-func (o *ResourceRemoteInfo) GetTeleportRole() *TeleportRole {
-	if o == nil {
+func (r *ResourceRemoteInfo) GetSalesforceRole() *SalesforceRole {
+	if r == nil {
 		return nil
 	}
-	return o.TeleportRole
+	return r.SalesforceRole
+}
+
+func (r *ResourceRemoteInfo) GetTeleportRole() *TeleportRole {
+	if r == nil {
+		return nil
+	}
+	return r.TeleportRole
 }

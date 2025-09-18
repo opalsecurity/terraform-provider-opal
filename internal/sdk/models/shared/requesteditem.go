@@ -25,51 +25,51 @@ type RequestedItem struct {
 	ResourceID *string `json:"resource_id,omitempty"`
 }
 
-func (o *RequestedItem) GetAccessLevelName() *string {
-	if o == nil {
+func (r *RequestedItem) GetAccessLevelName() *string {
+	if r == nil {
 		return nil
 	}
-	return o.AccessLevelName
+	return r.AccessLevelName
 }
 
-func (o *RequestedItem) GetAccessLevelRemoteID() *string {
-	if o == nil {
+func (r *RequestedItem) GetAccessLevelRemoteID() *string {
+	if r == nil {
 		return nil
 	}
-	return o.AccessLevelRemoteID
+	return r.AccessLevelRemoteID
 }
 
-func (o *RequestedItem) GetGroupID() *string {
-	if o == nil {
+func (r *RequestedItem) GetGroupID() *string {
+	if r == nil {
 		return nil
 	}
-	return o.GroupID
+	return r.GroupID
 }
 
-func (o *RequestedItem) GetName() *string {
-	if o == nil {
+func (r *RequestedItem) GetName() *string {
+	if r == nil {
 		return nil
 	}
-	return o.Name
+	return r.Name
 }
 
-func (o *RequestedItem) GetRemoteID() *string {
-	if o == nil {
+func (r *RequestedItem) GetRemoteID() *string {
+	if r == nil {
 		return nil
 	}
-	return o.RemoteID
+	return r.RemoteID
 }
 
-func (o *RequestedItem) GetRemoteName() *string {
-	if o == nil {
+func (r *RequestedItem) GetRemoteName() *string {
+	if r == nil {
 		return nil
 	}
-	return o.RemoteName
+	return r.RemoteName
 }
 
-func (o *RequestedItem) GetResourceID() *string {
-	if o == nil {
+func (r *RequestedItem) GetResourceID() *string {
+	if r == nil {
 		return nil
 	}
-	return o.ResourceID
+	return r.ResourceID
 }

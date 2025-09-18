@@ -825,7 +825,8 @@ func (s *Bundles) DeleteBundle(ctx context.Context, request operations.DeleteBun
 
 }
 
-// GetBundle - Returns a `Bundle` object.
+// GetBundle - Get bundle by ID
+// Returns a `Bundle` object.
 func (s *Bundles) GetBundle(ctx context.Context, request operations.GetBundleRequest, opts ...operations.Option) (*operations.GetBundleResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -1625,7 +1626,8 @@ func (s *Bundles) GetBundleVisibility(ctx context.Context, request operations.Ge
 
 }
 
-// GetBundles - Returns a list of `Bundle` objects.
+// GetBundles - Get bundles
+// Returns a list of `Bundle` objects.
 func (s *Bundles) GetBundles(ctx context.Context, request operations.GetBundlesRequest, opts ...operations.Option) (*operations.GetBundlesResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{

@@ -18,32 +18,32 @@ type GetUserResourcesRequest struct {
 	UserID string `pathParam:"style=simple,explode=false,name=user_id"`
 }
 
-func (o *GetUserResourcesRequest) GetCursor() *string {
-	if o == nil {
+func (g *GetUserResourcesRequest) GetCursor() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Cursor
+	return g.Cursor
 }
 
-func (o *GetUserResourcesRequest) GetIncludeUnmanaged() *bool {
-	if o == nil {
+func (g *GetUserResourcesRequest) GetIncludeUnmanaged() *bool {
+	if g == nil {
 		return nil
 	}
-	return o.IncludeUnmanaged
+	return g.IncludeUnmanaged
 }
 
-func (o *GetUserResourcesRequest) GetLimit() *int64 {
-	if o == nil {
+func (g *GetUserResourcesRequest) GetLimit() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.Limit
+	return g.Limit
 }
 
-func (o *GetUserResourcesRequest) GetUserID() string {
-	if o == nil {
+func (g *GetUserResourcesRequest) GetUserID() string {
+	if g == nil {
 		return ""
 	}
-	return o.UserID
+	return g.UserID
 }
 
 type GetUserResourcesResponse struct {
@@ -57,30 +57,30 @@ type GetUserResourcesResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetUserResourcesResponse) GetContentType() string {
-	if o == nil {
+func (g *GetUserResourcesResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetUserResourcesResponse) GetResourceAccessUserList() *shared.ResourceAccessUserList {
-	if o == nil {
+func (g *GetUserResourcesResponse) GetResourceAccessUserList() *shared.ResourceAccessUserList {
+	if g == nil {
 		return nil
 	}
-	return o.ResourceAccessUserList
+	return g.ResourceAccessUserList
 }
 
-func (o *GetUserResourcesResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetUserResourcesResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetUserResourcesResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetUserResourcesResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

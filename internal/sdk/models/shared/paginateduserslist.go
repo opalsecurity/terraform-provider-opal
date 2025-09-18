@@ -10,23 +10,23 @@ type PaginatedUsersList struct {
 	Results  []User  `json:"results"`
 }
 
-func (o *PaginatedUsersList) GetNext() *string {
-	if o == nil {
+func (p *PaginatedUsersList) GetNext() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Next
+	return p.Next
 }
 
-func (o *PaginatedUsersList) GetPrevious() *string {
-	if o == nil {
+func (p *PaginatedUsersList) GetPrevious() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Previous
+	return p.Previous
 }
 
-func (o *PaginatedUsersList) GetResults() []User {
-	if o == nil {
+func (p *PaginatedUsersList) GetResults() []User {
+	if p == nil {
 		return []User{}
 	}
-	return o.Results
+	return p.Results
 }

@@ -14,18 +14,18 @@ type GetTagsRequest struct {
 	PageSize *int64 `queryParam:"style=form,explode=true,name=page_size"`
 }
 
-func (o *GetTagsRequest) GetCursor() *string {
-	if o == nil {
+func (g *GetTagsRequest) GetCursor() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Cursor
+	return g.Cursor
 }
 
-func (o *GetTagsRequest) GetPageSize() *int64 {
-	if o == nil {
+func (g *GetTagsRequest) GetPageSize() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.PageSize
+	return g.PageSize
 }
 
 type GetTagsResponse struct {
@@ -39,30 +39,30 @@ type GetTagsResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetTagsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetTagsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetTagsResponse) GetPaginatedTagsList() *shared.PaginatedTagsList {
-	if o == nil {
+func (g *GetTagsResponse) GetPaginatedTagsList() *shared.PaginatedTagsList {
+	if g == nil {
 		return nil
 	}
-	return o.PaginatedTagsList
+	return g.PaginatedTagsList
 }
 
-func (o *GetTagsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetTagsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetTagsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetTagsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

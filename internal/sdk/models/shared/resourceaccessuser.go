@@ -51,65 +51,65 @@ func (r *ResourceAccessUser) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *ResourceAccessUser) GetAccessLevel() ResourceAccessLevel {
-	if o == nil {
+func (r *ResourceAccessUser) GetAccessLevel() ResourceAccessLevel {
+	if r == nil {
 		return ResourceAccessLevel{}
 	}
-	return o.AccessLevel
+	return r.AccessLevel
 }
 
-func (o *ResourceAccessUser) GetEmail() string {
-	if o == nil {
+func (r *ResourceAccessUser) GetEmail() string {
+	if r == nil {
 		return ""
 	}
-	return o.Email
+	return r.Email
 }
 
-func (o *ResourceAccessUser) GetExpirationDate() *time.Time {
-	if o == nil {
+func (r *ResourceAccessUser) GetExpirationDate() *time.Time {
+	if r == nil {
 		return nil
 	}
-	return o.ExpirationDate
+	return r.ExpirationDate
 }
 
-func (o *ResourceAccessUser) GetFullName() string {
-	if o == nil {
+func (r *ResourceAccessUser) GetFullName() string {
+	if r == nil {
 		return ""
 	}
-	return o.FullName
+	return r.FullName
 }
 
-func (o *ResourceAccessUser) GetHasDirectAccess() bool {
-	if o == nil {
+func (r *ResourceAccessUser) GetHasDirectAccess() bool {
+	if r == nil {
 		return false
 	}
-	return o.HasDirectAccess
+	return r.HasDirectAccess
 }
 
-func (o *ResourceAccessUser) GetNumAccessPaths() int {
-	if o == nil {
+func (r *ResourceAccessUser) GetNumAccessPaths() int {
+	if r == nil {
 		return 0
 	}
-	return o.NumAccessPaths
+	return r.NumAccessPaths
 }
 
-func (o *ResourceAccessUser) GetPropagationStatus() *PropagationStatus {
-	if o == nil {
+func (r *ResourceAccessUser) GetPropagationStatus() *PropagationStatus {
+	if r == nil {
 		return nil
 	}
-	return o.PropagationStatus
+	return r.PropagationStatus
 }
 
-func (o *ResourceAccessUser) GetResourceID() string {
-	if o == nil {
+func (r *ResourceAccessUser) GetResourceID() string {
+	if r == nil {
 		return ""
 	}
-	return o.ResourceID
+	return r.ResourceID
 }
 
-func (o *ResourceAccessUser) GetUserID() string {
-	if o == nil {
+func (r *ResourceAccessUser) GetUserID() string {
+	if r == nil {
 		return ""
 	}
-	return o.UserID
+	return r.UserID
 }

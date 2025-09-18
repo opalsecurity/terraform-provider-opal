@@ -8,15 +8,33 @@ import (
 )
 
 type GetGroupUsersRequest struct {
+	// The pagination cursor value.
+	Cursor *string `queryParam:"style=form,explode=true,name=cursor"`
 	// The ID of the group.
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
+	// Number of results to return per page. Default is 200.
+	PageSize *int64 `queryParam:"style=form,explode=true,name=page_size"`
 }
 
-func (o *GetGroupUsersRequest) GetGroupID() string {
-	if o == nil {
+func (g *GetGroupUsersRequest) GetCursor() *string {
+	if g == nil {
+		return nil
+	}
+	return g.Cursor
+}
+
+func (g *GetGroupUsersRequest) GetGroupID() string {
+	if g == nil {
 		return ""
 	}
-	return o.GroupID
+	return g.GroupID
+}
+
+func (g *GetGroupUsersRequest) GetPageSize() *int64 {
+	if g == nil {
+		return nil
+	}
+	return g.PageSize
 }
 
 type GetGroupUsersResponse struct {
@@ -30,30 +48,30 @@ type GetGroupUsersResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetGroupUsersResponse) GetContentType() string {
-	if o == nil {
+func (g *GetGroupUsersResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetGroupUsersResponse) GetGroupUserList() *shared.GroupUserList {
-	if o == nil {
+func (g *GetGroupUsersResponse) GetGroupUserList() *shared.GroupUserList {
+	if g == nil {
 		return nil
 	}
-	return o.GroupUserList
+	return g.GroupUserList
 }
 
-func (o *GetGroupUsersResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetGroupUsersResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetGroupUsersResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetGroupUsersResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

@@ -9,25 +9,25 @@ type CustomMetadata struct {
 	Value string                             `json:"value"`
 }
 
-func (o *CustomMetadata) GetName() string {
-	if o == nil {
+func (c *CustomMetadata) GetName() string {
+	if c == nil {
 		return ""
 	}
-	return o.Name
+	return c.Name
 }
 
-func (o *CustomMetadata) GetType() RequestTemplateCustomFieldTypeEnum {
-	if o == nil {
+func (c *CustomMetadata) GetType() RequestTemplateCustomFieldTypeEnum {
+	if c == nil {
 		return RequestTemplateCustomFieldTypeEnum("")
 	}
-	return o.Type
+	return c.Type
 }
 
-func (o *CustomMetadata) GetValue() string {
-	if o == nil {
+func (c *CustomMetadata) GetValue() string {
+	if c == nil {
 		return ""
 	}
-	return o.Value
+	return c.Value
 }
 
 type CreateRequestInfoGroups struct {
@@ -39,25 +39,25 @@ type CreateRequestInfoGroups struct {
 	ID string `json:"id"`
 }
 
-func (o *CreateRequestInfoGroups) GetAccessLevelName() *string {
-	if o == nil {
+func (c *CreateRequestInfoGroups) GetAccessLevelName() *string {
+	if c == nil {
 		return nil
 	}
-	return o.AccessLevelName
+	return c.AccessLevelName
 }
 
-func (o *CreateRequestInfoGroups) GetAccessLevelRemoteID() *string {
-	if o == nil {
+func (c *CreateRequestInfoGroups) GetAccessLevelRemoteID() *string {
+	if c == nil {
 		return nil
 	}
-	return o.AccessLevelRemoteID
+	return c.AccessLevelRemoteID
 }
 
-func (o *CreateRequestInfoGroups) GetID() string {
-	if o == nil {
+func (c *CreateRequestInfoGroups) GetID() string {
+	if c == nil {
 		return ""
 	}
-	return o.ID
+	return c.ID
 }
 
 type Resources struct {
@@ -69,25 +69,25 @@ type Resources struct {
 	ID *string `json:"id,omitempty"`
 }
 
-func (o *Resources) GetAccessLevelName() *string {
-	if o == nil {
+func (r *Resources) GetAccessLevelName() *string {
+	if r == nil {
 		return nil
 	}
-	return o.AccessLevelName
+	return r.AccessLevelName
 }
 
-func (o *Resources) GetAccessLevelRemoteID() *string {
-	if o == nil {
+func (r *Resources) GetAccessLevelRemoteID() *string {
+	if r == nil {
 		return nil
 	}
-	return o.AccessLevelRemoteID
+	return r.AccessLevelRemoteID
 }
 
-func (o *Resources) GetID() *string {
-	if o == nil {
+func (r *Resources) GetID() *string {
+	if r == nil {
 		return nil
 	}
-	return o.ID
+	return r.ID
 }
 
 type SupportTicket struct {
@@ -98,32 +98,32 @@ type SupportTicket struct {
 	URL               string                `json:"url"`
 }
 
-func (o *SupportTicket) GetIdentifier() string {
-	if o == nil {
+func (s *SupportTicket) GetIdentifier() string {
+	if s == nil {
 		return ""
 	}
-	return o.Identifier
+	return s.Identifier
 }
 
-func (o *SupportTicket) GetRemoteID() string {
-	if o == nil {
+func (s *SupportTicket) GetRemoteID() string {
+	if s == nil {
 		return ""
 	}
-	return o.RemoteID
+	return s.RemoteID
 }
 
-func (o *SupportTicket) GetTicketingProvider() TicketingProviderEnum {
-	if o == nil {
+func (s *SupportTicket) GetTicketingProvider() TicketingProviderEnum {
+	if s == nil {
 		return TicketingProviderEnum("")
 	}
-	return o.TicketingProvider
+	return s.TicketingProvider
 }
 
-func (o *SupportTicket) GetURL() string {
-	if o == nil {
+func (s *SupportTicket) GetURL() string {
+	if s == nil {
 		return ""
 	}
-	return o.URL
+	return s.URL
 }
 
 // CreateRequestInfo - All the information needed for creating a request
@@ -141,58 +141,58 @@ type CreateRequestInfo struct {
 	TargetUserID *string `json:"target_user_id,omitempty"`
 }
 
-func (o *CreateRequestInfo) GetCustomMetadata() []CustomMetadata {
-	if o == nil {
+func (c *CreateRequestInfo) GetCustomMetadata() []CustomMetadata {
+	if c == nil {
 		return nil
 	}
-	return o.CustomMetadata
+	return c.CustomMetadata
 }
 
-func (o *CreateRequestInfo) GetDurationMinutes() int64 {
-	if o == nil {
+func (c *CreateRequestInfo) GetDurationMinutes() int64 {
+	if c == nil {
 		return 0
 	}
-	return o.DurationMinutes
+	return c.DurationMinutes
 }
 
-func (o *CreateRequestInfo) GetGroups() []CreateRequestInfoGroups {
-	if o == nil {
+func (c *CreateRequestInfo) GetGroups() []CreateRequestInfoGroups {
+	if c == nil {
 		return []CreateRequestInfoGroups{}
 	}
-	return o.Groups
+	return c.Groups
 }
 
-func (o *CreateRequestInfo) GetReason() string {
-	if o == nil {
+func (c *CreateRequestInfo) GetReason() string {
+	if c == nil {
 		return ""
 	}
-	return o.Reason
+	return c.Reason
 }
 
-func (o *CreateRequestInfo) GetResources() []Resources {
-	if o == nil {
+func (c *CreateRequestInfo) GetResources() []Resources {
+	if c == nil {
 		return []Resources{}
 	}
-	return o.Resources
+	return c.Resources
 }
 
-func (o *CreateRequestInfo) GetSupportTicket() *SupportTicket {
-	if o == nil {
+func (c *CreateRequestInfo) GetSupportTicket() *SupportTicket {
+	if c == nil {
 		return nil
 	}
-	return o.SupportTicket
+	return c.SupportTicket
 }
 
-func (o *CreateRequestInfo) GetTargetGroupID() *string {
-	if o == nil {
+func (c *CreateRequestInfo) GetTargetGroupID() *string {
+	if c == nil {
 		return nil
 	}
-	return o.TargetGroupID
+	return c.TargetGroupID
 }
 
-func (o *CreateRequestInfo) GetTargetUserID() *string {
-	if o == nil {
+func (c *CreateRequestInfo) GetTargetUserID() *string {
+	if c == nil {
 		return nil
 	}
-	return o.TargetUserID
+	return c.TargetUserID
 }

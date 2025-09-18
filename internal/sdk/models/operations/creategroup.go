@@ -18,30 +18,30 @@ type CreateGroupResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *CreateGroupResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateGroupResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateGroupResponse) GetGroup() *shared.Group {
-	if o == nil {
+func (c *CreateGroupResponse) GetGroup() *shared.Group {
+	if c == nil {
 		return nil
 	}
-	return o.Group
+	return c.Group
 }
 
-func (o *CreateGroupResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateGroupResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateGroupResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateGroupResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }

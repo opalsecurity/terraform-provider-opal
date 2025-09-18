@@ -42,6 +42,10 @@ Optional:
 - `group_id` (String)
 - `hidden_from_end_user` (Boolean)
 
+Read-Only:
+
+- `app_resource_id` (String) The ID of the app resource.
+
 ## Import
 
 Import is supported using the following syntax:

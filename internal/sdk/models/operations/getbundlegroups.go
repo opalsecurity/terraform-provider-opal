@@ -16,25 +16,25 @@ type GetBundleGroupsRequest struct {
 	PageSize *int64 `queryParam:"style=form,explode=true,name=page_size"`
 }
 
-func (o *GetBundleGroupsRequest) GetBundleID() string {
-	if o == nil {
+func (g *GetBundleGroupsRequest) GetBundleID() string {
+	if g == nil {
 		return ""
 	}
-	return o.BundleID
+	return g.BundleID
 }
 
-func (o *GetBundleGroupsRequest) GetCursor() *string {
-	if o == nil {
+func (g *GetBundleGroupsRequest) GetCursor() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Cursor
+	return g.Cursor
 }
 
-func (o *GetBundleGroupsRequest) GetPageSize() *int64 {
-	if o == nil {
+func (g *GetBundleGroupsRequest) GetPageSize() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.PageSize
+	return g.PageSize
 }
 
 type GetBundleGroupsResponse struct {
@@ -48,30 +48,30 @@ type GetBundleGroupsResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetBundleGroupsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetBundleGroupsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetBundleGroupsResponse) GetPaginatedBundleGroupList() *shared.PaginatedBundleGroupList {
-	if o == nil {
+func (g *GetBundleGroupsResponse) GetPaginatedBundleGroupList() *shared.PaginatedBundleGroupList {
+	if g == nil {
 		return nil
 	}
-	return o.PaginatedBundleGroupList
+	return g.PaginatedBundleGroupList
 }
 
-func (o *GetBundleGroupsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetBundleGroupsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetBundleGroupsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetBundleGroupsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

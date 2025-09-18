@@ -7,9 +7,9 @@ type UpdateResourceInfoList struct {
 	Resources []UpdateResourceInfo `json:"resources"`
 }
 
-func (o *UpdateResourceInfoList) GetResources() []UpdateResourceInfo {
-	if o == nil {
+func (u *UpdateResourceInfoList) GetResources() []UpdateResourceInfo {
+	if u == nil {
 		return []UpdateResourceInfo{}
 	}
-	return o.Resources
+	return u.Resources
 }

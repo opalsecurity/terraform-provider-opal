@@ -6,9 +6,9 @@ type MessageChannelList struct {
 	Channels []MessageChannel `json:"channels"`
 }
 
-func (o *MessageChannelList) GetChannels() []MessageChannel {
-	if o == nil {
+func (m *MessageChannelList) GetChannels() []MessageChannel {
+	if m == nil {
 		return []MessageChannel{}
 	}
-	return o.Channels
+	return m.Channels
 }

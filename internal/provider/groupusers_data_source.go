@@ -5,8 +5,10 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
@@ -29,8 +31,12 @@ type GroupUsersDataSource struct {
 
 // GroupUsersDataSourceModel describes the data model.
 type GroupUsersDataSourceModel struct {
-	GroupID types.String        `tfsdk:"group_id"`
-	Results []tfTypes.GroupUser `tfsdk:"results"`
+	Cursor   types.String        `queryParam:"style=form,explode=true,name=cursor" tfsdk:"cursor"`
+	GroupID  types.String        `tfsdk:"group_id"`
+	Next     types.String        `tfsdk:"next"`
+	PageSize types.Int64         `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
+	Previous types.String        `tfsdk:"previous"`
+	Results  []tfTypes.GroupUser `tfsdk:"results"`
 }
 
 // Metadata returns the data source type name.
@@ -44,9 +50,28 @@ func (r *GroupUsersDataSource) Schema(ctx context.Context, req datasource.Schema
 		MarkdownDescription: "GroupUsers DataSource",
 
 		Attributes: map[string]schema.Attribute{
+			"cursor": schema.StringAttribute{
+				Optional:    true,
+				Description: `The pagination cursor value.`,
+			},
 			"group_id": schema.StringAttribute{
 				Required:    true,
 				Description: `The ID of the group.`,
+			},
+			"next": schema.StringAttribute{
+				Computed:    true,
+				Description: `The cursor with which to continue pagination if additional result pages exist.`,
+			},
+			"page_size": schema.Int64Attribute{
+				Optional:    true,
+				Description: `Number of results to return per page. Default is 200.`,
+				Validators: []validator.Int64{
+					int64validator.AtMost(1000),
+				},
+			},
+			"previous": schema.StringAttribute{
+				Computed:    true,
+				Description: `The cursor used to obtain the current result page.`,
 			},
 			"results": schema.ListNestedAttribute{
 				Computed: true,

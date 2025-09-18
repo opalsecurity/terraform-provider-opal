@@ -78,23 +78,23 @@ type RequestCustomFieldResponse struct {
 	FieldValue FieldValue                         `json:"field_value"`
 }
 
-func (o *RequestCustomFieldResponse) GetFieldName() string {
-	if o == nil {
+func (r *RequestCustomFieldResponse) GetFieldName() string {
+	if r == nil {
 		return ""
 	}
-	return o.FieldName
+	return r.FieldName
 }
 
-func (o *RequestCustomFieldResponse) GetFieldType() RequestTemplateCustomFieldTypeEnum {
-	if o == nil {
+func (r *RequestCustomFieldResponse) GetFieldType() RequestTemplateCustomFieldTypeEnum {
+	if r == nil {
 		return RequestTemplateCustomFieldTypeEnum("")
 	}
-	return o.FieldType
+	return r.FieldType
 }
 
-func (o *RequestCustomFieldResponse) GetFieldValue() FieldValue {
-	if o == nil {
+func (r *RequestCustomFieldResponse) GetFieldValue() FieldValue {
+	if r == nil {
 		return FieldValue{}
 	}
-	return o.FieldValue
+	return r.FieldValue
 }

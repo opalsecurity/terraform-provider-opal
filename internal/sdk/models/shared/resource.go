@@ -143,135 +143,135 @@ func (r *Resource) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Resource) GetAdminOwnerID() *string {
-	if o == nil {
+func (r *Resource) GetAdminOwnerID() *string {
+	if r == nil {
 		return nil
 	}
-	return o.AdminOwnerID
+	return r.AdminOwnerID
 }
 
-func (o *Resource) GetAncestorResourceIds() []string {
-	if o == nil {
+func (r *Resource) GetAncestorResourceIds() []string {
+	if r == nil {
 		return nil
 	}
-	return o.AncestorResourceIds
+	return r.AncestorResourceIds
 }
 
-func (o *Resource) GetAppID() *string {
-	if o == nil {
+func (r *Resource) GetAppID() *string {
+	if r == nil {
 		return nil
 	}
-	return o.AppID
+	return r.AppID
 }
 
-func (o *Resource) GetCustomRequestNotification() *string {
-	if o == nil {
+func (r *Resource) GetCustomRequestNotification() *string {
+	if r == nil {
 		return nil
 	}
-	return o.CustomRequestNotification
+	return r.CustomRequestNotification
 }
 
-func (o *Resource) GetDescendantResourceIds() []string {
-	if o == nil {
+func (r *Resource) GetDescendantResourceIds() []string {
+	if r == nil {
 		return nil
 	}
-	return o.DescendantResourceIds
+	return r.DescendantResourceIds
 }
 
-func (o *Resource) GetDescription() *string {
-	if o == nil {
+func (r *Resource) GetDescription() *string {
+	if r == nil {
 		return nil
 	}
-	return o.Description
+	return r.Description
 }
 
-func (o *Resource) GetExtensionsDurationInMinutes() *int64 {
-	if o == nil {
+func (r *Resource) GetExtensionsDurationInMinutes() *int64 {
+	if r == nil {
 		return nil
 	}
-	return o.ExtensionsDurationInMinutes
+	return r.ExtensionsDurationInMinutes
 }
 
-func (o *Resource) GetID() string {
-	if o == nil {
+func (r *Resource) GetID() string {
+	if r == nil {
 		return ""
 	}
-	return o.ID
+	return r.ID
 }
 
-func (o *Resource) GetLastSuccessfulSync() *SyncTask {
-	if o == nil {
+func (r *Resource) GetLastSuccessfulSync() *SyncTask {
+	if r == nil {
 		return nil
 	}
-	return o.LastSuccessfulSync
+	return r.LastSuccessfulSync
 }
 
-func (o *Resource) GetName() *string {
-	if o == nil {
+func (r *Resource) GetName() *string {
+	if r == nil {
 		return nil
 	}
-	return o.Name
+	return r.Name
 }
 
-func (o *Resource) GetParentResourceID() *string {
-	if o == nil {
+func (r *Resource) GetParentResourceID() *string {
+	if r == nil {
 		return nil
 	}
-	return o.ParentResourceID
+	return r.ParentResourceID
 }
 
-func (o *Resource) GetRemoteInfo() *ResourceRemoteInfo {
-	if o == nil {
+func (r *Resource) GetRemoteInfo() *ResourceRemoteInfo {
+	if r == nil {
 		return nil
 	}
-	return o.RemoteInfo
+	return r.RemoteInfo
 }
 
-func (o *Resource) GetRequestConfigurations() []RequestConfiguration {
-	if o == nil {
+func (r *Resource) GetRequestConfigurations() []RequestConfiguration {
+	if r == nil {
 		return nil
 	}
-	return o.RequestConfigurations
+	return r.RequestConfigurations
 }
 
-func (o *Resource) GetRequireMfaToApprove() *bool {
-	if o == nil {
+func (r *Resource) GetRequireMfaToApprove() *bool {
+	if r == nil {
 		return nil
 	}
-	return o.RequireMfaToApprove
+	return r.RequireMfaToApprove
 }
 
-func (o *Resource) GetRequireMfaToConnect() *bool {
-	if o == nil {
+func (r *Resource) GetRequireMfaToConnect() *bool {
+	if r == nil {
 		return nil
 	}
-	return o.RequireMfaToConnect
+	return r.RequireMfaToConnect
 }
 
-func (o *Resource) GetResourceType() *ResourceTypeEnum {
-	if o == nil {
+func (r *Resource) GetResourceType() *ResourceTypeEnum {
+	if r == nil {
 		return nil
 	}
-	return o.ResourceType
+	return r.ResourceType
 }
 
-func (o *Resource) GetRiskSensitivity() *ResourceRiskSensitivity {
-	if o == nil {
+func (r *Resource) GetRiskSensitivity() *ResourceRiskSensitivity {
+	if r == nil {
 		return nil
 	}
-	return o.RiskSensitivity
+	return r.RiskSensitivity
 }
 
-func (o *Resource) GetRiskSensitivityOverride() *ResourceRiskSensitivityOverride {
-	if o == nil {
+func (r *Resource) GetRiskSensitivityOverride() *ResourceRiskSensitivityOverride {
+	if r == nil {
 		return nil
 	}
-	return o.RiskSensitivityOverride
+	return r.RiskSensitivityOverride
 }
 
-func (o *Resource) GetTicketPropagation() *TicketPropagationConfiguration {
-	if o == nil {
+func (r *Resource) GetTicketPropagation() *TicketPropagationConfiguration {
+	if r == nil {
 		return nil
 	}
-	return o.TicketPropagation
+	return r.TicketPropagation
 }

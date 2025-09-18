@@ -23,44 +23,44 @@ type App struct {
 	Validations []AppValidation `json:"validations,omitempty"`
 }
 
-func (o *App) GetAdminOwnerID() string {
-	if o == nil {
+func (a *App) GetAdminOwnerID() string {
+	if a == nil {
 		return ""
 	}
-	return o.AdminOwnerID
+	return a.AdminOwnerID
 }
 
-func (o *App) GetDescription() string {
-	if o == nil {
+func (a *App) GetDescription() string {
+	if a == nil {
 		return ""
 	}
-	return o.Description
+	return a.Description
 }
 
-func (o *App) GetID() string {
-	if o == nil {
+func (a *App) GetID() string {
+	if a == nil {
 		return ""
 	}
-	return o.ID
+	return a.ID
 }
 
-func (o *App) GetName() string {
-	if o == nil {
+func (a *App) GetName() string {
+	if a == nil {
 		return ""
 	}
-	return o.Name
+	return a.Name
 }
 
-func (o *App) GetType() string {
-	if o == nil {
+func (a *App) GetType() string {
+	if a == nil {
 		return ""
 	}
-	return o.Type
+	return a.Type
 }
 
-func (o *App) GetValidations() []AppValidation {
-	if o == nil {
+func (a *App) GetValidations() []AppValidation {
+	if a == nil {
 		return nil
 	}
-	return o.Validations
+	return a.Validations
 }

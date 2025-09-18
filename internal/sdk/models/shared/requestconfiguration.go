@@ -32,79 +32,79 @@ type RequestConfiguration struct {
 	ReviewerStages []ReviewerStage `json:"reviewer_stages,omitempty"`
 }
 
-func (o *RequestConfiguration) GetAllowRequests() bool {
-	if o == nil {
+func (r *RequestConfiguration) GetAllowRequests() bool {
+	if r == nil {
 		return false
 	}
-	return o.AllowRequests
+	return r.AllowRequests
 }
 
-func (o *RequestConfiguration) GetAutoApproval() bool {
-	if o == nil {
+func (r *RequestConfiguration) GetAutoApproval() bool {
+	if r == nil {
 		return false
 	}
-	return o.AutoApproval
+	return r.AutoApproval
 }
 
-func (o *RequestConfiguration) GetCondition() *Condition {
-	if o == nil {
+func (r *RequestConfiguration) GetCondition() *Condition {
+	if r == nil {
 		return nil
 	}
-	return o.Condition
+	return r.Condition
 }
 
-func (o *RequestConfiguration) GetExtensionsDurationInMinutes() *int64 {
-	if o == nil {
+func (r *RequestConfiguration) GetExtensionsDurationInMinutes() *int64 {
+	if r == nil {
 		return nil
 	}
-	return o.ExtensionsDurationInMinutes
+	return r.ExtensionsDurationInMinutes
 }
 
-func (o *RequestConfiguration) GetMaxDuration() *int64 {
-	if o == nil {
+func (r *RequestConfiguration) GetMaxDuration() *int64 {
+	if r == nil {
 		return nil
 	}
-	return o.MaxDuration
+	return r.MaxDuration
 }
 
-func (o *RequestConfiguration) GetPriority() int64 {
-	if o == nil {
+func (r *RequestConfiguration) GetPriority() int64 {
+	if r == nil {
 		return 0
 	}
-	return o.Priority
+	return r.Priority
 }
 
-func (o *RequestConfiguration) GetRecommendedDuration() *int64 {
-	if o == nil {
+func (r *RequestConfiguration) GetRecommendedDuration() *int64 {
+	if r == nil {
 		return nil
 	}
-	return o.RecommendedDuration
+	return r.RecommendedDuration
 }
 
-func (o *RequestConfiguration) GetRequestTemplateID() *string {
-	if o == nil {
+func (r *RequestConfiguration) GetRequestTemplateID() *string {
+	if r == nil {
 		return nil
 	}
-	return o.RequestTemplateID
+	return r.RequestTemplateID
 }
 
-func (o *RequestConfiguration) GetRequireMfaToRequest() bool {
-	if o == nil {
+func (r *RequestConfiguration) GetRequireMfaToRequest() bool {
+	if r == nil {
 		return false
 	}
-	return o.RequireMfaToRequest
+	return r.RequireMfaToRequest
 }
 
-func (o *RequestConfiguration) GetRequireSupportTicket() bool {
-	if o == nil {
+func (r *RequestConfiguration) GetRequireSupportTicket() bool {
+	if r == nil {
 		return false
 	}
-	return o.RequireSupportTicket
+	return r.RequireSupportTicket
 }
 
-func (o *RequestConfiguration) GetReviewerStages() []ReviewerStage {
-	if o == nil {
+func (r *RequestConfiguration) GetReviewerStages() []ReviewerStage {
+	if r == nil {
 		return nil
 	}
-	return o.ReviewerStages
+	return r.ReviewerStages
 }

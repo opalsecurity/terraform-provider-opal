@@ -14,6 +14,7 @@ type Request struct {
 	Reason                types.String                 `tfsdk:"reason"`
 	RequestedItemsList    []RequestedItem              `tfsdk:"requested_items_list"`
 	RequesterID           types.String                 `tfsdk:"requester_id"`
+	ReviewerStages        []RequestReviewerStages      `tfsdk:"reviewer_stages"`
 	Stages                *RequestItemStages           `tfsdk:"stages"`
 	Status                types.String                 `tfsdk:"status"`
 	TargetGroupID         types.String                 `tfsdk:"target_group_id"`

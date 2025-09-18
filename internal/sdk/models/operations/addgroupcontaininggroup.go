@@ -13,18 +13,18 @@ type AddGroupContainingGroupRequest struct {
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (o *AddGroupContainingGroupRequest) GetGroupContainingGroup() shared.GroupContainingGroup {
-	if o == nil {
+func (a *AddGroupContainingGroupRequest) GetGroupContainingGroup() shared.GroupContainingGroup {
+	if a == nil {
 		return shared.GroupContainingGroup{}
 	}
-	return o.GroupContainingGroup
+	return a.GroupContainingGroup
 }
 
-func (o *AddGroupContainingGroupRequest) GetGroupID() string {
-	if o == nil {
+func (a *AddGroupContainingGroupRequest) GetGroupID() string {
+	if a == nil {
 		return ""
 	}
-	return o.GroupID
+	return a.GroupID
 }
 
 type AddGroupContainingGroupResponse struct {
@@ -38,30 +38,30 @@ type AddGroupContainingGroupResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *AddGroupContainingGroupResponse) GetContentType() string {
-	if o == nil {
+func (a *AddGroupContainingGroupResponse) GetContentType() string {
+	if a == nil {
 		return ""
 	}
-	return o.ContentType
+	return a.ContentType
 }
 
-func (o *AddGroupContainingGroupResponse) GetGroupContainingGroup() *shared.GroupContainingGroup {
-	if o == nil {
+func (a *AddGroupContainingGroupResponse) GetGroupContainingGroup() *shared.GroupContainingGroup {
+	if a == nil {
 		return nil
 	}
-	return o.GroupContainingGroup
+	return a.GroupContainingGroup
 }
 
-func (o *AddGroupContainingGroupResponse) GetStatusCode() int {
-	if o == nil {
+func (a *AddGroupContainingGroupResponse) GetStatusCode() int {
+	if a == nil {
 		return 0
 	}
-	return o.StatusCode
+	return a.StatusCode
 }
 
-func (o *AddGroupContainingGroupResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (a *AddGroupContainingGroupResponse) GetRawResponse() *http.Response {
+	if a == nil {
 		return nil
 	}
-	return o.RawResponse
+	return a.RawResponse
 }

@@ -124,11 +124,11 @@ resource "opal_group" "my_group" {
 - `admin_owner_id` (String) The ID of the owner of the group.
 - `custom_request_notification` (String) Custom request notification sent upon request approval.
 - `description` (String) A description of the remote group.
-- `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes).
+- `extensions_duration_in_minutes` (Number, Deprecated) The duration for which access can be extended (in minutes). Deprecated, set the extension duration in the request_configuration you want it to apply to.
 - `group_leader_user_ids` (Set of String) A list of User IDs for the group leaders of the group
 - `message_channel_ids` (Set of String)
 - `on_call_schedule_ids` (Set of String)
-- `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info))
+- `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this group. Default: false
 - `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
 - `visibility_group_ids` (Set of String)

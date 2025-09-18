@@ -12,11 +12,11 @@ type GetOwnerIDRequest struct {
 	ID string `pathParam:"style=simple,explode=true,name=owner_id"`
 }
 
-func (o *GetOwnerIDRequest) GetID() string {
-	if o == nil {
+func (g *GetOwnerIDRequest) GetID() string {
+	if g == nil {
 		return ""
 	}
-	return o.ID
+	return g.ID
 }
 
 type GetOwnerIDResponse struct {
@@ -30,30 +30,30 @@ type GetOwnerIDResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetOwnerIDResponse) GetContentType() string {
-	if o == nil {
+func (g *GetOwnerIDResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetOwnerIDResponse) GetOwner() *shared.Owner {
-	if o == nil {
+func (g *GetOwnerIDResponse) GetOwner() *shared.Owner {
+	if g == nil {
 		return nil
 	}
-	return o.Owner
+	return g.Owner
 }
 
-func (o *GetOwnerIDResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetOwnerIDResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetOwnerIDResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetOwnerIDResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

@@ -16,25 +16,25 @@ type GetBundleResourcesRequest struct {
 	PageSize *int64 `queryParam:"style=form,explode=true,name=page_size"`
 }
 
-func (o *GetBundleResourcesRequest) GetBundleID() string {
-	if o == nil {
+func (g *GetBundleResourcesRequest) GetBundleID() string {
+	if g == nil {
 		return ""
 	}
-	return o.BundleID
+	return g.BundleID
 }
 
-func (o *GetBundleResourcesRequest) GetCursor() *string {
-	if o == nil {
+func (g *GetBundleResourcesRequest) GetCursor() *string {
+	if g == nil {
 		return nil
 	}
-	return o.Cursor
+	return g.Cursor
 }
 
-func (o *GetBundleResourcesRequest) GetPageSize() *int64 {
-	if o == nil {
+func (g *GetBundleResourcesRequest) GetPageSize() *int64 {
+	if g == nil {
 		return nil
 	}
-	return o.PageSize
+	return g.PageSize
 }
 
 type GetBundleResourcesResponse struct {
@@ -48,30 +48,30 @@ type GetBundleResourcesResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetBundleResourcesResponse) GetContentType() string {
-	if o == nil {
+func (g *GetBundleResourcesResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetBundleResourcesResponse) GetPaginatedBundleResourceList() *shared.PaginatedBundleResourceList {
-	if o == nil {
+func (g *GetBundleResourcesResponse) GetPaginatedBundleResourceList() *shared.PaginatedBundleResourceList {
+	if g == nil {
 		return nil
 	}
-	return o.PaginatedBundleResourceList
+	return g.PaginatedBundleResourceList
 }
 
-func (o *GetBundleResourcesResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetBundleResourcesResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetBundleResourcesResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetBundleResourcesResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

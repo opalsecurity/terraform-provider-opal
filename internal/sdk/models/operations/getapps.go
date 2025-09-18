@@ -14,18 +14,18 @@ type GetAppsRequest struct {
 	OwnerFilter *string `queryParam:"style=form,explode=true,name=owner_filter"`
 }
 
-func (o *GetAppsRequest) GetAppTypeFilter() []shared.AppTypeEnum {
-	if o == nil {
+func (g *GetAppsRequest) GetAppTypeFilter() []shared.AppTypeEnum {
+	if g == nil {
 		return nil
 	}
-	return o.AppTypeFilter
+	return g.AppTypeFilter
 }
 
-func (o *GetAppsRequest) GetOwnerFilter() *string {
-	if o == nil {
+func (g *GetAppsRequest) GetOwnerFilter() *string {
+	if g == nil {
 		return nil
 	}
-	return o.OwnerFilter
+	return g.OwnerFilter
 }
 
 type GetAppsResponse struct {
@@ -39,30 +39,30 @@ type GetAppsResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetAppsResponse) GetAppsList() *shared.AppsList {
-	if o == nil {
+func (g *GetAppsResponse) GetAppsList() *shared.AppsList {
+	if g == nil {
 		return nil
 	}
-	return o.AppsList
+	return g.AppsList
 }
 
-func (o *GetAppsResponse) GetContentType() string {
-	if o == nil {
+func (g *GetAppsResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetAppsResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetAppsResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetAppsResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetAppsResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

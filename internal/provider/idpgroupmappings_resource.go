@@ -59,6 +59,10 @@ func (r *IdpGroupMappingsResource) Schema(ctx context.Context, req resource.Sche
 							Computed: true,
 							Optional: true,
 						},
+						"app_resource_id": schema.StringAttribute{
+							Computed:    true,
+							Description: `The ID of the app resource.`,
+						},
 						"group_id": schema.StringAttribute{
 							Computed: true,
 							Optional: true,

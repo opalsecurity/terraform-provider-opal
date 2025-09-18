@@ -11,11 +11,11 @@ type DeleteConfigurationTemplateRequest struct {
 	ConfigurationTemplateID string `pathParam:"style=simple,explode=false,name=configuration_template_id"`
 }
 
-func (o *DeleteConfigurationTemplateRequest) GetConfigurationTemplateID() string {
-	if o == nil {
+func (d *DeleteConfigurationTemplateRequest) GetConfigurationTemplateID() string {
+	if d == nil {
 		return ""
 	}
-	return o.ConfigurationTemplateID
+	return d.ConfigurationTemplateID
 }
 
 type DeleteConfigurationTemplateResponse struct {
@@ -27,23 +27,23 @@ type DeleteConfigurationTemplateResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *DeleteConfigurationTemplateResponse) GetContentType() string {
-	if o == nil {
+func (d *DeleteConfigurationTemplateResponse) GetContentType() string {
+	if d == nil {
 		return ""
 	}
-	return o.ContentType
+	return d.ContentType
 }
 
-func (o *DeleteConfigurationTemplateResponse) GetStatusCode() int {
-	if o == nil {
+func (d *DeleteConfigurationTemplateResponse) GetStatusCode() int {
+	if d == nil {
 		return 0
 	}
-	return o.StatusCode
+	return d.StatusCode
 }
 
-func (o *DeleteConfigurationTemplateResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (d *DeleteConfigurationTemplateResponse) GetRawResponse() *http.Response {
+	if d == nil {
 		return nil
 	}
-	return o.RawResponse
+	return d.RawResponse
 }

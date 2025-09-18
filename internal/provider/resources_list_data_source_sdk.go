@@ -102,6 +102,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.AwsRdsInstance.Region = types.StringValue(resultsItem.RemoteInfo.AwsRdsInstance.Region)
 					results.RemoteInfo.AwsRdsInstance.ResourceID = types.StringValue(resultsItem.RemoteInfo.AwsRdsInstance.ResourceID)
 				}
+				if resultsItem.RemoteInfo.CoupaRole == nil {
+					results.RemoteInfo.CoupaRole = nil
+				} else {
+					results.RemoteInfo.CoupaRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.CoupaRole.RoleID = types.StringValue(resultsItem.RemoteInfo.CoupaRole.RoleID)
+				}
 				if resultsItem.RemoteInfo.CustomConnector == nil {
 					results.RemoteInfo.CustomConnector = nil
 				} else {

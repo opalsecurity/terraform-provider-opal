@@ -10,23 +10,23 @@ type PaginatedResourcesList struct {
 	Results  []Resource `json:"results"`
 }
 
-func (o *PaginatedResourcesList) GetNext() *string {
-	if o == nil {
+func (p *PaginatedResourcesList) GetNext() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Next
+	return p.Next
 }
 
-func (o *PaginatedResourcesList) GetPrevious() *string {
-	if o == nil {
+func (p *PaginatedResourcesList) GetPrevious() *string {
+	if p == nil {
 		return nil
 	}
-	return o.Previous
+	return p.Previous
 }
 
-func (o *PaginatedResourcesList) GetResults() []Resource {
-	if o == nil {
+func (p *PaginatedResourcesList) GetResults() []Resource {
+	if p == nil {
 		return []Resource{}
 	}
-	return o.Results
+	return p.Results
 }

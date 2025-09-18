@@ -39,65 +39,65 @@ func (b *Bundle) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Bundle) GetAdminOwnerID() *string {
-	if o == nil {
+func (b *Bundle) GetAdminOwnerID() *string {
+	if b == nil {
 		return nil
 	}
-	return o.AdminOwnerID
+	return b.AdminOwnerID
 }
 
-func (o *Bundle) GetBundleID() *string {
-	if o == nil {
+func (b *Bundle) GetBundleID() *string {
+	if b == nil {
 		return nil
 	}
-	return o.BundleID
+	return b.BundleID
 }
 
-func (o *Bundle) GetCreatedAt() *time.Time {
-	if o == nil {
+func (b *Bundle) GetCreatedAt() *time.Time {
+	if b == nil {
 		return nil
 	}
-	return o.CreatedAt
+	return b.CreatedAt
 }
 
-func (o *Bundle) GetDescription() *string {
-	if o == nil {
+func (b *Bundle) GetDescription() *string {
+	if b == nil {
 		return nil
 	}
-	return o.Description
+	return b.Description
 }
 
-func (o *Bundle) GetName() *string {
-	if o == nil {
+func (b *Bundle) GetName() *string {
+	if b == nil {
 		return nil
 	}
-	return o.Name
+	return b.Name
 }
 
-func (o *Bundle) GetTotalNumGroups() *int64 {
-	if o == nil {
+func (b *Bundle) GetTotalNumGroups() *int64 {
+	if b == nil {
 		return nil
 	}
-	return o.TotalNumGroups
+	return b.TotalNumGroups
 }
 
-func (o *Bundle) GetTotalNumItems() *int64 {
-	if o == nil {
+func (b *Bundle) GetTotalNumItems() *int64 {
+	if b == nil {
 		return nil
 	}
-	return o.TotalNumItems
+	return b.TotalNumItems
 }
 
-func (o *Bundle) GetTotalNumResources() *int64 {
-	if o == nil {
+func (b *Bundle) GetTotalNumResources() *int64 {
+	if b == nil {
 		return nil
 	}
-	return o.TotalNumResources
+	return b.TotalNumResources
 }
 
-func (o *Bundle) GetUpdatedAt() *time.Time {
-	if o == nil {
+func (b *Bundle) GetUpdatedAt() *time.Time {
+	if b == nil {
 		return nil
 	}
-	return o.UpdatedAt
+	return b.UpdatedAt
 }

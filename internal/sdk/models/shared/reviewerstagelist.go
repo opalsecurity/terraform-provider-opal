@@ -7,9 +7,9 @@ type ReviewerStageList struct {
 	Stages []ReviewerStage `json:"stages"`
 }
 
-func (o *ReviewerStageList) GetStages() []ReviewerStage {
-	if o == nil {
+func (r *ReviewerStageList) GetStages() []ReviewerStage {
+	if r == nil {
 		return []ReviewerStage{}
 	}
-	return o.Stages
+	return r.Stages
 }
