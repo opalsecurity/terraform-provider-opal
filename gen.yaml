@@ -20,7 +20,7 @@ generation:
     skipResponseBodyAssertions: false
   flattenGlobalSecurity: true
 terraform:
-  version: 3.3.0
+  version: 3.4.11
   additionalDataSources: []
   additionalDependencies:
     github.com/hashicorp/terraform-plugin-testing: v1.13.2
@@ -45,5 +45,6 @@ terraform:
       shared: shared
       webhooks: webhooks
   inputModelSuffix: input
+  nullableOptionalWrapper: true
   outputModelSuffix: output
   packageName: opal
