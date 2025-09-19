@@ -2,6 +2,10 @@
 
 package shared
 
+import (
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
+)
+
 // RequestConfiguration - # Request Configuration Object
 // ### Description
 // The `RequestConfiguration` object is used to represent a request configuration.
@@ -17,7 +21,7 @@ type RequestConfiguration struct {
 	// The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 	ExtensionsDurationInMinutes *int64 `json:"extensions_duration_in_minutes,omitempty"`
 	// The maximum duration for which the resource can be requested (in minutes).
-	MaxDuration *int64 `json:"max_duration_minutes,omitempty"`
+	MaxDuration *int64 `default:"null" json:"max_duration_minutes"`
 	// The priority of the request configuration.
 	Priority int64 `json:"priority"`
 	// The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
@@ -30,6 +34,17 @@ type RequestConfiguration struct {
 	RequireSupportTicket bool `json:"require_support_ticket"`
 	// The list of reviewer stages for the request configuration.
 	ReviewerStages []ReviewerStage `json:"reviewer_stages,omitempty"`
+}
+
+func (r RequestConfiguration) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(r, "", false)
+}
+
+func (r *RequestConfiguration) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &r, "", false, []string{"allow_requests", "auto_approval", "priority", "require_mfa_to_request", "require_support_ticket"}); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *RequestConfiguration) GetAllowRequests() bool {

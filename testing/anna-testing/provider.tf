@@ -32,9 +32,9 @@ resource "opal_group" "my_group" {
   }
   request_configurations = [
     {
-      allow_requests         = true
-      auto_approval          = false
-      max_duration           = -1
+      allow_requests = true
+      auto_approval  = false
+      #   max_duration           = null
       priority               = 0
       recommended_duration   = -1
       require_mfa_to_request = false

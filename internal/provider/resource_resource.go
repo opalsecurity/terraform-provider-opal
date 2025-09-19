@@ -1173,11 +1173,8 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 							Description: `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
 						},
 						"max_duration": schema.Int64Attribute{
-							Computed: true,
-							Optional: true,
-							PlanModifiers: []planmodifier.Int64{
-								speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
-							},
+							Computed:    true,
+							Optional:    true,
 							Description: `The maximum duration for which the resource can be requested (in minutes).`,
 						},
 						"priority": schema.Int64Attribute{

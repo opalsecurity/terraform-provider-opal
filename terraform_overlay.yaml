@@ -57,6 +57,8 @@ actions:
   - target: $["paths"]["/apps"]["get"]
     update:
       x-speakeasy-entity-operation: Apps#get
+  - target: $["paths"]["/apps"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/apps/{app_id}"]["get"]["operationId"]
     update: getAppID
   - target: $["paths"]["/apps/{app_id}"]["get"]["parameters"][0]
@@ -72,6 +74,8 @@ actions:
   - target: $["paths"]["/apps/{app_id}"]["get"]
     update:
       x-speakeasy-entity-operation: App#get
+  - target: $["paths"]["/apps/{app_id}"]["get"]["summary"]
+    remove: true
   - target: $["paths"]["/bundles"]["get"]
     update:
       x-speakeasy-entity-operation: PaginatedBundleList#read
@@ -535,99 +539,6 @@ actions:
   - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["put"]
     update:
       x-speakeasy-entity-operation: IdpGroupMappings#create,update
-  - target: $["paths"]
-    update:
-      /idp-group-mappings/{app_resource_id}/{group_id}/:
-        post:
-          description: |
-            Creates or updates an individual `IdpGroupMapping` object (upsert operation).
-
-            **Behavior:**
-            - If the mapping doesn't exist, it will be created with the provided values
-            - If the mapping exists, only the fields provided in the request will be updated
-          operationId: createIdpGroupMapping
-          parameters:
-            - description: The ID of the Okta app.
-              example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
-              explode: false
-              in: path
-              name: app_resource_id
-              required: true
-              schema:
-                format: uuid
-                type: string
-              style: simple
-            - description: The ID of the group.
-              example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
-              explode: false
-              in: path
-              name: group_id
-              required: true
-              schema:
-                format: uuid
-                type: string
-              style: simple
-          requestBody:
-            required: false
-            content:
-              application/json:
-                schema:
-                  properties:
-                    alias:
-                      description: Optional alias for the group mapping
-                      type: string
-                      nullable: true
-                    hidden_from_end_user:
-                      description: |
-                        Whether this mapping should be hidden from end users.
-                        - **New mappings**: If not provided, defaults to `false`
-                        - **Existing mappings**: If not provided, existing value is preserved (no change)
-                        - **Explicit values**: If provided, value is updated to the specified boolean
-                      type: boolean
-                      nullable: true
-                  type: object
-          responses:
-            "200":
-              description: The IDP group mapping was successfully created or updated.
-              content:
-                application/json:
-                  schema:
-                    $ref: "#/components/schemas/IdpGroupMapping"
-          security:
-            - BearerAuth: []
-          tags:
-            - idp-group-mappings
-        delete:
-          description: Deletes an `IdpGroupMapping` object.
-          operationId: delete_idp_group_mappings
-          parameters:
-            - description: The ID of the Okta app.
-              example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
-              explode: false
-              in: path
-              name: app_resource_id
-              required: true
-              schema:
-                format: uuid
-                type: string
-              style: simple
-            - description: The ID of the group.
-              example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
-              explode: false
-              in: path
-              name: group_id
-              required: true
-              schema:
-                format: uuid
-                type: string
-              style: simple
-          responses:
-            "200":
-              description: The IDP group mapping was successfully deleted.
-          security:
-            - BearerAuth: []
-          tags:
-            - idp-group-mappings
   - target: $["paths"]["/owners"]["get"]["operationId"]
     update: getOwners
   - target: $["paths"]["/owners"]["get"]["responses"]
@@ -1193,6 +1104,99 @@ actions:
   - target: $["paths"]["/uar/{uar_id}"]["get"]
     update:
       x-speakeasy-entity-operation: UAR#get
+  - target: $["paths"]
+    update:
+      /idp-group-mappings/{app_resource_id}/{group_id}/:
+        post:
+          description: |
+            Creates or updates an individual `IdpGroupMapping` object (upsert operation).
+
+            **Behavior:**
+            - If the mapping doesn't exist, it will be created with the provided values
+            - If the mapping exists, only the fields provided in the request will be updated
+          operationId: createIdpGroupMapping
+          parameters:
+            - description: The ID of the Okta app.
+              example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+              explode: false
+              in: path
+              name: app_resource_id
+              required: true
+              schema:
+                format: uuid
+                type: string
+              style: simple
+            - description: The ID of the group.
+              example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+              explode: false
+              in: path
+              name: group_id
+              required: true
+              schema:
+                format: uuid
+                type: string
+              style: simple
+          requestBody:
+            required: false
+            content:
+              application/json:
+                schema:
+                  properties:
+                    alias:
+                      description: Optional alias for the group mapping
+                      type: string
+                      nullable: true
+                    hidden_from_end_user:
+                      description: |
+                        Whether this mapping should be hidden from end users.
+                        - **New mappings**: If not provided, defaults to `false`
+                        - **Existing mappings**: If not provided, existing value is preserved (no change)
+                        - **Explicit values**: If provided, value is updated to the specified boolean
+                      type: boolean
+                      nullable: true
+                  type: object
+          responses:
+            "200":
+              description: The IDP group mapping was successfully created or updated.
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/IdpGroupMapping"
+          security:
+            - BearerAuth: []
+          tags:
+            - idp-group-mappings
+        delete:
+          description: Deletes an `IdpGroupMapping` object.
+          operationId: delete_idp_group_mappings
+          parameters:
+            - description: The ID of the Okta app.
+              example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+              explode: false
+              in: path
+              name: app_resource_id
+              required: true
+              schema:
+                format: uuid
+                type: string
+              style: simple
+            - description: The ID of the group.
+              example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+              explode: false
+              in: path
+              name: group_id
+              required: true
+              schema:
+                format: uuid
+                type: string
+              style: simple
+          responses:
+            "200":
+              description: The IDP group mapping was successfully deleted.
+          security:
+            - BearerAuth: []
+          tags:
+            - idp-group-mappings
   - target: $["paths"]["/groups/users/{user_id}"]
     remove: true
   - target: $["paths"]["/idp-group-mappings/{app_resource_id}/groups/{group_id}"]
@@ -2223,10 +2227,20 @@ actions:
       default: null
   - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["max_duration_minutes"]
     update:
-      x-speakeasy-name-override: max_duration
+      nullable: true
   - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["max_duration_minutes"]
     update:
-      x-speakeasy-param-suppress-computed-diff: true
+      default: null
+  - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["max_duration_minutes"]
+    update:
+      oneOf:
+        - type: integer
+        - type: 'null'
+  - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["max_duration_minutes"]
+    update:
+      x-speakeasy-name-override: max_duration
+  - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["max_duration_minutes"]["type"]
+    remove: true
   - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["recommended_duration_minutes"]
     update:
       x-speakeasy-name-override: recommended_duration
@@ -2239,6 +2253,9 @@ actions:
   - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["reviewer_stages"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["RequestConfiguration"]["required"]
+    update:
+      - max_duration_minutes
   - target: $["components"]["schemas"]["RequestConfiguration"]
     update:
       x-speakeasy-entity: Requests

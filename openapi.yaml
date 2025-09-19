@@ -9273,10 +9273,13 @@ components:
           type: boolean
         max_duration_minutes:
           description: The maximum duration for which the resource can be requested (in minutes).
-          type: integer
           example: 120
+          nullable: true
+          default: null
+          oneOf:
+            - type: integer
+            - type: 'null'
           x-speakeasy-name-override: max_duration
-          x-speakeasy-param-suppress-computed-diff: true
         recommended_duration_minutes:
           description: The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
           type: integer
@@ -9314,6 +9317,7 @@ components:
         - require_mfa_to_request
         - require_support_ticket
         - priority
+        - max_duration_minutes
       x-speakeasy-entity: Requests
     CreateRequestConfigurationInfoList:
       description: |-
