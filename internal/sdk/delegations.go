@@ -415,7 +415,8 @@ func (s *Delegations) DeleteDelegation(ctx context.Context, request operations.D
 
 }
 
-// GetDelegation - Returns a specific delegation by its ID.
+// GetDelegation - Get delegation by ID
+// Returns a specific delegation by its ID.
 func (s *Delegations) GetDelegation(ctx context.Context, request operations.GetDelegationRequest, opts ...operations.Option) (*operations.GetDelegationResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -613,7 +614,8 @@ func (s *Delegations) GetDelegation(ctx context.Context, request operations.GetD
 
 }
 
-// GetDelegations - Returns a list of request reviewer delegations configured for your organization.
+// GetDelegations - Get delegations
+// Returns a list of request reviewer delegations configured for your organization.
 func (s *Delegations) GetDelegations(ctx context.Context, request operations.GetDelegationsRequest, opts ...operations.Option) (*operations.GetDelegationsResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{

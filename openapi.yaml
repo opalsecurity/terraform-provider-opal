@@ -54,6 +54,7 @@ tags:
 paths:
   /apps:
     get:
+      summary: Get apps
       description: Returns a list of `App` objects.
       operationId: getApps
       parameters:
@@ -97,6 +98,7 @@ paths:
       x-speakeasy-entity-operation: Apps#get
   /apps/{app_id}:
     get:
+      summary: Get app by ID
       description: Returns an `App` object.
       operationId: getAppID
       parameters:
@@ -4555,6 +4557,7 @@ paths:
         - apps
   /delegations:
     get:
+      summary: Get delegations
       description: Returns a list of request reviewer delegations configured for your organization.
       operationId: getDelegations
       parameters:
@@ -4632,6 +4635,7 @@ paths:
       x-speakeasy-entity-operation: Delegation#create
   /delegations/{delegation_id}:
     get:
+      summary: Get delegation by ID
       description: Returns a specific delegation by its ID.
       operationId: getDelegation
       parameters:
