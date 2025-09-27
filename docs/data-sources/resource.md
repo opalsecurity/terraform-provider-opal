@@ -68,6 +68,7 @@ Read-Only:
 - `aws_permission_set` (Attributes) Remote info for AWS Identity Center permission set. (see [below for nested schema](#nestedatt--remote_info--aws_permission_set))
 - `aws_rds_instance` (Attributes) Remote info for AWS RDS instance. (see [below for nested schema](#nestedatt--remote_info--aws_rds_instance))
 - `coupa_role` (Attributes) Remote info for Coupa role. (see [below for nested schema](#nestedatt--remote_info--coupa_role))
+- `cursor_organization` (Attributes) Remote info for a Cursor organization. (see [below for nested schema](#nestedatt--remote_info--cursor_organization))
 - `custom_connector` (Attributes) Remote info for a custom connector resource. (see [below for nested schema](#nestedatt--remote_info--custom_connector))
 - `datastax_astra_role` (Attributes) Remote info for an Astra role. (see [below for nested schema](#nestedatt--remote_info--datastax_astra_role))
 - `gcp_big_query_dataset` (Attributes) Remote info for GCP BigQuery Dataset. (see [below for nested schema](#nestedatt--remote_info--gcp_big_query_dataset))
@@ -165,6 +166,14 @@ Read-Only:
 Read-Only:
 
 - `role_id` (String) The id of the role.
+
+
+<a id="nestedatt--remote_info--cursor_organization"></a>
+### Nested Schema for `remote_info.cursor_organization`
+
+Read-Only:
+
+- `org_id` (String) The id of the organization.
 
 
 <a id="nestedatt--remote_info--custom_connector"></a>

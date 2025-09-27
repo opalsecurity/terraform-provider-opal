@@ -101,6 +101,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.CoupaRole = &tfTypes.SnowflakeRole{}
 				r.RemoteInfo.CoupaRole.RoleID = types.StringValue(resp.RemoteInfo.CoupaRole.RoleID)
 			}
+			if resp.RemoteInfo.CursorOrganization == nil {
+				r.RemoteInfo.CursorOrganization = nil
+			} else {
+				r.RemoteInfo.CursorOrganization = &tfTypes.CursorOrganization{}
+				r.RemoteInfo.CursorOrganization.OrgID = types.StringValue(resp.RemoteInfo.CursorOrganization.OrgID)
+			}
 			if resp.RemoteInfo.CustomConnector == nil {
 				r.RemoteInfo.CustomConnector = nil
 			} else {
