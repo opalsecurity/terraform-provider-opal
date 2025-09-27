@@ -40,6 +40,9 @@ resource "opal_resource" "my_resource" {
     coupa_role = {
       role_id = 999
     }
+    cursor_organization = {
+      org_id = "123e4567-e89b-12d3-a456-426614174000"
+    }
     custom_connector = {
       can_have_usage_events = false
       remote_resource_id    = "01fa7402-01d8-103b-8deb-5f3a0ab7884"

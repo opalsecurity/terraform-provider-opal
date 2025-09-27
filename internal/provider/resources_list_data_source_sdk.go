@@ -108,6 +108,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.CoupaRole = &tfTypes.SnowflakeRole{}
 					results.RemoteInfo.CoupaRole.RoleID = types.StringValue(resultsItem.RemoteInfo.CoupaRole.RoleID)
 				}
+				if resultsItem.RemoteInfo.CursorOrganization == nil {
+					results.RemoteInfo.CursorOrganization = nil
+				} else {
+					results.RemoteInfo.CursorOrganization = &tfTypes.CursorOrganization{}
+					results.RemoteInfo.CursorOrganization.OrgID = types.StringValue(resultsItem.RemoteInfo.CursorOrganization.OrgID)
+				}
 				if resultsItem.RemoteInfo.CustomConnector == nil {
 					results.RemoteInfo.CustomConnector = nil
 				} else {

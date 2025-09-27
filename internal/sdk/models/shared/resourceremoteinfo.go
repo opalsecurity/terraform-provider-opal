@@ -196,6 +196,19 @@ func (c *CoupaRole) GetRoleID() string {
 	return c.RoleID
 }
 
+// CursorOrganization - Remote info for a Cursor organization.
+type CursorOrganization struct {
+	// The id of the organization.
+	OrgID string `json:"org_id"`
+}
+
+func (c *CursorOrganization) GetOrgID() string {
+	if c == nil {
+		return ""
+	}
+	return c.OrgID
+}
+
 // CustomConnector - Remote info for a custom connector resource.
 type CustomConnector struct {
 	// A bool representing whether or not the resource can have usage data.
@@ -616,6 +629,8 @@ type ResourceRemoteInfo struct {
 	AwsRdsInstance *AwsRdsInstance `json:"aws_rds_instance,omitempty"`
 	// Remote info for Coupa role.
 	CoupaRole *CoupaRole `json:"coupa_role,omitempty"`
+	// Remote info for a Cursor organization.
+	CursorOrganization *CursorOrganization `json:"cursor_organization,omitempty"`
 	// Remote info for a custom connector resource.
 	CustomConnector *CustomConnector `json:"custom_connector,omitempty"`
 	// Remote info for an Astra role.
@@ -720,6 +735,13 @@ func (r *ResourceRemoteInfo) GetCoupaRole() *CoupaRole {
 		return nil
 	}
 	return r.CoupaRole
+}
+
+func (r *ResourceRemoteInfo) GetCursorOrganization() *CursorOrganization {
+	if r == nil {
+		return nil
+	}
+	return r.CursorOrganization
 }
 
 func (r *ResourceRemoteInfo) GetCustomConnector() *CustomConnector {

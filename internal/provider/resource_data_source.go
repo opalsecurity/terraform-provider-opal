@@ -240,6 +240,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Coupa role.`,
 					},
+					"cursor_organization": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"org_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the organization.`,
+							},
+						},
+						Description: `Remote info for a Cursor organization.`,
+					},
 					"custom_connector": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{

@@ -74,6 +74,7 @@ const (
 	ResourceTypeEnumIlevelAdvancedRole                ResourceTypeEnum = "ILEVEL_ADVANCED_ROLE"
 	ResourceTypeEnumDatastaxAstraRole                 ResourceTypeEnum = "DATASTAX_ASTRA_ROLE"
 	ResourceTypeEnumCoupaRole                         ResourceTypeEnum = "COUPA_ROLE"
+	ResourceTypeEnumCursorOrganization                ResourceTypeEnum = "CURSOR_ORGANIZATION"
 )
 
 func (e ResourceTypeEnum) ToPointer() *ResourceTypeEnum {
@@ -210,6 +211,8 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "DATASTAX_ASTRA_ROLE":
 		fallthrough
 	case "COUPA_ROLE":
+		fallthrough
+	case "CURSOR_ORGANIZATION":
 		*e = ResourceTypeEnum(v)
 		return nil
 	default:

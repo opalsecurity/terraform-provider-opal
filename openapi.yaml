@@ -54,6 +54,7 @@ tags:
 paths:
   /apps:
     get:
+      summary: Get apps
       description: Returns a list of `App` objects.
       operationId: getApps
       parameters:
@@ -97,6 +98,7 @@ paths:
       x-speakeasy-entity-operation: Apps#get
   /apps/{app_id}:
     get:
+      summary: Get app by ID
       description: Returns an `App` object.
       operationId: getAppID
       parameters:
@@ -4555,6 +4557,7 @@ paths:
         - apps
   /delegations:
     get:
+      summary: Get delegations
       description: Returns a list of request reviewer delegations configured for your organization.
       operationId: getDelegations
       parameters:
@@ -4632,6 +4635,7 @@ paths:
       x-speakeasy-entity-operation: Delegation#create
   /delegations/{delegation_id}:
     get:
+      summary: Get delegation by ID
       description: Returns a specific delegation by its ID.
       operationId: getDelegation
       parameters:
@@ -6625,6 +6629,7 @@ components:
         - ILEVEL_ADVANCED_ROLE
         - DATASTAX_ASTRA_ROLE
         - COUPA_ROLE
+        - CURSOR_ORGANIZATION
       example: AWS_IAM_ROLE
       type: string
     VisibilityTypeEnum:
@@ -7698,6 +7703,16 @@ components:
           type: object
           required:
             - role_id
+        cursor_organization:
+          description: Remote info for a Cursor organization.
+          properties:
+            org_id:
+              description: The id of the organization.
+              example: 123e4567-e89b-12d3-a456-426614174000
+              type: string
+          type: object
+          required:
+            - org_id
       type: object
     RiskSensitivityEnum:
       type: string

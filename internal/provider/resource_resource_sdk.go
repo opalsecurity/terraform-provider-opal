@@ -101,6 +101,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.CoupaRole = &tfTypes.SnowflakeRole{}
 				r.RemoteInfo.CoupaRole.RoleID = types.StringValue(resp.RemoteInfo.CoupaRole.RoleID)
 			}
+			if resp.RemoteInfo.CursorOrganization == nil {
+				r.RemoteInfo.CursorOrganization = nil
+			} else {
+				r.RemoteInfo.CursorOrganization = &tfTypes.CursorOrganization{}
+				r.RemoteInfo.CursorOrganization.OrgID = types.StringValue(resp.RemoteInfo.CursorOrganization.OrgID)
+			}
 			if resp.RemoteInfo.CustomConnector == nil {
 				r.RemoteInfo.CustomConnector = nil
 			} else {
@@ -622,6 +628,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				RoleID: roleID,
 			}
 		}
+		var cursorOrganization *shared.CursorOrganization
+		if r.RemoteInfo.CursorOrganization != nil {
+			var orgID string
+			orgID = r.RemoteInfo.CursorOrganization.OrgID.ValueString()
+
+			cursorOrganization = &shared.CursorOrganization{
+				OrgID: orgID,
+			}
+		}
 		var customConnector *shared.CustomConnector
 		if r.RemoteInfo.CustomConnector != nil {
 			var canHaveUsageEvents bool
@@ -887,6 +902,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			AwsPermissionSet:        awsPermissionSet,
 			AwsRdsInstance:          awsRdsInstance,
 			CoupaRole:               coupaRole,
+			CursorOrganization:      cursorOrganization,
 			CustomConnector:         customConnector,
 			DatastaxAstraRole:       datastaxAstraRole,
 			GcpBigQueryDataset:      gcpBigQueryDataset,
