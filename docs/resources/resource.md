@@ -21,6 +21,9 @@ resource "opal_resource" "my_resource" {
   extensions_duration_in_minutes = 120
   name                           = "mongo-db-prod"
   remote_info = {
+    anthropic_workspace = {
+      workspace_id = "ws-123456"
+    }
     aws_account = {
       account_id             = 234234234234
       organizational_unit_id = "ou-1234"
@@ -54,6 +57,9 @@ resource "opal_resource" "my_resource" {
     }
     coupa_role = {
       role_id = 999
+    }
+    cursor_organization = {
+      org_id = "123e4567-e89b-12d3-a456-426614174000"
     }
     custom_connector = {
       can_have_usage_events = false
@@ -100,6 +106,9 @@ resource "opal_resource" "my_resource" {
       instance_id = "example-sql-898931321"
       project_id  = "example-project-898931321"
     }
+    github_org = {
+      org_name = "Opal Security"
+    }
     github_org_role = {
       role_id = 112233
     }
@@ -120,6 +129,13 @@ resource "opal_resource" "my_resource" {
     }
     okta_standard_role = {
       role_type = "ORG_ADMIN"
+    }
+    openai_platform_project = {
+      project_id = "proj_abc"
+    }
+    openai_platform_service_account = {
+      project_id         = "proj_abc"
+      service_account_id = "svc_acct_abc"
     }
     pagerduty_role = {
       role_name = "owner"
@@ -194,7 +210,7 @@ resource "opal_resource" "my_resource" {
 - `app_id` (String) The ID of the app for the resource. Requires replacement if changed.
 - `name` (String) The name of the remote resource.
 - `request_configurations` (Attributes List) A list of configurations for requests to this resource. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
-- `resource_type` (String) The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE"]; Requires replacement if changed.
+- `resource_type` (String) The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG"]; Requires replacement if changed.
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 
 ### Optional
@@ -262,6 +278,7 @@ Optional:
 
 Optional:
 
+- `anthropic_workspace` (Attributes) Remote info for Anthropic workspace. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--anthropic_workspace))
 - `aws_account` (Attributes) Remote info for AWS account. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_account))
 - `aws_ec2_instance` (Attributes) Remote info for AWS EC2 instance. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_ec2_instance))
 - `aws_eks_cluster` (Attributes) Remote info for AWS EKS cluster. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_eks_cluster))
@@ -270,6 +287,7 @@ Optional:
 - `aws_permission_set` (Attributes) Remote info for AWS Identity Center permission set. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_permission_set))
 - `aws_rds_instance` (Attributes) Remote info for AWS RDS instance. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_rds_instance))
 - `coupa_role` (Attributes) Remote info for Coupa role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--coupa_role))
+- `cursor_organization` (Attributes) Remote info for a Cursor organization. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--cursor_organization))
 - `custom_connector` (Attributes) Remote info for a custom connector resource. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--custom_connector))
 - `datastax_astra_role` (Attributes) Remote info for an Astra role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--datastax_astra_role))
 - `gcp_big_query_dataset` (Attributes) Remote info for GCP BigQuery Dataset. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gcp_big_query_dataset))
@@ -282,6 +300,7 @@ Optional:
 - `gcp_project` (Attributes) Remote info for GCP project. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gcp_project))
 - `gcp_service_account` (Attributes) Remote info for a GCP service account. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gcp_service_account))
 - `gcp_sql_instance` (Attributes) Remote info for GCP SQL instance. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gcp_sql_instance))
+- `github_org` (Attributes) Remote info for GitHub organization. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--github_org))
 - `github_org_role` (Attributes) Remote info for GitHub organization role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--github_org_role))
 - `github_repo` (Attributes) Remote info for GitHub repository. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--github_repo))
 - `gitlab_project` (Attributes) Remote info for Gitlab project. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gitlab_project))
@@ -289,11 +308,21 @@ Optional:
 - `okta_app` (Attributes) Remote info for Okta directory app. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_app))
 - `okta_custom_role` (Attributes) Remote info for Okta directory custom role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_custom_role))
 - `okta_standard_role` (Attributes) Remote info for Okta directory standard role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_standard_role))
+- `openai_platform_project` (Attributes) Remote info for OpenAI Platform project. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--openai_platform_project))
+- `openai_platform_service_account` (Attributes) Remote info for OpenAI Platform service account. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--openai_platform_service_account))
 - `pagerduty_role` (Attributes) Remote info for Pagerduty role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--pagerduty_role))
 - `salesforce_permission_set` (Attributes) Remote info for Salesforce permission set. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--salesforce_permission_set))
 - `salesforce_profile` (Attributes) Remote info for Salesforce profile. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--salesforce_profile))
 - `salesforce_role` (Attributes) Remote info for Salesforce role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--salesforce_role))
 - `teleport_role` (Attributes) Remote info for Teleport role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--teleport_role))
+
+<a id="nestedatt--remote_info--anthropic_workspace"></a>
+### Nested Schema for `remote_info.anthropic_workspace`
+
+Optional:
+
+- `workspace_id` (String) The id of the workspace. Not Null; Requires replacement if changed.
+
 
 <a id="nestedatt--remote_info--aws_account"></a>
 ### Nested Schema for `remote_info.aws_account`
@@ -367,6 +396,14 @@ Optional:
 Optional:
 
 - `role_id` (String) The id of the role. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--cursor_organization"></a>
+### Nested Schema for `remote_info.cursor_organization`
+
+Optional:
+
+- `org_id` (String) The id of the organization. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--custom_connector"></a>
@@ -474,6 +511,14 @@ Optional:
 - `project_id` (String) The id of the project the instance is in. Not Null; Requires replacement if changed.
 
 
+<a id="nestedatt--remote_info--github_org"></a>
+### Nested Schema for `remote_info.github_org`
+
+Optional:
+
+- `org_name` (String) The name of the organization. Not Null; Requires replacement if changed.
+
+
 <a id="nestedatt--remote_info--github_org_role"></a>
 ### Nested Schema for `remote_info.github_org_role`
 
@@ -528,6 +573,23 @@ Optional:
 Optional:
 
 - `role_type` (String) The type of the standard role. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--openai_platform_project"></a>
+### Nested Schema for `remote_info.openai_platform_project`
+
+Optional:
+
+- `project_id` (String) The id of the project. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--openai_platform_service_account"></a>
+### Nested Schema for `remote_info.openai_platform_service_account`
+
+Optional:
+
+- `project_id` (String) The id of the project for the service account. Not Null; Requires replacement if changed.
+- `service_account_id` (String) The id of the service account. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--pagerduty_role"></a>

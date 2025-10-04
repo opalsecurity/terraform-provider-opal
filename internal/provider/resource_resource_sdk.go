@@ -43,6 +43,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			r.RemoteInfo = nil
 		} else {
 			r.RemoteInfo = &tfTypes.ResourceRemoteInfo{}
+			if resp.RemoteInfo.AnthropicWorkspace == nil {
+				r.RemoteInfo.AnthropicWorkspace = nil
+			} else {
+				r.RemoteInfo.AnthropicWorkspace = &tfTypes.AnthropicWorkspace{}
+				r.RemoteInfo.AnthropicWorkspace.WorkspaceID = types.StringValue(resp.RemoteInfo.AnthropicWorkspace.WorkspaceID)
+			}
 			if resp.RemoteInfo.AwsAccount == nil {
 				r.RemoteInfo.AwsAccount = nil
 			} else {
@@ -100,6 +106,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			} else {
 				r.RemoteInfo.CoupaRole = &tfTypes.SnowflakeRole{}
 				r.RemoteInfo.CoupaRole.RoleID = types.StringValue(resp.RemoteInfo.CoupaRole.RoleID)
+			}
+			if resp.RemoteInfo.CursorOrganization == nil {
+				r.RemoteInfo.CursorOrganization = nil
+			} else {
+				r.RemoteInfo.CursorOrganization = &tfTypes.CursorOrganization{}
+				r.RemoteInfo.CursorOrganization.OrgID = types.StringValue(resp.RemoteInfo.CursorOrganization.OrgID)
 			}
 			if resp.RemoteInfo.CustomConnector == nil {
 				r.RemoteInfo.CustomConnector = nil
@@ -182,6 +194,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.GcpSQLInstance.InstanceID = types.StringValue(resp.RemoteInfo.GcpSQLInstance.InstanceID)
 				r.RemoteInfo.GcpSQLInstance.ProjectID = types.StringValue(resp.RemoteInfo.GcpSQLInstance.ProjectID)
 			}
+			if resp.RemoteInfo.GithubOrg == nil {
+				r.RemoteInfo.GithubOrg = nil
+			} else {
+				r.RemoteInfo.GithubOrg = &tfTypes.GithubOrg{}
+				r.RemoteInfo.GithubOrg.OrgName = types.StringValue(resp.RemoteInfo.GithubOrg.OrgName)
+			}
 			if resp.RemoteInfo.GithubOrgRole == nil {
 				r.RemoteInfo.GithubOrgRole = nil
 			} else {
@@ -223,6 +241,19 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			} else {
 				r.RemoteInfo.OktaStandardRole = &tfTypes.OktaStandardRole{}
 				r.RemoteInfo.OktaStandardRole.RoleType = types.StringValue(resp.RemoteInfo.OktaStandardRole.RoleType)
+			}
+			if resp.RemoteInfo.OpenaiPlatformProject == nil {
+				r.RemoteInfo.OpenaiPlatformProject = nil
+			} else {
+				r.RemoteInfo.OpenaiPlatformProject = &tfTypes.GcpProject{}
+				r.RemoteInfo.OpenaiPlatformProject.ProjectID = types.StringValue(resp.RemoteInfo.OpenaiPlatformProject.ProjectID)
+			}
+			if resp.RemoteInfo.OpenaiPlatformServiceAccount == nil {
+				r.RemoteInfo.OpenaiPlatformServiceAccount = nil
+			} else {
+				r.RemoteInfo.OpenaiPlatformServiceAccount = &tfTypes.OpenaiPlatformServiceAccount{}
+				r.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID = types.StringValue(resp.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID)
+				r.RemoteInfo.OpenaiPlatformServiceAccount.ServiceAccountID = types.StringValue(resp.RemoteInfo.OpenaiPlatformServiceAccount.ServiceAccountID)
 			}
 			if resp.RemoteInfo.PagerdutyRole == nil {
 				r.RemoteInfo.PagerdutyRole = nil
@@ -492,6 +523,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 
 	var remoteInfo *shared.ResourceRemoteInfo
 	if r.RemoteInfo != nil {
+		var anthropicWorkspace *shared.AnthropicWorkspace
+		if r.RemoteInfo.AnthropicWorkspace != nil {
+			var workspaceID string
+			workspaceID = r.RemoteInfo.AnthropicWorkspace.WorkspaceID.ValueString()
+
+			anthropicWorkspace = &shared.AnthropicWorkspace{
+				WorkspaceID: workspaceID,
+			}
+		}
 		var awsAccount *shared.AwsAccount
 		if r.RemoteInfo.AwsAccount != nil {
 			var accountID string
@@ -620,6 +660,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 
 			coupaRole = &shared.CoupaRole{
 				RoleID: roleID,
+			}
+		}
+		var cursorOrganization *shared.CursorOrganization
+		if r.RemoteInfo.CursorOrganization != nil {
+			var orgID string
+			orgID = r.RemoteInfo.CursorOrganization.OrgID.ValueString()
+
+			cursorOrganization = &shared.CursorOrganization{
+				OrgID: orgID,
 			}
 		}
 		var customConnector *shared.CustomConnector
@@ -766,6 +815,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				ProjectID:  projectId5,
 			}
 		}
+		var githubOrg *shared.GithubOrg
+		if r.RemoteInfo.GithubOrg != nil {
+			var orgName string
+			orgName = r.RemoteInfo.GithubOrg.OrgName.ValueString()
+
+			githubOrg = &shared.GithubOrg{
+				OrgName: orgName,
+			}
+		}
 		var githubOrgRole *shared.GithubOrgRole
 		if r.RemoteInfo.GithubOrgRole != nil {
 			var roleId2 string
@@ -829,6 +887,28 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				RoleType: roleType,
 			}
 		}
+		var openaiPlatformProject *shared.OpenaiPlatformProject
+		if r.RemoteInfo.OpenaiPlatformProject != nil {
+			var projectId7 string
+			projectId7 = r.RemoteInfo.OpenaiPlatformProject.ProjectID.ValueString()
+
+			openaiPlatformProject = &shared.OpenaiPlatformProject{
+				ProjectID: projectId7,
+			}
+		}
+		var openaiPlatformServiceAccount *shared.OpenaiPlatformServiceAccount
+		if r.RemoteInfo.OpenaiPlatformServiceAccount != nil {
+			var projectId8 string
+			projectId8 = r.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID.ValueString()
+
+			var serviceAccountId1 string
+			serviceAccountId1 = r.RemoteInfo.OpenaiPlatformServiceAccount.ServiceAccountID.ValueString()
+
+			openaiPlatformServiceAccount = &shared.OpenaiPlatformServiceAccount{
+				ProjectID:        projectId8,
+				ServiceAccountID: serviceAccountId1,
+			}
+		}
 		var pagerdutyRole *shared.PagerdutyRole
 		if r.RemoteInfo.PagerdutyRole != nil {
 			var roleName string
@@ -879,38 +959,43 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			}
 		}
 		remoteInfo = &shared.ResourceRemoteInfo{
-			AwsAccount:              awsAccount,
-			AwsEc2Instance:          awsEc2Instance,
-			AwsEksCluster:           awsEksCluster,
-			AwsIamRole:              awsIamRole,
-			AwsOrganizationalUnit:   awsOrganizationalUnit,
-			AwsPermissionSet:        awsPermissionSet,
-			AwsRdsInstance:          awsRdsInstance,
-			CoupaRole:               coupaRole,
-			CustomConnector:         customConnector,
-			DatastaxAstraRole:       datastaxAstraRole,
-			GcpBigQueryDataset:      gcpBigQueryDataset,
-			GcpBigQueryTable:        gcpBigQueryTable,
-			GcpBucket:               gcpBucket,
-			GcpComputeInstance:      gcpComputeInstance,
-			GcpFolder:               gcpFolder,
-			GcpGkeCluster:           gcpGkeCluster,
-			GcpOrganization:         gcpOrganization,
-			GcpProject:              gcpProject,
-			GcpServiceAccount:       gcpServiceAccount,
-			GcpSQLInstance:          gcpSQLInstance,
-			GithubOrgRole:           githubOrgRole,
-			GithubRepo:              githubRepo,
-			GitlabProject:           gitlabProject,
-			GoogleWorkspaceRole:     googleWorkspaceRole,
-			OktaApp:                 oktaApp,
-			OktaCustomRole:          oktaCustomRole,
-			OktaStandardRole:        oktaStandardRole,
-			PagerdutyRole:           pagerdutyRole,
-			SalesforcePermissionSet: salesforcePermissionSet,
-			SalesforceProfile:       salesforceProfile,
-			SalesforceRole:          salesforceRole,
-			TeleportRole:            teleportRole,
+			AnthropicWorkspace:           anthropicWorkspace,
+			AwsAccount:                   awsAccount,
+			AwsEc2Instance:               awsEc2Instance,
+			AwsEksCluster:                awsEksCluster,
+			AwsIamRole:                   awsIamRole,
+			AwsOrganizationalUnit:        awsOrganizationalUnit,
+			AwsPermissionSet:             awsPermissionSet,
+			AwsRdsInstance:               awsRdsInstance,
+			CoupaRole:                    coupaRole,
+			CursorOrganization:           cursorOrganization,
+			CustomConnector:              customConnector,
+			DatastaxAstraRole:            datastaxAstraRole,
+			GcpBigQueryDataset:           gcpBigQueryDataset,
+			GcpBigQueryTable:             gcpBigQueryTable,
+			GcpBucket:                    gcpBucket,
+			GcpComputeInstance:           gcpComputeInstance,
+			GcpFolder:                    gcpFolder,
+			GcpGkeCluster:                gcpGkeCluster,
+			GcpOrganization:              gcpOrganization,
+			GcpProject:                   gcpProject,
+			GcpServiceAccount:            gcpServiceAccount,
+			GcpSQLInstance:               gcpSQLInstance,
+			GithubOrg:                    githubOrg,
+			GithubOrgRole:                githubOrgRole,
+			GithubRepo:                   githubRepo,
+			GitlabProject:                gitlabProject,
+			GoogleWorkspaceRole:          googleWorkspaceRole,
+			OktaApp:                      oktaApp,
+			OktaCustomRole:               oktaCustomRole,
+			OktaStandardRole:             oktaStandardRole,
+			OpenaiPlatformProject:        openaiPlatformProject,
+			OpenaiPlatformServiceAccount: openaiPlatformServiceAccount,
+			PagerdutyRole:                pagerdutyRole,
+			SalesforcePermissionSet:      salesforcePermissionSet,
+			SalesforceProfile:            salesforceProfile,
+			SalesforceRole:               salesforceRole,
+			TeleportRole:                 teleportRole,
 		}
 	}
 	resourceType := shared.ResourceTypeEnum(r.ResourceType.ValueString())

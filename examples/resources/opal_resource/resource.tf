@@ -6,6 +6,9 @@ resource "opal_resource" "my_resource" {
   extensions_duration_in_minutes = 120
   name                           = "mongo-db-prod"
   remote_info = {
+    anthropic_workspace = {
+      workspace_id = "ws-123456"
+    }
     aws_account = {
       account_id             = 234234234234
       organizational_unit_id = "ou-1234"
@@ -39,6 +42,9 @@ resource "opal_resource" "my_resource" {
     }
     coupa_role = {
       role_id = 999
+    }
+    cursor_organization = {
+      org_id = "123e4567-e89b-12d3-a456-426614174000"
     }
     custom_connector = {
       can_have_usage_events = false
@@ -85,6 +91,9 @@ resource "opal_resource" "my_resource" {
       instance_id = "example-sql-898931321"
       project_id  = "example-project-898931321"
     }
+    github_org = {
+      org_name = "Opal Security"
+    }
     github_org_role = {
       role_id = 112233
     }
@@ -105,6 +114,13 @@ resource "opal_resource" "my_resource" {
     }
     okta_standard_role = {
       role_type = "ORG_ADMIN"
+    }
+    openai_platform_project = {
+      project_id = "proj_abc"
+    }
+    openai_platform_service_account = {
+      project_id         = "proj_abc"
+      service_account_id = "svc_acct_abc"
     }
     pagerduty_role = {
       role_name = "owner"
