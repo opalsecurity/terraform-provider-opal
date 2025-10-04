@@ -60,6 +60,7 @@ Read-Only:
 
 Read-Only:
 
+- `anthropic_workspace` (Attributes) Remote info for Anthropic workspace. (see [below for nested schema](#nestedatt--remote_info--anthropic_workspace))
 - `aws_account` (Attributes) Remote info for AWS account. (see [below for nested schema](#nestedatt--remote_info--aws_account))
 - `aws_ec2_instance` (Attributes) Remote info for AWS EC2 instance. (see [below for nested schema](#nestedatt--remote_info--aws_ec2_instance))
 - `aws_eks_cluster` (Attributes) Remote info for AWS EKS cluster. (see [below for nested schema](#nestedatt--remote_info--aws_eks_cluster))
@@ -68,6 +69,7 @@ Read-Only:
 - `aws_permission_set` (Attributes) Remote info for AWS Identity Center permission set. (see [below for nested schema](#nestedatt--remote_info--aws_permission_set))
 - `aws_rds_instance` (Attributes) Remote info for AWS RDS instance. (see [below for nested schema](#nestedatt--remote_info--aws_rds_instance))
 - `coupa_role` (Attributes) Remote info for Coupa role. (see [below for nested schema](#nestedatt--remote_info--coupa_role))
+- `cursor_organization` (Attributes) Remote info for a Cursor organization. (see [below for nested schema](#nestedatt--remote_info--cursor_organization))
 - `custom_connector` (Attributes) Remote info for a custom connector resource. (see [below for nested schema](#nestedatt--remote_info--custom_connector))
 - `datastax_astra_role` (Attributes) Remote info for an Astra role. (see [below for nested schema](#nestedatt--remote_info--datastax_astra_role))
 - `gcp_big_query_dataset` (Attributes) Remote info for GCP BigQuery Dataset. (see [below for nested schema](#nestedatt--remote_info--gcp_big_query_dataset))
@@ -80,6 +82,7 @@ Read-Only:
 - `gcp_project` (Attributes) Remote info for GCP project. (see [below for nested schema](#nestedatt--remote_info--gcp_project))
 - `gcp_service_account` (Attributes) Remote info for a GCP service account. (see [below for nested schema](#nestedatt--remote_info--gcp_service_account))
 - `gcp_sql_instance` (Attributes) Remote info for GCP SQL instance. (see [below for nested schema](#nestedatt--remote_info--gcp_sql_instance))
+- `github_org` (Attributes) Remote info for GitHub organization. (see [below for nested schema](#nestedatt--remote_info--github_org))
 - `github_org_role` (Attributes) Remote info for GitHub organization role. (see [below for nested schema](#nestedatt--remote_info--github_org_role))
 - `github_repo` (Attributes) Remote info for GitHub repository. (see [below for nested schema](#nestedatt--remote_info--github_repo))
 - `gitlab_project` (Attributes) Remote info for Gitlab project. (see [below for nested schema](#nestedatt--remote_info--gitlab_project))
@@ -87,11 +90,21 @@ Read-Only:
 - `okta_app` (Attributes) Remote info for Okta directory app. (see [below for nested schema](#nestedatt--remote_info--okta_app))
 - `okta_custom_role` (Attributes) Remote info for Okta directory custom role. (see [below for nested schema](#nestedatt--remote_info--okta_custom_role))
 - `okta_standard_role` (Attributes) Remote info for Okta directory standard role. (see [below for nested schema](#nestedatt--remote_info--okta_standard_role))
+- `openai_platform_project` (Attributes) Remote info for OpenAI Platform project. (see [below for nested schema](#nestedatt--remote_info--openai_platform_project))
+- `openai_platform_service_account` (Attributes) Remote info for OpenAI Platform service account. (see [below for nested schema](#nestedatt--remote_info--openai_platform_service_account))
 - `pagerduty_role` (Attributes) Remote info for Pagerduty role. (see [below for nested schema](#nestedatt--remote_info--pagerduty_role))
 - `salesforce_permission_set` (Attributes) Remote info for Salesforce permission set. (see [below for nested schema](#nestedatt--remote_info--salesforce_permission_set))
 - `salesforce_profile` (Attributes) Remote info for Salesforce profile. (see [below for nested schema](#nestedatt--remote_info--salesforce_profile))
 - `salesforce_role` (Attributes) Remote info for Salesforce role. (see [below for nested schema](#nestedatt--remote_info--salesforce_role))
 - `teleport_role` (Attributes) Remote info for Teleport role. (see [below for nested schema](#nestedatt--remote_info--teleport_role))
+
+<a id="nestedatt--remote_info--anthropic_workspace"></a>
+### Nested Schema for `remote_info.anthropic_workspace`
+
+Read-Only:
+
+- `workspace_id` (String) The id of the workspace.
+
 
 <a id="nestedatt--remote_info--aws_account"></a>
 ### Nested Schema for `remote_info.aws_account`
@@ -165,6 +178,14 @@ Read-Only:
 Read-Only:
 
 - `role_id` (String) The id of the role.
+
+
+<a id="nestedatt--remote_info--cursor_organization"></a>
+### Nested Schema for `remote_info.cursor_organization`
+
+Read-Only:
+
+- `org_id` (String) The id of the organization.
 
 
 <a id="nestedatt--remote_info--custom_connector"></a>
@@ -272,6 +293,14 @@ Read-Only:
 - `project_id` (String) The id of the project the instance is in.
 
 
+<a id="nestedatt--remote_info--github_org"></a>
+### Nested Schema for `remote_info.github_org`
+
+Read-Only:
+
+- `org_name` (String) The name of the organization.
+
+
 <a id="nestedatt--remote_info--github_org_role"></a>
 ### Nested Schema for `remote_info.github_org_role`
 
@@ -326,6 +355,23 @@ Read-Only:
 Read-Only:
 
 - `role_type` (String) The type of the standard role.
+
+
+<a id="nestedatt--remote_info--openai_platform_project"></a>
+### Nested Schema for `remote_info.openai_platform_project`
+
+Read-Only:
+
+- `project_id` (String) The id of the project.
+
+
+<a id="nestedatt--remote_info--openai_platform_service_account"></a>
+### Nested Schema for `remote_info.openai_platform_service_account`
+
+Read-Only:
+
+- `project_id` (String) The id of the project for the service account.
+- `service_account_id` (String) The id of the service account.
 
 
 <a id="nestedatt--remote_info--pagerduty_role"></a>

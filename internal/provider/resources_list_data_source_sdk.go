@@ -50,6 +50,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				results.RemoteInfo = nil
 			} else {
 				results.RemoteInfo = &tfTypes.ResourceRemoteInfo{}
+				if resultsItem.RemoteInfo.AnthropicWorkspace == nil {
+					results.RemoteInfo.AnthropicWorkspace = nil
+				} else {
+					results.RemoteInfo.AnthropicWorkspace = &tfTypes.AnthropicWorkspace{}
+					results.RemoteInfo.AnthropicWorkspace.WorkspaceID = types.StringValue(resultsItem.RemoteInfo.AnthropicWorkspace.WorkspaceID)
+				}
 				if resultsItem.RemoteInfo.AwsAccount == nil {
 					results.RemoteInfo.AwsAccount = nil
 				} else {
@@ -107,6 +113,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				} else {
 					results.RemoteInfo.CoupaRole = &tfTypes.SnowflakeRole{}
 					results.RemoteInfo.CoupaRole.RoleID = types.StringValue(resultsItem.RemoteInfo.CoupaRole.RoleID)
+				}
+				if resultsItem.RemoteInfo.CursorOrganization == nil {
+					results.RemoteInfo.CursorOrganization = nil
+				} else {
+					results.RemoteInfo.CursorOrganization = &tfTypes.CursorOrganization{}
+					results.RemoteInfo.CursorOrganization.OrgID = types.StringValue(resultsItem.RemoteInfo.CursorOrganization.OrgID)
 				}
 				if resultsItem.RemoteInfo.CustomConnector == nil {
 					results.RemoteInfo.CustomConnector = nil
@@ -189,6 +201,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.GcpSQLInstance.InstanceID = types.StringValue(resultsItem.RemoteInfo.GcpSQLInstance.InstanceID)
 					results.RemoteInfo.GcpSQLInstance.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpSQLInstance.ProjectID)
 				}
+				if resultsItem.RemoteInfo.GithubOrg == nil {
+					results.RemoteInfo.GithubOrg = nil
+				} else {
+					results.RemoteInfo.GithubOrg = &tfTypes.GithubOrg{}
+					results.RemoteInfo.GithubOrg.OrgName = types.StringValue(resultsItem.RemoteInfo.GithubOrg.OrgName)
+				}
 				if resultsItem.RemoteInfo.GithubOrgRole == nil {
 					results.RemoteInfo.GithubOrgRole = nil
 				} else {
@@ -230,6 +248,19 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				} else {
 					results.RemoteInfo.OktaStandardRole = &tfTypes.OktaStandardRole{}
 					results.RemoteInfo.OktaStandardRole.RoleType = types.StringValue(resultsItem.RemoteInfo.OktaStandardRole.RoleType)
+				}
+				if resultsItem.RemoteInfo.OpenaiPlatformProject == nil {
+					results.RemoteInfo.OpenaiPlatformProject = nil
+				} else {
+					results.RemoteInfo.OpenaiPlatformProject = &tfTypes.GcpProject{}
+					results.RemoteInfo.OpenaiPlatformProject.ProjectID = types.StringValue(resultsItem.RemoteInfo.OpenaiPlatformProject.ProjectID)
+				}
+				if resultsItem.RemoteInfo.OpenaiPlatformServiceAccount == nil {
+					results.RemoteInfo.OpenaiPlatformServiceAccount = nil
+				} else {
+					results.RemoteInfo.OpenaiPlatformServiceAccount = &tfTypes.OpenaiPlatformServiceAccount{}
+					results.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID = types.StringValue(resultsItem.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID)
+					results.RemoteInfo.OpenaiPlatformServiceAccount.ServiceAccountID = types.StringValue(resultsItem.RemoteInfo.OpenaiPlatformServiceAccount.ServiceAccountID)
 				}
 				if resultsItem.RemoteInfo.PagerdutyRole == nil {
 					results.RemoteInfo.PagerdutyRole = nil
