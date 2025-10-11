@@ -63,7 +63,7 @@ func (s *Owners) Create(ctx context.Context, request shared.CreateOwnerInfo, opt
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createOwner",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -268,7 +268,7 @@ func (s *Owners) Delete(ctx context.Context, request operations.DeleteOwnerReque
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "deleteOwner",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -447,7 +447,7 @@ func (s *Owners) Get(ctx context.Context, request operations.GetOwnersRequest, o
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getOwners",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -650,7 +650,7 @@ func (s *Owners) GetFromName(ctx context.Context, request operations.GetOwnerFro
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getOwnerFromName",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -850,7 +850,7 @@ func (s *Owners) GetID(ctx context.Context, request operations.GetOwnerIDRequest
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getOwnerID",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1049,7 +1049,7 @@ func (s *Owners) Update(ctx context.Context, request shared.UpdateOwnerInfoList,
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateOwners",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -1254,7 +1254,7 @@ func (s *Owners) UpdateUsers(ctx context.Context, request operations.UpdateOwner
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "update_owner_users",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "UserIDList", "json", `request:"mediaType=application/json"`)

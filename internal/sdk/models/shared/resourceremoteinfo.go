@@ -2,6 +2,19 @@
 
 package shared
 
+// AnthropicWorkspace - Remote info for Anthropic workspace.
+type AnthropicWorkspace struct {
+	// The id of the workspace.
+	WorkspaceID string `json:"workspace_id"`
+}
+
+func (a *AnthropicWorkspace) GetWorkspaceID() string {
+	if a == nil {
+		return ""
+	}
+	return a.WorkspaceID
+}
+
 // AwsAccount - Remote info for AWS account.
 type AwsAccount struct {
 	// The id of the AWS account.
@@ -194,6 +207,19 @@ func (c *CoupaRole) GetRoleID() string {
 		return ""
 	}
 	return c.RoleID
+}
+
+// CursorOrganization - Remote info for a Cursor organization.
+type CursorOrganization struct {
+	// The id of the organization.
+	OrgID string `json:"org_id"`
+}
+
+func (c *CursorOrganization) GetOrgID() string {
+	if c == nil {
+		return ""
+	}
+	return c.OrgID
 }
 
 // CustomConnector - Remote info for a custom connector resource.
@@ -433,6 +459,19 @@ func (g *GcpSQLInstance) GetProjectID() string {
 	return g.ProjectID
 }
 
+// GithubOrg - Remote info for GitHub organization.
+type GithubOrg struct {
+	// The name of the organization.
+	OrgName string `json:"org_name"`
+}
+
+func (g *GithubOrg) GetOrgName() string {
+	if g == nil {
+		return ""
+	}
+	return g.OrgName
+}
+
 // GithubOrgRole - Remote info for GitHub organization role.
 type GithubOrgRole struct {
 	// The id of the role.
@@ -524,6 +563,41 @@ func (o *OktaStandardRole) GetRoleType() string {
 	return o.RoleType
 }
 
+// OpenaiPlatformProject - Remote info for OpenAI Platform project.
+type OpenaiPlatformProject struct {
+	// The id of the project.
+	ProjectID string `json:"project_id"`
+}
+
+func (o *OpenaiPlatformProject) GetProjectID() string {
+	if o == nil {
+		return ""
+	}
+	return o.ProjectID
+}
+
+// OpenaiPlatformServiceAccount - Remote info for OpenAI Platform service account.
+type OpenaiPlatformServiceAccount struct {
+	// The id of the project for the service account.
+	ProjectID string `json:"project_id"`
+	// The id of the service account.
+	ServiceAccountID string `json:"service_account_id"`
+}
+
+func (o *OpenaiPlatformServiceAccount) GetProjectID() string {
+	if o == nil {
+		return ""
+	}
+	return o.ProjectID
+}
+
+func (o *OpenaiPlatformServiceAccount) GetServiceAccountID() string {
+	if o == nil {
+		return ""
+	}
+	return o.ServiceAccountID
+}
+
 // PagerdutyRole - Remote info for Pagerduty role.
 type PagerdutyRole struct {
 	// The name of the role.
@@ -600,6 +674,8 @@ func (t *TeleportRole) GetRoleName() string {
 
 // ResourceRemoteInfo - Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields.
 type ResourceRemoteInfo struct {
+	// Remote info for Anthropic workspace.
+	AnthropicWorkspace *AnthropicWorkspace `json:"anthropic_workspace,omitempty"`
 	// Remote info for AWS account.
 	AwsAccount *AwsAccount `json:"aws_account,omitempty"`
 	// Remote info for AWS EC2 instance.
@@ -616,6 +692,8 @@ type ResourceRemoteInfo struct {
 	AwsRdsInstance *AwsRdsInstance `json:"aws_rds_instance,omitempty"`
 	// Remote info for Coupa role.
 	CoupaRole *CoupaRole `json:"coupa_role,omitempty"`
+	// Remote info for a Cursor organization.
+	CursorOrganization *CursorOrganization `json:"cursor_organization,omitempty"`
 	// Remote info for a custom connector resource.
 	CustomConnector *CustomConnector `json:"custom_connector,omitempty"`
 	// Remote info for an Astra role.
@@ -640,6 +718,8 @@ type ResourceRemoteInfo struct {
 	GcpServiceAccount *GcpServiceAccount `json:"gcp_service_account,omitempty"`
 	// Remote info for GCP SQL instance.
 	GcpSQLInstance *GcpSQLInstance `json:"gcp_sql_instance,omitempty"`
+	// Remote info for GitHub organization.
+	GithubOrg *GithubOrg `json:"github_org,omitempty"`
 	// Remote info for GitHub organization role.
 	GithubOrgRole *GithubOrgRole `json:"github_org_role,omitempty"`
 	// Remote info for GitHub repository.
@@ -654,6 +734,10 @@ type ResourceRemoteInfo struct {
 	OktaCustomRole *OktaCustomRole `json:"okta_custom_role,omitempty"`
 	// Remote info for Okta directory standard role.
 	OktaStandardRole *OktaStandardRole `json:"okta_standard_role,omitempty"`
+	// Remote info for OpenAI Platform project.
+	OpenaiPlatformProject *OpenaiPlatformProject `json:"openai_platform_project,omitempty"`
+	// Remote info for OpenAI Platform service account.
+	OpenaiPlatformServiceAccount *OpenaiPlatformServiceAccount `json:"openai_platform_service_account,omitempty"`
 	// Remote info for Pagerduty role.
 	PagerdutyRole *PagerdutyRole `json:"pagerduty_role,omitempty"`
 	// Remote info for Salesforce permission set.
@@ -664,6 +748,13 @@ type ResourceRemoteInfo struct {
 	SalesforceRole *SalesforceRole `json:"salesforce_role,omitempty"`
 	// Remote info for Teleport role.
 	TeleportRole *TeleportRole `json:"teleport_role,omitempty"`
+}
+
+func (r *ResourceRemoteInfo) GetAnthropicWorkspace() *AnthropicWorkspace {
+	if r == nil {
+		return nil
+	}
+	return r.AnthropicWorkspace
 }
 
 func (r *ResourceRemoteInfo) GetAwsAccount() *AwsAccount {
@@ -720,6 +811,13 @@ func (r *ResourceRemoteInfo) GetCoupaRole() *CoupaRole {
 		return nil
 	}
 	return r.CoupaRole
+}
+
+func (r *ResourceRemoteInfo) GetCursorOrganization() *CursorOrganization {
+	if r == nil {
+		return nil
+	}
+	return r.CursorOrganization
 }
 
 func (r *ResourceRemoteInfo) GetCustomConnector() *CustomConnector {
@@ -806,6 +904,13 @@ func (r *ResourceRemoteInfo) GetGcpSQLInstance() *GcpSQLInstance {
 	return r.GcpSQLInstance
 }
 
+func (r *ResourceRemoteInfo) GetGithubOrg() *GithubOrg {
+	if r == nil {
+		return nil
+	}
+	return r.GithubOrg
+}
+
 func (r *ResourceRemoteInfo) GetGithubOrgRole() *GithubOrgRole {
 	if r == nil {
 		return nil
@@ -853,6 +958,20 @@ func (r *ResourceRemoteInfo) GetOktaStandardRole() *OktaStandardRole {
 		return nil
 	}
 	return r.OktaStandardRole
+}
+
+func (r *ResourceRemoteInfo) GetOpenaiPlatformProject() *OpenaiPlatformProject {
+	if r == nil {
+		return nil
+	}
+	return r.OpenaiPlatformProject
+}
+
+func (r *ResourceRemoteInfo) GetOpenaiPlatformServiceAccount() *OpenaiPlatformServiceAccount {
+	if r == nil {
+		return nil
+	}
+	return r.OpenaiPlatformServiceAccount
 }
 
 func (r *ResourceRemoteInfo) GetPagerdutyRole() *PagerdutyRole {

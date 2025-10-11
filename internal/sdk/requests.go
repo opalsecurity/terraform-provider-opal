@@ -63,7 +63,7 @@ func (s *Requests) ApproveRequest(ctx context.Context, request operations.Approv
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "approveRequest",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
@@ -268,7 +268,7 @@ func (s *Requests) CreateRequest(ctx context.Context, request shared.CreateReque
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createRequest",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -473,7 +473,7 @@ func (s *Requests) CreateRequestComment(ctx context.Context, request operations.
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createRequestComment",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
@@ -678,7 +678,7 @@ func (s *Requests) DenyRequest(ctx context.Context, request operations.DenyReque
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "denyRequest",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
@@ -884,7 +884,7 @@ func (s *Requests) Get(ctx context.Context, request operations.GetRequestsReques
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getRequests",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1088,7 +1088,7 @@ func (s *Requests) GetRequest(ctx context.Context, request operations.GetRequest
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getRequest",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1286,7 +1286,7 @@ func (s *Requests) GetRequestComments(ctx context.Context, request operations.Ge
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getRequestComments",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1487,7 +1487,7 @@ func (s *Requests) GetRequestsRelay(ctx context.Context, request operations.GetR
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getRequestsRelay",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 

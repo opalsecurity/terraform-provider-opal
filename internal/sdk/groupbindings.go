@@ -63,7 +63,7 @@ func (s *GroupBindings) CreateGroupBinding(ctx context.Context, request shared.C
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createGroupBinding",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -268,7 +268,7 @@ func (s *GroupBindings) DeleteGroupBinding(ctx context.Context, request operatio
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "deleteGroupBinding",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -447,7 +447,7 @@ func (s *GroupBindings) GetGroupBinding(ctx context.Context, request operations.
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getGroupBinding",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -647,7 +647,7 @@ func (s *GroupBindings) GetGroupBindings(ctx context.Context, request operations
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getGroupBindings",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -850,7 +850,7 @@ func (s *GroupBindings) UpdateGroupBindings(ctx context.Context, request shared.
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateGroupBindings",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)

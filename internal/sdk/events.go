@@ -63,7 +63,7 @@ func (s *Events) Get(ctx context.Context, request operations.GetEventsRequest, o
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getEvents",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 

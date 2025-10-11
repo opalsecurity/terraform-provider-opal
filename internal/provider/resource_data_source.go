@@ -120,6 +120,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"remote_info": schema.SingleNestedAttribute{
 				Computed: true,
 				Attributes: map[string]schema.Attribute{
+					"anthropic_workspace": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"workspace_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the workspace.`,
+							},
+						},
+						Description: `Remote info for Anthropic workspace.`,
+					},
 					"aws_account": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -239,6 +249,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for Coupa role.`,
+					},
+					"cursor_organization": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"org_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the organization.`,
+							},
+						},
+						Description: `Remote info for a Cursor organization.`,
 					},
 					"custom_connector": schema.SingleNestedAttribute{
 						Computed: true,
@@ -396,6 +416,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for GCP SQL instance.`,
 					},
+					"github_org": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"org_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The name of the organization.`,
+							},
+						},
+						Description: `Remote info for GitHub organization.`,
+					},
 					"github_org_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -465,6 +495,30 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for Okta directory standard role.`,
+					},
+					"openai_platform_project": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"project_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the project.`,
+							},
+						},
+						Description: `Remote info for OpenAI Platform project.`,
+					},
+					"openai_platform_service_account": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"project_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the project for the service account.`,
+							},
+							"service_account_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the service account.`,
+							},
+						},
+						Description: `Remote info for OpenAI Platform service account.`,
 					},
 					"pagerduty_role": schema.SingleNestedAttribute{
 						Computed: true,
