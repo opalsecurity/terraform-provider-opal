@@ -74,6 +74,11 @@ const (
 	ResourceTypeEnumIlevelAdvancedRole                ResourceTypeEnum = "ILEVEL_ADVANCED_ROLE"
 	ResourceTypeEnumDatastaxAstraRole                 ResourceTypeEnum = "DATASTAX_ASTRA_ROLE"
 	ResourceTypeEnumCoupaRole                         ResourceTypeEnum = "COUPA_ROLE"
+	ResourceTypeEnumCursorOrganization                ResourceTypeEnum = "CURSOR_ORGANIZATION"
+	ResourceTypeEnumOpenaiPlatformProject             ResourceTypeEnum = "OPENAI_PLATFORM_PROJECT"
+	ResourceTypeEnumOpenaiPlatformServiceAccount      ResourceTypeEnum = "OPENAI_PLATFORM_SERVICE_ACCOUNT"
+	ResourceTypeEnumAnthropicWorkspace                ResourceTypeEnum = "ANTHROPIC_WORKSPACE"
+	ResourceTypeEnumGitHubOrg                         ResourceTypeEnum = "GIT_HUB_ORG"
 )
 
 func (e ResourceTypeEnum) ToPointer() *ResourceTypeEnum {
@@ -210,6 +215,16 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "DATASTAX_ASTRA_ROLE":
 		fallthrough
 	case "COUPA_ROLE":
+		fallthrough
+	case "CURSOR_ORGANIZATION":
+		fallthrough
+	case "OPENAI_PLATFORM_PROJECT":
+		fallthrough
+	case "OPENAI_PLATFORM_SERVICE_ACCOUNT":
+		fallthrough
+	case "ANTHROPIC_WORKSPACE":
+		fallthrough
+	case "GIT_HUB_ORG":
 		*e = ResourceTypeEnum(v)
 		return nil
 	default:

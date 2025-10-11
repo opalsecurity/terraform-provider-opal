@@ -17,6 +17,7 @@ const (
 	RolePermissionTargetTypeEnumBundle       RolePermissionTargetTypeEnum = "BUNDLE"
 	RolePermissionTargetTypeEnumUser         RolePermissionTargetTypeEnum = "USER"
 	RolePermissionTargetTypeEnumAccessReview RolePermissionTargetTypeEnum = "ACCESS_REVIEW"
+	RolePermissionTargetTypeEnumOwner        RolePermissionTargetTypeEnum = "OWNER"
 )
 
 func (e RolePermissionTargetTypeEnum) ToPointer() *RolePermissionTargetTypeEnum {
@@ -39,6 +40,8 @@ func (e *RolePermissionTargetTypeEnum) UnmarshalJSON(data []byte) error {
 	case "USER":
 		fallthrough
 	case "ACCESS_REVIEW":
+		fallthrough
+	case "OWNER":
 		*e = RolePermissionTargetTypeEnum(v)
 		return nil
 	default:

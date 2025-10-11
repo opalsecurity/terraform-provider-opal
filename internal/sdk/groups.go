@@ -63,7 +63,7 @@ func (s *Groups) AddGroupContainingGroup(ctx context.Context, request operations
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "add_group_containing_group",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "GroupContainingGroup", "json", `request:"mediaType=application/json"`)
@@ -268,7 +268,7 @@ func (s *Groups) Create(ctx context.Context, request shared.CreateGroupInfo, opt
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createGroup",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -473,7 +473,7 @@ func (s *Groups) CreateResources(ctx context.Context, request operations.CreateG
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createGroupResources",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "RequestBody", "json", `request:"mediaType=application/json"`)
@@ -682,7 +682,7 @@ func (s *Groups) CreateUser(ctx context.Context, request operations.CreateGroupU
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createGroupUser",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
@@ -887,7 +887,7 @@ func (s *Groups) Delete(ctx context.Context, request operations.DeleteGroupReque
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "deleteGroup",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1065,7 +1065,7 @@ func (s *Groups) DeleteUser(ctx context.Context, request operations.DeleteGroupU
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "deleteGroupUser",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1248,7 +1248,7 @@ func (s *Groups) GetGroup(ctx context.Context, request operations.GetGroupReques
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getGroup",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1448,7 +1448,7 @@ func (s *Groups) GetGroupContainingGroup(ctx context.Context, request operations
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "get_group_containing_group",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1647,7 +1647,7 @@ func (s *Groups) GetMessageChannels(ctx context.Context, request operations.GetG
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getGroupMessageChannels",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1846,7 +1846,7 @@ func (s *Groups) GetOnCallSchedules(ctx context.Context, request operations.GetG
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getGroupOnCallSchedules",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -2045,7 +2045,7 @@ func (s *Groups) GetResources(ctx context.Context, request operations.GetGroupRe
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getGroupResources",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -2246,7 +2246,7 @@ func (s *Groups) GetReviewersStages(ctx context.Context, request operations.GetG
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getGroupReviewersStages",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -2445,7 +2445,7 @@ func (s *Groups) GetTags(ctx context.Context, request operations.GetGroupTagsReq
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getGroupTags",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -2644,7 +2644,7 @@ func (s *Groups) GetUserGroups(ctx context.Context, request operations.GetUserGr
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "get_user_groups",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -2846,7 +2846,7 @@ func (s *Groups) GetUsers(ctx context.Context, request operations.GetGroupUsersR
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getGroupUsers",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -3049,7 +3049,7 @@ func (s *Groups) GetVisibility(ctx context.Context, request operations.GetGroupV
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getGroupVisibility",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -3249,7 +3249,7 @@ func (s *Groups) List(ctx context.Context, request operations.GetGroupsRequest, 
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getGroups",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -3452,7 +3452,7 @@ func (s *Groups) RemoveGroupContainingGroup(ctx context.Context, request operati
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "remove_group_containing_group",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -3630,7 +3630,7 @@ func (s *Groups) Update(ctx context.Context, request shared.UpdateGroupInfoList,
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateGroups",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -3835,7 +3835,7 @@ func (s *Groups) UpdateGroupUser(ctx context.Context, request operations.UpdateG
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "update_group_user",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
@@ -4040,7 +4040,7 @@ func (s *Groups) UpdateMessageChannels(ctx context.Context, request operations.U
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateGroupMessageChannels",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "MessageChannelIDList", "json", `request:"mediaType=application/json"`)
@@ -4225,7 +4225,7 @@ func (s *Groups) UpdateOnCallSchedules(ctx context.Context, request operations.U
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateGroupOnCallSchedules",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "OnCallScheduleIDList", "json", `request:"mediaType=application/json"`)
@@ -4410,7 +4410,7 @@ func (s *Groups) UpdateResources(ctx context.Context, request operations.UpdateG
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateGroupResources",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "UpdateGroupResourcesInfo", "json", `request:"mediaType=application/json"`)
@@ -4597,7 +4597,7 @@ func (s *Groups) UpdateReviewersStages(ctx context.Context, request operations.U
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateGroupReviewersStages",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "ReviewerStageList", "json", `request:"mediaType=application/json"`)
@@ -4802,7 +4802,7 @@ func (s *Groups) UpdateVisibility(ctx context.Context, request operations.Update
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateGroupVisibility",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "VisibilityInfo", "json", `request:"mediaType=application/json"`)

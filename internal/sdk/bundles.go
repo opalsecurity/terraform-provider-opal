@@ -63,7 +63,7 @@ func (s *Bundles) AddBundleGroup(ctx context.Context, request operations.AddBund
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "addBundleGroup",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
@@ -268,7 +268,7 @@ func (s *Bundles) AddBundleResource(ctx context.Context, request operations.AddB
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "addBundleResource",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "RequestBody", "json", `request:"mediaType=application/json"`)
@@ -473,7 +473,7 @@ func (s *Bundles) CreateBundle(ctx context.Context, request shared.CreateBundleI
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createBundle",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -678,7 +678,7 @@ func (s *Bundles) DeleteBundle(ctx context.Context, request operations.DeleteBun
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "deleteBundle",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -857,7 +857,7 @@ func (s *Bundles) GetBundle(ctx context.Context, request operations.GetBundleReq
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getBundle",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1055,7 +1055,7 @@ func (s *Bundles) GetBundleGroups(ctx context.Context, request operations.GetBun
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getBundleGroups",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1257,7 +1257,7 @@ func (s *Bundles) GetBundleResources(ctx context.Context, request operations.Get
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getBundleResources",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1459,7 +1459,7 @@ func (s *Bundles) GetBundleVisibility(ctx context.Context, request operations.Ge
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getBundleVisibility",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1658,7 +1658,7 @@ func (s *Bundles) GetBundles(ctx context.Context, request operations.GetBundlesR
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getBundles",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1860,7 +1860,7 @@ func (s *Bundles) RemoveBundleGroup(ctx context.Context, request operations.Remo
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "removeBundleGroup",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -2042,7 +2042,7 @@ func (s *Bundles) RemoveBundleResource(ctx context.Context, request operations.R
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "removeBundleResource",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -2224,7 +2224,7 @@ func (s *Bundles) SetBundleVisibility(ctx context.Context, request operations.Se
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "setBundleVisibility",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "VisibilityInfo", "json", `request:"mediaType=application/json"`)
@@ -2409,7 +2409,7 @@ func (s *Bundles) UpdateBundle(ctx context.Context, request operations.UpdateBun
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateBundle",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Bundle", "json", `request:"mediaType=application/json"`)

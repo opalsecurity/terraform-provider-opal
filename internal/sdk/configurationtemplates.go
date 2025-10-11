@@ -63,7 +63,7 @@ func (s *ConfigurationTemplates) Create(ctx context.Context, request shared.Crea
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createConfigurationTemplate",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -268,7 +268,7 @@ func (s *ConfigurationTemplates) Delete(ctx context.Context, request operations.
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "deleteConfigurationTemplate",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -415,7 +415,8 @@ func (s *ConfigurationTemplates) Delete(ctx context.Context, request operations.
 
 }
 
-// Get - Returns a list of `ConfigurationTemplate` objects.
+// Get message channels
+// Returns a list of `MessageChannel` objects.
 func (s *ConfigurationTemplates) Get(ctx context.Context, opts ...operations.Option) (*operations.GetConfigurationTemplatesResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -446,7 +447,7 @@ func (s *ConfigurationTemplates) Get(ctx context.Context, opts ...operations.Opt
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getConfigurationTemplates",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -645,7 +646,7 @@ func (s *ConfigurationTemplates) Update(ctx context.Context, request shared.Upda
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateConfigurationTemplate",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)

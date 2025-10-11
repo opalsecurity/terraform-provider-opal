@@ -63,7 +63,7 @@ func (s *Uars) Create(ctx context.Context, request shared.CreateUARInfo, opts ..
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createUAR",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -268,7 +268,7 @@ func (s *Uars) Get(ctx context.Context, request operations.GetUARsRequest, opts 
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getUARs",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -471,7 +471,7 @@ func (s *Uars) GetID(ctx context.Context, request operations.GetUARIDRequest, op
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getUARID",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 

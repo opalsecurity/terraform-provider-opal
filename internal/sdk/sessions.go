@@ -63,7 +63,7 @@ func (s *Sessions) Get(ctx context.Context, request operations.GetSessionsReques
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getSessions",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 

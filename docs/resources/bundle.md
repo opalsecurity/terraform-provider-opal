@@ -36,7 +36,7 @@ resource "opal_bundle" "my_bundle" {
 ### Optional
 
 - `description` (String) A brief description of the bundle.
-- `visibility_group_ids` (Set of String)
+- `visibility_group_ids` (Set of String) Default: []
 
 ### Read-Only
 

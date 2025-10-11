@@ -92,7 +92,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
 - `break_glass_user_ids` (Set of String) The IDs of the break glass users linked to the configuration template.
 - `custom_request_notification` (String) Custom request notification sent upon request approval for this configuration template.
 - `linked_audit_message_channel_ids` (Set of String) The IDs of the audit message channels linked to the configuration template.
-- `member_on_call_schedule_ids` (Set of String) The IDs of the on-call schedules linked to the configuration template.
+- `member_on_call_schedule_ids` (Set of String) The IDs of the on-call schedules linked to the configuration template. Default: []
 - `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template. Default: false
 - `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--ticket_propagation))
@@ -111,7 +111,7 @@ Required:
 
 Optional:
 
-- `visibility_group_ids` (Set of String)
+- `visibility_group_ids` (Set of String) Default: []
 
 
 <a id="nestedatt--request_configurations"></a>
@@ -139,8 +139,8 @@ Optional:
 
 Optional:
 
-- `group_ids` (Set of String) The list of group IDs to match.
-- `role_remote_ids` (Set of String) The list of role remote IDs to match.
+- `group_ids` (Set of String) The list of group IDs to match. Default: []
+- `role_remote_ids` (Set of String) The list of role remote IDs to match. Default: []
 
 
 <a id="nestedatt--request_configurations--reviewer_stages"></a>

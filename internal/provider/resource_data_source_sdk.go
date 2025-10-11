@@ -43,6 +43,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			r.RemoteInfo = nil
 		} else {
 			r.RemoteInfo = &tfTypes.ResourceRemoteInfo{}
+			if resp.RemoteInfo.AnthropicWorkspace == nil {
+				r.RemoteInfo.AnthropicWorkspace = nil
+			} else {
+				r.RemoteInfo.AnthropicWorkspace = &tfTypes.AnthropicWorkspace{}
+				r.RemoteInfo.AnthropicWorkspace.WorkspaceID = types.StringValue(resp.RemoteInfo.AnthropicWorkspace.WorkspaceID)
+			}
 			if resp.RemoteInfo.AwsAccount == nil {
 				r.RemoteInfo.AwsAccount = nil
 			} else {
@@ -100,6 +106,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			} else {
 				r.RemoteInfo.CoupaRole = &tfTypes.SnowflakeRole{}
 				r.RemoteInfo.CoupaRole.RoleID = types.StringValue(resp.RemoteInfo.CoupaRole.RoleID)
+			}
+			if resp.RemoteInfo.CursorOrganization == nil {
+				r.RemoteInfo.CursorOrganization = nil
+			} else {
+				r.RemoteInfo.CursorOrganization = &tfTypes.CursorOrganization{}
+				r.RemoteInfo.CursorOrganization.OrgID = types.StringValue(resp.RemoteInfo.CursorOrganization.OrgID)
 			}
 			if resp.RemoteInfo.CustomConnector == nil {
 				r.RemoteInfo.CustomConnector = nil
@@ -182,6 +194,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.GcpSQLInstance.InstanceID = types.StringValue(resp.RemoteInfo.GcpSQLInstance.InstanceID)
 				r.RemoteInfo.GcpSQLInstance.ProjectID = types.StringValue(resp.RemoteInfo.GcpSQLInstance.ProjectID)
 			}
+			if resp.RemoteInfo.GithubOrg == nil {
+				r.RemoteInfo.GithubOrg = nil
+			} else {
+				r.RemoteInfo.GithubOrg = &tfTypes.GithubOrg{}
+				r.RemoteInfo.GithubOrg.OrgName = types.StringValue(resp.RemoteInfo.GithubOrg.OrgName)
+			}
 			if resp.RemoteInfo.GithubOrgRole == nil {
 				r.RemoteInfo.GithubOrgRole = nil
 			} else {
@@ -223,6 +241,19 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			} else {
 				r.RemoteInfo.OktaStandardRole = &tfTypes.OktaStandardRole{}
 				r.RemoteInfo.OktaStandardRole.RoleType = types.StringValue(resp.RemoteInfo.OktaStandardRole.RoleType)
+			}
+			if resp.RemoteInfo.OpenaiPlatformProject == nil {
+				r.RemoteInfo.OpenaiPlatformProject = nil
+			} else {
+				r.RemoteInfo.OpenaiPlatformProject = &tfTypes.GcpProject{}
+				r.RemoteInfo.OpenaiPlatformProject.ProjectID = types.StringValue(resp.RemoteInfo.OpenaiPlatformProject.ProjectID)
+			}
+			if resp.RemoteInfo.OpenaiPlatformServiceAccount == nil {
+				r.RemoteInfo.OpenaiPlatformServiceAccount = nil
+			} else {
+				r.RemoteInfo.OpenaiPlatformServiceAccount = &tfTypes.OpenaiPlatformServiceAccount{}
+				r.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID = types.StringValue(resp.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID)
+				r.RemoteInfo.OpenaiPlatformServiceAccount.ServiceAccountID = types.StringValue(resp.RemoteInfo.OpenaiPlatformServiceAccount.ServiceAccountID)
 			}
 			if resp.RemoteInfo.PagerdutyRole == nil {
 				r.RemoteInfo.PagerdutyRole = nil
