@@ -6,6 +6,9 @@ resource "opal_resource" "my_resource" {
   extensions_duration_in_minutes = 120
   name                           = "mongo-db-prod"
   remote_info = {
+    anthropic_workspace = {
+      workspace_id = "ws-123456"
+    }
     aws_account = {
       account_id             = 234234234234
       organizational_unit_id = "ou-1234"
@@ -37,8 +40,50 @@ resource "opal_resource" "my_resource" {
       region      = "us-east-2"
       resource_id = "db-AOO8V0XUCNU13XLZXQDQRSN0NQ"
     }
+    azure_enterprise_app = {
+      resource_id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+    }
+    azure_entra_id_role = {
+      resource_id = "11111111-2222-3333-4444-555555555555"
+    }
+    azure_management_group = {
+      resource_id = "/providers/Microsoft.Management/managementGroups/my-mg"
+    }
+    azure_resource_group = {
+      resource_id = "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg"
+    }
+    azure_sql_database = {
+      resource_id = "/subscriptions/0000/resourceGroups/rg/providers/Microsoft.Sql/servers/sqldev01/databases/db01"
+    }
+    azure_sql_managed_database = {
+      resource_id = "/subscriptions/0000/resourceGroups/rg/providers/Microsoft.Sql/managedInstances/mi01/databases/midb01"
+    }
+    azure_sql_managed_instance = {
+      resource_id = "/subscriptions/0000/resourceGroups/rg/providers/Microsoft.Sql/managedInstances/mi01"
+    }
+    azure_sql_server = {
+      resource_id = "/subscriptions/0000/resourceGroups/rg/providers/Microsoft.Sql/servers/sqldev01"
+    }
+    azure_storage_account = {
+      resource_id = "/subscriptions/0000/resourceGroups/rg/providers/Microsoft.Storage/storageAccounts/sa01"
+    }
+    azure_storage_container = {
+      resource_id = "/subscriptions/0000/resourceGroups/rg/providers/Microsoft.Storage/storageAccounts/sa01/blobServices/default/containers/c01"
+    }
+    azure_subscription = {
+      resource_id = "/subscriptions/00000000-0000-0000-0000-000000000000"
+    }
+    azure_user_assigned_managed_identity = {
+      resource_id = "/subscriptions/0000/resourceGroups/rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id01"
+    }
+    azure_virtual_machine = {
+      resource_id = "/subscriptions/0000/resourceGroups/rg/providers/Microsoft.Compute/virtualMachines/vm01"
+    }
     coupa_role = {
       role_id = 999
+    }
+    cursor_organization = {
+      org_id = "123e4567-e89b-12d3-a456-426614174000"
     }
     custom_connector = {
       can_have_usage_events = false
@@ -85,6 +130,9 @@ resource "opal_resource" "my_resource" {
       instance_id = "example-sql-898931321"
       project_id  = "example-project-898931321"
     }
+    github_org = {
+      org_name = "Opal Security"
+    }
     github_org_role = {
       role_id = 112233
     }
@@ -105,6 +153,13 @@ resource "opal_resource" "my_resource" {
     }
     okta_standard_role = {
       role_type = "ORG_ADMIN"
+    }
+    openai_platform_project = {
+      project_id = "proj_abc"
+    }
+    openai_platform_service_account = {
+      project_id         = "proj_abc"
+      service_account_id = "svc_acct_abc"
     }
     pagerduty_role = {
       role_name = "owner"

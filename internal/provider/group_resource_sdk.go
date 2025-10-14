@@ -33,6 +33,10 @@ func (r *GroupResourceModel) RefreshFromOperationsGetGroupMessageChannelsRespons
 
 			r.MessageChannels.Channels = append(r.MessageChannels.Channels, channels)
 		}
+		r.MessageChannels.MessageChannelIds = make([]types.String, 0, len(resp.MessageChannelIds))
+		for _, v := range resp.MessageChannelIds {
+			r.MessageChannels.MessageChannelIds = append(r.MessageChannels.MessageChannelIds, types.StringValue(v))
+		}
 	}
 
 	return diags
@@ -42,6 +46,10 @@ func (r *GroupResourceModel) RefreshFromOperationsGetGroupOnCallSchedulesRespons
 	var diags diag.Diagnostics
 
 	if resp != nil {
+		r.OnCallSchedules.OnCallScheduleIds = make([]types.String, 0, len(resp.OnCallScheduleIds))
+		for _, v := range resp.OnCallScheduleIds {
+			r.OnCallSchedules.OnCallScheduleIds = append(r.OnCallSchedules.OnCallScheduleIds, types.StringValue(v))
+		}
 		r.OnCallSchedules.OnCallSchedules = []tfTypes.OnCallSchedule{}
 
 		for _, onCallSchedulesItem := range resp.OnCallSchedules {

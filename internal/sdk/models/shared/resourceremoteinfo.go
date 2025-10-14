@@ -2,6 +2,19 @@
 
 package shared
 
+// AnthropicWorkspace - Remote info for Anthropic workspace.
+type AnthropicWorkspace struct {
+	// The id of the workspace.
+	WorkspaceID string `json:"workspace_id"`
+}
+
+func (a *AnthropicWorkspace) GetWorkspaceID() string {
+	if a == nil {
+		return ""
+	}
+	return a.WorkspaceID
+}
+
 // AwsAccount - Remote info for AWS account.
 type AwsAccount struct {
 	// The id of the AWS account.
@@ -183,6 +196,175 @@ func (a *AwsRdsInstance) GetResourceID() string {
 	return a.ResourceID
 }
 
+// AzureEnterpriseApp - Remote info for Azure Enterprise App.
+type AzureEnterpriseApp struct {
+	// The remote application identifier (service principal or application object ID).
+	ResourceID string `json:"resource_id"`
+}
+
+func (a *AzureEnterpriseApp) GetResourceID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ResourceID
+}
+
+// AzureEntraIDRole - Remote info for Azure Entra ID role.
+type AzureEntraIDRole struct {
+	// The remote role identifier from Entra (object ID).
+	ResourceID string `json:"resource_id"`
+}
+
+func (a *AzureEntraIDRole) GetResourceID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ResourceID
+}
+
+// AzureManagementGroup - Remote info for Azure management group.
+type AzureManagementGroup struct {
+	// The ARM resource ID of the management group.
+	ResourceID string `json:"resource_id"`
+}
+
+func (a *AzureManagementGroup) GetResourceID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ResourceID
+}
+
+// AzureResourceGroup - Remote info for Azure resource group.
+type AzureResourceGroup struct {
+	// The ARM resource ID of the resource group.
+	ResourceID string `json:"resource_id"`
+}
+
+func (a *AzureResourceGroup) GetResourceID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ResourceID
+}
+
+// AzureSQLDatabase - Remote info for Azure SQL database.
+type AzureSQLDatabase struct {
+	// The ARM resource ID of the SQL database.
+	ResourceID string `json:"resource_id"`
+}
+
+func (a *AzureSQLDatabase) GetResourceID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ResourceID
+}
+
+// AzureSQLManagedDatabase - Remote info for Azure SQL managed database.
+type AzureSQLManagedDatabase struct {
+	// The ARM resource ID of the SQL managed database.
+	ResourceID string `json:"resource_id"`
+}
+
+func (a *AzureSQLManagedDatabase) GetResourceID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ResourceID
+}
+
+// AzureSQLManagedInstance - Remote info for Azure SQL managed instance.
+type AzureSQLManagedInstance struct {
+	// The ARM resource ID of the SQL managed instance.
+	ResourceID string `json:"resource_id"`
+}
+
+func (a *AzureSQLManagedInstance) GetResourceID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ResourceID
+}
+
+// AzureSQLServer - Remote info for Azure SQL server.
+type AzureSQLServer struct {
+	// The ARM resource ID of the SQL server.
+	ResourceID string `json:"resource_id"`
+}
+
+func (a *AzureSQLServer) GetResourceID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ResourceID
+}
+
+// AzureStorageAccount - Remote info for Azure storage account.
+type AzureStorageAccount struct {
+	// The ARM resource ID of the storage account.
+	ResourceID string `json:"resource_id"`
+}
+
+func (a *AzureStorageAccount) GetResourceID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ResourceID
+}
+
+// AzureStorageContainer - Remote info for Azure storage container.
+type AzureStorageContainer struct {
+	// The ARM resource ID of the storage container.
+	ResourceID string `json:"resource_id"`
+}
+
+func (a *AzureStorageContainer) GetResourceID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ResourceID
+}
+
+// AzureSubscription - Remote info for Azure subscription.
+type AzureSubscription struct {
+	// The ARM resource ID of the subscription.
+	ResourceID string `json:"resource_id"`
+}
+
+func (a *AzureSubscription) GetResourceID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ResourceID
+}
+
+// AzureUserAssignedManagedIdentity - Remote info for Azure user assigned managed identity.
+type AzureUserAssignedManagedIdentity struct {
+	// The ARM resource ID of the user assigned managed identity.
+	ResourceID string `json:"resource_id"`
+}
+
+func (a *AzureUserAssignedManagedIdentity) GetResourceID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ResourceID
+}
+
+// AzureVirtualMachine - Remote info for Azure virtual machine.
+type AzureVirtualMachine struct {
+	// The ARM resource ID of the virtual machine.
+	ResourceID string `json:"resource_id"`
+}
+
+func (a *AzureVirtualMachine) GetResourceID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ResourceID
+}
+
 // CoupaRole - Remote info for Coupa role.
 type CoupaRole struct {
 	// The id of the role.
@@ -194,6 +376,19 @@ func (c *CoupaRole) GetRoleID() string {
 		return ""
 	}
 	return c.RoleID
+}
+
+// CursorOrganization - Remote info for a Cursor organization.
+type CursorOrganization struct {
+	// The id of the organization.
+	OrgID string `json:"org_id"`
+}
+
+func (c *CursorOrganization) GetOrgID() string {
+	if c == nil {
+		return ""
+	}
+	return c.OrgID
 }
 
 // CustomConnector - Remote info for a custom connector resource.
@@ -433,6 +628,19 @@ func (g *GcpSQLInstance) GetProjectID() string {
 	return g.ProjectID
 }
 
+// GithubOrg - Remote info for GitHub organization.
+type GithubOrg struct {
+	// The name of the organization.
+	OrgName string `json:"org_name"`
+}
+
+func (g *GithubOrg) GetOrgName() string {
+	if g == nil {
+		return ""
+	}
+	return g.OrgName
+}
+
 // GithubOrgRole - Remote info for GitHub organization role.
 type GithubOrgRole struct {
 	// The id of the role.
@@ -524,6 +732,41 @@ func (o *OktaStandardRole) GetRoleType() string {
 	return o.RoleType
 }
 
+// OpenaiPlatformProject - Remote info for OpenAI Platform project.
+type OpenaiPlatformProject struct {
+	// The id of the project.
+	ProjectID string `json:"project_id"`
+}
+
+func (o *OpenaiPlatformProject) GetProjectID() string {
+	if o == nil {
+		return ""
+	}
+	return o.ProjectID
+}
+
+// OpenaiPlatformServiceAccount - Remote info for OpenAI Platform service account.
+type OpenaiPlatformServiceAccount struct {
+	// The id of the project for the service account.
+	ProjectID string `json:"project_id"`
+	// The id of the service account.
+	ServiceAccountID string `json:"service_account_id"`
+}
+
+func (o *OpenaiPlatformServiceAccount) GetProjectID() string {
+	if o == nil {
+		return ""
+	}
+	return o.ProjectID
+}
+
+func (o *OpenaiPlatformServiceAccount) GetServiceAccountID() string {
+	if o == nil {
+		return ""
+	}
+	return o.ServiceAccountID
+}
+
 // PagerdutyRole - Remote info for Pagerduty role.
 type PagerdutyRole struct {
 	// The name of the role.
@@ -600,6 +843,8 @@ func (t *TeleportRole) GetRoleName() string {
 
 // ResourceRemoteInfo - Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields.
 type ResourceRemoteInfo struct {
+	// Remote info for Anthropic workspace.
+	AnthropicWorkspace *AnthropicWorkspace `json:"anthropic_workspace,omitempty"`
 	// Remote info for AWS account.
 	AwsAccount *AwsAccount `json:"aws_account,omitempty"`
 	// Remote info for AWS EC2 instance.
@@ -614,8 +859,36 @@ type ResourceRemoteInfo struct {
 	AwsPermissionSet *AwsPermissionSet `json:"aws_permission_set,omitempty"`
 	// Remote info for AWS RDS instance.
 	AwsRdsInstance *AwsRdsInstance `json:"aws_rds_instance,omitempty"`
+	// Remote info for Azure Enterprise App.
+	AzureEnterpriseApp *AzureEnterpriseApp `json:"azure_enterprise_app,omitempty"`
+	// Remote info for Azure Entra ID role.
+	AzureEntraIDRole *AzureEntraIDRole `json:"azure_entra_id_role,omitempty"`
+	// Remote info for Azure management group.
+	AzureManagementGroup *AzureManagementGroup `json:"azure_management_group,omitempty"`
+	// Remote info for Azure resource group.
+	AzureResourceGroup *AzureResourceGroup `json:"azure_resource_group,omitempty"`
+	// Remote info for Azure SQL database.
+	AzureSQLDatabase *AzureSQLDatabase `json:"azure_sql_database,omitempty"`
+	// Remote info for Azure SQL managed database.
+	AzureSQLManagedDatabase *AzureSQLManagedDatabase `json:"azure_sql_managed_database,omitempty"`
+	// Remote info for Azure SQL managed instance.
+	AzureSQLManagedInstance *AzureSQLManagedInstance `json:"azure_sql_managed_instance,omitempty"`
+	// Remote info for Azure SQL server.
+	AzureSQLServer *AzureSQLServer `json:"azure_sql_server,omitempty"`
+	// Remote info for Azure storage account.
+	AzureStorageAccount *AzureStorageAccount `json:"azure_storage_account,omitempty"`
+	// Remote info for Azure storage container.
+	AzureStorageContainer *AzureStorageContainer `json:"azure_storage_container,omitempty"`
+	// Remote info for Azure subscription.
+	AzureSubscription *AzureSubscription `json:"azure_subscription,omitempty"`
+	// Remote info for Azure user assigned managed identity.
+	AzureUserAssignedManagedIdentity *AzureUserAssignedManagedIdentity `json:"azure_user_assigned_managed_identity,omitempty"`
+	// Remote info for Azure virtual machine.
+	AzureVirtualMachine *AzureVirtualMachine `json:"azure_virtual_machine,omitempty"`
 	// Remote info for Coupa role.
 	CoupaRole *CoupaRole `json:"coupa_role,omitempty"`
+	// Remote info for a Cursor organization.
+	CursorOrganization *CursorOrganization `json:"cursor_organization,omitempty"`
 	// Remote info for a custom connector resource.
 	CustomConnector *CustomConnector `json:"custom_connector,omitempty"`
 	// Remote info for an Astra role.
@@ -640,6 +913,8 @@ type ResourceRemoteInfo struct {
 	GcpServiceAccount *GcpServiceAccount `json:"gcp_service_account,omitempty"`
 	// Remote info for GCP SQL instance.
 	GcpSQLInstance *GcpSQLInstance `json:"gcp_sql_instance,omitempty"`
+	// Remote info for GitHub organization.
+	GithubOrg *GithubOrg `json:"github_org,omitempty"`
 	// Remote info for GitHub organization role.
 	GithubOrgRole *GithubOrgRole `json:"github_org_role,omitempty"`
 	// Remote info for GitHub repository.
@@ -654,6 +929,10 @@ type ResourceRemoteInfo struct {
 	OktaCustomRole *OktaCustomRole `json:"okta_custom_role,omitempty"`
 	// Remote info for Okta directory standard role.
 	OktaStandardRole *OktaStandardRole `json:"okta_standard_role,omitempty"`
+	// Remote info for OpenAI Platform project.
+	OpenaiPlatformProject *OpenaiPlatformProject `json:"openai_platform_project,omitempty"`
+	// Remote info for OpenAI Platform service account.
+	OpenaiPlatformServiceAccount *OpenaiPlatformServiceAccount `json:"openai_platform_service_account,omitempty"`
 	// Remote info for Pagerduty role.
 	PagerdutyRole *PagerdutyRole `json:"pagerduty_role,omitempty"`
 	// Remote info for Salesforce permission set.
@@ -664,6 +943,13 @@ type ResourceRemoteInfo struct {
 	SalesforceRole *SalesforceRole `json:"salesforce_role,omitempty"`
 	// Remote info for Teleport role.
 	TeleportRole *TeleportRole `json:"teleport_role,omitempty"`
+}
+
+func (r *ResourceRemoteInfo) GetAnthropicWorkspace() *AnthropicWorkspace {
+	if r == nil {
+		return nil
+	}
+	return r.AnthropicWorkspace
 }
 
 func (r *ResourceRemoteInfo) GetAwsAccount() *AwsAccount {
@@ -715,11 +1001,109 @@ func (r *ResourceRemoteInfo) GetAwsRdsInstance() *AwsRdsInstance {
 	return r.AwsRdsInstance
 }
 
+func (r *ResourceRemoteInfo) GetAzureEnterpriseApp() *AzureEnterpriseApp {
+	if r == nil {
+		return nil
+	}
+	return r.AzureEnterpriseApp
+}
+
+func (r *ResourceRemoteInfo) GetAzureEntraIDRole() *AzureEntraIDRole {
+	if r == nil {
+		return nil
+	}
+	return r.AzureEntraIDRole
+}
+
+func (r *ResourceRemoteInfo) GetAzureManagementGroup() *AzureManagementGroup {
+	if r == nil {
+		return nil
+	}
+	return r.AzureManagementGroup
+}
+
+func (r *ResourceRemoteInfo) GetAzureResourceGroup() *AzureResourceGroup {
+	if r == nil {
+		return nil
+	}
+	return r.AzureResourceGroup
+}
+
+func (r *ResourceRemoteInfo) GetAzureSQLDatabase() *AzureSQLDatabase {
+	if r == nil {
+		return nil
+	}
+	return r.AzureSQLDatabase
+}
+
+func (r *ResourceRemoteInfo) GetAzureSQLManagedDatabase() *AzureSQLManagedDatabase {
+	if r == nil {
+		return nil
+	}
+	return r.AzureSQLManagedDatabase
+}
+
+func (r *ResourceRemoteInfo) GetAzureSQLManagedInstance() *AzureSQLManagedInstance {
+	if r == nil {
+		return nil
+	}
+	return r.AzureSQLManagedInstance
+}
+
+func (r *ResourceRemoteInfo) GetAzureSQLServer() *AzureSQLServer {
+	if r == nil {
+		return nil
+	}
+	return r.AzureSQLServer
+}
+
+func (r *ResourceRemoteInfo) GetAzureStorageAccount() *AzureStorageAccount {
+	if r == nil {
+		return nil
+	}
+	return r.AzureStorageAccount
+}
+
+func (r *ResourceRemoteInfo) GetAzureStorageContainer() *AzureStorageContainer {
+	if r == nil {
+		return nil
+	}
+	return r.AzureStorageContainer
+}
+
+func (r *ResourceRemoteInfo) GetAzureSubscription() *AzureSubscription {
+	if r == nil {
+		return nil
+	}
+	return r.AzureSubscription
+}
+
+func (r *ResourceRemoteInfo) GetAzureUserAssignedManagedIdentity() *AzureUserAssignedManagedIdentity {
+	if r == nil {
+		return nil
+	}
+	return r.AzureUserAssignedManagedIdentity
+}
+
+func (r *ResourceRemoteInfo) GetAzureVirtualMachine() *AzureVirtualMachine {
+	if r == nil {
+		return nil
+	}
+	return r.AzureVirtualMachine
+}
+
 func (r *ResourceRemoteInfo) GetCoupaRole() *CoupaRole {
 	if r == nil {
 		return nil
 	}
 	return r.CoupaRole
+}
+
+func (r *ResourceRemoteInfo) GetCursorOrganization() *CursorOrganization {
+	if r == nil {
+		return nil
+	}
+	return r.CursorOrganization
 }
 
 func (r *ResourceRemoteInfo) GetCustomConnector() *CustomConnector {
@@ -806,6 +1190,13 @@ func (r *ResourceRemoteInfo) GetGcpSQLInstance() *GcpSQLInstance {
 	return r.GcpSQLInstance
 }
 
+func (r *ResourceRemoteInfo) GetGithubOrg() *GithubOrg {
+	if r == nil {
+		return nil
+	}
+	return r.GithubOrg
+}
+
 func (r *ResourceRemoteInfo) GetGithubOrgRole() *GithubOrgRole {
 	if r == nil {
 		return nil
@@ -853,6 +1244,20 @@ func (r *ResourceRemoteInfo) GetOktaStandardRole() *OktaStandardRole {
 		return nil
 	}
 	return r.OktaStandardRole
+}
+
+func (r *ResourceRemoteInfo) GetOpenaiPlatformProject() *OpenaiPlatformProject {
+	if r == nil {
+		return nil
+	}
+	return r.OpenaiPlatformProject
+}
+
+func (r *ResourceRemoteInfo) GetOpenaiPlatformServiceAccount() *OpenaiPlatformServiceAccount {
+	if r == nil {
+		return nil
+	}
+	return r.OpenaiPlatformServiceAccount
 }
 
 func (r *ResourceRemoteInfo) GetPagerdutyRole() *PagerdutyRole {

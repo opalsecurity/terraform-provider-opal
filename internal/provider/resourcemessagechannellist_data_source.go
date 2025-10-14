@@ -29,8 +29,9 @@ type ResourceMessageChannelListDataSource struct {
 
 // ResourceMessageChannelListDataSourceModel describes the data model.
 type ResourceMessageChannelListDataSourceModel struct {
-	Channels   []tfTypes.MessageChannel `tfsdk:"channels"`
-	ResourceID types.String             `tfsdk:"resource_id"`
+	Channels          []tfTypes.MessageChannel `tfsdk:"channels"`
+	MessageChannelIds []types.String           `tfsdk:"message_channel_ids"`
+	ResourceID        types.String             `tfsdk:"resource_id"`
 }
 
 // Metadata returns the data source type name.
@@ -70,6 +71,11 @@ func (r *ResourceMessageChannelListDataSource) Schema(ctx context.Context, req d
 						},
 					},
 				},
+			},
+			"message_channel_ids": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
+				Description: `Computed field that extracts message channel IDs from the channels array`,
 			},
 			"resource_id": schema.StringAttribute{
 				Required:    true,

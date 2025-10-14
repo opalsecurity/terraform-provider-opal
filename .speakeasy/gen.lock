@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: ef1f5b7191e64b96047eb05be95ab663
+  docChecksum: 448a91df917bfb8b926c722895228b63
   docVersion: "1.0"
   speakeasyVersion: 1.619.0
   generationVersion: 2.706.0
-  releaseVersion: 3.3.0
-  configChecksum: 167e7537c4fcf5e533e4b149bb906e1c
+  releaseVersion: 3.3.1
+  configChecksum: ba05f9db4af9d23ceba3bf7e02430a0c
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -283,6 +283,7 @@ generatedFiles:
   - internal/provider/typeconvert/datetime.go
   - internal/provider/typeconvert/int.go
   - internal/provider/types/active_directory_group.go
+  - internal/provider/types/anthropic_workspace.go
   - internal/provider/types/app.go
   - internal/provider/types/app_validation.go
   - internal/provider/types/aws_account.go
@@ -291,12 +292,14 @@ generatedFiles:
   - internal/provider/types/aws_organizational_unit.go
   - internal/provider/types/aws_permission_set.go
   - internal/provider/types/aws_rds_instance.go
+  - internal/provider/types/azure_enterprise_app.go
   - internal/provider/types/bundle.go
   - internal/provider/types/bundle_group.go
   - internal/provider/types/bundle_resource.go
   - internal/provider/types/condition.go
   - internal/provider/types/configuration_template.go
   - internal/provider/types/create_user_tag_request_body.go
+  - internal/provider/types/cursor_organization.go
   - internal/provider/types/custom_connector.go
   - internal/provider/types/delegation.go
   - internal/provider/types/event.go
@@ -313,6 +316,7 @@ generatedFiles:
   - internal/provider/types/gcp_sql_instance.go
   - internal/provider/types/get_group_message_channels_response_body.go
   - internal/provider/types/get_group_on_call_schedules_response_body.go
+  - internal/provider/types/github_org.go
   - internal/provider/types/github_repo.go
   - internal/provider/types/github_team.go
   - internal/provider/types/group.go
@@ -326,6 +330,7 @@ generatedFiles:
   - internal/provider/types/okta_group_rule.go
   - internal/provider/types/okta_standard_role.go
   - internal/provider/types/on_call_schedule.go
+  - internal/provider/types/openai_platform_service_account.go
   - internal/provider/types/owner.go
   - internal/provider/types/pagerduty_role.go
   - internal/provider/types/propagation_status.go

@@ -32,7 +32,8 @@ func newApps(rootSDK *OpalAPI, sdkConfig config.SDKConfiguration, hooks *hooks.H
 	}
 }
 
-// Get - Returns a list of `App` objects.
+// Get apps
+// Returns a list of `App` objects.
 func (s *Apps) Get(ctx context.Context, request operations.GetAppsRequest, opts ...operations.Option) (*operations.GetAppsResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -437,7 +438,8 @@ func (s *Apps) GetSyncErrors(ctx context.Context, request operations.GetSyncErro
 
 }
 
-// GetID - Returns an `App` object.
+// GetID - Get app by ID
+// Returns an `App` object.
 func (s *Apps) GetID(ctx context.Context, request operations.GetAppIDRequest, opts ...operations.Option) (*operations.GetAppIDResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{

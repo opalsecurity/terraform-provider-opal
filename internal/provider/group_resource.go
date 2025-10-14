@@ -263,6 +263,14 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							},
 						},
 					},
+					"message_channel_ids": schema.ListAttribute{
+						Computed: true,
+						PlanModifiers: []planmodifier.List{
+							speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
+						},
+						ElementType: types.StringType,
+						Description: `Computed field that extracts message channel IDs from the channels array`,
+					},
 				},
 				Description: `The audit and reviewer message channels attached to the group.`,
 			},
@@ -282,6 +290,14 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 				},
 				Attributes: map[string]schema.Attribute{
+					"on_call_schedule_ids": schema.ListAttribute{
+						Computed: true,
+						PlanModifiers: []planmodifier.List{
+							speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
+						},
+						ElementType: types.StringType,
+						Description: `Computed field that extracts on-call schedule IDs from the on_call_schedules array`,
+					},
 					"on_call_schedules": schema.ListNestedAttribute{
 						Computed: true,
 						PlanModifiers: []planmodifier.List{

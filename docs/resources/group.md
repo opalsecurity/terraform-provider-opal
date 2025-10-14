@@ -311,6 +311,7 @@ Read-Only:
 Read-Only:
 
 - `channels` (Attributes List) (see [below for nested schema](#nestedatt--message_channels--channels))
+- `message_channel_ids` (List of String) Computed field that extracts message channel IDs from the channels array
 
 <a id="nestedatt--message_channels--channels"></a>
 ### Nested Schema for `message_channels.channels`
@@ -330,6 +331,7 @@ Read-Only:
 
 Read-Only:
 
+- `on_call_schedule_ids` (List of String) Computed field that extracts on-call schedule IDs from the on_call_schedules array
 - `on_call_schedules` (Attributes List) (see [below for nested schema](#nestedatt--on_call_schedules--on_call_schedules))
 
 <a id="nestedatt--on_call_schedules--on_call_schedules"></a>

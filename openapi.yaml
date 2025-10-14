@@ -54,6 +54,7 @@ tags:
 paths:
   /apps:
     get:
+      summary: Get apps
       description: Returns a list of `App` objects.
       operationId: getApps
       parameters:
@@ -97,6 +98,7 @@ paths:
       x-speakeasy-entity-operation: Apps#get
   /apps/{app_id}:
     get:
+      summary: Get app by ID
       description: Returns an `App` object.
       operationId: getAppID
       parameters:
@@ -4555,6 +4557,7 @@ paths:
         - apps
   /delegations:
     get:
+      summary: Get delegations
       description: Returns a list of request reviewer delegations configured for your organization.
       operationId: getDelegations
       parameters:
@@ -4632,6 +4635,7 @@ paths:
       x-speakeasy-entity-operation: Delegation#create
   /delegations/{delegation_id}:
     get:
+      summary: Get delegation by ID
       description: Returns a specific delegation by its ID.
       operationId: getDelegation
       parameters:
@@ -5924,6 +5928,7 @@ components:
         - JIRA
         - LINEAR
         - SERVICE_NOW
+        - FRESH_SERVICE
         - PAGER_DUTY
         - OPSGENIE
         - GIT_HUB
@@ -6625,6 +6630,11 @@ components:
         - ILEVEL_ADVANCED_ROLE
         - DATASTAX_ASTRA_ROLE
         - COUPA_ROLE
+        - CURSOR_ORGANIZATION
+        - OPENAI_PLATFORM_PROJECT
+        - OPENAI_PLATFORM_SERVICE_ACCOUNT
+        - ANTHROPIC_WORKSPACE
+        - GIT_HUB_ORG
       example: AWS_IAM_ROLE
       type: string
     VisibilityTypeEnum:
@@ -6668,6 +6678,7 @@ components:
         - BUNDLE
         - USER
         - ACCESS_REVIEW
+        - OWNER
       example: RESOURCE
       type: string
     UpdateGroupResourcesInfo:
@@ -6789,6 +6800,14 @@ components:
           items:
             $ref: "#/components/schemas/MessageChannel"
           type: array
+        message_channel_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: "Computed field that extracts message channel IDs from the channels array"
+          x-speakeasy-computed: true
+          x-speakeasy-computed-source: "channels[*].message_channel_id"
       type: object
       required:
         - channels
@@ -6812,6 +6831,14 @@ components:
           items:
             $ref: "#/components/schemas/OnCallSchedule"
           type: array
+        on_call_schedule_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: "Computed field that extracts on-call schedule IDs from the on_call_schedules array"
+          x-speakeasy-computed: true
+          x-speakeasy-computed-source: "on_call_schedules[*].on_call_schedule_id"
       type: object
       required:
         - on_call_schedules
@@ -7238,6 +7265,136 @@ components:
     ResourceRemoteInfo:
       description: Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields.
       properties:
+        azure_subscription:
+          description: Remote info for Azure subscription.
+          properties:
+            resource_id:
+              description: The ARM resource ID of the subscription.
+              example: /subscriptions/00000000-0000-0000-0000-000000000000
+              type: string
+          type: object
+          required:
+            - resource_id
+        azure_resource_group:
+          description: Remote info for Azure resource group.
+          properties:
+            resource_id:
+              description: The ARM resource ID of the resource group.
+              example: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg
+              type: string
+          type: object
+          required:
+            - resource_id
+        azure_management_group:
+          description: Remote info for Azure management group.
+          properties:
+            resource_id:
+              description: The ARM resource ID of the management group.
+              example: /providers/Microsoft.Management/managementGroups/my-mg
+              type: string
+          type: object
+          required:
+            - resource_id
+        azure_virtual_machine:
+          description: Remote info for Azure virtual machine.
+          properties:
+            resource_id:
+              description: The ARM resource ID of the virtual machine.
+              example: /subscriptions/0000/resourceGroups/rg/providers/Microsoft.Compute/virtualMachines/vm01
+              type: string
+          type: object
+          required:
+            - resource_id
+        azure_storage_account:
+          description: Remote info for Azure storage account.
+          properties:
+            resource_id:
+              description: The ARM resource ID of the storage account.
+              example: /subscriptions/0000/resourceGroups/rg/providers/Microsoft.Storage/storageAccounts/sa01
+              type: string
+          type: object
+          required:
+            - resource_id
+        azure_storage_container:
+          description: Remote info for Azure storage container.
+          properties:
+            resource_id:
+              description: The ARM resource ID of the storage container.
+              example: /subscriptions/0000/resourceGroups/rg/providers/Microsoft.Storage/storageAccounts/sa01/blobServices/default/containers/c01
+              type: string
+          type: object
+          required:
+            - resource_id
+        azure_sql_server:
+          description: Remote info for Azure SQL server.
+          properties:
+            resource_id:
+              description: The ARM resource ID of the SQL server.
+              example: /subscriptions/0000/resourceGroups/rg/providers/Microsoft.Sql/servers/sqldev01
+              type: string
+          type: object
+          required:
+            - resource_id
+        azure_sql_database:
+          description: Remote info for Azure SQL database.
+          properties:
+            resource_id:
+              description: The ARM resource ID of the SQL database.
+              example: /subscriptions/0000/resourceGroups/rg/providers/Microsoft.Sql/servers/sqldev01/databases/db01
+              type: string
+          type: object
+          required:
+            - resource_id
+        azure_sql_managed_instance:
+          description: Remote info for Azure SQL managed instance.
+          properties:
+            resource_id:
+              description: The ARM resource ID of the SQL managed instance.
+              example: /subscriptions/0000/resourceGroups/rg/providers/Microsoft.Sql/managedInstances/mi01
+              type: string
+          type: object
+          required:
+            - resource_id
+        azure_sql_managed_database:
+          description: Remote info for Azure SQL managed database.
+          properties:
+            resource_id:
+              description: The ARM resource ID of the SQL managed database.
+              example: /subscriptions/0000/resourceGroups/rg/providers/Microsoft.Sql/managedInstances/mi01/databases/midb01
+              type: string
+          type: object
+          required:
+            - resource_id
+        azure_user_assigned_managed_identity:
+          description: Remote info for Azure user assigned managed identity.
+          properties:
+            resource_id:
+              description: The ARM resource ID of the user assigned managed identity.
+              example: /subscriptions/0000/resourceGroups/rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id01
+              type: string
+          type: object
+          required:
+            - resource_id
+        azure_enterprise_app:
+          description: Remote info for Azure Enterprise App.
+          properties:
+            resource_id:
+              description: The remote application identifier (service principal or application object ID).
+              example: aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee
+              type: string
+          type: object
+          required:
+            - resource_id
+        azure_entra_id_role:
+          description: Remote info for Azure Entra ID role.
+          properties:
+            resource_id:
+              description: The remote role identifier from Entra (object ID).
+              example: 11111111-2222-3333-4444-555555555555
+              type: string
+          type: object
+          required:
+            - resource_id
         aws_organizational_unit:
           description: Remote info for AWS organizational unit.
           properties:
@@ -7573,6 +7730,16 @@ components:
           type: object
           required:
             - role_id
+        github_org:
+          description: Remote info for GitHub organization.
+          properties:
+            org_name:
+              description: The name of the organization.
+              example: Opal Security
+              type: string
+          type: object
+          required:
+            - org_name
         gitlab_project:
           description: Remote info for Gitlab project.
           properties:
@@ -7698,6 +7865,51 @@ components:
           type: object
           required:
             - role_id
+        cursor_organization:
+          description: Remote info for a Cursor organization.
+          properties:
+            org_id:
+              description: The id of the organization.
+              example: 123e4567-e89b-12d3-a456-426614174000
+              type: string
+          type: object
+          required:
+            - org_id
+        openai_platform_project:
+          description: Remote info for OpenAI Platform project.
+          properties:
+            project_id:
+              description: The id of the project.
+              example: proj_abc
+              type: string
+          type: object
+          required:
+            - project_id
+        openai_platform_service_account:
+          description: Remote info for OpenAI Platform service account.
+          properties:
+            project_id:
+              description: The id of the project for the service account.
+              example: proj_abc
+              type: string
+            service_account_id:
+              description: The id of the service account.
+              example: svc_acct_abc
+              type: string
+          type: object
+          required:
+            - project_id
+            - service_account_id
+        anthropic_workspace:
+          description: Remote info for Anthropic workspace.
+          properties:
+            workspace_id:
+              description: The id of the workspace.
+              example: ws-123456
+              type: string
+          type: object
+          required:
+            - workspace_id
       type: object
     RiskSensitivityEnum:
       type: string

@@ -1437,6 +1437,26 @@ actions:
   - target: $["components"]["schemas"]["CreateOnCallScheduleInfo"]
     update:
       x-speakeasy-entity: OnCallSchedule
+  - target: $["components"]["schemas"]["MessageChannelList"]["properties"]
+    update:
+      message_channel_ids:
+        type: array
+        items:
+          type: string
+          format: uuid
+        description: "Computed field that extracts message channel IDs from the channels array"
+        x-speakeasy-computed: true
+        x-speakeasy-computed-source: "channels[*].message_channel_id"
+  - target: $["components"]["schemas"]["OnCallScheduleList"]["properties"]
+    update:
+      on_call_schedule_ids:
+        type: array
+        items:
+          type: string
+          format: uuid
+        description: "Computed field that extracts on-call schedule IDs from the on_call_schedules array"
+        x-speakeasy-computed: true
+        x-speakeasy-computed-source: "on_call_schedules[*].on_call_schedule_id"
   - target: $["components"]["schemas"]["OnCallScheduleProviderEnum"]
     update:
       x-speakeasy-entity: OnCallSchedule
