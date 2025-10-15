@@ -4,6 +4,8 @@ package shared
 
 type MessageChannelList struct {
 	Channels []MessageChannel `json:"channels"`
+	// Computed field that extracts message channel IDs from the channels array
+	MessageChannelIds []string `json:"message_channel_ids,omitempty"`
 }
 
 func (m *MessageChannelList) GetChannels() []MessageChannel {
@@ -11,4 +13,11 @@ func (m *MessageChannelList) GetChannels() []MessageChannel {
 		return []MessageChannel{}
 	}
 	return m.Channels
+}
+
+func (m *MessageChannelList) GetMessageChannelIds() []string {
+	if m == nil {
+		return nil
+	}
+	return m.MessageChannelIds
 }

@@ -88,8 +88,9 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Description: `A description of the resource.`,
 			},
 			"extensions_duration_in_minutes": schema.Int64Attribute{
-				Computed:    true,
-				Description: `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
+				Computed:           true,
+				DeprecationMessage: `Do not use this field, set the extension duration in the request_configuration you want it to apply to.`,
+				Description:        `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
 			},
 			"id": schema.StringAttribute{
 				Required:    true,
@@ -120,6 +121,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"remote_info": schema.SingleNestedAttribute{
 				Computed: true,
 				Attributes: map[string]schema.Attribute{
+					"anthropic_workspace": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"workspace_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the workspace.`,
+							},
+						},
+						Description: `Remote info for Anthropic workspace.`,
+					},
 					"aws_account": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -230,6 +241,136 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for AWS RDS instance.`,
 					},
+					"azure_enterprise_app": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The remote application identifier (service principal or application object ID).`,
+							},
+						},
+						Description: `Remote info for Azure Enterprise App.`,
+					},
+					"azure_entra_id_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The remote role identifier from Entra (object ID).`,
+							},
+						},
+						Description: `Remote info for Azure Entra ID role.`,
+					},
+					"azure_management_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ARM resource ID of the management group.`,
+							},
+						},
+						Description: `Remote info for Azure management group.`,
+					},
+					"azure_resource_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ARM resource ID of the resource group.`,
+							},
+						},
+						Description: `Remote info for Azure resource group.`,
+					},
+					"azure_sql_database": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ARM resource ID of the SQL database.`,
+							},
+						},
+						Description: `Remote info for Azure SQL database.`,
+					},
+					"azure_sql_managed_database": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ARM resource ID of the SQL managed database.`,
+							},
+						},
+						Description: `Remote info for Azure SQL managed database.`,
+					},
+					"azure_sql_managed_instance": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ARM resource ID of the SQL managed instance.`,
+							},
+						},
+						Description: `Remote info for Azure SQL managed instance.`,
+					},
+					"azure_sql_server": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ARM resource ID of the SQL server.`,
+							},
+						},
+						Description: `Remote info for Azure SQL server.`,
+					},
+					"azure_storage_account": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ARM resource ID of the storage account.`,
+							},
+						},
+						Description: `Remote info for Azure storage account.`,
+					},
+					"azure_storage_container": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ARM resource ID of the storage container.`,
+							},
+						},
+						Description: `Remote info for Azure storage container.`,
+					},
+					"azure_subscription": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ARM resource ID of the subscription.`,
+							},
+						},
+						Description: `Remote info for Azure subscription.`,
+					},
+					"azure_user_assigned_managed_identity": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ARM resource ID of the user assigned managed identity.`,
+							},
+						},
+						Description: `Remote info for Azure user assigned managed identity.`,
+					},
+					"azure_virtual_machine": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ARM resource ID of the virtual machine.`,
+							},
+						},
+						Description: `Remote info for Azure virtual machine.`,
+					},
 					"coupa_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -239,6 +380,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for Coupa role.`,
+					},
+					"cursor_organization": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"org_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the organization.`,
+							},
+						},
+						Description: `Remote info for a Cursor organization.`,
 					},
 					"custom_connector": schema.SingleNestedAttribute{
 						Computed: true,
@@ -396,6 +547,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for GCP SQL instance.`,
 					},
+					"github_org": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"org_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The name of the organization.`,
+							},
+						},
+						Description: `Remote info for GitHub organization.`,
+					},
 					"github_org_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -465,6 +626,30 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for Okta directory standard role.`,
+					},
+					"openai_platform_project": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"project_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the project.`,
+							},
+						},
+						Description: `Remote info for OpenAI Platform project.`,
+					},
+					"openai_platform_service_account": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"project_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the project for the service account.`,
+							},
+							"service_account_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the service account.`,
+							},
+						},
+						Description: `Remote info for OpenAI Platform service account.`,
 					},
 					"pagerduty_role": schema.SingleNestedAttribute{
 						Computed: true,

@@ -1171,6 +1171,12 @@ actions:
   - target: $["components"]["schemas"]["Group"]["properties"]["recommended_duration"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["extensions_duration_in_minutes"]
+    update:
+      deprecated: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["extensions_duration_in_minutes"]
+    update:
+      x-speakeasy-deprecation-message: Do not use this field, set the extension duration in the request_configuration you want it to apply to.
   - target: $["components"]["schemas"]["Group"]["properties"]["require_manager_approval"]
     update:
       x-speakeasy-ignore: true
@@ -1291,6 +1297,9 @@ actions:
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["group_leader_user_ids"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["extensions_duration_in_minutes"]
+    update:
+      x-speakeasy-deprecation-message: Do not use this field, set the extension duration in the request_configuration you want it to apply to.
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_configurations"]
     update:
       x-speakeasy-plan-validators: RequestConfigurations
@@ -1437,6 +1446,26 @@ actions:
   - target: $["components"]["schemas"]["CreateOnCallScheduleInfo"]
     update:
       x-speakeasy-entity: OnCallSchedule
+  - target: $["components"]["schemas"]["MessageChannelList"]["properties"]
+    update:
+      message_channel_ids:
+        type: array
+        items:
+          type: string
+          format: uuid
+        description: "Computed field that extracts message channel IDs from the channels array"
+        x-speakeasy-computed: true
+        x-speakeasy-computed-source: "channels[*].message_channel_id"
+  - target: $["components"]["schemas"]["OnCallScheduleList"]["properties"]
+    update:
+      on_call_schedule_ids:
+        type: array
+        items:
+          type: string
+          format: uuid
+        description: "Computed field that extracts on-call schedule IDs from the on_call_schedules array"
+        x-speakeasy-computed: true
+        x-speakeasy-computed-source: "on_call_schedules[*].on_call_schedule_id"
   - target: $["components"]["schemas"]["OnCallScheduleProviderEnum"]
     update:
       x-speakeasy-entity: OnCallSchedule
@@ -1708,6 +1737,12 @@ actions:
   - target: $["components"]["schemas"]["Resource"]["properties"]["recommended_duration"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["extensions_duration_in_minutes"]
+    update:
+      deprecated: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["extensions_duration_in_minutes"]
+    update:
+      x-speakeasy-deprecation-message: Do not use this field, set the extension duration in the request_configuration you want it to apply to.
   - target: $["components"]["schemas"]["Resource"]["properties"]["require_manager_approval"]
     update:
       x-speakeasy-ignore: true
@@ -1828,6 +1863,9 @@ actions:
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["is_requestable"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["extensions_duration_in_minutes"]
+    update:
+      x-speakeasy-deprecation-message: Do not use this field, set the extension duration in the request_configuration you want it to apply to.
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_configurations"]
     update:
       x-speakeasy-plan-validators: RequestConfigurations

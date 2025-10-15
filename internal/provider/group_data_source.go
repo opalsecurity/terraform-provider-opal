@@ -80,8 +80,9 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Description: `A description of the group.`,
 			},
 			"extensions_duration_in_minutes": schema.Int64Attribute{
-				Computed:    true,
-				Description: `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
+				Computed:           true,
+				DeprecationMessage: `Do not use this field, set the extension duration in the request_configuration you want it to apply to.`,
+				Description:        `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
 			},
 			"group_binding_id": schema.StringAttribute{
 				Computed:    true,
@@ -144,6 +145,11 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							},
 						},
 					},
+					"message_channel_ids": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+						Description: `Computed field that extracts message channel IDs from the channels array`,
+					},
 				},
 				Description: `The audit and reviewer message channels attached to the group.`,
 			},
@@ -154,6 +160,11 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			"on_call_schedules": schema.SingleNestedAttribute{
 				Computed: true,
 				Attributes: map[string]schema.Attribute{
+					"on_call_schedule_ids": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+						Description: `Computed field that extracts on-call schedule IDs from the on_call_schedules array`,
+					},
 					"on_call_schedules": schema.ListNestedAttribute{
 						Computed: true,
 						NestedObject: schema.NestedAttributeObject{

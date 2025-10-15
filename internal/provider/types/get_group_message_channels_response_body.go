@@ -2,6 +2,11 @@
 
 package types
 
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
+
 type GetGroupMessageChannelsResponseBody struct {
-	Channels []MessageChannel `tfsdk:"channels"`
+	Channels          []MessageChannel `tfsdk:"channels"`
+	MessageChannelIds []types.String   `tfsdk:"message_channel_ids"`
 }

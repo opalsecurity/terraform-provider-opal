@@ -22,6 +22,7 @@ data "opal_on_call_schedule_list" "my_oncallschedule_list" {
 
 ### Read-Only
 
+- `on_call_schedule_ids` (List of String) Computed field that extracts on-call schedule IDs from the on_call_schedules array
 - `on_call_schedules` (Attributes List) (see [below for nested schema](#nestedatt--on_call_schedules))
 
 <a id="nestedatt--on_call_schedules"></a>

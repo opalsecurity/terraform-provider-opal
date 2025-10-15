@@ -29,7 +29,8 @@ type OnCallScheduleListDataSource struct {
 
 // OnCallScheduleListDataSourceModel describes the data model.
 type OnCallScheduleListDataSourceModel struct {
-	OnCallSchedules []tfTypes.OnCallSchedule `tfsdk:"on_call_schedules"`
+	OnCallScheduleIds []types.String           `tfsdk:"on_call_schedule_ids"`
+	OnCallSchedules   []tfTypes.OnCallSchedule `tfsdk:"on_call_schedules"`
 }
 
 // Metadata returns the data source type name.
@@ -43,6 +44,11 @@ func (r *OnCallScheduleListDataSource) Schema(ctx context.Context, req datasourc
 		MarkdownDescription: "OnCallScheduleList DataSource",
 
 		Attributes: map[string]schema.Attribute{
+			"on_call_schedule_ids": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
+				Description: `Computed field that extracts on-call schedule IDs from the on_call_schedules array`,
+			},
 			"on_call_schedules": schema.ListNestedAttribute{
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{

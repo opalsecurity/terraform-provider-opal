@@ -43,6 +43,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			r.RemoteInfo = nil
 		} else {
 			r.RemoteInfo = &tfTypes.ResourceRemoteInfo{}
+			if resp.RemoteInfo.AnthropicWorkspace == nil {
+				r.RemoteInfo.AnthropicWorkspace = nil
+			} else {
+				r.RemoteInfo.AnthropicWorkspace = &tfTypes.AnthropicWorkspace{}
+				r.RemoteInfo.AnthropicWorkspace.WorkspaceID = types.StringValue(resp.RemoteInfo.AnthropicWorkspace.WorkspaceID)
+			}
 			if resp.RemoteInfo.AwsAccount == nil {
 				r.RemoteInfo.AwsAccount = nil
 			} else {
@@ -95,11 +101,95 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.AwsRdsInstance.Region = types.StringValue(resp.RemoteInfo.AwsRdsInstance.Region)
 				r.RemoteInfo.AwsRdsInstance.ResourceID = types.StringValue(resp.RemoteInfo.AwsRdsInstance.ResourceID)
 			}
+			if resp.RemoteInfo.AzureEnterpriseApp == nil {
+				r.RemoteInfo.AzureEnterpriseApp = nil
+			} else {
+				r.RemoteInfo.AzureEnterpriseApp = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.AzureEnterpriseApp.ResourceID = types.StringValue(resp.RemoteInfo.AzureEnterpriseApp.ResourceID)
+			}
+			if resp.RemoteInfo.AzureEntraIDRole == nil {
+				r.RemoteInfo.AzureEntraIDRole = nil
+			} else {
+				r.RemoteInfo.AzureEntraIDRole = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.AzureEntraIDRole.ResourceID = types.StringValue(resp.RemoteInfo.AzureEntraIDRole.ResourceID)
+			}
+			if resp.RemoteInfo.AzureManagementGroup == nil {
+				r.RemoteInfo.AzureManagementGroup = nil
+			} else {
+				r.RemoteInfo.AzureManagementGroup = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.AzureManagementGroup.ResourceID = types.StringValue(resp.RemoteInfo.AzureManagementGroup.ResourceID)
+			}
+			if resp.RemoteInfo.AzureResourceGroup == nil {
+				r.RemoteInfo.AzureResourceGroup = nil
+			} else {
+				r.RemoteInfo.AzureResourceGroup = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.AzureResourceGroup.ResourceID = types.StringValue(resp.RemoteInfo.AzureResourceGroup.ResourceID)
+			}
+			if resp.RemoteInfo.AzureSQLDatabase == nil {
+				r.RemoteInfo.AzureSQLDatabase = nil
+			} else {
+				r.RemoteInfo.AzureSQLDatabase = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.AzureSQLDatabase.ResourceID = types.StringValue(resp.RemoteInfo.AzureSQLDatabase.ResourceID)
+			}
+			if resp.RemoteInfo.AzureSQLManagedDatabase == nil {
+				r.RemoteInfo.AzureSQLManagedDatabase = nil
+			} else {
+				r.RemoteInfo.AzureSQLManagedDatabase = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.AzureSQLManagedDatabase.ResourceID = types.StringValue(resp.RemoteInfo.AzureSQLManagedDatabase.ResourceID)
+			}
+			if resp.RemoteInfo.AzureSQLManagedInstance == nil {
+				r.RemoteInfo.AzureSQLManagedInstance = nil
+			} else {
+				r.RemoteInfo.AzureSQLManagedInstance = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.AzureSQLManagedInstance.ResourceID = types.StringValue(resp.RemoteInfo.AzureSQLManagedInstance.ResourceID)
+			}
+			if resp.RemoteInfo.AzureSQLServer == nil {
+				r.RemoteInfo.AzureSQLServer = nil
+			} else {
+				r.RemoteInfo.AzureSQLServer = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.AzureSQLServer.ResourceID = types.StringValue(resp.RemoteInfo.AzureSQLServer.ResourceID)
+			}
+			if resp.RemoteInfo.AzureStorageAccount == nil {
+				r.RemoteInfo.AzureStorageAccount = nil
+			} else {
+				r.RemoteInfo.AzureStorageAccount = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.AzureStorageAccount.ResourceID = types.StringValue(resp.RemoteInfo.AzureStorageAccount.ResourceID)
+			}
+			if resp.RemoteInfo.AzureStorageContainer == nil {
+				r.RemoteInfo.AzureStorageContainer = nil
+			} else {
+				r.RemoteInfo.AzureStorageContainer = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.AzureStorageContainer.ResourceID = types.StringValue(resp.RemoteInfo.AzureStorageContainer.ResourceID)
+			}
+			if resp.RemoteInfo.AzureSubscription == nil {
+				r.RemoteInfo.AzureSubscription = nil
+			} else {
+				r.RemoteInfo.AzureSubscription = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.AzureSubscription.ResourceID = types.StringValue(resp.RemoteInfo.AzureSubscription.ResourceID)
+			}
+			if resp.RemoteInfo.AzureUserAssignedManagedIdentity == nil {
+				r.RemoteInfo.AzureUserAssignedManagedIdentity = nil
+			} else {
+				r.RemoteInfo.AzureUserAssignedManagedIdentity = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.AzureUserAssignedManagedIdentity.ResourceID = types.StringValue(resp.RemoteInfo.AzureUserAssignedManagedIdentity.ResourceID)
+			}
+			if resp.RemoteInfo.AzureVirtualMachine == nil {
+				r.RemoteInfo.AzureVirtualMachine = nil
+			} else {
+				r.RemoteInfo.AzureVirtualMachine = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.AzureVirtualMachine.ResourceID = types.StringValue(resp.RemoteInfo.AzureVirtualMachine.ResourceID)
+			}
 			if resp.RemoteInfo.CoupaRole == nil {
 				r.RemoteInfo.CoupaRole = nil
 			} else {
 				r.RemoteInfo.CoupaRole = &tfTypes.SnowflakeRole{}
 				r.RemoteInfo.CoupaRole.RoleID = types.StringValue(resp.RemoteInfo.CoupaRole.RoleID)
+			}
+			if resp.RemoteInfo.CursorOrganization == nil {
+				r.RemoteInfo.CursorOrganization = nil
+			} else {
+				r.RemoteInfo.CursorOrganization = &tfTypes.CursorOrganization{}
+				r.RemoteInfo.CursorOrganization.OrgID = types.StringValue(resp.RemoteInfo.CursorOrganization.OrgID)
 			}
 			if resp.RemoteInfo.CustomConnector == nil {
 				r.RemoteInfo.CustomConnector = nil
@@ -182,6 +272,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.GcpSQLInstance.InstanceID = types.StringValue(resp.RemoteInfo.GcpSQLInstance.InstanceID)
 				r.RemoteInfo.GcpSQLInstance.ProjectID = types.StringValue(resp.RemoteInfo.GcpSQLInstance.ProjectID)
 			}
+			if resp.RemoteInfo.GithubOrg == nil {
+				r.RemoteInfo.GithubOrg = nil
+			} else {
+				r.RemoteInfo.GithubOrg = &tfTypes.GithubOrg{}
+				r.RemoteInfo.GithubOrg.OrgName = types.StringValue(resp.RemoteInfo.GithubOrg.OrgName)
+			}
 			if resp.RemoteInfo.GithubOrgRole == nil {
 				r.RemoteInfo.GithubOrgRole = nil
 			} else {
@@ -223,6 +319,19 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			} else {
 				r.RemoteInfo.OktaStandardRole = &tfTypes.OktaStandardRole{}
 				r.RemoteInfo.OktaStandardRole.RoleType = types.StringValue(resp.RemoteInfo.OktaStandardRole.RoleType)
+			}
+			if resp.RemoteInfo.OpenaiPlatformProject == nil {
+				r.RemoteInfo.OpenaiPlatformProject = nil
+			} else {
+				r.RemoteInfo.OpenaiPlatformProject = &tfTypes.GcpProject{}
+				r.RemoteInfo.OpenaiPlatformProject.ProjectID = types.StringValue(resp.RemoteInfo.OpenaiPlatformProject.ProjectID)
+			}
+			if resp.RemoteInfo.OpenaiPlatformServiceAccount == nil {
+				r.RemoteInfo.OpenaiPlatformServiceAccount = nil
+			} else {
+				r.RemoteInfo.OpenaiPlatformServiceAccount = &tfTypes.OpenaiPlatformServiceAccount{}
+				r.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID = types.StringValue(resp.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID)
+				r.RemoteInfo.OpenaiPlatformServiceAccount.ServiceAccountID = types.StringValue(resp.RemoteInfo.OpenaiPlatformServiceAccount.ServiceAccountID)
 			}
 			if resp.RemoteInfo.PagerdutyRole == nil {
 				r.RemoteInfo.PagerdutyRole = nil

@@ -63,7 +63,7 @@ func (s *Resources) AddResourceNhi(ctx context.Context, request operations.AddRe
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "add_resource_nhi",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "RequestBody", "json", `request:"mediaType=application/json"`)
@@ -268,7 +268,7 @@ func (s *Resources) Create(ctx context.Context, request shared.CreateResourceInf
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createResource",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -473,7 +473,7 @@ func (s *Resources) Delete(ctx context.Context, request operations.DeleteResourc
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "deleteResource",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -651,7 +651,7 @@ func (s *Resources) DeleteResourceNhi(ctx context.Context, request operations.De
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "delete_resource_nhi",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -834,7 +834,7 @@ func (s *Resources) Get(ctx context.Context, request operations.GetResourcesRequ
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getResources",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1039,7 +1039,7 @@ func (s *Resources) GetAccessStatus(ctx context.Context, request operations.GetR
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getResourceUserAccessStatus",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1243,7 +1243,7 @@ func (s *Resources) GetID(ctx context.Context, request operations.GetResourceIDR
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getResourceID",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1442,7 +1442,7 @@ func (s *Resources) GetMessageChannels(ctx context.Context, request operations.G
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getResourceMessageChannels",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1641,7 +1641,7 @@ func (s *Resources) GetResourceNhis(ctx context.Context, request operations.GetR
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "get_resource_nhis",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1844,7 +1844,7 @@ func (s *Resources) GetReviewers(ctx context.Context, request operations.GetReso
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getResourceReviewers",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -2043,7 +2043,7 @@ func (s *Resources) GetScopedRolePermissions(ctx context.Context, request operat
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "get_resource_scoped_role_permissions",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -2241,7 +2241,7 @@ func (s *Resources) GetTags(ctx context.Context, request operations.GetResourceT
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getResourceTags",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -2440,7 +2440,7 @@ func (s *Resources) GetUserResources(ctx context.Context, request operations.Get
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "get_user_resources",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -2643,7 +2643,7 @@ func (s *Resources) GetUsers(ctx context.Context, request operations.GetResource
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getResourceUsers",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -2846,7 +2846,7 @@ func (s *Resources) GetVisibility(ctx context.Context, request operations.GetRes
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getResourceVisibility",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -3045,7 +3045,7 @@ func (s *Resources) Update(ctx context.Context, request shared.UpdateResourceInf
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateResources",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -3250,7 +3250,7 @@ func (s *Resources) UpdateMessageChannels(ctx context.Context, request operation
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateResourceMessageChannels",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "MessageChannelIDList", "json", `request:"mediaType=application/json"`)
@@ -3455,7 +3455,7 @@ func (s *Resources) UpdateReviewers(ctx context.Context, request operations.Upda
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateResourceReviewers",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "ReviewerIDList", "json", `request:"mediaType=application/json"`)
@@ -3660,7 +3660,7 @@ func (s *Resources) UpdateScopedRolePermissions(ctx context.Context, request ope
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "set_resource_scoped_role_permissions",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "ScopedRolePermissionList", "json", `request:"mediaType=application/json"`)
@@ -3865,7 +3865,7 @@ func (s *Resources) UpdateVisibility(ctx context.Context, request operations.Upd
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateResourceVisibility",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "VisibilityInfo", "json", `request:"mediaType=application/json"`)

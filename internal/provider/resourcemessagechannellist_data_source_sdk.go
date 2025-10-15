@@ -32,6 +32,10 @@ func (r *ResourceMessageChannelListDataSourceModel) RefreshFromSharedMessageChan
 
 			r.Channels = append(r.Channels, channels)
 		}
+		r.MessageChannelIds = make([]types.String, 0, len(resp.MessageChannelIds))
+		for _, v := range resp.MessageChannelIds {
+			r.MessageChannelIds = append(r.MessageChannelIds, types.StringValue(v))
+		}
 	}
 
 	return diags

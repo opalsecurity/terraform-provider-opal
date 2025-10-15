@@ -21,7 +21,16 @@ func (g *GetGroupOnCallSchedulesRequest) GetID() string {
 
 // GetGroupOnCallSchedulesResponseBody - The on call schedules attached to the group.
 type GetGroupOnCallSchedulesResponseBody struct {
-	OnCallSchedules []shared.OnCallSchedule `json:"on_call_schedules"`
+	// Computed field that extracts on-call schedule IDs from the on_call_schedules array
+	OnCallScheduleIds []string                `json:"on_call_schedule_ids,omitempty"`
+	OnCallSchedules   []shared.OnCallSchedule `json:"on_call_schedules"`
+}
+
+func (g *GetGroupOnCallSchedulesResponseBody) GetOnCallScheduleIds() []string {
+	if g == nil {
+		return nil
+	}
+	return g.OnCallScheduleIds
 }
 
 func (g *GetGroupOnCallSchedulesResponseBody) GetOnCallSchedules() []shared.OnCallSchedule {

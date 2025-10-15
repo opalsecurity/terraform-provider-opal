@@ -29,7 +29,8 @@ type MessageChannelListDataSource struct {
 
 // MessageChannelListDataSourceModel describes the data model.
 type MessageChannelListDataSourceModel struct {
-	Channels []tfTypes.MessageChannel `tfsdk:"channels"`
+	Channels          []tfTypes.MessageChannel `tfsdk:"channels"`
+	MessageChannelIds []types.String           `tfsdk:"message_channel_ids"`
 }
 
 // Metadata returns the data source type name.
@@ -69,6 +70,11 @@ func (r *MessageChannelListDataSource) Schema(ctx context.Context, req datasourc
 						},
 					},
 				},
+			},
+			"message_channel_ids": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
+				Description: `Computed field that extracts message channel IDs from the channels array`,
 			},
 		},
 	}

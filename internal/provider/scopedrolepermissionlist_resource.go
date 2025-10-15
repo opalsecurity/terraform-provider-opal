@@ -98,12 +98,12 @@ func (r *ScopedRolePermissionListResource) Schema(ctx context.Context, req resou
 							Optional:    true,
 							Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 							ElementType: types.StringType,
-							Description: `The IDs of the entities that this permission applies to. If empty of missing, the permission will have untargeted scope.`,
+							Description: `The IDs of the entities that this permission applies to. If empty of missing, the permission will have untargeted scope. Default: []`,
 						},
 						"target_type": schema.StringAttribute{
 							Computed:    true,
 							Optional:    true,
-							Description: `The type of the target for the role permission. Not Null; must be one of ["RESOURCE", "CONNECTION", "GROUP", "BUNDLE", "USER", "ACCESS_REVIEW"]`,
+							Description: `The type of the target for the role permission. Not Null; must be one of ["RESOURCE", "CONNECTION", "GROUP", "BUNDLE", "USER", "ACCESS_REVIEW", "OWNER"]`,
 							Validators: []validator.String{
 								speakeasy_stringvalidators.NotNull(),
 								stringvalidator.OneOf(
@@ -113,6 +113,7 @@ func (r *ScopedRolePermissionListResource) Schema(ctx context.Context, req resou
 									"BUNDLE",
 									"USER",
 									"ACCESS_REVIEW",
+									"OWNER",
 								),
 							},
 						},

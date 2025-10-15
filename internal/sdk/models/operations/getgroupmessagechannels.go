@@ -22,6 +22,8 @@ func (g *GetGroupMessageChannelsRequest) GetID() string {
 // GetGroupMessageChannelsResponseBody - The audit and reviewer message channels attached to the group.
 type GetGroupMessageChannelsResponseBody struct {
 	Channels []shared.MessageChannel `json:"channels"`
+	// Computed field that extracts message channel IDs from the channels array
+	MessageChannelIds []string `json:"message_channel_ids,omitempty"`
 }
 
 func (g *GetGroupMessageChannelsResponseBody) GetChannels() []shared.MessageChannel {
@@ -29,6 +31,13 @@ func (g *GetGroupMessageChannelsResponseBody) GetChannels() []shared.MessageChan
 		return []shared.MessageChannel{}
 	}
 	return g.Channels
+}
+
+func (g *GetGroupMessageChannelsResponseBody) GetMessageChannelIds() []string {
+	if g == nil {
+		return nil
+	}
+	return g.MessageChannelIds
 }
 
 type GetGroupMessageChannelsResponse struct {

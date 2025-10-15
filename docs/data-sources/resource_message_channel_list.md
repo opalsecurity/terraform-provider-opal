@@ -28,6 +28,7 @@ data "opal_resource_message_channel_list" "my_resourcemessagechannellist" {
 ### Read-Only
 
 - `channels` (Attributes List) (see [below for nested schema](#nestedatt--channels))
+- `message_channel_ids` (List of String) Computed field that extracts message channel IDs from the channels array
 
 <a id="nestedatt--channels"></a>
 ### Nested Schema for `channels`

@@ -63,7 +63,7 @@ func (s *AccessRules) CreateAccessRule(ctx context.Context, request shared.Updat
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "create_access_rule",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -268,7 +268,7 @@ func (s *AccessRules) GetAccessRule(ctx context.Context, request operations.GetA
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "get_access_rule",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -466,7 +466,7 @@ func (s *AccessRules) UpdateAccessRule(ctx context.Context, request operations.U
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "update_access_rule",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "UpdateAccessRuleInfo", "json", `request:"mediaType=application/json"`)

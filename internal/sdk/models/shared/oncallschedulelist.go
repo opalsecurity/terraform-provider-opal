@@ -3,7 +3,16 @@
 package shared
 
 type OnCallScheduleList struct {
-	OnCallSchedules []OnCallSchedule `json:"on_call_schedules"`
+	// Computed field that extracts on-call schedule IDs from the on_call_schedules array
+	OnCallScheduleIds []string         `json:"on_call_schedule_ids,omitempty"`
+	OnCallSchedules   []OnCallSchedule `json:"on_call_schedules"`
+}
+
+func (o *OnCallScheduleList) GetOnCallScheduleIds() []string {
+	if o == nil {
+		return nil
+	}
+	return o.OnCallScheduleIds
 }
 
 func (o *OnCallScheduleList) GetOnCallSchedules() []OnCallSchedule {

@@ -50,6 +50,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				results.RemoteInfo = nil
 			} else {
 				results.RemoteInfo = &tfTypes.ResourceRemoteInfo{}
+				if resultsItem.RemoteInfo.AnthropicWorkspace == nil {
+					results.RemoteInfo.AnthropicWorkspace = nil
+				} else {
+					results.RemoteInfo.AnthropicWorkspace = &tfTypes.AnthropicWorkspace{}
+					results.RemoteInfo.AnthropicWorkspace.WorkspaceID = types.StringValue(resultsItem.RemoteInfo.AnthropicWorkspace.WorkspaceID)
+				}
 				if resultsItem.RemoteInfo.AwsAccount == nil {
 					results.RemoteInfo.AwsAccount = nil
 				} else {
@@ -102,11 +108,95 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.AwsRdsInstance.Region = types.StringValue(resultsItem.RemoteInfo.AwsRdsInstance.Region)
 					results.RemoteInfo.AwsRdsInstance.ResourceID = types.StringValue(resultsItem.RemoteInfo.AwsRdsInstance.ResourceID)
 				}
+				if resultsItem.RemoteInfo.AzureEnterpriseApp == nil {
+					results.RemoteInfo.AzureEnterpriseApp = nil
+				} else {
+					results.RemoteInfo.AzureEnterpriseApp = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.AzureEnterpriseApp.ResourceID = types.StringValue(resultsItem.RemoteInfo.AzureEnterpriseApp.ResourceID)
+				}
+				if resultsItem.RemoteInfo.AzureEntraIDRole == nil {
+					results.RemoteInfo.AzureEntraIDRole = nil
+				} else {
+					results.RemoteInfo.AzureEntraIDRole = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.AzureEntraIDRole.ResourceID = types.StringValue(resultsItem.RemoteInfo.AzureEntraIDRole.ResourceID)
+				}
+				if resultsItem.RemoteInfo.AzureManagementGroup == nil {
+					results.RemoteInfo.AzureManagementGroup = nil
+				} else {
+					results.RemoteInfo.AzureManagementGroup = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.AzureManagementGroup.ResourceID = types.StringValue(resultsItem.RemoteInfo.AzureManagementGroup.ResourceID)
+				}
+				if resultsItem.RemoteInfo.AzureResourceGroup == nil {
+					results.RemoteInfo.AzureResourceGroup = nil
+				} else {
+					results.RemoteInfo.AzureResourceGroup = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.AzureResourceGroup.ResourceID = types.StringValue(resultsItem.RemoteInfo.AzureResourceGroup.ResourceID)
+				}
+				if resultsItem.RemoteInfo.AzureSQLDatabase == nil {
+					results.RemoteInfo.AzureSQLDatabase = nil
+				} else {
+					results.RemoteInfo.AzureSQLDatabase = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.AzureSQLDatabase.ResourceID = types.StringValue(resultsItem.RemoteInfo.AzureSQLDatabase.ResourceID)
+				}
+				if resultsItem.RemoteInfo.AzureSQLManagedDatabase == nil {
+					results.RemoteInfo.AzureSQLManagedDatabase = nil
+				} else {
+					results.RemoteInfo.AzureSQLManagedDatabase = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.AzureSQLManagedDatabase.ResourceID = types.StringValue(resultsItem.RemoteInfo.AzureSQLManagedDatabase.ResourceID)
+				}
+				if resultsItem.RemoteInfo.AzureSQLManagedInstance == nil {
+					results.RemoteInfo.AzureSQLManagedInstance = nil
+				} else {
+					results.RemoteInfo.AzureSQLManagedInstance = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.AzureSQLManagedInstance.ResourceID = types.StringValue(resultsItem.RemoteInfo.AzureSQLManagedInstance.ResourceID)
+				}
+				if resultsItem.RemoteInfo.AzureSQLServer == nil {
+					results.RemoteInfo.AzureSQLServer = nil
+				} else {
+					results.RemoteInfo.AzureSQLServer = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.AzureSQLServer.ResourceID = types.StringValue(resultsItem.RemoteInfo.AzureSQLServer.ResourceID)
+				}
+				if resultsItem.RemoteInfo.AzureStorageAccount == nil {
+					results.RemoteInfo.AzureStorageAccount = nil
+				} else {
+					results.RemoteInfo.AzureStorageAccount = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.AzureStorageAccount.ResourceID = types.StringValue(resultsItem.RemoteInfo.AzureStorageAccount.ResourceID)
+				}
+				if resultsItem.RemoteInfo.AzureStorageContainer == nil {
+					results.RemoteInfo.AzureStorageContainer = nil
+				} else {
+					results.RemoteInfo.AzureStorageContainer = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.AzureStorageContainer.ResourceID = types.StringValue(resultsItem.RemoteInfo.AzureStorageContainer.ResourceID)
+				}
+				if resultsItem.RemoteInfo.AzureSubscription == nil {
+					results.RemoteInfo.AzureSubscription = nil
+				} else {
+					results.RemoteInfo.AzureSubscription = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.AzureSubscription.ResourceID = types.StringValue(resultsItem.RemoteInfo.AzureSubscription.ResourceID)
+				}
+				if resultsItem.RemoteInfo.AzureUserAssignedManagedIdentity == nil {
+					results.RemoteInfo.AzureUserAssignedManagedIdentity = nil
+				} else {
+					results.RemoteInfo.AzureUserAssignedManagedIdentity = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.AzureUserAssignedManagedIdentity.ResourceID = types.StringValue(resultsItem.RemoteInfo.AzureUserAssignedManagedIdentity.ResourceID)
+				}
+				if resultsItem.RemoteInfo.AzureVirtualMachine == nil {
+					results.RemoteInfo.AzureVirtualMachine = nil
+				} else {
+					results.RemoteInfo.AzureVirtualMachine = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.AzureVirtualMachine.ResourceID = types.StringValue(resultsItem.RemoteInfo.AzureVirtualMachine.ResourceID)
+				}
 				if resultsItem.RemoteInfo.CoupaRole == nil {
 					results.RemoteInfo.CoupaRole = nil
 				} else {
 					results.RemoteInfo.CoupaRole = &tfTypes.SnowflakeRole{}
 					results.RemoteInfo.CoupaRole.RoleID = types.StringValue(resultsItem.RemoteInfo.CoupaRole.RoleID)
+				}
+				if resultsItem.RemoteInfo.CursorOrganization == nil {
+					results.RemoteInfo.CursorOrganization = nil
+				} else {
+					results.RemoteInfo.CursorOrganization = &tfTypes.CursorOrganization{}
+					results.RemoteInfo.CursorOrganization.OrgID = types.StringValue(resultsItem.RemoteInfo.CursorOrganization.OrgID)
 				}
 				if resultsItem.RemoteInfo.CustomConnector == nil {
 					results.RemoteInfo.CustomConnector = nil
@@ -189,6 +279,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.GcpSQLInstance.InstanceID = types.StringValue(resultsItem.RemoteInfo.GcpSQLInstance.InstanceID)
 					results.RemoteInfo.GcpSQLInstance.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpSQLInstance.ProjectID)
 				}
+				if resultsItem.RemoteInfo.GithubOrg == nil {
+					results.RemoteInfo.GithubOrg = nil
+				} else {
+					results.RemoteInfo.GithubOrg = &tfTypes.GithubOrg{}
+					results.RemoteInfo.GithubOrg.OrgName = types.StringValue(resultsItem.RemoteInfo.GithubOrg.OrgName)
+				}
 				if resultsItem.RemoteInfo.GithubOrgRole == nil {
 					results.RemoteInfo.GithubOrgRole = nil
 				} else {
@@ -230,6 +326,19 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				} else {
 					results.RemoteInfo.OktaStandardRole = &tfTypes.OktaStandardRole{}
 					results.RemoteInfo.OktaStandardRole.RoleType = types.StringValue(resultsItem.RemoteInfo.OktaStandardRole.RoleType)
+				}
+				if resultsItem.RemoteInfo.OpenaiPlatformProject == nil {
+					results.RemoteInfo.OpenaiPlatformProject = nil
+				} else {
+					results.RemoteInfo.OpenaiPlatformProject = &tfTypes.GcpProject{}
+					results.RemoteInfo.OpenaiPlatformProject.ProjectID = types.StringValue(resultsItem.RemoteInfo.OpenaiPlatformProject.ProjectID)
+				}
+				if resultsItem.RemoteInfo.OpenaiPlatformServiceAccount == nil {
+					results.RemoteInfo.OpenaiPlatformServiceAccount = nil
+				} else {
+					results.RemoteInfo.OpenaiPlatformServiceAccount = &tfTypes.OpenaiPlatformServiceAccount{}
+					results.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID = types.StringValue(resultsItem.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID)
+					results.RemoteInfo.OpenaiPlatformServiceAccount.ServiceAccountID = types.StringValue(resultsItem.RemoteInfo.OpenaiPlatformServiceAccount.ServiceAccountID)
 				}
 				if resultsItem.RemoteInfo.PagerdutyRole == nil {
 					results.RemoteInfo.PagerdutyRole = nil
