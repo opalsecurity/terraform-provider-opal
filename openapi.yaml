@@ -6098,6 +6098,8 @@ components:
           description: The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
           type: integer
           example: 120
+          deprecated: true
+          x-speakeasy-deprecation-message: Do not use this field, set the extension duration in the request_configuration you want it to apply to.
         require_manager_approval:
           description: A bool representing whether or not access requests to the group require manager approval.
           example: False
@@ -6480,6 +6482,7 @@ components:
           type: integer
           example: 120
           deprecated: true
+          x-speakeasy-deprecation-message: Do not use this field, set the extension duration in the request_configuration you want it to apply to.
         request_configurations:
           type: array
           items:
@@ -8906,6 +8909,8 @@ components:
           description: The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
           type: integer
           example: 120
+          deprecated: true
+          x-speakeasy-deprecation-message: Do not use this field, set the extension duration in the request_configuration you want it to apply to.
         require_manager_approval:
           description: A bool representing whether or not access requests to the resource require manager approval.
           example: False
@@ -9194,6 +9199,7 @@ components:
           type: integer
           example: 120
           deprecated: true
+          x-speakeasy-deprecation-message: Do not use this field, set the extension duration in the request_configuration you want it to apply to.
         request_configurations:
           type: array
           items:

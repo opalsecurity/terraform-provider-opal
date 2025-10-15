@@ -98,7 +98,7 @@ func (r *ScopedRolePermissionListResource) Schema(ctx context.Context, req resou
 							Optional:    true,
 							Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 							ElementType: types.StringType,
-							Description: `The IDs of the entities that this permission applies to. If empty of missing, the permission will have untargeted scope.`,
+							Description: `The IDs of the entities that this permission applies to. If empty of missing, the permission will have untargeted scope. Default: []`,
 						},
 						"target_type": schema.StringAttribute{
 							Computed:    true,

@@ -88,8 +88,9 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Description: `A description of the resource.`,
 			},
 			"extensions_duration_in_minutes": schema.Int64Attribute{
-				Computed:    true,
-				Description: `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
+				Computed:           true,
+				DeprecationMessage: `Do not use this field, set the extension duration in the request_configuration you want it to apply to.`,
+				Description:        `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
 			},
 			"id": schema.StringAttribute{
 				Required:    true,

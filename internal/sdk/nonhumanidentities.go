@@ -63,7 +63,7 @@ func (s *NonHumanIdentities) GetNhis(ctx context.Context, request operations.Get
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "get_nhis",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 

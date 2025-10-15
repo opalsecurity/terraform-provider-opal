@@ -1,10 +1,10 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 448a91df917bfb8b926c722895228b63
+  docChecksum: 2fb4e961b2c0cf31b9510ca66cda296f
   docVersion: "1.0"
-  speakeasyVersion: 1.619.0
-  generationVersion: 2.706.0
+  speakeasyVersion: 1.636.3
+  generationVersion: 2.723.11
   releaseVersion: 3.3.1
   configChecksum: ba05f9db4af9d23ceba3bf7e02430a0c
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
@@ -15,7 +15,7 @@ features:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.2
     constsAndDefaults: 0.3.0
-    core: 3.45.0
+    core: 3.45.3
     deprecations: 2.82.0
     globalSecurity: 2.82.1
     globalServerURLs: 2.83.0
@@ -26,7 +26,7 @@ features:
     retries: 2.81.4
     serverIDs: 2.81.1
     sets: 0.1.2
-    unions: 2.81.17
+    unions: 2.81.18
 generatedFiles:
   - .gitattributes
   - USAGE.md
@@ -683,7 +683,6 @@ generatedFiles:
   - internal/sdk/types/bigint.go
   - internal/sdk/types/date.go
   - internal/sdk/types/datetime.go
-  - internal/sdk/types/decimal.go
   - internal/sdk/types/pointers.go
   - internal/sdk/uars.go
   - internal/sdk/users.go

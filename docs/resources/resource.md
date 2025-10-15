@@ -263,7 +263,7 @@ resource "opal_resource" "my_resource" {
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to this resource.
 - `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
 - `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--ticket_propagation))
-- `visibility_group_ids` (Set of String)
+- `visibility_group_ids` (Set of String) Default: []
 
 ### Read-Only
 
@@ -296,8 +296,8 @@ Optional:
 
 Optional:
 
-- `group_ids` (Set of String) The list of group IDs to match.
-- `role_remote_ids` (Set of String) The list of role remote IDs to match.
+- `group_ids` (Set of String) The list of group IDs to match. Default: []
+- `role_remote_ids` (Set of String) The list of role remote IDs to match. Default: []
 
 
 <a id="nestedatt--request_configurations--reviewer_stages"></a>

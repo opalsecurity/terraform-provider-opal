@@ -1171,6 +1171,12 @@ actions:
   - target: $["components"]["schemas"]["Group"]["properties"]["recommended_duration"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["extensions_duration_in_minutes"]
+    update:
+      deprecated: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["extensions_duration_in_minutes"]
+    update:
+      x-speakeasy-deprecation-message: Do not use this field, set the extension duration in the request_configuration you want it to apply to.
   - target: $["components"]["schemas"]["Group"]["properties"]["require_manager_approval"]
     update:
       x-speakeasy-ignore: true
@@ -1291,6 +1297,9 @@ actions:
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["group_leader_user_ids"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["extensions_duration_in_minutes"]
+    update:
+      x-speakeasy-deprecation-message: Do not use this field, set the extension duration in the request_configuration you want it to apply to.
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_configurations"]
     update:
       x-speakeasy-plan-validators: RequestConfigurations
@@ -1728,6 +1737,12 @@ actions:
   - target: $["components"]["schemas"]["Resource"]["properties"]["recommended_duration"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["extensions_duration_in_minutes"]
+    update:
+      deprecated: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["extensions_duration_in_minutes"]
+    update:
+      x-speakeasy-deprecation-message: Do not use this field, set the extension duration in the request_configuration you want it to apply to.
   - target: $["components"]["schemas"]["Resource"]["properties"]["require_manager_approval"]
     update:
       x-speakeasy-ignore: true
@@ -1848,6 +1863,9 @@ actions:
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["is_requestable"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["extensions_duration_in_minutes"]
+    update:
+      x-speakeasy-deprecation-message: Do not use this field, set the extension duration in the request_configuration you want it to apply to.
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_configurations"]
     update:
       x-speakeasy-plan-validators: RequestConfigurations

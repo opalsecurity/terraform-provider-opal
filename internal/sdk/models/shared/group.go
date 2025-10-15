@@ -102,6 +102,8 @@ type Group struct {
 	// A description of the group.
 	Description *string `json:"description,omitempty"`
 	// The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
+	//
+	// Deprecated: Do not use this field, set the extension duration in the request_configuration you want it to apply to..
 	ExtensionsDurationInMinutes *int64 `json:"extensions_duration_in_minutes,omitempty"`
 	// The ID of the associated group binding.
 	GroupBindingID *string `json:"group_binding_id,omitempty"`

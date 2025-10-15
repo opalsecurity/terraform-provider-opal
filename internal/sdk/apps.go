@@ -64,7 +64,7 @@ func (s *Apps) Get(ctx context.Context, request operations.GetAppsRequest, opts 
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getApps",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -267,7 +267,7 @@ func (s *Apps) GetSyncErrors(ctx context.Context, request operations.GetSyncErro
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getSyncErrors",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -470,7 +470,7 @@ func (s *Apps) GetID(ctx context.Context, request operations.GetAppIDRequest, op
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getAppID",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 

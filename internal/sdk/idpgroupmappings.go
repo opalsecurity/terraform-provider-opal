@@ -66,7 +66,7 @@ func (s *IdpGroupMappings) CreateIdpGroupMapping(ctx context.Context, request op
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createIdpGroupMapping",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "RequestBody", "json", `request:"mediaType=application/json"`)
@@ -271,7 +271,7 @@ func (s *IdpGroupMappings) DeleteIdpGroupMappings(ctx context.Context, request o
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "delete_idp_group_mappings",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -449,7 +449,7 @@ func (s *IdpGroupMappings) GetIdpGroupMapping(ctx context.Context, request opera
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getIdpGroupMapping",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -649,7 +649,7 @@ func (s *IdpGroupMappings) GetIdpGroupMappings(ctx context.Context, request oper
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getIdpGroupMappings",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -849,7 +849,7 @@ func (s *IdpGroupMappings) UpdateIdpGroupMappings(ctx context.Context, request o
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateIdpGroupMappings",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)

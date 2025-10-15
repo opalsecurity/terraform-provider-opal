@@ -125,6 +125,7 @@ func (r *BundleResource) Schema(ctx context.Context, req resource.SchemaRequest,
 					speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
 				},
 				ElementType: types.StringType,
+				Description: `Default: []`,
 			},
 		},
 	}

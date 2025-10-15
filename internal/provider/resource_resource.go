@@ -141,7 +141,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 			"extensions_duration_in_minutes": schema.Int64Attribute{
 				Computed:           true,
 				Optional:           true,
-				DeprecationMessage: `This will be removed in a future release, please migrate away from it as soon as possible`,
+				DeprecationMessage: `Do not use this field, set the extension duration in the request_configuration you want it to apply to.`,
 				Description:        `The duration for which access can be extended (in minutes). Deprecated, set the extension duration in the request_configuration you want it to apply to.`,
 			},
 			"id": schema.StringAttribute{
@@ -1606,14 +1606,14 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 									Optional:    true,
 									Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 									ElementType: types.StringType,
-									Description: `The list of group IDs to match.`,
+									Description: `The list of group IDs to match. Default: []`,
 								},
 								"role_remote_ids": schema.SetAttribute{
 									Computed:    true,
 									Optional:    true,
 									Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 									ElementType: types.StringType,
-									Description: `The list of role remote IDs to match.`,
+									Description: `The list of role remote IDs to match. Default: []`,
 								},
 							},
 						},
@@ -1939,6 +1939,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Optional:    true,
 				Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 				ElementType: types.StringType,
+				Description: `Default: []`,
 			},
 		},
 	}

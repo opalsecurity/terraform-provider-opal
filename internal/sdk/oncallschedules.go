@@ -63,7 +63,7 @@ func (s *OnCallSchedules) Create(ctx context.Context, request shared.CreateOnCal
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createOnCallSchedule",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -269,7 +269,7 @@ func (s *OnCallSchedules) Get(ctx context.Context, opts ...operations.Option) (*
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getOnCallSchedule",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -469,7 +469,7 @@ func (s *OnCallSchedules) GetID(ctx context.Context, request operations.GetOnCal
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getOnCallScheduleID",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 

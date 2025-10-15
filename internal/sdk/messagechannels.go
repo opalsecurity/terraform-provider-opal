@@ -63,7 +63,7 @@ func (s *MessageChannels) Create(ctx context.Context, request shared.CreateMessa
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createMessageChannel",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -269,7 +269,7 @@ func (s *MessageChannels) Get(ctx context.Context, opts ...operations.Option) (*
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getMessageChannels",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -469,7 +469,7 @@ func (s *MessageChannels) GetID(ctx context.Context, request operations.GetMessa
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getMessageChannelID",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 

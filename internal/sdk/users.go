@@ -63,7 +63,7 @@ func (s *Users) Get(ctx context.Context, request operations.GetUserRequest, opts
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getUser",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -266,7 +266,7 @@ func (s *Users) GetRemoteUsers(ctx context.Context, request operations.GetRemote
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getRemoteUsers",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -468,7 +468,7 @@ func (s *Users) GetUserTags(ctx context.Context, request operations.GetUserTagsR
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getUserTags",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -667,7 +667,7 @@ func (s *Users) GetUsers(ctx context.Context, request operations.GetUsersRequest
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getUsers",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 

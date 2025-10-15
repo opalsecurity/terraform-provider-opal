@@ -18,7 +18,7 @@ type UpdateGroupInfo struct {
 	Description *string `json:"description,omitempty"`
 	// The duration for which access can be extended (in minutes). Deprecated, set the extension duration in the request_configuration you want it to apply to.
 	//
-	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
+	// Deprecated: Do not use this field, set the extension duration in the request_configuration you want it to apply to..
 	ExtensionsDurationInMinutes *int64 `json:"extensions_duration_in_minutes,omitempty"`
 	// A list of User IDs for the group leaders of the group
 	GroupLeaderUserIds []string `json:"group_leader_user_ids,omitempty"`
