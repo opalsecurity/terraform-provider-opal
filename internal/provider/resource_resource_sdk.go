@@ -531,6 +531,26 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.
 	return diags
 }
 
+func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfoList(ctx context.Context, resp *shared.UpdateResourceInfoList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		if len(resp.Resources) == 0 {
+			diags.AddError("Unexpected response from API", "Missing response body array data.")
+			return diags
+		}
+
+		diags.Append(r.RefreshFromSharedUpdateResourceInfo(ctx, &resp.Resources[0])...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
 func (r *ResourceResourceModel) ToOperationsDeleteResourceRequest(ctx context.Context) (*operations.DeleteResourceRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 

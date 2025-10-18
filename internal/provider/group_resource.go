@@ -973,11 +973,11 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if !(res1.UpdateGroupInfoList != nil && len(res1.UpdateGroupInfoList.Groups) > 0) {
+	if !(res1.UpdateGroupInfoList != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedUpdateGroupInfo(ctx, &res1.UpdateGroupInfoList.Groups[0])...)
+	resp.Diagnostics.Append(data.RefreshFromSharedUpdateGroupInfoList(ctx, res1.UpdateGroupInfoList)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -1424,11 +1424,11 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.UpdateGroupInfoList != nil && len(res.UpdateGroupInfoList.Groups) > 0) {
+	if !(res.UpdateGroupInfoList != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedUpdateGroupInfo(ctx, &res.UpdateGroupInfoList.Groups[0])...)
+	resp.Diagnostics.Append(data.RefreshFromSharedUpdateGroupInfoList(ctx, res.UpdateGroupInfoList)...)
 
 	if resp.Diagnostics.HasError() {
 		return

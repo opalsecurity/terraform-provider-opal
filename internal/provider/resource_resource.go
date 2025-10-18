@@ -2042,11 +2042,11 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
-	if !(res1.UpdateResourceInfoList != nil && len(res1.UpdateResourceInfoList.Resources) > 0) {
+	if !(res1.UpdateResourceInfoList != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedUpdateResourceInfo(ctx, &res1.UpdateResourceInfoList.Resources[0])...)
+	resp.Diagnostics.Append(data.RefreshFromSharedUpdateResourceInfoList(ctx, res1.UpdateResourceInfoList)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -2221,11 +2221,11 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.UpdateResourceInfoList != nil && len(res.UpdateResourceInfoList.Resources) > 0) {
+	if !(res.UpdateResourceInfoList != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedUpdateResourceInfo(ctx, &res.UpdateResourceInfoList.Resources[0])...)
+	resp.Diagnostics.Append(data.RefreshFromSharedUpdateResourceInfoList(ctx, res.UpdateResourceInfoList)...)
 
 	if resp.Diagnostics.HasError() {
 		return
