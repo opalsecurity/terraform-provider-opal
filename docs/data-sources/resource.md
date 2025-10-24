@@ -105,6 +105,7 @@ Read-Only:
 - `okta_standard_role` (Attributes) Remote info for Okta directory standard role. (see [below for nested schema](#nestedatt--remote_info--okta_standard_role))
 - `openai_platform_project` (Attributes) Remote info for OpenAI Platform project. (see [below for nested schema](#nestedatt--remote_info--openai_platform_project))
 - `openai_platform_service_account` (Attributes) Remote info for OpenAI Platform service account. (see [below for nested schema](#nestedatt--remote_info--openai_platform_service_account))
+- `oracle_fusion_role` (Attributes) Remote info for Oracle Fusion role. (see [below for nested schema](#nestedatt--remote_info--oracle_fusion_role))
 - `pagerduty_role` (Attributes) Remote info for Pagerduty role. (see [below for nested schema](#nestedatt--remote_info--pagerduty_role))
 - `salesforce_permission_set` (Attributes) Remote info for Salesforce permission set. (see [below for nested schema](#nestedatt--remote_info--salesforce_permission_set))
 - `salesforce_profile` (Attributes) Remote info for Salesforce profile. (see [below for nested schema](#nestedatt--remote_info--salesforce_profile))
@@ -489,6 +490,14 @@ Read-Only:
 
 - `project_id` (String) The id of the project for the service account.
 - `service_account_id` (String) The id of the service account.
+
+
+<a id="nestedatt--remote_info--oracle_fusion_role"></a>
+### Nested Schema for `remote_info.oracle_fusion_role`
+
+Read-Only:
+
+- `role_id` (String) The id of the role.
 
 
 <a id="nestedatt--remote_info--pagerduty_role"></a>

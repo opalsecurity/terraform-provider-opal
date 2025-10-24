@@ -22,6 +22,8 @@ type GroupUser struct {
 	// ### Usage Example
 	// View the `GroupAccessLevel` of a group/user or group/group pair to see the level of access granted to the group.
 	AccessLevel *GroupAccessLevel `json:"access_level,omitempty"`
+	// The description of the group.
+	Description string `json:"description"`
 	// The user's email.
 	Email string `json:"email"`
 	// The day and time the user's access will expire.
@@ -30,6 +32,8 @@ type GroupUser struct {
 	FullName string `json:"full_name"`
 	// The ID of the group.
 	GroupID string `json:"group_id"`
+	// The name of the group.
+	GroupName string `json:"group_name"`
 	// The state of whether the push action was propagated to the remote system. If this is null, the access was synced from the remote system.
 	PropagationStatus *PropagationStatus `json:"propagation_status,omitempty"`
 	// The ID of the user.
@@ -41,7 +45,7 @@ func (g GroupUser) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GroupUser) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &g, "", false, []string{"email", "full_name", "group_id", "user_id"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &g, "", false, []string{"description", "email", "full_name", "group_id", "group_name", "user_id"}); err != nil {
 		return err
 	}
 	return nil
@@ -52,6 +56,13 @@ func (g *GroupUser) GetAccessLevel() *GroupAccessLevel {
 		return nil
 	}
 	return g.AccessLevel
+}
+
+func (g *GroupUser) GetDescription() string {
+	if g == nil {
+		return ""
+	}
+	return g.Description
 }
 
 func (g *GroupUser) GetEmail() string {
@@ -80,6 +91,13 @@ func (g *GroupUser) GetGroupID() string {
 		return ""
 	}
 	return g.GroupID
+}
+
+func (g *GroupUser) GetGroupName() string {
+	if g == nil {
+		return ""
+	}
+	return g.GroupName
 }
 
 func (g *GroupUser) GetPropagationStatus() *PropagationStatus {

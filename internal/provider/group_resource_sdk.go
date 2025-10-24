@@ -328,6 +328,26 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(ctx context.Contex
 	return diags
 }
 
+func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfoList(ctx context.Context, resp *shared.UpdateGroupInfoList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		if len(resp.Groups) == 0 {
+			diags.AddError("Unexpected response from API", "Missing response body array data.")
+			return diags
+		}
+
+		diags.Append(r.RefreshFromSharedUpdateGroupInfo(ctx, &resp.Groups[0])...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
 func (r *GroupResourceModel) ToOperationsDeleteGroupRequest(ctx context.Context) (*operations.DeleteGroupRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 

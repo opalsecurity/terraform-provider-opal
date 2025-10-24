@@ -651,6 +651,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for OpenAI Platform service account.`,
 					},
+					"oracle_fusion_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"role_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the role.`,
+							},
+						},
+						Description: `Remote info for Oracle Fusion role.`,
+					},
 					"pagerduty_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{

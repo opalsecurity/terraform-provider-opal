@@ -38,6 +38,26 @@ func (r *OwnerResourceModel) RefreshFromSharedUpdateOwnerInfo(ctx context.Contex
 	return diags
 }
 
+func (r *OwnerResourceModel) RefreshFromSharedUpdateOwnerInfoList(ctx context.Context, resp *shared.UpdateOwnerInfoList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		if len(resp.Owners) == 0 {
+			diags.AddError("Unexpected response from API", "Missing response body array data.")
+			return diags
+		}
+
+		diags.Append(r.RefreshFromSharedUpdateOwnerInfo(ctx, &resp.Owners[0])...)
+
+		if diags.HasError() {
+			return diags
+		}
+
+	}
+
+	return diags
+}
+
 func (r *OwnerResourceModel) RefreshFromSharedUserList(ctx context.Context, resp *shared.UserList) diag.Diagnostics {
 	var diags diag.Diagnostics
 

@@ -8,10 +8,12 @@ import (
 
 type GroupUser struct {
 	AccessLevel       *ResourceAccessLevel `tfsdk:"access_level"`
+	Description       types.String         `tfsdk:"description"`
 	Email             types.String         `tfsdk:"email"`
 	ExpirationDate    types.String         `tfsdk:"expiration_date"`
 	FullName          types.String         `tfsdk:"full_name"`
 	GroupID           types.String         `tfsdk:"group_id"`
+	GroupName         types.String         `tfsdk:"group_name"`
 	PropagationStatus *PropagationStatus   `tfsdk:"propagation_status"`
 	UserID            types.String         `tfsdk:"user_id"`
 }

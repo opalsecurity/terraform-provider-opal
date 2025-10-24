@@ -6278,6 +6278,14 @@ components:
           example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
           format: uuid
           type: string
+        group_name:
+          description: The name of the group.
+          example: API Group
+          type: string
+        description:
+          description: The description of the group.
+          example: Group required to request API's
+          type: string
         user_id:
           description: The ID of the user.
           example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
@@ -6307,6 +6315,8 @@ components:
         - full_name
         - group_id
         - user_id
+        - group_name
+        - description
       type: object
       x-speakeasy-entity: GroupUser
     PropagationStatus:
@@ -6638,6 +6648,7 @@ components:
         - OPENAI_PLATFORM_SERVICE_ACCOUNT
         - ANTHROPIC_WORKSPACE
         - GIT_HUB_ORG
+        - ORACLE_FUSION_ROLE
       example: AWS_IAM_ROLE
       type: string
     VisibilityTypeEnum:
@@ -7913,6 +7924,16 @@ components:
           type: object
           required:
             - workspace_id
+        oracle_fusion_role:
+          description: Remote info for Oracle Fusion role.
+          properties:
+            role_id:
+              description: The id of the role.
+              example: 123e4567-e89b-12d3-a456-426614174000
+              type: string
+          type: object
+          required:
+            - role_id
       type: object
     RiskSensitivityEnum:
       type: string

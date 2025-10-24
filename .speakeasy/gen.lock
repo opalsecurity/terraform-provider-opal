@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 2fb4e961b2c0cf31b9510ca66cda296f
+  docChecksum: 1366c58606ef39f06fd8da2f5cd0c577
   docVersion: "1.0"
-  speakeasyVersion: 1.636.3
-  generationVersion: 2.723.11
-  releaseVersion: 3.3.1
-  configChecksum: ba05f9db4af9d23ceba3bf7e02430a0c
+  speakeasyVersion: 1.639.1
+  generationVersion: 2.730.0
+  releaseVersion: 3.3.2
+  configChecksum: baa23f67f8df8977e52c5911761aa6ea
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -15,7 +15,7 @@ features:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.2
     constsAndDefaults: 0.3.0
-    core: 3.45.3
+    core: 3.46.3
     deprecations: 2.82.0
     globalSecurity: 2.82.1
     globalServerURLs: 2.83.0
@@ -26,7 +26,7 @@ features:
     retries: 2.81.4
     serverIDs: 2.81.1
     sets: 0.1.2
-    unions: 2.81.18
+    unions: 2.82.0
 generatedFiles:
   - .gitattributes
   - USAGE.md
@@ -1006,7 +1006,7 @@ examples:
         application/json: {"access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess", "duration_minutes": 0}
       responses:
         "200":
-          application/json: {"email": "jake@company.dev", "expiration_date": "2022-01-23T04:56:07Z", "full_name": "Jake Barnes", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}
+          application/json: {"description": "Group required to request API's", "email": "jake@company.dev", "expiration_date": "2022-01-23T04:56:07Z", "full_name": "Jake Barnes", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "group_name": "API Group", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}
   deleteGroup:
     speakeasy-default-delete-group:
       parameters:
@@ -1087,7 +1087,7 @@ examples:
           page_size: 200
       responses:
         "200":
-          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"email": "jake@company.dev", "expiration_date": "2022-01-23T04:56:07Z", "full_name": "Jake Barnes", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}, {"email": "brett@company.dev", "expiration_date": "2022-02-03T12:33:02Z", "full_name": "Brett Ashley", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "7646aa9a-e2ee-4eb5-8c62-91f29038a373"}]}
+          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"description": "Group required to request API's", "email": "jake@company.dev", "expiration_date": "2022-01-23T04:56:07Z", "full_name": "Jake Barnes", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "group_name": "API Group", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}, {"description": "Group required to request API's", "email": "brett@company.dev", "expiration_date": "2022-02-03T12:33:02Z", "full_name": "Brett Ashley", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "group_name": "API Group", "user_id": "7646aa9a-e2ee-4eb5-8c62-91f29038a373"}]}
   getGroupVisibility:
     speakeasy-default-get-group-visibility:
       parameters:
@@ -1130,7 +1130,7 @@ examples:
         application/json: {"access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess", "duration_minutes": 60}
       responses:
         "200":
-          application/json: {"email": "jake@company.dev", "expiration_date": "2022-01-23T04:56:07Z", "full_name": "Jake Barnes", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}
+          application/json: {"description": "Group required to request API's", "email": "jake@company.dev", "expiration_date": "2022-01-23T04:56:07Z", "full_name": "Jake Barnes", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "group_name": "API Group", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}
   updateGroupMessageChannels:
     speakeasy-default-update-group-message-channels:
       parameters:
@@ -1736,7 +1736,7 @@ examples:
           page_size: 200
       responses:
         "200":
-          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"email": "jake@company.dev", "expiration_date": "2022-01-23T04:56:07Z", "full_name": "Jake Barnes", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}, {"email": "brett@company.dev", "expiration_date": "2022-02-03T12:33:02Z", "full_name": "Brett Ashley", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "7646aa9a-e2ee-4eb5-8c62-91f29038a373"}]}
+          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"description": "Group required to request API's", "email": "jake@company.dev", "expiration_date": "2022-01-23T04:56:07Z", "full_name": "Jake Barnes", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "group_name": "API Group", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}, {"description": "Group required to request API's", "email": "brett@company.dev", "expiration_date": "2022-02-03T12:33:02Z", "full_name": "Brett Ashley", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "group_name": "API Group", "user_id": "7646aa9a-e2ee-4eb5-8c62-91f29038a373"}]}
   getIdpGroupMapping:
     speakeasy-default-get-idp-group-mapping:
       parameters:
@@ -1776,3 +1776,4 @@ examples:
           application/json: {"comments": [{"comment": "This is a comment.", "created_at": "2021-01-06T20:00:00Z", "request_id": "4c86c85d-0651-43e2-a748-d69d658418e8", "user_id": "c86c85d-0651-43e2-a748-d69d658418e8"}]}
 examplesVersion: 1.0.2
 generatedTests: {}
+releaseNotes: "## Terraform SDK Changes Detected:\n* `Opal-API.groups.create_user()`:  `response` **Changed**\n* `Opal-API.groups.get_user_groups()`:  `response.results.[]` **Changed**\n* `Opal-API.groups.get_users()`:  `response.results.[]` **Changed**\n* `Opal-API.groups.update_group_user()`:  `response` **Changed**\n* `Opal-API.non-human-identities.get_nhis()`:  `response.results.[].remote_info.oracle_fusion_role` **Added**\n* `Opal-API.resources.create()`: \n  *  `request.remote_info.oracle_fusion_role` **Added**\n  *  `response.remote_info.oracle_fusion_role` **Added**\n* `Opal-API.resources.get()`: \n  *  `request.resource_type_filter` **Changed**\n  *  `response.results.[].remote_info.oracle_fusion_role` **Added**\n* `Opal-API.resources.get_id()`:  `response.remote_info.oracle_fusion_role` **Added**\n"

@@ -30,10 +30,12 @@ func (r *GroupUsersDataSourceModel) RefreshFromSharedGroupUserList(ctx context.C
 				results.AccessLevel.AccessLevelName = types.StringValue(resultsItem.AccessLevel.AccessLevelName)
 				results.AccessLevel.AccessLevelRemoteID = types.StringValue(resultsItem.AccessLevel.AccessLevelRemoteID)
 			}
+			results.Description = types.StringValue(resultsItem.Description)
 			results.Email = types.StringValue(resultsItem.Email)
 			results.ExpirationDate = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resultsItem.ExpirationDate))
 			results.FullName = types.StringValue(resultsItem.FullName)
 			results.GroupID = types.StringValue(resultsItem.GroupID)
+			results.GroupName = types.StringValue(resultsItem.GroupName)
 			if resultsItem.PropagationStatus == nil {
 				results.PropagationStatus = nil
 			} else {

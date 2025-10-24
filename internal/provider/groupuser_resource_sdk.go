@@ -23,10 +23,12 @@ func (r *GroupUserResourceModel) RefreshFromSharedGroupUser(ctx context.Context,
 			r.AccessLevel.AccessLevelName = types.StringValue(resp.AccessLevel.AccessLevelName)
 			r.AccessLevel.AccessLevelRemoteID = types.StringValue(resp.AccessLevel.AccessLevelRemoteID)
 		}
+		r.Description = types.StringValue(resp.Description)
 		r.Email = types.StringValue(resp.Email)
 		r.ExpirationDate = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resp.ExpirationDate))
 		r.FullName = types.StringValue(resp.FullName)
 		r.GroupID = types.StringValue(resp.GroupID)
+		r.GroupName = types.StringValue(resp.GroupName)
 		if resp.PropagationStatus == nil {
 			r.PropagationStatus = nil
 		} else {

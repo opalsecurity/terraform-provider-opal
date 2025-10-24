@@ -40,11 +40,13 @@ type GroupUserResource struct {
 type GroupUserResourceModel struct {
 	AccessLevel         *tfTypes.ResourceAccessLevel `tfsdk:"access_level"`
 	AccessLevelRemoteID types.String                 `tfsdk:"access_level_remote_id"`
+	Description         types.String                 `tfsdk:"description"`
 	DurationMinutes     types.Int64                  `tfsdk:"duration_minutes"`
 	Email               types.String                 `tfsdk:"email"`
 	ExpirationDate      types.String                 `tfsdk:"expiration_date"`
 	FullName            types.String                 `tfsdk:"full_name"`
 	GroupID             types.String                 `tfsdk:"group_id"`
+	GroupName           types.String                 `tfsdk:"group_name"`
 	PropagationStatus   *tfTypes.PropagationStatus   `tfsdk:"propagation_status"`
 	UserID              types.String                 `tfsdk:"user_id"`
 }
@@ -84,6 +86,10 @@ func (r *GroupUserResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 				Description: `The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used. Requires replacement if changed.`,
 			},
+			"description": schema.StringAttribute{
+				Computed:    true,
+				Description: `The description of the group.`,
+			},
 			"duration_minutes": schema.Int64Attribute{
 				Computed: true,
 				Optional: true,
@@ -118,6 +124,10 @@ func (r *GroupUserResource) Schema(ctx context.Context, req resource.SchemaReque
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 				Description: `The ID of the group. Requires replacement if changed.`,
+			},
+			"group_name": schema.StringAttribute{
+				Computed:    true,
+				Description: `The name of the group.`,
 			},
 			"propagation_status": schema.SingleNestedAttribute{
 				Computed: true,

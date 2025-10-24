@@ -340,6 +340,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID = types.StringValue(resultsItem.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID)
 					results.RemoteInfo.OpenaiPlatformServiceAccount.ServiceAccountID = types.StringValue(resultsItem.RemoteInfo.OpenaiPlatformServiceAccount.ServiceAccountID)
 				}
+				if resultsItem.RemoteInfo.OracleFusionRole == nil {
+					results.RemoteInfo.OracleFusionRole = nil
+				} else {
+					results.RemoteInfo.OracleFusionRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.OracleFusionRole.RoleID = types.StringValue(resultsItem.RemoteInfo.OracleFusionRole.RoleID)
+				}
 				if resultsItem.RemoteInfo.PagerdutyRole == nil {
 					results.RemoteInfo.PagerdutyRole = nil
 				} else {
