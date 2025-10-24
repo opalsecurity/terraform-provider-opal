@@ -48,6 +48,7 @@ type ResourceRemoteInfo struct {
 	OktaStandardRole                 *OktaStandardRole             `tfsdk:"okta_standard_role"`
 	OpenaiPlatformProject            *GcpProject                   `tfsdk:"openai_platform_project"`
 	OpenaiPlatformServiceAccount     *OpenaiPlatformServiceAccount `tfsdk:"openai_platform_service_account"`
+	OracleFusionRole                 *SnowflakeRole                `tfsdk:"oracle_fusion_role"`
 	PagerdutyRole                    *PagerdutyRole                `tfsdk:"pagerduty_role"`
 	SalesforcePermissionSet          *SalesforcePermissionSet      `tfsdk:"salesforce_permission_set"`
 	SalesforceProfile                *SalesforceProfile            `tfsdk:"salesforce_profile"`

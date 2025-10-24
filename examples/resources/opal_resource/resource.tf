@@ -161,6 +161,9 @@ resource "opal_resource" "my_resource" {
       project_id         = "proj_abc"
       service_account_id = "svc_acct_abc"
     }
+    oracle_fusion_role = {
+      role_id = "123e4567-e89b-12d3-a456-426614174000"
+    }
     pagerduty_role = {
       role_name = "owner"
     }

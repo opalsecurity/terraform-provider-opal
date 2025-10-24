@@ -333,6 +333,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID = types.StringValue(resp.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID)
 				r.RemoteInfo.OpenaiPlatformServiceAccount.ServiceAccountID = types.StringValue(resp.RemoteInfo.OpenaiPlatformServiceAccount.ServiceAccountID)
 			}
+			if resp.RemoteInfo.OracleFusionRole == nil {
+				r.RemoteInfo.OracleFusionRole = nil
+			} else {
+				r.RemoteInfo.OracleFusionRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.OracleFusionRole.RoleID = types.StringValue(resp.RemoteInfo.OracleFusionRole.RoleID)
+			}
 			if resp.RemoteInfo.PagerdutyRole == nil {
 				r.RemoteInfo.PagerdutyRole = nil
 			} else {
@@ -526,6 +532,26 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.
 		} else {
 			r.TicketPropagation.TicketProvider = types.StringNull()
 		}
+	}
+
+	return diags
+}
+
+func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfoList(ctx context.Context, resp *shared.UpdateResourceInfoList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		if len(resp.Resources) == 0 {
+			diags.AddError("Unexpected response from API", "Missing response body array data.")
+			return diags
+		}
+
+		diags.Append(r.RefreshFromSharedUpdateResourceInfo(ctx, &resp.Resources[0])...)
+
+		if diags.HasError() {
+			return diags
+		}
+
 	}
 
 	return diags
@@ -1104,6 +1130,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				ServiceAccountID: serviceAccountId1,
 			}
 		}
+		var oracleFusionRole *shared.OracleFusionRole
+		if r.RemoteInfo.OracleFusionRole != nil {
+			var roleId5 string
+			roleId5 = r.RemoteInfo.OracleFusionRole.RoleID.ValueString()
+
+			oracleFusionRole = &shared.OracleFusionRole{
+				RoleID: roleId5,
+			}
+		}
 		var pagerdutyRole *shared.PagerdutyRole
 		if r.RemoteInfo.PagerdutyRole != nil {
 			var roleName string
@@ -1137,11 +1172,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var salesforceRole *shared.SalesforceRole
 		if r.RemoteInfo.SalesforceRole != nil {
-			var roleId5 string
-			roleId5 = r.RemoteInfo.SalesforceRole.RoleID.ValueString()
+			var roleId6 string
+			roleId6 = r.RemoteInfo.SalesforceRole.RoleID.ValueString()
 
 			salesforceRole = &shared.SalesforceRole{
-				RoleID: roleId5,
+				RoleID: roleId6,
 			}
 		}
 		var teleportRole *shared.TeleportRole
@@ -1199,6 +1234,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			OktaStandardRole:                 oktaStandardRole,
 			OpenaiPlatformProject:            openaiPlatformProject,
 			OpenaiPlatformServiceAccount:     openaiPlatformServiceAccount,
+			OracleFusionRole:                 oracleFusionRole,
 			PagerdutyRole:                    pagerdutyRole,
 			SalesforcePermissionSet:          salesforcePermissionSet,
 			SalesforceProfile:                salesforceProfile,

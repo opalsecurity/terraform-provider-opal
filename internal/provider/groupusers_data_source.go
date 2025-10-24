@@ -97,6 +97,10 @@ func (r *GroupUsersDataSource) Schema(ctx context.Context, req datasource.Schema
 								`### Usage Example` + "\n" +
 								`View the ` + "`" + `GroupAccessLevel` + "`" + ` of a group/user or group/group pair to see the level of access granted to the group.`,
 						},
+						"description": schema.StringAttribute{
+							Computed:    true,
+							Description: `The description of the group.`,
+						},
 						"email": schema.StringAttribute{
 							Computed:    true,
 							Description: `The user's email.`,
@@ -112,6 +116,10 @@ func (r *GroupUsersDataSource) Schema(ctx context.Context, req datasource.Schema
 						"group_id": schema.StringAttribute{
 							Computed:    true,
 							Description: `The ID of the group.`,
+						},
+						"group_name": schema.StringAttribute{
+							Computed:    true,
+							Description: `The name of the group.`,
 						},
 						"propagation_status": schema.SingleNestedAttribute{
 							Computed: true,

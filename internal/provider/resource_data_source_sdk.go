@@ -333,6 +333,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID = types.StringValue(resp.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID)
 				r.RemoteInfo.OpenaiPlatformServiceAccount.ServiceAccountID = types.StringValue(resp.RemoteInfo.OpenaiPlatformServiceAccount.ServiceAccountID)
 			}
+			if resp.RemoteInfo.OracleFusionRole == nil {
+				r.RemoteInfo.OracleFusionRole = nil
+			} else {
+				r.RemoteInfo.OracleFusionRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.OracleFusionRole.RoleID = types.StringValue(resp.RemoteInfo.OracleFusionRole.RoleID)
+			}
 			if resp.RemoteInfo.PagerdutyRole == nil {
 				r.RemoteInfo.PagerdutyRole = nil
 			} else {

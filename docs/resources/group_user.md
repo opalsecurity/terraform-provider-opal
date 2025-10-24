@@ -43,9 +43,11 @@ level is a `GroupAccessLevel` object whose fields are all empty strings.
 
 ### Usage Example
 View the `GroupAccessLevel` of a group/user or group/group pair to see the level of access granted to the group. (see [below for nested schema](#nestedatt--access_level))
+- `description` (String) The description of the group.
 - `email` (String) The user's email.
 - `expiration_date` (String) The day and time the user's access will expire.
 - `full_name` (String) The user's full name.
+- `group_name` (String) The name of the group.
 - `propagation_status` (Attributes) The state of whether the push action was propagated to the remote system. If this is null, the access was synced from the remote system. (see [below for nested schema](#nestedatt--propagation_status))
 
 <a id="nestedatt--access_level"></a>

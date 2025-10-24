@@ -767,6 +767,19 @@ func (o *OpenaiPlatformServiceAccount) GetServiceAccountID() string {
 	return o.ServiceAccountID
 }
 
+// OracleFusionRole - Remote info for Oracle Fusion role.
+type OracleFusionRole struct {
+	// The id of the role.
+	RoleID string `json:"role_id"`
+}
+
+func (o *OracleFusionRole) GetRoleID() string {
+	if o == nil {
+		return ""
+	}
+	return o.RoleID
+}
+
 // PagerdutyRole - Remote info for Pagerduty role.
 type PagerdutyRole struct {
 	// The name of the role.
@@ -933,6 +946,8 @@ type ResourceRemoteInfo struct {
 	OpenaiPlatformProject *OpenaiPlatformProject `json:"openai_platform_project,omitempty"`
 	// Remote info for OpenAI Platform service account.
 	OpenaiPlatformServiceAccount *OpenaiPlatformServiceAccount `json:"openai_platform_service_account,omitempty"`
+	// Remote info for Oracle Fusion role.
+	OracleFusionRole *OracleFusionRole `json:"oracle_fusion_role,omitempty"`
 	// Remote info for Pagerduty role.
 	PagerdutyRole *PagerdutyRole `json:"pagerduty_role,omitempty"`
 	// Remote info for Salesforce permission set.
@@ -1258,6 +1273,13 @@ func (r *ResourceRemoteInfo) GetOpenaiPlatformServiceAccount() *OpenaiPlatformSe
 		return nil
 	}
 	return r.OpenaiPlatformServiceAccount
+}
+
+func (r *ResourceRemoteInfo) GetOracleFusionRole() *OracleFusionRole {
+	if r == nil {
+		return nil
+	}
+	return r.OracleFusionRole
 }
 
 func (r *ResourceRemoteInfo) GetPagerdutyRole() *PagerdutyRole {
