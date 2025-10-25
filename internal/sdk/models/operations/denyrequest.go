@@ -11,6 +11,8 @@ import (
 type DenyRequestRequestBody struct {
 	// Comment for the denial
 	Comment string `json:"comment"`
+	// The decision level for the approval
+	Level *shared.RequestApprovalEnum `json:"level,omitempty"`
 }
 
 func (d *DenyRequestRequestBody) GetComment() string {
@@ -18,6 +20,13 @@ func (d *DenyRequestRequestBody) GetComment() string {
 		return ""
 	}
 	return d.Comment
+}
+
+func (d *DenyRequestRequestBody) GetLevel() *shared.RequestApprovalEnum {
+	if d == nil {
+		return nil
+	}
+	return d.Level
 }
 
 type DenyRequestRequest struct {

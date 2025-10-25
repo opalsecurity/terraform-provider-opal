@@ -2663,6 +2663,8 @@ paths:
                   type: string
                   description: "Comment for the denial"
                   example: "Denied due to insufficient justification"
+                level:
+                  $ref: "#/components/schemas/RequestApprovalEnum"
               required:
                 - comment
       responses:
