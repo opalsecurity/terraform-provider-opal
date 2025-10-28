@@ -16,7 +16,6 @@ PaginatedBundleGroupList DataSource
 data "opal_paginated_bundle_group_list" "my_paginatedbundlegrouplist" {
   bundle_id = "32acc112-21ff-4669-91c2-21e27683eaa1"
   cursor    = "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
-  page_size = 200
 }
 ```
 
@@ -30,7 +29,6 @@ data "opal_paginated_bundle_group_list" "my_paginatedbundlegrouplist" {
 ### Optional
 
 - `cursor` (String) A cursor indicating where to start fetching items after a specific point.
-- `page_size` (Number) The maximum number of groups to return from the beginning of the list. Default is 200, max is 1000.
 
 ### Read-Only
 

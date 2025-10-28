@@ -5,10 +5,8 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
@@ -35,7 +33,6 @@ type DelegationsDataSourceModel struct {
 	DelegateUserID  types.String         `queryParam:"style=form,explode=true,name=delegate_user_id" tfsdk:"delegate_user_id"`
 	DelegatorUserID types.String         `queryParam:"style=form,explode=true,name=delegator_user_id" tfsdk:"delegator_user_id"`
 	Next            types.String         `tfsdk:"next"`
-	PageSize        types.Int64          `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
 	Previous        types.String         `tfsdk:"previous"`
 	Results         []tfTypes.Delegation `tfsdk:"results"`
 	TotalCount      types.Int64          `tfsdk:"total_count"`
@@ -67,13 +64,6 @@ func (r *DelegationsDataSource) Schema(ctx context.Context, req datasource.Schem
 			"next": schema.StringAttribute{
 				Computed:    true,
 				Description: `The cursor with which to continue pagination if additional result pages exist.`,
-			},
-			"page_size": schema.Int64Attribute{
-				Optional:    true,
-				Description: `The maximum number of results to return per page. The default is 200.`,
-				Validators: []validator.Int64{
-					int64validator.AtMost(1000),
-				},
 			},
 			"previous": schema.StringAttribute{
 				Computed:    true,
@@ -195,6 +185,26 @@ func (r *DelegationsDataSource) Read(ctx context.Context, req datasource.ReadReq
 
 	if resp.Diagnostics.HasError() {
 		return
+	}
+	for {
+		var err error
+
+		res, err = res.Next()
+
+		if err != nil {
+			resp.Diagnostics.AddError(fmt.Sprintf("failed to retrieve next page of results: %v", err), debugResponse(res.RawResponse))
+			return
+		}
+
+		if res == nil {
+			break
+		}
+
+		resp.Diagnostics.Append(data.RefreshFromSharedPaginatedDelegationsList(ctx, res.PaginatedDelegationsList)...)
+
+		if resp.Diagnostics.HasError() {
+			return
+		}
 	}
 
 	// Save updated data into Terraform state

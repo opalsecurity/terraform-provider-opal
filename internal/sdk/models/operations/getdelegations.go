@@ -55,6 +55,8 @@ type GetDelegationsResponse struct {
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
+
+	Next func() (*GetDelegationsResponse, error)
 }
 
 func (g *GetDelegationsResponse) GetContentType() string {

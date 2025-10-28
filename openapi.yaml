@@ -173,6 +173,18 @@ paths:
       tags:
         - bundles
       x-speakeasy-entity-operation: PaginatedBundleList#read
+      x-speakeasy-pagination:
+        type: cursor
+        inputs:
+          - name: cursor
+            in: parameters
+            type: cursor
+          - name: page_size
+            in: parameters
+            type: limit
+        outputs:
+          nextCursor: $.next
+          results: $.bundles
     post:
       description: Creates a bundle.
       operationId: createBundle
@@ -321,6 +333,18 @@ paths:
       tags:
         - bundles
       x-speakeasy-entity-operation: PaginatedBundleResourceList#read
+      x-speakeasy-pagination:
+        type: cursor
+        inputs:
+          - name: cursor
+            in: parameters
+            type: cursor
+          - name: page_size
+            in: parameters
+            type: limit
+        outputs:
+          nextCursor: $.next
+          results: $.bundle_resources
     post:
       description: Adds a resource to a bundle.
       operationId: addBundleResource
@@ -448,6 +472,18 @@ paths:
       tags:
         - bundles
       x-speakeasy-entity-operation: PaginatedBundleGroupList#read
+      x-speakeasy-pagination:
+        type: cursor
+        inputs:
+          - name: cursor
+            in: parameters
+            type: cursor
+          - name: page_size
+            in: parameters
+            type: limit
+        outputs:
+          nextCursor: $.next
+          results: $.groups
     post:
       description: Adds a group to a bundle.
       operationId: addBundleGroup
@@ -2663,6 +2699,8 @@ paths:
                   type: string
                   description: "Comment for the denial"
                   example: "Denied due to insufficient justification"
+                level:
+                  $ref: "#/components/schemas/RequestApprovalEnum"
               required:
                 - comment
       responses:
@@ -4612,6 +4650,18 @@ paths:
       tags:
         - delegations
       x-speakeasy-entity-operation: Delegations#get
+      x-speakeasy-pagination:
+        type: cursor
+        inputs:
+          - name: cursor
+            in: parameters
+            type: cursor
+          - name: page_size
+            in: parameters
+            type: limit
+        outputs:
+          nextCursor: $.next
+          results: $.results
     post:
       description: Creates a new request reviewer delegation to delegate access review requests from one user to another.
       operationId: createDelegation

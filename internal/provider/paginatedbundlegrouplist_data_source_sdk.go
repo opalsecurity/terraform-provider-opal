@@ -15,7 +15,9 @@ func (r *PaginatedBundleGroupListDataSourceModel) RefreshFromSharedPaginatedBund
 	var diags diag.Diagnostics
 
 	if resp != nil {
-		r.BundleGroups = []tfTypes.BundleGroup{}
+		if r.BundleGroups == nil {
+			r.BundleGroups = []tfTypes.BundleGroup{}
+		}
 
 		for _, bundleGroupsItem := range resp.BundleGroups {
 			var bundleGroups tfTypes.BundleGroup
@@ -41,22 +43,8 @@ func (r *PaginatedBundleGroupListDataSourceModel) ToOperationsGetBundleGroupsReq
 	var bundleID string
 	bundleID = r.BundleID.ValueString()
 
-	cursor := new(string)
-	if !r.Cursor.IsUnknown() && !r.Cursor.IsNull() {
-		*cursor = r.Cursor.ValueString()
-	} else {
-		cursor = nil
-	}
-	pageSize := new(int64)
-	if !r.PageSize.IsUnknown() && !r.PageSize.IsNull() {
-		*pageSize = r.PageSize.ValueInt64()
-	} else {
-		pageSize = nil
-	}
 	out := operations.GetBundleGroupsRequest{
 		BundleID: bundleID,
-		Cursor:   cursor,
-		PageSize: pageSize,
 	}
 
 	return &out, diags

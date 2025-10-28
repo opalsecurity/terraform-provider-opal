@@ -35,6 +35,18 @@ actions:
   - target: $["paths"]["/bundles"]["get"]
     update:
       x-speakeasy-entity-operation: PaginatedBundleList#read
+      x-speakeasy-pagination:
+        type: cursor
+        inputs:
+          - name: cursor
+            in: parameters
+            type: cursor
+          - name: page_size
+            in: parameters
+            type: limit
+        outputs:
+          nextCursor: $.next
+          results: $.bundles
   - target: $["paths"]["/bundles"]["post"]
     update:
       x-speakeasy-entity-operation: Bundle#create
@@ -50,6 +62,18 @@ actions:
   - target: $["paths"]["/bundles/{bundle_id}/resources"]["get"]
     update:
       x-speakeasy-entity-operation: PaginatedBundleResourceList#read
+      x-speakeasy-pagination:
+        type: cursor
+        inputs:
+          - name: cursor
+            in: parameters
+            type: cursor
+          - name: page_size
+            in: parameters
+            type: limit
+        outputs:
+          nextCursor: $.next
+          results: $.bundle_resources
   - target: $["paths"]["/bundles/{bundle_id}/resources"]["post"]
     update:
       x-speakeasy-entity-operation: BundleResource#create
@@ -59,6 +83,18 @@ actions:
   - target: $["paths"]["/bundles/{bundle_id}/groups"]["get"]
     update:
       x-speakeasy-entity-operation: PaginatedBundleGroupList#read
+      x-speakeasy-pagination:
+        type: cursor
+        inputs:
+          - name: cursor
+            in: parameters
+            type: cursor
+          - name: page_size
+            in: parameters
+            type: limit
+        outputs:
+          nextCursor: $.next
+          results: $.groups
   - target: $["paths"]["/bundles/{bundle_id}/groups"]["post"]
     update:
       x-speakeasy-entity-operation: BundleGroup#create
@@ -485,6 +521,18 @@ actions:
   - target: $["paths"]["/delegations"]["get"]
     update:
       x-speakeasy-entity-operation: Delegations#get
+      x-speakeasy-pagination:
+        type: cursor
+        inputs:
+          - name: cursor
+            in: parameters
+            type: cursor
+          - name: page_size
+            in: parameters
+            type: limit
+        outputs:
+          nextCursor: $.next
+          results: $.results
   - target: $["paths"]["/delegations"]["post"]
     update:
       x-speakeasy-entity-operation: Delegation#create

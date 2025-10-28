@@ -17,7 +17,6 @@ data "opal_delegations" "my_delegations" {
   cursor            = "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
   delegate_user_id  = "29827fb8-f2dd-4e80-9576-28e31e9934ac"
   delegator_user_id = "29827fb8-f2dd-4e80-9576-28e31e9934ac"
-  page_size         = 200
 }
 ```
 
@@ -29,7 +28,6 @@ data "opal_delegations" "my_delegations" {
 - `cursor` (String) A cursor to indicate where to start fetching results.
 - `delegate_user_id` (String) The delegate user ID to filter delegations by the user being delegated to.
 - `delegator_user_id` (String) The delegator user ID to filter delegations by the user delegating their access review requests.
-- `page_size` (Number) The maximum number of results to return per page. The default is 200.
 
 ### Read-Only
 

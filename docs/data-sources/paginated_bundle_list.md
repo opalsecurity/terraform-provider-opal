@@ -14,9 +14,8 @@ PaginatedBundleList DataSource
 
 ```terraform
 data "opal_paginated_bundle_list" "my_paginatedbundlelist" {
-  contains  = "Engineering"
-  cursor    = "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
-  page_size = 200
+  contains = "Engineering"
+  cursor   = "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
 }
 ```
 
@@ -27,7 +26,6 @@ data "opal_paginated_bundle_list" "my_paginatedbundlelist" {
 
 - `contains` (String) A filter for the bundle name.
 - `cursor` (String) A cursor indicating where to start fetching items after a specific point.
-- `page_size` (Number) The maximum number of bundles to return from the beginning of the list. Default is 200, max is 1000.
 
 ### Read-Only
 

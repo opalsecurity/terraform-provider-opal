@@ -46,6 +46,8 @@ type GetBundleGroupsResponse struct {
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
+
+	Next func() (*GetBundleGroupsResponse, error)
 }
 
 func (g *GetBundleGroupsResponse) GetContentType() string {

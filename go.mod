@@ -12,6 +12,7 @@ require (
 	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-testing v1.13.2
 	github.com/pkg/errors v0.9.1
+	github.com/spyzhov/ajson v0.9.0
 	github.com/stretchr/testify v1.8.3
 )
 
