@@ -33,7 +33,6 @@ type PaginatedBundleListDataSourceModel struct {
 	Contains   types.String     `queryParam:"style=form,explode=true,name=contains" tfsdk:"contains"`
 	Cursor     types.String     `queryParam:"style=form,explode=true,name=cursor" tfsdk:"cursor"`
 	Next       types.String     `tfsdk:"next"`
-	PageSize   types.Int64      `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
 	Previous   types.String     `tfsdk:"previous"`
 	TotalCount types.Int64      `tfsdk:"total_count"`
 }
@@ -103,10 +102,6 @@ func (r *PaginatedBundleListDataSource) Schema(ctx context.Context, req datasour
 			"next": schema.StringAttribute{
 				Computed:    true,
 				Description: `The cursor with which to continue pagination if additional result pages exist.`,
-			},
-			"page_size": schema.Int64Attribute{
-				Optional:    true,
-				Description: `The maximum number of bundles to return from the beginning of the list. Default is 200, max is 1000.`,
 			},
 			"previous": schema.StringAttribute{
 				Computed:    true,
@@ -188,6 +183,26 @@ func (r *PaginatedBundleListDataSource) Read(ctx context.Context, req datasource
 
 	if resp.Diagnostics.HasError() {
 		return
+	}
+	for {
+		var err error
+
+		res, err = res.Next()
+
+		if err != nil {
+			resp.Diagnostics.AddError(fmt.Sprintf("failed to retrieve next page of results: %v", err), debugResponse(res.RawResponse))
+			return
+		}
+
+		if res == nil {
+			break
+		}
+
+		resp.Diagnostics.Append(data.RefreshFromSharedPaginatedBundleList(ctx, res.PaginatedBundleList)...)
+
+		if resp.Diagnostics.HasError() {
+			return
+		}
 	}
 
 	// Save updated data into Terraform state

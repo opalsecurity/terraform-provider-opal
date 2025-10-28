@@ -18,7 +18,9 @@ func (r *DelegationsDataSourceModel) RefreshFromSharedPaginatedDelegationsList(c
 	if resp != nil {
 		r.Next = types.StringPointerValue(resp.Next)
 		r.Previous = types.StringPointerValue(resp.Previous)
-		r.Results = []tfTypes.Delegation{}
+		if r.Results == nil {
+			r.Results = []tfTypes.Delegation{}
+		}
 
 		for _, resultsItem := range resp.Results {
 			var results tfTypes.Delegation
@@ -43,12 +45,6 @@ func (r *DelegationsDataSourceModel) RefreshFromSharedPaginatedDelegationsList(c
 func (r *DelegationsDataSourceModel) ToOperationsGetDelegationsRequest(ctx context.Context) (*operations.GetDelegationsRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	cursor := new(string)
-	if !r.Cursor.IsUnknown() && !r.Cursor.IsNull() {
-		*cursor = r.Cursor.ValueString()
-	} else {
-		cursor = nil
-	}
 	delegateUserID := new(string)
 	if !r.DelegateUserID.IsUnknown() && !r.DelegateUserID.IsNull() {
 		*delegateUserID = r.DelegateUserID.ValueString()
@@ -61,17 +57,9 @@ func (r *DelegationsDataSourceModel) ToOperationsGetDelegationsRequest(ctx conte
 	} else {
 		delegatorUserID = nil
 	}
-	pageSize := new(int64)
-	if !r.PageSize.IsUnknown() && !r.PageSize.IsNull() {
-		*pageSize = r.PageSize.ValueInt64()
-	} else {
-		pageSize = nil
-	}
 	out := operations.GetDelegationsRequest{
-		Cursor:          cursor,
 		DelegateUserID:  delegateUserID,
 		DelegatorUserID: delegatorUserID,
-		PageSize:        pageSize,
 	}
 
 	return &out, diags

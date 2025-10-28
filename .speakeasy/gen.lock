@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 1366c58606ef39f06fd8da2f5cd0c577
+  docChecksum: 45e1f288aa81f854581b825bfe323380
   docVersion: "1.0"
-  speakeasyVersion: 1.639.1
-  generationVersion: 2.730.0
-  releaseVersion: 3.3.2
-  configChecksum: baa23f67f8df8977e52c5911761aa6ea
+  speakeasyVersion: 1.642.1
+  generationVersion: 2.731.4
+  releaseVersion: 3.4.0
+  configChecksum: 4f71ba5463e7f25051330975118aac14
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -23,10 +23,11 @@ features:
     inputOutputModels: 2.83.0
     nameOverrides: 2.81.3
     nullables: 0.0.0
+    pagination: 2.83.3
     retries: 2.81.4
     serverIDs: 2.81.1
     sets: 0.1.2
-    unions: 2.82.0
+    unions: 2.82.1
 generatedFiles:
   - .gitattributes
   - USAGE.md
@@ -1762,7 +1763,7 @@ examples:
         path:
           id: "83015915-58ae-4cce-b92d-608ff073ece1"
       requestBody:
-        application/json: {"comment": "Denied due to insufficient justification"}
+        application/json: {"comment": "Denied due to insufficient justification", "level": "REGULAR"}
       responses:
         "200":
           application/json: {"request": {"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "reviewer_stages": [{"item_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "item_name": "<value>", "stages": [{"operator": "AND", "reviewers": [{"id": "7c86c85d-0651-43e2-a748-d69d658418e8", "status": "PENDING"}], "stage": 1}, {"operator": "OR", "reviewers": [{"id": "8d86c85d-0651-43e2-a748-d69d658418e9", "status": "APPROVED"}], "stage": 2}]}], "status": "CANCELED", "target_group_id": "r86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}}
@@ -1776,4 +1777,3 @@ examples:
           application/json: {"comments": [{"comment": "This is a comment.", "created_at": "2021-01-06T20:00:00Z", "request_id": "4c86c85d-0651-43e2-a748-d69d658418e8", "user_id": "c86c85d-0651-43e2-a748-d69d658418e8"}]}
 examplesVersion: 1.0.2
 generatedTests: {}
-releaseNotes: "## Terraform SDK Changes Detected:\n* `Opal-API.groups.create_user()`:  `response` **Changed**\n* `Opal-API.groups.get_user_groups()`:  `response.results.[]` **Changed**\n* `Opal-API.groups.get_users()`:  `response.results.[]` **Changed**\n* `Opal-API.groups.update_group_user()`:  `response` **Changed**\n* `Opal-API.non-human-identities.get_nhis()`:  `response.results.[].remote_info.oracle_fusion_role` **Added**\n* `Opal-API.resources.create()`: \n  *  `request.remote_info.oracle_fusion_role` **Added**\n  *  `response.remote_info.oracle_fusion_role` **Added**\n* `Opal-API.resources.get()`: \n  *  `request.resource_type_filter` **Changed**\n  *  `response.results.[].remote_info.oracle_fusion_role` **Added**\n* `Opal-API.resources.get_id()`:  `response.remote_info.oracle_fusion_role` **Added**\n"

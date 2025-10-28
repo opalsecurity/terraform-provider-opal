@@ -13,8 +13,11 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/retry"
+	"github.com/spyzhov/ajson"
 	"net/http"
 	"net/url"
+	"strconv"
+	"strings"
 )
 
 // Delegations - Operations related to request reviewer delegations
@@ -781,6 +784,76 @@ func (s *Delegations) GetDelegations(ctx context.Context, request operations.Get
 		StatusCode:  httpRes.StatusCode,
 		ContentType: httpRes.Header.Get("Content-Type"),
 		RawResponse: httpRes,
+	}
+	res.Next = func() (*operations.GetDelegationsResponse, error) {
+		rawBody, err := utils.ConsumeRawBody(httpRes)
+		if err != nil {
+			return nil, err
+		}
+
+		b, err := ajson.Unmarshal(rawBody)
+		if err != nil {
+			return nil, err
+		}
+		nC, err := ajson.Eval(b, "$.next")
+		if err != nil {
+			return nil, err
+		}
+		var nCVal string
+
+		if nC.IsNumeric() {
+			numVal, err := nC.GetNumeric()
+			if err != nil {
+				return nil, err
+			}
+			// GetNumeric returns as float64 so convert to the appropriate type.
+			nCVal = strconv.FormatFloat(numVal, 'f', 0, 64)
+		} else {
+			val, err := nC.Value()
+			if err != nil {
+				return nil, err
+			}
+			if val == nil {
+				return nil, nil
+			}
+			nCVal = val.(string)
+			if strings.TrimSpace(nCVal) == "" {
+				return nil, nil
+			}
+		}
+		r, err := ajson.Eval(b, "$.results")
+		if err != nil {
+			return nil, err
+		}
+		if !r.IsArray() {
+			return nil, nil
+		}
+		arr, err := r.GetArray()
+		if err != nil {
+			return nil, err
+		}
+		if len(arr) == 0 {
+			return nil, nil
+		}
+
+		l := 0
+		if request.PageSize != nil {
+			l = int(*request.PageSize)
+		}
+		if len(arr) < l {
+			return nil, nil
+		}
+
+		return s.GetDelegations(
+			ctx,
+			operations.GetDelegationsRequest{
+				Cursor:          &nCVal,
+				DelegateUserID:  request.DelegateUserID,
+				DelegatorUserID: request.DelegatorUserID,
+				PageSize:        request.PageSize,
+			},
+			opts...,
+		)
 	}
 
 	switch {
