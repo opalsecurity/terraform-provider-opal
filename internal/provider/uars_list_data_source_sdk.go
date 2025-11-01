@@ -24,6 +24,7 @@ func (r *UARSListDataSourceModel) RefreshFromSharedPaginatedUARsList(ctx context
 			var results tfTypes.Uar
 
 			results.Deadline = types.StringValue(typeconvert.TimeToString(resultsItem.Deadline))
+			results.InstantlyActionReviews = types.BoolValue(resultsItem.InstantlyActionReviews)
 			results.Name = types.StringValue(resultsItem.Name)
 			results.ReviewerAssignmentPolicy = types.StringValue(string(resultsItem.ReviewerAssignmentPolicy))
 			results.SelfReviewAllowed = types.BoolValue(resultsItem.SelfReviewAllowed)
