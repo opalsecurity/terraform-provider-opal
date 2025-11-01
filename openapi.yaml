@@ -2663,6 +2663,8 @@ paths:
                   type: string
                   description: "Comment for the denial"
                   example: "Denied due to insufficient justification"
+                level:
+                  $ref: "#/components/schemas/RequestApprovalEnum"
               required:
                 - comment
       responses:
@@ -4940,6 +4942,10 @@ components:
           description: A bool representing whether to present a warning when a user is the only reviewer for themself. Default is False.
           example: False
           type: boolean
+        instantly_action_reviews:
+          description: A bool representing whether to instantly action changes when reviewers submit their decision. Default is False.
+          type: boolean
+          example: False
         uar_scope:
           $ref: "#/components/schemas/UARScope"
       required:
@@ -4950,6 +4956,7 @@ components:
         - send_reviewer_assignment_notification
         - time_zone
         - self_review_allowed
+        - instantly_action_reviews
       type: object
       x-speakeasy-entity: UAR
     CreateUARInfo:
@@ -4997,6 +5004,10 @@ components:
           description: A bool representing whether to present a warning when a user is the only reviewer for themself. Default is False.
           example: False
           type: boolean
+        instantly_action_reviews:
+          description: A bool representing whether to instantly action changes when reviewers submit their decision. Default is False.
+          type: boolean
+          example: False
         reminder_schedule:
           items:
             type: integer

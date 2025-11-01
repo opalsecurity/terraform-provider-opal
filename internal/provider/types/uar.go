@@ -8,6 +8,7 @@ import (
 
 type Uar struct {
 	Deadline                           types.String `tfsdk:"deadline"`
+	InstantlyActionReviews             types.Bool   `tfsdk:"instantly_action_reviews"`
 	Name                               types.String `tfsdk:"name"`
 	ReviewerAssignmentPolicy           types.String `tfsdk:"reviewer_assignment_policy"`
 	SelfReviewAllowed                  types.Bool   `tfsdk:"self_review_allowed"`
