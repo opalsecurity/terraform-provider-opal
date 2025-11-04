@@ -2,6 +2,43 @@
 
 package shared
 
+import (
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
+)
+
+// Condition - The condition for the request configuration.
+type Condition struct {
+	// The list of group IDs to match.
+	GroupIds []string `json:"group_ids"`
+	// The list of role remote IDs to match.
+	RoleRemoteIds []string `json:"role_remote_ids"`
+}
+
+func (c Condition) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(c, "", false)
+}
+
+func (c *Condition) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &c, "", false, nil); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Condition) GetGroupIds() []string {
+	if c == nil {
+		return nil
+	}
+	return c.GroupIds
+}
+
+func (c *Condition) GetRoleRemoteIds() []string {
+	if c == nil {
+		return nil
+	}
+	return c.RoleRemoteIds
+}
+
 // RequestConfiguration - # Request Configuration Object
 // ### Description
 // The `RequestConfiguration` object is used to represent a request configuration.
@@ -12,8 +49,9 @@ type RequestConfiguration struct {
 	// A bool representing whether or not to allow requests for this resource.
 	AllowRequests bool `json:"allow_requests"`
 	// A bool representing whether or not to automatically approve requests for this resource.
-	AutoApproval bool       `json:"auto_approval"`
-	Condition    *Condition `json:"condition,omitempty"`
+	AutoApproval bool `json:"auto_approval"`
+	// The condition for the request configuration.
+	Condition *Condition `json:"condition,omitempty"`
 	// The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 	ExtensionsDurationInMinutes *int64 `json:"extensions_duration_in_minutes,omitempty"`
 	// The maximum duration for which the resource can be requested (in minutes).

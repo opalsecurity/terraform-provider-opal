@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-type SyncTask struct {
+type LastSuccessfulSync struct {
 	CompletedAt types.String `tfsdk:"completed_at"`
 	ID          types.String `tfsdk:"id"`
 }

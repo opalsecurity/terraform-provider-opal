@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setdefault"
@@ -63,7 +64,7 @@ type GroupResourceModel struct {
 	GroupLeaderUserIds          []types.String                              `tfsdk:"group_leader_user_ids"`
 	GroupType                   types.String                                `tfsdk:"group_type"`
 	ID                          types.String                                `tfsdk:"id"`
-	LastSuccessfulSync          *tfTypes.SyncTask                           `tfsdk:"last_successful_sync"`
+	LastSuccessfulSync          *tfTypes.LastSuccessfulSync                 `tfsdk:"last_successful_sync"`
 	MessageChannelIds           []types.String                              `tfsdk:"message_channel_ids"`
 	MessageChannels             tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
 	Name                        types.String                                `tfsdk:"name"`
@@ -124,8 +125,11 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Description: `A description of the remote group.`,
 			},
 			"extensions_duration_in_minutes": schema.Int64Attribute{
-				Computed:           true,
-				Optional:           true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.Int64{
+					speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
+				},
 				DeprecationMessage: `Do not use this field, set the extension duration in the request_configuration you want it to apply to.`,
 				Description:        `The duration for which access can be extended (in minutes). Deprecated, set the extension duration in the request_configuration you want it to apply to.`,
 			},
@@ -185,20 +189,29 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 			},
 			"last_successful_sync": schema.SingleNestedAttribute{
 				Computed: true,
+				PlanModifiers: []planmodifier.Object{
+					speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+				},
 				Attributes: map[string]schema.Attribute{
 					"completed_at": schema.StringAttribute{
-						Computed:    true,
+						Computed: true,
+						PlanModifiers: []planmodifier.String{
+							speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+						},
 						Description: `The time when the sync task was completed.`,
 						Validators: []validator.String{
 							validators.IsRFC3339(),
 						},
 					},
 					"id": schema.StringAttribute{
-						Computed:    true,
+						Computed: true,
+						PlanModifiers: []planmodifier.String{
+							speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+						},
 						Description: `The ID of the sync task.`,
 					},
 				},
-				Description: `Represents a sync task that has been completed, either successfully or with errors.`,
+				Description: `Information about the last successful sync of this group.`,
 			},
 			"message_channel_ids": schema.SetAttribute{
 				Computed:    true,
@@ -762,26 +775,47 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						"condition": schema.SingleNestedAttribute{
 							Computed: true,
 							Optional: true,
+							Default: objectdefault.StaticValue(types.ObjectNull(map[string]attr.Type{
+								"group_ids": types.SetType{
+									ElemType: types.StringType,
+								},
+								"role_remote_ids": types.SetType{
+									ElemType: types.StringType,
+								},
+							})),
+							PlanModifiers: []planmodifier.Object{
+								speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+							},
 							Attributes: map[string]schema.Attribute{
 								"group_ids": schema.SetAttribute{
-									Computed:    true,
-									Optional:    true,
-									Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
+									Computed: true,
+									Optional: true,
+									Default:  setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
+									PlanModifiers: []planmodifier.Set{
+										speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
+									},
 									ElementType: types.StringType,
 									Description: `The list of group IDs to match. Default: []`,
 								},
 								"role_remote_ids": schema.SetAttribute{
-									Computed:    true,
-									Optional:    true,
-									Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
+									Computed: true,
+									Optional: true,
+									Default:  setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
+									PlanModifiers: []planmodifier.Set{
+										speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
+									},
 									ElementType: types.StringType,
 									Description: `The list of role remote IDs to match. Default: []`,
 								},
 							},
+							Description: `The condition for the request configuration.`,
 						},
 						"extensions_duration_in_minutes": schema.Int64Attribute{
-							Computed:    true,
-							Optional:    true,
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Int64{
+								speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
+							},
 							Description: `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
 						},
 						"max_duration": schema.Int64Attribute{

@@ -38,7 +38,7 @@ type GroupDataSourceModel struct {
 	GroupLeaderUserIds          []types.String                              `tfsdk:"group_leader_user_ids"`
 	GroupType                   types.String                                `tfsdk:"group_type"`
 	ID                          types.String                                `tfsdk:"id"`
-	LastSuccessfulSync          *tfTypes.SyncTask                           `tfsdk:"last_successful_sync"`
+	LastSuccessfulSync          *tfTypes.LastSuccessfulSync                 `tfsdk:"last_successful_sync"`
 	MessageChannels             tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
 	Name                        types.String                                `tfsdk:"name"`
 	OnCallSchedules             tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"on_call_schedules"`
@@ -113,7 +113,7 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						Description: `The ID of the sync task.`,
 					},
 				},
-				Description: `Represents a sync task that has been completed, either successfully or with errors.`,
+				Description: `Information about the last successful sync of this group.`,
 			},
 			"message_channels": schema.SingleNestedAttribute{
 				Computed: true,
@@ -387,6 +387,7 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 									Description: `The list of role remote IDs to match.`,
 								},
 							},
+							Description: `The condition for the request configuration.`,
 						},
 						"extensions_duration_in_minutes": schema.Int64Attribute{
 							Computed:    true,

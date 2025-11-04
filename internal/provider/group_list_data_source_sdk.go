@@ -40,7 +40,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 			if resultsItem.LastSuccessfulSync == nil {
 				results.LastSuccessfulSync = nil
 			} else {
-				results.LastSuccessfulSync = &tfTypes.SyncTask{}
+				results.LastSuccessfulSync = &tfTypes.LastSuccessfulSync{}
 				results.LastSuccessfulSync.CompletedAt = types.StringValue(typeconvert.TimeToString(resultsItem.LastSuccessfulSync.CompletedAt))
 				results.LastSuccessfulSync.ID = types.StringValue(resultsItem.LastSuccessfulSync.ID)
 			}

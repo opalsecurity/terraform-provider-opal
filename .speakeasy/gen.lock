@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 2fc28821a8bc5f8b27d5e97f6511a645
+  docChecksum: 644c34459301929a3e8f8c4c706619a9
   docVersion: "1.0"
   speakeasyVersion: 1.648.1
   generationVersion: 2.739.1
-  releaseVersion: 3.3.2
-  configChecksum: ac3579dbaae0aa4843e29c9b6706d0bf
+  releaseVersion: 3.3.3
+  configChecksum: b2f92f81dc1f2880ec243ac97befa0bd
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -327,6 +327,7 @@ generatedFiles:
   - internal/provider/types/group_user.go
   - internal/provider/types/idp_group_mapping.go
   - internal/provider/types/ilevel_advanced_role.go
+  - internal/provider/types/last_successful_sync.go
   - internal/provider/types/mappings.go
   - internal/provider/types/message_channel.go
   - internal/provider/types/okta_app.go
@@ -362,7 +363,6 @@ generatedFiles:
   - internal/provider/types/snowflake_schema.go
   - internal/provider/types/snowflake_table.go
   - internal/provider/types/sub_event.go
-  - internal/provider/types/sync_task.go
   - internal/provider/types/tag.go
   - internal/provider/types/tag_filter.go
   - internal/provider/types/tag_selector.go
@@ -546,7 +546,6 @@ generatedFiles:
   - internal/sdk/models/shared/bundlegroup.go
   - internal/sdk/models/shared/bundleinput.go
   - internal/sdk/models/shared/bundleresource.go
-  - internal/sdk/models/shared/condition.go
   - internal/sdk/models/shared/configurationtemplate.go
   - internal/sdk/models/shared/createbundleinfo.go
   - internal/sdk/models/shared/createconfigurationtemplateinfo.go
@@ -648,7 +647,6 @@ generatedFiles:
   - internal/sdk/models/shared/subevent.go
   - internal/sdk/models/shared/syncerror.go
   - internal/sdk/models/shared/syncerrorlist.go
-  - internal/sdk/models/shared/synctask.go
   - internal/sdk/models/shared/tag.go
   - internal/sdk/models/shared/tagfilter.go
   - internal/sdk/models/shared/tagselector.go

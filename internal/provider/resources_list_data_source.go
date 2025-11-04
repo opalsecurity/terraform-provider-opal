@@ -224,7 +224,7 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 									Description: `The ID of the sync task.`,
 								},
 							},
-							Description: `Represents a sync task that has been completed, either successfully or with errors.`,
+							Description: `Information about the last successful sync of this resource.`,
 						},
 						"name": schema.StringAttribute{
 							Computed:    true,
@@ -976,6 +976,7 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 												Description: `The list of role remote IDs to match.`,
 											},
 										},
+										Description: `The condition for the request configuration.`,
 									},
 									"extensions_duration_in_minutes": schema.Int64Attribute{
 										Computed:    true,

@@ -52,7 +52,7 @@ Read-Only:
 - `group_leader_user_ids` (Set of String) A list of User IDs for the group leaders of the group
 - `group_type` (String) The type of the group.
 - `id` (String) The ID of the group.
-- `last_successful_sync` (Attributes) Represents a sync task that has been completed, either successfully or with errors. (see [below for nested schema](#nestedatt--results--last_successful_sync))
+- `last_successful_sync` (Attributes) Information about the last successful sync of this group. (see [below for nested schema](#nestedatt--results--last_successful_sync))
 - `name` (String) The name of the group.
 - `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided. (see [below for nested schema](#nestedatt--results--remote_info))
 - `remote_name` (String) The name of the remote.
@@ -228,7 +228,7 @@ Read-Only:
 
 - `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource.
 - `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource.
-- `condition` (Attributes) (see [below for nested schema](#nestedatt--results--request_configurations--condition))
+- `condition` (Attributes) The condition for the request configuration. (see [below for nested schema](#nestedatt--results--request_configurations--condition))
 - `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
 - `priority` (Number) The priority of the request configuration.

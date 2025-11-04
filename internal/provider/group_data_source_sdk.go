@@ -108,7 +108,7 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 		if resp.LastSuccessfulSync == nil {
 			r.LastSuccessfulSync = nil
 		} else {
-			r.LastSuccessfulSync = &tfTypes.SyncTask{}
+			r.LastSuccessfulSync = &tfTypes.LastSuccessfulSync{}
 			r.LastSuccessfulSync.CompletedAt = types.StringValue(typeconvert.TimeToString(resp.LastSuccessfulSync.CompletedAt))
 			r.LastSuccessfulSync.ID = types.StringValue(resp.LastSuccessfulSync.ID)
 		}

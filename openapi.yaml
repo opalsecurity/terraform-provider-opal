@@ -6111,6 +6111,7 @@ components:
           example: 120
           deprecated: true
           x-speakeasy-deprecation-message: Do not use this field, set the extension duration in the request_configuration you want it to apply to.
+          x-speakeasy-param-suppress-computed-diff: true
         require_manager_approval:
           description: A bool representing whether or not access requests to the group require manager approval.
           example: False
@@ -6205,7 +6206,11 @@ components:
         last_successful_sync:
           readOnly: true
           description: Information about the last successful sync of this group.
-          $ref: "#/components/schemas/SyncTask"
+          allOf:
+            - $ref: "#/components/schemas/SyncTask"
+            - x-speakeasy-computed: true
+            - x-speakeasy-param-readonly: true
+            - x-speakeasy-param-suppress-computed-diff: true
       required:
         - group_id
       type: object
@@ -9111,6 +9116,7 @@ components:
           example: 120
           deprecated: true
           x-speakeasy-deprecation-message: Do not use this field, set the extension duration in the request_configuration you want it to apply to.
+          x-speakeasy-param-suppress-computed-diff: true
         require_manager_approval:
           description: A bool representing whether or not access requests to the resource require manager approval.
           example: False
@@ -9235,7 +9241,11 @@ components:
         last_successful_sync:
           readOnly: true
           description: Information about the last successful sync of this resource.
-          $ref: "#/components/schemas/SyncTask"
+          allOf:
+            - $ref: "#/components/schemas/SyncTask"
+            - x-speakeasy-computed: true
+            - x-speakeasy-param-readonly: true
+            - x-speakeasy-param-suppress-computed-diff: true
       required:
         - resource_id
       type: object
@@ -10170,7 +10180,10 @@ components:
       properties:
         condition:
           description: The condition for the request configuration.
-          $ref: "#/components/schemas/Condition"
+          allOf:
+            - $ref: "#/components/schemas/Condition"
+            - x-speakeasy-computed: true
+            - x-speakeasy-param-suppress-computed-diff: true
           default: null
         allow_requests:
           description: A bool representing whether or not to allow requests for this resource.
@@ -10204,6 +10217,7 @@ components:
           description: The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
           type: integer
           example: 120
+          x-speakeasy-param-suppress-computed-diff: true
         request_template_id:
           description: The ID of the associated request template.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304

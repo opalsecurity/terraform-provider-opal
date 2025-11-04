@@ -149,7 +149,7 @@ resource "opal_group" "my_group" {
 
 - `group_binding_id` (String) The ID of the associated group binding.
 - `id` (String) The ID of the group.
-- `last_successful_sync` (Attributes) Represents a sync task that has been completed, either successfully or with errors. (see [below for nested schema](#nestedatt--last_successful_sync))
+- `last_successful_sync` (Attributes) Information about the last successful sync of this group. (see [below for nested schema](#nestedatt--last_successful_sync))
 - `message_channels` (Attributes) The audit and reviewer message channels attached to the group. (see [below for nested schema](#nestedatt--message_channels))
 - `on_call_schedules` (Attributes) The on call schedules attached to the group. (see [below for nested schema](#nestedatt--on_call_schedules))
 - `remote_name` (String) The name of the remote.
@@ -162,7 +162,7 @@ Optional:
 
 - `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource. Not Null
 - `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource. Not Null
-- `condition` (Attributes) (see [below for nested schema](#nestedatt--request_configurations--condition))
+- `condition` (Attributes) The condition for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--condition))
 - `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
 - `priority` (Number) The priority of the request configuration. Not Null
