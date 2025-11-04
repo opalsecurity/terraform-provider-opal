@@ -6,7 +6,6 @@ sources:
         sourceBlobDigest: sha256:30d3e88fa1ae2e9f58a97079d4f9dfd29d92e82d288df4600e84082814e68cf7
         tags:
             - latest
-            - speakeasy-sdk-regen-1761351387
             - "1.0"
 targets:
     terraform:

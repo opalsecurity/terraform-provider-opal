@@ -5,8 +5,8 @@ management:
   docVersion: "1.0"
   speakeasyVersion: 1.648.1
   generationVersion: 2.739.1
-  releaseVersion: 3.3.3
-  configChecksum: b2f92f81dc1f2880ec243ac97befa0bd
+  releaseVersion: 3.3.2
+  configChecksum: ac3579dbaae0aa4843e29c9b6706d0bf
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
@@ -1783,4 +1783,3 @@ examples:
           application/json: {"comments": [{"comment": "This is a comment.", "created_at": "2021-01-06T20:00:00Z", "request_id": "4c86c85d-0651-43e2-a748-d69d658418e8", "user_id": "c86c85d-0651-43e2-a748-d69d658418e8"}]}
 examplesVersion: 1.0.2
 generatedTests: {}
-releaseNotes: "## Terraform SDK Changes Detected:\n* `Opal-API.groups.create()`: \n  *  `request.remote_info` **Changed**\n  *  `response.remote_info` **Changed**\n* `Opal-API.groups.getGroup()`:  `response.remote_info` **Changed**\n* `Opal-API.groups.list()`:  `response.results.[].remote_info` **Changed**\n* `Opal-API.non-human-identities.get_nhis()`:  `response.results.[].remote_info` **Changed**\n* `Opal-API.requests.denyRequest()`: \n  *  `request.RequestBody.level` **Added**\n* `Opal-API.resources.create()`: \n  *  `request.remote_info` **Changed**\n  *  `response.remote_info` **Changed**\n* `Opal-API.resources.get()`:  `response.results.[].remote_info` **Changed**\n* `Opal-API.resources.get_id()`:  `response.remote_info` **Changed**\n* `Opal-API.uars.create()`: \n  *  `request.instantly_action_reviews` **Added**\n  *  `response.instantly_action_reviews` **Added**\n* `Opal-API.uars.get()`:  `response.results.[].instantly_action_reviews` **Added**\n* `Opal-API.uars.get_id()`:  `response.instantly_action_reviews` **Added**\n"
