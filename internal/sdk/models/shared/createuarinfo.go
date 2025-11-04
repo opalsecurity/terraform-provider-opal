@@ -11,6 +11,8 @@ import (
 type CreateUARInfo struct {
 	// The last day for reviewers to complete their access reviews.
 	Deadline time.Time `json:"deadline"`
+	// A bool representing whether to instantly action changes when reviewers submit their decision. Default is False.
+	InstantlyActionReviews *bool `json:"instantly_action_reviews,omitempty"`
 	// The name of the UAR.
 	Name                   string  `json:"name"`
 	ReminderIncludeManager *bool   `json:"reminder_include_manager,omitempty"`
@@ -43,6 +45,13 @@ func (c *CreateUARInfo) GetDeadline() time.Time {
 		return time.Time{}
 	}
 	return c.Deadline
+}
+
+func (c *CreateUARInfo) GetInstantlyActionReviews() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.InstantlyActionReviews
 }
 
 func (c *CreateUARInfo) GetName() string {

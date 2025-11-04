@@ -1,21 +1,21 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 1366c58606ef39f06fd8da2f5cd0c577
+  docChecksum: 2fc28821a8bc5f8b27d5e97f6511a645
   docVersion: "1.0"
-  speakeasyVersion: 1.639.1
-  generationVersion: 2.730.0
-  releaseVersion: 3.3.2
-  configChecksum: baa23f67f8df8977e52c5911761aa6ea
+  speakeasyVersion: 1.648.1
+  generationVersion: 2.739.1
+  releaseVersion: 3.3.3
+  configChecksum: b2f92f81dc1f2880ec243ac97befa0bd
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
 features:
   terraform:
     additionalDependencies: 0.1.0
-    additionalProperties: 0.1.2
+    additionalProperties: 0.1.3
     constsAndDefaults: 0.3.0
-    core: 3.46.3
+    core: 3.46.5
     deprecations: 2.82.0
     globalSecurity: 2.82.1
     globalServerURLs: 2.83.0
@@ -26,7 +26,7 @@ features:
     retries: 2.81.4
     serverIDs: 2.81.1
     sets: 0.1.2
-    unions: 2.82.0
+    unions: 2.82.2
 generatedFiles:
   - .gitattributes
   - USAGE.md
@@ -291,6 +291,7 @@ generatedFiles:
   - internal/provider/types/aws_eks_cluster.go
   - internal/provider/types/aws_organizational_unit.go
   - internal/provider/types/aws_permission_set.go
+  - internal/provider/types/aws_rds_cluster.go
   - internal/provider/types/aws_rds_instance.go
   - internal/provider/types/azure_enterprise_app.go
   - internal/provider/types/bundle.go
@@ -301,6 +302,7 @@ generatedFiles:
   - internal/provider/types/create_user_tag_request_body.go
   - internal/provider/types/cursor_organization.go
   - internal/provider/types/custom_connector.go
+  - internal/provider/types/databricks_account_service_principal.go
   - internal/provider/types/delegation.go
   - internal/provider/types/event.go
   - internal/provider/types/field_value.go
@@ -324,6 +326,7 @@ generatedFiles:
   - internal/provider/types/group_resource.go
   - internal/provider/types/group_user.go
   - internal/provider/types/idp_group_mapping.go
+  - internal/provider/types/ilevel_advanced_role.go
   - internal/provider/types/mappings.go
   - internal/provider/types/message_channel.go
   - internal/provider/types/okta_app.go
@@ -332,7 +335,6 @@ generatedFiles:
   - internal/provider/types/on_call_schedule.go
   - internal/provider/types/openai_platform_service_account.go
   - internal/provider/types/owner.go
-  - internal/provider/types/pagerduty_role.go
   - internal/provider/types/propagation_status.go
   - internal/provider/types/request.go
   - internal/provider/types/request_configuration.go
@@ -355,12 +357,16 @@ generatedFiles:
   - internal/provider/types/salesforce_profile.go
   - internal/provider/types/scoped_role_permission.go
   - internal/provider/types/session.go
+  - internal/provider/types/snowflake_database.go
   - internal/provider/types/snowflake_role.go
+  - internal/provider/types/snowflake_schema.go
+  - internal/provider/types/snowflake_table.go
   - internal/provider/types/sub_event.go
   - internal/provider/types/sync_task.go
   - internal/provider/types/tag.go
   - internal/provider/types/tag_filter.go
   - internal/provider/types/tag_selector.go
+  - internal/provider/types/tailscale_ssh.go
   - internal/provider/types/ticket_propagation_configuration.go
   - internal/provider/types/uar.go
   - internal/provider/types/uar_scope.go
@@ -596,6 +602,7 @@ generatedFiles:
   - internal/sdk/models/shared/paginateduserslist.go
   - internal/sdk/models/shared/propagationstatus.go
   - internal/sdk/models/shared/propagationstatusenum.go
+  - internal/sdk/models/shared/rdsengineenum.go
   - internal/sdk/models/shared/remoteuser.go
   - internal/sdk/models/shared/request.go
   - internal/sdk/models/shared/requestapprovalenum.go
@@ -1592,7 +1599,7 @@ examples:
         application/json: {"deadline": "2022-07-14T06:59:59Z", "name": "Monthly UAR (July)", "reminder_include_manager": true, "reminder_schedule": [7, 3, 1, 0], "reviewer_assignment_policy": "MANUALLY", "self_review_allowed": false, "send_reviewer_assignment_notification": false, "time_zone": "America/Los_Angeles", "uar_scope": {"admins": ["f454d283-ca87-4a8a-bdbb-df212eca5353", "8763d283-ca87-4a8a-bdbb-df212ecab139"], "group_visibility": "STRICT", "names": ["demo", "api"], "tags": [{"key": "uar_scope", "value": "high_priority"}]}}
       responses:
         "200":
-          application/json: {"deadline": "2022-07-14T06:59:59Z", "name": "Monthly UAR (July)", "reviewer_assignment_policy": "MANUALLY", "self_review_allowed": false, "send_reviewer_assignment_notification": false, "time_zone": "America/Los_Angeles", "uar_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "uar_scope": {"admins": ["f454d283-ca87-4a8a-bdbb-df212eca5353", "8763d283-ca87-4a8a-bdbb-df212ecab139"], "names": ["demo", "api"], "tags": [{"key": "uar_scope", "value": "high_priority"}]}}
+          application/json: {"deadline": "2022-07-14T06:59:59Z", "instantly_action_reviews": false, "name": "Monthly UAR (July)", "reviewer_assignment_policy": "MANUALLY", "self_review_allowed": false, "send_reviewer_assignment_notification": false, "time_zone": "America/Los_Angeles", "uar_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "uar_scope": {"admins": ["f454d283-ca87-4a8a-bdbb-df212eca5353", "8763d283-ca87-4a8a-bdbb-df212ecab139"], "names": ["demo", "api"], "tags": [{"key": "uar_scope", "value": "high_priority"}]}}
   getUARs:
     speakeasy-default-get-UA-rs:
       parameters:
@@ -1601,7 +1608,7 @@ examples:
           page_size: 200
       responses:
         "200":
-          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"deadline": "2022-07-14T06:59:59Z", "name": "Monthly UAR (July)", "reviewer_assignment_policy": "MANUALLY", "self_review_allowed": false, "send_reviewer_assignment_notification": false, "time_zone": "America/Los_Angeles", "uar_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "uar_scope": {"admins": ["f454d283-ca87-4a8a-bdbb-df212eca5353", "8763d283-ca87-4a8a-bdbb-df212ecab139"], "names": ["demo", "api"], "tags": [{"key": "uar_scope", "value": "high_priority"}]}}, {"deadline": "2022-08-14T06:59:59Z", "name": "Monthly UAR (August)", "reviewer_assignment_policy": "MANUALLY", "self_review_allowed": false, "send_reviewer_assignment_notification": true, "time_zone": "America/Los_Angeles", "uar_id": "39a4d283-ca87-4a8a-bdbb-df212eca5fdb", "uar_scope": {"admins": ["f454d283-ca87-4a8a-bdbb-df212eca5353", "8763d283-ca87-4a8a-bdbb-df212ecab139"], "names": ["demo", "api"], "tags": [{"key": "uar_scope", "value": "high_priority"}]}}]}
+          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"deadline": "2022-07-14T06:59:59Z", "instantly_action_reviews": false, "name": "Monthly UAR (July)", "reviewer_assignment_policy": "MANUALLY", "self_review_allowed": false, "send_reviewer_assignment_notification": false, "time_zone": "America/Los_Angeles", "uar_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "uar_scope": {"admins": ["f454d283-ca87-4a8a-bdbb-df212eca5353", "8763d283-ca87-4a8a-bdbb-df212ecab139"], "names": ["demo", "api"], "tags": [{"key": "uar_scope", "value": "high_priority"}]}}, {"deadline": "2022-08-14T06:59:59Z", "instantly_action_reviews": false, "name": "Monthly UAR (August)", "reviewer_assignment_policy": "MANUALLY", "self_review_allowed": false, "send_reviewer_assignment_notification": true, "time_zone": "America/Los_Angeles", "uar_id": "39a4d283-ca87-4a8a-bdbb-df212eca5fdb", "uar_scope": {"admins": ["f454d283-ca87-4a8a-bdbb-df212eca5353", "8763d283-ca87-4a8a-bdbb-df212ecab139"], "names": ["demo", "api"], "tags": [{"key": "uar_scope", "value": "high_priority"}]}}]}
   getUARID:
     speakeasy-default-get-UARID:
       parameters:
@@ -1609,7 +1616,7 @@ examples:
           uar_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
       responses:
         "200":
-          application/json: {"deadline": "2022-07-14T06:59:59Z", "name": "Monthly UAR (July)", "reviewer_assignment_policy": "MANUALLY", "self_review_allowed": false, "send_reviewer_assignment_notification": false, "time_zone": "America/Los_Angeles", "uar_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "uar_scope": {"admins": ["f454d283-ca87-4a8a-bdbb-df212eca5353", "8763d283-ca87-4a8a-bdbb-df212ecab139"], "names": ["demo", "api"], "tags": [{"key": "uar_scope", "value": "high_priority"}]}}
+          application/json: {"deadline": "2022-07-14T06:59:59Z", "instantly_action_reviews": false, "name": "Monthly UAR (July)", "reviewer_assignment_policy": "MANUALLY", "self_review_allowed": false, "send_reviewer_assignment_notification": false, "time_zone": "America/Los_Angeles", "uar_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "uar_scope": {"admins": ["f454d283-ca87-4a8a-bdbb-df212eca5353", "8763d283-ca87-4a8a-bdbb-df212ecab139"], "names": ["demo", "api"], "tags": [{"key": "uar_scope", "value": "high_priority"}]}}
   getUser:
     speakeasy-default-get-user:
       parameters:
@@ -1762,7 +1769,7 @@ examples:
         path:
           id: "83015915-58ae-4cce-b92d-608ff073ece1"
       requestBody:
-        application/json: {"comment": "Denied due to insufficient justification"}
+        application/json: {"comment": "Denied due to insufficient justification", "level": "REGULAR"}
       responses:
         "200":
           application/json: {"request": {"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "reviewer_stages": [{"item_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "item_name": "<value>", "stages": [{"operator": "AND", "reviewers": [{"id": "7c86c85d-0651-43e2-a748-d69d658418e8", "status": "PENDING"}], "stage": 1}, {"operator": "OR", "reviewers": [{"id": "8d86c85d-0651-43e2-a748-d69d658418e9", "status": "APPROVED"}], "stage": 2}]}], "status": "CANCELED", "target_group_id": "r86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}}
@@ -1776,4 +1783,4 @@ examples:
           application/json: {"comments": [{"comment": "This is a comment.", "created_at": "2021-01-06T20:00:00Z", "request_id": "4c86c85d-0651-43e2-a748-d69d658418e8", "user_id": "c86c85d-0651-43e2-a748-d69d658418e8"}]}
 examplesVersion: 1.0.2
 generatedTests: {}
-releaseNotes: "## Terraform SDK Changes Detected:\n* `Opal-API.groups.create_user()`:  `response` **Changed**\n* `Opal-API.groups.get_user_groups()`:  `response.results.[]` **Changed**\n* `Opal-API.groups.get_users()`:  `response.results.[]` **Changed**\n* `Opal-API.groups.update_group_user()`:  `response` **Changed**\n* `Opal-API.non-human-identities.get_nhis()`:  `response.results.[].remote_info.oracle_fusion_role` **Added**\n* `Opal-API.resources.create()`: \n  *  `request.remote_info.oracle_fusion_role` **Added**\n  *  `response.remote_info.oracle_fusion_role` **Added**\n* `Opal-API.resources.get()`: \n  *  `request.resource_type_filter` **Changed**\n  *  `response.results.[].remote_info.oracle_fusion_role` **Added**\n* `Opal-API.resources.get_id()`:  `response.remote_info.oracle_fusion_role` **Added**\n"
+releaseNotes: "## Terraform SDK Changes Detected:\n* `Opal-API.groups.create()`: \n  *  `request.remote_info` **Changed**\n  *  `response.remote_info` **Changed**\n* `Opal-API.groups.getGroup()`:  `response.remote_info` **Changed**\n* `Opal-API.groups.list()`:  `response.results.[].remote_info` **Changed**\n* `Opal-API.non-human-identities.get_nhis()`:  `response.results.[].remote_info` **Changed**\n* `Opal-API.requests.denyRequest()`: \n  *  `request.RequestBody.level` **Added**\n* `Opal-API.resources.create()`: \n  *  `request.remote_info` **Changed**\n  *  `response.remote_info` **Changed**\n* `Opal-API.resources.get()`:  `response.results.[].remote_info` **Changed**\n* `Opal-API.resources.get_id()`:  `response.remote_info` **Changed**\n* `Opal-API.uars.create()`: \n  *  `request.instantly_action_reviews` **Added**\n  *  `response.instantly_action_reviews` **Added**\n* `Opal-API.uars.get()`:  `response.results.[].instantly_action_reviews` **Added**\n* `Opal-API.uars.get_id()`:  `response.instantly_action_reviews` **Added**\n"

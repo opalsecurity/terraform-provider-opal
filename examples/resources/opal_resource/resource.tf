@@ -34,6 +34,14 @@ resource "opal_resource" "my_resource" {
       account_id = 234234234234
       arn        = "arn:aws:sso:::permissionSet/asdf-32139302d201d32/ps-f03323201211e1b9"
     }
+    aws_rds_cluster = {
+      account_id    = 234234234234
+      cluster_id    = "demo-mysql-cluster"
+      database_name = "mydatabase"
+      engine        = "MYSQL"
+      region        = "us-east-2"
+      resource_id   = "cluster-AOO8V0XUCNU13XLZXQDQRSN0NQ"
+    }
     aws_rds_instance = {
       account_id  = 234234234234
       instance_id = "demo-mysql-db"
@@ -88,6 +96,10 @@ resource "opal_resource" "my_resource" {
     custom_connector = {
       can_have_usage_events = false
       remote_resource_id    = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    databricks_account_service_principal = {
+      application_id = "00000000-0000-0000-0000-000000000000"
+      resource_id    = "00000000-0000-0000-0000-000000000000"
     }
     datastax_astra_role = {
       role_id = "123e4567-e89b-12d3-a456-426614174000"
@@ -145,6 +157,9 @@ resource "opal_resource" "my_resource" {
     google_workspace_role = {
       role_id = "google-workspace-role:01234567890123456"
     }
+    ilevel_advanced_role = {
+      role_name = "IT User"
+    }
     okta_app = {
       app_id = "a9dfas0f678asdf67867"
     }
@@ -177,8 +192,26 @@ resource "opal_resource" "my_resource" {
     salesforce_role = {
       role_id = "0PS5Y090202wOV7WAM"
     }
+    snowflake_database = {
+      database_name = "mydatabase"
+    }
+    snowflake_schema = {
+      database_name = "mydatabase"
+      schema_name   = "mycatalogschema"
+    }
+    snowflake_table = {
+      database_name = "mydatabase"
+      schema_name   = "mycatalogschema"
+      table_name    = "myitemstable"
+    }
+    tailscale_ssh = {
+      tag_name = "admin"
+    }
     teleport_role = {
       role_name = "admin_role"
+    }
+    workday_role = {
+      role_id = "123abc456def"
     }
   }
   request_configurations = [

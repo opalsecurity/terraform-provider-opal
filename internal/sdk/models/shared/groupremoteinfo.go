@@ -15,6 +15,19 @@ func (a *ActiveDirectoryGroup) GetGroupID() string {
 	return a.GroupID
 }
 
+// AwsSsoGroup - Remote info for AWS SSO group.
+type AwsSsoGroup struct {
+	// The id of the AWS SSO group.
+	GroupID string `json:"group_id"`
+}
+
+func (a *AwsSsoGroup) GetGroupID() string {
+	if a == nil {
+		return ""
+	}
+	return a.GroupID
+}
+
 // AzureAdMicrosoft365Group - Remote info for Microsoft Entra ID Microsoft 365 group.
 type AzureAdMicrosoft365Group struct {
 	// The id of the Microsoft Entra ID Microsoft 365 group.
@@ -39,6 +52,32 @@ func (a *AzureAdSecurityGroup) GetGroupID() string {
 		return ""
 	}
 	return a.GroupID
+}
+
+// ConnectorGroup - Remote info for Connector group.
+type ConnectorGroup struct {
+	// The id of the Connector group.
+	GroupID string `json:"group_id"`
+}
+
+func (c *ConnectorGroup) GetGroupID() string {
+	if c == nil {
+		return ""
+	}
+	return c.GroupID
+}
+
+// DatabricksAccountGroup - Remote info for Databricks account group.
+type DatabricksAccountGroup struct {
+	// The id of the Databricks account group.
+	GroupID string `json:"group_id"`
+}
+
+func (d *DatabricksAccountGroup) GetGroupID() string {
+	if d == nil {
+		return ""
+	}
+	return d.GroupID
 }
 
 // DuoGroup - Remote info for Duo Security group.
@@ -145,6 +184,19 @@ func (s *SnowflakeRole) GetRoleID() string {
 	return s.RoleID
 }
 
+// TailscaleGroup - Remote info for Tailscale group.
+type TailscaleGroup struct {
+	// The id of the Tailscale group.
+	GroupID string `json:"group_id"`
+}
+
+func (t *TailscaleGroup) GetGroupID() string {
+	if t == nil {
+		return ""
+	}
+	return t.GroupID
+}
+
 // WorkdayUserSecurityGroup - Remote info for Workday User Security group.
 type WorkdayUserSecurityGroup struct {
 	// The id of the Workday User Security group.
@@ -162,10 +214,16 @@ func (w *WorkdayUserSecurityGroup) GetGroupID() string {
 type GroupRemoteInfo struct {
 	// Remote info for Active Directory group.
 	ActiveDirectoryGroup *ActiveDirectoryGroup `json:"active_directory_group,omitempty"`
+	// Remote info for AWS SSO group.
+	AwsSsoGroup *AwsSsoGroup `json:"aws_sso_group,omitempty"`
 	// Remote info for Microsoft Entra ID Microsoft 365 group.
 	AzureAdMicrosoft365Group *AzureAdMicrosoft365Group `json:"azure_ad_microsoft_365_group,omitempty"`
 	// Remote info for Microsoft Entra ID Security group.
 	AzureAdSecurityGroup *AzureAdSecurityGroup `json:"azure_ad_security_group,omitempty"`
+	// Remote info for Connector group.
+	ConnectorGroup *ConnectorGroup `json:"connector_group,omitempty"`
+	// Remote info for Databricks account group.
+	DatabricksAccountGroup *DatabricksAccountGroup `json:"databricks_account_group,omitempty"`
 	// Remote info for Duo Security group.
 	DuoGroup *DuoGroup `json:"duo_group,omitempty"`
 	// Remote info for GitHub team.
@@ -182,6 +240,8 @@ type GroupRemoteInfo struct {
 	OktaGroupRule *OktaGroupRule `json:"okta_group_rule,omitempty"`
 	// Remote info for Snowflake role.
 	SnowflakeRole *SnowflakeRole `json:"snowflake_role,omitempty"`
+	// Remote info for Tailscale group.
+	TailscaleGroup *TailscaleGroup `json:"tailscale_group,omitempty"`
 	// Remote info for Workday User Security group.
 	WorkdayUserSecurityGroup *WorkdayUserSecurityGroup `json:"workday_user_security_group,omitempty"`
 }
@@ -191,6 +251,13 @@ func (g *GroupRemoteInfo) GetActiveDirectoryGroup() *ActiveDirectoryGroup {
 		return nil
 	}
 	return g.ActiveDirectoryGroup
+}
+
+func (g *GroupRemoteInfo) GetAwsSsoGroup() *AwsSsoGroup {
+	if g == nil {
+		return nil
+	}
+	return g.AwsSsoGroup
 }
 
 func (g *GroupRemoteInfo) GetAzureAdMicrosoft365Group() *AzureAdMicrosoft365Group {
@@ -205,6 +272,20 @@ func (g *GroupRemoteInfo) GetAzureAdSecurityGroup() *AzureAdSecurityGroup {
 		return nil
 	}
 	return g.AzureAdSecurityGroup
+}
+
+func (g *GroupRemoteInfo) GetConnectorGroup() *ConnectorGroup {
+	if g == nil {
+		return nil
+	}
+	return g.ConnectorGroup
+}
+
+func (g *GroupRemoteInfo) GetDatabricksAccountGroup() *DatabricksAccountGroup {
+	if g == nil {
+		return nil
+	}
+	return g.DatabricksAccountGroup
 }
 
 func (g *GroupRemoteInfo) GetDuoGroup() *DuoGroup {
@@ -261,6 +342,13 @@ func (g *GroupRemoteInfo) GetSnowflakeRole() *SnowflakeRole {
 		return nil
 	}
 	return g.SnowflakeRole
+}
+
+func (g *GroupRemoteInfo) GetTailscaleGroup() *TailscaleGroup {
+	if g == nil {
+		return nil
+	}
+	return g.TailscaleGroup
 }
 
 func (g *GroupRemoteInfo) GetWorkdayUserSecurityGroup() *WorkdayUserSecurityGroup {

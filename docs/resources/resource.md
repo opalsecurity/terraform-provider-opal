@@ -49,6 +49,14 @@ resource "opal_resource" "my_resource" {
       account_id = 234234234234
       arn        = "arn:aws:sso:::permissionSet/asdf-32139302d201d32/ps-f03323201211e1b9"
     }
+    aws_rds_cluster = {
+      account_id    = 234234234234
+      cluster_id    = "demo-mysql-cluster"
+      database_name = "mydatabase"
+      engine        = "MYSQL"
+      region        = "us-east-2"
+      resource_id   = "cluster-AOO8V0XUCNU13XLZXQDQRSN0NQ"
+    }
     aws_rds_instance = {
       account_id  = 234234234234
       instance_id = "demo-mysql-db"
@@ -103,6 +111,10 @@ resource "opal_resource" "my_resource" {
     custom_connector = {
       can_have_usage_events = false
       remote_resource_id    = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    databricks_account_service_principal = {
+      application_id = "00000000-0000-0000-0000-000000000000"
+      resource_id    = "00000000-0000-0000-0000-000000000000"
     }
     datastax_astra_role = {
       role_id = "123e4567-e89b-12d3-a456-426614174000"
@@ -160,6 +172,9 @@ resource "opal_resource" "my_resource" {
     google_workspace_role = {
       role_id = "google-workspace-role:01234567890123456"
     }
+    ilevel_advanced_role = {
+      role_name = "IT User"
+    }
     okta_app = {
       app_id = "a9dfas0f678asdf67867"
     }
@@ -192,8 +207,26 @@ resource "opal_resource" "my_resource" {
     salesforce_role = {
       role_id = "0PS5Y090202wOV7WAM"
     }
+    snowflake_database = {
+      database_name = "mydatabase"
+    }
+    snowflake_schema = {
+      database_name = "mydatabase"
+      schema_name   = "mycatalogschema"
+    }
+    snowflake_table = {
+      database_name = "mydatabase"
+      schema_name   = "mycatalogschema"
+      table_name    = "myitemstable"
+    }
+    tailscale_ssh = {
+      tag_name = "admin"
+    }
     teleport_role = {
       role_name = "admin_role"
+    }
+    workday_role = {
+      role_id = "123abc456def"
     }
   }
   request_configurations = [
@@ -327,6 +360,7 @@ Optional:
 - `aws_iam_role` (Attributes) Remote info for AWS IAM role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_iam_role))
 - `aws_organizational_unit` (Attributes) Remote info for AWS organizational unit. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_organizational_unit))
 - `aws_permission_set` (Attributes) Remote info for AWS Identity Center permission set. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_permission_set))
+- `aws_rds_cluster` (Attributes) Remote info for AWS RDS cluster. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_rds_cluster))
 - `aws_rds_instance` (Attributes) Remote info for AWS RDS instance. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_rds_instance))
 - `azure_enterprise_app` (Attributes) Remote info for Azure Enterprise App. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_enterprise_app))
 - `azure_entra_id_role` (Attributes) Remote info for Azure Entra ID role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_entra_id_role))
@@ -344,6 +378,7 @@ Optional:
 - `coupa_role` (Attributes) Remote info for Coupa role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--coupa_role))
 - `cursor_organization` (Attributes) Remote info for a Cursor organization. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--cursor_organization))
 - `custom_connector` (Attributes) Remote info for a custom connector resource. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--custom_connector))
+- `databricks_account_service_principal` (Attributes) Remote info for Databricks account service principal. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--databricks_account_service_principal))
 - `datastax_astra_role` (Attributes) Remote info for an Astra role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--datastax_astra_role))
 - `gcp_big_query_dataset` (Attributes) Remote info for GCP BigQuery Dataset. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gcp_big_query_dataset))
 - `gcp_big_query_table` (Attributes) Remote info for GCP BigQuery Table. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gcp_big_query_table))
@@ -360,6 +395,7 @@ Optional:
 - `github_repo` (Attributes) Remote info for GitHub repository. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--github_repo))
 - `gitlab_project` (Attributes) Remote info for Gitlab project. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gitlab_project))
 - `google_workspace_role` (Attributes) Remote info for GCP workspace role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--google_workspace_role))
+- `ilevel_advanced_role` (Attributes) Remote info for iLevel Advanced role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--ilevel_advanced_role))
 - `okta_app` (Attributes) Remote info for Okta directory app. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_app))
 - `okta_custom_role` (Attributes) Remote info for Okta directory custom role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_custom_role))
 - `okta_standard_role` (Attributes) Remote info for Okta directory standard role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_standard_role))
@@ -370,7 +406,12 @@ Optional:
 - `salesforce_permission_set` (Attributes) Remote info for Salesforce permission set. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--salesforce_permission_set))
 - `salesforce_profile` (Attributes) Remote info for Salesforce profile. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--salesforce_profile))
 - `salesforce_role` (Attributes) Remote info for Salesforce role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--salesforce_role))
+- `snowflake_database` (Attributes) Remote info for Snowflake database. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--snowflake_database))
+- `snowflake_schema` (Attributes) Remote info for Snowflake schema. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--snowflake_schema))
+- `snowflake_table` (Attributes) Remote info for Snowflake table. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--snowflake_table))
+- `tailscale_ssh` (Attributes) Remote info for Tailscale SSH tag. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--tailscale_ssh))
 - `teleport_role` (Attributes) Remote info for Teleport role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--teleport_role))
+- `workday_role` (Attributes) Remote info for Workday role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--workday_role))
 
 <a id="nestedatt--remote_info--anthropic_workspace"></a>
 ### Nested Schema for `remote_info.anthropic_workspace`
@@ -433,6 +474,19 @@ Optional:
 
 - `account_id` (String) The ID of an AWS account to which this permission set is provisioned. Not Null; Requires replacement if changed.
 - `arn` (String) The ARN of the permission set. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--aws_rds_cluster"></a>
+### Nested Schema for `remote_info.aws_rds_cluster`
+
+Optional:
+
+- `account_id` (String) The id of the AWS account. Required for AWS Organizations. Not Null; Requires replacement if changed.
+- `cluster_id` (String) The clusterId of the RDS cluster. Not Null; Requires replacement if changed.
+- `database_name` (String) The name of the database in the RDS cluster. This can be the value of the tag `opal:database-name` or the database name. Not Null; Requires replacement if changed.
+- `engine` (String) The database engine for the RDS instance. Not Null; must be one of ["MYSQL", "POSTGRESQL"]; Requires replacement if changed.
+- `region` (String) The region of the RDS cluster. Not Null; Requires replacement if changed.
+- `resource_id` (String) The resourceId of the RDS cluster. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--aws_rds_instance"></a>
@@ -575,6 +629,15 @@ Optional:
 - `remote_resource_id` (String) The id of the resource in the end system. Not Null; Requires replacement if changed.
 
 
+<a id="nestedatt--remote_info--databricks_account_service_principal"></a>
+### Nested Schema for `remote_info.databricks_account_service_principal`
+
+Optional:
+
+- `application_id` (String) The application ID of the service principal. Not Null; Requires replacement if changed.
+- `resource_id` (String) The resource ID of the service principal. Not Null; Requires replacement if changed.
+
+
 <a id="nestedatt--remote_info--datastax_astra_role"></a>
 ### Nested Schema for `remote_info.datastax_astra_role`
 
@@ -711,6 +774,14 @@ Optional:
 - `role_id` (String) The id of the role. Not Null; Requires replacement if changed.
 
 
+<a id="nestedatt--remote_info--ilevel_advanced_role"></a>
+### Nested Schema for `remote_info.ilevel_advanced_role`
+
+Optional:
+
+- `role_name` (String) The name of the role. Not Null; Requires replacement if changed.
+
+
 <a id="nestedatt--remote_info--okta_app"></a>
 ### Nested Schema for `remote_info.okta_app`
 
@@ -793,12 +864,55 @@ Optional:
 - `role_id` (String) The id of the role. Not Null; Requires replacement if changed.
 
 
+<a id="nestedatt--remote_info--snowflake_database"></a>
+### Nested Schema for `remote_info.snowflake_database`
+
+Optional:
+
+- `database_name` (String) The name of the database. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--snowflake_schema"></a>
+### Nested Schema for `remote_info.snowflake_schema`
+
+Optional:
+
+- `database_name` (String) The name of the database the schema is in. Not Null; Requires replacement if changed.
+- `schema_name` (String) The name of the schema. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--snowflake_table"></a>
+### Nested Schema for `remote_info.snowflake_table`
+
+Optional:
+
+- `database_name` (String) The name of the database the table is in. Not Null; Requires replacement if changed.
+- `schema_name` (String) The name of the schema the table is in. Not Null; Requires replacement if changed.
+- `table_name` (String) The name of the table. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--tailscale_ssh"></a>
+### Nested Schema for `remote_info.tailscale_ssh`
+
+Optional:
+
+- `tag_name` (String) The name of the tag. Not Null; Requires replacement if changed.
+
+
 <a id="nestedatt--remote_info--teleport_role"></a>
 ### Nested Schema for `remote_info.teleport_role`
 
 Optional:
 
 - `role_name` (String) The name role. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--workday_role"></a>
+### Nested Schema for `remote_info.workday_role`
+
+Optional:
+
+- `role_id` (String) The id of the role. Not Null; Requires replacement if changed.
 
 
 

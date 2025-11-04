@@ -76,6 +76,10 @@ func (r *UARSListDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							Computed:    true,
 							Description: `The last day for reviewers to complete their access reviews.`,
 						},
+						"instantly_action_reviews": schema.BoolAttribute{
+							Computed:    true,
+							Description: `A bool representing whether to instantly action changes when reviewers submit their decision. Default is False.`,
+						},
 						"name": schema.StringAttribute{
 							Computed:    true,
 							Description: `The name of the UAR.`,

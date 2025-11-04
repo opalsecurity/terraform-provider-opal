@@ -156,6 +156,63 @@ func (a *AwsPermissionSet) GetArn() string {
 	return a.Arn
 }
 
+// AwsRdsCluster - Remote info for AWS RDS cluster.
+type AwsRdsCluster struct {
+	// The id of the AWS account. Required for AWS Organizations.
+	AccountID string `json:"account_id"`
+	// The clusterId of the RDS cluster.
+	ClusterID string `json:"cluster_id"`
+	// The name of the database in the RDS cluster. This can be the value of the tag `opal:database-name` or the database name.
+	DatabaseName string        `json:"database_name"`
+	Engine       RDSEngineEnum `json:"engine"`
+	// The region of the RDS cluster.
+	Region string `json:"region"`
+	// The resourceId of the RDS cluster.
+	ResourceID string `json:"resource_id"`
+}
+
+func (a *AwsRdsCluster) GetAccountID() string {
+	if a == nil {
+		return ""
+	}
+	return a.AccountID
+}
+
+func (a *AwsRdsCluster) GetClusterID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ClusterID
+}
+
+func (a *AwsRdsCluster) GetDatabaseName() string {
+	if a == nil {
+		return ""
+	}
+	return a.DatabaseName
+}
+
+func (a *AwsRdsCluster) GetEngine() RDSEngineEnum {
+	if a == nil {
+		return RDSEngineEnum("")
+	}
+	return a.Engine
+}
+
+func (a *AwsRdsCluster) GetRegion() string {
+	if a == nil {
+		return ""
+	}
+	return a.Region
+}
+
+func (a *AwsRdsCluster) GetResourceID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ResourceID
+}
+
 // AwsRdsInstance - Remote info for AWS RDS instance.
 type AwsRdsInstance struct {
 	// The id of the AWS account. Required for AWS Organizations.
@@ -411,6 +468,28 @@ func (c *CustomConnector) GetRemoteResourceID() string {
 		return ""
 	}
 	return c.RemoteResourceID
+}
+
+// DatabricksAccountServicePrincipal - Remote info for Databricks account service principal.
+type DatabricksAccountServicePrincipal struct {
+	// The application ID of the service principal.
+	ApplicationID string `json:"application_id"`
+	// The resource ID of the service principal.
+	ResourceID string `json:"resource_id"`
+}
+
+func (d *DatabricksAccountServicePrincipal) GetApplicationID() string {
+	if d == nil {
+		return ""
+	}
+	return d.ApplicationID
+}
+
+func (d *DatabricksAccountServicePrincipal) GetResourceID() string {
+	if d == nil {
+		return ""
+	}
+	return d.ResourceID
 }
 
 // DatastaxAstraRole - Remote info for an Astra role.
@@ -693,6 +772,19 @@ func (g *GoogleWorkspaceRole) GetRoleID() string {
 	return g.RoleID
 }
 
+// IlevelAdvancedRole - Remote info for iLevel Advanced role.
+type IlevelAdvancedRole struct {
+	// The name of the role.
+	RoleName string `json:"role_name"`
+}
+
+func (i *IlevelAdvancedRole) GetRoleName() string {
+	if i == nil {
+		return ""
+	}
+	return i.RoleName
+}
+
 // OktaApp - Remote info for Okta directory app.
 type OktaApp struct {
 	// The id of the app.
@@ -841,6 +933,85 @@ func (s *SalesforceRole) GetRoleID() string {
 	return s.RoleID
 }
 
+// SnowflakeDatabase - Remote info for Snowflake database.
+type SnowflakeDatabase struct {
+	// The name of the database.
+	DatabaseName string `json:"database_name"`
+}
+
+func (s *SnowflakeDatabase) GetDatabaseName() string {
+	if s == nil {
+		return ""
+	}
+	return s.DatabaseName
+}
+
+// SnowflakeSchema - Remote info for Snowflake schema.
+type SnowflakeSchema struct {
+	// The name of the database the schema is in.
+	DatabaseName string `json:"database_name"`
+	// The name of the schema.
+	SchemaName string `json:"schema_name"`
+}
+
+func (s *SnowflakeSchema) GetDatabaseName() string {
+	if s == nil {
+		return ""
+	}
+	return s.DatabaseName
+}
+
+func (s *SnowflakeSchema) GetSchemaName() string {
+	if s == nil {
+		return ""
+	}
+	return s.SchemaName
+}
+
+// SnowflakeTable - Remote info for Snowflake table.
+type SnowflakeTable struct {
+	// The name of the database the table is in.
+	DatabaseName string `json:"database_name"`
+	// The name of the schema the table is in.
+	SchemaName string `json:"schema_name"`
+	// The name of the table.
+	TableName string `json:"table_name"`
+}
+
+func (s *SnowflakeTable) GetDatabaseName() string {
+	if s == nil {
+		return ""
+	}
+	return s.DatabaseName
+}
+
+func (s *SnowflakeTable) GetSchemaName() string {
+	if s == nil {
+		return ""
+	}
+	return s.SchemaName
+}
+
+func (s *SnowflakeTable) GetTableName() string {
+	if s == nil {
+		return ""
+	}
+	return s.TableName
+}
+
+// TailscaleSSH - Remote info for Tailscale SSH tag.
+type TailscaleSSH struct {
+	// The name of the tag.
+	TagName string `json:"tag_name"`
+}
+
+func (t *TailscaleSSH) GetTagName() string {
+	if t == nil {
+		return ""
+	}
+	return t.TagName
+}
+
 // TeleportRole - Remote info for Teleport role.
 type TeleportRole struct {
 	// The name role.
@@ -852,6 +1023,19 @@ func (t *TeleportRole) GetRoleName() string {
 		return ""
 	}
 	return t.RoleName
+}
+
+// WorkdayRole - Remote info for Workday role.
+type WorkdayRole struct {
+	// The id of the role.
+	RoleID string `json:"role_id"`
+}
+
+func (w *WorkdayRole) GetRoleID() string {
+	if w == nil {
+		return ""
+	}
+	return w.RoleID
 }
 
 // ResourceRemoteInfo - Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields.
@@ -870,6 +1054,8 @@ type ResourceRemoteInfo struct {
 	AwsOrganizationalUnit *AwsOrganizationalUnit `json:"aws_organizational_unit,omitempty"`
 	// Remote info for AWS Identity Center permission set.
 	AwsPermissionSet *AwsPermissionSet `json:"aws_permission_set,omitempty"`
+	// Remote info for AWS RDS cluster.
+	AwsRdsCluster *AwsRdsCluster `json:"aws_rds_cluster,omitempty"`
 	// Remote info for AWS RDS instance.
 	AwsRdsInstance *AwsRdsInstance `json:"aws_rds_instance,omitempty"`
 	// Remote info for Azure Enterprise App.
@@ -904,6 +1090,8 @@ type ResourceRemoteInfo struct {
 	CursorOrganization *CursorOrganization `json:"cursor_organization,omitempty"`
 	// Remote info for a custom connector resource.
 	CustomConnector *CustomConnector `json:"custom_connector,omitempty"`
+	// Remote info for Databricks account service principal.
+	DatabricksAccountServicePrincipal *DatabricksAccountServicePrincipal `json:"databricks_account_service_principal,omitempty"`
 	// Remote info for an Astra role.
 	DatastaxAstraRole *DatastaxAstraRole `json:"datastax_astra_role,omitempty"`
 	// Remote info for GCP BigQuery Dataset.
@@ -936,6 +1124,8 @@ type ResourceRemoteInfo struct {
 	GitlabProject *GitlabProject `json:"gitlab_project,omitempty"`
 	// Remote info for GCP workspace role.
 	GoogleWorkspaceRole *GoogleWorkspaceRole `json:"google_workspace_role,omitempty"`
+	// Remote info for iLevel Advanced role.
+	IlevelAdvancedRole *IlevelAdvancedRole `json:"ilevel_advanced_role,omitempty"`
 	// Remote info for Okta directory app.
 	OktaApp *OktaApp `json:"okta_app,omitempty"`
 	// Remote info for Okta directory custom role.
@@ -956,8 +1146,18 @@ type ResourceRemoteInfo struct {
 	SalesforceProfile *SalesforceProfile `json:"salesforce_profile,omitempty"`
 	// Remote info for Salesforce role.
 	SalesforceRole *SalesforceRole `json:"salesforce_role,omitempty"`
+	// Remote info for Snowflake database.
+	SnowflakeDatabase *SnowflakeDatabase `json:"snowflake_database,omitempty"`
+	// Remote info for Snowflake schema.
+	SnowflakeSchema *SnowflakeSchema `json:"snowflake_schema,omitempty"`
+	// Remote info for Snowflake table.
+	SnowflakeTable *SnowflakeTable `json:"snowflake_table,omitempty"`
+	// Remote info for Tailscale SSH tag.
+	TailscaleSSH *TailscaleSSH `json:"tailscale_ssh,omitempty"`
 	// Remote info for Teleport role.
 	TeleportRole *TeleportRole `json:"teleport_role,omitempty"`
+	// Remote info for Workday role.
+	WorkdayRole *WorkdayRole `json:"workday_role,omitempty"`
 }
 
 func (r *ResourceRemoteInfo) GetAnthropicWorkspace() *AnthropicWorkspace {
@@ -1007,6 +1207,13 @@ func (r *ResourceRemoteInfo) GetAwsPermissionSet() *AwsPermissionSet {
 		return nil
 	}
 	return r.AwsPermissionSet
+}
+
+func (r *ResourceRemoteInfo) GetAwsRdsCluster() *AwsRdsCluster {
+	if r == nil {
+		return nil
+	}
+	return r.AwsRdsCluster
 }
 
 func (r *ResourceRemoteInfo) GetAwsRdsInstance() *AwsRdsInstance {
@@ -1128,6 +1335,13 @@ func (r *ResourceRemoteInfo) GetCustomConnector() *CustomConnector {
 	return r.CustomConnector
 }
 
+func (r *ResourceRemoteInfo) GetDatabricksAccountServicePrincipal() *DatabricksAccountServicePrincipal {
+	if r == nil {
+		return nil
+	}
+	return r.DatabricksAccountServicePrincipal
+}
+
 func (r *ResourceRemoteInfo) GetDatastaxAstraRole() *DatastaxAstraRole {
 	if r == nil {
 		return nil
@@ -1240,6 +1454,13 @@ func (r *ResourceRemoteInfo) GetGoogleWorkspaceRole() *GoogleWorkspaceRole {
 	return r.GoogleWorkspaceRole
 }
 
+func (r *ResourceRemoteInfo) GetIlevelAdvancedRole() *IlevelAdvancedRole {
+	if r == nil {
+		return nil
+	}
+	return r.IlevelAdvancedRole
+}
+
 func (r *ResourceRemoteInfo) GetOktaApp() *OktaApp {
 	if r == nil {
 		return nil
@@ -1310,9 +1531,44 @@ func (r *ResourceRemoteInfo) GetSalesforceRole() *SalesforceRole {
 	return r.SalesforceRole
 }
 
+func (r *ResourceRemoteInfo) GetSnowflakeDatabase() *SnowflakeDatabase {
+	if r == nil {
+		return nil
+	}
+	return r.SnowflakeDatabase
+}
+
+func (r *ResourceRemoteInfo) GetSnowflakeSchema() *SnowflakeSchema {
+	if r == nil {
+		return nil
+	}
+	return r.SnowflakeSchema
+}
+
+func (r *ResourceRemoteInfo) GetSnowflakeTable() *SnowflakeTable {
+	if r == nil {
+		return nil
+	}
+	return r.SnowflakeTable
+}
+
+func (r *ResourceRemoteInfo) GetTailscaleSSH() *TailscaleSSH {
+	if r == nil {
+		return nil
+	}
+	return r.TailscaleSSH
+}
+
 func (r *ResourceRemoteInfo) GetTeleportRole() *TeleportRole {
 	if r == nil {
 		return nil
 	}
 	return r.TeleportRole
+}
+
+func (r *ResourceRemoteInfo) GetWorkdayRole() *WorkdayRole {
+	if r == nil {
+		return nil
+	}
+	return r.WorkdayRole
 }

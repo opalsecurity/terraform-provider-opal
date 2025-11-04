@@ -30,6 +30,7 @@ type UarDataSource struct {
 // UarDataSourceModel describes the data model.
 type UarDataSourceModel struct {
 	Deadline                           types.String      `tfsdk:"deadline"`
+	InstantlyActionReviews             types.Bool        `tfsdk:"instantly_action_reviews"`
 	Name                               types.String      `tfsdk:"name"`
 	ReviewerAssignmentPolicy           types.String      `tfsdk:"reviewer_assignment_policy"`
 	SelfReviewAllowed                  types.Bool        `tfsdk:"self_review_allowed"`
@@ -53,6 +54,10 @@ func (r *UarDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 			"deadline": schema.StringAttribute{
 				Computed:    true,
 				Description: `The last day for reviewers to complete their access reviews.`,
+			},
+			"instantly_action_reviews": schema.BoolAttribute{
+				Computed:    true,
+				Description: `A bool representing whether to instantly action changes when reviewers submit their decision. Default is False.`,
 			},
 			"name": schema.StringAttribute{
 				Computed:    true,

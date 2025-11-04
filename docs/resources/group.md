@@ -34,11 +34,20 @@ resource "opal_group" "my_group" {
     active_directory_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
+    aws_sso_group = {
+      group_id = 898931321
+    }
     azure_ad_microsoft_365_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
     azure_ad_security_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    connector_group = {
+      group_id = 898931321
+    }
+    databricks_account_group = {
+      group_id = 898931321
     }
     duo_group = {
       group_id = "DSRD8W89B9DNDBY4RHAC"
@@ -63,6 +72,9 @@ resource "opal_group" "my_group" {
     }
     snowflake_role = {
       role_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    tailscale_group = {
+      group_id = 898931321
     }
     workday_user_security_group = {
       group_id = "123abc456def"
@@ -187,8 +199,11 @@ Optional:
 Optional:
 
 - `active_directory_group` (Attributes) Remote info for Active Directory group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--active_directory_group))
+- `aws_sso_group` (Attributes) Remote info for AWS SSO group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_sso_group))
 - `azure_ad_microsoft_365_group` (Attributes) Remote info for Microsoft Entra ID Microsoft 365 group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_ad_microsoft_365_group))
 - `azure_ad_security_group` (Attributes) Remote info for Microsoft Entra ID Security group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_ad_security_group))
+- `connector_group` (Attributes) Remote info for Connector group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--connector_group))
+- `databricks_account_group` (Attributes) Remote info for Databricks account group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--databricks_account_group))
 - `duo_group` (Attributes) Remote info for Duo Security group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--duo_group))
 - `github_team` (Attributes) Remote info for GitHub team. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--github_team))
 - `gitlab_group` (Attributes) Remote info for Gitlab group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gitlab_group))
@@ -197,6 +212,7 @@ Optional:
 - `okta_group` (Attributes) Remote info for Okta Directory group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_group))
 - `okta_group_rule` (Attributes) Remote info for Okta Directory group rule. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_group_rule))
 - `snowflake_role` (Attributes) Remote info for Snowflake role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--snowflake_role))
+- `tailscale_group` (Attributes) Remote info for Tailscale group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--tailscale_group))
 - `workday_user_security_group` (Attributes) Remote info for Workday User Security group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--workday_user_security_group))
 
 <a id="nestedatt--remote_info--active_directory_group"></a>
@@ -205,6 +221,14 @@ Optional:
 Optional:
 
 - `group_id` (String) The id of the Google group. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--aws_sso_group"></a>
+### Nested Schema for `remote_info.aws_sso_group`
+
+Optional:
+
+- `group_id` (String) The id of the AWS SSO group. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--azure_ad_microsoft_365_group"></a>
@@ -221,6 +245,22 @@ Optional:
 Optional:
 
 - `group_id` (String) The id of the Microsoft Entra ID Security group. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--connector_group"></a>
+### Nested Schema for `remote_info.connector_group`
+
+Optional:
+
+- `group_id` (String) The id of the Connector group. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--databricks_account_group"></a>
+### Nested Schema for `remote_info.databricks_account_group`
+
+Optional:
+
+- `group_id` (String) The id of the Databricks account group. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--duo_group"></a>
@@ -285,6 +325,14 @@ Optional:
 Optional:
 
 - `role_id` (String) The id of the Snowflake role. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--tailscale_group"></a>
+### Nested Schema for `remote_info.tailscale_group`
+
+Optional:
+
+- `group_id` (String) The id of the Tailscale group. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--workday_user_security_group"></a>

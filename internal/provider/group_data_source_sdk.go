@@ -123,6 +123,12 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.ActiveDirectoryGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.ActiveDirectoryGroup.GroupID = types.StringValue(resp.RemoteInfo.ActiveDirectoryGroup.GroupID)
 			}
+			if resp.RemoteInfo.AwsSsoGroup == nil {
+				r.RemoteInfo.AwsSsoGroup = nil
+			} else {
+				r.RemoteInfo.AwsSsoGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.AwsSsoGroup.GroupID = types.StringValue(resp.RemoteInfo.AwsSsoGroup.GroupID)
+			}
 			if resp.RemoteInfo.AzureAdMicrosoft365Group == nil {
 				r.RemoteInfo.AzureAdMicrosoft365Group = nil
 			} else {
@@ -134,6 +140,18 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			} else {
 				r.RemoteInfo.AzureAdSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.AzureAdSecurityGroup.GroupID = types.StringValue(resp.RemoteInfo.AzureAdSecurityGroup.GroupID)
+			}
+			if resp.RemoteInfo.ConnectorGroup == nil {
+				r.RemoteInfo.ConnectorGroup = nil
+			} else {
+				r.RemoteInfo.ConnectorGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.ConnectorGroup.GroupID = types.StringValue(resp.RemoteInfo.ConnectorGroup.GroupID)
+			}
+			if resp.RemoteInfo.DatabricksAccountGroup == nil {
+				r.RemoteInfo.DatabricksAccountGroup = nil
+			} else {
+				r.RemoteInfo.DatabricksAccountGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.DatabricksAccountGroup.GroupID = types.StringValue(resp.RemoteInfo.DatabricksAccountGroup.GroupID)
 			}
 			if resp.RemoteInfo.DuoGroup == nil {
 				r.RemoteInfo.DuoGroup = nil
@@ -182,6 +200,12 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			} else {
 				r.RemoteInfo.SnowflakeRole = &tfTypes.SnowflakeRole{}
 				r.RemoteInfo.SnowflakeRole.RoleID = types.StringValue(resp.RemoteInfo.SnowflakeRole.RoleID)
+			}
+			if resp.RemoteInfo.TailscaleGroup == nil {
+				r.RemoteInfo.TailscaleGroup = nil
+			} else {
+				r.RemoteInfo.TailscaleGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.TailscaleGroup.GroupID = types.StringValue(resp.RemoteInfo.TailscaleGroup.GroupID)
 			}
 			if resp.RemoteInfo.WorkdayUserSecurityGroup == nil {
 				r.RemoteInfo.WorkdayUserSecurityGroup = nil

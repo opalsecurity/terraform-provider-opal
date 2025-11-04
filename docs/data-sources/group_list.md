@@ -76,8 +76,11 @@ Read-Only:
 Read-Only:
 
 - `active_directory_group` (Attributes) Remote info for Active Directory group. (see [below for nested schema](#nestedatt--results--remote_info--active_directory_group))
+- `aws_sso_group` (Attributes) Remote info for AWS SSO group. (see [below for nested schema](#nestedatt--results--remote_info--aws_sso_group))
 - `azure_ad_microsoft_365_group` (Attributes) Remote info for Microsoft Entra ID Microsoft 365 group. (see [below for nested schema](#nestedatt--results--remote_info--azure_ad_microsoft_365_group))
 - `azure_ad_security_group` (Attributes) Remote info for Microsoft Entra ID Security group. (see [below for nested schema](#nestedatt--results--remote_info--azure_ad_security_group))
+- `connector_group` (Attributes) Remote info for Connector group. (see [below for nested schema](#nestedatt--results--remote_info--connector_group))
+- `databricks_account_group` (Attributes) Remote info for Databricks account group. (see [below for nested schema](#nestedatt--results--remote_info--databricks_account_group))
 - `duo_group` (Attributes) Remote info for Duo Security group. (see [below for nested schema](#nestedatt--results--remote_info--duo_group))
 - `github_team` (Attributes) Remote info for GitHub team. (see [below for nested schema](#nestedatt--results--remote_info--github_team))
 - `gitlab_group` (Attributes) Remote info for Gitlab group. (see [below for nested schema](#nestedatt--results--remote_info--gitlab_group))
@@ -86,6 +89,7 @@ Read-Only:
 - `okta_group` (Attributes) Remote info for Okta Directory group. (see [below for nested schema](#nestedatt--results--remote_info--okta_group))
 - `okta_group_rule` (Attributes) Remote info for Okta Directory group rule. (see [below for nested schema](#nestedatt--results--remote_info--okta_group_rule))
 - `snowflake_role` (Attributes) Remote info for Snowflake role. (see [below for nested schema](#nestedatt--results--remote_info--snowflake_role))
+- `tailscale_group` (Attributes) Remote info for Tailscale group. (see [below for nested schema](#nestedatt--results--remote_info--tailscale_group))
 - `workday_user_security_group` (Attributes) Remote info for Workday User Security group. (see [below for nested schema](#nestedatt--results--remote_info--workday_user_security_group))
 
 <a id="nestedatt--results--remote_info--active_directory_group"></a>
@@ -94,6 +98,14 @@ Read-Only:
 Read-Only:
 
 - `group_id` (String) The id of the Google group.
+
+
+<a id="nestedatt--results--remote_info--aws_sso_group"></a>
+### Nested Schema for `results.remote_info.aws_sso_group`
+
+Read-Only:
+
+- `group_id` (String) The id of the AWS SSO group.
 
 
 <a id="nestedatt--results--remote_info--azure_ad_microsoft_365_group"></a>
@@ -110,6 +122,22 @@ Read-Only:
 Read-Only:
 
 - `group_id` (String) The id of the Microsoft Entra ID Security group.
+
+
+<a id="nestedatt--results--remote_info--connector_group"></a>
+### Nested Schema for `results.remote_info.connector_group`
+
+Read-Only:
+
+- `group_id` (String) The id of the Connector group.
+
+
+<a id="nestedatt--results--remote_info--databricks_account_group"></a>
+### Nested Schema for `results.remote_info.databricks_account_group`
+
+Read-Only:
+
+- `group_id` (String) The id of the Databricks account group.
 
 
 <a id="nestedatt--results--remote_info--duo_group"></a>
@@ -174,6 +202,14 @@ Read-Only:
 Read-Only:
 
 - `role_id` (String) The id of the Snowflake role.
+
+
+<a id="nestedatt--results--remote_info--tailscale_group"></a>
+### Nested Schema for `results.remote_info.tailscale_group`
+
+Read-Only:
+
+- `group_id` (String) The id of the Tailscale group.
 
 
 <a id="nestedatt--results--remote_info--workday_user_security_group"></a>

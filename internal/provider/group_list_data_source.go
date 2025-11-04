@@ -166,6 +166,16 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 									},
 									Description: `Remote info for Active Directory group.`,
 								},
+								"aws_sso_group": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"group_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The id of the AWS SSO group.`,
+										},
+									},
+									Description: `Remote info for AWS SSO group.`,
+								},
 								"azure_ad_microsoft_365_group": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
@@ -185,6 +195,26 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 										},
 									},
 									Description: `Remote info for Microsoft Entra ID Security group.`,
+								},
+								"connector_group": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"group_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The id of the Connector group.`,
+										},
+									},
+									Description: `Remote info for Connector group.`,
+								},
+								"databricks_account_group": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"group_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The id of the Databricks account group.`,
+										},
+									},
+									Description: `Remote info for Databricks account group.`,
 								},
 								"duo_group": schema.SingleNestedAttribute{
 									Computed: true,
@@ -265,6 +295,16 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 										},
 									},
 									Description: `Remote info for Snowflake role.`,
+								},
+								"tailscale_group": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"group_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The id of the Tailscale group.`,
+										},
+									},
+									Description: `Remote info for Tailscale group.`,
 								},
 								"workday_user_security_group": schema.SingleNestedAttribute{
 									Computed: true,

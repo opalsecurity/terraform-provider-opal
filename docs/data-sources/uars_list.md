@@ -39,6 +39,7 @@ data "opal_uars_list" "my_uars_list" {
 Read-Only:
 
 - `deadline` (String) The last day for reviewers to complete their access reviews.
+- `instantly_action_reviews` (Boolean) A bool representing whether to instantly action changes when reviewers submit their decision. Default is False.
 - `name` (String) The name of the UAR.
 - `reviewer_assignment_policy` (String) A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually.
 - `self_review_allowed` (Boolean) A bool representing whether to present a warning when a user is the only reviewer for themself. Default is False.
