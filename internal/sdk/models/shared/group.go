@@ -6,7 +6,41 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
+	"time"
 )
+
+// LastSuccessfulSync - Information about the last successful sync of this group.
+type LastSuccessfulSync struct {
+	// The time when the sync task was completed.
+	CompletedAt time.Time `json:"completed_at"`
+	// The ID of the sync task.
+	ID string `json:"id"`
+}
+
+func (l LastSuccessfulSync) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(l, "", false)
+}
+
+func (l *LastSuccessfulSync) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &l, "", false, []string{"completed_at", "id"}); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (l *LastSuccessfulSync) GetCompletedAt() time.Time {
+	if l == nil {
+		return time.Time{}
+	}
+	return l.CompletedAt
+}
+
+func (l *LastSuccessfulSync) GetID() string {
+	if l == nil {
+		return ""
+	}
+	return l.ID
+}
 
 // RiskSensitivity - The risk sensitivity level for the group. When an override is set, this field will match that.
 type RiskSensitivity string
@@ -113,8 +147,8 @@ type Group struct {
 	GroupType *GroupTypeEnum `json:"group_type,omitempty"`
 	// The ID of the group.
 	ID string `json:"group_id"`
-	// Represents a sync task that has been completed, either successfully or with errors.
-	LastSuccessfulSync *SyncTask `json:"last_successful_sync,omitempty"`
+	// Information about the last successful sync of this group.
+	LastSuccessfulSync *LastSuccessfulSync `json:"last_successful_sync,omitempty"`
 	// The name of the group.
 	Name *string `json:"name,omitempty"`
 	// Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided.
@@ -204,7 +238,7 @@ func (g *Group) GetID() string {
 	return g.ID
 }
 
-func (g *Group) GetLastSuccessfulSync() *SyncTask {
+func (g *Group) GetLastSuccessfulSync() *LastSuccessfulSync {
 	if g == nil {
 		return nil
 	}

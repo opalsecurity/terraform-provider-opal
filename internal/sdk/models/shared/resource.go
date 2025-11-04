@@ -6,7 +6,41 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
+	"time"
 )
+
+// ResourceLastSuccessfulSync - Information about the last successful sync of this resource.
+type ResourceLastSuccessfulSync struct {
+	// The time when the sync task was completed.
+	CompletedAt time.Time `json:"completed_at"`
+	// The ID of the sync task.
+	ID string `json:"id"`
+}
+
+func (r ResourceLastSuccessfulSync) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(r, "", false)
+}
+
+func (r *ResourceLastSuccessfulSync) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &r, "", false, []string{"completed_at", "id"}); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *ResourceLastSuccessfulSync) GetCompletedAt() time.Time {
+	if r == nil {
+		return time.Time{}
+	}
+	return r.CompletedAt
+}
+
+func (r *ResourceLastSuccessfulSync) GetID() string {
+	if r == nil {
+		return ""
+	}
+	return r.ID
+}
 
 // ResourceRiskSensitivity - The risk sensitivity level for the resource. When an override is set, this field will match that.
 type ResourceRiskSensitivity string
@@ -111,8 +145,8 @@ type Resource struct {
 	ExtensionsDurationInMinutes *int64 `json:"extensions_duration_in_minutes,omitempty"`
 	// The ID of the resource.
 	ID string `json:"resource_id"`
-	// Represents a sync task that has been completed, either successfully or with errors.
-	LastSuccessfulSync *SyncTask `json:"last_successful_sync,omitempty"`
+	// Information about the last successful sync of this resource.
+	LastSuccessfulSync *ResourceLastSuccessfulSync `json:"last_successful_sync,omitempty"`
 	// The name of the resource.
 	Name *string `json:"name,omitempty"`
 	// The ID of the parent resource.
@@ -201,7 +235,7 @@ func (r *Resource) GetID() string {
 	return r.ID
 }
 
-func (r *Resource) GetLastSuccessfulSync() *SyncTask {
+func (r *Resource) GetLastSuccessfulSync() *ResourceLastSuccessfulSync {
 	if r == nil {
 		return nil
 	}

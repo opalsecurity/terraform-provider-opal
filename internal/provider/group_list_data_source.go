@@ -147,7 +147,7 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 									Description: `The ID of the sync task.`,
 								},
 							},
-							Description: `Represents a sync task that has been completed, either successfully or with errors.`,
+							Description: `Information about the last successful sync of this group.`,
 						},
 						"name": schema.StringAttribute{
 							Computed:    true,
@@ -349,6 +349,7 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 												Description: `The list of role remote IDs to match.`,
 											},
 										},
+										Description: `The condition for the request configuration.`,
 									},
 									"extensions_duration_in_minutes": schema.Int64Attribute{
 										Computed:    true,

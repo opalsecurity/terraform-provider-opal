@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
@@ -121,7 +122,16 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 							Description: `A bool representing whether or not to automatically approve requests for this resource.`,
 						},
 						"condition": schema.SingleNestedAttribute{
+							Computed: true,
 							Optional: true,
+							Default: objectdefault.StaticValue(types.ObjectNull(map[string]attr.Type{
+								"group_ids": types.SetType{
+									ElemType: types.StringType,
+								},
+								"role_remote_ids": types.SetType{
+									ElemType: types.StringType,
+								},
+							})),
 							Attributes: map[string]schema.Attribute{
 								"group_ids": schema.SetAttribute{
 									Computed:    true,
@@ -138,6 +148,7 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 									Description: `The list of role remote IDs to match. Default: []`,
 								},
 							},
+							Description: `The condition for the request configuration.`,
 						},
 						"extensions_duration_in_minutes": schema.Int64Attribute{
 							Optional:    true,

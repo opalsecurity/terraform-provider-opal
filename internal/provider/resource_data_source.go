@@ -37,7 +37,7 @@ type ResourceDataSourceModel struct {
 	Description                 types.String                            `tfsdk:"description"`
 	ExtensionsDurationInMinutes types.Int64                             `tfsdk:"extensions_duration_in_minutes"`
 	ID                          types.String                            `tfsdk:"id"`
-	LastSuccessfulSync          *tfTypes.SyncTask                       `tfsdk:"last_successful_sync"`
+	LastSuccessfulSync          *tfTypes.LastSuccessfulSync             `tfsdk:"last_successful_sync"`
 	Name                        types.String                            `tfsdk:"name"`
 	ParentResourceID            types.String                            `tfsdk:"parent_resource_id"`
 	RemoteInfo                  *tfTypes.ResourceRemoteInfo             `tfsdk:"remote_info"`
@@ -108,7 +108,7 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						Description: `The ID of the sync task.`,
 					},
 				},
-				Description: `Represents a sync task that has been completed, either successfully or with errors.`,
+				Description: `Information about the last successful sync of this resource.`,
 			},
 			"name": schema.StringAttribute{
 				Computed:    true,
@@ -860,6 +860,7 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 									Description: `The list of role remote IDs to match.`,
 								},
 							},
+							Description: `The condition for the request configuration.`,
 						},
 						"extensions_duration_in_minutes": schema.Int64Attribute{
 							Computed:    true,

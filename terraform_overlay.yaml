@@ -464,42 +464,32 @@ actions:
   - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["get"]
     update:
       x-speakeasy-entity-operation: IdpGroupMappings#get
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["get"]
+    update:
       deprecated: true
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["get"]
+    update:
       x-speakeasy-deprecation-message: This resource is deprecated. Use the `opal_group_catalog_mapping` resource instead.
   - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["put"]
     update:
       x-speakeasy-entity-operation: IdpGroupMappings#create,update
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["put"]
+    update:
       deprecated: true
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}"]["put"]
+    update:
       x-speakeasy-deprecation-message: This resource is deprecated. Use the `opal_group_catalog_mapping` resource instead.
+  - target: $["paths"]["/idp-group-mappings/{app_resource_id}/groups/{group_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: GroupCatalogMapping#read
   - target: $["paths"]["/idp-group-mappings/{app_resource_id}/groups/{group_id}"]["post"]
     update:
       x-speakeasy-entity-operation:
         - GroupCatalogMapping#create
         - GroupCatalogMapping#update
-  - target: $["paths"]["/idp-group-mappings/{app_resource_id}/groups/{group_id}"]["get"]
-    update:
-      x-speakeasy-entity-operation: GroupCatalogMapping#read
   - target: $["paths"]["/idp-group-mappings/{app_resource_id}/groups/{group_id}"]["delete"]
     update:
       x-speakeasy-entity-operation: GroupCatalogMapping#delete
-  - target: $["paths"]["/delegations"]["get"]
-    update:
-      x-speakeasy-entity-operation: Delegations#get
-  - target: $["paths"]["/delegations"]["post"]
-    update:
-      x-speakeasy-entity-operation: Delegation#create
-  - target: $["paths"]["/delegations/{delegation_id}"]["get"]["parameters"][0]
-    update:
-      x-speakeasy-name-override: id
-  - target: $["paths"]["/delegations/{delegation_id}"]["get"]
-    update:
-      x-speakeasy-entity-operation: Delegation#read
-  - target: $["paths"]["/delegations/{delegation_id}"]["delete"]["parameters"][0]
-    update:
-      x-speakeasy-name-override: id
-  - target: $["paths"]["/delegations/{delegation_id}"]["delete"]
-    update:
-      x-speakeasy-entity-operation: Delegation#delete
   - target: $["paths"]["/owners"]["get"]["operationId"]
     update: getOwners
   - target: $["paths"]["/owners"]["get"]["responses"]
@@ -1037,6 +1027,24 @@ actions:
   - target: $["paths"]["/uar/{uar_id}"]["get"]
     update:
       x-speakeasy-entity-operation: UAR#get
+  - target: $["paths"]["/delegations"]["get"]
+    update:
+      x-speakeasy-entity-operation: Delegations#get
+  - target: $["paths"]["/delegations"]["post"]
+    update:
+      x-speakeasy-entity-operation: Delegation#create
+  - target: $["paths"]["/delegations/{delegation_id}"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/delegations/{delegation_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: Delegation#read
+  - target: $["paths"]["/delegations/{delegation_id}"]["delete"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/delegations/{delegation_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: Delegation#delete
   - target: $["paths"]["/resources/{resource_id}/users/{user_id}"]
     remove: true
   - target: $["components"]["schemas"]["PaginatedUARsList"]
@@ -1177,6 +1185,9 @@ actions:
   - target: $["components"]["schemas"]["Group"]["properties"]["extensions_duration_in_minutes"]
     update:
       x-speakeasy-deprecation-message: Do not use this field, set the extension duration in the request_configuration you want it to apply to.
+  - target: $["components"]["schemas"]["Group"]["properties"]["extensions_duration_in_minutes"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["Group"]["properties"]["require_manager_approval"]
     update:
       x-speakeasy-ignore: true
@@ -1225,6 +1236,15 @@ actions:
   - target: $["components"]["schemas"]["Group"]["properties"]["risk_sensitivity_override"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["last_successful_sync"]
+    update:
+      allOf:
+        - $ref: "#/components/schemas/SyncTask"
+        - x-speakeasy-computed: true
+        - x-speakeasy-param-readonly: true
+        - x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["last_successful_sync"]["$ref"]
+    remove: true
   - target: $["components"]["schemas"]["Group"]
     update:
       x-speakeasy-entity: Group
@@ -1318,18 +1338,41 @@ actions:
   - target: $["components"]["schemas"]["UpdateGroupResourcesInfo"]
     update:
       x-speakeasy-entity: GroupResourceList
+  - target: $["components"]["schemas"]["IdpGroupMapping"]
+    update:
+      x-speakeasy-entity: GroupCatalogMapping
   - target: $["components"]["schemas"]["GroupResourceList"]["properties"]["group_resources"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["GroupResourceList"]
     update:
       x-speakeasy-entity: GroupResourceList
+  - target: $["components"]["schemas"]["MessageChannelList"]["properties"]
+    update:
+      message_channel_ids:
+        type: array
+        items:
+          type: string
+          format: uuid
+        description: "Computed field that extracts message channel IDs from the channels array"
+        x-speakeasy-computed: true
+        x-speakeasy-computed-source: "channels[*].message_channel_id"
   - target: $["components"]["schemas"]["MessageChannelList"]
     update:
       x-speakeasy-entity:
         - MessageChannelList
         - ResourceMessageChannelList
         - GroupMessageChannels
+  - target: $["components"]["schemas"]["OnCallScheduleList"]["properties"]
+    update:
+      on_call_schedule_ids:
+        type: array
+        items:
+          type: string
+          format: uuid
+        description: "Computed field that extracts on-call schedule IDs from the on_call_schedules array"
+        x-speakeasy-computed: true
+        x-speakeasy-computed-source: "on_call_schedules[*].on_call_schedule_id"
   - target: $["components"]["schemas"]["OnCallScheduleList"]
     update:
       x-speakeasy-entity:
@@ -1446,26 +1489,6 @@ actions:
   - target: $["components"]["schemas"]["CreateOnCallScheduleInfo"]
     update:
       x-speakeasy-entity: OnCallSchedule
-  - target: $["components"]["schemas"]["MessageChannelList"]["properties"]
-    update:
-      message_channel_ids:
-        type: array
-        items:
-          type: string
-          format: uuid
-        description: "Computed field that extracts message channel IDs from the channels array"
-        x-speakeasy-computed: true
-        x-speakeasy-computed-source: "channels[*].message_channel_id"
-  - target: $["components"]["schemas"]["OnCallScheduleList"]["properties"]
-    update:
-      on_call_schedule_ids:
-        type: array
-        items:
-          type: string
-          format: uuid
-        description: "Computed field that extracts on-call schedule IDs from the on_call_schedules array"
-        x-speakeasy-computed: true
-        x-speakeasy-computed-source: "on_call_schedules[*].on_call_schedule_id"
   - target: $["components"]["schemas"]["OnCallScheduleProviderEnum"]
     update:
       x-speakeasy-entity: OnCallSchedule
@@ -1743,6 +1766,9 @@ actions:
   - target: $["components"]["schemas"]["Resource"]["properties"]["extensions_duration_in_minutes"]
     update:
       x-speakeasy-deprecation-message: Do not use this field, set the extension duration in the request_configuration you want it to apply to.
+  - target: $["components"]["schemas"]["Resource"]["properties"]["extensions_duration_in_minutes"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["require_manager_approval"]
     update:
       x-speakeasy-ignore: true
@@ -1800,6 +1826,15 @@ actions:
   - target: $["components"]["schemas"]["Resource"]["properties"]["descendant_resource_ids"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["last_successful_sync"]
+    update:
+      allOf:
+        - $ref: "#/components/schemas/SyncTask"
+        - x-speakeasy-computed: true
+        - x-speakeasy-param-readonly: true
+        - x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["last_successful_sync"]["$ref"]
+    remove: true
   - target: $["components"]["schemas"]["Resource"]
     update:
       x-speakeasy-entity: Resource
@@ -1974,7 +2009,15 @@ actions:
     remove: true
   - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["condition"]
     update:
+      allOf:
+        - $ref: "#/components/schemas/Condition"
+        - x-speakeasy-computed: true
+        - x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["condition"]
+    update:
       default: null
+  - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["condition"]["$ref"]
+    remove: true
   - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["max_duration_minutes"]
     update:
       x-speakeasy-name-override: max_duration
@@ -1985,6 +2028,9 @@ actions:
     update:
       x-speakeasy-name-override: recommended_duration
   - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["recommended_duration_minutes"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["extensions_duration_in_minutes"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["RequestConfiguration"]["properties"]["request_template_id"]
@@ -2093,6 +2139,12 @@ actions:
   - target: $["components"]["schemas"]["ScopedRolePermission"]["properties"]["target_ids"]
     update:
       default: []
+  - target: $["components"]["schemas"]["Delegation"]
+    update:
+      x-speakeasy-entity: Delegation
+  - target: $["components"]["schemas"]["CreateDelegationRequest"]
+    update:
+      x-speakeasy-entity: Delegation
   - target: $["components"]["schemas"]
     update:
       BundlesVisibilityTypeEnum:
@@ -2102,15 +2154,6 @@ actions:
           - TEAM
         example: GLOBAL
         type: string
-  - target: $["components"]["schemas"]["IdpGroupMapping"]
-    update:
-      x-speakeasy-entity: GroupCatalogMapping
-  - target: $["components"]["schemas"]["Delegation"]
-    update:
-      x-speakeasy-entity: Delegation
-  - target: $["components"]["schemas"]["CreateDelegationRequest"]
-    update:
-      x-speakeasy-entity: Delegation
   - target: $["components"]["schemas"]["GroupWithAccessLevel"]
     remove: true
   - target: $["components"]["schemas"]["GroupContainingGroupList"]

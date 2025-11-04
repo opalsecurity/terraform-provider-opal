@@ -1,5 +1,51 @@
 # Changelog
 
+## v3.3.3
+- Bring Terraform provider up to date with new API resource and group types.
+  - Adds option to instantly perform actions after a UAR is closed on UAR creation.
+  - Adds support for Tailscale Groups.
+  - Adds support for AWS SSO Groups.
+  - Adds support for Databricks Account Groups.
+  - Adds support for Custom Connector Groups.
+  - Adds support for Databricks Account Service principals.
+  - Adds support for AWS RDS clusters.
+  - Adds support for Snowflake Databases.
+  - Adds support for Snowflake Schemas.
+  - Adds support for Snowflake Tables.
+  - Adds support for iLevel Advanced Roles.
+  - Adds support for Tailscale SSH Tags.
+  - Adds support for Workday Roles.
+
+- Fixes bug where `last_successful_sync`, `max_duration`, `extension_duration_in_minutes`, and `recommended_duration` fields were causing state drift.
+
+## v3.3.2
+- Adds support for Oracle Fusion
+- Adds fields in several data sources
+
+## v3.3.1
+- Fixes bug where oncall schedules and message channels were not being populated correctly on import
+- Adds deprecation warning for setting request extensions on top-line groups or resources (this should be specified in `request_configurations`)
+
+## v3.3.0
+### New Features
+- **Add support for Delegations**: New `opal_delegation` resource and `opal_delegations` data source for managing delegation configurations
+  - `opal_delegation`: Create, read, and delete individual delegations
+  - `opal_delegations`: List all delegations with filtering capabilities
+
+### Breaking Changes
+- **Deprecate IDP Group Mappings**: The `opal_idp_group_mappings` resource and data source are now deprecated
+  - Use the new `opal_group_catalog_mapping` resource instead
+  - The old resources will be removed in a future major version
+
+### New Resources
+- `opal_group_catalog_mapping`: Manage individual IDP group mappings
+  - Supports create, read, update, and delete operations
+  - Replaces the bulk `opal_idp_group_mappings` resource with singular resource management
+
+### New Data Sources
+- `opal_delegations`: List all delegations in your Opal organization
+- `opal_group_catalog_mapping`: Read individual group catalog mappings
+
 ## v.3.2.2
 - Fixes a bug scoped role permissions with no target_ids were causing state drift.
 
