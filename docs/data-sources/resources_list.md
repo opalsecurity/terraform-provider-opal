@@ -94,6 +94,7 @@ Read-Only:
 - `aws_iam_role` (Attributes) Remote info for AWS IAM role. (see [below for nested schema](#nestedatt--results--remote_info--aws_iam_role))
 - `aws_organizational_unit` (Attributes) Remote info for AWS organizational unit. (see [below for nested schema](#nestedatt--results--remote_info--aws_organizational_unit))
 - `aws_permission_set` (Attributes) Remote info for AWS Identity Center permission set. (see [below for nested schema](#nestedatt--results--remote_info--aws_permission_set))
+- `aws_rds_cluster` (Attributes) Remote info for AWS RDS cluster. (see [below for nested schema](#nestedatt--results--remote_info--aws_rds_cluster))
 - `aws_rds_instance` (Attributes) Remote info for AWS RDS instance. (see [below for nested schema](#nestedatt--results--remote_info--aws_rds_instance))
 - `azure_enterprise_app` (Attributes) Remote info for Azure Enterprise App. (see [below for nested schema](#nestedatt--results--remote_info--azure_enterprise_app))
 - `azure_entra_id_role` (Attributes) Remote info for Azure Entra ID role. (see [below for nested schema](#nestedatt--results--remote_info--azure_entra_id_role))
@@ -111,6 +112,7 @@ Read-Only:
 - `coupa_role` (Attributes) Remote info for Coupa role. (see [below for nested schema](#nestedatt--results--remote_info--coupa_role))
 - `cursor_organization` (Attributes) Remote info for a Cursor organization. (see [below for nested schema](#nestedatt--results--remote_info--cursor_organization))
 - `custom_connector` (Attributes) Remote info for a custom connector resource. (see [below for nested schema](#nestedatt--results--remote_info--custom_connector))
+- `databricks_account_service_principal` (Attributes) Remote info for Databricks account service principal. (see [below for nested schema](#nestedatt--results--remote_info--databricks_account_service_principal))
 - `datastax_astra_role` (Attributes) Remote info for an Astra role. (see [below for nested schema](#nestedatt--results--remote_info--datastax_astra_role))
 - `gcp_big_query_dataset` (Attributes) Remote info for GCP BigQuery Dataset. (see [below for nested schema](#nestedatt--results--remote_info--gcp_big_query_dataset))
 - `gcp_big_query_table` (Attributes) Remote info for GCP BigQuery Table. (see [below for nested schema](#nestedatt--results--remote_info--gcp_big_query_table))
@@ -127,6 +129,7 @@ Read-Only:
 - `github_repo` (Attributes) Remote info for GitHub repository. (see [below for nested schema](#nestedatt--results--remote_info--github_repo))
 - `gitlab_project` (Attributes) Remote info for Gitlab project. (see [below for nested schema](#nestedatt--results--remote_info--gitlab_project))
 - `google_workspace_role` (Attributes) Remote info for GCP workspace role. (see [below for nested schema](#nestedatt--results--remote_info--google_workspace_role))
+- `ilevel_advanced_role` (Attributes) Remote info for iLevel Advanced role. (see [below for nested schema](#nestedatt--results--remote_info--ilevel_advanced_role))
 - `okta_app` (Attributes) Remote info for Okta directory app. (see [below for nested schema](#nestedatt--results--remote_info--okta_app))
 - `okta_custom_role` (Attributes) Remote info for Okta directory custom role. (see [below for nested schema](#nestedatt--results--remote_info--okta_custom_role))
 - `okta_standard_role` (Attributes) Remote info for Okta directory standard role. (see [below for nested schema](#nestedatt--results--remote_info--okta_standard_role))
@@ -137,7 +140,12 @@ Read-Only:
 - `salesforce_permission_set` (Attributes) Remote info for Salesforce permission set. (see [below for nested schema](#nestedatt--results--remote_info--salesforce_permission_set))
 - `salesforce_profile` (Attributes) Remote info for Salesforce profile. (see [below for nested schema](#nestedatt--results--remote_info--salesforce_profile))
 - `salesforce_role` (Attributes) Remote info for Salesforce role. (see [below for nested schema](#nestedatt--results--remote_info--salesforce_role))
+- `snowflake_database` (Attributes) Remote info for Snowflake database. (see [below for nested schema](#nestedatt--results--remote_info--snowflake_database))
+- `snowflake_schema` (Attributes) Remote info for Snowflake schema. (see [below for nested schema](#nestedatt--results--remote_info--snowflake_schema))
+- `snowflake_table` (Attributes) Remote info for Snowflake table. (see [below for nested schema](#nestedatt--results--remote_info--snowflake_table))
+- `tailscale_ssh` (Attributes) Remote info for Tailscale SSH tag. (see [below for nested schema](#nestedatt--results--remote_info--tailscale_ssh))
 - `teleport_role` (Attributes) Remote info for Teleport role. (see [below for nested schema](#nestedatt--results--remote_info--teleport_role))
+- `workday_role` (Attributes) Remote info for Workday role. (see [below for nested schema](#nestedatt--results--remote_info--workday_role))
 
 <a id="nestedatt--results--remote_info--anthropic_workspace"></a>
 ### Nested Schema for `results.remote_info.anthropic_workspace`
@@ -200,6 +208,19 @@ Read-Only:
 
 - `account_id` (String) The ID of an AWS account to which this permission set is provisioned.
 - `arn` (String) The ARN of the permission set.
+
+
+<a id="nestedatt--results--remote_info--aws_rds_cluster"></a>
+### Nested Schema for `results.remote_info.aws_rds_cluster`
+
+Read-Only:
+
+- `account_id` (String) The id of the AWS account. Required for AWS Organizations.
+- `cluster_id` (String) The clusterId of the RDS cluster.
+- `database_name` (String) The name of the database in the RDS cluster. This can be the value of the tag `opal:database-name` or the database name.
+- `engine` (String) The database engine for the RDS instance.
+- `region` (String) The region of the RDS cluster.
+- `resource_id` (String) The resourceId of the RDS cluster.
 
 
 <a id="nestedatt--results--remote_info--aws_rds_instance"></a>
@@ -342,6 +363,15 @@ Read-Only:
 - `remote_resource_id` (String) The id of the resource in the end system
 
 
+<a id="nestedatt--results--remote_info--databricks_account_service_principal"></a>
+### Nested Schema for `results.remote_info.databricks_account_service_principal`
+
+Read-Only:
+
+- `application_id` (String) The application ID of the service principal.
+- `resource_id` (String) The resource ID of the service principal.
+
+
 <a id="nestedatt--results--remote_info--datastax_astra_role"></a>
 ### Nested Schema for `results.remote_info.datastax_astra_role`
 
@@ -478,6 +508,14 @@ Read-Only:
 - `role_id` (String) The id of the role.
 
 
+<a id="nestedatt--results--remote_info--ilevel_advanced_role"></a>
+### Nested Schema for `results.remote_info.ilevel_advanced_role`
+
+Read-Only:
+
+- `role_name` (String) The name of the role.
+
+
 <a id="nestedatt--results--remote_info--okta_app"></a>
 ### Nested Schema for `results.remote_info.okta_app`
 
@@ -560,12 +598,55 @@ Read-Only:
 - `role_id` (String) The id of the role.
 
 
+<a id="nestedatt--results--remote_info--snowflake_database"></a>
+### Nested Schema for `results.remote_info.snowflake_database`
+
+Read-Only:
+
+- `database_name` (String) The name of the database.
+
+
+<a id="nestedatt--results--remote_info--snowflake_schema"></a>
+### Nested Schema for `results.remote_info.snowflake_schema`
+
+Read-Only:
+
+- `database_name` (String) The name of the database the schema is in.
+- `schema_name` (String) The name of the schema.
+
+
+<a id="nestedatt--results--remote_info--snowflake_table"></a>
+### Nested Schema for `results.remote_info.snowflake_table`
+
+Read-Only:
+
+- `database_name` (String) The name of the database the table is in.
+- `schema_name` (String) The name of the schema the table is in.
+- `table_name` (String) The name of the table.
+
+
+<a id="nestedatt--results--remote_info--tailscale_ssh"></a>
+### Nested Schema for `results.remote_info.tailscale_ssh`
+
+Read-Only:
+
+- `tag_name` (String) The name of the tag.
+
+
 <a id="nestedatt--results--remote_info--teleport_role"></a>
 ### Nested Schema for `results.remote_info.teleport_role`
 
 Read-Only:
 
 - `role_name` (String) The name role.
+
+
+<a id="nestedatt--results--remote_info--workday_role"></a>
+### Nested Schema for `results.remote_info.workday_role`
+
+Read-Only:
+
+- `role_id` (String) The id of the role.
 
 
 

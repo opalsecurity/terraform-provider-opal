@@ -19,11 +19,20 @@ resource "opal_group" "my_group" {
     active_directory_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
+    aws_sso_group = {
+      group_id = 898931321
+    }
     azure_ad_microsoft_365_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
     azure_ad_security_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    connector_group = {
+      group_id = 898931321
+    }
+    databricks_account_group = {
+      group_id = 898931321
     }
     duo_group = {
       group_id = "DSRD8W89B9DNDBY4RHAC"
@@ -48,6 +57,9 @@ resource "opal_group" "my_group" {
     }
     snowflake_role = {
       role_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    tailscale_group = {
+      group_id = 898931321
     }
     workday_user_security_group = {
       group_id = "123abc456def"

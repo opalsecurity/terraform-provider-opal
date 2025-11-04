@@ -2663,6 +2663,8 @@ paths:
                   type: string
                   description: "Comment for the denial"
                   example: "Denied due to insufficient justification"
+                level:
+                  $ref: "#/components/schemas/RequestApprovalEnum"
               required:
                 - comment
       responses:
@@ -4940,6 +4942,10 @@ components:
           description: A bool representing whether to present a warning when a user is the only reviewer for themself. Default is False.
           example: False
           type: boolean
+        instantly_action_reviews:
+          description: A bool representing whether to instantly action changes when reviewers submit their decision. Default is False.
+          type: boolean
+          example: False
         uar_scope:
           $ref: "#/components/schemas/UARScope"
       required:
@@ -4950,6 +4956,7 @@ components:
         - send_reviewer_assignment_notification
         - time_zone
         - self_review_allowed
+        - instantly_action_reviews
       type: object
       x-speakeasy-entity: UAR
     CreateUARInfo:
@@ -4997,6 +5004,10 @@ components:
           description: A bool representing whether to present a warning when a user is the only reviewer for themself. Default is False.
           example: False
           type: boolean
+        instantly_action_reviews:
+          description: A bool representing whether to instantly action changes when reviewers submit their decision. Default is False.
+          type: boolean
+          example: False
         reminder_schedule:
           items:
             type: integer
@@ -7135,6 +7146,10 @@ components:
         - SERVICE_NOW
       example: LINEAR
       type: string
+    RDSEngineEnum:
+      type: string
+      description: "The database engine for the RDS instance."
+      enum: [MYSQL, POSTGRESQL]
     GroupRemoteInfo:
       description: Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided.
       properties:
@@ -7149,6 +7164,46 @@ components:
           required:
             - group_id
           x-speakeasy-param-force-new: true
+        tailscale_group:
+          description: Remote info for Tailscale group.
+          properties:
+            group_id:
+              description: The id of the Tailscale group.
+              example: 898931321
+              type: string
+          type: object
+          required:
+            - group_id
+        aws_sso_group:
+          description: Remote info for AWS SSO group.
+          properties:
+            group_id:
+              description: The id of the AWS SSO group.
+              example: 898931321
+              type: string
+          type: object
+          required:
+            - group_id
+        databricks_account_group:
+          description: Remote info for Databricks account group.
+          properties:
+            group_id:
+              description: The id of the Databricks account group.
+              example: 898931321
+              type: string
+          type: object
+          required:
+            - group_id
+        connector_group:
+          description: Remote info for Connector group.
+          properties:
+            group_id:
+              description: The id of the Connector group.
+              example: 898931321
+              type: string
+          type: object
+          required:
+            - group_id
         github_team:
           description: Remote info for GitHub team.
           properties:
@@ -7279,6 +7334,21 @@ components:
     ResourceRemoteInfo:
       description: Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields.
       properties:
+        databricks_account_service_principal:
+          description: Remote info for Databricks account service principal.
+          properties:
+            application_id:
+              description: The application ID of the service principal.
+              example: 00000000-0000-0000-0000-000000000000
+              type: string
+            resource_id:
+              description: The resource ID of the service principal.
+              example: 00000000-0000-0000-0000-000000000000
+              type: string
+          type: object
+          required:
+            - application_id
+            - resource_id
         azure_subscription:
           description: Remote info for Azure subscription.
           properties:
@@ -7493,6 +7563,40 @@ components:
           required:
             - instance_id
             - region
+        aws_rds_cluster:
+          description: Remote info for AWS RDS cluster.
+          properties:
+            cluster_id:
+              description: The clusterId of the RDS cluster.
+              example: demo-mysql-cluster
+              type: string
+            region:
+              description: The region of the RDS cluster.
+              example: us-east-2
+              type: string
+            resource_id:
+              description: The resourceId of the RDS cluster.
+              example: cluster-AOO8V0XUCNU13XLZXQDQRSN0NQ
+              type: string
+            account_id:
+              description: The id of the AWS account. Required for AWS Organizations.
+              example: 234234234234
+              type: string
+            database_name:
+              description: The name of the database in the RDS cluster. This can be the value of the tag `opal:database-name` or the database name.
+              example: mydatabase
+              type: string
+            engine:
+              allOf:
+                - $ref: "#/components/schemas/RDSEngineEnum"
+          type: object
+          required:
+            - cluster_id
+            - region
+            - resource_id
+            - account_id
+            - database_name
+            - engine
         aws_rds_instance:
           description: Remote info for AWS RDS instance.
           properties:
@@ -7798,6 +7902,71 @@ components:
           type: object
           required:
             - role_id
+        snowflake_database:
+          description: Remote info for Snowflake database.
+          properties:
+            database_name:
+              description: The name of the database.
+              example: mydatabase
+              type: string
+          type: object
+          required:
+            - database_name
+        snowflake_schema:
+          description: Remote info for Snowflake schema.
+          properties:
+            database_name:
+              description: The name of the database the schema is in.
+              example: mydatabase
+              type: string
+            schema_name:
+              description: The name of the schema.
+              example: mycatalogschema
+              type: string
+          type: object
+          required:
+            - database_name
+            - schema_name
+        snowflake_table:
+          description: Remote info for Snowflake table.
+          properties:
+            database_name:
+              description: The name of the database the table is in.
+              example: mydatabase
+              type: string
+            schema_name:
+              description: The name of the schema the table is in.
+              example: mycatalogschema
+              type: string
+            table_name:
+              description: The name of the table.
+              example: myitemstable
+              type: string
+          type: object
+          required:
+            - database_name
+            - schema_name
+            - table_name
+        ilevel_advanced_role:
+          description: Remote info for iLevel Advanced role.
+          properties:
+            role_name:
+              description: The name of the role.
+              example: IT User
+              type: string
+          type: object
+          required:
+            - role_name
+        tailscale_ssh:
+          description: Remote info for Tailscale SSH tag.
+          properties:
+            tag_name:
+              description: The name of the tag.
+              example: admin
+              type: string
+          type: object
+          required:
+            - tag_name
         pagerduty_role:
           description: Remote info for Pagerduty role.
           properties:
@@ -7809,6 +7978,16 @@ components:
           type: object
           required:
             - role_name
+        workday_role:
+          description: Remote info for Workday role.
+          properties:
+            role_id:
+              description: The id of the role.
+              example: 123abc456def
+              type: string
+          type: object
+          required:
+            - role_id
         salesforce_permission_set:
           description: Remote info for Salesforce permission set.
           properties:

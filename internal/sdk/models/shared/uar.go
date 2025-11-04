@@ -11,6 +11,8 @@ import (
 type Uar struct {
 	// The last day for reviewers to complete their access reviews.
 	Deadline time.Time `json:"deadline"`
+	// A bool representing whether to instantly action changes when reviewers submit their decision. Default is False.
+	InstantlyActionReviews bool `json:"instantly_action_reviews"`
 	// The name of the UAR.
 	Name string `json:"name"`
 	// A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually.
@@ -32,7 +34,7 @@ func (u Uar) MarshalJSON() ([]byte, error) {
 }
 
 func (u *Uar) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &u, "", false, []string{"deadline", "name", "reviewer_assignment_policy", "self_review_allowed", "send_reviewer_assignment_notification", "time_zone", "uar_id"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &u, "", false, []string{"deadline", "instantly_action_reviews", "name", "reviewer_assignment_policy", "self_review_allowed", "send_reviewer_assignment_notification", "time_zone", "uar_id"}); err != nil {
 		return err
 	}
 	return nil
@@ -43,6 +45,13 @@ func (u *Uar) GetDeadline() time.Time {
 		return time.Time{}
 	}
 	return u.Deadline
+}
+
+func (u *Uar) GetInstantlyActionReviews() bool {
+	if u == nil {
+		return false
+	}
+	return u.InstantlyActionReviews
 }
 
 func (u *Uar) GetName() string {

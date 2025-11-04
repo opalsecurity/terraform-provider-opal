@@ -92,6 +92,17 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.AwsPermissionSet.AccountID = types.StringValue(resp.RemoteInfo.AwsPermissionSet.AccountID)
 				r.RemoteInfo.AwsPermissionSet.Arn = types.StringValue(resp.RemoteInfo.AwsPermissionSet.Arn)
 			}
+			if resp.RemoteInfo.AwsRdsCluster == nil {
+				r.RemoteInfo.AwsRdsCluster = nil
+			} else {
+				r.RemoteInfo.AwsRdsCluster = &tfTypes.AwsRdsCluster{}
+				r.RemoteInfo.AwsRdsCluster.AccountID = types.StringValue(resp.RemoteInfo.AwsRdsCluster.AccountID)
+				r.RemoteInfo.AwsRdsCluster.ClusterID = types.StringValue(resp.RemoteInfo.AwsRdsCluster.ClusterID)
+				r.RemoteInfo.AwsRdsCluster.DatabaseName = types.StringValue(resp.RemoteInfo.AwsRdsCluster.DatabaseName)
+				r.RemoteInfo.AwsRdsCluster.Engine = types.StringValue(string(resp.RemoteInfo.AwsRdsCluster.Engine))
+				r.RemoteInfo.AwsRdsCluster.Region = types.StringValue(resp.RemoteInfo.AwsRdsCluster.Region)
+				r.RemoteInfo.AwsRdsCluster.ResourceID = types.StringValue(resp.RemoteInfo.AwsRdsCluster.ResourceID)
+			}
 			if resp.RemoteInfo.AwsRdsInstance == nil {
 				r.RemoteInfo.AwsRdsInstance = nil
 			} else {
@@ -198,6 +209,13 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.CustomConnector.CanHaveUsageEvents = types.BoolValue(resp.RemoteInfo.CustomConnector.CanHaveUsageEvents)
 				r.RemoteInfo.CustomConnector.RemoteResourceID = types.StringValue(resp.RemoteInfo.CustomConnector.RemoteResourceID)
 			}
+			if resp.RemoteInfo.DatabricksAccountServicePrincipal == nil {
+				r.RemoteInfo.DatabricksAccountServicePrincipal = nil
+			} else {
+				r.RemoteInfo.DatabricksAccountServicePrincipal = &tfTypes.DatabricksAccountServicePrincipal{}
+				r.RemoteInfo.DatabricksAccountServicePrincipal.ApplicationID = types.StringValue(resp.RemoteInfo.DatabricksAccountServicePrincipal.ApplicationID)
+				r.RemoteInfo.DatabricksAccountServicePrincipal.ResourceID = types.StringValue(resp.RemoteInfo.DatabricksAccountServicePrincipal.ResourceID)
+			}
 			if resp.RemoteInfo.DatastaxAstraRole == nil {
 				r.RemoteInfo.DatastaxAstraRole = nil
 			} else {
@@ -302,6 +320,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.GoogleWorkspaceRole = &tfTypes.SnowflakeRole{}
 				r.RemoteInfo.GoogleWorkspaceRole.RoleID = types.StringValue(resp.RemoteInfo.GoogleWorkspaceRole.RoleID)
 			}
+			if resp.RemoteInfo.IlevelAdvancedRole == nil {
+				r.RemoteInfo.IlevelAdvancedRole = nil
+			} else {
+				r.RemoteInfo.IlevelAdvancedRole = &tfTypes.IlevelAdvancedRole{}
+				r.RemoteInfo.IlevelAdvancedRole.RoleName = types.StringValue(resp.RemoteInfo.IlevelAdvancedRole.RoleName)
+			}
 			if resp.RemoteInfo.OktaApp == nil {
 				r.RemoteInfo.OktaApp = nil
 			} else {
@@ -342,7 +366,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			if resp.RemoteInfo.PagerdutyRole == nil {
 				r.RemoteInfo.PagerdutyRole = nil
 			} else {
-				r.RemoteInfo.PagerdutyRole = &tfTypes.PagerdutyRole{}
+				r.RemoteInfo.PagerdutyRole = &tfTypes.IlevelAdvancedRole{}
 				r.RemoteInfo.PagerdutyRole.RoleName = types.StringValue(resp.RemoteInfo.PagerdutyRole.RoleName)
 			}
 			if resp.RemoteInfo.SalesforcePermissionSet == nil {
@@ -364,11 +388,44 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.SalesforceRole = &tfTypes.SnowflakeRole{}
 				r.RemoteInfo.SalesforceRole.RoleID = types.StringValue(resp.RemoteInfo.SalesforceRole.RoleID)
 			}
+			if resp.RemoteInfo.SnowflakeDatabase == nil {
+				r.RemoteInfo.SnowflakeDatabase = nil
+			} else {
+				r.RemoteInfo.SnowflakeDatabase = &tfTypes.SnowflakeDatabase{}
+				r.RemoteInfo.SnowflakeDatabase.DatabaseName = types.StringValue(resp.RemoteInfo.SnowflakeDatabase.DatabaseName)
+			}
+			if resp.RemoteInfo.SnowflakeSchema == nil {
+				r.RemoteInfo.SnowflakeSchema = nil
+			} else {
+				r.RemoteInfo.SnowflakeSchema = &tfTypes.SnowflakeSchema{}
+				r.RemoteInfo.SnowflakeSchema.DatabaseName = types.StringValue(resp.RemoteInfo.SnowflakeSchema.DatabaseName)
+				r.RemoteInfo.SnowflakeSchema.SchemaName = types.StringValue(resp.RemoteInfo.SnowflakeSchema.SchemaName)
+			}
+			if resp.RemoteInfo.SnowflakeTable == nil {
+				r.RemoteInfo.SnowflakeTable = nil
+			} else {
+				r.RemoteInfo.SnowflakeTable = &tfTypes.SnowflakeTable{}
+				r.RemoteInfo.SnowflakeTable.DatabaseName = types.StringValue(resp.RemoteInfo.SnowflakeTable.DatabaseName)
+				r.RemoteInfo.SnowflakeTable.SchemaName = types.StringValue(resp.RemoteInfo.SnowflakeTable.SchemaName)
+				r.RemoteInfo.SnowflakeTable.TableName = types.StringValue(resp.RemoteInfo.SnowflakeTable.TableName)
+			}
+			if resp.RemoteInfo.TailscaleSSH == nil {
+				r.RemoteInfo.TailscaleSSH = nil
+			} else {
+				r.RemoteInfo.TailscaleSSH = &tfTypes.TailscaleSSH{}
+				r.RemoteInfo.TailscaleSSH.TagName = types.StringValue(resp.RemoteInfo.TailscaleSSH.TagName)
+			}
 			if resp.RemoteInfo.TeleportRole == nil {
 				r.RemoteInfo.TeleportRole = nil
 			} else {
-				r.RemoteInfo.TeleportRole = &tfTypes.PagerdutyRole{}
+				r.RemoteInfo.TeleportRole = &tfTypes.IlevelAdvancedRole{}
 				r.RemoteInfo.TeleportRole.RoleName = types.StringValue(resp.RemoteInfo.TeleportRole.RoleName)
+			}
+			if resp.RemoteInfo.WorkdayRole == nil {
+				r.RemoteInfo.WorkdayRole = nil
+			} else {
+				r.RemoteInfo.WorkdayRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.WorkdayRole.RoleID = types.StringValue(resp.RemoteInfo.WorkdayRole.RoleID)
 			}
 		}
 		r.RequestConfigurations = []tfTypes.RequestConfiguration{}
@@ -733,145 +790,172 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				Arn:       arn2,
 			}
 		}
+		var awsRdsCluster *shared.AwsRdsCluster
+		if r.RemoteInfo.AwsRdsCluster != nil {
+			var accountId5 string
+			accountId5 = r.RemoteInfo.AwsRdsCluster.AccountID.ValueString()
+
+			var clusterID string
+			clusterID = r.RemoteInfo.AwsRdsCluster.ClusterID.ValueString()
+
+			var databaseName string
+			databaseName = r.RemoteInfo.AwsRdsCluster.DatabaseName.ValueString()
+
+			engine := shared.RDSEngineEnum(r.RemoteInfo.AwsRdsCluster.Engine.ValueString())
+			var region1 string
+			region1 = r.RemoteInfo.AwsRdsCluster.Region.ValueString()
+
+			var resourceID string
+			resourceID = r.RemoteInfo.AwsRdsCluster.ResourceID.ValueString()
+
+			awsRdsCluster = &shared.AwsRdsCluster{
+				AccountID:    accountId5,
+				ClusterID:    clusterID,
+				DatabaseName: databaseName,
+				Engine:       engine,
+				Region:       region1,
+				ResourceID:   resourceID,
+			}
+		}
 		var awsRdsInstance *shared.AwsRdsInstance
 		if r.RemoteInfo.AwsRdsInstance != nil {
-			accountId5 := new(string)
+			accountId6 := new(string)
 			if !r.RemoteInfo.AwsRdsInstance.AccountID.IsUnknown() && !r.RemoteInfo.AwsRdsInstance.AccountID.IsNull() {
-				*accountId5 = r.RemoteInfo.AwsRdsInstance.AccountID.ValueString()
+				*accountId6 = r.RemoteInfo.AwsRdsInstance.AccountID.ValueString()
 			} else {
-				accountId5 = nil
+				accountId6 = nil
 			}
 			var instanceId1 string
 			instanceId1 = r.RemoteInfo.AwsRdsInstance.InstanceID.ValueString()
 
-			var region1 string
-			region1 = r.RemoteInfo.AwsRdsInstance.Region.ValueString()
+			var region2 string
+			region2 = r.RemoteInfo.AwsRdsInstance.Region.ValueString()
 
-			var resourceID string
-			resourceID = r.RemoteInfo.AwsRdsInstance.ResourceID.ValueString()
+			var resourceId1 string
+			resourceId1 = r.RemoteInfo.AwsRdsInstance.ResourceID.ValueString()
 
 			awsRdsInstance = &shared.AwsRdsInstance{
-				AccountID:  accountId5,
+				AccountID:  accountId6,
 				InstanceID: instanceId1,
-				Region:     region1,
-				ResourceID: resourceID,
+				Region:     region2,
+				ResourceID: resourceId1,
 			}
 		}
 		var azureEnterpriseApp *shared.AzureEnterpriseApp
 		if r.RemoteInfo.AzureEnterpriseApp != nil {
-			var resourceId1 string
-			resourceId1 = r.RemoteInfo.AzureEnterpriseApp.ResourceID.ValueString()
+			var resourceId2 string
+			resourceId2 = r.RemoteInfo.AzureEnterpriseApp.ResourceID.ValueString()
 
 			azureEnterpriseApp = &shared.AzureEnterpriseApp{
-				ResourceID: resourceId1,
+				ResourceID: resourceId2,
 			}
 		}
 		var azureEntraIDRole *shared.AzureEntraIDRole
 		if r.RemoteInfo.AzureEntraIDRole != nil {
-			var resourceId2 string
-			resourceId2 = r.RemoteInfo.AzureEntraIDRole.ResourceID.ValueString()
+			var resourceId3 string
+			resourceId3 = r.RemoteInfo.AzureEntraIDRole.ResourceID.ValueString()
 
 			azureEntraIDRole = &shared.AzureEntraIDRole{
-				ResourceID: resourceId2,
+				ResourceID: resourceId3,
 			}
 		}
 		var azureManagementGroup *shared.AzureManagementGroup
 		if r.RemoteInfo.AzureManagementGroup != nil {
-			var resourceId3 string
-			resourceId3 = r.RemoteInfo.AzureManagementGroup.ResourceID.ValueString()
+			var resourceId4 string
+			resourceId4 = r.RemoteInfo.AzureManagementGroup.ResourceID.ValueString()
 
 			azureManagementGroup = &shared.AzureManagementGroup{
-				ResourceID: resourceId3,
+				ResourceID: resourceId4,
 			}
 		}
 		var azureResourceGroup *shared.AzureResourceGroup
 		if r.RemoteInfo.AzureResourceGroup != nil {
-			var resourceId4 string
-			resourceId4 = r.RemoteInfo.AzureResourceGroup.ResourceID.ValueString()
+			var resourceId5 string
+			resourceId5 = r.RemoteInfo.AzureResourceGroup.ResourceID.ValueString()
 
 			azureResourceGroup = &shared.AzureResourceGroup{
-				ResourceID: resourceId4,
+				ResourceID: resourceId5,
 			}
 		}
 		var azureSQLDatabase *shared.AzureSQLDatabase
 		if r.RemoteInfo.AzureSQLDatabase != nil {
-			var resourceId5 string
-			resourceId5 = r.RemoteInfo.AzureSQLDatabase.ResourceID.ValueString()
+			var resourceId6 string
+			resourceId6 = r.RemoteInfo.AzureSQLDatabase.ResourceID.ValueString()
 
 			azureSQLDatabase = &shared.AzureSQLDatabase{
-				ResourceID: resourceId5,
+				ResourceID: resourceId6,
 			}
 		}
 		var azureSQLManagedDatabase *shared.AzureSQLManagedDatabase
 		if r.RemoteInfo.AzureSQLManagedDatabase != nil {
-			var resourceId6 string
-			resourceId6 = r.RemoteInfo.AzureSQLManagedDatabase.ResourceID.ValueString()
+			var resourceId7 string
+			resourceId7 = r.RemoteInfo.AzureSQLManagedDatabase.ResourceID.ValueString()
 
 			azureSQLManagedDatabase = &shared.AzureSQLManagedDatabase{
-				ResourceID: resourceId6,
+				ResourceID: resourceId7,
 			}
 		}
 		var azureSQLManagedInstance *shared.AzureSQLManagedInstance
 		if r.RemoteInfo.AzureSQLManagedInstance != nil {
-			var resourceId7 string
-			resourceId7 = r.RemoteInfo.AzureSQLManagedInstance.ResourceID.ValueString()
+			var resourceId8 string
+			resourceId8 = r.RemoteInfo.AzureSQLManagedInstance.ResourceID.ValueString()
 
 			azureSQLManagedInstance = &shared.AzureSQLManagedInstance{
-				ResourceID: resourceId7,
+				ResourceID: resourceId8,
 			}
 		}
 		var azureSQLServer *shared.AzureSQLServer
 		if r.RemoteInfo.AzureSQLServer != nil {
-			var resourceId8 string
-			resourceId8 = r.RemoteInfo.AzureSQLServer.ResourceID.ValueString()
+			var resourceId9 string
+			resourceId9 = r.RemoteInfo.AzureSQLServer.ResourceID.ValueString()
 
 			azureSQLServer = &shared.AzureSQLServer{
-				ResourceID: resourceId8,
+				ResourceID: resourceId9,
 			}
 		}
 		var azureStorageAccount *shared.AzureStorageAccount
 		if r.RemoteInfo.AzureStorageAccount != nil {
-			var resourceId9 string
-			resourceId9 = r.RemoteInfo.AzureStorageAccount.ResourceID.ValueString()
+			var resourceId10 string
+			resourceId10 = r.RemoteInfo.AzureStorageAccount.ResourceID.ValueString()
 
 			azureStorageAccount = &shared.AzureStorageAccount{
-				ResourceID: resourceId9,
+				ResourceID: resourceId10,
 			}
 		}
 		var azureStorageContainer *shared.AzureStorageContainer
 		if r.RemoteInfo.AzureStorageContainer != nil {
-			var resourceId10 string
-			resourceId10 = r.RemoteInfo.AzureStorageContainer.ResourceID.ValueString()
+			var resourceId11 string
+			resourceId11 = r.RemoteInfo.AzureStorageContainer.ResourceID.ValueString()
 
 			azureStorageContainer = &shared.AzureStorageContainer{
-				ResourceID: resourceId10,
+				ResourceID: resourceId11,
 			}
 		}
 		var azureSubscription *shared.AzureSubscription
 		if r.RemoteInfo.AzureSubscription != nil {
-			var resourceId11 string
-			resourceId11 = r.RemoteInfo.AzureSubscription.ResourceID.ValueString()
+			var resourceId12 string
+			resourceId12 = r.RemoteInfo.AzureSubscription.ResourceID.ValueString()
 
 			azureSubscription = &shared.AzureSubscription{
-				ResourceID: resourceId11,
+				ResourceID: resourceId12,
 			}
 		}
 		var azureUserAssignedManagedIdentity *shared.AzureUserAssignedManagedIdentity
 		if r.RemoteInfo.AzureUserAssignedManagedIdentity != nil {
-			var resourceId12 string
-			resourceId12 = r.RemoteInfo.AzureUserAssignedManagedIdentity.ResourceID.ValueString()
+			var resourceId13 string
+			resourceId13 = r.RemoteInfo.AzureUserAssignedManagedIdentity.ResourceID.ValueString()
 
 			azureUserAssignedManagedIdentity = &shared.AzureUserAssignedManagedIdentity{
-				ResourceID: resourceId12,
+				ResourceID: resourceId13,
 			}
 		}
 		var azureVirtualMachine *shared.AzureVirtualMachine
 		if r.RemoteInfo.AzureVirtualMachine != nil {
-			var resourceId13 string
-			resourceId13 = r.RemoteInfo.AzureVirtualMachine.ResourceID.ValueString()
+			var resourceId14 string
+			resourceId14 = r.RemoteInfo.AzureVirtualMachine.ResourceID.ValueString()
 
 			azureVirtualMachine = &shared.AzureVirtualMachine{
-				ResourceID: resourceId13,
+				ResourceID: resourceId14,
 			}
 		}
 		var coupaRole *shared.CoupaRole
@@ -903,6 +987,19 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			customConnector = &shared.CustomConnector{
 				CanHaveUsageEvents: canHaveUsageEvents,
 				RemoteResourceID:   remoteResourceID,
+			}
+		}
+		var databricksAccountServicePrincipal *shared.DatabricksAccountServicePrincipal
+		if r.RemoteInfo.DatabricksAccountServicePrincipal != nil {
+			var applicationID string
+			applicationID = r.RemoteInfo.DatabricksAccountServicePrincipal.ApplicationID.ValueString()
+
+			var resourceId15 string
+			resourceId15 = r.RemoteInfo.DatabricksAccountServicePrincipal.ResourceID.ValueString()
+
+			databricksAccountServicePrincipal = &shared.DatabricksAccountServicePrincipal{
+				ApplicationID: applicationID,
+				ResourceID:    resourceId15,
 			}
 		}
 		var datastaxAstraRole *shared.DatastaxAstraRole
@@ -1081,6 +1178,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				RoleID: roleId3,
 			}
 		}
+		var ilevelAdvancedRole *shared.IlevelAdvancedRole
+		if r.RemoteInfo.IlevelAdvancedRole != nil {
+			var roleName string
+			roleName = r.RemoteInfo.IlevelAdvancedRole.RoleName.ValueString()
+
+			ilevelAdvancedRole = &shared.IlevelAdvancedRole{
+				RoleName: roleName,
+			}
+		}
 		var oktaApp *shared.OktaApp
 		if r.RemoteInfo.OktaApp != nil {
 			var appId1 string
@@ -1141,11 +1247,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var pagerdutyRole *shared.PagerdutyRole
 		if r.RemoteInfo.PagerdutyRole != nil {
-			var roleName string
-			roleName = r.RemoteInfo.PagerdutyRole.RoleName.ValueString()
+			var roleName1 string
+			roleName1 = r.RemoteInfo.PagerdutyRole.RoleName.ValueString()
 
 			pagerdutyRole = &shared.PagerdutyRole{
-				RoleName: roleName,
+				RoleName: roleName1,
 			}
 		}
 		var salesforcePermissionSet *shared.SalesforcePermissionSet
@@ -1179,67 +1285,132 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				RoleID: roleId6,
 			}
 		}
+		var snowflakeDatabase *shared.SnowflakeDatabase
+		if r.RemoteInfo.SnowflakeDatabase != nil {
+			var databaseName1 string
+			databaseName1 = r.RemoteInfo.SnowflakeDatabase.DatabaseName.ValueString()
+
+			snowflakeDatabase = &shared.SnowflakeDatabase{
+				DatabaseName: databaseName1,
+			}
+		}
+		var snowflakeSchema *shared.SnowflakeSchema
+		if r.RemoteInfo.SnowflakeSchema != nil {
+			var databaseName2 string
+			databaseName2 = r.RemoteInfo.SnowflakeSchema.DatabaseName.ValueString()
+
+			var schemaName string
+			schemaName = r.RemoteInfo.SnowflakeSchema.SchemaName.ValueString()
+
+			snowflakeSchema = &shared.SnowflakeSchema{
+				DatabaseName: databaseName2,
+				SchemaName:   schemaName,
+			}
+		}
+		var snowflakeTable *shared.SnowflakeTable
+		if r.RemoteInfo.SnowflakeTable != nil {
+			var databaseName3 string
+			databaseName3 = r.RemoteInfo.SnowflakeTable.DatabaseName.ValueString()
+
+			var schemaName1 string
+			schemaName1 = r.RemoteInfo.SnowflakeTable.SchemaName.ValueString()
+
+			var tableName string
+			tableName = r.RemoteInfo.SnowflakeTable.TableName.ValueString()
+
+			snowflakeTable = &shared.SnowflakeTable{
+				DatabaseName: databaseName3,
+				SchemaName:   schemaName1,
+				TableName:    tableName,
+			}
+		}
+		var tailscaleSSH *shared.TailscaleSSH
+		if r.RemoteInfo.TailscaleSSH != nil {
+			var tagName string
+			tagName = r.RemoteInfo.TailscaleSSH.TagName.ValueString()
+
+			tailscaleSSH = &shared.TailscaleSSH{
+				TagName: tagName,
+			}
+		}
 		var teleportRole *shared.TeleportRole
 		if r.RemoteInfo.TeleportRole != nil {
-			var roleName1 string
-			roleName1 = r.RemoteInfo.TeleportRole.RoleName.ValueString()
+			var roleName2 string
+			roleName2 = r.RemoteInfo.TeleportRole.RoleName.ValueString()
 
 			teleportRole = &shared.TeleportRole{
-				RoleName: roleName1,
+				RoleName: roleName2,
+			}
+		}
+		var workdayRole *shared.WorkdayRole
+		if r.RemoteInfo.WorkdayRole != nil {
+			var roleId7 string
+			roleId7 = r.RemoteInfo.WorkdayRole.RoleID.ValueString()
+
+			workdayRole = &shared.WorkdayRole{
+				RoleID: roleId7,
 			}
 		}
 		remoteInfo = &shared.ResourceRemoteInfo{
-			AnthropicWorkspace:               anthropicWorkspace,
-			AwsAccount:                       awsAccount,
-			AwsEc2Instance:                   awsEc2Instance,
-			AwsEksCluster:                    awsEksCluster,
-			AwsIamRole:                       awsIamRole,
-			AwsOrganizationalUnit:            awsOrganizationalUnit,
-			AwsPermissionSet:                 awsPermissionSet,
-			AwsRdsInstance:                   awsRdsInstance,
-			AzureEnterpriseApp:               azureEnterpriseApp,
-			AzureEntraIDRole:                 azureEntraIDRole,
-			AzureManagementGroup:             azureManagementGroup,
-			AzureResourceGroup:               azureResourceGroup,
-			AzureSQLDatabase:                 azureSQLDatabase,
-			AzureSQLManagedDatabase:          azureSQLManagedDatabase,
-			AzureSQLManagedInstance:          azureSQLManagedInstance,
-			AzureSQLServer:                   azureSQLServer,
-			AzureStorageAccount:              azureStorageAccount,
-			AzureStorageContainer:            azureStorageContainer,
-			AzureSubscription:                azureSubscription,
-			AzureUserAssignedManagedIdentity: azureUserAssignedManagedIdentity,
-			AzureVirtualMachine:              azureVirtualMachine,
-			CoupaRole:                        coupaRole,
-			CursorOrganization:               cursorOrganization,
-			CustomConnector:                  customConnector,
-			DatastaxAstraRole:                datastaxAstraRole,
-			GcpBigQueryDataset:               gcpBigQueryDataset,
-			GcpBigQueryTable:                 gcpBigQueryTable,
-			GcpBucket:                        gcpBucket,
-			GcpComputeInstance:               gcpComputeInstance,
-			GcpFolder:                        gcpFolder,
-			GcpGkeCluster:                    gcpGkeCluster,
-			GcpOrganization:                  gcpOrganization,
-			GcpProject:                       gcpProject,
-			GcpServiceAccount:                gcpServiceAccount,
-			GcpSQLInstance:                   gcpSQLInstance,
-			GithubOrg:                        githubOrg,
-			GithubOrgRole:                    githubOrgRole,
-			GithubRepo:                       githubRepo,
-			GitlabProject:                    gitlabProject,
-			GoogleWorkspaceRole:              googleWorkspaceRole,
-			OktaApp:                          oktaApp,
-			OktaCustomRole:                   oktaCustomRole,
-			OktaStandardRole:                 oktaStandardRole,
-			OpenaiPlatformProject:            openaiPlatformProject,
-			OpenaiPlatformServiceAccount:     openaiPlatformServiceAccount,
-			OracleFusionRole:                 oracleFusionRole,
-			PagerdutyRole:                    pagerdutyRole,
-			SalesforcePermissionSet:          salesforcePermissionSet,
-			SalesforceProfile:                salesforceProfile,
-			SalesforceRole:                   salesforceRole,
-			TeleportRole:                     teleportRole,
+			AnthropicWorkspace:                anthropicWorkspace,
+			AwsAccount:                        awsAccount,
+			AwsEc2Instance:                    awsEc2Instance,
+			AwsEksCluster:                     awsEksCluster,
+			AwsIamRole:                        awsIamRole,
+			AwsOrganizationalUnit:             awsOrganizationalUnit,
+			AwsPermissionSet:                  awsPermissionSet,
+			AwsRdsCluster:                     awsRdsCluster,
+			AwsRdsInstance:                    awsRdsInstance,
+			AzureEnterpriseApp:                azureEnterpriseApp,
+			AzureEntraIDRole:                  azureEntraIDRole,
+			AzureManagementGroup:              azureManagementGroup,
+			AzureResourceGroup:                azureResourceGroup,
+			AzureSQLDatabase:                  azureSQLDatabase,
+			AzureSQLManagedDatabase:           azureSQLManagedDatabase,
+			AzureSQLManagedInstance:           azureSQLManagedInstance,
+			AzureSQLServer:                    azureSQLServer,
+			AzureStorageAccount:               azureStorageAccount,
+			AzureStorageContainer:             azureStorageContainer,
+			AzureSubscription:                 azureSubscription,
+			AzureUserAssignedManagedIdentity:  azureUserAssignedManagedIdentity,
+			AzureVirtualMachine:               azureVirtualMachine,
+			CoupaRole:                         coupaRole,
+			CursorOrganization:                cursorOrganization,
+			CustomConnector:                   customConnector,
+			DatabricksAccountServicePrincipal: databricksAccountServicePrincipal,
+			DatastaxAstraRole:                 datastaxAstraRole,
+			GcpBigQueryDataset:                gcpBigQueryDataset,
+			GcpBigQueryTable:                  gcpBigQueryTable,
+			GcpBucket:                         gcpBucket,
+			GcpComputeInstance:                gcpComputeInstance,
+			GcpFolder:                         gcpFolder,
+			GcpGkeCluster:                     gcpGkeCluster,
+			GcpOrganization:                   gcpOrganization,
+			GcpProject:                        gcpProject,
+			GcpServiceAccount:                 gcpServiceAccount,
+			GcpSQLInstance:                    gcpSQLInstance,
+			GithubOrg:                         githubOrg,
+			GithubOrgRole:                     githubOrgRole,
+			GithubRepo:                        githubRepo,
+			GitlabProject:                     gitlabProject,
+			GoogleWorkspaceRole:               googleWorkspaceRole,
+			IlevelAdvancedRole:                ilevelAdvancedRole,
+			OktaApp:                           oktaApp,
+			OktaCustomRole:                    oktaCustomRole,
+			OktaStandardRole:                  oktaStandardRole,
+			OpenaiPlatformProject:             openaiPlatformProject,
+			OpenaiPlatformServiceAccount:      openaiPlatformServiceAccount,
+			OracleFusionRole:                  oracleFusionRole,
+			PagerdutyRole:                     pagerdutyRole,
+			SalesforcePermissionSet:           salesforcePermissionSet,
+			SalesforceProfile:                 salesforceProfile,
+			SalesforceRole:                    salesforceRole,
+			SnowflakeDatabase:                 snowflakeDatabase,
+			SnowflakeSchema:                   snowflakeSchema,
+			SnowflakeTable:                    snowflakeTable,
+			TailscaleSSH:                      tailscaleSSH,
+			TeleportRole:                      teleportRole,
+			WorkdayRole:                       workdayRole,
 		}
 	}
 	resourceType := shared.ResourceTypeEnum(r.ResourceType.ValueString())

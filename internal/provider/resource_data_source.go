@@ -219,6 +219,36 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for AWS Identity Center permission set.`,
 					},
+					"aws_rds_cluster": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"account_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the AWS account. Required for AWS Organizations.`,
+							},
+							"cluster_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The clusterId of the RDS cluster.`,
+							},
+							"database_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The name of the database in the RDS cluster. This can be the value of the tag ` + "`" + `opal:database-name` + "`" + ` or the database name.`,
+							},
+							"engine": schema.StringAttribute{
+								Computed:    true,
+								Description: `The database engine for the RDS instance.`,
+							},
+							"region": schema.StringAttribute{
+								Computed:    true,
+								Description: `The region of the RDS cluster.`,
+							},
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The resourceId of the RDS cluster.`,
+							},
+						},
+						Description: `Remote info for AWS RDS cluster.`,
+					},
 					"aws_rds_instance": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -404,6 +434,20 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for a custom connector resource.`,
+					},
+					"databricks_account_service_principal": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"application_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The application ID of the service principal.`,
+							},
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The resource ID of the service principal.`,
+							},
+						},
+						Description: `Remote info for Databricks account service principal.`,
 					},
 					"datastax_astra_role": schema.SingleNestedAttribute{
 						Computed: true,
@@ -597,6 +641,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for GCP workspace role.`,
 					},
+					"ilevel_advanced_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"role_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The name of the role.`,
+							},
+						},
+						Description: `Remote info for iLevel Advanced role.`,
+					},
 					"okta_app": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -705,6 +759,58 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Salesforce role.`,
 					},
+					"snowflake_database": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"database_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The name of the database.`,
+							},
+						},
+						Description: `Remote info for Snowflake database.`,
+					},
+					"snowflake_schema": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"database_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The name of the database the schema is in.`,
+							},
+							"schema_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The name of the schema.`,
+							},
+						},
+						Description: `Remote info for Snowflake schema.`,
+					},
+					"snowflake_table": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"database_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The name of the database the table is in.`,
+							},
+							"schema_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The name of the schema the table is in.`,
+							},
+							"table_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The name of the table.`,
+							},
+						},
+						Description: `Remote info for Snowflake table.`,
+					},
+					"tailscale_ssh": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"tag_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The name of the tag.`,
+							},
+						},
+						Description: `Remote info for Tailscale SSH tag.`,
+					},
 					"teleport_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -714,6 +820,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for Teleport role.`,
+					},
+					"workday_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"role_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the role.`,
+							},
+						},
+						Description: `Remote info for Workday role.`,
 					},
 				},
 				Description: `Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields.`,

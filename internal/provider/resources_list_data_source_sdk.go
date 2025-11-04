@@ -99,6 +99,17 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.AwsPermissionSet.AccountID = types.StringValue(resultsItem.RemoteInfo.AwsPermissionSet.AccountID)
 					results.RemoteInfo.AwsPermissionSet.Arn = types.StringValue(resultsItem.RemoteInfo.AwsPermissionSet.Arn)
 				}
+				if resultsItem.RemoteInfo.AwsRdsCluster == nil {
+					results.RemoteInfo.AwsRdsCluster = nil
+				} else {
+					results.RemoteInfo.AwsRdsCluster = &tfTypes.AwsRdsCluster{}
+					results.RemoteInfo.AwsRdsCluster.AccountID = types.StringValue(resultsItem.RemoteInfo.AwsRdsCluster.AccountID)
+					results.RemoteInfo.AwsRdsCluster.ClusterID = types.StringValue(resultsItem.RemoteInfo.AwsRdsCluster.ClusterID)
+					results.RemoteInfo.AwsRdsCluster.DatabaseName = types.StringValue(resultsItem.RemoteInfo.AwsRdsCluster.DatabaseName)
+					results.RemoteInfo.AwsRdsCluster.Engine = types.StringValue(string(resultsItem.RemoteInfo.AwsRdsCluster.Engine))
+					results.RemoteInfo.AwsRdsCluster.Region = types.StringValue(resultsItem.RemoteInfo.AwsRdsCluster.Region)
+					results.RemoteInfo.AwsRdsCluster.ResourceID = types.StringValue(resultsItem.RemoteInfo.AwsRdsCluster.ResourceID)
+				}
 				if resultsItem.RemoteInfo.AwsRdsInstance == nil {
 					results.RemoteInfo.AwsRdsInstance = nil
 				} else {
@@ -205,6 +216,13 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.CustomConnector.CanHaveUsageEvents = types.BoolValue(resultsItem.RemoteInfo.CustomConnector.CanHaveUsageEvents)
 					results.RemoteInfo.CustomConnector.RemoteResourceID = types.StringValue(resultsItem.RemoteInfo.CustomConnector.RemoteResourceID)
 				}
+				if resultsItem.RemoteInfo.DatabricksAccountServicePrincipal == nil {
+					results.RemoteInfo.DatabricksAccountServicePrincipal = nil
+				} else {
+					results.RemoteInfo.DatabricksAccountServicePrincipal = &tfTypes.DatabricksAccountServicePrincipal{}
+					results.RemoteInfo.DatabricksAccountServicePrincipal.ApplicationID = types.StringValue(resultsItem.RemoteInfo.DatabricksAccountServicePrincipal.ApplicationID)
+					results.RemoteInfo.DatabricksAccountServicePrincipal.ResourceID = types.StringValue(resultsItem.RemoteInfo.DatabricksAccountServicePrincipal.ResourceID)
+				}
 				if resultsItem.RemoteInfo.DatastaxAstraRole == nil {
 					results.RemoteInfo.DatastaxAstraRole = nil
 				} else {
@@ -309,6 +327,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.GoogleWorkspaceRole = &tfTypes.SnowflakeRole{}
 					results.RemoteInfo.GoogleWorkspaceRole.RoleID = types.StringValue(resultsItem.RemoteInfo.GoogleWorkspaceRole.RoleID)
 				}
+				if resultsItem.RemoteInfo.IlevelAdvancedRole == nil {
+					results.RemoteInfo.IlevelAdvancedRole = nil
+				} else {
+					results.RemoteInfo.IlevelAdvancedRole = &tfTypes.IlevelAdvancedRole{}
+					results.RemoteInfo.IlevelAdvancedRole.RoleName = types.StringValue(resultsItem.RemoteInfo.IlevelAdvancedRole.RoleName)
+				}
 				if resultsItem.RemoteInfo.OktaApp == nil {
 					results.RemoteInfo.OktaApp = nil
 				} else {
@@ -349,7 +373,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				if resultsItem.RemoteInfo.PagerdutyRole == nil {
 					results.RemoteInfo.PagerdutyRole = nil
 				} else {
-					results.RemoteInfo.PagerdutyRole = &tfTypes.PagerdutyRole{}
+					results.RemoteInfo.PagerdutyRole = &tfTypes.IlevelAdvancedRole{}
 					results.RemoteInfo.PagerdutyRole.RoleName = types.StringValue(resultsItem.RemoteInfo.PagerdutyRole.RoleName)
 				}
 				if resultsItem.RemoteInfo.SalesforcePermissionSet == nil {
@@ -371,11 +395,44 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.SalesforceRole = &tfTypes.SnowflakeRole{}
 					results.RemoteInfo.SalesforceRole.RoleID = types.StringValue(resultsItem.RemoteInfo.SalesforceRole.RoleID)
 				}
+				if resultsItem.RemoteInfo.SnowflakeDatabase == nil {
+					results.RemoteInfo.SnowflakeDatabase = nil
+				} else {
+					results.RemoteInfo.SnowflakeDatabase = &tfTypes.SnowflakeDatabase{}
+					results.RemoteInfo.SnowflakeDatabase.DatabaseName = types.StringValue(resultsItem.RemoteInfo.SnowflakeDatabase.DatabaseName)
+				}
+				if resultsItem.RemoteInfo.SnowflakeSchema == nil {
+					results.RemoteInfo.SnowflakeSchema = nil
+				} else {
+					results.RemoteInfo.SnowflakeSchema = &tfTypes.SnowflakeSchema{}
+					results.RemoteInfo.SnowflakeSchema.DatabaseName = types.StringValue(resultsItem.RemoteInfo.SnowflakeSchema.DatabaseName)
+					results.RemoteInfo.SnowflakeSchema.SchemaName = types.StringValue(resultsItem.RemoteInfo.SnowflakeSchema.SchemaName)
+				}
+				if resultsItem.RemoteInfo.SnowflakeTable == nil {
+					results.RemoteInfo.SnowflakeTable = nil
+				} else {
+					results.RemoteInfo.SnowflakeTable = &tfTypes.SnowflakeTable{}
+					results.RemoteInfo.SnowflakeTable.DatabaseName = types.StringValue(resultsItem.RemoteInfo.SnowflakeTable.DatabaseName)
+					results.RemoteInfo.SnowflakeTable.SchemaName = types.StringValue(resultsItem.RemoteInfo.SnowflakeTable.SchemaName)
+					results.RemoteInfo.SnowflakeTable.TableName = types.StringValue(resultsItem.RemoteInfo.SnowflakeTable.TableName)
+				}
+				if resultsItem.RemoteInfo.TailscaleSSH == nil {
+					results.RemoteInfo.TailscaleSSH = nil
+				} else {
+					results.RemoteInfo.TailscaleSSH = &tfTypes.TailscaleSSH{}
+					results.RemoteInfo.TailscaleSSH.TagName = types.StringValue(resultsItem.RemoteInfo.TailscaleSSH.TagName)
+				}
 				if resultsItem.RemoteInfo.TeleportRole == nil {
 					results.RemoteInfo.TeleportRole = nil
 				} else {
-					results.RemoteInfo.TeleportRole = &tfTypes.PagerdutyRole{}
+					results.RemoteInfo.TeleportRole = &tfTypes.IlevelAdvancedRole{}
 					results.RemoteInfo.TeleportRole.RoleName = types.StringValue(resultsItem.RemoteInfo.TeleportRole.RoleName)
+				}
+				if resultsItem.RemoteInfo.WorkdayRole == nil {
+					results.RemoteInfo.WorkdayRole = nil
+				} else {
+					results.RemoteInfo.WorkdayRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.WorkdayRole.RoleID = types.StringValue(resultsItem.RemoteInfo.WorkdayRole.RoleID)
 				}
 			}
 			results.RequestConfigurations = []tfTypes.RequestConfiguration{}

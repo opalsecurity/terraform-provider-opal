@@ -34,6 +34,8 @@ terraform:
   author: opalsecurity
   baseErrorName: OpalAPIError
   defaultErrorName: SDKError
+  enableOperationSecurity: false
+  enableOperationServers: false
   enableTypeDeduplication: true
   environmentVariables:
     - env: OPAL_AUTH_TOKEN
@@ -46,6 +48,8 @@ terraform:
       operations: operations
       shared: shared
       webhooks: webhooks
+  includeEmptyObjects: false
   inputModelSuffix: input
   outputModelSuffix: output
   packageName: opal
+  unionDeserializationStrategy: populated-fields

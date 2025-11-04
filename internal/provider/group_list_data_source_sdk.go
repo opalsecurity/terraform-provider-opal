@@ -55,6 +55,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.ActiveDirectoryGroup = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.ActiveDirectoryGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.ActiveDirectoryGroup.GroupID)
 				}
+				if resultsItem.RemoteInfo.AwsSsoGroup == nil {
+					results.RemoteInfo.AwsSsoGroup = nil
+				} else {
+					results.RemoteInfo.AwsSsoGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.AwsSsoGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.AwsSsoGroup.GroupID)
+				}
 				if resultsItem.RemoteInfo.AzureAdMicrosoft365Group == nil {
 					results.RemoteInfo.AzureAdMicrosoft365Group = nil
 				} else {
@@ -66,6 +72,18 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				} else {
 					results.RemoteInfo.AzureAdSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.AzureAdSecurityGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.AzureAdSecurityGroup.GroupID)
+				}
+				if resultsItem.RemoteInfo.ConnectorGroup == nil {
+					results.RemoteInfo.ConnectorGroup = nil
+				} else {
+					results.RemoteInfo.ConnectorGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.ConnectorGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.ConnectorGroup.GroupID)
+				}
+				if resultsItem.RemoteInfo.DatabricksAccountGroup == nil {
+					results.RemoteInfo.DatabricksAccountGroup = nil
+				} else {
+					results.RemoteInfo.DatabricksAccountGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.DatabricksAccountGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.DatabricksAccountGroup.GroupID)
 				}
 				if resultsItem.RemoteInfo.DuoGroup == nil {
 					results.RemoteInfo.DuoGroup = nil
@@ -114,6 +132,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				} else {
 					results.RemoteInfo.SnowflakeRole = &tfTypes.SnowflakeRole{}
 					results.RemoteInfo.SnowflakeRole.RoleID = types.StringValue(resultsItem.RemoteInfo.SnowflakeRole.RoleID)
+				}
+				if resultsItem.RemoteInfo.TailscaleGroup == nil {
+					results.RemoteInfo.TailscaleGroup = nil
+				} else {
+					results.RemoteInfo.TailscaleGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.TailscaleGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.TailscaleGroup.GroupID)
 				}
 				if resultsItem.RemoteInfo.WorkdayUserSecurityGroup == nil {
 					results.RemoteInfo.WorkdayUserSecurityGroup = nil

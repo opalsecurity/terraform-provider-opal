@@ -17,6 +17,7 @@ func (r *UarDataSourceModel) RefreshFromSharedUar(ctx context.Context, resp *sha
 
 	if resp != nil {
 		r.Deadline = types.StringValue(typeconvert.TimeToString(resp.Deadline))
+		r.InstantlyActionReviews = types.BoolValue(resp.InstantlyActionReviews)
 		r.Name = types.StringValue(resp.Name)
 		r.ReviewerAssignmentPolicy = types.StringValue(string(resp.ReviewerAssignmentPolicy))
 		r.SelfReviewAllowed = types.BoolValue(resp.SelfReviewAllowed)

@@ -123,6 +123,12 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 				r.RemoteInfo.ActiveDirectoryGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.ActiveDirectoryGroup.GroupID = types.StringValue(resp.RemoteInfo.ActiveDirectoryGroup.GroupID)
 			}
+			if resp.RemoteInfo.AwsSsoGroup == nil {
+				r.RemoteInfo.AwsSsoGroup = nil
+			} else {
+				r.RemoteInfo.AwsSsoGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.AwsSsoGroup.GroupID = types.StringValue(resp.RemoteInfo.AwsSsoGroup.GroupID)
+			}
 			if resp.RemoteInfo.AzureAdMicrosoft365Group == nil {
 				r.RemoteInfo.AzureAdMicrosoft365Group = nil
 			} else {
@@ -134,6 +140,18 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 			} else {
 				r.RemoteInfo.AzureAdSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.AzureAdSecurityGroup.GroupID = types.StringValue(resp.RemoteInfo.AzureAdSecurityGroup.GroupID)
+			}
+			if resp.RemoteInfo.ConnectorGroup == nil {
+				r.RemoteInfo.ConnectorGroup = nil
+			} else {
+				r.RemoteInfo.ConnectorGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.ConnectorGroup.GroupID = types.StringValue(resp.RemoteInfo.ConnectorGroup.GroupID)
+			}
+			if resp.RemoteInfo.DatabricksAccountGroup == nil {
+				r.RemoteInfo.DatabricksAccountGroup = nil
+			} else {
+				r.RemoteInfo.DatabricksAccountGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.DatabricksAccountGroup.GroupID = types.StringValue(resp.RemoteInfo.DatabricksAccountGroup.GroupID)
 			}
 			if resp.RemoteInfo.DuoGroup == nil {
 				r.RemoteInfo.DuoGroup = nil
@@ -182,6 +200,12 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 			} else {
 				r.RemoteInfo.SnowflakeRole = &tfTypes.SnowflakeRole{}
 				r.RemoteInfo.SnowflakeRole.RoleID = types.StringValue(resp.RemoteInfo.SnowflakeRole.RoleID)
+			}
+			if resp.RemoteInfo.TailscaleGroup == nil {
+				r.RemoteInfo.TailscaleGroup = nil
+			} else {
+				r.RemoteInfo.TailscaleGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.TailscaleGroup.GroupID = types.StringValue(resp.RemoteInfo.TailscaleGroup.GroupID)
 			}
 			if resp.RemoteInfo.WorkdayUserSecurityGroup == nil {
 				r.RemoteInfo.WorkdayUserSecurityGroup = nil
@@ -509,31 +533,58 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 				GroupID: groupID,
 			}
 		}
+		var awsSsoGroup *shared.AwsSsoGroup
+		if r.RemoteInfo.AwsSsoGroup != nil {
+			var groupId1 string
+			groupId1 = r.RemoteInfo.AwsSsoGroup.GroupID.ValueString()
+
+			awsSsoGroup = &shared.AwsSsoGroup{
+				GroupID: groupId1,
+			}
+		}
 		var azureAdMicrosoft365Group *shared.AzureAdMicrosoft365Group
 		if r.RemoteInfo.AzureAdMicrosoft365Group != nil {
-			var groupId1 string
-			groupId1 = r.RemoteInfo.AzureAdMicrosoft365Group.GroupID.ValueString()
+			var groupId2 string
+			groupId2 = r.RemoteInfo.AzureAdMicrosoft365Group.GroupID.ValueString()
 
 			azureAdMicrosoft365Group = &shared.AzureAdMicrosoft365Group{
-				GroupID: groupId1,
+				GroupID: groupId2,
 			}
 		}
 		var azureAdSecurityGroup *shared.AzureAdSecurityGroup
 		if r.RemoteInfo.AzureAdSecurityGroup != nil {
-			var groupId2 string
-			groupId2 = r.RemoteInfo.AzureAdSecurityGroup.GroupID.ValueString()
+			var groupId3 string
+			groupId3 = r.RemoteInfo.AzureAdSecurityGroup.GroupID.ValueString()
 
 			azureAdSecurityGroup = &shared.AzureAdSecurityGroup{
-				GroupID: groupId2,
+				GroupID: groupId3,
+			}
+		}
+		var connectorGroup *shared.ConnectorGroup
+		if r.RemoteInfo.ConnectorGroup != nil {
+			var groupId4 string
+			groupId4 = r.RemoteInfo.ConnectorGroup.GroupID.ValueString()
+
+			connectorGroup = &shared.ConnectorGroup{
+				GroupID: groupId4,
+			}
+		}
+		var databricksAccountGroup *shared.DatabricksAccountGroup
+		if r.RemoteInfo.DatabricksAccountGroup != nil {
+			var groupId5 string
+			groupId5 = r.RemoteInfo.DatabricksAccountGroup.GroupID.ValueString()
+
+			databricksAccountGroup = &shared.DatabricksAccountGroup{
+				GroupID: groupId5,
 			}
 		}
 		var duoGroup *shared.DuoGroup
 		if r.RemoteInfo.DuoGroup != nil {
-			var groupId3 string
-			groupId3 = r.RemoteInfo.DuoGroup.GroupID.ValueString()
+			var groupId6 string
+			groupId6 = r.RemoteInfo.DuoGroup.GroupID.ValueString()
 
 			duoGroup = &shared.DuoGroup{
-				GroupID: groupId3,
+				GroupID: groupId6,
 			}
 		}
 		var githubTeam *shared.GithubTeam
@@ -547,38 +598,38 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		}
 		var gitlabGroup *shared.GitlabGroup
 		if r.RemoteInfo.GitlabGroup != nil {
-			var groupId4 string
-			groupId4 = r.RemoteInfo.GitlabGroup.GroupID.ValueString()
+			var groupId7 string
+			groupId7 = r.RemoteInfo.GitlabGroup.GroupID.ValueString()
 
 			gitlabGroup = &shared.GitlabGroup{
-				GroupID: groupId4,
+				GroupID: groupId7,
 			}
 		}
 		var googleGroup *shared.GoogleGroup
 		if r.RemoteInfo.GoogleGroup != nil {
-			var groupId5 string
-			groupId5 = r.RemoteInfo.GoogleGroup.GroupID.ValueString()
+			var groupId8 string
+			groupId8 = r.RemoteInfo.GoogleGroup.GroupID.ValueString()
 
 			googleGroup = &shared.GoogleGroup{
-				GroupID: groupId5,
+				GroupID: groupId8,
 			}
 		}
 		var ldapGroup *shared.LdapGroup
 		if r.RemoteInfo.LdapGroup != nil {
-			var groupId6 string
-			groupId6 = r.RemoteInfo.LdapGroup.GroupID.ValueString()
+			var groupId9 string
+			groupId9 = r.RemoteInfo.LdapGroup.GroupID.ValueString()
 
 			ldapGroup = &shared.LdapGroup{
-				GroupID: groupId6,
+				GroupID: groupId9,
 			}
 		}
 		var oktaGroup *shared.OktaGroup
 		if r.RemoteInfo.OktaGroup != nil {
-			var groupId7 string
-			groupId7 = r.RemoteInfo.OktaGroup.GroupID.ValueString()
+			var groupId10 string
+			groupId10 = r.RemoteInfo.OktaGroup.GroupID.ValueString()
 
 			oktaGroup = &shared.OktaGroup{
-				GroupID: groupId7,
+				GroupID: groupId10,
 			}
 		}
 		var oktaGroupRule *shared.OktaGroupRule
@@ -599,19 +650,31 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 				RoleID: roleID,
 			}
 		}
+		var tailscaleGroup *shared.TailscaleGroup
+		if r.RemoteInfo.TailscaleGroup != nil {
+			var groupId11 string
+			groupId11 = r.RemoteInfo.TailscaleGroup.GroupID.ValueString()
+
+			tailscaleGroup = &shared.TailscaleGroup{
+				GroupID: groupId11,
+			}
+		}
 		var workdayUserSecurityGroup *shared.WorkdayUserSecurityGroup
 		if r.RemoteInfo.WorkdayUserSecurityGroup != nil {
-			var groupId8 string
-			groupId8 = r.RemoteInfo.WorkdayUserSecurityGroup.GroupID.ValueString()
+			var groupId12 string
+			groupId12 = r.RemoteInfo.WorkdayUserSecurityGroup.GroupID.ValueString()
 
 			workdayUserSecurityGroup = &shared.WorkdayUserSecurityGroup{
-				GroupID: groupId8,
+				GroupID: groupId12,
 			}
 		}
 		remoteInfo = &shared.GroupRemoteInfo{
 			ActiveDirectoryGroup:     activeDirectoryGroup,
+			AwsSsoGroup:              awsSsoGroup,
 			AzureAdMicrosoft365Group: azureAdMicrosoft365Group,
 			AzureAdSecurityGroup:     azureAdSecurityGroup,
+			ConnectorGroup:           connectorGroup,
+			DatabricksAccountGroup:   databricksAccountGroup,
 			DuoGroup:                 duoGroup,
 			GithubTeam:               githubTeam,
 			GitlabGroup:              gitlabGroup,
@@ -620,6 +683,7 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 			OktaGroup:                oktaGroup,
 			OktaGroupRule:            oktaGroupRule,
 			SnowflakeRole:            snowflakeRole,
+			TailscaleGroup:           tailscaleGroup,
 			WorkdayUserSecurityGroup: workdayUserSecurityGroup,
 		}
 	}

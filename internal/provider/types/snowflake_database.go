@@ -6,6 +6,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-type PagerdutyRole struct {
-	RoleName types.String `tfsdk:"role_name"`
+type SnowflakeDatabase struct {
+	DatabaseName types.String `tfsdk:"database_name"`
 }
