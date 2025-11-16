@@ -16,13 +16,14 @@ generation:
     hoistGlobalSecurity: true
   schemas:
     allOfMergeStrategy: shallowMerge
+  requestBodyFieldName: ""
   tests:
     generateTests: true
     generateNewTests: false
     skipResponseBodyAssertions: false
   flattenGlobalSecurity: true
 terraform:
-  version: 3.3.3
+  version: 3.3.4
   additionalDataSources: []
   additionalDependencies:
     github.com/hashicorp/terraform-plugin-testing: v1.13.2
@@ -34,12 +35,14 @@ terraform:
   author: opalsecurity
   baseErrorName: OpalAPIError
   defaultErrorName: SDKError
+  enableCustomCodeRegions: false
   enableOperationSecurity: false
   enableOperationServers: false
   enableTypeDeduplication: true
   environmentVariables:
     - env: OPAL_AUTH_TOKEN
       providerAttribute: bearer_auth
+  excludeEmptyObjectSchemas: false
   imports:
     option: openapi
     paths:

@@ -340,11 +340,6 @@ func (r *OwnerResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedUserList(ctx, res1.UserList)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
 
 	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
 

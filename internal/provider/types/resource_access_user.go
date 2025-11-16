@@ -8,6 +8,7 @@ import (
 
 type ResourceAccessUser struct {
 	AccessLevel       ResourceAccessLevel `tfsdk:"access_level"`
+	Description       types.String        `tfsdk:"description"`
 	Email             types.String        `tfsdk:"email"`
 	ExpirationDate    types.String        `tfsdk:"expiration_date"`
 	FullName          types.String        `tfsdk:"full_name"`
@@ -15,5 +16,6 @@ type ResourceAccessUser struct {
 	NumAccessPaths    types.Int32         `tfsdk:"num_access_paths"`
 	PropagationStatus *PropagationStatus  `tfsdk:"propagation_status"`
 	ResourceID        types.String        `tfsdk:"resource_id"`
+	ResourceName      types.String        `tfsdk:"resource_name"`
 	UserID            types.String        `tfsdk:"user_id"`
 }

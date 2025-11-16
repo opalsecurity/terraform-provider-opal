@@ -55,9 +55,6 @@ func (r *DelegationResource) Schema(ctx context.Context, req resource.SchemaRequ
 			"created_at": schema.StringAttribute{
 				Computed:    true,
 				Description: `The creation time of the delegation.`,
-				Validators: []validator.String{
-					validators.IsRFC3339(),
-				},
 			},
 			"delegate_user_id": schema.StringAttribute{
 				Required: true,
@@ -112,9 +109,6 @@ func (r *DelegationResource) Schema(ctx context.Context, req resource.SchemaRequ
 			"updated_at": schema.StringAttribute{
 				Computed:    true,
 				Description: `The last updated time of the delegation.`,
-				Validators: []validator.String{
-					validators.IsRFC3339(),
-				},
 			},
 		},
 	}
