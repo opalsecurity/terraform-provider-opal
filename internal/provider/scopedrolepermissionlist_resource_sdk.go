@@ -73,16 +73,16 @@ func (r *ScopedRolePermissionListResourceModel) ToSharedScopedRolePermissionList
 	var diags diag.Diagnostics
 
 	permissions := make([]shared.ScopedRolePermission, 0, len(r.Permissions))
-	for _, permissionsItem := range r.Permissions {
+	for permissionsIndex := range r.Permissions {
 		var allowAll bool
-		allowAll = permissionsItem.AllowAll.ValueBool()
+		allowAll = r.Permissions[permissionsIndex].AllowAll.ValueBool()
 
-		permissionName := shared.RolePermissionNameEnum(permissionsItem.PermissionName.ValueString())
-		targetIds := make([]string, 0, len(permissionsItem.TargetIds))
-		for _, targetIdsItem := range permissionsItem.TargetIds {
-			targetIds = append(targetIds, targetIdsItem.ValueString())
+		permissionName := shared.RolePermissionNameEnum(r.Permissions[permissionsIndex].PermissionName.ValueString())
+		targetIds := make([]string, 0, len(r.Permissions[permissionsIndex].TargetIds))
+		for targetIdsIndex := range r.Permissions[permissionsIndex].TargetIds {
+			targetIds = append(targetIds, r.Permissions[permissionsIndex].TargetIds[targetIdsIndex].ValueString())
 		}
-		targetType := shared.RolePermissionTargetTypeEnum(permissionsItem.TargetType.ValueString())
+		targetType := shared.RolePermissionTargetTypeEnum(r.Permissions[permissionsIndex].TargetType.ValueString())
 		permissions = append(permissions, shared.ScopedRolePermission{
 			AllowAll:       allowAll,
 			PermissionName: permissionName,

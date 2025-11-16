@@ -70,22 +70,22 @@ func (r *IdpGroupMappingsResourceModel) ToOperationsUpdateIdpGroupMappingsReques
 	var diags diag.Diagnostics
 
 	mappings := make([]operations.Mappings, 0, len(r.Mappings))
-	for _, mappingsItem := range r.Mappings {
+	for mappingsIndex := range r.Mappings {
 		alias := new(string)
-		if !mappingsItem.Alias.IsUnknown() && !mappingsItem.Alias.IsNull() {
-			*alias = mappingsItem.Alias.ValueString()
+		if !r.Mappings[mappingsIndex].Alias.IsUnknown() && !r.Mappings[mappingsIndex].Alias.IsNull() {
+			*alias = r.Mappings[mappingsIndex].Alias.ValueString()
 		} else {
 			alias = nil
 		}
 		groupID := new(string)
-		if !mappingsItem.GroupID.IsUnknown() && !mappingsItem.GroupID.IsNull() {
-			*groupID = mappingsItem.GroupID.ValueString()
+		if !r.Mappings[mappingsIndex].GroupID.IsUnknown() && !r.Mappings[mappingsIndex].GroupID.IsNull() {
+			*groupID = r.Mappings[mappingsIndex].GroupID.ValueString()
 		} else {
 			groupID = nil
 		}
 		hiddenFromEndUser := new(bool)
-		if !mappingsItem.HiddenFromEndUser.IsUnknown() && !mappingsItem.HiddenFromEndUser.IsNull() {
-			*hiddenFromEndUser = mappingsItem.HiddenFromEndUser.ValueBool()
+		if !r.Mappings[mappingsIndex].HiddenFromEndUser.IsUnknown() && !r.Mappings[mappingsIndex].HiddenFromEndUser.IsNull() {
+			*hiddenFromEndUser = r.Mappings[mappingsIndex].HiddenFromEndUser.ValueBool()
 		} else {
 			hiddenFromEndUser = nil
 		}

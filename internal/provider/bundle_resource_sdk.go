@@ -183,8 +183,8 @@ func (r *BundleResourceModel) ToSharedVisibilityInfo(ctx context.Context) (*shar
 
 	visibility := shared.VisibilityTypeEnum(r.Visibility.ValueString())
 	visibilityGroupIds := make([]string, 0, len(r.VisibilityGroupIds))
-	for _, visibilityGroupIdsItem := range r.VisibilityGroupIds {
-		visibilityGroupIds = append(visibilityGroupIds, visibilityGroupIdsItem.ValueString())
+	for visibilityGroupIdsIndex := range r.VisibilityGroupIds {
+		visibilityGroupIds = append(visibilityGroupIds, r.VisibilityGroupIds[visibilityGroupIdsIndex].ValueString())
 	}
 	out := shared.VisibilityInfo{
 		Visibility:         visibility,

@@ -31,7 +31,6 @@ import (
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
 	stateupgraders "github.com/opalsecurity/terraform-provider-opal/v3/internal/stateupgraders"
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/validators"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/boolvalidators"
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/int64validators"
 	custom_listvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/listvalidators"
@@ -167,9 +166,6 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 							speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 						},
 						Description: `The time when the sync task was completed.`,
-						Validators: []validator.String{
-							validators.IsRFC3339(),
-						},
 					},
 					"id": schema.StringAttribute{
 						Computed: true,
@@ -2194,17 +2190,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				PlanModifiers: []planmodifier.String{
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The risk sensitivity level for the resource. When an override is set, this field will match that. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]`,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"UNKNOWN",
-						"CRITICAL",
-						"HIGH",
-						"MEDIUM",
-						"LOW",
-						"NONE",
-					),
-				},
+				Description: `The risk sensitivity level for the resource. When an override is set, this field will match that.`,
 			},
 			"risk_sensitivity_override": schema.StringAttribute{
 				Computed: true,

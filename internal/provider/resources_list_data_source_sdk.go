@@ -556,8 +556,8 @@ func (r *ResourcesListDataSourceModel) ToOperationsGetResourcesRequest(ctx conte
 		remoteID = nil
 	}
 	resourceIds := make([]string, 0, len(r.ResourceIds))
-	for _, resourceIdsItem := range r.ResourceIds {
-		resourceIds = append(resourceIds, resourceIdsItem.ValueString())
+	for resourceIdsIndex := range r.ResourceIds {
+		resourceIds = append(resourceIds, r.ResourceIds[resourceIdsIndex].ValueString())
 	}
 	resourceName := new(string)
 	if !r.ResourceName.IsUnknown() && !r.ResourceName.IsNull() {

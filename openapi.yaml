@@ -5026,11 +5026,14 @@ components:
         - self_review_allowed
       type: object
     UARReviewerAssignmentPolicyEnum:
-      description: A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually.
+      description: A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually. BY_OWNING_TEAM_ADMIN assigns reviews to resource admins in round-robin fashion. BY_OWNING_TEAM_ADMIN_ALL assigns reviews to all resource admins. BY_APPROVERS assigns reviews to resource approvers in round-robin fashion. BY_APPROVERS_ALL assigns reviews to all resource approvers.
       enum:
         - MANUALLY
         - BY_OWNING_TEAM_ADMIN
+        - BY_OWNING_TEAM_ADMIN_ALL
         - BY_MANAGER
+        - BY_APPROVERS
+        - BY_APPROVERS_ALL
       example: MANUALLY
       type: string
     TagFilter:
@@ -5519,6 +5522,14 @@ components:
           description: The ID of the resource.
           example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
           format: uuid
+          type: string
+        resource_name:
+          description: The name of the resource.
+          example: AdministratorAccess
+          type: string
+        description:
+          description: The description of the resource.
+          example: Full access to all resources and settings.
           type: string
         user_id:
           description: The ID of the user.
@@ -6591,6 +6602,8 @@ components:
         - CONNECTOR_GROUP
         - SNOWFLAKE_ROLE
         - WORKDAY_USER_SECURITY_GROUP
+        - PAGERDUTY_ON_CALL_SCHEDULE
+        - INCIDENTIO_ON_CALL_SCHEDULE
       example: OPAL_GROUP
       type: string
     ResourceTypeEnum:
@@ -7334,6 +7347,26 @@ components:
           type: object
           required:
             - group_id
+        pagerduty_on_call_schedule:
+          description: Remote info for PagerDuty on-call schedule group.
+          properties:
+            schedule_id:
+              description: The id of the PagerDuty on-call schedule.
+              example: PNZNINN
+              type: string
+          type: object
+          required:
+            - schedule_id
+        incidentio_on_call_schedule:
+          description: Remote info for Incident.io on-call schedule group.
+          properties:
+            schedule_id:
+              description: The id of the Incident.io on-call schedule.
+              example: 01HZ8XQM9ZQX8RKMZQ8ZQX8RK
+              type: string
+          type: object
+          required:
+            - schedule_id
       type: object
       x-speakeasy-entity: GroupRemote
     ResourceRemoteInfo:

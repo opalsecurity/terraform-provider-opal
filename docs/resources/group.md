@@ -61,6 +61,9 @@ resource "opal_group" "my_group" {
     google_group = {
       group_id = "1y6w882181n7sg"
     }
+    incidentio_on_call_schedule = {
+      schedule_id = "01HZ8XQM9ZQX8RKMZQ8ZQX8RK"
+    }
     ldap_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
@@ -69,6 +72,9 @@ resource "opal_group" "my_group" {
     }
     okta_group_rule = {
       rule_id = "0pr3f7zMZZHPgUoWO0g4"
+    }
+    pagerduty_on_call_schedule = {
+      schedule_id = "PNZNINN"
     }
     snowflake_role = {
       role_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
@@ -126,7 +132,7 @@ resource "opal_group" "my_group" {
 ### Required
 
 - `app_id` (String) The ID of the app for the group. Requires replacement if changed.
-- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP"]; Requires replacement if changed.
+- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE"]; Requires replacement if changed.
 - `name` (String) The name of the remote group.
 - `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
@@ -153,7 +159,7 @@ resource "opal_group" "my_group" {
 - `message_channels` (Attributes) The audit and reviewer message channels attached to the group. (see [below for nested schema](#nestedatt--message_channels))
 - `on_call_schedules` (Attributes) The on call schedules attached to the group. (see [below for nested schema](#nestedatt--on_call_schedules))
 - `remote_name` (String) The name of the remote.
-- `risk_sensitivity` (String) The risk sensitivity level for the group. When an override is set, this field will match that. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
+- `risk_sensitivity` (String) The risk sensitivity level for the group. When an override is set, this field will match that.
 
 <a id="nestedatt--request_configurations"></a>
 ### Nested Schema for `request_configurations`
@@ -208,9 +214,11 @@ Optional:
 - `github_team` (Attributes) Remote info for GitHub team. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--github_team))
 - `gitlab_group` (Attributes) Remote info for Gitlab group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gitlab_group))
 - `google_group` (Attributes) Remote info for Google group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--google_group))
+- `incidentio_on_call_schedule` (Attributes) Remote info for Incident.io on-call schedule group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--incidentio_on_call_schedule))
 - `ldap_group` (Attributes) Remote info for LDAP group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--ldap_group))
 - `okta_group` (Attributes) Remote info for Okta Directory group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_group))
 - `okta_group_rule` (Attributes) Remote info for Okta Directory group rule. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_group_rule))
+- `pagerduty_on_call_schedule` (Attributes) Remote info for PagerDuty on-call schedule group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--pagerduty_on_call_schedule))
 - `snowflake_role` (Attributes) Remote info for Snowflake role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--snowflake_role))
 - `tailscale_group` (Attributes) Remote info for Tailscale group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--tailscale_group))
 - `workday_user_security_group` (Attributes) Remote info for Workday User Security group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--workday_user_security_group))
@@ -295,6 +303,14 @@ Optional:
 - `group_id` (String) The id of the Google group. Not Null; Requires replacement if changed.
 
 
+<a id="nestedatt--remote_info--incidentio_on_call_schedule"></a>
+### Nested Schema for `remote_info.incidentio_on_call_schedule`
+
+Optional:
+
+- `schedule_id` (String) The id of the Incident.io on-call schedule. Not Null; Requires replacement if changed.
+
+
 <a id="nestedatt--remote_info--ldap_group"></a>
 ### Nested Schema for `remote_info.ldap_group`
 
@@ -317,6 +333,14 @@ Optional:
 Optional:
 
 - `rule_id` (String) The id of the Okta group rule. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--pagerduty_on_call_schedule"></a>
+### Nested Schema for `remote_info.pagerduty_on_call_schedule`
+
+Optional:
+
+- `schedule_id` (String) The id of the PagerDuty on-call schedule. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--snowflake_role"></a>
@@ -370,7 +394,7 @@ Read-Only:
 - `is_private` (Boolean) A bool representing whether or not the message channel is private.
 - `name` (String) The name of the message channel.
 - `remote_id` (String) The remote ID of the message channel
-- `third_party_provider` (String) The third party provider of the message channel. must be "SLACK"
+- `third_party_provider` (String) The third party provider of the message channel.
 
 
 
@@ -390,7 +414,7 @@ Read-Only:
 - `id` (String) The ID of the on-call schedule.
 - `name` (String) The name of the on call schedule.
 - `remote_id` (String) The remote ID of the on call schedule
-- `third_party_provider` (String) The third party provider of the on call schedule. must be one of ["OPSGENIE", "PAGER_DUTY"]
+- `third_party_provider` (String) The third party provider of the on call schedule.
 
 ## Import
 
