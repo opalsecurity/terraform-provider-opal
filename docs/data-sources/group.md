@@ -113,9 +113,11 @@ Read-Only:
 - `github_team` (Attributes) Remote info for GitHub team. (see [below for nested schema](#nestedatt--remote_info--github_team))
 - `gitlab_group` (Attributes) Remote info for Gitlab group. (see [below for nested schema](#nestedatt--remote_info--gitlab_group))
 - `google_group` (Attributes) Remote info for Google group. (see [below for nested schema](#nestedatt--remote_info--google_group))
+- `incidentio_on_call_schedule` (Attributes) Remote info for Incident.io on-call schedule group. (see [below for nested schema](#nestedatt--remote_info--incidentio_on_call_schedule))
 - `ldap_group` (Attributes) Remote info for LDAP group. (see [below for nested schema](#nestedatt--remote_info--ldap_group))
 - `okta_group` (Attributes) Remote info for Okta Directory group. (see [below for nested schema](#nestedatt--remote_info--okta_group))
 - `okta_group_rule` (Attributes) Remote info for Okta Directory group rule. (see [below for nested schema](#nestedatt--remote_info--okta_group_rule))
+- `pagerduty_on_call_schedule` (Attributes) Remote info for PagerDuty on-call schedule group. (see [below for nested schema](#nestedatt--remote_info--pagerduty_on_call_schedule))
 - `snowflake_role` (Attributes) Remote info for Snowflake role. (see [below for nested schema](#nestedatt--remote_info--snowflake_role))
 - `tailscale_group` (Attributes) Remote info for Tailscale group. (see [below for nested schema](#nestedatt--remote_info--tailscale_group))
 - `workday_user_security_group` (Attributes) Remote info for Workday User Security group. (see [below for nested schema](#nestedatt--remote_info--workday_user_security_group))
@@ -200,6 +202,14 @@ Read-Only:
 - `group_id` (String) The id of the Google group.
 
 
+<a id="nestedatt--remote_info--incidentio_on_call_schedule"></a>
+### Nested Schema for `remote_info.incidentio_on_call_schedule`
+
+Read-Only:
+
+- `schedule_id` (String) The id of the Incident.io on-call schedule.
+
+
 <a id="nestedatt--remote_info--ldap_group"></a>
 ### Nested Schema for `remote_info.ldap_group`
 
@@ -222,6 +232,14 @@ Read-Only:
 Read-Only:
 
 - `rule_id` (String) The id of the Okta group rule.
+
+
+<a id="nestedatt--remote_info--pagerduty_on_call_schedule"></a>
+### Nested Schema for `remote_info.pagerduty_on_call_schedule`
+
+Read-Only:
+
+- `schedule_id` (String) The id of the PagerDuty on-call schedule.
 
 
 <a id="nestedatt--remote_info--snowflake_role"></a>

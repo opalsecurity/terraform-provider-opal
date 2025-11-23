@@ -403,6 +403,7 @@ func (s *Owners) Delete(ctx context.Context, request operations.DeleteOwnerReque
 
 	switch {
 	case httpRes.StatusCode == 200:
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {

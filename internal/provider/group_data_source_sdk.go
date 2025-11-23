@@ -177,6 +177,12 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.GoogleGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.GoogleGroup.GroupID = types.StringValue(resp.RemoteInfo.GoogleGroup.GroupID)
 			}
+			if resp.RemoteInfo.IncidentioOnCallSchedule == nil {
+				r.RemoteInfo.IncidentioOnCallSchedule = nil
+			} else {
+				r.RemoteInfo.IncidentioOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
+				r.RemoteInfo.IncidentioOnCallSchedule.ScheduleID = types.StringValue(resp.RemoteInfo.IncidentioOnCallSchedule.ScheduleID)
+			}
 			if resp.RemoteInfo.LdapGroup == nil {
 				r.RemoteInfo.LdapGroup = nil
 			} else {
@@ -194,6 +200,12 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			} else {
 				r.RemoteInfo.OktaGroupRule = &tfTypes.OktaGroupRule{}
 				r.RemoteInfo.OktaGroupRule.RuleID = types.StringValue(resp.RemoteInfo.OktaGroupRule.RuleID)
+			}
+			if resp.RemoteInfo.PagerdutyOnCallSchedule == nil {
+				r.RemoteInfo.PagerdutyOnCallSchedule = nil
+			} else {
+				r.RemoteInfo.PagerdutyOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
+				r.RemoteInfo.PagerdutyOnCallSchedule.ScheduleID = types.StringValue(resp.RemoteInfo.PagerdutyOnCallSchedule.ScheduleID)
 			}
 			if resp.RemoteInfo.SnowflakeRole == nil {
 				r.RemoteInfo.SnowflakeRole = nil

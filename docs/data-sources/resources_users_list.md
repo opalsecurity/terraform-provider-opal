@@ -48,6 +48,7 @@ level is a `AccessLevel` object whose fields are all empty strings.
 
 ### Usage Example
 View the `AccessLevel` of a resource/user or resource/group pair to see the level of access granted to the resource. (see [below for nested schema](#nestedatt--results--access_level))
+- `description` (String) The description of the resource.
 - `email` (String) The user's email.
 - `expiration_date` (String) The day and time the user's access will expire.
 - `full_name` (String) The user's full name.
@@ -55,6 +56,7 @@ View the `AccessLevel` of a resource/user or resource/group pair to see the leve
 - `num_access_paths` (Number) The number of ways in which the user has access through this resource (directly and indirectly).
 - `propagation_status` (Attributes) The state of whether the push action was propagated to the remote system. If this is null, the access was synced from the remote system. (see [below for nested schema](#nestedatt--results--propagation_status))
 - `resource_id` (String) The ID of the resource.
+- `resource_name` (String) The name of the resource.
 - `user_id` (String) The ID of the user.
 
 <a id="nestedatt--results--access_level"></a>
