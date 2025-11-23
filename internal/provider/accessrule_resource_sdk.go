@@ -130,17 +130,17 @@ func (r *AccessRuleResourceModel) ToSharedUpdateAccessRuleInfo(ctx context.Conte
 	var unless *shared.RuleConjunction
 	if r.RuleClauses.Unless != nil {
 		clauses := make([]shared.RuleDisjunction, 0, len(r.RuleClauses.Unless.Clauses))
-		for _, clausesItem := range r.RuleClauses.Unless.Clauses {
-			selectors := make([]shared.TagSelector, 0, len(clausesItem.Selectors))
-			for _, selectorsItem := range clausesItem.Selectors {
+		for clausesIndex := range r.RuleClauses.Unless.Clauses {
+			selectors := make([]shared.TagSelector, 0, len(r.RuleClauses.Unless.Clauses[clausesIndex].Selectors))
+			for selectorsIndex := range r.RuleClauses.Unless.Clauses[clausesIndex].Selectors {
 				var connectionID string
-				connectionID = selectorsItem.ConnectionID.ValueString()
+				connectionID = r.RuleClauses.Unless.Clauses[clausesIndex].Selectors[selectorsIndex].ConnectionID.ValueString()
 
 				var key string
-				key = selectorsItem.Key.ValueString()
+				key = r.RuleClauses.Unless.Clauses[clausesIndex].Selectors[selectorsIndex].Key.ValueString()
 
 				var value string
-				value = selectorsItem.Value.ValueString()
+				value = r.RuleClauses.Unless.Clauses[clausesIndex].Selectors[selectorsIndex].Value.ValueString()
 
 				selectors = append(selectors, shared.TagSelector{
 					ConnectionID: connectionID,
@@ -157,17 +157,17 @@ func (r *AccessRuleResourceModel) ToSharedUpdateAccessRuleInfo(ctx context.Conte
 		}
 	}
 	clauses1 := make([]shared.RuleDisjunction, 0, len(r.RuleClauses.When.Clauses))
-	for _, clausesItem1 := range r.RuleClauses.When.Clauses {
-		selectors1 := make([]shared.TagSelector, 0, len(clausesItem1.Selectors))
-		for _, selectorsItem1 := range clausesItem1.Selectors {
+	for clausesIndex1 := range r.RuleClauses.When.Clauses {
+		selectors1 := make([]shared.TagSelector, 0, len(r.RuleClauses.When.Clauses[clausesIndex1].Selectors))
+		for selectorsIndex1 := range r.RuleClauses.When.Clauses[clausesIndex1].Selectors {
 			var connectionId1 string
-			connectionId1 = selectorsItem1.ConnectionID.ValueString()
+			connectionId1 = r.RuleClauses.When.Clauses[clausesIndex1].Selectors[selectorsIndex1].ConnectionID.ValueString()
 
 			var key1 string
-			key1 = selectorsItem1.Key.ValueString()
+			key1 = r.RuleClauses.When.Clauses[clausesIndex1].Selectors[selectorsIndex1].Key.ValueString()
 
 			var value1 string
-			value1 = selectorsItem1.Value.ValueString()
+			value1 = r.RuleClauses.When.Clauses[clausesIndex1].Selectors[selectorsIndex1].Value.ValueString()
 
 			selectors1 = append(selectors1, shared.TagSelector{
 				ConnectionID: connectionId1,

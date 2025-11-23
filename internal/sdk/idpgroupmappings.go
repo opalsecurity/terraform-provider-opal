@@ -406,6 +406,7 @@ func (s *IdpGroupMappings) DeleteIdpGroupMappings(ctx context.Context, request o
 
 	switch {
 	case httpRes.StatusCode == 200:
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -604,6 +605,7 @@ func (s *IdpGroupMappings) GetIdpGroupMapping(ctx context.Context, request opera
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -804,6 +806,7 @@ func (s *IdpGroupMappings) GetIdpGroupMappings(ctx context.Context, request oper
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {

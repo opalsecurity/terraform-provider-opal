@@ -1022,6 +1022,7 @@ func (s *Groups) Delete(ctx context.Context, request operations.DeleteGroupReque
 
 	switch {
 	case httpRes.StatusCode == 200:
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -1204,6 +1205,7 @@ func (s *Groups) DeleteUser(ctx context.Context, request operations.DeleteGroupU
 
 	switch {
 	case httpRes.StatusCode == 200:
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -3587,6 +3589,7 @@ func (s *Groups) RemoveGroupContainingGroup(ctx context.Context, request operati
 
 	switch {
 	case httpRes.StatusCode == 204:
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {

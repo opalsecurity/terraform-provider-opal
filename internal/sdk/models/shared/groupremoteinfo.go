@@ -132,6 +132,19 @@ func (g *GoogleGroup) GetGroupID() string {
 	return g.GroupID
 }
 
+// IncidentioOnCallSchedule - Remote info for Incident.io on-call schedule group.
+type IncidentioOnCallSchedule struct {
+	// The id of the Incident.io on-call schedule.
+	ScheduleID string `json:"schedule_id"`
+}
+
+func (i *IncidentioOnCallSchedule) GetScheduleID() string {
+	if i == nil {
+		return ""
+	}
+	return i.ScheduleID
+}
+
 // LdapGroup - Remote info for LDAP group.
 type LdapGroup struct {
 	// The id of the LDAP group.
@@ -169,6 +182,19 @@ func (o *OktaGroupRule) GetRuleID() string {
 		return ""
 	}
 	return o.RuleID
+}
+
+// PagerdutyOnCallSchedule - Remote info for PagerDuty on-call schedule group.
+type PagerdutyOnCallSchedule struct {
+	// The id of the PagerDuty on-call schedule.
+	ScheduleID string `json:"schedule_id"`
+}
+
+func (p *PagerdutyOnCallSchedule) GetScheduleID() string {
+	if p == nil {
+		return ""
+	}
+	return p.ScheduleID
 }
 
 // SnowflakeRole - Remote info for Snowflake role.
@@ -232,12 +258,16 @@ type GroupRemoteInfo struct {
 	GitlabGroup *GitlabGroup `json:"gitlab_group,omitempty"`
 	// Remote info for Google group.
 	GoogleGroup *GoogleGroup `json:"google_group,omitempty"`
+	// Remote info for Incident.io on-call schedule group.
+	IncidentioOnCallSchedule *IncidentioOnCallSchedule `json:"incidentio_on_call_schedule,omitempty"`
 	// Remote info for LDAP group.
 	LdapGroup *LdapGroup `json:"ldap_group,omitempty"`
 	// Remote info for Okta Directory group.
 	OktaGroup *OktaGroup `json:"okta_group,omitempty"`
 	// Remote info for Okta Directory group rule.
 	OktaGroupRule *OktaGroupRule `json:"okta_group_rule,omitempty"`
+	// Remote info for PagerDuty on-call schedule group.
+	PagerdutyOnCallSchedule *PagerdutyOnCallSchedule `json:"pagerduty_on_call_schedule,omitempty"`
 	// Remote info for Snowflake role.
 	SnowflakeRole *SnowflakeRole `json:"snowflake_role,omitempty"`
 	// Remote info for Tailscale group.
@@ -316,6 +346,13 @@ func (g *GroupRemoteInfo) GetGoogleGroup() *GoogleGroup {
 	return g.GoogleGroup
 }
 
+func (g *GroupRemoteInfo) GetIncidentioOnCallSchedule() *IncidentioOnCallSchedule {
+	if g == nil {
+		return nil
+	}
+	return g.IncidentioOnCallSchedule
+}
+
 func (g *GroupRemoteInfo) GetLdapGroup() *LdapGroup {
 	if g == nil {
 		return nil
@@ -335,6 +372,13 @@ func (g *GroupRemoteInfo) GetOktaGroupRule() *OktaGroupRule {
 		return nil
 	}
 	return g.OktaGroupRule
+}
+
+func (g *GroupRemoteInfo) GetPagerdutyOnCallSchedule() *PagerdutyOnCallSchedule {
+	if g == nil {
+		return nil
+	}
+	return g.PagerdutyOnCallSchedule
 }
 
 func (g *GroupRemoteInfo) GetSnowflakeRole() *SnowflakeRole {

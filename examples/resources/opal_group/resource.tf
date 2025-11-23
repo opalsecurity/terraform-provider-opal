@@ -46,6 +46,9 @@ resource "opal_group" "my_group" {
     google_group = {
       group_id = "1y6w882181n7sg"
     }
+    incidentio_on_call_schedule = {
+      schedule_id = "01HZ8XQM9ZQX8RKMZQ8ZQX8RK"
+    }
     ldap_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
@@ -54,6 +57,9 @@ resource "opal_group" "my_group" {
     }
     okta_group_rule = {
       rule_id = "0pr3f7zMZZHPgUoWO0g4"
+    }
+    pagerduty_on_call_schedule = {
+      schedule_id = "PNZNINN"
     }
     snowflake_role = {
       role_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
