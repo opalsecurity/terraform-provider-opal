@@ -153,6 +153,12 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 				r.RemoteInfo.DatabricksAccountGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.DatabricksAccountGroup.GroupID = types.StringValue(resp.RemoteInfo.DatabricksAccountGroup.GroupID)
 			}
+			if resp.RemoteInfo.DevinGroup == nil {
+				r.RemoteInfo.DevinGroup = nil
+			} else {
+				r.RemoteInfo.DevinGroup = &tfTypes.DevinGroup{}
+				r.RemoteInfo.DevinGroup.GroupName = types.StringValue(resp.RemoteInfo.DevinGroup.GroupName)
+			}
 			if resp.RemoteInfo.DuoGroup == nil {
 				r.RemoteInfo.DuoGroup = nil
 			} else {
@@ -177,6 +183,12 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 				r.RemoteInfo.GoogleGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.GoogleGroup.GroupID = types.StringValue(resp.RemoteInfo.GoogleGroup.GroupID)
 			}
+			if resp.RemoteInfo.IncidentioOnCallSchedule == nil {
+				r.RemoteInfo.IncidentioOnCallSchedule = nil
+			} else {
+				r.RemoteInfo.IncidentioOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
+				r.RemoteInfo.IncidentioOnCallSchedule.ScheduleID = types.StringValue(resp.RemoteInfo.IncidentioOnCallSchedule.ScheduleID)
+			}
 			if resp.RemoteInfo.LdapGroup == nil {
 				r.RemoteInfo.LdapGroup = nil
 			} else {
@@ -194,6 +206,12 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 			} else {
 				r.RemoteInfo.OktaGroupRule = &tfTypes.OktaGroupRule{}
 				r.RemoteInfo.OktaGroupRule.RuleID = types.StringValue(resp.RemoteInfo.OktaGroupRule.RuleID)
+			}
+			if resp.RemoteInfo.PagerdutyOnCallSchedule == nil {
+				r.RemoteInfo.PagerdutyOnCallSchedule = nil
+			} else {
+				r.RemoteInfo.PagerdutyOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
+				r.RemoteInfo.PagerdutyOnCallSchedule.ScheduleID = types.StringValue(resp.RemoteInfo.PagerdutyOnCallSchedule.ScheduleID)
 			}
 			if resp.RemoteInfo.SnowflakeRole == nil {
 				r.RemoteInfo.SnowflakeRole = nil
@@ -578,6 +596,15 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 				GroupID: groupId5,
 			}
 		}
+		var devinGroup *shared.DevinGroup
+		if r.RemoteInfo.DevinGroup != nil {
+			var groupName string
+			groupName = r.RemoteInfo.DevinGroup.GroupName.ValueString()
+
+			devinGroup = &shared.DevinGroup{
+				GroupName: groupName,
+			}
+		}
 		var duoGroup *shared.DuoGroup
 		if r.RemoteInfo.DuoGroup != nil {
 			var groupId6 string
@@ -614,6 +641,15 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 				GroupID: groupId8,
 			}
 		}
+		var incidentioOnCallSchedule *shared.IncidentioOnCallSchedule
+		if r.RemoteInfo.IncidentioOnCallSchedule != nil {
+			var scheduleID string
+			scheduleID = r.RemoteInfo.IncidentioOnCallSchedule.ScheduleID.ValueString()
+
+			incidentioOnCallSchedule = &shared.IncidentioOnCallSchedule{
+				ScheduleID: scheduleID,
+			}
+		}
 		var ldapGroup *shared.LdapGroup
 		if r.RemoteInfo.LdapGroup != nil {
 			var groupId9 string
@@ -639,6 +675,15 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 
 			oktaGroupRule = &shared.OktaGroupRule{
 				RuleID: ruleID,
+			}
+		}
+		var pagerdutyOnCallSchedule *shared.PagerdutyOnCallSchedule
+		if r.RemoteInfo.PagerdutyOnCallSchedule != nil {
+			var scheduleId1 string
+			scheduleId1 = r.RemoteInfo.PagerdutyOnCallSchedule.ScheduleID.ValueString()
+
+			pagerdutyOnCallSchedule = &shared.PagerdutyOnCallSchedule{
+				ScheduleID: scheduleId1,
 			}
 		}
 		var snowflakeRole *shared.SnowflakeRole
@@ -675,13 +720,16 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 			AzureAdSecurityGroup:     azureAdSecurityGroup,
 			ConnectorGroup:           connectorGroup,
 			DatabricksAccountGroup:   databricksAccountGroup,
+			DevinGroup:               devinGroup,
 			DuoGroup:                 duoGroup,
 			GithubTeam:               githubTeam,
 			GitlabGroup:              gitlabGroup,
 			GoogleGroup:              googleGroup,
+			IncidentioOnCallSchedule: incidentioOnCallSchedule,
 			LdapGroup:                ldapGroup,
 			OktaGroup:                oktaGroup,
 			OktaGroupRule:            oktaGroupRule,
+			PagerdutyOnCallSchedule:  pagerdutyOnCallSchedule,
 			SnowflakeRole:            snowflakeRole,
 			TailscaleGroup:           tailscaleGroup,
 			WorkdayUserSecurityGroup: workdayUserSecurityGroup,
@@ -710,8 +758,8 @@ func (r *GroupResourceModel) ToSharedMessageChannelIDList(ctx context.Context) (
 	var diags diag.Diagnostics
 
 	messageChannelIds := make([]string, 0, len(r.MessageChannelIds))
-	for _, messageChannelIdsItem := range r.MessageChannelIds {
-		messageChannelIds = append(messageChannelIds, messageChannelIdsItem.ValueString())
+	for messageChannelIdsIndex := range r.MessageChannelIds {
+		messageChannelIds = append(messageChannelIds, r.MessageChannelIds[messageChannelIdsIndex].ValueString())
 	}
 	out := shared.MessageChannelIDList{
 		MessageChannelIds: messageChannelIds,
@@ -724,8 +772,8 @@ func (r *GroupResourceModel) ToSharedOnCallScheduleIDList(ctx context.Context) (
 	var diags diag.Diagnostics
 
 	onCallScheduleIds := make([]string, 0, len(r.OnCallScheduleIds))
-	for _, onCallScheduleIdsItem := range r.OnCallScheduleIds {
-		onCallScheduleIds = append(onCallScheduleIds, onCallScheduleIdsItem.ValueString())
+	for onCallScheduleIdsIndex := range r.OnCallScheduleIds {
+		onCallScheduleIds = append(onCallScheduleIds, r.OnCallScheduleIds[onCallScheduleIdsIndex].ValueString())
 	}
 	out := shared.OnCallScheduleIDList{
 		OnCallScheduleIds: onCallScheduleIds,
@@ -762,8 +810,8 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 		extensionsDurationInMinutes = nil
 	}
 	groupLeaderUserIds := make([]string, 0, len(r.GroupLeaderUserIds))
-	for _, groupLeaderUserIdsItem := range r.GroupLeaderUserIds {
-		groupLeaderUserIds = append(groupLeaderUserIds, groupLeaderUserIdsItem.ValueString())
+	for groupLeaderUserIdsIndex := range r.GroupLeaderUserIds {
+		groupLeaderUserIds = append(groupLeaderUserIds, r.GroupLeaderUserIds[groupLeaderUserIdsIndex].ValueString())
 	}
 	var id string
 	id = r.ID.ValueString()
@@ -775,22 +823,22 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 		name = nil
 	}
 	requestConfigurations := make([]shared.RequestConfiguration, 0, len(r.RequestConfigurations))
-	for _, requestConfigurationsItem := range r.RequestConfigurations {
+	for requestConfigurationsIndex := range r.RequestConfigurations {
 		var allowRequests bool
-		allowRequests = requestConfigurationsItem.AllowRequests.ValueBool()
+		allowRequests = r.RequestConfigurations[requestConfigurationsIndex].AllowRequests.ValueBool()
 
 		var autoApproval bool
-		autoApproval = requestConfigurationsItem.AutoApproval.ValueBool()
+		autoApproval = r.RequestConfigurations[requestConfigurationsIndex].AutoApproval.ValueBool()
 
 		var condition *shared.Condition
-		if requestConfigurationsItem.Condition != nil {
-			groupIds := make([]string, 0, len(requestConfigurationsItem.Condition.GroupIds))
-			for _, groupIdsItem := range requestConfigurationsItem.Condition.GroupIds {
-				groupIds = append(groupIds, groupIdsItem.ValueString())
+		if r.RequestConfigurations[requestConfigurationsIndex].Condition != nil {
+			groupIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].Condition.GroupIds))
+			for groupIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].Condition.GroupIds {
+				groupIds = append(groupIds, r.RequestConfigurations[requestConfigurationsIndex].Condition.GroupIds[groupIdsIndex].ValueString())
 			}
-			roleRemoteIds := make([]string, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
-			for _, roleRemoteIdsItem := range requestConfigurationsItem.Condition.RoleRemoteIds {
-				roleRemoteIds = append(roleRemoteIds, roleRemoteIdsItem.ValueString())
+			roleRemoteIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds))
+			for roleRemoteIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds {
+				roleRemoteIds = append(roleRemoteIds, r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds[roleRemoteIdsIndex].ValueString())
 			}
 			condition = &shared.Condition{
 				GroupIds:      groupIds,
@@ -798,59 +846,59 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 			}
 		}
 		extensionsDurationInMinutes1 := new(int64)
-		if !requestConfigurationsItem.ExtensionsDurationInMinutes.IsUnknown() && !requestConfigurationsItem.ExtensionsDurationInMinutes.IsNull() {
-			*extensionsDurationInMinutes1 = requestConfigurationsItem.ExtensionsDurationInMinutes.ValueInt64()
+		if !r.RequestConfigurations[requestConfigurationsIndex].ExtensionsDurationInMinutes.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ExtensionsDurationInMinutes.IsNull() {
+			*extensionsDurationInMinutes1 = r.RequestConfigurations[requestConfigurationsIndex].ExtensionsDurationInMinutes.ValueInt64()
 		} else {
 			extensionsDurationInMinutes1 = nil
 		}
 		maxDuration := new(int64)
-		if !requestConfigurationsItem.MaxDuration.IsUnknown() && !requestConfigurationsItem.MaxDuration.IsNull() {
-			*maxDuration = requestConfigurationsItem.MaxDuration.ValueInt64()
+		if !r.RequestConfigurations[requestConfigurationsIndex].MaxDuration.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].MaxDuration.IsNull() {
+			*maxDuration = r.RequestConfigurations[requestConfigurationsIndex].MaxDuration.ValueInt64()
 		} else {
 			maxDuration = nil
 		}
 		var priority int64
-		priority = requestConfigurationsItem.Priority.ValueInt64()
+		priority = r.RequestConfigurations[requestConfigurationsIndex].Priority.ValueInt64()
 
 		recommendedDuration := new(int64)
-		if !requestConfigurationsItem.RecommendedDuration.IsUnknown() && !requestConfigurationsItem.RecommendedDuration.IsNull() {
-			*recommendedDuration = requestConfigurationsItem.RecommendedDuration.ValueInt64()
+		if !r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.IsNull() {
+			*recommendedDuration = r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.ValueInt64()
 		} else {
 			recommendedDuration = nil
 		}
 		requestTemplateID := new(string)
-		if !requestConfigurationsItem.RequestTemplateID.IsUnknown() && !requestConfigurationsItem.RequestTemplateID.IsNull() {
-			*requestTemplateID = requestConfigurationsItem.RequestTemplateID.ValueString()
+		if !r.RequestConfigurations[requestConfigurationsIndex].RequestTemplateID.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].RequestTemplateID.IsNull() {
+			*requestTemplateID = r.RequestConfigurations[requestConfigurationsIndex].RequestTemplateID.ValueString()
 		} else {
 			requestTemplateID = nil
 		}
 		var requireMfaToRequest bool
-		requireMfaToRequest = requestConfigurationsItem.RequireMfaToRequest.ValueBool()
+		requireMfaToRequest = r.RequestConfigurations[requestConfigurationsIndex].RequireMfaToRequest.ValueBool()
 
 		var requireSupportTicket bool
-		requireSupportTicket = requestConfigurationsItem.RequireSupportTicket.ValueBool()
+		requireSupportTicket = r.RequestConfigurations[requestConfigurationsIndex].RequireSupportTicket.ValueBool()
 
-		reviewerStages := make([]shared.ReviewerStage, 0, len(requestConfigurationsItem.ReviewerStages))
-		for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
+		reviewerStages := make([]shared.ReviewerStage, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages))
+		for reviewerStagesIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages {
 			operator := new(shared.Operator)
-			if !reviewerStagesItem.Operator.IsUnknown() && !reviewerStagesItem.Operator.IsNull() {
-				*operator = shared.Operator(reviewerStagesItem.Operator.ValueString())
+			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsNull() {
+				*operator = shared.Operator(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.ValueString())
 			} else {
 				operator = nil
 			}
-			ownerIds := make([]string, 0, len(reviewerStagesItem.OwnerIds))
-			for _, ownerIdsItem := range reviewerStagesItem.OwnerIds {
-				ownerIds = append(ownerIds, ownerIdsItem.ValueString())
+			ownerIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds))
+			for ownerIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds {
+				ownerIds = append(ownerIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds[ownerIdsIndex].ValueString())
 			}
 			requireAdminApproval := new(bool)
-			if !reviewerStagesItem.RequireAdminApproval.IsUnknown() && !reviewerStagesItem.RequireAdminApproval.IsNull() {
-				*requireAdminApproval = reviewerStagesItem.RequireAdminApproval.ValueBool()
+			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireAdminApproval.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireAdminApproval.IsNull() {
+				*requireAdminApproval = r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireAdminApproval.ValueBool()
 			} else {
 				requireAdminApproval = nil
 			}
 			requireManagerApproval := new(bool)
-			if !reviewerStagesItem.RequireManagerApproval.IsUnknown() && !reviewerStagesItem.RequireManagerApproval.IsNull() {
-				*requireManagerApproval = reviewerStagesItem.RequireManagerApproval.ValueBool()
+			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireManagerApproval.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireManagerApproval.IsNull() {
+				*requireManagerApproval = r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireManagerApproval.ValueBool()
 			} else {
 				requireManagerApproval = nil
 			}
@@ -925,8 +973,8 @@ func (r *GroupResourceModel) ToSharedVisibilityInfo(ctx context.Context) (*share
 
 	visibility := shared.VisibilityTypeEnum(r.Visibility.ValueString())
 	visibilityGroupIds := make([]string, 0, len(r.VisibilityGroupIds))
-	for _, visibilityGroupIdsItem := range r.VisibilityGroupIds {
-		visibilityGroupIds = append(visibilityGroupIds, visibilityGroupIdsItem.ValueString())
+	for visibilityGroupIdsIndex := range r.VisibilityGroupIds {
+		visibilityGroupIds = append(visibilityGroupIds, r.VisibilityGroupIds[visibilityGroupIdsIndex].ValueString())
 	}
 	out := shared.VisibilityInfo{
 		Visibility:         visibility,
