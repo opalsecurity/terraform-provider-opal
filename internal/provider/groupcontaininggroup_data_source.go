@@ -45,7 +45,7 @@ func (r *GroupContainingGroupDataSource) Schema(ctx context.Context, req datasou
 		Attributes: map[string]schema.Attribute{
 			"containing_group_id": schema.StringAttribute{
 				Required:    true,
-				Description: `The ID of the containing group.`,
+				Description: `The groupID of the containing group.`,
 			},
 			"group_id": schema.StringAttribute{
 				Required:    true,

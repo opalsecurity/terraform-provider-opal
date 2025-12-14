@@ -24,7 +24,7 @@ data "opal_group_catalog_mapping" "my_groupcatalogmapping" {
 
 ### Required
 
-- `app_resource_id` (String) The ID of the Okta app.
+- `app_resource_id` (String) The ID of the app resource.
 - `group_id` (String) The ID of the group.
 
 ### Read-Only

@@ -18,7 +18,7 @@ func (v VisibilityInfo) MarshalJSON() ([]byte, error) {
 }
 
 func (v *VisibilityInfo) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &v, "", false, []string{"visibility"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &v, "", false, nil); err != nil {
 		return err
 	}
 	return nil

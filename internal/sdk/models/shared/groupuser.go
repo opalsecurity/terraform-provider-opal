@@ -45,7 +45,7 @@ func (g GroupUser) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GroupUser) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &g, "", false, []string{"description", "email", "full_name", "group_id", "group_name", "user_id"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &g, "", false, nil); err != nil {
 		return err
 	}
 	return nil

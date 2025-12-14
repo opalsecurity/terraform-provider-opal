@@ -67,7 +67,7 @@ func (r *DelegationDataSource) Schema(ctx context.Context, req datasource.Schema
 			},
 			"id": schema.StringAttribute{
 				Required:    true,
-				Description: `The ID of the delegation to retrieve.`,
+				Description: `The ID of the delegation.`,
 			},
 			"reason": schema.StringAttribute{
 				Computed:    true,

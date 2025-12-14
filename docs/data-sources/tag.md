@@ -23,7 +23,7 @@ data "opal_tag" "my_tag" {
 
 ### Required
 
-- `id` (String) The tag ID
+- `id` (String) The ID of the tag.
 
 ### Read-Only
 

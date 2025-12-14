@@ -24,5 +24,5 @@ data "opal_group_containing_group" "my_groupcontaininggroup" {
 
 ### Required
 
-- `containing_group_id` (String) The ID of the containing group.
+- `containing_group_id` (String) The groupID of the containing group.
 - `group_id` (String) The ID of the group.

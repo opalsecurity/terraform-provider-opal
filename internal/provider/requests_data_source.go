@@ -55,7 +55,7 @@ func (r *RequestsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"cursor": schema.StringAttribute{
 				Computed:    true,
 				Optional:    true,
-				Description: `The pagination cursor value.`,
+				Description: `The cursor to use in the next request to get the next page of results.`,
 			},
 			"end_date_filter": schema.StringAttribute{
 				Optional:    true,
@@ -158,65 +158,73 @@ func (r *RequestsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							Computed:    true,
 							Description: `The unique identifier of the user who created the request.`,
 						},
-						"reviewer_stages": schema.ListNestedAttribute{
+						"reviewer_stages": schema.SingleNestedAttribute{
 							Computed: true,
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{
-									"access_level_name": schema.StringAttribute{
-										Computed:    true,
-										Description: `The name of the access level requested.`,
-									},
-									"access_level_remote_id": schema.StringAttribute{
-										Computed:    true,
-										Description: `The ID of the access level requested on the remote system.`,
-									},
-									"item_id": schema.StringAttribute{
-										Computed:    true,
-										Description: `The ID of the resource requested.`,
-									},
-									"item_name": schema.StringAttribute{
-										Computed:    true,
-										Description: `The name of the requested item`,
-									},
-									"stages": schema.ListNestedAttribute{
-										Computed: true,
-										NestedObject: schema.NestedAttributeObject{
-											Attributes: map[string]schema.Attribute{
-												"operator": schema.StringAttribute{
-													Computed:    true,
-													Description: `The operator to apply to reviewers in a stage`,
-												},
-												"reviewers": schema.ListNestedAttribute{
-													Computed: true,
-													NestedObject: schema.NestedAttributeObject{
-														Attributes: map[string]schema.Attribute{
-															"full_name": schema.StringAttribute{
-																Computed:    true,
-																Description: `The user's full name.`,
+							Attributes: map[string]schema.Attribute{
+								"array_of_request_reviewer_stages": schema.ListNestedAttribute{
+									Computed: true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"access_level_name": schema.StringAttribute{
+												Computed:    true,
+												Description: `The name of the access level requested.`,
+											},
+											"access_level_remote_id": schema.StringAttribute{
+												Computed:    true,
+												Description: `The ID of the access level requested on the remote system.`,
+											},
+											"item_id": schema.StringAttribute{
+												Computed:    true,
+												Description: `The ID of the resource requested.`,
+											},
+											"item_name": schema.StringAttribute{
+												Computed:    true,
+												Description: `The name of the requested item`,
+											},
+											"stages": schema.ListNestedAttribute{
+												Computed: true,
+												NestedObject: schema.NestedAttributeObject{
+													Attributes: map[string]schema.Attribute{
+														"operator": schema.StringAttribute{
+															Computed:    true,
+															Description: `The operator to apply to reviewers in a stage`,
+														},
+														"reviewers": schema.ListNestedAttribute{
+															Computed: true,
+															NestedObject: schema.NestedAttributeObject{
+																Attributes: map[string]schema.Attribute{
+																	"full_name": schema.StringAttribute{
+																		Computed:    true,
+																		Description: `The user's full name.`,
+																	},
+																	"id": schema.StringAttribute{
+																		Computed:    true,
+																		Description: `The unique identifier of the reviewer`,
+																	},
+																	"status": schema.StringAttribute{
+																		Computed:    true,
+																		Description: `The status of this reviewer's review`,
+																	},
+																},
 															},
-															"id": schema.StringAttribute{
-																Computed:    true,
-																Description: `The unique identifier of the reviewer`,
-															},
-															"status": schema.StringAttribute{
-																Computed:    true,
-																Description: `The status of this reviewer's review`,
-															},
+															Description: `The reviewers for this stage`,
+														},
+														"stage": schema.Int64Attribute{
+															Computed:    true,
+															Description: `The stage number`,
 														},
 													},
-													Description: `The reviewers for this stage`,
 												},
-												"stage": schema.Int64Attribute{
-													Computed:    true,
-													Description: `The stage number`,
-												},
+												Description: `The stages of review for this request`,
 											},
 										},
-										Description: `The stages of review for this request`,
 									},
 								},
+								"str": schema.StringAttribute{
+									Computed: true,
+								},
 							},
-							Description: `The configured reviewer stages for every item in this request`,
+							Description: `The configured reviewer stages for every item in this request, or an error message if reviewers could not be loaded`,
 						},
 						"stages": schema.SingleNestedAttribute{
 							Computed: true,

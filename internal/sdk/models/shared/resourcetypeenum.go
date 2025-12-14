@@ -80,6 +80,11 @@ const (
 	ResourceTypeEnumAnthropicWorkspace                ResourceTypeEnum = "ANTHROPIC_WORKSPACE"
 	ResourceTypeEnumGitHubOrg                         ResourceTypeEnum = "GIT_HUB_ORG"
 	ResourceTypeEnumOracleFusionRole                  ResourceTypeEnum = "ORACLE_FUSION_ROLE"
+	ResourceTypeEnumDevinOrganization                 ResourceTypeEnum = "DEVIN_ORGANIZATION"
+	ResourceTypeEnumDevinRole                         ResourceTypeEnum = "DEVIN_ROLE"
+	ResourceTypeEnumVaultSecret                       ResourceTypeEnum = "VAULT_SECRET"
+	ResourceTypeEnumVaultPolicy                       ResourceTypeEnum = "VAULT_POLICY"
+	ResourceTypeEnumVaultOidcRole                     ResourceTypeEnum = "VAULT_OIDC_ROLE"
 )
 
 func (e ResourceTypeEnum) ToPointer() *ResourceTypeEnum {
@@ -228,6 +233,16 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "GIT_HUB_ORG":
 		fallthrough
 	case "ORACLE_FUSION_ROLE":
+		fallthrough
+	case "DEVIN_ORGANIZATION":
+		fallthrough
+	case "DEVIN_ROLE":
+		fallthrough
+	case "VAULT_SECRET":
+		fallthrough
+	case "VAULT_POLICY":
+		fallthrough
+	case "VAULT_OIDC_ROLE":
 		*e = ResourceTypeEnum(v)
 		return nil
 	default:

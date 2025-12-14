@@ -61,7 +61,9 @@ func (c *CreateRequestInfoGroups) GetID() string {
 }
 
 type Resources struct {
-	// The ID of the access level requested on the remote system.
+	// The ID of the access level requested on the remote system. This field is deprecated and no longer required. We will populate based on the access_level_remote_id.
+	//
+	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
 	AccessLevelName *string `json:"access_level_name,omitempty"`
 	// The ID of the access level requested on the remote system.
 	AccessLevelRemoteID *string `json:"access_level_remote_id,omitempty"`

@@ -22,7 +22,7 @@ func (r ResourceLastSuccessfulSync) MarshalJSON() ([]byte, error) {
 }
 
 func (r *ResourceLastSuccessfulSync) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &r, "", false, []string{"completed_at", "id"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &r, "", false, nil); err != nil {
 		return err
 	}
 	return nil
@@ -173,7 +173,7 @@ func (r Resource) MarshalJSON() ([]byte, error) {
 }
 
 func (r *Resource) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &r, "", false, []string{"resource_id"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &r, "", false, nil); err != nil {
 		return err
 	}
 	return nil

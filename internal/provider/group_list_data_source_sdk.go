@@ -85,6 +85,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.DatabricksAccountGroup = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.DatabricksAccountGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.DatabricksAccountGroup.GroupID)
 				}
+				if resultsItem.RemoteInfo.DevinGroup == nil {
+					results.RemoteInfo.DevinGroup = nil
+				} else {
+					results.RemoteInfo.DevinGroup = &tfTypes.DevinGroup{}
+					results.RemoteInfo.DevinGroup.GroupName = types.StringValue(resultsItem.RemoteInfo.DevinGroup.GroupName)
+				}
 				if resultsItem.RemoteInfo.DuoGroup == nil {
 					results.RemoteInfo.DuoGroup = nil
 				} else {
@@ -109,6 +115,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.GoogleGroup = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.GoogleGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.GoogleGroup.GroupID)
 				}
+				if resultsItem.RemoteInfo.IncidentioOnCallSchedule == nil {
+					results.RemoteInfo.IncidentioOnCallSchedule = nil
+				} else {
+					results.RemoteInfo.IncidentioOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
+					results.RemoteInfo.IncidentioOnCallSchedule.ScheduleID = types.StringValue(resultsItem.RemoteInfo.IncidentioOnCallSchedule.ScheduleID)
+				}
 				if resultsItem.RemoteInfo.LdapGroup == nil {
 					results.RemoteInfo.LdapGroup = nil
 				} else {
@@ -126,6 +138,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				} else {
 					results.RemoteInfo.OktaGroupRule = &tfTypes.OktaGroupRule{}
 					results.RemoteInfo.OktaGroupRule.RuleID = types.StringValue(resultsItem.RemoteInfo.OktaGroupRule.RuleID)
+				}
+				if resultsItem.RemoteInfo.PagerdutyOnCallSchedule == nil {
+					results.RemoteInfo.PagerdutyOnCallSchedule = nil
+				} else {
+					results.RemoteInfo.PagerdutyOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
+					results.RemoteInfo.PagerdutyOnCallSchedule.ScheduleID = types.StringValue(resultsItem.RemoteInfo.PagerdutyOnCallSchedule.ScheduleID)
 				}
 				if resultsItem.RemoteInfo.SnowflakeRole == nil {
 					results.RemoteInfo.SnowflakeRole = nil
@@ -219,8 +237,8 @@ func (r *GroupListDataSourceModel) ToOperationsGetGroupsRequest(ctx context.Cont
 	var diags diag.Diagnostics
 
 	groupIds := make([]string, 0, len(r.GroupIds))
-	for _, groupIdsItem := range r.GroupIds {
-		groupIds = append(groupIds, groupIdsItem.ValueString())
+	for groupIdsIndex := range r.GroupIds {
+		groupIds = append(groupIds, r.GroupIds[groupIdsIndex].ValueString())
 	}
 	groupName := new(string)
 	if !r.GroupName.IsUnknown() && !r.GroupName.IsNull() {

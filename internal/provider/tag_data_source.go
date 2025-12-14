@@ -53,7 +53,7 @@ func (r *TagDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 			},
 			"id": schema.StringAttribute{
 				Required:    true,
-				Description: `The tag ID`,
+				Description: `The ID of the tag.`,
 			},
 			"key": schema.StringAttribute{
 				Computed:    true,

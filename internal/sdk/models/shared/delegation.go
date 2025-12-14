@@ -38,7 +38,7 @@ func (d Delegation) MarshalJSON() ([]byte, error) {
 }
 
 func (d *Delegation) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &d, "", false, []string{"created_at", "delegate_user_id", "delegator_user_id", "end_time", "id", "reason", "start_time", "updated_at"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &d, "", false, nil); err != nil {
 		return err
 	}
 	return nil

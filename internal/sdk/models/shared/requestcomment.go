@@ -33,7 +33,7 @@ func (r RequestComment) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RequestComment) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &r, "", false, []string{"comment", "created_at", "request_id", "user_id"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &r, "", false, nil); err != nil {
 		return err
 	}
 	return nil

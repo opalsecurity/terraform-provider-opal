@@ -23,7 +23,7 @@ data "opal_message_channel" "my_messagechannel" {
 
 ### Required
 
-- `id` (String) The ID of the message_channel.
+- `id` (String) The ID of the message channel.
 
 ### Read-Only
 
