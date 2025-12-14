@@ -16,8 +16,8 @@ const (
 )
 
 type FieldValue struct {
-	Str     *string `queryParam:"inline,name=field_value"`
-	Boolean *bool   `queryParam:"inline,name=field_value"`
+	Str     *string `queryParam:"inline,name=field_value" union:"member"`
+	Boolean *bool   `queryParam:"inline,name=field_value" union:"member"`
 
 	Type FieldValueType
 }
@@ -66,7 +66,7 @@ func (u *FieldValue) UnmarshalJSON(data []byte) error {
 	}
 
 	// Pick the best candidate using multi-stage filtering
-	best := utils.PickBestCandidate(candidates)
+	best := utils.PickBestUnionCandidate(candidates, data)
 	if best == nil {
 		return fmt.Errorf("could not unmarshal `%s` into any supported union types for FieldValue", string(data))
 	}

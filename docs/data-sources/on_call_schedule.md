@@ -23,7 +23,7 @@ data "opal_on_call_schedule" "my_oncallschedule" {
 
 ### Required
 
-- `id` (String) The ID of the on_call_schedule.
+- `id` (String) The ID of the on-call schedule.
 
 ### Read-Only
 

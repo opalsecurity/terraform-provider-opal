@@ -22,6 +22,8 @@ type ResourceAccessUser struct {
 	// ### Usage Example
 	// View the `AccessLevel` of a resource/user or resource/group pair to see the level of access granted to the resource.
 	AccessLevel ResourceAccessLevel `json:"access_level"`
+	// The description of the resource.
+	Description *string `json:"description,omitempty"`
 	// The user's email.
 	Email string `json:"email"`
 	// The day and time the user's access will expire.
@@ -36,6 +38,8 @@ type ResourceAccessUser struct {
 	PropagationStatus *PropagationStatus `json:"propagation_status,omitempty"`
 	// The ID of the resource.
 	ResourceID string `json:"resource_id"`
+	// The name of the resource.
+	ResourceName *string `json:"resource_name,omitempty"`
 	// The ID of the user.
 	UserID string `json:"user_id"`
 }
@@ -45,7 +49,7 @@ func (r ResourceAccessUser) MarshalJSON() ([]byte, error) {
 }
 
 func (r *ResourceAccessUser) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &r, "", false, []string{"access_level", "email", "full_name", "has_direct_access", "num_access_paths", "resource_id", "user_id"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &r, "", false, nil); err != nil {
 		return err
 	}
 	return nil
@@ -56,6 +60,13 @@ func (r *ResourceAccessUser) GetAccessLevel() ResourceAccessLevel {
 		return ResourceAccessLevel{}
 	}
 	return r.AccessLevel
+}
+
+func (r *ResourceAccessUser) GetDescription() *string {
+	if r == nil {
+		return nil
+	}
+	return r.Description
 }
 
 func (r *ResourceAccessUser) GetEmail() string {
@@ -105,6 +116,13 @@ func (r *ResourceAccessUser) GetResourceID() string {
 		return ""
 	}
 	return r.ResourceID
+}
+
+func (r *ResourceAccessUser) GetResourceName() *string {
+	if r == nil {
+		return nil
+	}
+	return r.ResourceName
 }
 
 func (r *ResourceAccessUser) GetUserID() string {

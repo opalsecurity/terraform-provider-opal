@@ -47,7 +47,7 @@ func (r *OnCallScheduleDataSource) Schema(ctx context.Context, req datasource.Sc
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Required:    true,
-				Description: `The ID of the on_call_schedule.`,
+				Description: `The ID of the on-call schedule.`,
 			},
 			"name": schema.StringAttribute{
 				Computed:    true,

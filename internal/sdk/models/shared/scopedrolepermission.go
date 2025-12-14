@@ -21,7 +21,7 @@ func (s ScopedRolePermission) MarshalJSON() ([]byte, error) {
 }
 
 func (s *ScopedRolePermission) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &s, "", false, []string{"allow_all", "permission_name", "target_type"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &s, "", false, nil); err != nil {
 		return err
 	}
 	return nil

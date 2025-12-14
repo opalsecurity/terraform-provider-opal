@@ -29,7 +29,7 @@ data "opal_requests" "my_requests" {
 
 ### Optional
 
-- `cursor` (String) The pagination cursor value.
+- `cursor` (String) The cursor to use in the next request to get the next page of results.
 - `end_date_filter` (String) An end date filter for the events.
 - `page_size` (Number) Number of results to return per page. Default is 200.
 - `requester_id` (String) Filter requests by their requester ID.
@@ -53,7 +53,7 @@ Read-Only:
 - `reason` (String) The reason for the request.
 - `requested_items_list` (Attributes List) The list of targets for the request. (see [below for nested schema](#nestedatt--requests--requested_items_list))
 - `requester_id` (String) The unique identifier of the user who created the request.
-- `reviewer_stages` (Attributes List) The configured reviewer stages for every item in this request (see [below for nested schema](#nestedatt--requests--reviewer_stages))
+- `reviewer_stages` (Attributes) The configured reviewer stages for every item in this request, or an error message if reviewers could not be loaded (see [below for nested schema](#nestedatt--requests--reviewer_stages))
 - `stages` (Attributes, Deprecated) The stages configuration for a request item (see [below for nested schema](#nestedatt--requests--stages))
 - `status` (String) # Request Status
 ### Description
@@ -103,29 +103,38 @@ Read-Only:
 
 Read-Only:
 
+- `array_of_request_reviewer_stages` (Attributes List) (see [below for nested schema](#nestedatt--requests--reviewer_stages--array_of_request_reviewer_stages))
+- `str` (String)
+
+<a id="nestedatt--requests--reviewer_stages--array_of_request_reviewer_stages"></a>
+### Nested Schema for `requests.reviewer_stages.array_of_request_reviewer_stages`
+
+Read-Only:
+
 - `access_level_name` (String) The name of the access level requested.
 - `access_level_remote_id` (String) The ID of the access level requested on the remote system.
 - `item_id` (String) The ID of the resource requested.
 - `item_name` (String) The name of the requested item
-- `stages` (Attributes List) The stages of review for this request (see [below for nested schema](#nestedatt--requests--reviewer_stages--stages))
+- `stages` (Attributes List) The stages of review for this request (see [below for nested schema](#nestedatt--requests--reviewer_stages--array_of_request_reviewer_stages--stages))
 
-<a id="nestedatt--requests--reviewer_stages--stages"></a>
-### Nested Schema for `requests.reviewer_stages.stages`
+<a id="nestedatt--requests--reviewer_stages--array_of_request_reviewer_stages--stages"></a>
+### Nested Schema for `requests.reviewer_stages.array_of_request_reviewer_stages.stages`
 
 Read-Only:
 
 - `operator` (String) The operator to apply to reviewers in a stage
-- `reviewers` (Attributes List) The reviewers for this stage (see [below for nested schema](#nestedatt--requests--reviewer_stages--stages--reviewers))
+- `reviewers` (Attributes List) The reviewers for this stage (see [below for nested schema](#nestedatt--requests--reviewer_stages--array_of_request_reviewer_stages--stages--reviewers))
 - `stage` (Number) The stage number
 
-<a id="nestedatt--requests--reviewer_stages--stages--reviewers"></a>
-### Nested Schema for `requests.reviewer_stages.stages.reviewers`
+<a id="nestedatt--requests--reviewer_stages--array_of_request_reviewer_stages--stages--reviewers"></a>
+### Nested Schema for `requests.reviewer_stages.array_of_request_reviewer_stages.stages.reviewers`
 
 Read-Only:
 
 - `full_name` (String) The user's full name.
 - `id` (String) The unique identifier of the reviewer
 - `status` (String) The status of this reviewer's review
+
 
 
 

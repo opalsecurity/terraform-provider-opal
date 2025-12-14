@@ -18,7 +18,6 @@ import (
 	speakeasy_setplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/setplanmodifier"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/validators"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -75,9 +74,6 @@ func (r *BundleResource) Schema(ctx context.Context, req resource.SchemaRequest,
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 				Description: `The creation timestamp of the bundle, in ISO 8601 format`,
-				Validators: []validator.String{
-					validators.IsRFC3339(),
-				},
 			},
 			"description": schema.StringAttribute{
 				Computed:    true,
@@ -103,9 +99,6 @@ func (r *BundleResource) Schema(ctx context.Context, req resource.SchemaRequest,
 			"updated_at": schema.StringAttribute{
 				Computed:    true,
 				Description: `The last updated timestamp of the bundle, in ISO 8601 format`,
-				Validators: []validator.String{
-					validators.IsRFC3339(),
-				},
 			},
 			"visibility": schema.StringAttribute{
 				Required:    true,
@@ -455,7 +448,10 @@ func (r *BundleResource) Delete(ctx context.Context, req resource.DeleteRequest,
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode != 200 {
+	switch res.StatusCode {
+	case 200, 404:
+		break
+	default:
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}

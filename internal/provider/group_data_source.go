@@ -254,6 +254,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Databricks account group.`,
 					},
+					"devin_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The name of the Devin group.`,
+							},
+						},
+						Description: `Remote info for Devin group.`,
+					},
 					"duo_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -294,6 +304,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Google group.`,
 					},
+					"incidentio_on_call_schedule": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"schedule_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the Incident.io on-call schedule.`,
+							},
+						},
+						Description: `Remote info for Incident.io on-call schedule group.`,
+					},
 					"ldap_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -323,6 +343,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							},
 						},
 						Description: `Remote info for Okta Directory group rule.`,
+					},
+					"pagerduty_on_call_schedule": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"schedule_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the PagerDuty on-call schedule.`,
+							},
+						},
+						Description: `Remote info for PagerDuty on-call schedule group.`,
 					},
 					"snowflake_role": schema.SingleNestedAttribute{
 						Computed: true,

@@ -3,9 +3,101 @@
 package shared
 
 import (
+	"errors"
+	"fmt"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
 	"time"
 )
+
+type ReviewerStagesType string
+
+const (
+	ReviewerStagesTypeArrayOfRequestReviewerStages ReviewerStagesType = "arrayOfRequestReviewerStages"
+	ReviewerStagesTypeStr                          ReviewerStagesType = "str"
+)
+
+// ReviewerStages - The configured reviewer stages for every item in this request, or an error message if reviewers could not be loaded
+type ReviewerStages struct {
+	ArrayOfRequestReviewerStages []RequestReviewerStages `queryParam:"inline,name=reviewer_stages" union:"member"`
+	Str                          *string                 `queryParam:"inline,name=reviewer_stages" union:"member"`
+
+	Type ReviewerStagesType
+}
+
+func CreateReviewerStagesArrayOfRequestReviewerStages(arrayOfRequestReviewerStages []RequestReviewerStages) ReviewerStages {
+	typ := ReviewerStagesTypeArrayOfRequestReviewerStages
+
+	return ReviewerStages{
+		ArrayOfRequestReviewerStages: arrayOfRequestReviewerStages,
+		Type:                         typ,
+	}
+}
+
+func CreateReviewerStagesStr(str string) ReviewerStages {
+	typ := ReviewerStagesTypeStr
+
+	return ReviewerStages{
+		Str:  &str,
+		Type: typ,
+	}
+}
+
+func (u *ReviewerStages) UnmarshalJSON(data []byte) error {
+
+	var candidates []utils.UnionCandidate
+
+	// Collect all valid candidates
+	var arrayOfRequestReviewerStages []RequestReviewerStages = []RequestReviewerStages{}
+	if err := utils.UnmarshalJSON(data, &arrayOfRequestReviewerStages, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  ReviewerStagesTypeArrayOfRequestReviewerStages,
+			Value: arrayOfRequestReviewerStages,
+		})
+	}
+
+	var str string = ""
+	if err := utils.UnmarshalJSON(data, &str, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  ReviewerStagesTypeStr,
+			Value: &str,
+		})
+	}
+
+	if len(candidates) == 0 {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for ReviewerStages", string(data))
+	}
+
+	// Pick the best candidate using multi-stage filtering
+	best := utils.PickBestUnionCandidate(candidates, data)
+	if best == nil {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for ReviewerStages", string(data))
+	}
+
+	// Set the union type and value based on the best candidate
+	u.Type = best.Type.(ReviewerStagesType)
+	switch best.Type {
+	case ReviewerStagesTypeArrayOfRequestReviewerStages:
+		u.ArrayOfRequestReviewerStages = best.Value.([]RequestReviewerStages)
+		return nil
+	case ReviewerStagesTypeStr:
+		u.Str = best.Value.(*string)
+		return nil
+	}
+
+	return fmt.Errorf("could not unmarshal `%s` into any supported union types for ReviewerStages", string(data))
+}
+
+func (u ReviewerStages) MarshalJSON() ([]byte, error) {
+	if u.ArrayOfRequestReviewerStages != nil {
+		return utils.MarshalJSON(u.ArrayOfRequestReviewerStages, "", true)
+	}
+
+	if u.Str != nil {
+		return utils.MarshalJSON(u.Str, "", true)
+	}
+
+	return nil, errors.New("could not marshal union type ReviewerStages: all fields are null")
+}
 
 // # Request Object
 // ### Description
@@ -28,8 +120,8 @@ type Request struct {
 	RequestedItemsList []RequestedItem `json:"requested_items_list,omitempty"`
 	// The unique identifier of the user who created the request.
 	RequesterID string `json:"requester_id"`
-	// The configured reviewer stages for every item in this request
-	ReviewerStages []RequestReviewerStages `json:"reviewer_stages,omitempty"`
+	// The configured reviewer stages for every item in this request, or an error message if reviewers could not be loaded
+	ReviewerStages *ReviewerStages `json:"reviewer_stages,omitempty"`
 	// The stages configuration for a request item
 	//
 	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
@@ -54,7 +146,7 @@ func (r Request) MarshalJSON() ([]byte, error) {
 }
 
 func (r *Request) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &r, "", false, []string{"created_at", "id", "reason", "requester_id", "status", "updated_at"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &r, "", false, nil); err != nil {
 		return err
 	}
 	return nil
@@ -109,7 +201,7 @@ func (r *Request) GetRequesterID() string {
 	return r.RequesterID
 }
 
-func (r *Request) GetReviewerStages() []RequestReviewerStages {
+func (r *Request) GetReviewerStages() *ReviewerStages {
 	if r == nil {
 		return nil
 	}

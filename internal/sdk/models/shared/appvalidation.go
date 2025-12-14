@@ -35,7 +35,7 @@ func (a AppValidation) MarshalJSON() ([]byte, error) {
 }
 
 func (a *AppValidation) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &a, "", false, []string{"key", "name", "severity", "status", "updated_at"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &a, "", false, nil); err != nil {
 		return err
 	}
 	return nil

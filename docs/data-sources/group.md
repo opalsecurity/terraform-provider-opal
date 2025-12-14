@@ -109,13 +109,16 @@ Read-Only:
 - `azure_ad_security_group` (Attributes) Remote info for Microsoft Entra ID Security group. (see [below for nested schema](#nestedatt--remote_info--azure_ad_security_group))
 - `connector_group` (Attributes) Remote info for Connector group. (see [below for nested schema](#nestedatt--remote_info--connector_group))
 - `databricks_account_group` (Attributes) Remote info for Databricks account group. (see [below for nested schema](#nestedatt--remote_info--databricks_account_group))
+- `devin_group` (Attributes) Remote info for Devin group. (see [below for nested schema](#nestedatt--remote_info--devin_group))
 - `duo_group` (Attributes) Remote info for Duo Security group. (see [below for nested schema](#nestedatt--remote_info--duo_group))
 - `github_team` (Attributes) Remote info for GitHub team. (see [below for nested schema](#nestedatt--remote_info--github_team))
 - `gitlab_group` (Attributes) Remote info for Gitlab group. (see [below for nested schema](#nestedatt--remote_info--gitlab_group))
 - `google_group` (Attributes) Remote info for Google group. (see [below for nested schema](#nestedatt--remote_info--google_group))
+- `incidentio_on_call_schedule` (Attributes) Remote info for Incident.io on-call schedule group. (see [below for nested schema](#nestedatt--remote_info--incidentio_on_call_schedule))
 - `ldap_group` (Attributes) Remote info for LDAP group. (see [below for nested schema](#nestedatt--remote_info--ldap_group))
 - `okta_group` (Attributes) Remote info for Okta Directory group. (see [below for nested schema](#nestedatt--remote_info--okta_group))
 - `okta_group_rule` (Attributes) Remote info for Okta Directory group rule. (see [below for nested schema](#nestedatt--remote_info--okta_group_rule))
+- `pagerduty_on_call_schedule` (Attributes) Remote info for PagerDuty on-call schedule group. (see [below for nested schema](#nestedatt--remote_info--pagerduty_on_call_schedule))
 - `snowflake_role` (Attributes) Remote info for Snowflake role. (see [below for nested schema](#nestedatt--remote_info--snowflake_role))
 - `tailscale_group` (Attributes) Remote info for Tailscale group. (see [below for nested schema](#nestedatt--remote_info--tailscale_group))
 - `workday_user_security_group` (Attributes) Remote info for Workday User Security group. (see [below for nested schema](#nestedatt--remote_info--workday_user_security_group))
@@ -168,6 +171,14 @@ Read-Only:
 - `group_id` (String) The id of the Databricks account group.
 
 
+<a id="nestedatt--remote_info--devin_group"></a>
+### Nested Schema for `remote_info.devin_group`
+
+Read-Only:
+
+- `group_name` (String) The name of the Devin group.
+
+
 <a id="nestedatt--remote_info--duo_group"></a>
 ### Nested Schema for `remote_info.duo_group`
 
@@ -200,6 +211,14 @@ Read-Only:
 - `group_id` (String) The id of the Google group.
 
 
+<a id="nestedatt--remote_info--incidentio_on_call_schedule"></a>
+### Nested Schema for `remote_info.incidentio_on_call_schedule`
+
+Read-Only:
+
+- `schedule_id` (String) The id of the Incident.io on-call schedule.
+
+
 <a id="nestedatt--remote_info--ldap_group"></a>
 ### Nested Schema for `remote_info.ldap_group`
 
@@ -222,6 +241,14 @@ Read-Only:
 Read-Only:
 
 - `rule_id` (String) The id of the Okta group rule.
+
+
+<a id="nestedatt--remote_info--pagerduty_on_call_schedule"></a>
+### Nested Schema for `remote_info.pagerduty_on_call_schedule`
+
+Read-Only:
+
+- `schedule_id` (String) The id of the PagerDuty on-call schedule.
 
 
 <a id="nestedatt--remote_info--snowflake_role"></a>

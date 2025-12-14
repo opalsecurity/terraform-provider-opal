@@ -38,9 +38,9 @@ resource "opal_idp_group_mappings" "my_idpgroupmappings" {
 
 Optional:
 
-- `alias` (String)
-- `group_id` (String)
-- `hidden_from_end_user` (Boolean)
+- `alias` (String) The alias of the group.
+- `group_id` (String) The ID of the group.
+- `hidden_from_end_user` (Boolean) A bool representing whether or not the group is hidden from the end user.
 
 Read-Only:
 

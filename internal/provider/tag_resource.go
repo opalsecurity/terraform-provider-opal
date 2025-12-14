@@ -10,12 +10,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/validators"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -53,16 +51,13 @@ func (r *TagResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 			"created_at": schema.StringAttribute{
 				Computed:    true,
 				Description: `The date the tag was created.`,
-				Validators: []validator.String{
-					validators.IsRFC3339(),
-				},
 			},
 			"id": schema.StringAttribute{
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The ID of the tag.`,
+				Description: `The tag ID`,
 			},
 			"key": schema.StringAttribute{
 				Required: true,
@@ -75,9 +70,6 @@ func (r *TagResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 			"updated_at": schema.StringAttribute{
 				Computed:    true,
 				Description: `The date the tag was last updated.`,
-				Validators: []validator.String{
-					validators.IsRFC3339(),
-				},
 			},
 			"user_creator_id": schema.StringAttribute{
 				Computed:    true,
@@ -290,7 +282,10 @@ func (r *TagResource) Delete(ctx context.Context, req resource.DeleteRequest, re
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode != 200 {
+	switch res.StatusCode {
+	case 200, 404:
+		break
+	default:
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
