@@ -30,6 +30,8 @@ type ResourceRemoteInfo struct {
 	CustomConnector                   *CustomConnector                   `tfsdk:"custom_connector"`
 	DatabricksAccountServicePrincipal *DatabricksAccountServicePrincipal `tfsdk:"databricks_account_service_principal"`
 	DatastaxAstraRole                 *SnowflakeRole                     `tfsdk:"datastax_astra_role"`
+	DevinOrganization                 *CursorOrganization                `tfsdk:"devin_organization"`
+	DevinRole                         *SnowflakeRole                     `tfsdk:"devin_role"`
 	GcpBigQueryDataset                *GcpBigQueryDataset                `tfsdk:"gcp_big_query_dataset"`
 	GcpBigQueryTable                  *GcpBigQueryTable                  `tfsdk:"gcp_big_query_table"`
 	GcpBucket                         *GcpBucket                         `tfsdk:"gcp_bucket"`

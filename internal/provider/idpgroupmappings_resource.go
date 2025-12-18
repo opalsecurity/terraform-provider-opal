@@ -56,20 +56,23 @@ func (r *IdpGroupMappingsResource) Schema(ctx context.Context, req resource.Sche
 					},
 					Attributes: map[string]schema.Attribute{
 						"alias": schema.StringAttribute{
-							Computed: true,
-							Optional: true,
+							Computed:    true,
+							Optional:    true,
+							Description: `The alias of the group.`,
 						},
 						"app_resource_id": schema.StringAttribute{
 							Computed:    true,
 							Description: `The ID of the app resource.`,
 						},
 						"group_id": schema.StringAttribute{
-							Computed: true,
-							Optional: true,
+							Computed:    true,
+							Optional:    true,
+							Description: `The ID of the group.`,
 						},
 						"hidden_from_end_user": schema.BoolAttribute{
-							Computed: true,
-							Optional: true,
+							Computed:    true,
+							Optional:    true,
+							Description: `A bool representing whether or not the group is hidden from the end user.`,
 						},
 					},
 				},

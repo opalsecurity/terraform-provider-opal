@@ -65,7 +65,7 @@ func (r *UarDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 			},
 			"reviewer_assignment_policy": schema.StringAttribute{
 				Computed:    true,
-				Description: `A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually.`,
+				Description: `A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually. BY_OWNING_TEAM_ADMIN assigns reviews to resource admins in round-robin fashion. BY_OWNING_TEAM_ADMIN_ALL assigns reviews to all resource admins. BY_APPROVERS assigns reviews to resource approvers in round-robin fashion. BY_APPROVERS_ALL assigns reviews to all resource approvers.`,
 			},
 			"self_review_allowed": schema.BoolAttribute{
 				Computed:    true,

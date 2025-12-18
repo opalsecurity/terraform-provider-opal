@@ -27,7 +27,7 @@ func (r *AppsDataSourceModel) RefreshFromSharedAppsList(ctx context.Context, res
 			apps.Description = types.StringValue(appsItem.Description)
 			apps.ID = types.StringValue(appsItem.ID)
 			apps.Name = types.StringValue(appsItem.Name)
-			apps.Type = types.StringValue(appsItem.Type)
+			apps.Type = types.StringValue(string(appsItem.Type))
 			apps.Validations = []tfTypes.AppValidation{}
 
 			for _, validationsItem := range appsItem.Validations {

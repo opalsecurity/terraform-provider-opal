@@ -42,7 +42,7 @@ func (c CreateConfigurationTemplateInfo) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateConfigurationTemplateInfo) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &c, "", false, []string{"admin_owner_id", "name", "require_mfa_to_connect", "visibility"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &c, "", false, nil); err != nil {
 		return err
 	}
 	return nil

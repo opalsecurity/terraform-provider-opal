@@ -36,7 +36,7 @@ resource "opal_delegation" "my_delegation" {
 ### Read-Only
 
 - `created_at` (String) The creation time of the delegation.
-- `id` (String) The ID of the delegation.
+- `id` (String) The ID of the delegation to remove.
 - `updated_at` (String) The last updated time of the delegation.
 
 ## Import

@@ -37,7 +37,7 @@ func (s Session) MarshalJSON() ([]byte, error) {
 }
 
 func (s *Session) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &s, "", false, []string{"access_level", "connection_id", "expiration_date", "resource_id", "user_id"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &s, "", false, nil); err != nil {
 		return err
 	}
 	return nil

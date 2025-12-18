@@ -58,38 +58,46 @@ func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(ctx context.Conte
 				requests.RequestedItemsList = append(requests.RequestedItemsList, requestedItemsList)
 			}
 			requests.RequesterID = types.StringValue(requestsItem.RequesterID)
-			requests.ReviewerStages = []tfTypes.RequestReviewerStages{}
+			if requestsItem.ReviewerStages != nil {
+				requests.ReviewerStages = &tfTypes.ReviewerStages{}
+				if requestsItem.ReviewerStages.ArrayOfRequestReviewerStages != nil {
+					requests.ReviewerStages.ArrayOfRequestReviewerStages = []tfTypes.RequestReviewerStages{}
 
-			for _, reviewerStagesItem := range requestsItem.ReviewerStages {
-				var reviewerStages tfTypes.RequestReviewerStages
+					for _, arrayOfRequestReviewerStagesItem := range requestsItem.ReviewerStages.ArrayOfRequestReviewerStages {
+						var arrayOfRequestReviewerStages tfTypes.RequestReviewerStages
 
-				reviewerStages.AccessLevelName = types.StringPointerValue(reviewerStagesItem.AccessLevelName)
-				reviewerStages.AccessLevelRemoteID = types.StringPointerValue(reviewerStagesItem.AccessLevelRemoteID)
-				reviewerStages.ItemID = types.StringValue(reviewerStagesItem.ItemID)
-				reviewerStages.ItemName = types.StringValue(reviewerStagesItem.ItemName)
-				reviewerStages.Stages = []tfTypes.RequestStage{}
+						arrayOfRequestReviewerStages.AccessLevelName = types.StringPointerValue(arrayOfRequestReviewerStagesItem.AccessLevelName)
+						arrayOfRequestReviewerStages.AccessLevelRemoteID = types.StringPointerValue(arrayOfRequestReviewerStagesItem.AccessLevelRemoteID)
+						arrayOfRequestReviewerStages.ItemID = types.StringValue(arrayOfRequestReviewerStagesItem.ItemID)
+						arrayOfRequestReviewerStages.ItemName = types.StringValue(arrayOfRequestReviewerStagesItem.ItemName)
+						arrayOfRequestReviewerStages.Stages = []tfTypes.RequestStage{}
 
-				for _, stagesItem := range reviewerStagesItem.Stages {
-					var stages tfTypes.RequestStage
+						for _, stagesItem := range arrayOfRequestReviewerStagesItem.Stages {
+							var stages tfTypes.RequestStage
 
-					stages.Operator = types.StringValue(string(stagesItem.Operator))
-					stages.Reviewers = []tfTypes.RequestReviewer{}
+							stages.Operator = types.StringValue(string(stagesItem.Operator))
+							stages.Reviewers = []tfTypes.RequestReviewer{}
 
-					for _, reviewersItem := range stagesItem.Reviewers {
-						var reviewers tfTypes.RequestReviewer
+							for _, reviewersItem := range stagesItem.Reviewers {
+								var reviewers tfTypes.RequestReviewer
 
-						reviewers.FullName = types.StringPointerValue(reviewersItem.FullName)
-						reviewers.ID = types.StringValue(reviewersItem.ID)
-						reviewers.Status = types.StringValue(string(reviewersItem.Status))
+								reviewers.FullName = types.StringPointerValue(reviewersItem.FullName)
+								reviewers.ID = types.StringValue(reviewersItem.ID)
+								reviewers.Status = types.StringValue(string(reviewersItem.Status))
 
-						stages.Reviewers = append(stages.Reviewers, reviewers)
+								stages.Reviewers = append(stages.Reviewers, reviewers)
+							}
+							stages.Stage = types.Int64Value(stagesItem.Stage)
+
+							arrayOfRequestReviewerStages.Stages = append(arrayOfRequestReviewerStages.Stages, stages)
+						}
+
+						requests.ReviewerStages.ArrayOfRequestReviewerStages = append(requests.ReviewerStages.ArrayOfRequestReviewerStages, arrayOfRequestReviewerStages)
 					}
-					stages.Stage = types.Int64Value(stagesItem.Stage)
-
-					reviewerStages.Stages = append(reviewerStages.Stages, stages)
 				}
-
-				requests.ReviewerStages = append(requests.ReviewerStages, reviewerStages)
+				if requestsItem.ReviewerStages.Str != nil {
+					requests.ReviewerStages.Str = types.StringPointerValue(requestsItem.ReviewerStages.Str)
+				}
 			}
 			if requestsItem.Stages == nil {
 				requests.Stages = nil

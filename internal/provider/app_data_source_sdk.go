@@ -22,7 +22,7 @@ func (r *AppDataSourceModel) RefreshFromSharedApp(ctx context.Context, resp *sha
 		r.Description = types.StringValue(resp.Description)
 		r.ID = types.StringValue(resp.ID)
 		r.Name = types.StringValue(resp.Name)
-		r.Type = types.StringValue(resp.Type)
+		r.Type = types.StringValue(string(resp.Type))
 		r.Validations = []tfTypes.AppValidation{}
 
 		for _, validationsItem := range resp.Validations {

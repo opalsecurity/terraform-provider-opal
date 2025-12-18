@@ -70,15 +70,15 @@ func (r *GroupResourceListResourceModel) ToSharedUpdateGroupResourcesInfo(ctx co
 	var diags diag.Diagnostics
 
 	resources := make([]shared.ResourceWithAccessLevel, 0, len(r.Resources))
-	for _, resourcesItem := range r.Resources {
+	for resourcesIndex := range r.Resources {
 		accessLevelRemoteID := new(string)
-		if !resourcesItem.AccessLevelRemoteID.IsUnknown() && !resourcesItem.AccessLevelRemoteID.IsNull() {
-			*accessLevelRemoteID = resourcesItem.AccessLevelRemoteID.ValueString()
+		if !r.Resources[resourcesIndex].AccessLevelRemoteID.IsUnknown() && !r.Resources[resourcesIndex].AccessLevelRemoteID.IsNull() {
+			*accessLevelRemoteID = r.Resources[resourcesIndex].AccessLevelRemoteID.ValueString()
 		} else {
 			accessLevelRemoteID = nil
 		}
 		var resourceID string
-		resourceID = resourcesItem.ResourceID.ValueString()
+		resourceID = r.Resources[resourcesIndex].ResourceID.ValueString()
 
 		resources = append(resources, shared.ResourceWithAccessLevel{
 			AccessLevelRemoteID: accessLevelRemoteID,

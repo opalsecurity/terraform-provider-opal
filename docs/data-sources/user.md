@@ -24,8 +24,8 @@ data "opal_user" "my_user" {
 
 ### Optional
 
-- `email` (String) The email of the user. If both user ID and email are provided, user ID will take precedence. If neither are provided, an error will occur.
-- `id` (String) The user ID of the user.
+- `email` (String) The email of the user.
+- `id` (String) The ID of the user.
 
 ### Read-Only
 

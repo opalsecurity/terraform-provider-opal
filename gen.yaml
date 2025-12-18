@@ -16,13 +16,15 @@ generation:
     hoistGlobalSecurity: true
   schemas:
     allOfMergeStrategy: shallowMerge
+  requestBodyFieldName: ""
+  persistentEdits: {}
   tests:
     generateTests: true
     generateNewTests: false
     skipResponseBodyAssertions: false
   flattenGlobalSecurity: true
 terraform:
-  version: 3.3.3
+  version: 3.4.0
   additionalDataSources: []
   additionalDependencies:
     github.com/hashicorp/terraform-plugin-testing: v1.13.2
@@ -33,13 +35,16 @@ terraform:
   allowUnknownFieldsInWeakUnions: false
   author: opalsecurity
   baseErrorName: OpalAPIError
+  debugLogging: {}
   defaultErrorName: SDKError
+  enableCustomCodeRegions: false
   enableOperationSecurity: false
   enableOperationServers: false
   enableTypeDeduplication: true
   environmentVariables:
     - env: OPAL_AUTH_TOKEN
       providerAttribute: bearer_auth
+  excludeEmptyObjectSchemas: false
   imports:
     option: openapi
     paths:
@@ -49,7 +54,9 @@ terraform:
       shared: shared
       webhooks: webhooks
   includeEmptyObjects: false
+  inferUnionDiscriminators: false
   inputModelSuffix: input
   outputModelSuffix: output
   packageName: opal
-  unionDeserializationStrategy: populated-fields
+  respectRequiredFields: false
+  unionStrategy: populated-fields

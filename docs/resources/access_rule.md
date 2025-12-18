@@ -62,7 +62,7 @@ resource "opal_access_rule" "my_accessrule" {
 
 ### Read-Only
 
-- `id` (String) The ID (group ID) of the access rule.
+- `id` (String) The access rule ID (group ID) of the access rule.
 
 <a id="nestedatt--rule_clauses"></a>
 ### Nested Schema for `rule_clauses`

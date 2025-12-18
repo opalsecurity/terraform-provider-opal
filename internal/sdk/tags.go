@@ -944,6 +944,7 @@ func (s *Tags) Delete(ctx context.Context, request operations.DeleteUserTagReque
 
 	switch {
 	case httpRes.StatusCode == 200:
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -1122,6 +1123,7 @@ func (s *Tags) DeleteGroup(ctx context.Context, request operations.DeleteGroupTa
 
 	switch {
 	case httpRes.StatusCode == 200:
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -1300,6 +1302,7 @@ func (s *Tags) DeleteResource(ctx context.Context, request operations.DeleteReso
 
 	switch {
 	case httpRes.StatusCode == 200:
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -1478,6 +1481,7 @@ func (s *Tags) DeleteTagByID(ctx context.Context, request operations.DeleteTagBy
 
 	switch {
 	case httpRes.StatusCode == 200:
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -1744,7 +1748,7 @@ func (s *Tags) GetTags(ctx context.Context, request operations.GetTagsRequest, o
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
 
-	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
+	if err := utils.PopulateQueryParams(ctx, req, request, nil, nil); err != nil {
 		return nil, fmt.Errorf("error populating query params: %w", err)
 	}
 

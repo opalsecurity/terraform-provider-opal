@@ -23,7 +23,7 @@ data "opal_delegation" "my_delegation" {
 
 ### Required
 
-- `id` (String) The ID of the delegation to retrieve.
+- `id` (String) The ID of the delegation.
 
 ### Read-Only
 

@@ -5026,11 +5026,14 @@ components:
         - self_review_allowed
       type: object
     UARReviewerAssignmentPolicyEnum:
-      description: A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually.
+      description: A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually. BY_OWNING_TEAM_ADMIN assigns reviews to resource admins in round-robin fashion. BY_OWNING_TEAM_ADMIN_ALL assigns reviews to all resource admins. BY_APPROVERS assigns reviews to resource approvers in round-robin fashion. BY_APPROVERS_ALL assigns reviews to all resource approvers.
       enum:
         - MANUALLY
         - BY_OWNING_TEAM_ADMIN
+        - BY_OWNING_TEAM_ADMIN_ALL
         - BY_MANAGER
+        - BY_APPROVERS
+        - BY_APPROVERS_ALL
       example: MANUALLY
       type: string
     TagFilter:
@@ -5112,7 +5115,29 @@ components:
           x-speakeasy-name-override: type
           description: The type of an app.
           enum:
-            $ref: "#/components/schemas/AppTypeEnum/enum"
+            - ACTIVE_DIRECTORY
+            - AZURE_AD
+            - AWS
+            - AWS_SSO
+            - CUSTOM
+            - DUO
+            - GCP
+            - GIT_HUB
+            - GIT_LAB
+            - GOOGLE_GROUPS
+            - GOOGLE_WORKSPACE
+            - LDAP
+            - MARIADB
+            - MONGO
+            - MONGO_ATLAS
+            - MYSQL
+            - OKTA_DIRECTORY
+            - OPAL
+            - PAGERDUTY
+            - SALESFORCE
+            - TAILSCALE
+            - TELEPORT
+            - WORKDAY
           example: OKTA_DIRECTORY
           type: string
         validations:
@@ -5519,6 +5544,14 @@ components:
           description: The ID of the resource.
           example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
           format: uuid
+          type: string
+        resource_name:
+          description: The name of the resource.
+          example: AdministratorAccess
+          type: string
+        description:
+          description: The description of the resource.
+          example: Full access to all resources and settings.
           type: string
         user_id:
           description: The ID of the user.
@@ -5940,12 +5973,14 @@ components:
         - LINEAR
         - SERVICE_NOW
         - FRESH_SERVICE
+        - SHORTCUT
         - PAGER_DUTY
         - OPSGENIE
         - GIT_HUB
         - GIT_LAB
         - GIT_LAB_CONNECTION
         - TELEPORT
+        - SLACK
       example: GIT_HUB
       type: string
     PaginatedGroupsList:
@@ -6591,6 +6626,9 @@ components:
         - CONNECTOR_GROUP
         - SNOWFLAKE_ROLE
         - WORKDAY_USER_SECURITY_GROUP
+        - PAGERDUTY_ON_CALL_SCHEDULE
+        - INCIDENTIO_ON_CALL_SCHEDULE
+        - DEVIN_GROUP
       example: OPAL_GROUP
       type: string
     ResourceTypeEnum:
@@ -6665,6 +6703,11 @@ components:
         - ANTHROPIC_WORKSPACE
         - GIT_HUB_ORG
         - ORACLE_FUSION_ROLE
+        - DEVIN_ORGANIZATION
+        - DEVIN_ROLE
+        - VAULT_SECRET
+        - VAULT_POLICY
+        - VAULT_OIDC_ROLE
       example: AWS_IAM_ROLE
       type: string
     VisibilityTypeEnum:
@@ -7334,6 +7377,36 @@ components:
           type: object
           required:
             - group_id
+        pagerduty_on_call_schedule:
+          description: Remote info for PagerDuty on-call schedule group.
+          properties:
+            schedule_id:
+              description: The id of the PagerDuty on-call schedule.
+              example: PNZNINN
+              type: string
+          type: object
+          required:
+            - schedule_id
+        incidentio_on_call_schedule:
+          description: Remote info for Incident.io on-call schedule group.
+          properties:
+            schedule_id:
+              description: The id of the Incident.io on-call schedule.
+              example: 01HZ8XQM9ZQX8RKMZQ8ZQX8RK
+              type: string
+          type: object
+          required:
+            - schedule_id
+        devin_group:
+          description: Remote info for Devin group.
+          properties:
+            group_name:
+              description: The name of the Devin group.
+              example: devin-group-01
+              type: string
+          type: object
+          required:
+            - group_name
       type: object
       x-speakeasy-entity: GroupRemote
     ResourceRemoteInfo:
@@ -8118,6 +8191,26 @@ components:
           type: object
           required:
             - role_id
+        devin_organization:
+          description: Remote info for Devin organization.
+          properties:
+            org_id:
+              description: The id of the organization.
+              example: devin-org-01
+              type: string
+          type: object
+          required:
+            - org_id
+        devin_role:
+          description: Remote info for Devin role.
+          properties:
+            role_id:
+              description: The id of the role.
+              example: devin-role-01
+              type: string
+          type: object
+          required:
+            - role_id
       type: object
     RiskSensitivityEnum:
       type: string
@@ -8757,10 +8850,12 @@ components:
           description: The stages configuration for this request
           $ref: "#/components/schemas/RequestItemStages"
         reviewer_stages:
-          description: The configured reviewer stages for every item in this request
-          type: array
-          items:
-            $ref: "#/components/schemas/RequestReviewerStages"
+          description: The configured reviewer stages for every item in this request, or an error message if reviewers could not be loaded
+          oneOf:
+            - type: array
+              items:
+                $ref: "#/components/schemas/RequestReviewerStages"
+            - type: string
       required:
         - id
         - created_at
@@ -10749,9 +10844,10 @@ components:
                 example: arn:aws:iam::490306337630:role/SupportUser
                 type: string
               access_level_name:
-                description: The ID of the access level requested on the remote system.
+                description: The ID of the access level requested on the remote system. This field is deprecated and no longer required. We will populate based on the access_level_remote_id.
                 example: arn:aws:iam::490306337630:role/SupportUser
                 type: string
+                deprecated: true
         groups:
           type: array
           items:

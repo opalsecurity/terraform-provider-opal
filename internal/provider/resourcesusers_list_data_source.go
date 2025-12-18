@@ -87,6 +87,10 @@ func (r *ResourcesUsersListDataSource) Schema(ctx context.Context, req datasourc
 								`### Usage Example` + "\n" +
 								`View the ` + "`" + `AccessLevel` + "`" + ` of a resource/user or resource/group pair to see the level of access granted to the resource.`,
 						},
+						"description": schema.StringAttribute{
+							Computed:    true,
+							Description: `The description of the resource.`,
+						},
 						"email": schema.StringAttribute{
 							Computed:    true,
 							Description: `The user's email.`,
@@ -120,6 +124,10 @@ func (r *ResourcesUsersListDataSource) Schema(ctx context.Context, req datasourc
 						"resource_id": schema.StringAttribute{
 							Computed:    true,
 							Description: `The ID of the resource.`,
+						},
+						"resource_name": schema.StringAttribute{
+							Computed:    true,
+							Description: `The name of the resource.`,
 						},
 						"user_id": schema.StringAttribute{
 							Computed:    true,

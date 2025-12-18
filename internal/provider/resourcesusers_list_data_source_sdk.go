@@ -25,6 +25,7 @@ func (r *ResourcesUsersListDataSourceModel) RefreshFromSharedResourceAccessUserL
 
 			results.AccessLevel.AccessLevelName = types.StringValue(resultsItem.AccessLevel.AccessLevelName)
 			results.AccessLevel.AccessLevelRemoteID = types.StringValue(resultsItem.AccessLevel.AccessLevelRemoteID)
+			results.Description = types.StringPointerValue(resultsItem.Description)
 			results.Email = types.StringValue(resultsItem.Email)
 			results.ExpirationDate = types.StringPointerValue(typeconvert.TimePointerToStringPointer(resultsItem.ExpirationDate))
 			results.FullName = types.StringValue(resultsItem.FullName)
@@ -37,6 +38,7 @@ func (r *ResourcesUsersListDataSourceModel) RefreshFromSharedResourceAccessUserL
 				results.PropagationStatus.Status = types.StringValue(string(resultsItem.PropagationStatus.Status))
 			}
 			results.ResourceID = types.StringValue(resultsItem.ResourceID)
+			results.ResourceName = types.StringPointerValue(resultsItem.ResourceName)
 			results.UserID = types.StringValue(resultsItem.UserID)
 
 			r.Results = append(r.Results, results)

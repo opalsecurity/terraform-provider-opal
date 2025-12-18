@@ -1072,7 +1072,29 @@ actions:
   - target: $["components"]["schemas"]["App"]["properties"]["app_type"]
     update:
       enum:
-        $ref: "#/components/schemas/AppTypeEnum/enum"
+        - ACTIVE_DIRECTORY
+        - AZURE_AD
+        - AWS
+        - AWS_SSO
+        - CUSTOM
+        - DUO
+        - GCP
+        - GIT_HUB
+        - GIT_LAB
+        - GOOGLE_GROUPS
+        - GOOGLE_WORKSPACE
+        - LDAP
+        - MARIADB
+        - MONGO
+        - MONGO_ATLAS
+        - MYSQL
+        - OKTA_DIRECTORY
+        - OPAL
+        - PAGERDUTY
+        - SALESFORCE
+        - TAILSCALE
+        - TELEPORT
+        - WORKDAY
   - target: $["components"]["schemas"]["App"]["properties"]["app_type"]
     update:
       example: OKTA_DIRECTORY

@@ -51,7 +51,7 @@ func (r *UserDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 			"email": schema.StringAttribute{
 				Computed:    true,
 				Optional:    true,
-				Description: `The email of the user. If both user ID and email are provided, user ID will take precedence. If neither are provided, an error will occur.`,
+				Description: `The email of the user.`,
 			},
 			"first_name": schema.StringAttribute{
 				Computed:    true,
@@ -64,7 +64,7 @@ func (r *UserDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 			"id": schema.StringAttribute{
 				Computed:    true,
 				Optional:    true,
-				Description: `The user ID of the user.`,
+				Description: `The ID of the user.`,
 			},
 			"last_name": schema.StringAttribute{
 				Computed:    true,

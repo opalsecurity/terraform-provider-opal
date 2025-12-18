@@ -30,7 +30,7 @@ data "opal_uar" "my_uar" {
 - `deadline` (String) The last day for reviewers to complete their access reviews.
 - `instantly_action_reviews` (Boolean) A bool representing whether to instantly action changes when reviewers submit their decision. Default is False.
 - `name` (String) The name of the UAR.
-- `reviewer_assignment_policy` (String) A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually.
+- `reviewer_assignment_policy` (String) A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually. BY_OWNING_TEAM_ADMIN assigns reviews to resource admins in round-robin fashion. BY_OWNING_TEAM_ADMIN_ALL assigns reviews to all resource admins. BY_APPROVERS assigns reviews to resource approvers in round-robin fashion. BY_APPROVERS_ALL assigns reviews to all resource approvers.
 - `self_review_allowed` (Boolean) A bool representing whether to present a warning when a user is the only reviewer for themself. Default is False.
 - `send_reviewer_assignment_notification` (Boolean) A bool representing whether to send a notification to reviewers when they're assigned a new review. Default is False.
 - `time_zone` (String) The time zone name (as defined by the IANA Time Zone database) used in the access review deadline and exported audit report. Default is America/Los_Angeles.
