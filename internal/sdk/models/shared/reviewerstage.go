@@ -51,7 +51,7 @@ func (r ReviewerStage) MarshalJSON() ([]byte, error) {
 }
 
 func (r *ReviewerStage) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &r, "", false, []string{"owner_ids"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &r, "", false, nil); err != nil {
 		return err
 	}
 	return nil

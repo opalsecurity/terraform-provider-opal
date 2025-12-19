@@ -17,7 +17,7 @@ type CreateUARInfo struct {
 	Name                   string  `json:"name"`
 	ReminderIncludeManager *bool   `json:"reminder_include_manager,omitempty"`
 	ReminderSchedule       []int64 `json:"reminder_schedule,omitempty"`
-	// A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually.
+	// A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually. BY_OWNING_TEAM_ADMIN assigns reviews to resource admins in round-robin fashion. BY_OWNING_TEAM_ADMIN_ALL assigns reviews to all resource admins. BY_APPROVERS assigns reviews to resource approvers in round-robin fashion. BY_APPROVERS_ALL assigns reviews to all resource approvers.
 	ReviewerAssignmentPolicy UARReviewerAssignmentPolicyEnum `json:"reviewer_assignment_policy"`
 	// A bool representing whether to present a warning when a user is the only reviewer for themself. Default is False.
 	SelfReviewAllowed bool `json:"self_review_allowed"`
@@ -34,7 +34,7 @@ func (c CreateUARInfo) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateUARInfo) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &c, "", false, []string{"deadline", "name", "reviewer_assignment_policy", "self_review_allowed", "send_reviewer_assignment_notification", "time_zone"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &c, "", false, nil); err != nil {
 		return err
 	}
 	return nil

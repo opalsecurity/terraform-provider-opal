@@ -24,7 +24,7 @@ data "opal_access_rule" "my_accessrule" {
 
 - `admin_owner_id` (String) The ID of the owner of the group.
 - `description` (String) A description of the group.
-- `id` (String) The access rule ID (group ID) of the access rule.
+- `id` (String) The ID (group ID) of the access rule.
 - `name` (String) The name of the access rule.
 - `rule_clauses` (Attributes) (see [below for nested schema](#nestedatt--rule_clauses))
 - `status` (String) The status of the access rule.

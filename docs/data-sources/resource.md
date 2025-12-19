@@ -87,6 +87,8 @@ Read-Only:
 - `custom_connector` (Attributes) Remote info for a custom connector resource. (see [below for nested schema](#nestedatt--remote_info--custom_connector))
 - `databricks_account_service_principal` (Attributes) Remote info for Databricks account service principal. (see [below for nested schema](#nestedatt--remote_info--databricks_account_service_principal))
 - `datastax_astra_role` (Attributes) Remote info for an Astra role. (see [below for nested schema](#nestedatt--remote_info--datastax_astra_role))
+- `devin_organization` (Attributes) Remote info for Devin organization. (see [below for nested schema](#nestedatt--remote_info--devin_organization))
+- `devin_role` (Attributes) Remote info for Devin role. (see [below for nested schema](#nestedatt--remote_info--devin_role))
 - `gcp_big_query_dataset` (Attributes) Remote info for GCP BigQuery Dataset. (see [below for nested schema](#nestedatt--remote_info--gcp_big_query_dataset))
 - `gcp_big_query_table` (Attributes) Remote info for GCP BigQuery Table. (see [below for nested schema](#nestedatt--remote_info--gcp_big_query_table))
 - `gcp_bucket` (Attributes) Remote info for GCP bucket. (see [below for nested schema](#nestedatt--remote_info--gcp_bucket))
@@ -347,6 +349,22 @@ Read-Only:
 
 <a id="nestedatt--remote_info--datastax_astra_role"></a>
 ### Nested Schema for `remote_info.datastax_astra_role`
+
+Read-Only:
+
+- `role_id` (String) The id of the role.
+
+
+<a id="nestedatt--remote_info--devin_organization"></a>
+### Nested Schema for `remote_info.devin_organization`
+
+Read-Only:
+
+- `org_id` (String) The id of the organization.
+
+
+<a id="nestedatt--remote_info--devin_role"></a>
+### Nested Schema for `remote_info.devin_role`
 
 Read-Only:
 

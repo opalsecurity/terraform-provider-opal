@@ -229,6 +229,18 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.DatastaxAstraRole = &tfTypes.SnowflakeRole{}
 					results.RemoteInfo.DatastaxAstraRole.RoleID = types.StringValue(resultsItem.RemoteInfo.DatastaxAstraRole.RoleID)
 				}
+				if resultsItem.RemoteInfo.DevinOrganization == nil {
+					results.RemoteInfo.DevinOrganization = nil
+				} else {
+					results.RemoteInfo.DevinOrganization = &tfTypes.CursorOrganization{}
+					results.RemoteInfo.DevinOrganization.OrgID = types.StringValue(resultsItem.RemoteInfo.DevinOrganization.OrgID)
+				}
+				if resultsItem.RemoteInfo.DevinRole == nil {
+					results.RemoteInfo.DevinRole = nil
+				} else {
+					results.RemoteInfo.DevinRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.DevinRole.RoleID = types.StringValue(resultsItem.RemoteInfo.DevinRole.RoleID)
+				}
 				if resultsItem.RemoteInfo.GcpBigQueryDataset == nil {
 					results.RemoteInfo.GcpBigQueryDataset = nil
 				} else {
@@ -556,8 +568,8 @@ func (r *ResourcesListDataSourceModel) ToOperationsGetResourcesRequest(ctx conte
 		remoteID = nil
 	}
 	resourceIds := make([]string, 0, len(r.ResourceIds))
-	for _, resourceIdsItem := range r.ResourceIds {
-		resourceIds = append(resourceIds, resourceIdsItem.ValueString())
+	for resourceIdsIndex := range r.ResourceIds {
+		resourceIds = append(resourceIds, r.ResourceIds[resourceIdsIndex].ValueString())
 	}
 	resourceName := new(string)
 	if !r.ResourceName.IsUnknown() && !r.ResourceName.IsNull() {

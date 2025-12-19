@@ -18,6 +18,7 @@ const (
 	ThirdPartyProviderEnumLinear           ThirdPartyProviderEnum = "LINEAR"
 	ThirdPartyProviderEnumServiceNow       ThirdPartyProviderEnum = "SERVICE_NOW"
 	ThirdPartyProviderEnumFreshService     ThirdPartyProviderEnum = "FRESH_SERVICE"
+	ThirdPartyProviderEnumShortcut         ThirdPartyProviderEnum = "SHORTCUT"
 	ThirdPartyProviderEnumPagerDuty        ThirdPartyProviderEnum = "PAGER_DUTY"
 	ThirdPartyProviderEnumOpsgenie         ThirdPartyProviderEnum = "OPSGENIE"
 	ThirdPartyProviderEnumGitHub           ThirdPartyProviderEnum = "GIT_HUB"
@@ -48,6 +49,8 @@ func (e *ThirdPartyProviderEnum) UnmarshalJSON(data []byte) error {
 	case "SERVICE_NOW":
 		fallthrough
 	case "FRESH_SERVICE":
+		fallthrough
+	case "SHORTCUT":
 		fallthrough
 	case "PAGER_DUTY":
 		fallthrough

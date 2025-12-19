@@ -58,15 +58,6 @@ func (r *OwnerResourceModel) RefreshFromSharedUpdateOwnerInfoList(ctx context.Co
 	return diags
 }
 
-func (r *OwnerResourceModel) RefreshFromSharedUserList(ctx context.Context, resp *shared.UserList) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if resp != nil {
-	}
-
-	return diags
-}
-
 func (r *OwnerResourceModel) ToOperationsDeleteOwnerRequest(ctx context.Context) (*operations.DeleteOwnerRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -145,8 +136,8 @@ func (r *OwnerResourceModel) ToSharedCreateOwnerInfo(ctx context.Context) (*shar
 		sourceGroupID = nil
 	}
 	userIds := make([]string, 0, len(r.UserIds))
-	for _, userIdsItem := range r.UserIds {
-		userIds = append(userIds, userIdsItem.ValueString())
+	for userIdsIndex := range r.UserIds {
+		userIds = append(userIds, r.UserIds[userIdsIndex].ValueString())
 	}
 	out := shared.CreateOwnerInfo{
 		AccessRequestEscalationPeriod: accessRequestEscalationPeriod,
@@ -229,8 +220,8 @@ func (r *OwnerResourceModel) ToSharedUserIDList(ctx context.Context) (*shared.Us
 	var diags diag.Diagnostics
 
 	userIds := make([]string, 0, len(r.UserIds))
-	for _, userIdsItem := range r.UserIds {
-		userIds = append(userIds, userIdsItem.ValueString())
+	for userIdsIndex := range r.UserIds {
+		userIds = append(userIds, r.UserIds[userIdsIndex].ValueString())
 	}
 	out := shared.UserIDList{
 		UserIds: userIds,

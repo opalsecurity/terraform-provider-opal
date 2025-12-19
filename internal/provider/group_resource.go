@@ -30,7 +30,6 @@ import (
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
 	stateupgraders "github.com/opalsecurity/terraform-provider-opal/v3/internal/stateupgraders"
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/validators"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/boolvalidators"
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/int64validators"
 	custom_listvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/listvalidators"
@@ -111,7 +110,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				PlanModifiers: []planmodifier.String{
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `Custom request notification sent upon request approval.`,
+				Description: `Custom request notification sent to the requester when the request is approved.`,
 				Validators: []validator.String{
 					stringvalidator.UTF8LengthAtMost(800),
 				},
@@ -122,7 +121,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				PlanModifiers: []planmodifier.String{
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `A description of the remote group.`,
+				Description: `A description of the group.`,
 			},
 			"extensions_duration_in_minutes": schema.Int64Attribute{
 				Computed: true,
@@ -155,7 +154,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP"]; Requires replacement if changed.`,
+				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "DEVIN_GROUP"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"ACTIVE_DIRECTORY_GROUP",
@@ -177,6 +176,9 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						"CONNECTOR_GROUP",
 						"SNOWFLAKE_ROLE",
 						"WORKDAY_USER_SECURITY_GROUP",
+						"PAGERDUTY_ON_CALL_SCHEDULE",
+						"INCIDENTIO_ON_CALL_SCHEDULE",
+						"DEVIN_GROUP",
 					),
 				},
 			},
@@ -199,9 +201,6 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 						},
 						Description: `The time when the sync task was completed.`,
-						Validators: []validator.String{
-							validators.IsRFC3339(),
-						},
 					},
 					"id": schema.StringAttribute{
 						Computed: true,
@@ -269,10 +268,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 									PlanModifiers: []planmodifier.String{
 										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 									},
-									Description: `The third party provider of the message channel. must be "SLACK"`,
-									Validators: []validator.String{
-										stringvalidator.OneOf("SLACK"),
-									},
+									Description: `The third party provider of the message channel.`,
 								},
 							},
 						},
@@ -290,7 +286,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 			},
 			"name": schema.StringAttribute{
 				Required:    true,
-				Description: `The name of the remote group.`,
+				Description: `The name of the group.`,
 			},
 			"on_call_schedule_ids": schema.SetAttribute{
 				Computed:    true,
@@ -349,13 +345,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 									PlanModifiers: []planmodifier.String{
 										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 									},
-									Description: `The third party provider of the on call schedule. must be one of ["OPSGENIE", "PAGER_DUTY"]`,
-									Validators: []validator.String{
-										stringvalidator.OneOf(
-											"OPSGENIE",
-											"PAGER_DUTY",
-										),
-									},
+									Description: `The third party provider of the on call schedule.`,
 								},
 							},
 						},
@@ -509,6 +499,29 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						},
 						Description: `Remote info for Databricks account group. Requires replacement if changed.`,
 					},
+					"devin_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"group_name": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The name of the Devin group. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Devin group. Requires replacement if changed.`,
+					},
 					"duo_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -601,6 +614,29 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						},
 						Description: `Remote info for Google group. Requires replacement if changed.`,
 					},
+					"incidentio_on_call_schedule": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"schedule_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The id of the Incident.io on-call schedule. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Incident.io on-call schedule group. Requires replacement if changed.`,
+					},
 					"ldap_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -669,6 +705,29 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							},
 						},
 						Description: `Remote info for Okta Directory group rule. Requires replacement if changed.`,
+					},
+					"pagerduty_on_call_schedule": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"schedule_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The id of the PagerDuty on-call schedule. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for PagerDuty on-call schedule group. Requires replacement if changed.`,
 					},
 					"snowflake_role": schema.SingleNestedAttribute{
 						Computed: true,
@@ -948,17 +1007,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				PlanModifiers: []planmodifier.String{
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The risk sensitivity level for the group. When an override is set, this field will match that. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]`,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"UNKNOWN",
-						"CRITICAL",
-						"HIGH",
-						"MEDIUM",
-						"LOW",
-						"NONE",
-					),
-				},
+				Description: `The risk sensitivity level for the group. When an override is set, this field will match that.`,
 			},
 			"risk_sensitivity_override": schema.StringAttribute{
 				Computed: true,
@@ -1838,7 +1887,10 @@ func (r *GroupResource) Delete(ctx context.Context, req resource.DeleteRequest, 
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode != 200 {
+	switch res.StatusCode {
+	case 200, 404:
+		break
+	default:
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}

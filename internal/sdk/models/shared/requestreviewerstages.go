@@ -2,6 +2,10 @@
 
 package shared
 
+import (
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
+)
+
 // RequestReviewerStages - The stages configuration for a request item
 type RequestReviewerStages struct {
 	// The name of the access level requested.
@@ -14,6 +18,17 @@ type RequestReviewerStages struct {
 	ItemName string `json:"item_name"`
 	// The stages of review for this request
 	Stages []RequestStage `json:"stages"`
+}
+
+func (r RequestReviewerStages) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(r, "", false)
+}
+
+func (r *RequestReviewerStages) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &r, "", false, nil); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *RequestReviewerStages) GetAccessLevelName() *string {

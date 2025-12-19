@@ -7,13 +7,16 @@ import (
 	"fmt"
 )
 
-// UARReviewerAssignmentPolicyEnum - A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually.
+// UARReviewerAssignmentPolicyEnum - A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually. BY_OWNING_TEAM_ADMIN assigns reviews to resource admins in round-robin fashion. BY_OWNING_TEAM_ADMIN_ALL assigns reviews to all resource admins. BY_APPROVERS assigns reviews to resource approvers in round-robin fashion. BY_APPROVERS_ALL assigns reviews to all resource approvers.
 type UARReviewerAssignmentPolicyEnum string
 
 const (
-	UARReviewerAssignmentPolicyEnumManually          UARReviewerAssignmentPolicyEnum = "MANUALLY"
-	UARReviewerAssignmentPolicyEnumByOwningTeamAdmin UARReviewerAssignmentPolicyEnum = "BY_OWNING_TEAM_ADMIN"
-	UARReviewerAssignmentPolicyEnumByManager         UARReviewerAssignmentPolicyEnum = "BY_MANAGER"
+	UARReviewerAssignmentPolicyEnumManually             UARReviewerAssignmentPolicyEnum = "MANUALLY"
+	UARReviewerAssignmentPolicyEnumByOwningTeamAdmin    UARReviewerAssignmentPolicyEnum = "BY_OWNING_TEAM_ADMIN"
+	UARReviewerAssignmentPolicyEnumByOwningTeamAdminAll UARReviewerAssignmentPolicyEnum = "BY_OWNING_TEAM_ADMIN_ALL"
+	UARReviewerAssignmentPolicyEnumByManager            UARReviewerAssignmentPolicyEnum = "BY_MANAGER"
+	UARReviewerAssignmentPolicyEnumByApprovers          UARReviewerAssignmentPolicyEnum = "BY_APPROVERS"
+	UARReviewerAssignmentPolicyEnumByApproversAll       UARReviewerAssignmentPolicyEnum = "BY_APPROVERS_ALL"
 )
 
 func (e UARReviewerAssignmentPolicyEnum) ToPointer() *UARReviewerAssignmentPolicyEnum {
@@ -29,7 +32,13 @@ func (e *UARReviewerAssignmentPolicyEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "BY_OWNING_TEAM_ADMIN":
 		fallthrough
+	case "BY_OWNING_TEAM_ADMIN_ALL":
+		fallthrough
 	case "BY_MANAGER":
+		fallthrough
+	case "BY_APPROVERS":
+		fallthrough
+	case "BY_APPROVERS_ALL":
 		*e = UARReviewerAssignmentPolicyEnum(v)
 		return nil
 	default:

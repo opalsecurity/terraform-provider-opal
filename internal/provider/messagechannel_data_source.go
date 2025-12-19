@@ -48,7 +48,7 @@ func (r *MessageChannelDataSource) Schema(ctx context.Context, req datasource.Sc
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Required:    true,
-				Description: `The ID of the message_channel.`,
+				Description: `The ID of the message channel.`,
 			},
 			"is_private": schema.BoolAttribute{
 				Computed:    true,

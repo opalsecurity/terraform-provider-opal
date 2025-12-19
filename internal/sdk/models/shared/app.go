@@ -2,6 +2,101 @@
 
 package shared
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
+// Type - The type of an app.
+type Type string
+
+const (
+	TypeActiveDirectory Type = "ACTIVE_DIRECTORY"
+	TypeAzureAd         Type = "AZURE_AD"
+	TypeAws             Type = "AWS"
+	TypeAwsSso          Type = "AWS_SSO"
+	TypeCustom          Type = "CUSTOM"
+	TypeDuo             Type = "DUO"
+	TypeGcp             Type = "GCP"
+	TypeGitHub          Type = "GIT_HUB"
+	TypeGitLab          Type = "GIT_LAB"
+	TypeGoogleGroups    Type = "GOOGLE_GROUPS"
+	TypeGoogleWorkspace Type = "GOOGLE_WORKSPACE"
+	TypeLdap            Type = "LDAP"
+	TypeMariadb         Type = "MARIADB"
+	TypeMongo           Type = "MONGO"
+	TypeMongoAtlas      Type = "MONGO_ATLAS"
+	TypeMysql           Type = "MYSQL"
+	TypeOktaDirectory   Type = "OKTA_DIRECTORY"
+	TypeOpal            Type = "OPAL"
+	TypePagerduty       Type = "PAGERDUTY"
+	TypeSalesforce      Type = "SALESFORCE"
+	TypeTailscale       Type = "TAILSCALE"
+	TypeTeleport        Type = "TELEPORT"
+	TypeWorkday         Type = "WORKDAY"
+)
+
+func (e Type) ToPointer() *Type {
+	return &e
+}
+func (e *Type) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "ACTIVE_DIRECTORY":
+		fallthrough
+	case "AZURE_AD":
+		fallthrough
+	case "AWS":
+		fallthrough
+	case "AWS_SSO":
+		fallthrough
+	case "CUSTOM":
+		fallthrough
+	case "DUO":
+		fallthrough
+	case "GCP":
+		fallthrough
+	case "GIT_HUB":
+		fallthrough
+	case "GIT_LAB":
+		fallthrough
+	case "GOOGLE_GROUPS":
+		fallthrough
+	case "GOOGLE_WORKSPACE":
+		fallthrough
+	case "LDAP":
+		fallthrough
+	case "MARIADB":
+		fallthrough
+	case "MONGO":
+		fallthrough
+	case "MONGO_ATLAS":
+		fallthrough
+	case "MYSQL":
+		fallthrough
+	case "OKTA_DIRECTORY":
+		fallthrough
+	case "OPAL":
+		fallthrough
+	case "PAGERDUTY":
+		fallthrough
+	case "SALESFORCE":
+		fallthrough
+	case "TAILSCALE":
+		fallthrough
+	case "TELEPORT":
+		fallthrough
+	case "WORKDAY":
+		*e = Type(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for Type: %v", v)
+	}
+}
+
 // # App Object
 // ### Description
 // The `App` object is used to represent an app to an application.
@@ -18,7 +113,7 @@ type App struct {
 	// The name of the app.
 	Name string `json:"name"`
 	// The type of an app.
-	Type string `json:"app_type"`
+	Type Type `json:"app_type"`
 	// Validation checks of an apps' configuration and permissions.
 	Validations []AppValidation `json:"validations,omitempty"`
 }
@@ -51,9 +146,9 @@ func (a *App) GetName() string {
 	return a.Name
 }
 
-func (a *App) GetType() string {
+func (a *App) GetType() Type {
 	if a == nil {
-		return ""
+		return Type("")
 	}
 	return a.Type
 }

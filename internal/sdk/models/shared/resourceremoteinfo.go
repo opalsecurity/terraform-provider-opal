@@ -505,6 +505,32 @@ func (d *DatastaxAstraRole) GetRoleID() string {
 	return d.RoleID
 }
 
+// DevinOrganization - Remote info for Devin organization.
+type DevinOrganization struct {
+	// The id of the organization.
+	OrgID string `json:"org_id"`
+}
+
+func (d *DevinOrganization) GetOrgID() string {
+	if d == nil {
+		return ""
+	}
+	return d.OrgID
+}
+
+// DevinRole - Remote info for Devin role.
+type DevinRole struct {
+	// The id of the role.
+	RoleID string `json:"role_id"`
+}
+
+func (d *DevinRole) GetRoleID() string {
+	if d == nil {
+		return ""
+	}
+	return d.RoleID
+}
+
 // GcpBigQueryDataset - Remote info for GCP BigQuery Dataset.
 type GcpBigQueryDataset struct {
 	// The id of the dataset.
@@ -1094,6 +1120,10 @@ type ResourceRemoteInfo struct {
 	DatabricksAccountServicePrincipal *DatabricksAccountServicePrincipal `json:"databricks_account_service_principal,omitempty"`
 	// Remote info for an Astra role.
 	DatastaxAstraRole *DatastaxAstraRole `json:"datastax_astra_role,omitempty"`
+	// Remote info for Devin organization.
+	DevinOrganization *DevinOrganization `json:"devin_organization,omitempty"`
+	// Remote info for Devin role.
+	DevinRole *DevinRole `json:"devin_role,omitempty"`
 	// Remote info for GCP BigQuery Dataset.
 	GcpBigQueryDataset *GcpBigQueryDataset `json:"gcp_big_query_dataset,omitempty"`
 	// Remote info for GCP BigQuery Table.
@@ -1347,6 +1377,20 @@ func (r *ResourceRemoteInfo) GetDatastaxAstraRole() *DatastaxAstraRole {
 		return nil
 	}
 	return r.DatastaxAstraRole
+}
+
+func (r *ResourceRemoteInfo) GetDevinOrganization() *DevinOrganization {
+	if r == nil {
+		return nil
+	}
+	return r.DevinOrganization
+}
+
+func (r *ResourceRemoteInfo) GetDevinRole() *DevinRole {
+	if r == nil {
+		return nil
+	}
+	return r.DevinRole
 }
 
 func (r *ResourceRemoteInfo) GetGcpBigQueryDataset() *GcpBigQueryDataset {

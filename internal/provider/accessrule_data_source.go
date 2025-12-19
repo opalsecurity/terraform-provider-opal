@@ -58,7 +58,7 @@ func (r *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 			},
 			"id": schema.StringAttribute{
 				Computed:    true,
-				Description: `The access rule ID (group ID) of the access rule.`,
+				Description: `The ID (group ID) of the access rule.`,
 			},
 			"name": schema.StringAttribute{
 				Computed:    true,

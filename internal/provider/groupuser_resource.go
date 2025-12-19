@@ -6,7 +6,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
@@ -19,7 +18,6 @@ import (
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/validators"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -109,9 +107,6 @@ func (r *GroupUserResource) Schema(ctx context.Context, req resource.SchemaReque
 			"expiration_date": schema.StringAttribute{
 				Computed:    true,
 				Description: `The day and time the user's access will expire.`,
-				Validators: []validator.String{
-					validators.IsRFC3339(),
-				},
 			},
 			"full_name": schema.StringAttribute{
 				Computed:    true,
@@ -134,32 +129,7 @@ func (r *GroupUserResource) Schema(ctx context.Context, req resource.SchemaReque
 				Attributes: map[string]schema.Attribute{
 					"status": schema.StringAttribute{
 						Computed:    true,
-						Description: `The status of whether the user has been synced to the group or resource in the remote system. must be one of ["SUCCESS", "ERR_REMOTE_INTERNAL_ERROR", "ERR_REMOTE_USER_NOT_FOUND", "ERR_REMOTE_USER_NOT_LINKED", "ERR_REMOTE_RESOURCE_NOT_FOUND", "ERR_REMOTE_THROTTLE", "ERR_NOT_AUTHORIZED_TO_QUERY_RESOURCE", "ERR_REMOTE_PROVISIONING_VIA_IDP_FAILED", "ERR_IDP_EMAIL_UPDATE_CONFLICT", "ERR_TIMEOUT", "ERR_UNKNOWN", "ERR_OPAL_INTERNAL_ERROR", "ERR_ORG_READ_ONLY", "ERR_OPERATION_UNSUPPORTED", "PENDING", "PENDING_MANUAL_PROPAGATION", "PENDING_TICKET_CREATION", "ERR_TICKET_CREATION_SKIPPED", "ERR_DRY_RUN_MODE_ENABLED", "ERR_HR_IDP_PROVIDER_NOT_LINKED", "ERR_REMOTE_UNRECOVERABLE_ERROR"]`,
-						Validators: []validator.String{
-							stringvalidator.OneOf(
-								"SUCCESS",
-								"ERR_REMOTE_INTERNAL_ERROR",
-								"ERR_REMOTE_USER_NOT_FOUND",
-								"ERR_REMOTE_USER_NOT_LINKED",
-								"ERR_REMOTE_RESOURCE_NOT_FOUND",
-								"ERR_REMOTE_THROTTLE",
-								"ERR_NOT_AUTHORIZED_TO_QUERY_RESOURCE",
-								"ERR_REMOTE_PROVISIONING_VIA_IDP_FAILED",
-								"ERR_IDP_EMAIL_UPDATE_CONFLICT",
-								"ERR_TIMEOUT",
-								"ERR_UNKNOWN",
-								"ERR_OPAL_INTERNAL_ERROR",
-								"ERR_ORG_READ_ONLY",
-								"ERR_OPERATION_UNSUPPORTED",
-								"PENDING",
-								"PENDING_MANUAL_PROPAGATION",
-								"PENDING_TICKET_CREATION",
-								"ERR_TICKET_CREATION_SKIPPED",
-								"ERR_DRY_RUN_MODE_ENABLED",
-								"ERR_HR_IDP_PROVIDER_NOT_LINKED",
-								"ERR_REMOTE_UNRECOVERABLE_ERROR",
-							),
-						},
+						Description: `The status of whether the user has been synced to the group or resource in the remote system.`,
 					},
 				},
 				Description: `The state of whether the push action was propagated to the remote system. If this is null, the access was synced from the remote system.`,
@@ -336,7 +306,10 @@ func (r *GroupUserResource) Delete(ctx context.Context, req resource.DeleteReque
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode != 200 {
+	switch res.StatusCode {
+	case 200, 404:
+		break
+	default:
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}

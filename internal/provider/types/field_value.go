@@ -7,6 +7,6 @@ import (
 )
 
 type FieldValue struct {
-	Str     types.String `queryParam:"inline" tfsdk:"str" tfPlanOnly:"true"`
-	Boolean types.Bool   `queryParam:"inline" tfsdk:"boolean" tfPlanOnly:"true"`
+	Str     types.String `queryParam:"inline" tfsdk:"str"`
+	Boolean types.Bool   `queryParam:"inline" tfsdk:"boolean"`
 }

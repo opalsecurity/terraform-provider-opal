@@ -79,8 +79,8 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 	adminOwnerID = r.AdminOwnerID.ValueString()
 
 	breakGlassUserIds := make([]string, 0, len(r.BreakGlassUserIds))
-	for _, breakGlassUserIdsItem := range r.BreakGlassUserIds {
-		breakGlassUserIds = append(breakGlassUserIds, breakGlassUserIdsItem.ValueString())
+	for breakGlassUserIdsIndex := range r.BreakGlassUserIds {
+		breakGlassUserIds = append(breakGlassUserIds, r.BreakGlassUserIds[breakGlassUserIdsIndex].ValueString())
 	}
 	customRequestNotification := new(string)
 	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
@@ -89,33 +89,33 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 		customRequestNotification = nil
 	}
 	linkedAuditMessageChannelIds := make([]string, 0, len(r.LinkedAuditMessageChannelIds))
-	for _, linkedAuditMessageChannelIdsItem := range r.LinkedAuditMessageChannelIds {
-		linkedAuditMessageChannelIds = append(linkedAuditMessageChannelIds, linkedAuditMessageChannelIdsItem.ValueString())
+	for linkedAuditMessageChannelIdsIndex := range r.LinkedAuditMessageChannelIds {
+		linkedAuditMessageChannelIds = append(linkedAuditMessageChannelIds, r.LinkedAuditMessageChannelIds[linkedAuditMessageChannelIdsIndex].ValueString())
 	}
 	memberOnCallScheduleIds := make([]string, 0, len(r.MemberOnCallScheduleIds))
-	for _, memberOnCallScheduleIdsItem := range r.MemberOnCallScheduleIds {
-		memberOnCallScheduleIds = append(memberOnCallScheduleIds, memberOnCallScheduleIdsItem.ValueString())
+	for memberOnCallScheduleIdsIndex := range r.MemberOnCallScheduleIds {
+		memberOnCallScheduleIds = append(memberOnCallScheduleIds, r.MemberOnCallScheduleIds[memberOnCallScheduleIdsIndex].ValueString())
 	}
 	var name string
 	name = r.Name.ValueString()
 
 	requestConfigurations := make([]shared.RequestConfiguration, 0, len(r.RequestConfigurations))
-	for _, requestConfigurationsItem := range r.RequestConfigurations {
+	for requestConfigurationsIndex := range r.RequestConfigurations {
 		var allowRequests bool
-		allowRequests = requestConfigurationsItem.AllowRequests.ValueBool()
+		allowRequests = r.RequestConfigurations[requestConfigurationsIndex].AllowRequests.ValueBool()
 
 		var autoApproval bool
-		autoApproval = requestConfigurationsItem.AutoApproval.ValueBool()
+		autoApproval = r.RequestConfigurations[requestConfigurationsIndex].AutoApproval.ValueBool()
 
 		var condition *shared.Condition
-		if requestConfigurationsItem.Condition != nil {
-			groupIds := make([]string, 0, len(requestConfigurationsItem.Condition.GroupIds))
-			for _, groupIdsItem := range requestConfigurationsItem.Condition.GroupIds {
-				groupIds = append(groupIds, groupIdsItem.ValueString())
+		if r.RequestConfigurations[requestConfigurationsIndex].Condition != nil {
+			groupIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].Condition.GroupIds))
+			for groupIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].Condition.GroupIds {
+				groupIds = append(groupIds, r.RequestConfigurations[requestConfigurationsIndex].Condition.GroupIds[groupIdsIndex].ValueString())
 			}
-			roleRemoteIds := make([]string, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
-			for _, roleRemoteIdsItem := range requestConfigurationsItem.Condition.RoleRemoteIds {
-				roleRemoteIds = append(roleRemoteIds, roleRemoteIdsItem.ValueString())
+			roleRemoteIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds))
+			for roleRemoteIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds {
+				roleRemoteIds = append(roleRemoteIds, r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds[roleRemoteIdsIndex].ValueString())
 			}
 			condition = &shared.Condition{
 				GroupIds:      groupIds,
@@ -123,59 +123,59 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 			}
 		}
 		extensionsDurationInMinutes := new(int64)
-		if !requestConfigurationsItem.ExtensionsDurationInMinutes.IsUnknown() && !requestConfigurationsItem.ExtensionsDurationInMinutes.IsNull() {
-			*extensionsDurationInMinutes = requestConfigurationsItem.ExtensionsDurationInMinutes.ValueInt64()
+		if !r.RequestConfigurations[requestConfigurationsIndex].ExtensionsDurationInMinutes.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ExtensionsDurationInMinutes.IsNull() {
+			*extensionsDurationInMinutes = r.RequestConfigurations[requestConfigurationsIndex].ExtensionsDurationInMinutes.ValueInt64()
 		} else {
 			extensionsDurationInMinutes = nil
 		}
 		maxDuration := new(int64)
-		if !requestConfigurationsItem.MaxDuration.IsUnknown() && !requestConfigurationsItem.MaxDuration.IsNull() {
-			*maxDuration = requestConfigurationsItem.MaxDuration.ValueInt64()
+		if !r.RequestConfigurations[requestConfigurationsIndex].MaxDuration.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].MaxDuration.IsNull() {
+			*maxDuration = r.RequestConfigurations[requestConfigurationsIndex].MaxDuration.ValueInt64()
 		} else {
 			maxDuration = nil
 		}
 		var priority int64
-		priority = requestConfigurationsItem.Priority.ValueInt64()
+		priority = r.RequestConfigurations[requestConfigurationsIndex].Priority.ValueInt64()
 
 		recommendedDuration := new(int64)
-		if !requestConfigurationsItem.RecommendedDuration.IsUnknown() && !requestConfigurationsItem.RecommendedDuration.IsNull() {
-			*recommendedDuration = requestConfigurationsItem.RecommendedDuration.ValueInt64()
+		if !r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.IsNull() {
+			*recommendedDuration = r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.ValueInt64()
 		} else {
 			recommendedDuration = nil
 		}
 		requestTemplateID := new(string)
-		if !requestConfigurationsItem.RequestTemplateID.IsUnknown() && !requestConfigurationsItem.RequestTemplateID.IsNull() {
-			*requestTemplateID = requestConfigurationsItem.RequestTemplateID.ValueString()
+		if !r.RequestConfigurations[requestConfigurationsIndex].RequestTemplateID.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].RequestTemplateID.IsNull() {
+			*requestTemplateID = r.RequestConfigurations[requestConfigurationsIndex].RequestTemplateID.ValueString()
 		} else {
 			requestTemplateID = nil
 		}
 		var requireMfaToRequest bool
-		requireMfaToRequest = requestConfigurationsItem.RequireMfaToRequest.ValueBool()
+		requireMfaToRequest = r.RequestConfigurations[requestConfigurationsIndex].RequireMfaToRequest.ValueBool()
 
 		var requireSupportTicket bool
-		requireSupportTicket = requestConfigurationsItem.RequireSupportTicket.ValueBool()
+		requireSupportTicket = r.RequestConfigurations[requestConfigurationsIndex].RequireSupportTicket.ValueBool()
 
-		reviewerStages := make([]shared.ReviewerStage, 0, len(requestConfigurationsItem.ReviewerStages))
-		for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
+		reviewerStages := make([]shared.ReviewerStage, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages))
+		for reviewerStagesIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages {
 			operator := new(shared.Operator)
-			if !reviewerStagesItem.Operator.IsUnknown() && !reviewerStagesItem.Operator.IsNull() {
-				*operator = shared.Operator(reviewerStagesItem.Operator.ValueString())
+			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsNull() {
+				*operator = shared.Operator(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.ValueString())
 			} else {
 				operator = nil
 			}
-			ownerIds := make([]string, 0, len(reviewerStagesItem.OwnerIds))
-			for _, ownerIdsItem := range reviewerStagesItem.OwnerIds {
-				ownerIds = append(ownerIds, ownerIdsItem.ValueString())
+			ownerIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds))
+			for ownerIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds {
+				ownerIds = append(ownerIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds[ownerIdsIndex].ValueString())
 			}
 			requireAdminApproval := new(bool)
-			if !reviewerStagesItem.RequireAdminApproval.IsUnknown() && !reviewerStagesItem.RequireAdminApproval.IsNull() {
-				*requireAdminApproval = reviewerStagesItem.RequireAdminApproval.ValueBool()
+			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireAdminApproval.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireAdminApproval.IsNull() {
+				*requireAdminApproval = r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireAdminApproval.ValueBool()
 			} else {
 				requireAdminApproval = nil
 			}
 			requireManagerApproval := new(bool)
-			if !reviewerStagesItem.RequireManagerApproval.IsUnknown() && !reviewerStagesItem.RequireManagerApproval.IsNull() {
-				*requireManagerApproval = reviewerStagesItem.RequireManagerApproval.ValueBool()
+			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireManagerApproval.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireManagerApproval.IsNull() {
+				*requireManagerApproval = r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireManagerApproval.ValueBool()
 			} else {
 				requireManagerApproval = nil
 			}
@@ -238,8 +238,8 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 	}
 	visibility1 := shared.VisibilityTypeEnum(r.Visibility.Visibility.ValueString())
 	visibilityGroupIds := make([]string, 0, len(r.Visibility.VisibilityGroupIds))
-	for _, visibilityGroupIdsItem := range r.Visibility.VisibilityGroupIds {
-		visibilityGroupIds = append(visibilityGroupIds, visibilityGroupIdsItem.ValueString())
+	for visibilityGroupIdsIndex := range r.Visibility.VisibilityGroupIds {
+		visibilityGroupIds = append(visibilityGroupIds, r.Visibility.VisibilityGroupIds[visibilityGroupIdsIndex].ValueString())
 	}
 	visibility := shared.VisibilityInfo{
 		Visibility:         visibility1,
@@ -272,8 +272,8 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 		adminOwnerID = nil
 	}
 	breakGlassUserIds := make([]string, 0, len(r.BreakGlassUserIds))
-	for _, breakGlassUserIdsItem := range r.BreakGlassUserIds {
-		breakGlassUserIds = append(breakGlassUserIds, breakGlassUserIdsItem.ValueString())
+	for breakGlassUserIdsIndex := range r.BreakGlassUserIds {
+		breakGlassUserIds = append(breakGlassUserIds, r.BreakGlassUserIds[breakGlassUserIdsIndex].ValueString())
 	}
 	var configurationTemplateID string
 	configurationTemplateID = r.ConfigurationTemplateID.ValueString()
@@ -285,12 +285,12 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 		customRequestNotification = nil
 	}
 	linkedAuditMessageChannelIds := make([]string, 0, len(r.LinkedAuditMessageChannelIds))
-	for _, linkedAuditMessageChannelIdsItem := range r.LinkedAuditMessageChannelIds {
-		linkedAuditMessageChannelIds = append(linkedAuditMessageChannelIds, linkedAuditMessageChannelIdsItem.ValueString())
+	for linkedAuditMessageChannelIdsIndex := range r.LinkedAuditMessageChannelIds {
+		linkedAuditMessageChannelIds = append(linkedAuditMessageChannelIds, r.LinkedAuditMessageChannelIds[linkedAuditMessageChannelIdsIndex].ValueString())
 	}
 	memberOnCallScheduleIds := make([]string, 0, len(r.MemberOnCallScheduleIds))
-	for _, memberOnCallScheduleIdsItem := range r.MemberOnCallScheduleIds {
-		memberOnCallScheduleIds = append(memberOnCallScheduleIds, memberOnCallScheduleIdsItem.ValueString())
+	for memberOnCallScheduleIdsIndex := range r.MemberOnCallScheduleIds {
+		memberOnCallScheduleIds = append(memberOnCallScheduleIds, r.MemberOnCallScheduleIds[memberOnCallScheduleIdsIndex].ValueString())
 	}
 	name := new(string)
 	if !r.Name.IsUnknown() && !r.Name.IsNull() {
@@ -299,22 +299,22 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 		name = nil
 	}
 	requestConfigurations := make([]shared.RequestConfiguration, 0, len(r.RequestConfigurations))
-	for _, requestConfigurationsItem := range r.RequestConfigurations {
+	for requestConfigurationsIndex := range r.RequestConfigurations {
 		var allowRequests bool
-		allowRequests = requestConfigurationsItem.AllowRequests.ValueBool()
+		allowRequests = r.RequestConfigurations[requestConfigurationsIndex].AllowRequests.ValueBool()
 
 		var autoApproval bool
-		autoApproval = requestConfigurationsItem.AutoApproval.ValueBool()
+		autoApproval = r.RequestConfigurations[requestConfigurationsIndex].AutoApproval.ValueBool()
 
 		var condition *shared.Condition
-		if requestConfigurationsItem.Condition != nil {
-			groupIds := make([]string, 0, len(requestConfigurationsItem.Condition.GroupIds))
-			for _, groupIdsItem := range requestConfigurationsItem.Condition.GroupIds {
-				groupIds = append(groupIds, groupIdsItem.ValueString())
+		if r.RequestConfigurations[requestConfigurationsIndex].Condition != nil {
+			groupIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].Condition.GroupIds))
+			for groupIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].Condition.GroupIds {
+				groupIds = append(groupIds, r.RequestConfigurations[requestConfigurationsIndex].Condition.GroupIds[groupIdsIndex].ValueString())
 			}
-			roleRemoteIds := make([]string, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
-			for _, roleRemoteIdsItem := range requestConfigurationsItem.Condition.RoleRemoteIds {
-				roleRemoteIds = append(roleRemoteIds, roleRemoteIdsItem.ValueString())
+			roleRemoteIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds))
+			for roleRemoteIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds {
+				roleRemoteIds = append(roleRemoteIds, r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds[roleRemoteIdsIndex].ValueString())
 			}
 			condition = &shared.Condition{
 				GroupIds:      groupIds,
@@ -322,59 +322,59 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 			}
 		}
 		extensionsDurationInMinutes := new(int64)
-		if !requestConfigurationsItem.ExtensionsDurationInMinutes.IsUnknown() && !requestConfigurationsItem.ExtensionsDurationInMinutes.IsNull() {
-			*extensionsDurationInMinutes = requestConfigurationsItem.ExtensionsDurationInMinutes.ValueInt64()
+		if !r.RequestConfigurations[requestConfigurationsIndex].ExtensionsDurationInMinutes.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ExtensionsDurationInMinutes.IsNull() {
+			*extensionsDurationInMinutes = r.RequestConfigurations[requestConfigurationsIndex].ExtensionsDurationInMinutes.ValueInt64()
 		} else {
 			extensionsDurationInMinutes = nil
 		}
 		maxDuration := new(int64)
-		if !requestConfigurationsItem.MaxDuration.IsUnknown() && !requestConfigurationsItem.MaxDuration.IsNull() {
-			*maxDuration = requestConfigurationsItem.MaxDuration.ValueInt64()
+		if !r.RequestConfigurations[requestConfigurationsIndex].MaxDuration.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].MaxDuration.IsNull() {
+			*maxDuration = r.RequestConfigurations[requestConfigurationsIndex].MaxDuration.ValueInt64()
 		} else {
 			maxDuration = nil
 		}
 		var priority int64
-		priority = requestConfigurationsItem.Priority.ValueInt64()
+		priority = r.RequestConfigurations[requestConfigurationsIndex].Priority.ValueInt64()
 
 		recommendedDuration := new(int64)
-		if !requestConfigurationsItem.RecommendedDuration.IsUnknown() && !requestConfigurationsItem.RecommendedDuration.IsNull() {
-			*recommendedDuration = requestConfigurationsItem.RecommendedDuration.ValueInt64()
+		if !r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.IsNull() {
+			*recommendedDuration = r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.ValueInt64()
 		} else {
 			recommendedDuration = nil
 		}
 		requestTemplateID := new(string)
-		if !requestConfigurationsItem.RequestTemplateID.IsUnknown() && !requestConfigurationsItem.RequestTemplateID.IsNull() {
-			*requestTemplateID = requestConfigurationsItem.RequestTemplateID.ValueString()
+		if !r.RequestConfigurations[requestConfigurationsIndex].RequestTemplateID.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].RequestTemplateID.IsNull() {
+			*requestTemplateID = r.RequestConfigurations[requestConfigurationsIndex].RequestTemplateID.ValueString()
 		} else {
 			requestTemplateID = nil
 		}
 		var requireMfaToRequest bool
-		requireMfaToRequest = requestConfigurationsItem.RequireMfaToRequest.ValueBool()
+		requireMfaToRequest = r.RequestConfigurations[requestConfigurationsIndex].RequireMfaToRequest.ValueBool()
 
 		var requireSupportTicket bool
-		requireSupportTicket = requestConfigurationsItem.RequireSupportTicket.ValueBool()
+		requireSupportTicket = r.RequestConfigurations[requestConfigurationsIndex].RequireSupportTicket.ValueBool()
 
-		reviewerStages := make([]shared.ReviewerStage, 0, len(requestConfigurationsItem.ReviewerStages))
-		for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
+		reviewerStages := make([]shared.ReviewerStage, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages))
+		for reviewerStagesIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages {
 			operator := new(shared.Operator)
-			if !reviewerStagesItem.Operator.IsUnknown() && !reviewerStagesItem.Operator.IsNull() {
-				*operator = shared.Operator(reviewerStagesItem.Operator.ValueString())
+			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsNull() {
+				*operator = shared.Operator(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.ValueString())
 			} else {
 				operator = nil
 			}
-			ownerIds := make([]string, 0, len(reviewerStagesItem.OwnerIds))
-			for _, ownerIdsItem := range reviewerStagesItem.OwnerIds {
-				ownerIds = append(ownerIds, ownerIdsItem.ValueString())
+			ownerIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds))
+			for ownerIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds {
+				ownerIds = append(ownerIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds[ownerIdsIndex].ValueString())
 			}
 			requireAdminApproval := new(bool)
-			if !reviewerStagesItem.RequireAdminApproval.IsUnknown() && !reviewerStagesItem.RequireAdminApproval.IsNull() {
-				*requireAdminApproval = reviewerStagesItem.RequireAdminApproval.ValueBool()
+			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireAdminApproval.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireAdminApproval.IsNull() {
+				*requireAdminApproval = r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireAdminApproval.ValueBool()
 			} else {
 				requireAdminApproval = nil
 			}
 			requireManagerApproval := new(bool)
-			if !reviewerStagesItem.RequireManagerApproval.IsUnknown() && !reviewerStagesItem.RequireManagerApproval.IsNull() {
-				*requireManagerApproval = reviewerStagesItem.RequireManagerApproval.ValueBool()
+			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireManagerApproval.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireManagerApproval.IsNull() {
+				*requireManagerApproval = r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireManagerApproval.ValueBool()
 			} else {
 				requireManagerApproval = nil
 			}
@@ -441,8 +441,8 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 	var visibility *shared.VisibilityInfo
 	visibility1 := shared.VisibilityTypeEnum(r.Visibility.Visibility.ValueString())
 	visibilityGroupIds := make([]string, 0, len(r.Visibility.VisibilityGroupIds))
-	for _, visibilityGroupIdsItem := range r.Visibility.VisibilityGroupIds {
-		visibilityGroupIds = append(visibilityGroupIds, visibilityGroupIdsItem.ValueString())
+	for visibilityGroupIdsIndex := range r.Visibility.VisibilityGroupIds {
+		visibilityGroupIds = append(visibilityGroupIds, r.Visibility.VisibilityGroupIds[visibilityGroupIdsIndex].ValueString())
 	}
 	visibility = &shared.VisibilityInfo{
 		Visibility:         visibility1,

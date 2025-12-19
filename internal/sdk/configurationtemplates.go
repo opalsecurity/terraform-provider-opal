@@ -403,6 +403,7 @@ func (s *ConfigurationTemplates) Delete(ctx context.Context, request operations.
 
 	switch {
 	case httpRes.StatusCode == 200:
+	case httpRes.StatusCode == 404:
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {

@@ -31,7 +31,7 @@ func (g GroupBinding) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GroupBinding) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &g, "", false, []string{"created_at", "created_by_id", "group_binding_id", "groups", "source_group_id"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &g, "", false, nil); err != nil {
 		return err
 	}
 	return nil

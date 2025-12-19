@@ -51,7 +51,7 @@ func (r *GroupCatalogMappingDataSource) Schema(ctx context.Context, req datasour
 			},
 			"app_resource_id": schema.StringAttribute{
 				Required:    true,
-				Description: `The ID of the Okta app.`,
+				Description: `The ID of the app resource.`,
 			},
 			"group_id": schema.StringAttribute{
 				Required:    true,

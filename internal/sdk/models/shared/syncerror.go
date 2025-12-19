@@ -29,7 +29,7 @@ func (s SyncError) MarshalJSON() ([]byte, error) {
 }
 
 func (s *SyncError) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &s, "", false, []string{"error_message", "first_seen", "last_seen"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &s, "", false, nil); err != nil {
 		return err
 	}
 	return nil

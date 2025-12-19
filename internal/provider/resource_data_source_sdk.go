@@ -222,6 +222,18 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.DatastaxAstraRole = &tfTypes.SnowflakeRole{}
 				r.RemoteInfo.DatastaxAstraRole.RoleID = types.StringValue(resp.RemoteInfo.DatastaxAstraRole.RoleID)
 			}
+			if resp.RemoteInfo.DevinOrganization == nil {
+				r.RemoteInfo.DevinOrganization = nil
+			} else {
+				r.RemoteInfo.DevinOrganization = &tfTypes.CursorOrganization{}
+				r.RemoteInfo.DevinOrganization.OrgID = types.StringValue(resp.RemoteInfo.DevinOrganization.OrgID)
+			}
+			if resp.RemoteInfo.DevinRole == nil {
+				r.RemoteInfo.DevinRole = nil
+			} else {
+				r.RemoteInfo.DevinRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.DevinRole.RoleID = types.StringValue(resp.RemoteInfo.DevinRole.RoleID)
+			}
 			if resp.RemoteInfo.GcpBigQueryDataset == nil {
 				r.RemoteInfo.GcpBigQueryDataset = nil
 			} else {
