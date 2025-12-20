@@ -63,7 +63,7 @@ func (v SetRequestConfigurationsValidator) ValidateSet(ctx context.Context, req 
 		if !(hasReviewerStages || isAutoApprove || isNotRequestable) {
 			resp.Diagnostics.Append(validatordiag.InvalidAttributeTypeDiagnostic(
 				req.Path,
-				"invalid request configuration. Please specify a reviewer_stage, set auto_approve to true, or set is_requestable to false",
+				"invalid request configuration. Please specify a reviewer_stage, set auto_approval to true, or set allow_requests to false",
 				req.Path.String()+": "+v.Description(ctx),
 			))
 		}
