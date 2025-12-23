@@ -733,6 +733,17 @@ actions:
     update:
       "404":
         description: Not Found
+  - target: $["paths"]["/non-human-identities"]["get"]
+    update:
+      x-speakeasy-pagination:
+        type: cursor
+        inputs:
+          - name: cursor
+            in: parameters
+            type: cursor
+        outputs:
+          nextCursor: $.next
+          results: $.results
   - target: $["paths"]["/resources/{resource_id}/users"]["get"]["operationId"]
     update: getResourceUsers
   - target: $["paths"]["/resources/{resource_id}/users"]["get"]["responses"]
