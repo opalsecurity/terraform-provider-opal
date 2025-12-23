@@ -1,19 +1,19 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 542552ae38d6147e5ff1b03b7bc21563
+  docChecksum: 196f5094e196f3c562e584f9e8b3e049
   docVersion: "1.0"
   speakeasyVersion: 1.680.1
   generationVersion: 2.788.5
-  releaseVersion: 3.4.0
-  configChecksum: 87f614b600b85ea27b3ed9808815d5df
+  releaseVersion: 3.5.0
+  configChecksum: c7e2a9f7ffab9be565753115691783cc
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
 persistentEdits:
-  generation_id: fe249b23-dca2-4e5f-8690-6041d484f97b
-  pristine_commit_hash: 47c1bc4943e3bb4e6e76afe03997c93b0b8fc4dc
-  pristine_tree_hash: 244c52a404007318c5c70bf6ae2f00d7c448a3be
+  generation_id: 509f1315-efe8-4c5b-ac72-3c8341e660ea
+  pristine_commit_hash: eed0b1485f4bd62f6a3df04c6eeab2fcdd20667b
+  pristine_tree_hash: 3db595721ddf4037ab328dc27d4612cac9437478
 features:
   terraform:
     additionalDependencies: 0.1.0
@@ -27,6 +27,7 @@ features:
     inputOutputModels: 2.83.0
     nameOverrides: 2.81.3
     nullables: 0.0.0
+    pagination: 2.83.5
     retries: 2.81.4
     serverIDs: 2.81.1
     sets: 0.1.2
@@ -226,8 +227,8 @@ trackedFiles:
     pristine_git_object: eb8eb0132c74305a9a4c668c0f802c6ea4c5da8a
   examples/provider/provider.tf:
     id: 954e955c0240
-    last_write_checksum: sha1:6f01047c8afa2931ab1db9193cf1bff4e150610c
-    pristine_git_object: b7dc2e96bc9bf080c03f0da5021dae87384277e3
+    last_write_checksum: sha1:fbd916ffdb70a715aadb95eb64029775176cb411
+    pristine_git_object: b135b9719a703812016b7971829bf85bb536e36f
   examples/resources/opal_access_rule/import-by-string-id.tf:
     id: 5d07a05dc439
     last_write_checksum: sha1:9978da2497ab3366e081ddfd1f5bcf2237e3d024
@@ -426,8 +427,8 @@ trackedFiles:
     pristine_git_object: ad40456bb8fc65645b0081fd325ed66905e7d1ad
   go.mod:
     id: c47645c391ad
-    last_write_checksum: sha1:3a8aa4cce5bb3bea2fdbee88faeb25aa926696be
-    pristine_git_object: 6804ab7528e2a0d3eed8e219cab9f06a8dbb14e2
+    last_write_checksum: sha1:70bd173607308392faa07f7617b1a3a55c681ffe
+    pristine_git_object: 144f45652c85b13a1a02bfbfe88b9191bd47f4c9
   internal/planmodifiers/boolplanmodifier/suppress_diff.go:
     id: 3cf85b98963e
     last_write_checksum: sha1:144617faef5a59ed16fd2fccad0047147e0db52a
@@ -1890,8 +1891,8 @@ trackedFiles:
     pristine_git_object: 2331f627aff69d6cd4a42748a3ca6a94981873b5
   internal/sdk/models/operations/getnhis.go:
     id: d231d03234db
-    last_write_checksum: sha1:b21a8d0acbb1f2692851b50c53513b24d6923e8c
-    pristine_git_object: f1453f8c879957b06a4bc7a6b2c4690849742cfd
+    last_write_checksum: sha1:6ecf232fdbaebd1565cb1ca0f212bd2c8ec38e40
+    pristine_git_object: 2d3ac456fea9e1a093a51dd09b9cf25fd75a1ff0
   internal/sdk/models/operations/getoncallschedule.go:
     id: fdcf14e60481
     last_write_checksum: sha1:9520d7eb960459963a07a1010e4a82a21c1109ee
@@ -2678,16 +2679,16 @@ trackedFiles:
     pristine_git_object: ecb700bccf8f5eb34204caf77b32ede2c44570c9
   internal/sdk/nonhumanidentities.go:
     id: 93d37b2d6344
-    last_write_checksum: sha1:a76fe5e8a89b3ce3bd0f108d19ccbea6114ae23f
-    pristine_git_object: d7dcc5d2f96e776f3fdf08df837c3ed3efc58c8f
+    last_write_checksum: sha1:32d739a1c937ba078f4c2840dc504bc9b216afa5
+    pristine_git_object: 8e7f7ff0d21973e26363dd99e121cee621bef2a0
   internal/sdk/oncallschedules.go:
     id: d9442b312dd0
     last_write_checksum: sha1:ef7fa50fa92e0bd68bc4c02ec8a6505d6baaefc7
     pristine_git_object: a10a725ff500c633aee84a33b979354a4e46c6cd
   internal/sdk/opalapi.go:
     id: 115b79f30ba9
-    last_write_checksum: sha1:25e17d46882c4a9c8de9415da9292ab0ba3a3ed1
-    pristine_git_object: 857f0921c699406e53d6b32b000a0c44c612ee1c
+    last_write_checksum: sha1:9c01822a374ff50989b8714559be94d0dfd54800
+    pristine_git_object: afb3e07487844f5a580b9d4d805c9097f8b26d46
   internal/sdk/optionalnullable/optionalnullable.go:
     id: 4b83aa3f3df3
     last_write_checksum: sha1:d6aff1a420c31e025ea21d46cf056e305ae76fe8

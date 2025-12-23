@@ -37,6 +37,8 @@ type GetNhisResponse struct {
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
+
+	Next func() (*GetNhisResponse, error)
 }
 
 func (g *GetNhisResponse) GetContentType() string {
