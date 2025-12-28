@@ -24,7 +24,7 @@ generation:
     skipResponseBodyAssertions: false
   flattenGlobalSecurity: true
 terraform:
-  version: 3.4.0
+  version: 3.4.1
   additionalDataSources: []
   additionalDependencies:
     github.com/hashicorp/terraform-plugin-testing: v1.13.2
