@@ -3,17 +3,17 @@ id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
   docChecksum: 542552ae38d6147e5ff1b03b7bc21563
   docVersion: "1.0"
-  speakeasyVersion: 1.680.1
-  generationVersion: 2.788.5
-  releaseVersion: 3.4.0
-  configChecksum: 87f614b600b85ea27b3ed9808815d5df
+  speakeasyVersion: 1.680.5
+  generationVersion: 2.788.7
+  releaseVersion: 3.4.1
+  configChecksum: cee2d1cafd31b06bb06e2e06c63b7bf8
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   published: true
 persistentEdits:
-  generation_id: fe249b23-dca2-4e5f-8690-6041d484f97b
-  pristine_commit_hash: 47c1bc4943e3bb4e6e76afe03997c93b0b8fc4dc
-  pristine_tree_hash: 244c52a404007318c5c70bf6ae2f00d7c448a3be
+  generation_id: a797b7cf-c054-42a1-b9c2-3d806c16bae5
+  pristine_commit_hash: 090469f4394ba5ffbaa1d55d9d2eeaf7b5ec4e9a
+  pristine_tree_hash: 2bf90113be93572169f3a8df9a26bf99d57701a5
 features:
   terraform:
     additionalDependencies: 0.1.0
@@ -226,8 +226,8 @@ trackedFiles:
     pristine_git_object: eb8eb0132c74305a9a4c668c0f802c6ea4c5da8a
   examples/provider/provider.tf:
     id: 954e955c0240
-    last_write_checksum: sha1:6f01047c8afa2931ab1db9193cf1bff4e150610c
-    pristine_git_object: b7dc2e96bc9bf080c03f0da5021dae87384277e3
+    last_write_checksum: sha1:e11b9767d672494df87d8da24be17678d7983614
+    pristine_git_object: 208ef3f0fe04fd5153d9cc8a96fd8a1847e54253
   examples/resources/opal_access_rule/import-by-string-id.tf:
     id: 5d07a05dc439
     last_write_checksum: sha1:9978da2497ab3366e081ddfd1f5bcf2237e3d024
@@ -2686,8 +2686,8 @@ trackedFiles:
     pristine_git_object: a10a725ff500c633aee84a33b979354a4e46c6cd
   internal/sdk/opalapi.go:
     id: 115b79f30ba9
-    last_write_checksum: sha1:25e17d46882c4a9c8de9415da9292ab0ba3a3ed1
-    pristine_git_object: 857f0921c699406e53d6b32b000a0c44c612ee1c
+    last_write_checksum: sha1:b81178d1a38a3f6d10489d03a962bd3d8c797b23
+    pristine_git_object: 75eb8621380197a76e951b2ae6c03a670abf7467
   internal/sdk/optionalnullable/optionalnullable.go:
     id: 4b83aa3f3df3
     last_write_checksum: sha1:d6aff1a420c31e025ea21d46cf056e305ae76fe8
