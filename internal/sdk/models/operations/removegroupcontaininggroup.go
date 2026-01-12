@@ -9,7 +9,7 @@ import (
 type RemoveGroupContainingGroupRequest struct {
 	// The ID of the containing group.
 	ContainingGroupID string `pathParam:"style=simple,explode=false,name=containing_group_id"`
-	// The ID of the group.
+	// The ID of the member group to remove.
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 

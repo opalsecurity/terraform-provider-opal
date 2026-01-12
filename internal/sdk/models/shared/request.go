@@ -18,8 +18,8 @@ const (
 
 // ReviewerStages - The configured reviewer stages for every item in this request, or an error message if reviewers could not be loaded
 type ReviewerStages struct {
-	ArrayOfRequestReviewerStages []RequestReviewerStages `queryParam:"inline,name=reviewer_stages" union:"member"`
-	Str                          *string                 `queryParam:"inline,name=reviewer_stages" union:"member"`
+	ArrayOfRequestReviewerStages []RequestReviewerStages `queryParam:"inline" union:"member"`
+	Str                          *string                 `queryParam:"inline" union:"member"`
 
 	Type ReviewerStagesType
 }

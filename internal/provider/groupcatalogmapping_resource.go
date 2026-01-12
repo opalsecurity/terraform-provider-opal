@@ -324,12 +324,12 @@ func (r *GroupCatalogMappingResource) ImportState(ctx context.Context, req resou
 	}
 
 	if len(data.AppResourceID) == 0 {
-		resp.Diagnostics.AddError("Missing required field", `The field app_resource_id is required but was not found in the json encoded ID. It's expected to be a value alike '"4baf8423-db0a-4037-a4cf-f79c60cb67a5"`)
+		resp.Diagnostics.AddError("Missing required field", `The field app_resource_id is required but was not found in the json encoded ID. It's expected to be a value alike '"4baf8423-db0a-4037-a4cf-f79c60cb67a5"'`)
 		return
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("app_resource_id"), data.AppResourceID)...)
 	if len(data.GroupID) == 0 {
-		resp.Diagnostics.AddError("Missing required field", `The field group_id is required but was not found in the json encoded ID. It's expected to be a value alike '"4baf8423-db0a-4037-a4cf-f79c60cb67a5"`)
+		resp.Diagnostics.AddError("Missing required field", `The field group_id is required but was not found in the json encoded ID. It's expected to be a value alike '"4baf8423-db0a-4037-a4cf-f79c60cb67a5"'`)
 		return
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("group_id"), data.GroupID)...)

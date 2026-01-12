@@ -1236,7 +1236,7 @@ paths:
       description: Removes a containing group from a group.
       operationId: remove_group_containing_group
       parameters:
-        - description: The ID of the group.
+        - description: The ID of the member group to remove.
           example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
           explode: false
           in: path
@@ -6062,6 +6062,15 @@ components:
           example: f454d283-ca87-4a8a-bdbb-df212eca5353
           format: uuid
           type: string
+        duration_minutes:
+          description: The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite.
+          type: integer
+          maximum: 525960 # One year
+          example: 120
+        access_level_remote_id:
+          description: The updated remote ID of the access level granted to this group.
+          type: string
+          example: arn:aws:iam::590304332660:role/ReadOnlyAccess
       required:
         - containing_group_id
       type: object

@@ -7,13 +7,17 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	speakeasy_int64planmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/int64planmodifier"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
 )
@@ -34,8 +38,10 @@ type GroupContainingGroupResource struct {
 
 // GroupContainingGroupResourceModel describes the resource data model.
 type GroupContainingGroupResourceModel struct {
-	ContainingGroupID types.String `tfsdk:"containing_group_id"`
-	GroupID           types.String `tfsdk:"group_id"`
+	AccessLevelRemoteID types.String `tfsdk:"access_level_remote_id"`
+	ContainingGroupID   types.String `tfsdk:"containing_group_id"`
+	DurationMinutes     types.Int64  `tfsdk:"duration_minutes"`
+	GroupID             types.String `tfsdk:"group_id"`
 }
 
 func (r *GroupContainingGroupResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -46,6 +52,15 @@ func (r *GroupContainingGroupResource) Schema(ctx context.Context, req resource.
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "GroupContainingGroup Resource",
 		Attributes: map[string]schema.Attribute{
+			"access_level_remote_id": schema.StringAttribute{
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplaceIfConfigured(),
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
+				Description: `The updated remote ID of the access level granted to this group. Requires replacement if changed.`,
+			},
 			"containing_group_id": schema.StringAttribute{
 				Required: true,
 				PlanModifiers: []planmodifier.String{
@@ -53,6 +68,18 @@ func (r *GroupContainingGroupResource) Schema(ctx context.Context, req resource.
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 				Description: `The groupID of the containing group. Requires replacement if changed.`,
+			},
+			"duration_minutes": schema.Int64Attribute{
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.Int64{
+					int64planmodifier.RequiresReplaceIfConfigured(),
+					speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
+				},
+				Description: `The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite. Requires replacement if changed.`,
+				Validators: []validator.Int64{
+					int64validator.AtMost(525960),
+				},
 			},
 			"group_id": schema.StringAttribute{
 				Required: true,
@@ -283,12 +310,12 @@ func (r *GroupContainingGroupResource) ImportState(ctx context.Context, req reso
 	}
 
 	if len(data.ContainingGroupID) == 0 {
-		resp.Diagnostics.AddError("Missing required field", `The field containing_group_id is required but was not found in the json encoded ID. It's expected to be a value alike '"4baf8423-db0a-4037-a4cf-f79c60cb67a5"`)
+		resp.Diagnostics.AddError("Missing required field", `The field containing_group_id is required but was not found in the json encoded ID. It's expected to be a value alike '"4baf8423-db0a-4037-a4cf-f79c60cb67a5"'`)
 		return
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("containing_group_id"), data.ContainingGroupID)...)
 	if len(data.GroupID) == 0 {
-		resp.Diagnostics.AddError("Missing required field", `The field group_id is required but was not found in the json encoded ID. It's expected to be a value alike '"4baf8423-db0a-4037-a4cf-f79c60cb67a5"`)
+		resp.Diagnostics.AddError("Missing required field", `The field group_id is required but was not found in the json encoded ID. It's expected to be a value alike '"4baf8423-db0a-4037-a4cf-f79c60cb67a5"'`)
 		return
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("group_id"), data.GroupID)...)
