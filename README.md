@@ -31,13 +31,13 @@ terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "3.4.0"
+      version = "3.4.1"
     }
   }
 }
 
 provider "opal" {
-  # Configuration options
+  server_url = "..." # Optional
 }
 ```
 <!-- End Installation [installation] -->

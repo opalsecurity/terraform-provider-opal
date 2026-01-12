@@ -14,7 +14,9 @@ func (r *GroupContainingGroupDataSourceModel) RefreshFromSharedGroupContainingGr
 	var diags diag.Diagnostics
 
 	if resp != nil {
+		r.AccessLevelRemoteID = types.StringPointerValue(resp.AccessLevelRemoteID)
 		r.ContainingGroupID = types.StringValue(resp.ContainingGroupID)
+		r.DurationMinutes = types.Int64PointerValue(resp.DurationMinutes)
 	}
 
 	return diags

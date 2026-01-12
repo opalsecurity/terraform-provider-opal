@@ -6,8 +6,19 @@ package shared
 // ### Description
 // The `GroupContainingGroup` object is used to represent a relationship between a group and a group.
 type GroupContainingGroup struct {
+	// The updated remote ID of the access level granted to this group.
+	AccessLevelRemoteID *string `json:"access_level_remote_id,omitempty"`
 	// The groupID of the containing group.
 	ContainingGroupID string `json:"containing_group_id"`
+	// The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite.
+	DurationMinutes *int64 `json:"duration_minutes,omitempty"`
+}
+
+func (g *GroupContainingGroup) GetAccessLevelRemoteID() *string {
+	if g == nil {
+		return nil
+	}
+	return g.AccessLevelRemoteID
 }
 
 func (g *GroupContainingGroup) GetContainingGroupID() string {
@@ -15,4 +26,11 @@ func (g *GroupContainingGroup) GetContainingGroupID() string {
 		return ""
 	}
 	return g.ContainingGroupID
+}
+
+func (g *GroupContainingGroup) GetDurationMinutes() *int64 {
+	if g == nil {
+		return nil
+	}
+	return g.DurationMinutes
 }
