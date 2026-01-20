@@ -14,7 +14,9 @@ func (r *GroupContainingGroupResourceModel) RefreshFromSharedGroupContainingGrou
 	var diags diag.Diagnostics
 
 	if resp != nil {
+		r.AccessLevelRemoteID = types.StringPointerValue(resp.AccessLevelRemoteID)
 		r.ContainingGroupID = types.StringValue(resp.ContainingGroupID)
+		r.DurationMinutes = types.Int64PointerValue(resp.DurationMinutes)
 	}
 
 	return diags
@@ -78,11 +80,25 @@ func (r *GroupContainingGroupResourceModel) ToOperationsRemoveGroupContainingGro
 func (r *GroupContainingGroupResourceModel) ToSharedGroupContainingGroup(ctx context.Context) (*shared.GroupContainingGroup, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	accessLevelRemoteID := new(string)
+	if !r.AccessLevelRemoteID.IsUnknown() && !r.AccessLevelRemoteID.IsNull() {
+		*accessLevelRemoteID = r.AccessLevelRemoteID.ValueString()
+	} else {
+		accessLevelRemoteID = nil
+	}
 	var containingGroupID string
 	containingGroupID = r.ContainingGroupID.ValueString()
 
+	durationMinutes := new(int64)
+	if !r.DurationMinutes.IsUnknown() && !r.DurationMinutes.IsNull() {
+		*durationMinutes = r.DurationMinutes.ValueInt64()
+	} else {
+		durationMinutes = nil
+	}
 	out := shared.GroupContainingGroup{
-		ContainingGroupID: containingGroupID,
+		AccessLevelRemoteID: accessLevelRemoteID,
+		ContainingGroupID:   containingGroupID,
+		DurationMinutes:     durationMinutes,
 	}
 
 	return &out, diags

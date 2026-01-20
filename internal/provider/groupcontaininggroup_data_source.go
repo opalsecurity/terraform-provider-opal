@@ -28,8 +28,10 @@ type GroupContainingGroupDataSource struct {
 
 // GroupContainingGroupDataSourceModel describes the data model.
 type GroupContainingGroupDataSourceModel struct {
-	ContainingGroupID types.String `tfsdk:"containing_group_id"`
-	GroupID           types.String `tfsdk:"group_id"`
+	AccessLevelRemoteID types.String `tfsdk:"access_level_remote_id"`
+	ContainingGroupID   types.String `tfsdk:"containing_group_id"`
+	DurationMinutes     types.Int64  `tfsdk:"duration_minutes"`
+	GroupID             types.String `tfsdk:"group_id"`
 }
 
 // Metadata returns the data source type name.
@@ -43,9 +45,17 @@ func (r *GroupContainingGroupDataSource) Schema(ctx context.Context, req datasou
 		MarkdownDescription: "GroupContainingGroup DataSource",
 
 		Attributes: map[string]schema.Attribute{
+			"access_level_remote_id": schema.StringAttribute{
+				Computed:    true,
+				Description: `The updated remote ID of the access level granted to this group.`,
+			},
 			"containing_group_id": schema.StringAttribute{
 				Required:    true,
 				Description: `The groupID of the containing group.`,
+			},
+			"duration_minutes": schema.Int64Attribute{
+				Computed:    true,
+				Description: `The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite.`,
 			},
 			"group_id": schema.StringAttribute{
 				Required:    true,

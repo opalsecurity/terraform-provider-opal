@@ -1236,7 +1236,7 @@ paths:
       description: Removes a containing group from a group.
       operationId: remove_group_containing_group
       parameters:
-        - description: The ID of the group.
+        - description: The ID of the member group to remove.
           example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
           explode: false
           in: path
@@ -3647,6 +3647,32 @@ paths:
         - BearerAuth: []
       tags:
         - resources
+  /resources/{resource_id}/groups:
+    get:
+      description: Returns a list of groups that grant access to the resource
+      operationId: get_resource_groups
+      parameters:
+        - description: The ID of the resource that the groups grant access to.
+          name: resource_id
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          explode: false
+          in: path
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupResourceList"
+          description: The groups that grant access to the resource.
+      security:
+        - BearerAuth: []
+      tags:
+        - resources
   /sessions:
     get:
       description: Returns a list of `Session` objects.
@@ -5116,25 +5142,34 @@ components:
           description: The type of an app.
           enum:
             - ACTIVE_DIRECTORY
+            - ANTHROPIC
             - AZURE_AD
             - AWS
             - AWS_SSO
+            - COUPA
+            - CURSOR
             - CUSTOM
+            - DATABRICKS
+            - DATASTAX_ASTRA
             - DUO
             - GCP
             - GIT_HUB
             - GIT_LAB
             - GOOGLE_GROUPS
             - GOOGLE_WORKSPACE
+            - ILEVEL
+            - INCIDENTIO
             - LDAP
             - MARIADB
             - MONGO
             - MONGO_ATLAS
             - MYSQL
             - OKTA_DIRECTORY
+            - OPENAI_PLATFORM
             - OPAL
             - PAGERDUTY
             - SALESFORCE
+            - SNOWFLAKE
             - TAILSCALE
             - TELEPORT
             - WORKDAY
@@ -5157,25 +5192,34 @@ components:
       description: The type of an app.
       enum:
         - ACTIVE_DIRECTORY
+        - ANTHROPIC
         - AZURE_AD
         - AWS
         - AWS_SSO
+        - COUPA
+        - CURSOR
         - CUSTOM
+        - DATABRICKS
+        - DATASTAX_ASTRA
         - DUO
         - GCP
         - GIT_HUB
         - GIT_LAB
         - GOOGLE_GROUPS
         - GOOGLE_WORKSPACE
+        - ILEVEL
+        - INCIDENTIO
         - LDAP
         - MARIADB
         - MONGO
         - MONGO_ATLAS
         - MYSQL
         - OKTA_DIRECTORY
+        - OPENAI_PLATFORM
         - OPAL
         - PAGERDUTY
         - SALESFORCE
+        - SNOWFLAKE
         - TAILSCALE
         - TELEPORT
         - WORKDAY
@@ -6062,6 +6106,15 @@ components:
           example: f454d283-ca87-4a8a-bdbb-df212eca5353
           format: uuid
           type: string
+        duration_minutes:
+          description: The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite.
+          type: integer
+          maximum: 525960 # One year
+          example: 120
+        access_level_remote_id:
+          description: The updated remote ID of the access level granted to this group.
+          type: string
+          example: arn:aws:iam::590304332660:role/ReadOnlyAccess
       required:
         - containing_group_id
       type: object

@@ -12,25 +12,34 @@ type AppTypeEnum string
 
 const (
 	AppTypeEnumActiveDirectory AppTypeEnum = "ACTIVE_DIRECTORY"
+	AppTypeEnumAnthropic       AppTypeEnum = "ANTHROPIC"
 	AppTypeEnumAzureAd         AppTypeEnum = "AZURE_AD"
 	AppTypeEnumAws             AppTypeEnum = "AWS"
 	AppTypeEnumAwsSso          AppTypeEnum = "AWS_SSO"
+	AppTypeEnumCoupa           AppTypeEnum = "COUPA"
+	AppTypeEnumCursor          AppTypeEnum = "CURSOR"
 	AppTypeEnumCustom          AppTypeEnum = "CUSTOM"
+	AppTypeEnumDatabricks      AppTypeEnum = "DATABRICKS"
+	AppTypeEnumDatastaxAstra   AppTypeEnum = "DATASTAX_ASTRA"
 	AppTypeEnumDuo             AppTypeEnum = "DUO"
 	AppTypeEnumGcp             AppTypeEnum = "GCP"
 	AppTypeEnumGitHub          AppTypeEnum = "GIT_HUB"
 	AppTypeEnumGitLab          AppTypeEnum = "GIT_LAB"
 	AppTypeEnumGoogleGroups    AppTypeEnum = "GOOGLE_GROUPS"
 	AppTypeEnumGoogleWorkspace AppTypeEnum = "GOOGLE_WORKSPACE"
+	AppTypeEnumIlevel          AppTypeEnum = "ILEVEL"
+	AppTypeEnumIncidentio      AppTypeEnum = "INCIDENTIO"
 	AppTypeEnumLdap            AppTypeEnum = "LDAP"
 	AppTypeEnumMariadb         AppTypeEnum = "MARIADB"
 	AppTypeEnumMongo           AppTypeEnum = "MONGO"
 	AppTypeEnumMongoAtlas      AppTypeEnum = "MONGO_ATLAS"
 	AppTypeEnumMysql           AppTypeEnum = "MYSQL"
 	AppTypeEnumOktaDirectory   AppTypeEnum = "OKTA_DIRECTORY"
+	AppTypeEnumOpenaiPlatform  AppTypeEnum = "OPENAI_PLATFORM"
 	AppTypeEnumOpal            AppTypeEnum = "OPAL"
 	AppTypeEnumPagerduty       AppTypeEnum = "PAGERDUTY"
 	AppTypeEnumSalesforce      AppTypeEnum = "SALESFORCE"
+	AppTypeEnumSnowflake       AppTypeEnum = "SNOWFLAKE"
 	AppTypeEnumTailscale       AppTypeEnum = "TAILSCALE"
 	AppTypeEnumTeleport        AppTypeEnum = "TELEPORT"
 	AppTypeEnumWorkday         AppTypeEnum = "WORKDAY"
@@ -47,13 +56,23 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 	switch v {
 	case "ACTIVE_DIRECTORY":
 		fallthrough
+	case "ANTHROPIC":
+		fallthrough
 	case "AZURE_AD":
 		fallthrough
 	case "AWS":
 		fallthrough
 	case "AWS_SSO":
 		fallthrough
+	case "COUPA":
+		fallthrough
+	case "CURSOR":
+		fallthrough
 	case "CUSTOM":
+		fallthrough
+	case "DATABRICKS":
+		fallthrough
+	case "DATASTAX_ASTRA":
 		fallthrough
 	case "DUO":
 		fallthrough
@@ -67,6 +86,10 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "GOOGLE_WORKSPACE":
 		fallthrough
+	case "ILEVEL":
+		fallthrough
+	case "INCIDENTIO":
+		fallthrough
 	case "LDAP":
 		fallthrough
 	case "MARIADB":
@@ -79,11 +102,15 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "OKTA_DIRECTORY":
 		fallthrough
+	case "OPENAI_PLATFORM":
+		fallthrough
 	case "OPAL":
 		fallthrough
 	case "PAGERDUTY":
 		fallthrough
 	case "SALESFORCE":
+		fallthrough
+	case "SNOWFLAKE":
 		fallthrough
 	case "TAILSCALE":
 		fallthrough
