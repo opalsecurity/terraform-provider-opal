@@ -13,25 +13,34 @@ type Type string
 
 const (
 	TypeActiveDirectory Type = "ACTIVE_DIRECTORY"
+	TypeAnthropic       Type = "ANTHROPIC"
 	TypeAzureAd         Type = "AZURE_AD"
 	TypeAws             Type = "AWS"
 	TypeAwsSso          Type = "AWS_SSO"
+	TypeCoupa           Type = "COUPA"
+	TypeCursor          Type = "CURSOR"
 	TypeCustom          Type = "CUSTOM"
+	TypeDatabricks      Type = "DATABRICKS"
+	TypeDatastaxAstra   Type = "DATASTAX_ASTRA"
 	TypeDuo             Type = "DUO"
 	TypeGcp             Type = "GCP"
 	TypeGitHub          Type = "GIT_HUB"
 	TypeGitLab          Type = "GIT_LAB"
 	TypeGoogleGroups    Type = "GOOGLE_GROUPS"
 	TypeGoogleWorkspace Type = "GOOGLE_WORKSPACE"
+	TypeIlevel          Type = "ILEVEL"
+	TypeIncidentio      Type = "INCIDENTIO"
 	TypeLdap            Type = "LDAP"
 	TypeMariadb         Type = "MARIADB"
 	TypeMongo           Type = "MONGO"
 	TypeMongoAtlas      Type = "MONGO_ATLAS"
 	TypeMysql           Type = "MYSQL"
 	TypeOktaDirectory   Type = "OKTA_DIRECTORY"
+	TypeOpenaiPlatform  Type = "OPENAI_PLATFORM"
 	TypeOpal            Type = "OPAL"
 	TypePagerduty       Type = "PAGERDUTY"
 	TypeSalesforce      Type = "SALESFORCE"
+	TypeSnowflake       Type = "SNOWFLAKE"
 	TypeTailscale       Type = "TAILSCALE"
 	TypeTeleport        Type = "TELEPORT"
 	TypeWorkday         Type = "WORKDAY"
@@ -48,13 +57,23 @@ func (e *Type) UnmarshalJSON(data []byte) error {
 	switch v {
 	case "ACTIVE_DIRECTORY":
 		fallthrough
+	case "ANTHROPIC":
+		fallthrough
 	case "AZURE_AD":
 		fallthrough
 	case "AWS":
 		fallthrough
 	case "AWS_SSO":
 		fallthrough
+	case "COUPA":
+		fallthrough
+	case "CURSOR":
+		fallthrough
 	case "CUSTOM":
+		fallthrough
+	case "DATABRICKS":
+		fallthrough
+	case "DATASTAX_ASTRA":
 		fallthrough
 	case "DUO":
 		fallthrough
@@ -68,6 +87,10 @@ func (e *Type) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "GOOGLE_WORKSPACE":
 		fallthrough
+	case "ILEVEL":
+		fallthrough
+	case "INCIDENTIO":
+		fallthrough
 	case "LDAP":
 		fallthrough
 	case "MARIADB":
@@ -80,11 +103,15 @@ func (e *Type) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "OKTA_DIRECTORY":
 		fallthrough
+	case "OPENAI_PLATFORM":
+		fallthrough
 	case "OPAL":
 		fallthrough
 	case "PAGERDUTY":
 		fallthrough
 	case "SALESFORCE":
+		fallthrough
+	case "SNOWFLAKE":
 		fallthrough
 	case "TAILSCALE":
 		fallthrough
