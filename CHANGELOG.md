@@ -1,7 +1,20 @@
 # Changelog
 
+## v3.4.1
+  - Adds `duration_minutes` and `access_level_remote_id` to `opal_group_containing_group`
+  - Adds AppTypes:
+      - ANTHROPIC
+      - COUPA
+      - CURSOR
+      - DATABRICKS
+      - DATASTAX_ASTRA
+      - ILEVEL
+      - INCIDENTIO
+      - OPENAI_PLATFORM
+      - SNOWFLAKE
+
 ## v3.3.3
-- Bring Terraform provider up to date with new API resource and group types.
+  - Bring Terraform provider up to date with new API resource and group types.
   - Adds option to instantly perform actions after a UAR is closed on UAR creation.
   - Adds support for Tailscale Groups.
   - Adds support for AWS SSO Groups.
@@ -58,14 +71,14 @@
 - Adds support for IDP Group Mappings.
 
 ### Breaking Changes in v3.2.0:
-  - All references to `oncall_schedule` have been replaced with `on_call_schedule` for consistency across the provider. 
+  - All references to `oncall_schedule` have been replaced with `on_call_schedule` for consistency across the provider.
   - This affects the following resources:
     - `opal_configuration_template`: `member_oncall_schedule_ids` => `member_on_call_schedule_ids`
     - Note: The `opal_group` *resource* is unaffected by this change as it already uses `on_call_schedule_ids`.
   - This affects the following data sources:
     - `opal_group`: `oncall_schedules` => `on_call_schedules`
     - `opal_configuration_template`: `member_oncall_schedule_ids` => `member_on_call_schedule_ids`
-  
+
 
 ## v.3.1.3
 - Fixed a bug where opal_scoped_role_permission_list could show state drift when no changes were made.
@@ -73,7 +86,7 @@
 ## v.3.1.0
 - Bumping minor version due to improvements in release cycle
 - Improvements to documentation
-  
+
 ## v.3.0.19
 - Add support for Scoped Admin Roles
 
