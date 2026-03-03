@@ -55,6 +55,9 @@ resource "opal_group" "my_group" {
     duo_group = {
       group_id = "DSRD8W89B9DNDBY4RHAC"
     }
+    github_enterprise_team = {
+      team_slug = "opal-security"
+    }
     github_team = {
       team_slug = "opal-security"
     }
@@ -78,6 +81,9 @@ resource "opal_group" "my_group" {
     }
     pagerduty_on_call_schedule = {
       schedule_id = "PNZNINN"
+    }
+    rootly_on_call_schedule = {
+      schedule_id = "01HZ8XQM9ZQX8RKMZQ8ZQX8RK"
     }
     snowflake_role = {
       role_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
@@ -135,7 +141,7 @@ resource "opal_group" "my_group" {
 ### Required
 
 - `app_id` (String) The ID of the app for the group. Requires replacement if changed.
-- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "DEVIN_GROUP"]; Requires replacement if changed.
+- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM"]; Requires replacement if changed.
 - `name` (String) The name of the group.
 - `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
@@ -215,6 +221,7 @@ Optional:
 - `databricks_account_group` (Attributes) Remote info for Databricks account group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--databricks_account_group))
 - `devin_group` (Attributes) Remote info for Devin group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--devin_group))
 - `duo_group` (Attributes) Remote info for Duo Security group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--duo_group))
+- `github_enterprise_team` (Attributes) Remote info for GitHub Enterprise team. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--github_enterprise_team))
 - `github_team` (Attributes) Remote info for GitHub team. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--github_team))
 - `gitlab_group` (Attributes) Remote info for Gitlab group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gitlab_group))
 - `google_group` (Attributes) Remote info for Google group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--google_group))
@@ -223,6 +230,7 @@ Optional:
 - `okta_group` (Attributes) Remote info for Okta Directory group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_group))
 - `okta_group_rule` (Attributes) Remote info for Okta Directory group rule. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_group_rule))
 - `pagerduty_on_call_schedule` (Attributes) Remote info for PagerDuty on-call schedule group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--pagerduty_on_call_schedule))
+- `rootly_on_call_schedule` (Attributes) Remote info for Rootly on-call schedule group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--rootly_on_call_schedule))
 - `snowflake_role` (Attributes) Remote info for Snowflake role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--snowflake_role))
 - `tailscale_group` (Attributes) Remote info for Tailscale group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--tailscale_group))
 - `workday_user_security_group` (Attributes) Remote info for Workday User Security group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--workday_user_security_group))
@@ -291,6 +299,14 @@ Optional:
 - `group_id` (String) The id of the Duo Security group. Not Null; Requires replacement if changed.
 
 
+<a id="nestedatt--remote_info--github_enterprise_team"></a>
+### Nested Schema for `remote_info.github_enterprise_team`
+
+Optional:
+
+- `team_slug` (String) The slug of the GitHub Enterprise team. Not Null; Requires replacement if changed.
+
+
 <a id="nestedatt--remote_info--github_team"></a>
 ### Nested Schema for `remote_info.github_team`
 
@@ -353,6 +369,14 @@ Optional:
 Optional:
 
 - `schedule_id` (String) The id of the PagerDuty on-call schedule. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--rootly_on_call_schedule"></a>
+### Nested Schema for `remote_info.rootly_on_call_schedule`
+
+Optional:
+
+- `schedule_id` (String) The id of the Rootly on-call schedule. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--snowflake_role"></a>

@@ -9,5 +9,5 @@ import (
 type RequestCustomFieldResponse struct {
 	FieldName  types.String `tfsdk:"field_name"`
 	FieldType  types.String `tfsdk:"field_type"`
-	FieldValue FieldValue   `tfsdk:"field_value"`
+	FieldValue *FieldValue  `tfsdk:"field_value"`
 }

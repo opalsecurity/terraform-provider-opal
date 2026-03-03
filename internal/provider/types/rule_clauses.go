@@ -4,5 +4,5 @@ package types
 
 type RuleClauses struct {
 	Unless *RuleConjunction `tfsdk:"unless"`
-	When   RuleConjunction  `tfsdk:"when"`
+	When   *RuleConjunction `tfsdk:"when"`
 }

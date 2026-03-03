@@ -302,6 +302,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.GcpSQLInstance.InstanceID = types.StringValue(resp.RemoteInfo.GcpSQLInstance.InstanceID)
 				r.RemoteInfo.GcpSQLInstance.ProjectID = types.StringValue(resp.RemoteInfo.GcpSQLInstance.ProjectID)
 			}
+			if resp.RemoteInfo.GithubEnterpriseRole == nil {
+				r.RemoteInfo.GithubEnterpriseRole = nil
+			} else {
+				r.RemoteInfo.GithubEnterpriseRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.GithubEnterpriseRole.RoleID = types.StringValue(resp.RemoteInfo.GithubEnterpriseRole.RoleID)
+			}
 			if resp.RemoteInfo.GithubOrg == nil {
 				r.RemoteInfo.GithubOrg = nil
 			} else {
@@ -1163,6 +1169,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				ProjectID:  projectId5,
 			}
 		}
+		var githubEnterpriseRole *shared.GithubEnterpriseRole
+		if r.RemoteInfo.GithubEnterpriseRole != nil {
+			var roleId3 string
+			roleId3 = r.RemoteInfo.GithubEnterpriseRole.RoleID.ValueString()
+
+			githubEnterpriseRole = &shared.GithubEnterpriseRole{
+				RoleID: roleId3,
+			}
+		}
 		var githubOrg *shared.GithubOrg
 		if r.RemoteInfo.GithubOrg != nil {
 			var orgName string
@@ -1174,11 +1189,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var githubOrgRole *shared.GithubOrgRole
 		if r.RemoteInfo.GithubOrgRole != nil {
-			var roleId3 string
-			roleId3 = r.RemoteInfo.GithubOrgRole.RoleID.ValueString()
+			var roleId4 string
+			roleId4 = r.RemoteInfo.GithubOrgRole.RoleID.ValueString()
 
 			githubOrgRole = &shared.GithubOrgRole{
-				RoleID: roleId3,
+				RoleID: roleId4,
 			}
 		}
 		var githubRepo *shared.GithubRepo
@@ -1201,11 +1216,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var googleWorkspaceRole *shared.GoogleWorkspaceRole
 		if r.RemoteInfo.GoogleWorkspaceRole != nil {
-			var roleId4 string
-			roleId4 = r.RemoteInfo.GoogleWorkspaceRole.RoleID.ValueString()
+			var roleId5 string
+			roleId5 = r.RemoteInfo.GoogleWorkspaceRole.RoleID.ValueString()
 
 			googleWorkspaceRole = &shared.GoogleWorkspaceRole{
-				RoleID: roleId4,
+				RoleID: roleId5,
 			}
 		}
 		var ilevelAdvancedRole *shared.IlevelAdvancedRole
@@ -1228,11 +1243,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var oktaCustomRole *shared.OktaCustomRole
 		if r.RemoteInfo.OktaCustomRole != nil {
-			var roleId5 string
-			roleId5 = r.RemoteInfo.OktaCustomRole.RoleID.ValueString()
+			var roleId6 string
+			roleId6 = r.RemoteInfo.OktaCustomRole.RoleID.ValueString()
 
 			oktaCustomRole = &shared.OktaCustomRole{
-				RoleID: roleId5,
+				RoleID: roleId6,
 			}
 		}
 		var oktaStandardRole *shared.OktaStandardRole
@@ -1268,11 +1283,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var oracleFusionRole *shared.OracleFusionRole
 		if r.RemoteInfo.OracleFusionRole != nil {
-			var roleId6 string
-			roleId6 = r.RemoteInfo.OracleFusionRole.RoleID.ValueString()
+			var roleId7 string
+			roleId7 = r.RemoteInfo.OracleFusionRole.RoleID.ValueString()
 
 			oracleFusionRole = &shared.OracleFusionRole{
-				RoleID: roleId6,
+				RoleID: roleId7,
 			}
 		}
 		var pagerdutyRole *shared.PagerdutyRole
@@ -1308,11 +1323,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var salesforceRole *shared.SalesforceRole
 		if r.RemoteInfo.SalesforceRole != nil {
-			var roleId7 string
-			roleId7 = r.RemoteInfo.SalesforceRole.RoleID.ValueString()
+			var roleId8 string
+			roleId8 = r.RemoteInfo.SalesforceRole.RoleID.ValueString()
 
 			salesforceRole = &shared.SalesforceRole{
-				RoleID: roleId7,
+				RoleID: roleId8,
 			}
 		}
 		var snowflakeDatabase *shared.SnowflakeDatabase
@@ -1374,11 +1389,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var workdayRole *shared.WorkdayRole
 		if r.RemoteInfo.WorkdayRole != nil {
-			var roleId8 string
-			roleId8 = r.RemoteInfo.WorkdayRole.RoleID.ValueString()
+			var roleId9 string
+			roleId9 = r.RemoteInfo.WorkdayRole.RoleID.ValueString()
 
 			workdayRole = &shared.WorkdayRole{
-				RoleID: roleId8,
+				RoleID: roleId9,
 			}
 		}
 		remoteInfo = &shared.ResourceRemoteInfo{
@@ -1421,6 +1436,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			GcpProject:                        gcpProject,
 			GcpServiceAccount:                 gcpServiceAccount,
 			GcpSQLInstance:                    gcpSQLInstance,
+			GithubEnterpriseRole:              githubEnterpriseRole,
 			GithubOrg:                         githubOrg,
 			GithubOrgRole:                     githubOrgRole,
 			GithubRepo:                        githubRepo,

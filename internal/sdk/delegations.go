@@ -403,7 +403,9 @@ func (s *Delegations) DeleteDelegation(ctx context.Context, request operations.D
 
 	switch {
 	case httpRes.StatusCode == 200:
+		utils.DrainBody(httpRes)
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -604,6 +606,7 @@ func (s *Delegations) GetDelegation(ctx context.Context, request operations.GetD
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -808,6 +811,7 @@ func (s *Delegations) GetDelegations(ctx context.Context, request operations.Get
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {

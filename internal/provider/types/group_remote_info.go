@@ -11,7 +11,8 @@ type GroupRemoteInfo struct {
 	DatabricksAccountGroup   *ActiveDirectoryGroup     `tfsdk:"databricks_account_group"`
 	DevinGroup               *DevinGroup               `tfsdk:"devin_group"`
 	DuoGroup                 *ActiveDirectoryGroup     `tfsdk:"duo_group"`
-	GithubTeam               *GithubTeam               `tfsdk:"github_team"`
+	GithubEnterpriseTeam     *GithubEnterpriseTeam     `tfsdk:"github_enterprise_team"`
+	GithubTeam               *GithubEnterpriseTeam     `tfsdk:"github_team"`
 	GitlabGroup              *ActiveDirectoryGroup     `tfsdk:"gitlab_group"`
 	GoogleGroup              *ActiveDirectoryGroup     `tfsdk:"google_group"`
 	IncidentioOnCallSchedule *IncidentioOnCallSchedule `tfsdk:"incidentio_on_call_schedule"`
@@ -19,6 +20,7 @@ type GroupRemoteInfo struct {
 	OktaGroup                *ActiveDirectoryGroup     `tfsdk:"okta_group"`
 	OktaGroupRule            *OktaGroupRule            `tfsdk:"okta_group_rule"`
 	PagerdutyOnCallSchedule  *IncidentioOnCallSchedule `tfsdk:"pagerduty_on_call_schedule"`
+	RootlyOnCallSchedule     *IncidentioOnCallSchedule `tfsdk:"rootly_on_call_schedule"`
 	SnowflakeRole            *SnowflakeRole            `tfsdk:"snowflake_role"`
 	TailscaleGroup           *ActiveDirectoryGroup     `tfsdk:"tailscale_group"`
 	WorkdayUserSecurityGroup *ActiveDirectoryGroup     `tfsdk:"workday_user_security_group"`

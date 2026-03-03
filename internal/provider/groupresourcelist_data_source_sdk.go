@@ -6,6 +6,7 @@ import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/typeconvert"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
@@ -20,10 +21,14 @@ func (r *GroupResourceListDataSourceModel) RefreshFromSharedGroupResourceList(ct
 		for _, groupResourcesItem := range resp.GroupResources {
 			var groupResources tfTypes.GroupResource
 
+			groupResources.AccessLevel = &tfTypes.ResourceAccessLevel{}
 			groupResources.AccessLevel.AccessLevelName = types.StringValue(groupResourcesItem.AccessLevel.AccessLevelName)
 			groupResources.AccessLevel.AccessLevelRemoteID = types.StringValue(groupResourcesItem.AccessLevel.AccessLevelRemoteID)
+			groupResources.ExpirationDate = types.StringPointerValue(typeconvert.TimePointerToStringPointer(groupResourcesItem.ExpirationDate))
 			groupResources.GroupID = types.StringValue(groupResourcesItem.GroupID)
+			groupResources.GroupName = types.StringPointerValue(groupResourcesItem.GroupName)
 			groupResources.ResourceID = types.StringValue(groupResourcesItem.ResourceID)
+			groupResources.ResourceName = types.StringPointerValue(groupResourcesItem.ResourceName)
 
 			r.GroupResources = append(r.GroupResources, groupResources)
 		}

@@ -41,8 +41,11 @@ level is a `AccessLevel` object whose fields are all empty strings.
 
 ### Usage Example
 View the `AccessLevel` of a resource/user or resource/group pair to see the level of access granted to the resource. (see [below for nested schema](#nestedatt--group_resources--access_level))
+- `expiration_date` (String) The day and time the group's access will expire.
 - `group_id` (String) The ID of the group.
+- `group_name` (String) The name of the group
 - `resource_id` (String) The ID of the resource.
+- `resource_name` (String) The name of the resource
 
 <a id="nestedatt--group_resources--access_level"></a>
 ### Nested Schema for `group_resources.access_level`

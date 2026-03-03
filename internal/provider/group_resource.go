@@ -54,29 +54,29 @@ type GroupResource struct {
 
 // GroupResourceModel describes the resource data model.
 type GroupResourceModel struct {
-	AdminOwnerID                types.String                                `tfsdk:"admin_owner_id"`
-	AppID                       types.String                                `tfsdk:"app_id"`
-	CustomRequestNotification   types.String                                `tfsdk:"custom_request_notification"`
-	Description                 types.String                                `tfsdk:"description"`
-	ExtensionsDurationInMinutes types.Int64                                 `tfsdk:"extensions_duration_in_minutes"`
-	GroupBindingID              types.String                                `tfsdk:"group_binding_id"`
-	GroupLeaderUserIds          []types.String                              `tfsdk:"group_leader_user_ids"`
-	GroupType                   types.String                                `tfsdk:"group_type"`
-	ID                          types.String                                `tfsdk:"id"`
-	LastSuccessfulSync          *tfTypes.LastSuccessfulSync                 `tfsdk:"last_successful_sync"`
-	MessageChannelIds           []types.String                              `tfsdk:"message_channel_ids"`
-	MessageChannels             tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
-	Name                        types.String                                `tfsdk:"name"`
-	OnCallScheduleIds           []types.String                              `tfsdk:"on_call_schedule_ids"`
-	OnCallSchedules             tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"on_call_schedules"`
-	RemoteInfo                  *tfTypes.GroupRemoteInfo                    `tfsdk:"remote_info"`
-	RemoteName                  types.String                                `tfsdk:"remote_name"`
-	RequestConfigurations       []tfTypes.RequestConfiguration              `tfsdk:"request_configurations"`
-	RequireMfaToApprove         types.Bool                                  `tfsdk:"require_mfa_to_approve"`
-	RiskSensitivity             types.String                                `tfsdk:"risk_sensitivity"`
-	RiskSensitivityOverride     types.String                                `tfsdk:"risk_sensitivity_override"`
-	Visibility                  types.String                                `tfsdk:"visibility"`
-	VisibilityGroupIds          []types.String                              `tfsdk:"visibility_group_ids"`
+	AdminOwnerID                types.String                                 `tfsdk:"admin_owner_id"`
+	AppID                       types.String                                 `tfsdk:"app_id"`
+	CustomRequestNotification   types.String                                 `tfsdk:"custom_request_notification"`
+	Description                 types.String                                 `tfsdk:"description"`
+	ExtensionsDurationInMinutes types.Int64                                  `tfsdk:"extensions_duration_in_minutes"`
+	GroupBindingID              types.String                                 `tfsdk:"group_binding_id"`
+	GroupLeaderUserIds          []types.String                               `tfsdk:"group_leader_user_ids"`
+	GroupType                   types.String                                 `tfsdk:"group_type"`
+	ID                          types.String                                 `tfsdk:"id"`
+	LastSuccessfulSync          *tfTypes.LastSuccessfulSync                  `tfsdk:"last_successful_sync"`
+	MessageChannelIds           []types.String                               `tfsdk:"message_channel_ids"`
+	MessageChannels             *tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
+	Name                        types.String                                 `tfsdk:"name"`
+	OnCallScheduleIds           []types.String                               `tfsdk:"on_call_schedule_ids"`
+	OnCallSchedules             *tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"on_call_schedules"`
+	RemoteInfo                  *tfTypes.GroupRemoteInfo                     `tfsdk:"remote_info"`
+	RemoteName                  types.String                                 `tfsdk:"remote_name"`
+	RequestConfigurations       []tfTypes.RequestConfiguration               `tfsdk:"request_configurations"`
+	RequireMfaToApprove         types.Bool                                   `tfsdk:"require_mfa_to_approve"`
+	RiskSensitivity             types.String                                 `tfsdk:"risk_sensitivity"`
+	RiskSensitivityOverride     types.String                                 `tfsdk:"risk_sensitivity_override"`
+	Visibility                  types.String                                 `tfsdk:"visibility"`
+	VisibilityGroupIds          []types.String                               `tfsdk:"visibility_group_ids"`
 }
 
 func (r *GroupResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -154,7 +154,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "DEVIN_GROUP"]; Requires replacement if changed.`,
+				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"ACTIVE_DIRECTORY_GROUP",
@@ -178,7 +178,9 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						"WORKDAY_USER_SECURITY_GROUP",
 						"PAGERDUTY_ON_CALL_SCHEDULE",
 						"INCIDENTIO_ON_CALL_SCHEDULE",
+						"ROOTLY_ON_CALL_SCHEDULE",
 						"DEVIN_GROUP",
+						"GIT_HUB_ENTERPRISE_TEAM",
 					),
 				},
 			},
@@ -545,6 +547,29 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						},
 						Description: `Remote info for Duo Security group. Requires replacement if changed.`,
 					},
+					"github_enterprise_team": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"team_slug": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The slug of the GitHub Enterprise team. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for GitHub Enterprise team. Requires replacement if changed.`,
+					},
 					"github_team": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -728,6 +753,29 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							},
 						},
 						Description: `Remote info for PagerDuty on-call schedule group. Requires replacement if changed.`,
+					},
+					"rootly_on_call_schedule": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"schedule_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The id of the Rootly on-call schedule. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Rootly on-call schedule group. Requires replacement if changed.`,
 					},
 					"snowflake_role": schema.SingleNestedAttribute{
 						Computed: true,

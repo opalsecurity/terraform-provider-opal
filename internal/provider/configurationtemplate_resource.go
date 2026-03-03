@@ -55,7 +55,7 @@ type ConfigurationTemplateResourceModel struct {
 	RequireMfaToApprove          types.Bool                              `tfsdk:"require_mfa_to_approve"`
 	RequireMfaToConnect          types.Bool                              `tfsdk:"require_mfa_to_connect"`
 	TicketPropagation            *tfTypes.TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
-	Visibility                   tfTypes.VisibilityInfo                  `tfsdk:"visibility"`
+	Visibility                   *tfTypes.VisibilityInfo                 `tfsdk:"visibility"`
 }
 
 func (r *ConfigurationTemplateResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {

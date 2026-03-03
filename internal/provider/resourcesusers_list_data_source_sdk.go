@@ -23,6 +23,7 @@ func (r *ResourcesUsersListDataSourceModel) RefreshFromSharedResourceAccessUserL
 		for _, resultsItem := range resp.Results {
 			var results tfTypes.ResourceAccessUser
 
+			results.AccessLevel = &tfTypes.ResourceAccessLevel{}
 			results.AccessLevel.AccessLevelName = types.StringValue(resultsItem.AccessLevel.AccessLevelName)
 			results.AccessLevel.AccessLevelRemoteID = types.StringValue(resultsItem.AccessLevel.AccessLevelRemoteID)
 			results.Description = types.StringPointerValue(resultsItem.Description)

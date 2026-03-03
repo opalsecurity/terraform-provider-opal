@@ -813,7 +813,9 @@ func (s *Bundles) DeleteBundle(ctx context.Context, request operations.DeleteBun
 
 	switch {
 	case httpRes.StatusCode == 200:
+		utils.DrainBody(httpRes)
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -1014,6 +1016,7 @@ func (s *Bundles) GetBundle(ctx context.Context, request operations.GetBundleReq
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -1217,6 +1220,7 @@ func (s *Bundles) GetBundleGroups(ctx context.Context, request operations.GetBun
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -1420,6 +1424,7 @@ func (s *Bundles) GetBundleResources(ctx context.Context, request operations.Get
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -1619,6 +1624,7 @@ func (s *Bundles) GetBundleVisibility(ctx context.Context, request operations.Ge
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -1823,6 +1829,7 @@ func (s *Bundles) GetBundles(ctx context.Context, request operations.GetBundlesR
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -2005,7 +2012,9 @@ func (s *Bundles) RemoveBundleGroup(ctx context.Context, request operations.Remo
 
 	switch {
 	case httpRes.StatusCode == 200:
+		utils.DrainBody(httpRes)
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -2188,7 +2197,9 @@ func (s *Bundles) RemoveBundleResource(ctx context.Context, request operations.R
 
 	switch {
 	case httpRes.StatusCode == 200:
+		utils.DrainBody(httpRes)
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -2374,6 +2385,7 @@ func (s *Bundles) SetBundleVisibility(ctx context.Context, request operations.Se
 
 	switch {
 	case httpRes.StatusCode == 200:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -2580,6 +2592,7 @@ func (s *Bundles) UpdateBundle(ctx context.Context, request operations.UpdateBun
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 204:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {

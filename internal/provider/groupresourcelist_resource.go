@@ -90,6 +90,13 @@ func (r *GroupResourceListResource) Schema(ctx context.Context, req resource.Sch
 								`### Usage Example` + "\n" +
 								`View the ` + "`" + `AccessLevel` + "`" + ` of a resource/user or resource/group pair to see the level of access granted to the resource.`,
 						},
+						"expiration_date": schema.StringAttribute{
+							Computed: true,
+							PlanModifiers: []planmodifier.String{
+								speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+							},
+							Description: `The day and time the group's access will expire.`,
+						},
 						"group_id": schema.StringAttribute{
 							Computed: true,
 							PlanModifiers: []planmodifier.String{
@@ -97,12 +104,26 @@ func (r *GroupResourceListResource) Schema(ctx context.Context, req resource.Sch
 							},
 							Description: `The ID of the group.`,
 						},
+						"group_name": schema.StringAttribute{
+							Computed: true,
+							PlanModifiers: []planmodifier.String{
+								speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+							},
+							Description: `The name of the group`,
+						},
 						"resource_id": schema.StringAttribute{
 							Computed: true,
 							PlanModifiers: []planmodifier.String{
 								speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 							},
 							Description: `The ID of the resource.`,
+						},
+						"resource_name": schema.StringAttribute{
+							Computed: true,
+							PlanModifiers: []planmodifier.String{
+								speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+							},
+							Description: `The name of the resource`,
 						},
 					},
 				},

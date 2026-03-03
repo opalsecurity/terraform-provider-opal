@@ -106,6 +106,19 @@ func (d *DuoGroup) GetGroupID() string {
 	return d.GroupID
 }
 
+// GithubEnterpriseTeam - Remote info for GitHub Enterprise team.
+type GithubEnterpriseTeam struct {
+	// The slug of the GitHub Enterprise team.
+	TeamSlug string `json:"team_slug"`
+}
+
+func (g *GithubEnterpriseTeam) GetTeamSlug() string {
+	if g == nil {
+		return ""
+	}
+	return g.TeamSlug
+}
+
 // GithubTeam - Remote info for GitHub team.
 type GithubTeam struct {
 	// The slug of the GitHub team.
@@ -210,6 +223,19 @@ func (p *PagerdutyOnCallSchedule) GetScheduleID() string {
 	return p.ScheduleID
 }
 
+// RootlyOnCallSchedule - Remote info for Rootly on-call schedule group.
+type RootlyOnCallSchedule struct {
+	// The id of the Rootly on-call schedule.
+	ScheduleID string `json:"schedule_id"`
+}
+
+func (r *RootlyOnCallSchedule) GetScheduleID() string {
+	if r == nil {
+		return ""
+	}
+	return r.ScheduleID
+}
+
 // SnowflakeRole - Remote info for Snowflake role.
 type SnowflakeRole struct {
 	// The id of the Snowflake role.
@@ -267,6 +293,8 @@ type GroupRemoteInfo struct {
 	DevinGroup *DevinGroup `json:"devin_group,omitempty"`
 	// Remote info for Duo Security group.
 	DuoGroup *DuoGroup `json:"duo_group,omitempty"`
+	// Remote info for GitHub Enterprise team.
+	GithubEnterpriseTeam *GithubEnterpriseTeam `json:"github_enterprise_team,omitempty"`
 	// Remote info for GitHub team.
 	GithubTeam *GithubTeam `json:"github_team,omitempty"`
 	// Remote info for Gitlab group.
@@ -283,6 +311,8 @@ type GroupRemoteInfo struct {
 	OktaGroupRule *OktaGroupRule `json:"okta_group_rule,omitempty"`
 	// Remote info for PagerDuty on-call schedule group.
 	PagerdutyOnCallSchedule *PagerdutyOnCallSchedule `json:"pagerduty_on_call_schedule,omitempty"`
+	// Remote info for Rootly on-call schedule group.
+	RootlyOnCallSchedule *RootlyOnCallSchedule `json:"rootly_on_call_schedule,omitempty"`
 	// Remote info for Snowflake role.
 	SnowflakeRole *SnowflakeRole `json:"snowflake_role,omitempty"`
 	// Remote info for Tailscale group.
@@ -347,6 +377,13 @@ func (g *GroupRemoteInfo) GetDuoGroup() *DuoGroup {
 	return g.DuoGroup
 }
 
+func (g *GroupRemoteInfo) GetGithubEnterpriseTeam() *GithubEnterpriseTeam {
+	if g == nil {
+		return nil
+	}
+	return g.GithubEnterpriseTeam
+}
+
 func (g *GroupRemoteInfo) GetGithubTeam() *GithubTeam {
 	if g == nil {
 		return nil
@@ -401,6 +438,13 @@ func (g *GroupRemoteInfo) GetPagerdutyOnCallSchedule() *PagerdutyOnCallSchedule 
 		return nil
 	}
 	return g.PagerdutyOnCallSchedule
+}
+
+func (g *GroupRemoteInfo) GetRootlyOnCallSchedule() *RootlyOnCallSchedule {
+	if g == nil {
+		return nil
+	}
+	return g.RootlyOnCallSchedule
 }
 
 func (g *GroupRemoteInfo) GetSnowflakeRole() *SnowflakeRole {

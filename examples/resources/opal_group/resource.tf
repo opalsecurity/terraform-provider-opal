@@ -40,6 +40,9 @@ resource "opal_group" "my_group" {
     duo_group = {
       group_id = "DSRD8W89B9DNDBY4RHAC"
     }
+    github_enterprise_team = {
+      team_slug = "opal-security"
+    }
     github_team = {
       team_slug = "opal-security"
     }
@@ -63,6 +66,9 @@ resource "opal_group" "my_group" {
     }
     pagerduty_on_call_schedule = {
       schedule_id = "PNZNINN"
+    }
+    rootly_on_call_schedule = {
+      schedule_id = "01HZ8XQM9ZQX8RKMZQ8ZQX8RK"
     }
     snowflake_role = {
       role_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"

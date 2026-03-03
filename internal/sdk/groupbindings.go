@@ -403,6 +403,7 @@ func (s *GroupBindings) DeleteGroupBinding(ctx context.Context, request operatio
 
 	switch {
 	case httpRes.StatusCode == 200:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -603,6 +604,7 @@ func (s *GroupBindings) GetGroupBinding(ctx context.Context, request operations.
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -807,6 +809,7 @@ func (s *GroupBindings) GetGroupBindings(ctx context.Context, request operations
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -992,6 +995,7 @@ func (s *GroupBindings) UpdateGroupBindings(ctx context.Context, request shared.
 
 	switch {
 	case httpRes.StatusCode == 200:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {

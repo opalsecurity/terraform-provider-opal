@@ -1022,7 +1022,9 @@ func (s *Groups) Delete(ctx context.Context, request operations.DeleteGroupReque
 
 	switch {
 	case httpRes.StatusCode == 200:
+		utils.DrainBody(httpRes)
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -1205,7 +1207,9 @@ func (s *Groups) DeleteUser(ctx context.Context, request operations.DeleteGroupU
 
 	switch {
 	case httpRes.StatusCode == 200:
+		utils.DrainBody(httpRes)
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -1406,6 +1410,7 @@ func (s *Groups) GetGroup(ctx context.Context, request operations.GetGroupReques
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -1606,6 +1611,7 @@ func (s *Groups) GetGroupContainingGroup(ctx context.Context, request operations
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -1805,6 +1811,7 @@ func (s *Groups) GetMessageChannels(ctx context.Context, request operations.GetG
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -2004,6 +2011,7 @@ func (s *Groups) GetOnCallSchedules(ctx context.Context, request operations.GetG
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -2203,6 +2211,7 @@ func (s *Groups) GetResources(ctx context.Context, request operations.GetGroupRe
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -2404,6 +2413,7 @@ func (s *Groups) GetReviewersStages(ctx context.Context, request operations.GetG
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -2603,6 +2613,7 @@ func (s *Groups) GetTags(ctx context.Context, request operations.GetGroupTagsReq
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -3008,6 +3019,7 @@ func (s *Groups) GetUsers(ctx context.Context, request operations.GetGroupUsersR
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -3207,6 +3219,7 @@ func (s *Groups) GetVisibility(ctx context.Context, request operations.GetGroupV
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -3411,6 +3424,7 @@ func (s *Groups) List(ctx context.Context, request operations.GetGroupsRequest, 
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -3475,6 +3489,10 @@ func (s *Groups) RemoveGroupContainingGroup(ctx context.Context, request operati
 	}
 	req.Header.Set("Accept", "*/*")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
+
+	if err := utils.PopulateQueryParams(ctx, req, request, nil, nil); err != nil {
+		return nil, fmt.Errorf("error populating query params: %w", err)
+	}
 
 	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
 		return nil, err
@@ -3589,7 +3607,9 @@ func (s *Groups) RemoveGroupContainingGroup(ctx context.Context, request operati
 
 	switch {
 	case httpRes.StatusCode == 204:
+		utils.DrainBody(httpRes)
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -4185,6 +4205,7 @@ func (s *Groups) UpdateMessageChannels(ctx context.Context, request operations.U
 
 	switch {
 	case httpRes.StatusCode == 200:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -4370,6 +4391,7 @@ func (s *Groups) UpdateOnCallSchedules(ctx context.Context, request operations.U
 
 	switch {
 	case httpRes.StatusCode == 200:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -4555,6 +4577,7 @@ func (s *Groups) UpdateResources(ctx context.Context, request operations.UpdateG
 
 	switch {
 	case httpRes.StatusCode == 200:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -4947,6 +4970,7 @@ func (s *Groups) UpdateVisibility(ctx context.Context, request operations.Update
 
 	switch {
 	case httpRes.StatusCode == 200:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {

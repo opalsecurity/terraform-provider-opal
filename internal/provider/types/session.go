@@ -7,9 +7,9 @@ import (
 )
 
 type Session struct {
-	AccessLevel    ResourceAccessLevel `tfsdk:"access_level"`
-	ConnectionID   types.String        `tfsdk:"connection_id"`
-	ExpirationDate types.String        `tfsdk:"expiration_date"`
-	ResourceID     types.String        `tfsdk:"resource_id"`
-	UserID         types.String        `tfsdk:"user_id"`
+	AccessLevel    *ResourceAccessLevel `tfsdk:"access_level"`
+	ConnectionID   types.String         `tfsdk:"connection_id"`
+	ExpirationDate types.String         `tfsdk:"expiration_date"`
+	ResourceID     types.String         `tfsdk:"resource_id"`
+	UserID         types.String         `tfsdk:"user_id"`
 }

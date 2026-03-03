@@ -11,6 +11,7 @@ generation:
     securityFeb2025: false
     sharedErrorComponentsApr2025: false
     sharedNestedComponentsJan2026: false
+    nameOverrideFeb2026: false
   auth:
     oAuth2ClientCredentialsEnabled: false
     oAuth2PasswordEnabled: false
@@ -18,6 +19,7 @@ generation:
   schemas:
     allOfMergeStrategy: shallowMerge
   requestBodyFieldName: ""
+  versioningStrategy: automatic
   persistentEdits: {}
   tests:
     generateTests: true
@@ -25,14 +27,17 @@ generation:
     skipResponseBodyAssertions: false
   flattenGlobalSecurity: true
 terraform:
-  version: 3.4.1
+  version: 3.4.2
+  additionalActions: []
   additionalDataSources: []
   additionalDependencies:
     github.com/hashicorp/terraform-plugin-testing: v1.13.2
   additionalEphemeralResources: []
+  additionalFunctions: []
   additionalListResources: []
   additionalProviderAttributes:
     httpHeaders: http_headers
+    tlsSkipVerify: ""
   additionalResources: []
   allowUnknownFieldsInWeakUnions: false
   author: opalsecurity
@@ -61,4 +66,5 @@ terraform:
   outputModelSuffix: output
   packageName: opal
   respectRequiredFields: false
+  respectTitlesForPrimitiveUnionMembers: false
   unionStrategy: populated-fields

@@ -57,7 +57,7 @@ func (r *BundleDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Description: `The ID of the owner of the bundle.`,
 			},
 			"bundle_id": schema.StringAttribute{
-				Computed:    true,
+				Required:    true,
 				Description: `The ID of the bundle.`,
 			},
 			"created_at": schema.StringAttribute{

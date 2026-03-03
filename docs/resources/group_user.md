@@ -32,7 +32,7 @@ resource "opal_group_user" "my_groupuser" {
 ### Optional
 
 - `access_level_remote_id` (String) The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used. Requires replacement if changed.
-- `duration_minutes` (Number) Must be set to 0. Any nonzerovalue in terraform does not make sense. Default: 0; must be "0"; Requires replacement if changed.
+- `duration_minutes` (Number) Must be set to 0. Any nonzerovalue in terraform does not make sense. Default: 0; must be 0; Requires replacement if changed.
 
 ### Read-Only
 

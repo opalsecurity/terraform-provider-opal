@@ -95,7 +95,7 @@ func (r *GroupUserResource) Schema(ctx context.Context, req resource.SchemaReque
 				PlanModifiers: []planmodifier.Int64{
 					int64planmodifier.RequiresReplaceIfConfigured(),
 				},
-				Description: `Must be set to 0. Any nonzerovalue in terraform does not make sense. Default: 0; must be "0"; Requires replacement if changed.`,
+				Description: `Must be set to 0. Any nonzerovalue in terraform does not make sense. Default: 0; must be 0; Requires replacement if changed.`,
 				Validators: []validator.Int64{
 					int64validator.OneOf(0),
 				},

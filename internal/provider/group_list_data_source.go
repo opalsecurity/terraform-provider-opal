@@ -61,7 +61,7 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 			},
 			"group_type_filter": schema.StringAttribute{
 				Optional:    true,
-				Description: `The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "DEVIN_GROUP"]`,
+				Description: `The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"ACTIVE_DIRECTORY_GROUP",
@@ -85,7 +85,9 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 						"WORKDAY_USER_SECURITY_GROUP",
 						"PAGERDUTY_ON_CALL_SCHEDULE",
 						"INCIDENTIO_ON_CALL_SCHEDULE",
+						"ROOTLY_ON_CALL_SCHEDULE",
 						"DEVIN_GROUP",
+						"GIT_HUB_ENTERPRISE_TEAM",
 					),
 				},
 			},
@@ -239,6 +241,16 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 									},
 									Description: `Remote info for Duo Security group.`,
 								},
+								"github_enterprise_team": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"team_slug": schema.StringAttribute{
+											Computed:    true,
+											Description: `The slug of the GitHub Enterprise team.`,
+										},
+									},
+									Description: `Remote info for GitHub Enterprise team.`,
+								},
 								"github_team": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
@@ -318,6 +330,16 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 										},
 									},
 									Description: `Remote info for PagerDuty on-call schedule group.`,
+								},
+								"rootly_on_call_schedule": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"schedule_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The id of the Rootly on-call schedule.`,
+										},
+									},
+									Description: `Remote info for Rootly on-call schedule group.`,
 								},
 								"snowflake_role": schema.SingleNestedAttribute{
 									Computed: true,

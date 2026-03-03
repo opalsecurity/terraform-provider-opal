@@ -2,6 +2,11 @@
 
 package shared
 
+import (
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
+	"time"
+)
+
 // # GroupResource Object
 // ### Description
 // The `GroupResource` object is used to represent a relationship between a group and a resource.
@@ -14,10 +19,27 @@ type GroupResource struct {
 	// ### Usage Example
 	// View the `AccessLevel` of a resource/user or resource/group pair to see the level of access granted to the resource.
 	AccessLevel ResourceAccessLevel `json:"access_level"`
+	// The day and time the group's access will expire.
+	ExpirationDate *time.Time `json:"expiration_date,omitempty"`
 	// The ID of the group.
 	GroupID string `json:"group_id"`
+	// The name of the group
+	GroupName *string `json:"group_name,omitempty"`
 	// The ID of the resource.
 	ResourceID string `json:"resource_id"`
+	// The name of the resource
+	ResourceName *string `json:"resource_name,omitempty"`
+}
+
+func (g GroupResource) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(g, "", false)
+}
+
+func (g *GroupResource) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &g, "", false, nil); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (g *GroupResource) GetAccessLevel() ResourceAccessLevel {
@@ -27,6 +49,13 @@ func (g *GroupResource) GetAccessLevel() ResourceAccessLevel {
 	return g.AccessLevel
 }
 
+func (g *GroupResource) GetExpirationDate() *time.Time {
+	if g == nil {
+		return nil
+	}
+	return g.ExpirationDate
+}
+
 func (g *GroupResource) GetGroupID() string {
 	if g == nil {
 		return ""
@@ -34,9 +63,23 @@ func (g *GroupResource) GetGroupID() string {
 	return g.GroupID
 }
 
+func (g *GroupResource) GetGroupName() *string {
+	if g == nil {
+		return nil
+	}
+	return g.GroupName
+}
+
 func (g *GroupResource) GetResourceID() string {
 	if g == nil {
 		return ""
 	}
 	return g.ResourceID
+}
+
+func (g *GroupResource) GetResourceName() *string {
+	if g == nil {
+		return nil
+	}
+	return g.ResourceName
 }
