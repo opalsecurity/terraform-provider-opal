@@ -4,8 +4,11 @@ package provider
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-framework/action"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/ephemeral"
+	"github.com/hashicorp/terraform-plugin-framework/function"
+	"github.com/hashicorp/terraform-plugin-framework/list"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -17,7 +20,9 @@ import (
 )
 
 var _ provider.Provider = (*OpalProvider)(nil)
+var _ provider.ProviderWithActions = (*OpalProvider)(nil)
 var _ provider.ProviderWithEphemeralResources = (*OpalProvider)(nil)
+var _ provider.ProviderWithFunctions = (*OpalProvider)(nil)
 
 type OpalProvider struct {
 	// version is set to the provider version on release, "dev" when the
@@ -112,9 +117,19 @@ func (p *OpalProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 	}
 
 	client := sdk.New(opts...)
+	resp.ActionData = client
 	resp.DataSourceData = client
 	resp.EphemeralResourceData = client
+	resp.ListResourceData = client
 	resp.ResourceData = client
+}
+
+func (p *OpalProvider) Functions(_ context.Context) []func() function.Function {
+	return []func() function.Function{}
+}
+
+func (p *OpalProvider) Actions(_ context.Context) []func() action.Action {
+	return []func() action.Action{}
 }
 
 func (p *OpalProvider) Resources(ctx context.Context) []func() resource.Resource {
@@ -155,13 +170,13 @@ func (p *OpalProvider) DataSources(ctx context.Context) []func() datasource.Data
 		NewDelegationsDataSource,
 		NewEventsDataSource,
 		NewGroupDataSource,
-		NewGroupListDataSource,
 		NewGroupCatalogMappingDataSource,
 		NewGroupContainingGroupDataSource,
 		NewGroupResourceListDataSource,
 		NewGroupReviewersStagesListDataSource,
 		NewGroupTagsDataSource,
 		NewGroupUsersDataSource,
+		NewGroupListDataSource,
 		NewIdpGroupMappingsDataSource,
 		NewMessageChannelDataSource,
 		NewMessageChannelListDataSource,
@@ -177,11 +192,11 @@ func (p *OpalProvider) DataSources(ctx context.Context) []func() datasource.Data
 		NewResourceDataSource,
 		NewResourceMessageChannelListDataSource,
 		NewResourceReviewersListDataSource,
-		NewResourcesListDataSource,
-		NewResourcesAccessStatusDataSource,
-		NewResourcesUsersListDataSource,
 		NewResourceTagsDataSource,
 		NewResourceVisibilityDataSource,
+		NewResourcesAccessStatusDataSource,
+		NewResourcesUsersListDataSource,
+		NewResourcesListDataSource,
 		NewScopedRolePermissionListDataSource,
 		NewSessionsDataSource,
 		NewTagDataSource,
@@ -189,13 +204,17 @@ func (p *OpalProvider) DataSources(ctx context.Context) []func() datasource.Data
 		NewUarDataSource,
 		NewUARSListDataSource,
 		NewUserDataSource,
-		NewUsersDataSource,
 		NewUserTagsDataSource,
+		NewUsersDataSource,
 	}
 }
 
 func (p *OpalProvider) EphemeralResources(ctx context.Context) []func() ephemeral.EphemeralResource {
 	return []func() ephemeral.EphemeralResource{}
+}
+
+func (p *OpalProvider) ListResources(ctx context.Context) []func() list.ListResource {
+	return []func() list.ListResource{}
 }
 
 func New(version string) func() provider.Provider {

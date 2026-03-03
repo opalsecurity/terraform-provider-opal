@@ -63,6 +63,12 @@ func (r *GroupContainingGroupResourceModel) ToOperationsGetGroupContainingGroupR
 func (r *GroupContainingGroupResourceModel) ToOperationsRemoveGroupContainingGroupRequest(ctx context.Context) (*operations.RemoveGroupContainingGroupRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	accessLevelRemoteID := new(string)
+	if !r.AccessLevelRemoteID.IsUnknown() && !r.AccessLevelRemoteID.IsNull() {
+		*accessLevelRemoteID = r.AccessLevelRemoteID.ValueString()
+	} else {
+		accessLevelRemoteID = nil
+	}
 	var containingGroupID string
 	containingGroupID = r.ContainingGroupID.ValueString()
 
@@ -70,8 +76,9 @@ func (r *GroupContainingGroupResourceModel) ToOperationsRemoveGroupContainingGro
 	groupID = r.GroupID.ValueString()
 
 	out := operations.RemoveGroupContainingGroupRequest{
-		ContainingGroupID: containingGroupID,
-		GroupID:           groupID,
+		AccessLevelRemoteID: accessLevelRemoteID,
+		ContainingGroupID:   containingGroupID,
+		GroupID:             groupID,
 	}
 
 	return &out, diags

@@ -19,6 +19,7 @@ func (r *AccessRuleDataSourceModel) RefreshFromSharedAccessRule(ctx context.Cont
 		r.Description = types.StringValue(resp.Description)
 		r.ID = types.StringValue(resp.ID)
 		r.Name = types.StringValue(resp.Name)
+		r.RuleClauses = &tfTypes.RuleClauses{}
 		if resp.RuleClauses.Unless == nil {
 			r.RuleClauses.Unless = nil
 		} else {
@@ -43,6 +44,7 @@ func (r *AccessRuleDataSourceModel) RefreshFromSharedAccessRule(ctx context.Cont
 				r.RuleClauses.Unless.Clauses = append(r.RuleClauses.Unless.Clauses, clauses)
 			}
 		}
+		r.RuleClauses.When = &tfTypes.RuleConjunction{}
 		r.RuleClauses.When.Clauses = []tfTypes.RuleDisjunction{}
 
 		for _, clausesItem1 := range resp.RuleClauses.When.Clauses {

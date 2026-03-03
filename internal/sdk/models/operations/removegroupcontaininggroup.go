@@ -7,10 +7,19 @@ import (
 )
 
 type RemoveGroupContainingGroupRequest struct {
+	// The remote ID of the member group's access level to filter by.
+	AccessLevelRemoteID *string `queryParam:"style=form,explode=true,name=access_level_remote_id"`
 	// The ID of the containing group.
 	ContainingGroupID string `pathParam:"style=simple,explode=false,name=containing_group_id"`
 	// The ID of the member group to remove.
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
+}
+
+func (r *RemoveGroupContainingGroupRequest) GetAccessLevelRemoteID() *string {
+	if r == nil {
+		return nil
+	}
+	return r.AccessLevelRemoteID
 }
 
 func (r *RemoveGroupContainingGroupRequest) GetContainingGroupID() string {

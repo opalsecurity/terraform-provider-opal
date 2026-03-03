@@ -38,12 +38,12 @@ type AccessRuleResource struct {
 
 // AccessRuleResourceModel describes the resource data model.
 type AccessRuleResourceModel struct {
-	AdminOwnerID types.String        `tfsdk:"admin_owner_id"`
-	Description  types.String        `tfsdk:"description"`
-	ID           types.String        `tfsdk:"id"`
-	Name         types.String        `tfsdk:"name"`
-	RuleClauses  tfTypes.RuleClauses `tfsdk:"rule_clauses"`
-	Status       types.String        `tfsdk:"status"`
+	AdminOwnerID types.String         `tfsdk:"admin_owner_id"`
+	Description  types.String         `tfsdk:"description"`
+	ID           types.String         `tfsdk:"id"`
+	Name         types.String         `tfsdk:"name"`
+	RuleClauses  *tfTypes.RuleClauses `tfsdk:"rule_clauses"`
+	Status       types.String         `tfsdk:"status"`
 }
 
 func (r *AccessRuleResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {

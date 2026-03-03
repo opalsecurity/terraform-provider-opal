@@ -29,27 +29,27 @@ type GroupDataSource struct {
 
 // GroupDataSourceModel describes the data model.
 type GroupDataSourceModel struct {
-	AdminOwnerID                types.String                                `tfsdk:"admin_owner_id"`
-	AppID                       types.String                                `tfsdk:"app_id"`
-	CustomRequestNotification   types.String                                `tfsdk:"custom_request_notification"`
-	Description                 types.String                                `tfsdk:"description"`
-	ExtensionsDurationInMinutes types.Int64                                 `tfsdk:"extensions_duration_in_minutes"`
-	GroupBindingID              types.String                                `tfsdk:"group_binding_id"`
-	GroupLeaderUserIds          []types.String                              `tfsdk:"group_leader_user_ids"`
-	GroupType                   types.String                                `tfsdk:"group_type"`
-	ID                          types.String                                `tfsdk:"id"`
-	LastSuccessfulSync          *tfTypes.LastSuccessfulSync                 `tfsdk:"last_successful_sync"`
-	MessageChannels             tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
-	Name                        types.String                                `tfsdk:"name"`
-	OnCallSchedules             tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"on_call_schedules"`
-	RemoteInfo                  *tfTypes.GroupRemoteInfo                    `tfsdk:"remote_info"`
-	RemoteName                  types.String                                `tfsdk:"remote_name"`
-	RequestConfigurations       []tfTypes.RequestConfiguration              `tfsdk:"request_configurations"`
-	RequireMfaToApprove         types.Bool                                  `tfsdk:"require_mfa_to_approve"`
-	RiskSensitivity             types.String                                `tfsdk:"risk_sensitivity"`
-	RiskSensitivityOverride     types.String                                `tfsdk:"risk_sensitivity_override"`
-	Visibility                  types.String                                `tfsdk:"visibility"`
-	VisibilityGroupIds          []types.String                              `tfsdk:"visibility_group_ids"`
+	AdminOwnerID                types.String                                 `tfsdk:"admin_owner_id"`
+	AppID                       types.String                                 `tfsdk:"app_id"`
+	CustomRequestNotification   types.String                                 `tfsdk:"custom_request_notification"`
+	Description                 types.String                                 `tfsdk:"description"`
+	ExtensionsDurationInMinutes types.Int64                                  `tfsdk:"extensions_duration_in_minutes"`
+	GroupBindingID              types.String                                 `tfsdk:"group_binding_id"`
+	GroupLeaderUserIds          []types.String                               `tfsdk:"group_leader_user_ids"`
+	GroupType                   types.String                                 `tfsdk:"group_type"`
+	ID                          types.String                                 `tfsdk:"id"`
+	LastSuccessfulSync          *tfTypes.LastSuccessfulSync                  `tfsdk:"last_successful_sync"`
+	MessageChannels             *tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
+	Name                        types.String                                 `tfsdk:"name"`
+	OnCallSchedules             *tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"on_call_schedules"`
+	RemoteInfo                  *tfTypes.GroupRemoteInfo                     `tfsdk:"remote_info"`
+	RemoteName                  types.String                                 `tfsdk:"remote_name"`
+	RequestConfigurations       []tfTypes.RequestConfiguration               `tfsdk:"request_configurations"`
+	RequireMfaToApprove         types.Bool                                   `tfsdk:"require_mfa_to_approve"`
+	RiskSensitivity             types.String                                 `tfsdk:"risk_sensitivity"`
+	RiskSensitivityOverride     types.String                                 `tfsdk:"risk_sensitivity_override"`
+	Visibility                  types.String                                 `tfsdk:"visibility"`
+	VisibilityGroupIds          []types.String                               `tfsdk:"visibility_group_ids"`
 }
 
 // Metadata returns the data source type name.
@@ -274,6 +274,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Duo Security group.`,
 					},
+					"github_enterprise_team": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"team_slug": schema.StringAttribute{
+								Computed:    true,
+								Description: `The slug of the GitHub Enterprise team.`,
+							},
+						},
+						Description: `Remote info for GitHub Enterprise team.`,
+					},
 					"github_team": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -353,6 +363,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							},
 						},
 						Description: `Remote info for PagerDuty on-call schedule group.`,
+					},
+					"rootly_on_call_schedule": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"schedule_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the Rootly on-call schedule.`,
+							},
+						},
+						Description: `Remote info for Rootly on-call schedule group.`,
 					},
 					"snowflake_role": schema.SingleNestedAttribute{
 						Computed: true,

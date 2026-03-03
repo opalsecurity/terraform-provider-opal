@@ -165,10 +165,16 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 				r.RemoteInfo.DuoGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.DuoGroup.GroupID = types.StringValue(resp.RemoteInfo.DuoGroup.GroupID)
 			}
+			if resp.RemoteInfo.GithubEnterpriseTeam == nil {
+				r.RemoteInfo.GithubEnterpriseTeam = nil
+			} else {
+				r.RemoteInfo.GithubEnterpriseTeam = &tfTypes.GithubEnterpriseTeam{}
+				r.RemoteInfo.GithubEnterpriseTeam.TeamSlug = types.StringValue(resp.RemoteInfo.GithubEnterpriseTeam.TeamSlug)
+			}
 			if resp.RemoteInfo.GithubTeam == nil {
 				r.RemoteInfo.GithubTeam = nil
 			} else {
-				r.RemoteInfo.GithubTeam = &tfTypes.GithubTeam{}
+				r.RemoteInfo.GithubTeam = &tfTypes.GithubEnterpriseTeam{}
 				r.RemoteInfo.GithubTeam.TeamSlug = types.StringValue(resp.RemoteInfo.GithubTeam.TeamSlug)
 			}
 			if resp.RemoteInfo.GitlabGroup == nil {
@@ -212,6 +218,12 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 			} else {
 				r.RemoteInfo.PagerdutyOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
 				r.RemoteInfo.PagerdutyOnCallSchedule.ScheduleID = types.StringValue(resp.RemoteInfo.PagerdutyOnCallSchedule.ScheduleID)
+			}
+			if resp.RemoteInfo.RootlyOnCallSchedule == nil {
+				r.RemoteInfo.RootlyOnCallSchedule = nil
+			} else {
+				r.RemoteInfo.RootlyOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
+				r.RemoteInfo.RootlyOnCallSchedule.ScheduleID = types.StringValue(resp.RemoteInfo.RootlyOnCallSchedule.ScheduleID)
 			}
 			if resp.RemoteInfo.SnowflakeRole == nil {
 				r.RemoteInfo.SnowflakeRole = nil
@@ -614,13 +626,22 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 				GroupID: groupId6,
 			}
 		}
+		var githubEnterpriseTeam *shared.GithubEnterpriseTeam
+		if r.RemoteInfo.GithubEnterpriseTeam != nil {
+			var teamSlug string
+			teamSlug = r.RemoteInfo.GithubEnterpriseTeam.TeamSlug.ValueString()
+
+			githubEnterpriseTeam = &shared.GithubEnterpriseTeam{
+				TeamSlug: teamSlug,
+			}
+		}
 		var githubTeam *shared.GithubTeam
 		if r.RemoteInfo.GithubTeam != nil {
-			var teamSlug string
-			teamSlug = r.RemoteInfo.GithubTeam.TeamSlug.ValueString()
+			var teamSlug1 string
+			teamSlug1 = r.RemoteInfo.GithubTeam.TeamSlug.ValueString()
 
 			githubTeam = &shared.GithubTeam{
-				TeamSlug: teamSlug,
+				TeamSlug: teamSlug1,
 			}
 		}
 		var gitlabGroup *shared.GitlabGroup
@@ -686,6 +707,15 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 				ScheduleID: scheduleId1,
 			}
 		}
+		var rootlyOnCallSchedule *shared.RootlyOnCallSchedule
+		if r.RemoteInfo.RootlyOnCallSchedule != nil {
+			var scheduleId2 string
+			scheduleId2 = r.RemoteInfo.RootlyOnCallSchedule.ScheduleID.ValueString()
+
+			rootlyOnCallSchedule = &shared.RootlyOnCallSchedule{
+				ScheduleID: scheduleId2,
+			}
+		}
 		var snowflakeRole *shared.SnowflakeRole
 		if r.RemoteInfo.SnowflakeRole != nil {
 			var roleID string
@@ -722,6 +752,7 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 			DatabricksAccountGroup:   databricksAccountGroup,
 			DevinGroup:               devinGroup,
 			DuoGroup:                 duoGroup,
+			GithubEnterpriseTeam:     githubEnterpriseTeam,
 			GithubTeam:               githubTeam,
 			GitlabGroup:              gitlabGroup,
 			GoogleGroup:              googleGroup,
@@ -730,6 +761,7 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 			OktaGroup:                oktaGroup,
 			OktaGroupRule:            oktaGroupRule,
 			PagerdutyOnCallSchedule:  pagerdutyOnCallSchedule,
+			RootlyOnCallSchedule:     rootlyOnCallSchedule,
 			SnowflakeRole:            snowflakeRole,
 			TailscaleGroup:           tailscaleGroup,
 			WorkdayUserSecurityGroup: workdayUserSecurityGroup,

@@ -309,6 +309,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.GcpSQLInstance.InstanceID = types.StringValue(resultsItem.RemoteInfo.GcpSQLInstance.InstanceID)
 					results.RemoteInfo.GcpSQLInstance.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpSQLInstance.ProjectID)
 				}
+				if resultsItem.RemoteInfo.GithubEnterpriseRole == nil {
+					results.RemoteInfo.GithubEnterpriseRole = nil
+				} else {
+					results.RemoteInfo.GithubEnterpriseRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.GithubEnterpriseRole.RoleID = types.StringValue(resultsItem.RemoteInfo.GithubEnterpriseRole.RoleID)
+				}
 				if resultsItem.RemoteInfo.GithubOrg == nil {
 					results.RemoteInfo.GithubOrg = nil
 				} else {

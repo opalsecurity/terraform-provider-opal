@@ -31,13 +31,13 @@ terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "3.4.1"
+      version = "3.4.2"
     }
   }
 }
 
 provider "opal" {
-  # Configuration options
+  server_url = "..." # Optional
 }
 ```
 <!-- End Installation [installation] -->
@@ -63,7 +63,7 @@ Available configuration:
 <!-- Start Available Resources and Data Sources [operations] -->
 ## Available Resources and Data Sources
 
-### Resources
+### Managed Resources
 
 * [opal_access_rule](docs/resources/access_rule.md)
 * [opal_bundle](docs/resources/bundle.md)
@@ -86,6 +86,7 @@ Available configuration:
 * [opal_scoped_role_permission_list](docs/resources/scoped_role_permission_list.md)
 * [opal_tag](docs/resources/tag.md)
 * [opal_tag_user](docs/resources/tag_user.md)
+
 ### Data Sources
 
 * [opal_access_rule](docs/data-sources/access_rule.md)
@@ -98,13 +99,13 @@ Available configuration:
 * [opal_delegations](docs/data-sources/delegations.md)
 * [opal_events](docs/data-sources/events.md)
 * [opal_group](docs/data-sources/group.md)
-* [opal_group_list](docs/data-sources/group_list.md)
 * [opal_group_catalog_mapping](docs/data-sources/group_catalog_mapping.md)
 * [opal_group_containing_group](docs/data-sources/group_containing_group.md)
 * [opal_group_resource_list](docs/data-sources/group_resource_list.md)
 * [opal_group_reviewers_stages_list](docs/data-sources/group_reviewers_stages_list.md)
 * [opal_group_tags](docs/data-sources/group_tags.md)
 * [opal_group_users](docs/data-sources/group_users.md)
+* [opal_group_list](docs/data-sources/group_list.md)
 * [opal_idp_group_mappings](docs/data-sources/idp_group_mappings.md)
 * [opal_message_channel](docs/data-sources/message_channel.md)
 * [opal_message_channel_list](docs/data-sources/message_channel_list.md)
@@ -120,11 +121,11 @@ Available configuration:
 * [opal_resource](docs/data-sources/resource.md)
 * [opal_resource_message_channel_list](docs/data-sources/resource_message_channel_list.md)
 * [opal_resource_reviewers_list](docs/data-sources/resource_reviewers_list.md)
-* [opal_resources_list](docs/data-sources/resources_list.md)
-* [opal_resources_access_status](docs/data-sources/resources_access_status.md)
-* [opal_resources_users_list](docs/data-sources/resources_users_list.md)
 * [opal_resource_tags](docs/data-sources/resource_tags.md)
 * [opal_resource_visibility](docs/data-sources/resource_visibility.md)
+* [opal_resources_access_status](docs/data-sources/resources_access_status.md)
+* [opal_resources_users_list](docs/data-sources/resources_users_list.md)
+* [opal_resources_list](docs/data-sources/resources_list.md)
 * [opal_scoped_role_permission_list](docs/data-sources/scoped_role_permission_list.md)
 * [opal_sessions](docs/data-sources/sessions.md)
 * [opal_tag](docs/data-sources/tag.md)
@@ -132,8 +133,8 @@ Available configuration:
 * [opal_uar](docs/data-sources/uar.md)
 * [opal_uars_list](docs/data-sources/uars_list.md)
 * [opal_user](docs/data-sources/user.md)
-* [opal_users](docs/data-sources/users.md)
 * [opal_user_tags](docs/data-sources/user_tags.md)
+* [opal_users](docs/data-sources/users.md)
 <!-- End Available Resources and Data Sources [operations] -->
 
 <!-- Start Testing the provider locally [usage] -->

@@ -31,7 +31,7 @@ data "opal_group_list" "my_group_list" {
 
 - `group_ids` (List of String) The group ids to filter by.
 - `group_name` (String) Group name.
-- `group_type_filter` (String) The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "DEVIN_GROUP"]
+- `group_type_filter` (String) The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM"]
 - `page_size` (Number) Number of results to return per page. Default is 200.
 
 ### Read-Only
@@ -83,6 +83,7 @@ Read-Only:
 - `databricks_account_group` (Attributes) Remote info for Databricks account group. (see [below for nested schema](#nestedatt--results--remote_info--databricks_account_group))
 - `devin_group` (Attributes) Remote info for Devin group. (see [below for nested schema](#nestedatt--results--remote_info--devin_group))
 - `duo_group` (Attributes) Remote info for Duo Security group. (see [below for nested schema](#nestedatt--results--remote_info--duo_group))
+- `github_enterprise_team` (Attributes) Remote info for GitHub Enterprise team. (see [below for nested schema](#nestedatt--results--remote_info--github_enterprise_team))
 - `github_team` (Attributes) Remote info for GitHub team. (see [below for nested schema](#nestedatt--results--remote_info--github_team))
 - `gitlab_group` (Attributes) Remote info for Gitlab group. (see [below for nested schema](#nestedatt--results--remote_info--gitlab_group))
 - `google_group` (Attributes) Remote info for Google group. (see [below for nested schema](#nestedatt--results--remote_info--google_group))
@@ -91,6 +92,7 @@ Read-Only:
 - `okta_group` (Attributes) Remote info for Okta Directory group. (see [below for nested schema](#nestedatt--results--remote_info--okta_group))
 - `okta_group_rule` (Attributes) Remote info for Okta Directory group rule. (see [below for nested schema](#nestedatt--results--remote_info--okta_group_rule))
 - `pagerduty_on_call_schedule` (Attributes) Remote info for PagerDuty on-call schedule group. (see [below for nested schema](#nestedatt--results--remote_info--pagerduty_on_call_schedule))
+- `rootly_on_call_schedule` (Attributes) Remote info for Rootly on-call schedule group. (see [below for nested schema](#nestedatt--results--remote_info--rootly_on_call_schedule))
 - `snowflake_role` (Attributes) Remote info for Snowflake role. (see [below for nested schema](#nestedatt--results--remote_info--snowflake_role))
 - `tailscale_group` (Attributes) Remote info for Tailscale group. (see [below for nested schema](#nestedatt--results--remote_info--tailscale_group))
 - `workday_user_security_group` (Attributes) Remote info for Workday User Security group. (see [below for nested schema](#nestedatt--results--remote_info--workday_user_security_group))
@@ -159,6 +161,14 @@ Read-Only:
 - `group_id` (String) The id of the Duo Security group.
 
 
+<a id="nestedatt--results--remote_info--github_enterprise_team"></a>
+### Nested Schema for `results.remote_info.github_enterprise_team`
+
+Read-Only:
+
+- `team_slug` (String) The slug of the GitHub Enterprise team.
+
+
 <a id="nestedatt--results--remote_info--github_team"></a>
 ### Nested Schema for `results.remote_info.github_team`
 
@@ -221,6 +231,14 @@ Read-Only:
 Read-Only:
 
 - `schedule_id` (String) The id of the PagerDuty on-call schedule.
+
+
+<a id="nestedatt--results--remote_info--rootly_on_call_schedule"></a>
+### Nested Schema for `results.remote_info.rootly_on_call_schedule`
+
+Read-Only:
+
+- `schedule_id` (String) The id of the Rootly on-call schedule.
 
 
 <a id="nestedatt--results--remote_info--snowflake_role"></a>

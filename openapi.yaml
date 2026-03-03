@@ -783,6 +783,35 @@ paths:
         - events
       x-speakeasy-name-override: get
       x-speakeasy-entity-operation: Events#get
+  /events/{event_id}:
+    get:
+      summary: Get event by ID
+      description: Returns an `Event` object.
+      operationId: getEvent
+      parameters:
+        - description: The ID of the event.
+          example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+          explode: true
+          in: path
+          name: event_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+          description: The requested `Event`.
+        "404":
+          description: Event not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - events
   /groups:
     get:
       summary: Get groups
@@ -1256,9 +1285,18 @@ paths:
             format: uuid
             type: string
           style: simple
+        - description: The remote ID of the member group's access level to filter by.
+          example: arn:aws:iam::590304332660:role/AdministratorAccess
+          explode: true
+          in: query
+          name: access_level_remote_id
+          required: false
+          schema:
+            type: string
+          style: form
       responses:
         "204":
-          description: The containing group was successfully removed from the group.
+          description: The member group was successfully removed from the containing group.
       security:
         - BearerAuth: []
       tags:
@@ -2699,7 +2737,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
                 $ref: "#/components/schemas/RequestCommentList"
       security:
         - BearerAuth: []
@@ -6024,7 +6061,6 @@ components:
         - GIT_LAB
         - GIT_LAB_CONNECTION
         - TELEPORT
-        - SLACK
       example: GIT_HUB
       type: string
     PaginatedGroupsList:
@@ -6085,6 +6121,20 @@ components:
           description: The ID of the resource.
           example: b5a5ca27-0ea3-4d86-9199-2126d57d1fbd
           format: uuid
+          type: string
+        group_name:
+          description: The name of the group
+          example: API Group
+          type: string
+        resource_name:
+          description: The name of the resource
+          example: API Group
+          type: string
+        expiration_date:
+          description: The day and time the group's access will expire.
+          example: 2022-01-23T04:56:07Z
+          format: date-time
+          nullable: true
           type: string
         access_level:
           $ref: "#/components/schemas/ResourceAccessLevel"
@@ -6681,7 +6731,9 @@ components:
         - WORKDAY_USER_SECURITY_GROUP
         - PAGERDUTY_ON_CALL_SCHEDULE
         - INCIDENTIO_ON_CALL_SCHEDULE
+        - ROOTLY_ON_CALL_SCHEDULE
         - DEVIN_GROUP
+        - GIT_HUB_ENTERPRISE_TEAM
       example: OPAL_GROUP
       type: string
     ResourceTypeEnum:
@@ -6761,6 +6813,7 @@ components:
         - VAULT_SECRET
         - VAULT_POLICY
         - VAULT_OIDC_ROLE
+        - GIT_HUB_ENTERPRISE_ROLE
       example: AWS_IAM_ROLE
       type: string
     VisibilityTypeEnum:
@@ -7322,6 +7375,16 @@ components:
           required:
             - team_slug
           x-speakeasy-param-force-new: true
+        github_enterprise_team:
+          description: Remote info for GitHub Enterprise team.
+          properties:
+            team_slug:
+              description: The slug of the GitHub Enterprise team.
+              example: opal-security
+              type: string
+          type: object
+          required:
+            - team_slug
         gitlab_group:
           description: Remote info for Gitlab group.
           properties:
@@ -7445,6 +7508,16 @@ components:
           properties:
             schedule_id:
               description: The id of the Incident.io on-call schedule.
+              example: 01HZ8XQM9ZQX8RKMZQ8ZQX8RK
+              type: string
+          type: object
+          required:
+            - schedule_id
+        rootly_on_call_schedule:
+          description: Remote info for Rootly on-call schedule group.
+          properties:
+            schedule_id:
+              description: The id of the Rootly on-call schedule.
               example: 01HZ8XQM9ZQX8RKMZQ8ZQX8RK
               type: string
           type: object
@@ -7989,6 +8062,16 @@ components:
           type: object
           required:
             - org_name
+        github_enterprise_role:
+          description: Remote info for GitHub Enterprise role.
+          properties:
+            role_id:
+              description: The id of the role.
+              example: 112233
+              type: string
+          type: object
+          required:
+            - role_id
         gitlab_project:
           description: Remote info for Gitlab project.
           properties:

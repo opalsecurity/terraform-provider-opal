@@ -611,6 +611,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for GCP SQL instance.`,
 					},
+					"github_enterprise_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"role_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the role.`,
+							},
+						},
+						Description: `Remote info for GitHub Enterprise role.`,
+					},
 					"github_org": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{

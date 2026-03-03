@@ -97,10 +97,16 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.DuoGroup = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.DuoGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.DuoGroup.GroupID)
 				}
+				if resultsItem.RemoteInfo.GithubEnterpriseTeam == nil {
+					results.RemoteInfo.GithubEnterpriseTeam = nil
+				} else {
+					results.RemoteInfo.GithubEnterpriseTeam = &tfTypes.GithubEnterpriseTeam{}
+					results.RemoteInfo.GithubEnterpriseTeam.TeamSlug = types.StringValue(resultsItem.RemoteInfo.GithubEnterpriseTeam.TeamSlug)
+				}
 				if resultsItem.RemoteInfo.GithubTeam == nil {
 					results.RemoteInfo.GithubTeam = nil
 				} else {
-					results.RemoteInfo.GithubTeam = &tfTypes.GithubTeam{}
+					results.RemoteInfo.GithubTeam = &tfTypes.GithubEnterpriseTeam{}
 					results.RemoteInfo.GithubTeam.TeamSlug = types.StringValue(resultsItem.RemoteInfo.GithubTeam.TeamSlug)
 				}
 				if resultsItem.RemoteInfo.GitlabGroup == nil {
@@ -144,6 +150,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				} else {
 					results.RemoteInfo.PagerdutyOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
 					results.RemoteInfo.PagerdutyOnCallSchedule.ScheduleID = types.StringValue(resultsItem.RemoteInfo.PagerdutyOnCallSchedule.ScheduleID)
+				}
+				if resultsItem.RemoteInfo.RootlyOnCallSchedule == nil {
+					results.RemoteInfo.RootlyOnCallSchedule = nil
+				} else {
+					results.RemoteInfo.RootlyOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
+					results.RemoteInfo.RootlyOnCallSchedule.ScheduleID = types.StringValue(resultsItem.RemoteInfo.RootlyOnCallSchedule.ScheduleID)
 				}
 				if resultsItem.RemoteInfo.SnowflakeRole == nil {
 					results.RemoteInfo.SnowflakeRole = nil

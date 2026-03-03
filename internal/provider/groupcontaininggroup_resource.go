@@ -7,7 +7,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -79,7 +78,6 @@ func (r *GroupContainingGroupResource) Schema(ctx context.Context, req resource.
 				},
 				Description: `The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite. Requires replacement if changed.`,
 				Validators: []validator.Int64{
-					int64validator.AtLeast(0),
 					int64validator.AtMost(525960),
 				},
 			},
@@ -312,12 +310,12 @@ func (r *GroupContainingGroupResource) ImportState(ctx context.Context, req reso
 	}
 
 	if len(data.ContainingGroupID) == 0 {
-		resp.Diagnostics.AddError("Missing required field", `The field containing_group_id is required but was not found in the json encoded ID. It's expected to be a value alike '"4baf8423-db0a-4037-a4cf-f79c60cb67a5"`)
+		resp.Diagnostics.AddError("Missing required field", `The field containing_group_id is required but was not found in the json encoded ID. It's expected to be a value alike '"4baf8423-db0a-4037-a4cf-f79c60cb67a5"'`)
 		return
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("containing_group_id"), data.ContainingGroupID)...)
 	if len(data.GroupID) == 0 {
-		resp.Diagnostics.AddError("Missing required field", `The field group_id is required but was not found in the json encoded ID. It's expected to be a value alike '"4baf8423-db0a-4037-a4cf-f79c60cb67a5"`)
+		resp.Diagnostics.AddError("Missing required field", `The field group_id is required but was not found in the json encoded ID. It's expected to be a value alike '"4baf8423-db0a-4037-a4cf-f79c60cb67a5"'`)
 		return
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("group_id"), data.GroupID)...)

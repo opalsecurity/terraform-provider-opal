@@ -72,13 +72,25 @@ func (r *GroupResourceListDataSource) Schema(ctx context.Context, req datasource
 								`### Usage Example` + "\n" +
 								`View the ` + "`" + `AccessLevel` + "`" + ` of a resource/user or resource/group pair to see the level of access granted to the resource.`,
 						},
+						"expiration_date": schema.StringAttribute{
+							Computed:    true,
+							Description: `The day and time the group's access will expire.`,
+						},
 						"group_id": schema.StringAttribute{
 							Computed:    true,
 							Description: `The ID of the group.`,
 						},
+						"group_name": schema.StringAttribute{
+							Computed:    true,
+							Description: `The name of the group`,
+						},
 						"resource_id": schema.StringAttribute{
 							Computed:    true,
 							Description: `The ID of the resource.`,
+						},
+						"resource_name": schema.StringAttribute{
+							Computed:    true,
+							Description: `The name of the resource`,
 						},
 					},
 				},

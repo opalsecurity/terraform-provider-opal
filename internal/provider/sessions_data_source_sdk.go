@@ -23,6 +23,7 @@ func (r *SessionsDataSourceModel) RefreshFromSharedSessionsList(ctx context.Cont
 		for _, resultsItem := range resp.Results {
 			var results tfTypes.Session
 
+			results.AccessLevel = &tfTypes.ResourceAccessLevel{}
 			results.AccessLevel.AccessLevelName = types.StringValue(resultsItem.AccessLevel.AccessLevelName)
 			results.AccessLevel.AccessLevelRemoteID = types.StringValue(resultsItem.AccessLevel.AccessLevelRemoteID)
 			results.ConnectionID = types.StringValue(resultsItem.ConnectionID)

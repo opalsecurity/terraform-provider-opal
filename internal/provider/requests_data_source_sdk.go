@@ -30,6 +30,9 @@ func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(ctx context.Conte
 
 				customFieldsResponses.FieldName = types.StringValue(customFieldsResponsesItem.FieldName)
 				customFieldsResponses.FieldType = types.StringValue(string(customFieldsResponsesItem.FieldType))
+				if customFieldsResponses.FieldValue == nil {
+					customFieldsResponses.FieldValue = &tfTypes.FieldValue{}
+				}
 				if customFieldsResponsesItem.FieldValue.Str != nil {
 					customFieldsResponses.FieldValue.Str = types.StringPointerValue(customFieldsResponsesItem.FieldValue.Str)
 				}

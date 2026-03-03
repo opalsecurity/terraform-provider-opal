@@ -85,6 +85,7 @@ const (
 	ResourceTypeEnumVaultSecret                       ResourceTypeEnum = "VAULT_SECRET"
 	ResourceTypeEnumVaultPolicy                       ResourceTypeEnum = "VAULT_POLICY"
 	ResourceTypeEnumVaultOidcRole                     ResourceTypeEnum = "VAULT_OIDC_ROLE"
+	ResourceTypeEnumGitHubEnterpriseRole              ResourceTypeEnum = "GIT_HUB_ENTERPRISE_ROLE"
 )
 
 func (e ResourceTypeEnum) ToPointer() *ResourceTypeEnum {
@@ -243,6 +244,8 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "VAULT_POLICY":
 		fallthrough
 	case "VAULT_OIDC_ROLE":
+		fallthrough
+	case "GIT_HUB_ENTERPRISE_ROLE":
 		*e = ResourceTypeEnum(v)
 		return nil
 	default:

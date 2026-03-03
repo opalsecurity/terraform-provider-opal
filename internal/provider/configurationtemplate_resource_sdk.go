@@ -48,6 +48,7 @@ func (r *ConfigurationTemplateResourceModel) RefreshFromSharedConfigurationTempl
 			}
 		}
 		if resp.Visibility != nil {
+			r.Visibility = &tfTypes.VisibilityInfo{}
 			r.Visibility.Visibility = types.StringValue(string(resp.Visibility.Visibility))
 			r.Visibility.VisibilityGroupIds = make([]types.String, 0, len(resp.Visibility.VisibilityGroupIds))
 			for _, v := range resp.Visibility.VisibilityGroupIds {

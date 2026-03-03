@@ -111,6 +111,7 @@ Read-Only:
 - `databricks_account_group` (Attributes) Remote info for Databricks account group. (see [below for nested schema](#nestedatt--remote_info--databricks_account_group))
 - `devin_group` (Attributes) Remote info for Devin group. (see [below for nested schema](#nestedatt--remote_info--devin_group))
 - `duo_group` (Attributes) Remote info for Duo Security group. (see [below for nested schema](#nestedatt--remote_info--duo_group))
+- `github_enterprise_team` (Attributes) Remote info for GitHub Enterprise team. (see [below for nested schema](#nestedatt--remote_info--github_enterprise_team))
 - `github_team` (Attributes) Remote info for GitHub team. (see [below for nested schema](#nestedatt--remote_info--github_team))
 - `gitlab_group` (Attributes) Remote info for Gitlab group. (see [below for nested schema](#nestedatt--remote_info--gitlab_group))
 - `google_group` (Attributes) Remote info for Google group. (see [below for nested schema](#nestedatt--remote_info--google_group))
@@ -119,6 +120,7 @@ Read-Only:
 - `okta_group` (Attributes) Remote info for Okta Directory group. (see [below for nested schema](#nestedatt--remote_info--okta_group))
 - `okta_group_rule` (Attributes) Remote info for Okta Directory group rule. (see [below for nested schema](#nestedatt--remote_info--okta_group_rule))
 - `pagerduty_on_call_schedule` (Attributes) Remote info for PagerDuty on-call schedule group. (see [below for nested schema](#nestedatt--remote_info--pagerduty_on_call_schedule))
+- `rootly_on_call_schedule` (Attributes) Remote info for Rootly on-call schedule group. (see [below for nested schema](#nestedatt--remote_info--rootly_on_call_schedule))
 - `snowflake_role` (Attributes) Remote info for Snowflake role. (see [below for nested schema](#nestedatt--remote_info--snowflake_role))
 - `tailscale_group` (Attributes) Remote info for Tailscale group. (see [below for nested schema](#nestedatt--remote_info--tailscale_group))
 - `workday_user_security_group` (Attributes) Remote info for Workday User Security group. (see [below for nested schema](#nestedatt--remote_info--workday_user_security_group))
@@ -187,6 +189,14 @@ Read-Only:
 - `group_id` (String) The id of the Duo Security group.
 
 
+<a id="nestedatt--remote_info--github_enterprise_team"></a>
+### Nested Schema for `remote_info.github_enterprise_team`
+
+Read-Only:
+
+- `team_slug` (String) The slug of the GitHub Enterprise team.
+
+
 <a id="nestedatt--remote_info--github_team"></a>
 ### Nested Schema for `remote_info.github_team`
 
@@ -249,6 +259,14 @@ Read-Only:
 Read-Only:
 
 - `schedule_id` (String) The id of the PagerDuty on-call schedule.
+
+
+<a id="nestedatt--remote_info--rootly_on_call_schedule"></a>
+### Nested Schema for `remote_info.rootly_on_call_schedule`
+
+Read-Only:
+
+- `schedule_id` (String) The id of the Rootly on-call schedule.
 
 
 <a id="nestedatt--remote_info--snowflake_role"></a>

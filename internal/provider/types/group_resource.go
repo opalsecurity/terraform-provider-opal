@@ -7,7 +7,10 @@ import (
 )
 
 type GroupResource struct {
-	AccessLevel ResourceAccessLevel `tfsdk:"access_level"`
-	GroupID     types.String        `tfsdk:"group_id"`
-	ResourceID  types.String        `tfsdk:"resource_id"`
+	AccessLevel    *ResourceAccessLevel `tfsdk:"access_level"`
+	ExpirationDate types.String         `tfsdk:"expiration_date"`
+	GroupID        types.String         `tfsdk:"group_id"`
+	GroupName      types.String         `tfsdk:"group_name"`
+	ResourceID     types.String         `tfsdk:"resource_id"`
+	ResourceName   types.String         `tfsdk:"resource_name"`
 }

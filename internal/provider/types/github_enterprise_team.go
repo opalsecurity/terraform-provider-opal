@@ -6,6 +6,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-type GithubTeam struct {
+type GithubEnterpriseTeam struct {
 	TeamSlug types.String `tfsdk:"team_slug"`
 }

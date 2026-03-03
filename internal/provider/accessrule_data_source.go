@@ -29,12 +29,12 @@ type AccessRuleDataSource struct {
 
 // AccessRuleDataSourceModel describes the data model.
 type AccessRuleDataSourceModel struct {
-	AdminOwnerID types.String        `tfsdk:"admin_owner_id"`
-	Description  types.String        `tfsdk:"description"`
-	ID           types.String        `tfsdk:"id"`
-	Name         types.String        `tfsdk:"name"`
-	RuleClauses  tfTypes.RuleClauses `tfsdk:"rule_clauses"`
-	Status       types.String        `tfsdk:"status"`
+	AdminOwnerID types.String         `tfsdk:"admin_owner_id"`
+	Description  types.String         `tfsdk:"description"`
+	ID           types.String         `tfsdk:"id"`
+	Name         types.String         `tfsdk:"name"`
+	RuleClauses  *tfTypes.RuleClauses `tfsdk:"rule_clauses"`
+	Status       types.String         `tfsdk:"status"`
 }
 
 // Metadata returns the data source type name.
@@ -57,7 +57,7 @@ func (r *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 				Description: `A description of the group.`,
 			},
 			"id": schema.StringAttribute{
-				Computed:    true,
+				Required:    true,
 				Description: `The ID (group ID) of the access rule.`,
 			},
 			"name": schema.StringAttribute{

@@ -148,6 +148,9 @@ resource "opal_resource" "my_resource" {
       instance_id = "example-sql-898931321"
       project_id  = "example-project-898931321"
     }
+    github_enterprise_role = {
+      role_id = 112233
+    }
     github_org = {
       org_name = "Opal Security"
     }
