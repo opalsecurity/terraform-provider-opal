@@ -1080,6 +1080,7 @@ actions:
         - COUPA
         - CURSOR
         - CUSTOM
+        - CUSTOM_CONNECTOR
         - DATABRICKS
         - DATASTAX_ASTRA
         - DUO
