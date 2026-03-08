@@ -445,6 +445,7 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 												"owner_ids": schema.SetAttribute{
 													Computed:    true,
 													ElementType: types.StringType,
+													Description: `The IDs of owners assigned as reviewers for this stage.`,
 												},
 												"require_admin_approval": schema.BoolAttribute{
 													Computed:    true,
@@ -453,6 +454,11 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 												"require_manager_approval": schema.BoolAttribute{
 													Computed:    true,
 													Description: `Whether this reviewer stage should require manager approval.`,
+												},
+												"service_user_ids": schema.ListAttribute{
+													Computed:    true,
+													ElementType: types.StringType,
+													Description: `The IDs of service users assigned as reviewers for this stage.`,
 												},
 											},
 										},

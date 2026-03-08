@@ -41,6 +41,9 @@ resource "opal_configuration_template" "my_configurationtemplate" {
           ]
           require_admin_approval   = false
           require_manager_approval = false
+          service_user_ids = [
+            "b6e24f53-c0bf-47ad-85c7-9b524e6ab746"
+          ]
         }
       ]
     }

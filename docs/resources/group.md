@@ -122,6 +122,9 @@ resource "opal_group" "my_group" {
           ]
           require_admin_approval   = false
           require_manager_approval = false
+          service_user_ids = [
+            "2397768f-f9b2-4d15-ae5b-40e60f38060e"
+          ]
         }
       ]
     }
@@ -202,9 +205,10 @@ Optional:
 Optional:
 
 - `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. Default: "AND"; must be one of ["AND", "OR"]
-- `owner_ids` (Set of String) Not Null
+- `owner_ids` (Set of String) The IDs of owners assigned as reviewers for this stage. Not Null
 - `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval. Default: false
 - `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval. Default: false
+- `service_user_ids` (List of String) The IDs of service users assigned as reviewers for this stage.
 
 
 
