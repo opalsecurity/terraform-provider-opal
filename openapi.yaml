@@ -47,6 +47,8 @@ tags:
     description: Operations related to sessions
   - name: tags
     description: Operations related to tags
+  - name: tokens
+    description: Operations related to API tokens
   - name: uars
     description: Operations related to UARs
   - name: users
@@ -4480,6 +4482,90 @@ paths:
         - on-call-schedules
       x-speakeasy-name-override: get_id
       x-speakeasy-entity-operation: OnCallSchedule#get
+  /tokens:
+    get:
+      summary: Get tokens
+      description: Returns a list of first-party API tokens for your organization. Requires admin access.
+      operationId: getTokens
+      parameters:
+        - description: The pagination cursor value.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          explode: true
+          in: query
+          name: cursor
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: Number of results to return per page. Default is 200.
+          example: 200
+          explode: true
+          in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+          style: form
+        - description: Filter by token IDs.
+          explode: false
+          in: query
+          name: token_ids
+          required: false
+          schema:
+            items:
+              format: uuid
+              type: string
+            type: array
+          style: form
+        - description: Filter by user ID.
+          example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+          explode: true
+          in: query
+          name: user_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedTokensList"
+          description: A list of API tokens for your organization.
+      security:
+        - BearerAuth: []
+      tags:
+        - tokens
+  /tokens/{token_id}:
+    delete:
+      summary: Delete token
+      description: Deletes a first-party API token. Admins can delete any token. Non-admins can only delete their own tokens when the organization allows all users to create API tokens.
+      operationId: deleteToken
+      parameters:
+        - description: The ID of the token to delete.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          explode: false
+          in: path
+          name: token_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          description: The token was successfully deleted.
+        "403":
+          description: Not authorized to delete this token.
+        "404":
+          description: Token not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - tokens
   /uars:
     get:
       description: Returns a list of `UAR` objects.
@@ -5236,6 +5322,7 @@ components:
         - COUPA
         - CURSOR
         - CUSTOM
+        - CUSTOM_CONNECTOR
         - DATABRICKS
         - DATASTAX_ASTRA
         - DUO
@@ -7128,6 +7215,8 @@ components:
         owner_ids:
           - 7870617d-e72a-47f5-a84c-693817ab4567
           - 1520617d-e72a-47f5-a84c-693817ab48ad2
+        service_user_ids:
+          - 7870617d-e72a-47f5-a84c-693817ab4568
       properties:
         require_manager_approval:
           description: Whether this reviewer stage should require manager approval.
@@ -7148,11 +7237,18 @@ components:
           type: string
           default: AND
         owner_ids:
+          description: The IDs of owners assigned as reviewers for this stage.
           items:
             type: string
             format: uuid
           type: array
           format: set
+        service_user_ids:
+          description: The IDs of service users assigned as reviewers for this stage.
+          items:
+            type: string
+            format: uuid
+          type: array
       type: object
       required:
         - operator
@@ -11499,6 +11595,98 @@ components:
         - end_time
         - reason
       x-speakeasy-entity: Delegation
+    ApiAccessLevelEnum:
+      description: The access level of an API token.
+      enum:
+        - READ_ONLY
+        - FULL_ACCESS
+      type: string
+    Token:
+      description: A first-party API token.
+      example:
+        token_id: f454d283-ca87-4a8a-bdbb-df212eca5353
+        created_at: 2022-01-23T04:56:07Z
+        token_preview: ab123
+        token_label: My API Token
+        creator_user_id: d4a7d928-783e-4599-8ec6-088d635a5bcc
+        user_id: d4a7d928-783e-4599-8ec6-088d635a5bcc
+        access_level: READ_ONLY
+      properties:
+        token_id:
+          description: The ID of the API token.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          format: uuid
+          type: string
+        created_at:
+          description: The date and time the token was created.
+          example: 2022-01-23T04:56:07Z
+          format: date-time
+          type: string
+        token_label:
+          description: A human-readable label for the token.
+          example: My API Token
+          type: string
+        creator_user_id:
+          description: The ID of the user who created the token.
+          example: d4a7d928-783e-4599-8ec6-088d635a5bcc
+          format: uuid
+          type: string
+        user_id:
+          description: The ID of the user the token authenticates as.
+          example: d4a7d928-783e-4599-8ec6-088d635a5bcc
+          format: uuid
+          type: string
+        last_used_at:
+          description: The date and time the token was last used.
+          example: 2022-01-23T04:56:07Z
+          format: date-time
+          nullable: true
+          type: string
+        access_level:
+          $ref: "#/components/schemas/ApiAccessLevelEnum"
+        expires_at:
+          description: The date and time the token expires.
+          example: 2023-01-23T04:56:07Z
+          format: date-time
+          nullable: true
+          type: string
+      required:
+        - token_id
+        - created_at
+        - token_label
+        - creator_user_id
+        - user_id
+        - access_level
+      type: object
+    PaginatedTokensList:
+      example:
+        next: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+        previous: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+        results:
+          - token_id: f454d283-ca87-4a8a-bdbb-df212eca5353
+            created_at: 2022-01-23T04:56:07Z
+            token_label: My API Token
+            creator_user_id: d4a7d928-783e-4599-8ec6-088d635a5bcc
+            user_id: d4a7d928-783e-4599-8ec6-088d635a5bcc
+            access_level: READ_ONLY
+      properties:
+        next:
+          description: The cursor with which to continue pagination if additional result pages exist.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          nullable: true
+          type: string
+        previous:
+          description: The cursor used to obtain the current result page.
+          example: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: "#/components/schemas/Token"
+          type: array
+      required:
+        - results
+      type: object
     BundlesVisibilityTypeEnum:
       description: The visibility level of the entity.
       enum:

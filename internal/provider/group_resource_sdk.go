@@ -288,6 +288,10 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 				}
 				reviewerStages.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
 				reviewerStages.RequireManagerApproval = types.BoolPointerValue(reviewerStagesItem.RequireManagerApproval)
+				reviewerStages.ServiceUserIds = make([]types.String, 0, len(reviewerStagesItem.ServiceUserIds))
+				for _, v := range reviewerStagesItem.ServiceUserIds {
+					reviewerStages.ServiceUserIds = append(reviewerStages.ServiceUserIds, types.StringValue(v))
+				}
 
 				requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
 			}
@@ -366,6 +370,10 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(ctx context.Contex
 			}
 			reviewerStages.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
 			reviewerStages.RequireManagerApproval = types.BoolPointerValue(reviewerStagesItem.RequireManagerApproval)
+			reviewerStages.ServiceUserIds = make([]types.String, 0, len(reviewerStagesItem.ServiceUserIds))
+			for _, v := range reviewerStagesItem.ServiceUserIds {
+				reviewerStages.ServiceUserIds = append(reviewerStages.ServiceUserIds, types.StringValue(v))
+			}
 
 			requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
 		}
@@ -934,11 +942,16 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 			} else {
 				requireManagerApproval = nil
 			}
+			serviceUserIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].ServiceUserIds))
+			for serviceUserIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].ServiceUserIds {
+				serviceUserIds = append(serviceUserIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].ServiceUserIds[serviceUserIdsIndex].ValueString())
+			}
 			reviewerStages = append(reviewerStages, shared.ReviewerStage{
 				Operator:               operator,
 				OwnerIds:               ownerIds,
 				RequireAdminApproval:   requireAdminApproval,
 				RequireManagerApproval: requireManagerApproval,
+				ServiceUserIds:         serviceUserIds,
 			})
 		}
 		requestConfigurations = append(requestConfigurations, shared.RequestConfiguration{

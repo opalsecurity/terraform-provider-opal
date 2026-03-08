@@ -19,6 +19,7 @@ const (
 	AppTypeEnumCoupa           AppTypeEnum = "COUPA"
 	AppTypeEnumCursor          AppTypeEnum = "CURSOR"
 	AppTypeEnumCustom          AppTypeEnum = "CUSTOM"
+	AppTypeEnumCustomConnector AppTypeEnum = "CUSTOM_CONNECTOR"
 	AppTypeEnumDatabricks      AppTypeEnum = "DATABRICKS"
 	AppTypeEnumDatastaxAstra   AppTypeEnum = "DATASTAX_ASTRA"
 	AppTypeEnumDuo             AppTypeEnum = "DUO"
@@ -69,6 +70,8 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 	case "CURSOR":
 		fallthrough
 	case "CUSTOM":
+		fallthrough
+	case "CUSTOM_CONNECTOR":
 		fallthrough
 	case "DATABRICKS":
 		fallthrough

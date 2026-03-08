@@ -2,7 +2,7 @@
 
 package sdk
 
-// Generated from OpenAPI doc version 1.0 and generator version 2.845.21
+// Generated from OpenAPI doc version 1.0 and generator version 2.855.2
 
 import (
 	"context"
@@ -89,6 +89,8 @@ type OpalAPI struct {
 	Sessions *Sessions
 	// Operations related to tags
 	Tags *Tags
+	// Operations related to API tokens
+	Tokens *Tokens
 	// Operations related to UARs
 	Uars *Uars
 	// Operations related to users
@@ -169,9 +171,9 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *OpalAPI {
 	sdk := &OpalAPI{
-		SDKVersion: "3.4.2",
+		SDKVersion: "3.4.3",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:  "speakeasy-sdk/terraform 3.4.2 2.845.21 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
+			UserAgent:  "speakeasy-sdk/terraform 3.4.3 2.855.2 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
 			ServerList: ServerList,
 		},
 		hooks: hooks.New(),
@@ -209,6 +211,7 @@ func New(opts ...SDKOption) *OpalAPI {
 	sdk.Resources = newResources(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Sessions = newSessions(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Tags = newTags(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Tokens = newTokens(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Uars = newUars(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Users = newUsers(sdk, sdk.sdkConfiguration, sdk.hooks)
 

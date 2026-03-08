@@ -120,7 +120,7 @@ func (r *ResourceReviewersListDataSource) Read(ctx context.Context, req datasour
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromString(ctx, res.Strings)...)
+	resp.Diagnostics.Append(data.RefreshFrom(ctx, res.Strings)...)
 
 	if resp.Diagnostics.HasError() {
 		return

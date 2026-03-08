@@ -107,6 +107,9 @@ resource "opal_group" "my_group" {
           ]
           require_admin_approval   = false
           require_manager_approval = false
+          service_user_ids = [
+            "2397768f-f9b2-4d15-ae5b-40e60f38060e"
+          ]
         }
       ]
     }
