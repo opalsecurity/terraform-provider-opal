@@ -2124,7 +2124,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 											speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
 										},
 										ElementType: types.StringType,
-										Description: `Not Null`,
+										Description: `The IDs of owners assigned as reviewers for this stage. Not Null`,
 										Validators: []validator.Set{
 											speakeasy_setvalidators.NotNull(),
 										},
@@ -2146,6 +2146,15 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 											speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
 										},
 										Description: `Whether this reviewer stage should require manager approval. Default: false`,
+									},
+									"service_user_ids": schema.ListAttribute{
+										Computed: true,
+										Optional: true,
+										PlanModifiers: []planmodifier.List{
+											speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
+										},
+										ElementType: types.StringType,
+										Description: `The IDs of service users assigned as reviewers for this stage.`,
 									},
 								},
 							},

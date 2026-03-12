@@ -30,6 +30,10 @@ func (r *GroupReviewersStagesListDataSourceModel) RefreshFromSharedReviewerStage
 		}
 		data.RequireAdminApproval = types.BoolPointerValue(dataItem.RequireAdminApproval)
 		data.RequireManagerApproval = types.BoolPointerValue(dataItem.RequireManagerApproval)
+		data.ServiceUserIds = make([]types.String, 0, len(dataItem.ServiceUserIds))
+		for _, v := range dataItem.ServiceUserIds {
+			data.ServiceUserIds = append(data.ServiceUserIds, types.StringValue(v))
+		}
 
 		r.Data = append(r.Data, data)
 	}

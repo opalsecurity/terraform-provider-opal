@@ -39,11 +39,14 @@ func (e *Operator) UnmarshalJSON(data []byte) error {
 type ReviewerStage struct {
 	// The operator of the reviewer stage. Admin and manager approval are also treated as reviewers.
 	Operator *Operator `default:"AND" json:"operator"`
-	OwnerIds []string  `json:"owner_ids"`
+	// The IDs of owners assigned as reviewers for this stage.
+	OwnerIds []string `json:"owner_ids"`
 	// Whether this reviewer stage should require admin approval.
 	RequireAdminApproval *bool `default:"false" json:"require_admin_approval"`
 	// Whether this reviewer stage should require manager approval.
 	RequireManagerApproval *bool `default:"false" json:"require_manager_approval"`
+	// The IDs of service users assigned as reviewers for this stage.
+	ServiceUserIds []string `json:"service_user_ids,omitempty"`
 }
 
 func (r ReviewerStage) MarshalJSON() ([]byte, error) {
@@ -83,4 +86,11 @@ func (r *ReviewerStage) GetRequireManagerApproval() *bool {
 		return nil
 	}
 	return r.RequireManagerApproval
+}
+
+func (r *ReviewerStage) GetServiceUserIds() []string {
+	if r == nil {
+		return nil
+	}
+	return r.ServiceUserIds
 }

@@ -180,11 +180,16 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 			} else {
 				requireManagerApproval = nil
 			}
+			serviceUserIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].ServiceUserIds))
+			for serviceUserIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].ServiceUserIds {
+				serviceUserIds = append(serviceUserIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].ServiceUserIds[serviceUserIdsIndex].ValueString())
+			}
 			reviewerStages = append(reviewerStages, shared.ReviewerStage{
 				Operator:               operator,
 				OwnerIds:               ownerIds,
 				RequireAdminApproval:   requireAdminApproval,
 				RequireManagerApproval: requireManagerApproval,
+				ServiceUserIds:         serviceUserIds,
 			})
 		}
 		requestConfigurations = append(requestConfigurations, shared.RequestConfiguration{
@@ -379,11 +384,16 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 			} else {
 				requireManagerApproval = nil
 			}
+			serviceUserIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].ServiceUserIds))
+			for serviceUserIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].ServiceUserIds {
+				serviceUserIds = append(serviceUserIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].ServiceUserIds[serviceUserIdsIndex].ValueString())
+			}
 			reviewerStages = append(reviewerStages, shared.ReviewerStage{
 				Operator:               operator,
 				OwnerIds:               ownerIds,
 				RequireAdminApproval:   requireAdminApproval,
 				RequireManagerApproval: requireManagerApproval,
+				ServiceUserIds:         serviceUserIds,
 			})
 		}
 		requestConfigurations = append(requestConfigurations, shared.RequestConfiguration{

@@ -16,6 +16,9 @@ func (r *GroupDataSourceModel) RefreshFromOperationsGetGroupMessageChannelsRespo
 	var diags diag.Diagnostics
 
 	if resp != nil {
+		if r.MessageChannels == nil {
+			r.MessageChannels = &tfTypes.GetGroupMessageChannelsResponseBody{}
+		}
 		r.MessageChannels.Channels = []tfTypes.MessageChannel{}
 
 		for _, channelsItem := range resp.Channels {
@@ -46,6 +49,9 @@ func (r *GroupDataSourceModel) RefreshFromOperationsGetGroupOnCallSchedulesRespo
 	var diags diag.Diagnostics
 
 	if resp != nil {
+		if r.OnCallSchedules == nil {
+			r.OnCallSchedules = &tfTypes.GetGroupOnCallSchedulesResponseBody{}
+		}
 		r.OnCallSchedules.OnCallScheduleIds = make([]types.String, 0, len(resp.OnCallScheduleIds))
 		for _, v := range resp.OnCallScheduleIds {
 			r.OnCallSchedules.OnCallScheduleIds = append(r.OnCallSchedules.OnCallScheduleIds, types.StringValue(v))
@@ -288,6 +294,10 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				}
 				reviewerStages.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
 				reviewerStages.RequireManagerApproval = types.BoolPointerValue(reviewerStagesItem.RequireManagerApproval)
+				reviewerStages.ServiceUserIds = make([]types.String, 0, len(reviewerStagesItem.ServiceUserIds))
+				for _, v := range reviewerStagesItem.ServiceUserIds {
+					reviewerStages.ServiceUserIds = append(reviewerStages.ServiceUserIds, types.StringValue(v))
+				}
 
 				requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
 			}

@@ -41,6 +41,9 @@ func (a *AzureAdMicrosoft365Group) GetGroupID() string {
 	return a.GroupID
 }
 
+// #region class-body-azureadmicrosoft365group
+// #endregion class-body-azureadmicrosoft365group
+
 // AzureAdSecurityGroup - Remote info for Microsoft Entra ID Security group.
 type AzureAdSecurityGroup struct {
 	// The id of the Microsoft Entra ID Security group.

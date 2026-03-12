@@ -250,6 +250,9 @@ resource "opal_resource" "my_resource" {
           ]
           require_admin_approval   = false
           require_manager_approval = false
+          service_user_ids = [
+            "33dc8511-738b-4cfa-8746-4ed50249ba57"
+          ]
         }
       ]
     }

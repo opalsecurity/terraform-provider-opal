@@ -16,6 +16,9 @@ func (r *GroupResourceModel) RefreshFromOperationsGetGroupMessageChannelsRespons
 	var diags diag.Diagnostics
 
 	if resp != nil {
+		if r.MessageChannels == nil {
+			r.MessageChannels = &tfTypes.GetGroupMessageChannelsResponseBody{}
+		}
 		r.MessageChannels.Channels = []tfTypes.MessageChannel{}
 
 		for _, channelsItem := range resp.Channels {
@@ -46,6 +49,9 @@ func (r *GroupResourceModel) RefreshFromOperationsGetGroupOnCallSchedulesRespons
 	var diags diag.Diagnostics
 
 	if resp != nil {
+		if r.OnCallSchedules == nil {
+			r.OnCallSchedules = &tfTypes.GetGroupOnCallSchedulesResponseBody{}
+		}
 		r.OnCallSchedules.OnCallScheduleIds = make([]types.String, 0, len(resp.OnCallScheduleIds))
 		for _, v := range resp.OnCallScheduleIds {
 			r.OnCallSchedules.OnCallScheduleIds = append(r.OnCallSchedules.OnCallScheduleIds, types.StringValue(v))
@@ -288,6 +294,10 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 				}
 				reviewerStages.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
 				reviewerStages.RequireManagerApproval = types.BoolPointerValue(reviewerStagesItem.RequireManagerApproval)
+				reviewerStages.ServiceUserIds = make([]types.String, 0, len(reviewerStagesItem.ServiceUserIds))
+				for _, v := range reviewerStagesItem.ServiceUserIds {
+					reviewerStages.ServiceUserIds = append(reviewerStages.ServiceUserIds, types.StringValue(v))
+				}
 
 				requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
 			}
@@ -366,6 +376,10 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(ctx context.Contex
 			}
 			reviewerStages.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
 			reviewerStages.RequireManagerApproval = types.BoolPointerValue(reviewerStagesItem.RequireManagerApproval)
+			reviewerStages.ServiceUserIds = make([]types.String, 0, len(reviewerStagesItem.ServiceUserIds))
+			for _, v := range reviewerStagesItem.ServiceUserIds {
+				reviewerStages.ServiceUserIds = append(reviewerStages.ServiceUserIds, types.StringValue(v))
+			}
 
 			requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
 		}
@@ -934,11 +948,16 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 			} else {
 				requireManagerApproval = nil
 			}
+			serviceUserIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].ServiceUserIds))
+			for serviceUserIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].ServiceUserIds {
+				serviceUserIds = append(serviceUserIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].ServiceUserIds[serviceUserIdsIndex].ValueString())
+			}
 			reviewerStages = append(reviewerStages, shared.ReviewerStage{
 				Operator:               operator,
 				OwnerIds:               ownerIds,
 				RequireAdminApproval:   requireAdminApproval,
 				RequireManagerApproval: requireManagerApproval,
+				ServiceUserIds:         serviceUserIds,
 			})
 		}
 		requestConfigurations = append(requestConfigurations, shared.RequestConfiguration{

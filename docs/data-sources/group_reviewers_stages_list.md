@@ -35,6 +35,7 @@ data "opal_group_reviewers_stages_list" "my_groupreviewersstageslist" {
 Read-Only:
 
 - `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers.
-- `owner_ids` (Set of String)
+- `owner_ids` (Set of String) The IDs of owners assigned as reviewers for this stage.
 - `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval.
 - `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval.
+- `service_user_ids` (List of String) The IDs of service users assigned as reviewers for this stage.

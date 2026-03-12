@@ -197,6 +197,7 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 									"owner_ids": schema.SetAttribute{
 										Required:    true,
 										ElementType: types.StringType,
+										Description: `The IDs of owners assigned as reviewers for this stage.`,
 									},
 									"require_admin_approval": schema.BoolAttribute{
 										Computed:    true,
@@ -209,6 +210,11 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 										Optional:    true,
 										Default:     booldefault.StaticBool(false),
 										Description: `Whether this reviewer stage should require manager approval. Default: false`,
+									},
+									"service_user_ids": schema.ListAttribute{
+										Optional:    true,
+										ElementType: types.StringType,
+										Description: `The IDs of service users assigned as reviewers for this stage.`,
 									},
 								},
 							},

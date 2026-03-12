@@ -496,6 +496,10 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					}
 					reviewerStages.RequireAdminApproval = types.BoolPointerValue(reviewerStagesItem.RequireAdminApproval)
 					reviewerStages.RequireManagerApproval = types.BoolPointerValue(reviewerStagesItem.RequireManagerApproval)
+					reviewerStages.ServiceUserIds = make([]types.String, 0, len(reviewerStagesItem.ServiceUserIds))
+					for _, v := range reviewerStagesItem.ServiceUserIds {
+						reviewerStages.ServiceUserIds = append(reviewerStages.ServiceUserIds, types.StringValue(v))
+					}
 
 					requestConfigurations.ReviewerStages = append(requestConfigurations.ReviewerStages, reviewerStages)
 				}
