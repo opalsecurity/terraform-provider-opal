@@ -56,6 +56,9 @@ resource "opal_configuration_template" "my_configurationtemplate" {
           ]
           require_admin_approval   = false
           require_manager_approval = false
+          service_user_ids = [
+            "b6e24f53-c0bf-47ad-85c7-9b524e6ab746"
+          ]
         }
       ]
     }
@@ -148,13 +151,14 @@ Optional:
 
 Required:
 
-- `owner_ids` (Set of String)
+- `owner_ids` (Set of String) The IDs of owners assigned as reviewers for this stage.
 
 Optional:
 
 - `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. Default: "AND"; must be one of ["AND", "OR"]
 - `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval. Default: false
 - `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval. Default: false
+- `service_user_ids` (List of String) The IDs of service users assigned as reviewers for this stage.
 
 
 

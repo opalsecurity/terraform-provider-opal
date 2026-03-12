@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.4.3
+ - Fixes nil pointer dereference error when using opal_group resource
+
+
 ## v3.4.1
   - Adds `duration_minutes` and `access_level_remote_id` to `opal_group_containing_group`
   - Adds AppTypes:
