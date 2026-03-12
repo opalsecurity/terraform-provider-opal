@@ -69,9 +69,6 @@ func (a *AwsEc2Instance) GetRegion() string {
 	return a.Region
 }
 
-// #region class-body-awsec2instance
-// #endregion class-body-awsec2instance
-
 // AwsEksCluster - Remote info for AWS EKS cluster.
 type AwsEksCluster struct {
 	// The id of the AWS account. Required for AWS Organizations.

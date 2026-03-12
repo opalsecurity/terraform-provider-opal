@@ -17,9 +17,6 @@ func (r *GroupResourceModel) RefreshFromOperationsGetGroupMessageChannelsRespons
 	var diags diag.Diagnostics
 
 	if resp != nil {
-		if r.MessageChannels == nil {
-			r.MessageChannels = &tfTypes.GetGroupMessageChannelsResponseBody{}
-		}
 		r.MessageChannels.Channels = []tfTypes.MessageChannel{}
 
 		for _, channelsItem := range resp.Channels {
@@ -50,9 +47,6 @@ func (r *GroupResourceModel) RefreshFromOperationsGetGroupOnCallSchedulesRespons
 	var diags diag.Diagnostics
 
 	if resp != nil {
-		if r.OnCallSchedules == nil {
-			r.OnCallSchedules = &tfTypes.GetGroupOnCallSchedulesResponseBody{}
-		}
 		r.OnCallSchedules.OnCallScheduleIds = make([]types.String, 0, len(resp.OnCallScheduleIds))
 		for _, v := range resp.OnCallScheduleIds {
 			r.OnCallSchedules.OnCallScheduleIds = append(r.OnCallSchedules.OnCallScheduleIds, types.StringValue(v))

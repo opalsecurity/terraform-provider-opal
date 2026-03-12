@@ -10,7 +10,7 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/operations"
 )
 
-func (r *ResourceReviewersListDataSourceModel) RefreshFrom(ctx context.Context, resp []string) diag.Diagnostics {
+func (r *ResourceReviewersListDataSourceModel) RefreshFromString(ctx context.Context, resp []string) diag.Diagnostics {
 	var diags diag.Diagnostics
 
 	r.Data = make([]types.String, 0, len(resp))
