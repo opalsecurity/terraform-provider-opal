@@ -118,6 +118,9 @@ actions:
   - target: $["paths"]["/groups"]["get"]["parameters"][0]
     update:
       x-speakeasy-ignore: true
+  - target: $["paths"]["/groups"]["get"]["parameters"][5]
+    update:
+      x-speakeasy-ignore: true
   - target: $["paths"]["/groups"]["get"]["responses"]
     update:
       "404":
@@ -576,6 +579,9 @@ actions:
   - target: $["paths"]["/requests"]["get"]
     update:
       x-speakeasy-entity-operation: Requests#get
+  - target: $["paths"]["/resources"]["get"]["parameters"][8]
+    update:
+      x-speakeasy-ignore: true
   - target: $["paths"]["/resources"]["get"]["responses"]
     update:
       "404":
@@ -808,6 +814,9 @@ actions:
   - target: $["paths"]["/user"]["get"]
     update:
       x-speakeasy-entity-operation: User#get
+  - target: $["paths"]["/users"]["get"]["parameters"][2]
+    update:
+      x-speakeasy-ignore: true
   - target: $["paths"]["/users"]["get"]["responses"]
     update:
       "404":
