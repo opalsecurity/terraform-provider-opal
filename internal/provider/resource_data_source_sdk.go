@@ -344,6 +344,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.IlevelAdvancedRole = &tfTypes.IlevelAdvancedRole{}
 				r.RemoteInfo.IlevelAdvancedRole.RoleName = types.StringValue(resp.RemoteInfo.IlevelAdvancedRole.RoleName)
 			}
+			if resp.RemoteInfo.NetsuiteRole == nil {
+				r.RemoteInfo.NetsuiteRole = nil
+			} else {
+				r.RemoteInfo.NetsuiteRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.NetsuiteRole.RoleID = types.StringValue(resp.RemoteInfo.NetsuiteRole.RoleID)
+			}
 			if resp.RemoteInfo.OktaApp == nil {
 				r.RemoteInfo.OktaApp = nil
 			} else {

@@ -1095,6 +1095,7 @@ actions:
         - MONGO
         - MONGO_ATLAS
         - MYSQL
+        - NETSUITE
         - OKTA_DIRECTORY
         - OPENAI_PLATFORM
         - OPAL
@@ -1680,6 +1681,9 @@ actions:
     update:
       x-speakeasy-param-force-new: true
   - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["teleport_role"]["properties"]["role_name"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["ResourceRemoteInfo"]["properties"]["netsuite_role"]["properties"]["role_id"]
     update:
       x-speakeasy-param-force-new: true
   - target: $["components"]["schemas"]["CreateResourceInfo"]["properties"]["resource_type"]

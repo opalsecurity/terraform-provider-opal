@@ -5287,6 +5287,7 @@ components:
             - MONGO
             - MONGO_ATLAS
             - MYSQL
+            - NETSUITE
             - OKTA_DIRECTORY
             - OPENAI_PLATFORM
             - OPAL
@@ -5338,6 +5339,7 @@ components:
         - MONGO
         - MONGO_ATLAS
         - MYSQL
+        - NETSUITE
         - OKTA_DIRECTORY
         - OPENAI_PLATFORM
         - OPAL
@@ -6869,6 +6871,7 @@ components:
         - GOOGLE_WORKSPACE_ROLE
         - MONGO_INSTANCE
         - MONGO_ATLAS_INSTANCE
+        - NETSUITE_ROLE
         - OKTA_APP
         - OKTA_ROLE
         - OPAL_ROLE
@@ -8440,6 +8443,17 @@ components:
               description: The id of the role.
               example: devin-role-01
               type: string
+          type: object
+          required:
+            - role_id
+        netsuite_role:
+          description: Remote info for NetSuite role.
+          properties:
+            role_id:
+              description: The id of the role.
+              example: 123e4567-e89b-12d3-a456-426614174000
+              type: string
+              x-speakeasy-param-force-new: true
           type: object
           required:
             - role_id

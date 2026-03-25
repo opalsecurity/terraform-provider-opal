@@ -344,6 +344,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.IlevelAdvancedRole = &tfTypes.IlevelAdvancedRole{}
 				r.RemoteInfo.IlevelAdvancedRole.RoleName = types.StringValue(resp.RemoteInfo.IlevelAdvancedRole.RoleName)
 			}
+			if resp.RemoteInfo.NetsuiteRole == nil {
+				r.RemoteInfo.NetsuiteRole = nil
+			} else {
+				r.RemoteInfo.NetsuiteRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.NetsuiteRole.RoleID = types.StringValue(resp.RemoteInfo.NetsuiteRole.RoleID)
+			}
 			if resp.RemoteInfo.OktaApp == nil {
 				r.RemoteInfo.OktaApp = nil
 			} else {
@@ -1240,6 +1246,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				RoleName: roleName,
 			}
 		}
+		var netsuiteRole *shared.NetsuiteRole
+		if r.RemoteInfo.NetsuiteRole != nil {
+			var roleId6 string
+			roleId6 = r.RemoteInfo.NetsuiteRole.RoleID.ValueString()
+
+			netsuiteRole = &shared.NetsuiteRole{
+				RoleID: roleId6,
+			}
+		}
 		var oktaApp *shared.OktaApp
 		if r.RemoteInfo.OktaApp != nil {
 			var appId1 string
@@ -1251,11 +1266,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var oktaCustomRole *shared.OktaCustomRole
 		if r.RemoteInfo.OktaCustomRole != nil {
-			var roleId6 string
-			roleId6 = r.RemoteInfo.OktaCustomRole.RoleID.ValueString()
+			var roleId7 string
+			roleId7 = r.RemoteInfo.OktaCustomRole.RoleID.ValueString()
 
 			oktaCustomRole = &shared.OktaCustomRole{
-				RoleID: roleId6,
+				RoleID: roleId7,
 			}
 		}
 		var oktaStandardRole *shared.OktaStandardRole
@@ -1291,11 +1306,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var oracleFusionRole *shared.OracleFusionRole
 		if r.RemoteInfo.OracleFusionRole != nil {
-			var roleId7 string
-			roleId7 = r.RemoteInfo.OracleFusionRole.RoleID.ValueString()
+			var roleId8 string
+			roleId8 = r.RemoteInfo.OracleFusionRole.RoleID.ValueString()
 
 			oracleFusionRole = &shared.OracleFusionRole{
-				RoleID: roleId7,
+				RoleID: roleId8,
 			}
 		}
 		var pagerdutyRole *shared.PagerdutyRole
@@ -1331,11 +1346,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var salesforceRole *shared.SalesforceRole
 		if r.RemoteInfo.SalesforceRole != nil {
-			var roleId8 string
-			roleId8 = r.RemoteInfo.SalesforceRole.RoleID.ValueString()
+			var roleId9 string
+			roleId9 = r.RemoteInfo.SalesforceRole.RoleID.ValueString()
 
 			salesforceRole = &shared.SalesforceRole{
-				RoleID: roleId8,
+				RoleID: roleId9,
 			}
 		}
 		var snowflakeDatabase *shared.SnowflakeDatabase
@@ -1397,11 +1412,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var workdayRole *shared.WorkdayRole
 		if r.RemoteInfo.WorkdayRole != nil {
-			var roleId9 string
-			roleId9 = r.RemoteInfo.WorkdayRole.RoleID.ValueString()
+			var roleId10 string
+			roleId10 = r.RemoteInfo.WorkdayRole.RoleID.ValueString()
 
 			workdayRole = &shared.WorkdayRole{
-				RoleID: roleId9,
+				RoleID: roleId10,
 			}
 		}
 		remoteInfo = &shared.ResourceRemoteInfo{
@@ -1451,6 +1466,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			GitlabProject:                     gitlabProject,
 			GoogleWorkspaceRole:               googleWorkspaceRole,
 			IlevelAdvancedRole:                ilevelAdvancedRole,
+			NetsuiteRole:                      netsuiteRole,
 			OktaApp:                           oktaApp,
 			OktaCustomRole:                    oktaCustomRole,
 			OktaStandardRole:                  oktaStandardRole,

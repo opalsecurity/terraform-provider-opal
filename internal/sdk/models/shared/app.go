@@ -34,6 +34,7 @@ const (
 	TypeMongo           Type = "MONGO"
 	TypeMongoAtlas      Type = "MONGO_ATLAS"
 	TypeMysql           Type = "MYSQL"
+	TypeNetsuite        Type = "NETSUITE"
 	TypeOktaDirectory   Type = "OKTA_DIRECTORY"
 	TypeOpenaiPlatform  Type = "OPENAI_PLATFORM"
 	TypeOpal            Type = "OPAL"
@@ -99,6 +100,8 @@ func (e *Type) UnmarshalJSON(data []byte) error {
 	case "MONGO_ATLAS":
 		fallthrough
 	case "MYSQL":
+		fallthrough
+	case "NETSUITE":
 		fallthrough
 	case "OKTA_DIRECTORY":
 		fallthrough

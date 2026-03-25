@@ -62,7 +62,16 @@ resource "opal_resource" "sensitive_resource" {
   admin_owner_id = opal_owner.security.id
   visibility = "LIMITED"
   visibility_group_ids=[]#"c95394cf-e1e8-4baa-b850-ab5fd27335dc"]
-  request_configurations=[]
+  request_configurations=[
+    {
+      allow_requests         = true
+      auto_approval          = true
+      priority               = 0
+      require_mfa_to_request = false
+      require_support_ticket = false
+      reviewer_stages        = []
+    }
+  ]
 }
 
 resource "opal_message_channel" "my_messagechannel" {
@@ -81,7 +90,16 @@ resource "opal_group" "oncall" {
   # on_call_schedule_ids = ["d5d9099b-8ab1-4ed5-8ac6-7c874808dda1"]
   visibility = "LIMITED"
   # visibility_group_ids = ["c95394cf-e1e8-4baa-b850-ab5fd27335dc"]
-  request_configurations=[]
+  request_configurations = [
+    {
+      allow_requests         = true
+      auto_approval          = true
+      priority               = 0
+      require_mfa_to_request = false
+      require_support_ticket = false
+      reviewer_stages        = []
+    }
+  ]
 }
 
 resource "opal_group" "okta" {
@@ -206,6 +224,34 @@ resource "opal_group_resource_list" "my_groupresourcelist" {
     {
       resource_id            = opal_resource.sensitive_resource.id
     },
+  ]
+}
+
+data "opal_app" "netsuite" {
+  id = "1f74ec58-877f-4699-8499-5e3d572ee9b5"
+}
+
+resource "opal_resource" "netsuite_role" {
+  name           = "Terraform Netsuite Role Test"
+  description    = "Netsuite role created via Terraform"
+  resource_type  = "NETSUITE_ROLE"
+  app_id         = data.opal_app.netsuite.id
+  admin_owner_id = "370b6d08-006d-4dd7-b841-1a94096a89d6"
+  visibility     = "GLOBAL"
+  remote_info = {
+    netsuite_role = {
+      role_id = "4"
+    }
+  }
+  request_configurations = [
+    {
+      allow_requests         = true
+      auto_approval          = true
+      priority               = 0
+      require_mfa_to_request = false
+      require_support_ticket = false
+      reviewer_stages        = []
+    }
   ]
 }
 
