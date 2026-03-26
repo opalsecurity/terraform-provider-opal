@@ -169,6 +169,9 @@ resource "opal_resource" "my_resource" {
     ilevel_advanced_role = {
       role_name = "IT User"
     }
+    netsuite_role = {
+      role_id = "123e4567-e89b-12d3-a456-426614174000"
+    }
     okta_app = {
       app_id = "a9dfas0f678asdf67867"
     }

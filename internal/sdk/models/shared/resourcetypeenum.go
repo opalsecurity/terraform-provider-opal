@@ -54,6 +54,7 @@ const (
 	ResourceTypeEnumGoogleWorkspaceRole               ResourceTypeEnum = "GOOGLE_WORKSPACE_ROLE"
 	ResourceTypeEnumMongoInstance                     ResourceTypeEnum = "MONGO_INSTANCE"
 	ResourceTypeEnumMongoAtlasInstance                ResourceTypeEnum = "MONGO_ATLAS_INSTANCE"
+	ResourceTypeEnumNetsuiteRole                      ResourceTypeEnum = "NETSUITE_ROLE"
 	ResourceTypeEnumOktaApp                           ResourceTypeEnum = "OKTA_APP"
 	ResourceTypeEnumOktaRole                          ResourceTypeEnum = "OKTA_ROLE"
 	ResourceTypeEnumOpalRole                          ResourceTypeEnum = "OPAL_ROLE"
@@ -182,6 +183,8 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "MONGO_INSTANCE":
 		fallthrough
 	case "MONGO_ATLAS_INSTANCE":
+		fallthrough
+	case "NETSUITE_ROLE":
 		fallthrough
 	case "OKTA_APP":
 		fallthrough

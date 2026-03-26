@@ -351,6 +351,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.IlevelAdvancedRole = &tfTypes.IlevelAdvancedRole{}
 					results.RemoteInfo.IlevelAdvancedRole.RoleName = types.StringValue(resultsItem.RemoteInfo.IlevelAdvancedRole.RoleName)
 				}
+				if resultsItem.RemoteInfo.NetsuiteRole == nil {
+					results.RemoteInfo.NetsuiteRole = nil
+				} else {
+					results.RemoteInfo.NetsuiteRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.NetsuiteRole.RoleID = types.StringValue(resultsItem.RemoteInfo.NetsuiteRole.RoleID)
+				}
 				if resultsItem.RemoteInfo.OktaApp == nil {
 					results.RemoteInfo.OktaApp = nil
 				} else {

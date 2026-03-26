@@ -49,6 +49,7 @@ type ResourceRemoteInfo struct {
 	GitlabProject                     *GcpProject                        `tfsdk:"gitlab_project"`
 	GoogleWorkspaceRole               *SnowflakeRole                     `tfsdk:"google_workspace_role"`
 	IlevelAdvancedRole                *IlevelAdvancedRole                `tfsdk:"ilevel_advanced_role"`
+	NetsuiteRole                      *SnowflakeRole                     `tfsdk:"netsuite_role"`
 	OktaApp                           *OktaApp                           `tfsdk:"okta_app"`
 	OktaCustomRole                    *SnowflakeRole                     `tfsdk:"okta_custom_role"`
 	OktaStandardRole                  *OktaStandardRole                  `tfsdk:"okta_standard_role"`

@@ -35,6 +35,7 @@ const (
 	AppTypeEnumMongo           AppTypeEnum = "MONGO"
 	AppTypeEnumMongoAtlas      AppTypeEnum = "MONGO_ATLAS"
 	AppTypeEnumMysql           AppTypeEnum = "MYSQL"
+	AppTypeEnumNetsuite        AppTypeEnum = "NETSUITE"
 	AppTypeEnumOktaDirectory   AppTypeEnum = "OKTA_DIRECTORY"
 	AppTypeEnumOpenaiPlatform  AppTypeEnum = "OPENAI_PLATFORM"
 	AppTypeEnumOpal            AppTypeEnum = "OPAL"
@@ -102,6 +103,8 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 	case "MONGO_ATLAS":
 		fallthrough
 	case "MYSQL":
+		fallthrough
+	case "NETSUITE":
 		fallthrough
 	case "OKTA_DIRECTORY":
 		fallthrough

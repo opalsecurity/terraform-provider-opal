@@ -873,6 +873,17 @@ paths:
           schema:
             type: string
           style: form
+        - description: The IDs of the tags to filter by. Returns only groups that have any of these tags applied.
+          in: query
+          name: tag_ids
+          required: false
+          schema:
+            type: array
+            items:
+              format: uuid
+              type: string
+          style: form
+          x-speakeasy-ignore: true
       responses:
         "200":
           content:
@@ -2869,6 +2880,17 @@ paths:
           schema:
             type: string
           style: form
+        - description: The IDs of the tags to filter by. Returns only resources that have any of these tags applied.
+          in: query
+          name: tag_ids
+          required: false
+          schema:
+            type: array
+            items:
+              format: uuid
+              type: string
+          style: form
+          x-speakeasy-ignore: true
       responses:
         "200":
           content:
@@ -3815,6 +3837,17 @@ paths:
             type: integer
             maximum: 1000
           style: form
+        - description: The IDs of the tags to filter by. Returns only users that have any of these tags applied.
+          in: query
+          name: tag_ids
+          required: false
+          schema:
+            type: array
+            items:
+              format: uuid
+              type: string
+          style: form
+          x-speakeasy-ignore: true
       responses:
         "200":
           content:
@@ -5287,6 +5320,7 @@ components:
             - MONGO
             - MONGO_ATLAS
             - MYSQL
+            - NETSUITE
             - OKTA_DIRECTORY
             - OPENAI_PLATFORM
             - OPAL
@@ -5338,6 +5372,7 @@ components:
         - MONGO
         - MONGO_ATLAS
         - MYSQL
+        - NETSUITE
         - OKTA_DIRECTORY
         - OPENAI_PLATFORM
         - OPAL
@@ -6869,6 +6904,7 @@ components:
         - GOOGLE_WORKSPACE_ROLE
         - MONGO_INSTANCE
         - MONGO_ATLAS_INSTANCE
+        - NETSUITE_ROLE
         - OKTA_APP
         - OKTA_ROLE
         - OPAL_ROLE
@@ -8440,6 +8476,17 @@ components:
               description: The id of the role.
               example: devin-role-01
               type: string
+          type: object
+          required:
+            - role_id
+        netsuite_role:
+          description: Remote info for NetSuite role.
+          properties:
+            role_id:
+              description: The id of the role.
+              example: 123e4567-e89b-12d3-a456-426614174000
+              type: string
+              x-speakeasy-param-force-new: true
           type: object
           required:
             - role_id

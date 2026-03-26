@@ -1,5 +1,8 @@
 # Changelog
 
+## v3.4.4
+ - Add AppType: NETSUITE and ResourceType: NETSUITE_ROLE
+
 ## v3.4.3
  - Fixes nil pointer dereference error when using opal_group resource
 
