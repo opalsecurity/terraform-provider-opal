@@ -882,7 +882,6 @@ paths:
             items:
               format: uuid
               type: string
-          style: form
           x-speakeasy-ignore: true
       responses:
         "200":
@@ -2476,6 +2475,24 @@ paths:
           example: 37cb7e41-12ba-46da-92ff-030abe0450b1
           in: query
           name: target_user_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
+        - description: Filter requests by the resource ID that was requested.
+          example: 37cb7e41-12ba-46da-92ff-030abe0450b1
+          in: query
+          name: resource_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
+        - description: Filter requests by the group ID that was requested.
+          example: 37cb7e41-12ba-46da-92ff-030abe0450b1
+          in: query
+          name: group_id
           required: false
           schema:
             format: uuid

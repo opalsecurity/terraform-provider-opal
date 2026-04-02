@@ -1,5 +1,8 @@
 # Changelog
 
+## v3.4.5
+ - Fixes bug preventing oncall schedules from being created as `opal_groups`
+
 ## v3.4.4
  - Add AppType: NETSUITE and ResourceType: NETSUITE_ROLE
 

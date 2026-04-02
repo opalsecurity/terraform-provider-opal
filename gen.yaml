@@ -20,18 +20,19 @@ generation:
     allOfMergeStrategy: shallowMerge
   requestBodyFieldName: ""
   versioningStrategy: automatic
-  persistentEdits: {}
+  persistentEdits:
+    enabled: "true"
   tests:
     generateTests: true
     generateNewTests: false
     skipResponseBodyAssertions: false
   flattenGlobalSecurity: true
 terraform:
-  version: 3.4.4
+  version: 3.5.0
   additionalActions: []
   additionalDataSources: []
   additionalDependencies:
-    github.com/hashicorp/terraform-plugin-testing: v1.13.2
+    github.com/hashicorp/terraform-plugin-testing: v1.15.0
   additionalEphemeralResources: []
   additionalFunctions: []
   additionalListResources: []
@@ -52,6 +53,7 @@ terraform:
     - env: OPAL_AUTH_TOKEN
       providerAttribute: bearer_auth
   excludeEmptyObjectSchemas: false
+  forwardCompatibleEnumsByDefault: false
   imports:
     option: openapi
     paths:
@@ -65,6 +67,7 @@ terraform:
   inputModelSuffix: input
   outputModelSuffix: output
   packageName: opal
+  preApplyUnionDiscriminators: false
   respectRequiredFields: false
   respectTitlesForPrimitiveUnionMembers: false
   unionStrategy: populated-fields
