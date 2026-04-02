@@ -10,4 +10,7 @@ data "opal_resources_list" "my_resources_list" {
   ]
   resource_name        = "example-name"
   resource_type_filter = "AWS_IAM_ROLE"
+  tag_ids = [
+    "d65a0178-2679-4631-9aed-b1ad19ca8a12"
+  ]
 }
