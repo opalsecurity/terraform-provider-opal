@@ -40,7 +40,7 @@ data "opal_resources_list" "my_resources_list" {
 - `remote_id` (String) Filter resources by their remote id. This will return all resources that have a remote id that matches the provided remote id. Note that this requires resource_type_filter to be provided.
 - `resource_ids` (List of String) The resource ids to filter by.
 - `resource_name` (String) Resource name.
-- `resource_type_filter` (String) The resource type to filter by. Required when remote_id is provided. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE"]
+- `resource_type_filter` (String) The resource type to filter by. Required when remote_id is provided. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE"]
 
 ### Read-Only
 
@@ -109,6 +109,8 @@ Read-Only:
 - `azure_subscription` (Attributes) Remote info for Azure subscription. (see [below for nested schema](#nestedatt--results--remote_info--azure_subscription))
 - `azure_user_assigned_managed_identity` (Attributes) Remote info for Azure user assigned managed identity. (see [below for nested schema](#nestedatt--results--remote_info--azure_user_assigned_managed_identity))
 - `azure_virtual_machine` (Attributes) Remote info for Azure virtual machine. (see [below for nested schema](#nestedatt--results--remote_info--azure_virtual_machine))
+- `clickhouse_database` (Attributes) Remote info for ClickHouse database. (see [below for nested schema](#nestedatt--results--remote_info--clickhouse_database))
+- `clickhouse_table` (Attributes) Remote info for ClickHouse table. (see [below for nested schema](#nestedatt--results--remote_info--clickhouse_table))
 - `coupa_role` (Attributes) Remote info for Coupa role. (see [below for nested schema](#nestedatt--results--remote_info--coupa_role))
 - `cursor_organization` (Attributes) Remote info for a Cursor organization. (see [below for nested schema](#nestedatt--results--remote_info--cursor_organization))
 - `custom_connector` (Attributes) Remote info for a custom connector resource. (see [below for nested schema](#nestedatt--results--remote_info--custom_connector))
@@ -340,6 +342,23 @@ Read-Only:
 Read-Only:
 
 - `resource_id` (String) The ARM resource ID of the virtual machine.
+
+
+<a id="nestedatt--results--remote_info--clickhouse_database"></a>
+### Nested Schema for `results.remote_info.clickhouse_database`
+
+Read-Only:
+
+- `database_name` (String) The name of the ClickHouse database.
+
+
+<a id="nestedatt--results--remote_info--clickhouse_table"></a>
+### Nested Schema for `results.remote_info.clickhouse_table`
+
+Read-Only:
+
+- `database_name` (String) The name of the ClickHouse database containing the table.
+- `table_name` (String) The name of the ClickHouse table.
 
 
 <a id="nestedatt--results--remote_info--coupa_role"></a>

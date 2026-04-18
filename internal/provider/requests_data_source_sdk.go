@@ -157,6 +157,12 @@ func (r *RequestsDataSourceModel) ToOperationsGetRequestsRequest(ctx context.Con
 	} else {
 		endDateFilter = nil
 	}
+	groupID := new(string)
+	if !r.GroupID.IsUnknown() && !r.GroupID.IsNull() {
+		*groupID = r.GroupID.ValueString()
+	} else {
+		groupID = nil
+	}
 	pageSize := new(int64)
 	if !r.PageSize.IsUnknown() && !r.PageSize.IsNull() {
 		*pageSize = r.PageSize.ValueInt64()
@@ -168,6 +174,12 @@ func (r *RequestsDataSourceModel) ToOperationsGetRequestsRequest(ctx context.Con
 		*requesterID = r.RequesterID.ValueString()
 	} else {
 		requesterID = nil
+	}
+	resourceID := new(string)
+	if !r.ResourceID.IsUnknown() && !r.ResourceID.IsNull() {
+		*resourceID = r.ResourceID.ValueString()
+	} else {
+		resourceID = nil
 	}
 	showPendingOnly := new(bool)
 	if !r.ShowPendingOnly.IsUnknown() && !r.ShowPendingOnly.IsNull() {
@@ -190,8 +202,10 @@ func (r *RequestsDataSourceModel) ToOperationsGetRequestsRequest(ctx context.Con
 	out := operations.GetRequestsRequest{
 		Cursor:          cursor,
 		EndDateFilter:   endDateFilter,
+		GroupID:         groupID,
 		PageSize:        pageSize,
 		RequesterID:     requesterID,
+		ResourceID:      resourceID,
 		ShowPendingOnly: showPendingOnly,
 		StartDateFilter: startDateFilter,
 		TargetUserID:    targetUserID,

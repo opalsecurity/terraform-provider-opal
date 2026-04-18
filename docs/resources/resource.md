@@ -102,6 +102,13 @@ resource "opal_resource" "my_resource" {
     azure_virtual_machine = {
       resource_id = "/subscriptions/0000/resourceGroups/rg/providers/Microsoft.Compute/virtualMachines/vm01"
     }
+    clickhouse_database = {
+      database_name = "my_database"
+    }
+    clickhouse_table = {
+      database_name = "my_database"
+      table_name    = "my_table"
+    }
     coupa_role = {
       role_id = 999
     }
@@ -300,7 +307,7 @@ resource "opal_resource" "my_resource" {
 - `app_id` (String) The ID of the app for the resource. Requires replacement if changed.
 - `name` (String) The name of the resource.
 - `request_configurations` (Attributes List) A list of configurations for requests to this resource. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
-- `resource_type` (String) The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE"]; Requires replacement if changed.
+- `resource_type` (String) The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE"]; Requires replacement if changed.
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 
 ### Optional
@@ -391,6 +398,8 @@ Optional:
 - `azure_subscription` (Attributes) Remote info for Azure subscription. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_subscription))
 - `azure_user_assigned_managed_identity` (Attributes) Remote info for Azure user assigned managed identity. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_user_assigned_managed_identity))
 - `azure_virtual_machine` (Attributes) Remote info for Azure virtual machine. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_virtual_machine))
+- `clickhouse_database` (Attributes) Remote info for ClickHouse database. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--clickhouse_database))
+- `clickhouse_table` (Attributes) Remote info for ClickHouse table. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--clickhouse_table))
 - `coupa_role` (Attributes) Remote info for Coupa role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--coupa_role))
 - `cursor_organization` (Attributes) Remote info for a Cursor organization. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--cursor_organization))
 - `custom_connector` (Attributes) Remote info for a custom connector resource. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--custom_connector))
@@ -622,6 +631,23 @@ Optional:
 Optional:
 
 - `resource_id` (String) The ARM resource ID of the virtual machine. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--clickhouse_database"></a>
+### Nested Schema for `remote_info.clickhouse_database`
+
+Optional:
+
+- `database_name` (String) The name of the ClickHouse database. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--clickhouse_table"></a>
+### Nested Schema for `remote_info.clickhouse_table`
+
+Optional:
+
+- `database_name` (String) The name of the ClickHouse database containing the table. Not Null; Requires replacement if changed.
+- `table_name` (String) The name of the ClickHouse table. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--coupa_role"></a>

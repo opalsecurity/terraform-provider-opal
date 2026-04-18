@@ -87,6 +87,13 @@ resource "opal_resource" "my_resource" {
     azure_virtual_machine = {
       resource_id = "/subscriptions/0000/resourceGroups/rg/providers/Microsoft.Compute/virtualMachines/vm01"
     }
+    clickhouse_database = {
+      database_name = "my_database"
+    }
+    clickhouse_table = {
+      database_name = "my_database"
+      table_name    = "my_table"
+    }
     coupa_role = {
       role_id = 999
     }

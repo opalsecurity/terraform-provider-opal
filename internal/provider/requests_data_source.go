@@ -33,9 +33,11 @@ type RequestsDataSource struct {
 type RequestsDataSourceModel struct {
 	Cursor          types.String      `queryParam:"style=form,explode=true,name=cursor" tfsdk:"cursor"`
 	EndDateFilter   types.String      `queryParam:"style=form,explode=true,name=end_date_filter" tfsdk:"end_date_filter"`
+	GroupID         types.String      `queryParam:"style=form,explode=true,name=group_id" tfsdk:"group_id"`
 	PageSize        types.Int64       `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
 	RequesterID     types.String      `queryParam:"style=form,explode=true,name=requester_id" tfsdk:"requester_id"`
 	Requests        []tfTypes.Request `tfsdk:"requests"`
+	ResourceID      types.String      `queryParam:"style=form,explode=true,name=resource_id" tfsdk:"resource_id"`
 	ShowPendingOnly types.Bool        `queryParam:"style=form,explode=true,name=show_pending_only" tfsdk:"show_pending_only"`
 	StartDateFilter types.String      `queryParam:"style=form,explode=true,name=start_date_filter" tfsdk:"start_date_filter"`
 	TargetUserID    types.String      `queryParam:"style=form,explode=true,name=target_user_id" tfsdk:"target_user_id"`
@@ -60,6 +62,10 @@ func (r *RequestsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"end_date_filter": schema.StringAttribute{
 				Optional:    true,
 				Description: `An end date filter for the events.`,
+			},
+			"group_id": schema.StringAttribute{
+				Optional:    true,
+				Description: `Filter requests by the group ID that was requested.`,
 			},
 			"page_size": schema.Int64Attribute{
 				Optional:    true,
@@ -301,6 +307,10 @@ func (r *RequestsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 					},
 				},
 				Description: `The list of requests.`,
+			},
+			"resource_id": schema.StringAttribute{
+				Optional:    true,
+				Description: `Filter requests by the resource ID that was requested.`,
 			},
 			"show_pending_only": schema.BoolAttribute{
 				Optional:    true,

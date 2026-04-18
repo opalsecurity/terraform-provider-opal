@@ -234,6 +234,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Microsoft Entra ID Security group.`,
 					},
+					"clickhouse_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"role_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The name of the ClickHouse role.`,
+							},
+						},
+						Description: `Remote info for ClickHouse role.`,
+					},
 					"connector_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{

@@ -107,6 +107,7 @@ Read-Only:
 - `aws_sso_group` (Attributes) Remote info for AWS SSO group. (see [below for nested schema](#nestedatt--remote_info--aws_sso_group))
 - `azure_ad_microsoft_365_group` (Attributes) Remote info for Microsoft Entra ID Microsoft 365 group. (see [below for nested schema](#nestedatt--remote_info--azure_ad_microsoft_365_group))
 - `azure_ad_security_group` (Attributes) Remote info for Microsoft Entra ID Security group. (see [below for nested schema](#nestedatt--remote_info--azure_ad_security_group))
+- `clickhouse_role` (Attributes) Remote info for ClickHouse role. (see [below for nested schema](#nestedatt--remote_info--clickhouse_role))
 - `connector_group` (Attributes) Remote info for Connector group. (see [below for nested schema](#nestedatt--remote_info--connector_group))
 - `databricks_account_group` (Attributes) Remote info for Databricks account group. (see [below for nested schema](#nestedatt--remote_info--databricks_account_group))
 - `devin_group` (Attributes) Remote info for Devin group. (see [below for nested schema](#nestedatt--remote_info--devin_group))
@@ -155,6 +156,14 @@ Read-Only:
 Read-Only:
 
 - `group_id` (String) The id of the Microsoft Entra ID Security group.
+
+
+<a id="nestedatt--remote_info--clickhouse_role"></a>
+### Nested Schema for `remote_info.clickhouse_role`
+
+Read-Only:
+
+- `role_id` (String) The name of the ClickHouse role.
 
 
 <a id="nestedatt--remote_info--connector_group"></a>

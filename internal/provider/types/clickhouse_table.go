@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-type SnowflakeRole struct {
-	RoleID types.String `tfsdk:"role_id"`
+type ClickhouseTable struct {
+	DatabaseName types.String `tfsdk:"database_name"`
+	TableName    types.String `tfsdk:"table_name"`
 }

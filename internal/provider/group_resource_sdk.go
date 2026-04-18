@@ -147,6 +147,12 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 				r.RemoteInfo.AzureAdSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.AzureAdSecurityGroup.GroupID = types.StringValue(resp.RemoteInfo.AzureAdSecurityGroup.GroupID)
 			}
+			if resp.RemoteInfo.ClickhouseRole == nil {
+				r.RemoteInfo.ClickhouseRole = nil
+			} else {
+				r.RemoteInfo.ClickhouseRole = &tfTypes.ClickhouseRole{}
+				r.RemoteInfo.ClickhouseRole.RoleID = types.StringValue(resp.RemoteInfo.ClickhouseRole.RoleID)
+			}
 			if resp.RemoteInfo.ConnectorGroup == nil {
 				r.RemoteInfo.ConnectorGroup = nil
 			} else {
@@ -234,7 +240,7 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 			if resp.RemoteInfo.SnowflakeRole == nil {
 				r.RemoteInfo.SnowflakeRole = nil
 			} else {
-				r.RemoteInfo.SnowflakeRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.SnowflakeRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.SnowflakeRole.RoleID = types.StringValue(resp.RemoteInfo.SnowflakeRole.RoleID)
 			}
 			if resp.RemoteInfo.TailscaleGroup == nil {
@@ -604,6 +610,15 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 				GroupID: groupId3,
 			}
 		}
+		var clickhouseRole *shared.ClickhouseRole
+		if r.RemoteInfo.ClickhouseRole != nil {
+			var roleID string
+			roleID = r.RemoteInfo.ClickhouseRole.RoleID.ValueString()
+
+			clickhouseRole = &shared.ClickhouseRole{
+				RoleID: roleID,
+			}
+		}
 		var connectorGroup *shared.ConnectorGroup
 		if r.RemoteInfo.ConnectorGroup != nil {
 			var groupId4 string
@@ -732,11 +747,11 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		}
 		var snowflakeRole *shared.SnowflakeRole
 		if r.RemoteInfo.SnowflakeRole != nil {
-			var roleID string
-			roleID = r.RemoteInfo.SnowflakeRole.RoleID.ValueString()
+			var roleId1 string
+			roleId1 = r.RemoteInfo.SnowflakeRole.RoleID.ValueString()
 
 			snowflakeRole = &shared.SnowflakeRole{
-				RoleID: roleID,
+				RoleID: roleId1,
 			}
 		}
 		var tailscaleGroup *shared.TailscaleGroup
@@ -762,6 +777,7 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 			AwsSsoGroup:              awsSsoGroup,
 			AzureAdMicrosoft365Group: azureAdMicrosoft365Group,
 			AzureAdSecurityGroup:     azureAdSecurityGroup,
+			ClickhouseRole:           clickhouseRole,
 			ConnectorGroup:           connectorGroup,
 			DatabricksAccountGroup:   databricksAccountGroup,
 			DevinGroup:               devinGroup,

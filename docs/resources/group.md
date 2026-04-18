@@ -43,6 +43,9 @@ resource "opal_group" "my_group" {
     azure_ad_security_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
+    clickhouse_role = {
+      role_id = "my_clickhouse_role"
+    }
     connector_group = {
       group_id = 898931321
     }
@@ -144,7 +147,7 @@ resource "opal_group" "my_group" {
 ### Required
 
 - `app_id` (String) The ID of the app for the group. Requires replacement if changed.
-- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM"]; Requires replacement if changed.
+- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE"]; Requires replacement if changed.
 - `name` (String) The name of the group.
 - `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
@@ -221,6 +224,7 @@ Optional:
 - `aws_sso_group` (Attributes) Remote info for AWS SSO group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_sso_group))
 - `azure_ad_microsoft_365_group` (Attributes) Remote info for Microsoft Entra ID Microsoft 365 group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_ad_microsoft_365_group))
 - `azure_ad_security_group` (Attributes) Remote info for Microsoft Entra ID Security group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_ad_security_group))
+- `clickhouse_role` (Attributes) Remote info for ClickHouse role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--clickhouse_role))
 - `connector_group` (Attributes) Remote info for Connector group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--connector_group))
 - `databricks_account_group` (Attributes) Remote info for Databricks account group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--databricks_account_group))
 - `devin_group` (Attributes) Remote info for Devin group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--devin_group))
@@ -269,6 +273,14 @@ Optional:
 Optional:
 
 - `group_id` (String) The id of the Microsoft Entra ID Security group. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--clickhouse_role"></a>
+### Nested Schema for `remote_info.clickhouse_role`
+
+Optional:
+
+- `role_id` (String) The name of the ClickHouse role. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--connector_group"></a>

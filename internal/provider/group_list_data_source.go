@@ -61,7 +61,7 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 			},
 			"group_type_filter": schema.StringAttribute{
 				Optional:    true,
-				Description: `The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM"]`,
+				Description: `The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"ACTIVE_DIRECTORY_GROUP",
@@ -88,6 +88,8 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 						"ROOTLY_ON_CALL_SCHEDULE",
 						"DEVIN_GROUP",
 						"GIT_HUB_ENTERPRISE_TEAM",
+						"GRAFANA_TEAM",
+						"CLICKHOUSE_ROLE",
 					),
 				},
 			},
@@ -200,6 +202,16 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 										},
 									},
 									Description: `Remote info for Microsoft Entra ID Security group.`,
+								},
+								"clickhouse_role": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"role_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The name of the ClickHouse role.`,
+										},
+									},
+									Description: `Remote info for ClickHouse role.`,
 								},
 								"connector_group": schema.SingleNestedAttribute{
 									Computed: true,

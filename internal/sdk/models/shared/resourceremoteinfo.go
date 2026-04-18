@@ -425,6 +425,41 @@ func (a *AzureVirtualMachine) GetResourceID() string {
 	return a.ResourceID
 }
 
+// ClickhouseDatabase - Remote info for ClickHouse database.
+type ClickhouseDatabase struct {
+	// The name of the ClickHouse database.
+	DatabaseName string `json:"database_name"`
+}
+
+func (c *ClickhouseDatabase) GetDatabaseName() string {
+	if c == nil {
+		return ""
+	}
+	return c.DatabaseName
+}
+
+// ClickhouseTable - Remote info for ClickHouse table.
+type ClickhouseTable struct {
+	// The name of the ClickHouse database containing the table.
+	DatabaseName string `json:"database_name"`
+	// The name of the ClickHouse table.
+	TableName string `json:"table_name"`
+}
+
+func (c *ClickhouseTable) GetDatabaseName() string {
+	if c == nil {
+		return ""
+	}
+	return c.DatabaseName
+}
+
+func (c *ClickhouseTable) GetTableName() string {
+	if c == nil {
+		return ""
+	}
+	return c.TableName
+}
+
 // CoupaRole - Remote info for Coupa role.
 type CoupaRole struct {
 	// The id of the role.
@@ -1139,6 +1174,10 @@ type ResourceRemoteInfo struct {
 	AzureUserAssignedManagedIdentity *AzureUserAssignedManagedIdentity `json:"azure_user_assigned_managed_identity,omitempty"`
 	// Remote info for Azure virtual machine.
 	AzureVirtualMachine *AzureVirtualMachine `json:"azure_virtual_machine,omitempty"`
+	// Remote info for ClickHouse database.
+	ClickhouseDatabase *ClickhouseDatabase `json:"clickhouse_database,omitempty"`
+	// Remote info for ClickHouse table.
+	ClickhouseTable *ClickhouseTable `json:"clickhouse_table,omitempty"`
 	// Remote info for Coupa role.
 	CoupaRole *CoupaRole `json:"coupa_role,omitempty"`
 	// Remote info for a Cursor organization.
@@ -1375,6 +1414,20 @@ func (r *ResourceRemoteInfo) GetAzureVirtualMachine() *AzureVirtualMachine {
 		return nil
 	}
 	return r.AzureVirtualMachine
+}
+
+func (r *ResourceRemoteInfo) GetClickhouseDatabase() *ClickhouseDatabase {
+	if r == nil {
+		return nil
+	}
+	return r.ClickhouseDatabase
+}
+
+func (r *ResourceRemoteInfo) GetClickhouseTable() *ClickhouseTable {
+	if r == nil {
+		return nil
+	}
+	return r.ClickhouseTable
 }
 
 func (r *ResourceRemoteInfo) GetCoupaRole() *CoupaRole {

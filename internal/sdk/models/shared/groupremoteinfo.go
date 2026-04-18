@@ -57,6 +57,19 @@ func (a *AzureAdSecurityGroup) GetGroupID() string {
 	return a.GroupID
 }
 
+// ClickhouseRole - Remote info for ClickHouse role.
+type ClickhouseRole struct {
+	// The name of the ClickHouse role.
+	RoleID string `json:"role_id"`
+}
+
+func (c *ClickhouseRole) GetRoleID() string {
+	if c == nil {
+		return ""
+	}
+	return c.RoleID
+}
+
 // ConnectorGroup - Remote info for Connector group.
 type ConnectorGroup struct {
 	// The id of the Connector group.
@@ -288,6 +301,8 @@ type GroupRemoteInfo struct {
 	AzureAdMicrosoft365Group *AzureAdMicrosoft365Group `json:"azure_ad_microsoft_365_group,omitempty"`
 	// Remote info for Microsoft Entra ID Security group.
 	AzureAdSecurityGroup *AzureAdSecurityGroup `json:"azure_ad_security_group,omitempty"`
+	// Remote info for ClickHouse role.
+	ClickhouseRole *ClickhouseRole `json:"clickhouse_role,omitempty"`
 	// Remote info for Connector group.
 	ConnectorGroup *ConnectorGroup `json:"connector_group,omitempty"`
 	// Remote info for Databricks account group.
@@ -350,6 +365,13 @@ func (g *GroupRemoteInfo) GetAzureAdSecurityGroup() *AzureAdSecurityGroup {
 		return nil
 	}
 	return g.AzureAdSecurityGroup
+}
+
+func (g *GroupRemoteInfo) GetClickhouseRole() *ClickhouseRole {
+	if g == nil {
+		return nil
+	}
+	return g.ClickhouseRole
 }
 
 func (g *GroupRemoteInfo) GetConnectorGroup() *ConnectorGroup {

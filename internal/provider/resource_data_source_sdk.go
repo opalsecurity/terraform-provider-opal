@@ -190,10 +190,23 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.AzureVirtualMachine = &tfTypes.AzureEnterpriseApp{}
 				r.RemoteInfo.AzureVirtualMachine.ResourceID = types.StringValue(resp.RemoteInfo.AzureVirtualMachine.ResourceID)
 			}
+			if resp.RemoteInfo.ClickhouseDatabase == nil {
+				r.RemoteInfo.ClickhouseDatabase = nil
+			} else {
+				r.RemoteInfo.ClickhouseDatabase = &tfTypes.ClickhouseDatabase{}
+				r.RemoteInfo.ClickhouseDatabase.DatabaseName = types.StringValue(resp.RemoteInfo.ClickhouseDatabase.DatabaseName)
+			}
+			if resp.RemoteInfo.ClickhouseTable == nil {
+				r.RemoteInfo.ClickhouseTable = nil
+			} else {
+				r.RemoteInfo.ClickhouseTable = &tfTypes.ClickhouseTable{}
+				r.RemoteInfo.ClickhouseTable.DatabaseName = types.StringValue(resp.RemoteInfo.ClickhouseTable.DatabaseName)
+				r.RemoteInfo.ClickhouseTable.TableName = types.StringValue(resp.RemoteInfo.ClickhouseTable.TableName)
+			}
 			if resp.RemoteInfo.CoupaRole == nil {
 				r.RemoteInfo.CoupaRole = nil
 			} else {
-				r.RemoteInfo.CoupaRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.CoupaRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.CoupaRole.RoleID = types.StringValue(resp.RemoteInfo.CoupaRole.RoleID)
 			}
 			if resp.RemoteInfo.CursorOrganization == nil {
@@ -219,7 +232,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			if resp.RemoteInfo.DatastaxAstraRole == nil {
 				r.RemoteInfo.DatastaxAstraRole = nil
 			} else {
-				r.RemoteInfo.DatastaxAstraRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.DatastaxAstraRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.DatastaxAstraRole.RoleID = types.StringValue(resp.RemoteInfo.DatastaxAstraRole.RoleID)
 			}
 			if resp.RemoteInfo.DevinOrganization == nil {
@@ -231,7 +244,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			if resp.RemoteInfo.DevinRole == nil {
 				r.RemoteInfo.DevinRole = nil
 			} else {
-				r.RemoteInfo.DevinRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.DevinRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.DevinRole.RoleID = types.StringValue(resp.RemoteInfo.DevinRole.RoleID)
 			}
 			if resp.RemoteInfo.GcpBigQueryDataset == nil {
@@ -305,7 +318,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			if resp.RemoteInfo.GithubEnterpriseRole == nil {
 				r.RemoteInfo.GithubEnterpriseRole = nil
 			} else {
-				r.RemoteInfo.GithubEnterpriseRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.GithubEnterpriseRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.GithubEnterpriseRole.RoleID = types.StringValue(resp.RemoteInfo.GithubEnterpriseRole.RoleID)
 			}
 			if resp.RemoteInfo.GithubOrg == nil {
@@ -317,7 +330,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			if resp.RemoteInfo.GithubOrgRole == nil {
 				r.RemoteInfo.GithubOrgRole = nil
 			} else {
-				r.RemoteInfo.GithubOrgRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.GithubOrgRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.GithubOrgRole.RoleID = types.StringValue(resp.RemoteInfo.GithubOrgRole.RoleID)
 			}
 			if resp.RemoteInfo.GithubRepo == nil {
@@ -335,7 +348,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			if resp.RemoteInfo.GoogleWorkspaceRole == nil {
 				r.RemoteInfo.GoogleWorkspaceRole = nil
 			} else {
-				r.RemoteInfo.GoogleWorkspaceRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.GoogleWorkspaceRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.GoogleWorkspaceRole.RoleID = types.StringValue(resp.RemoteInfo.GoogleWorkspaceRole.RoleID)
 			}
 			if resp.RemoteInfo.IlevelAdvancedRole == nil {
@@ -347,7 +360,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			if resp.RemoteInfo.NetsuiteRole == nil {
 				r.RemoteInfo.NetsuiteRole = nil
 			} else {
-				r.RemoteInfo.NetsuiteRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.NetsuiteRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.NetsuiteRole.RoleID = types.StringValue(resp.RemoteInfo.NetsuiteRole.RoleID)
 			}
 			if resp.RemoteInfo.OktaApp == nil {
@@ -359,7 +372,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			if resp.RemoteInfo.OktaCustomRole == nil {
 				r.RemoteInfo.OktaCustomRole = nil
 			} else {
-				r.RemoteInfo.OktaCustomRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.OktaCustomRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.OktaCustomRole.RoleID = types.StringValue(resp.RemoteInfo.OktaCustomRole.RoleID)
 			}
 			if resp.RemoteInfo.OktaStandardRole == nil {
@@ -384,7 +397,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			if resp.RemoteInfo.OracleFusionRole == nil {
 				r.RemoteInfo.OracleFusionRole = nil
 			} else {
-				r.RemoteInfo.OracleFusionRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.OracleFusionRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.OracleFusionRole.RoleID = types.StringValue(resp.RemoteInfo.OracleFusionRole.RoleID)
 			}
 			if resp.RemoteInfo.PagerdutyRole == nil {
@@ -409,13 +422,13 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			if resp.RemoteInfo.SalesforceRole == nil {
 				r.RemoteInfo.SalesforceRole = nil
 			} else {
-				r.RemoteInfo.SalesforceRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.SalesforceRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.SalesforceRole.RoleID = types.StringValue(resp.RemoteInfo.SalesforceRole.RoleID)
 			}
 			if resp.RemoteInfo.SnowflakeDatabase == nil {
 				r.RemoteInfo.SnowflakeDatabase = nil
 			} else {
-				r.RemoteInfo.SnowflakeDatabase = &tfTypes.SnowflakeDatabase{}
+				r.RemoteInfo.SnowflakeDatabase = &tfTypes.ClickhouseDatabase{}
 				r.RemoteInfo.SnowflakeDatabase.DatabaseName = types.StringValue(resp.RemoteInfo.SnowflakeDatabase.DatabaseName)
 			}
 			if resp.RemoteInfo.SnowflakeSchema == nil {
@@ -448,7 +461,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			if resp.RemoteInfo.WorkdayRole == nil {
 				r.RemoteInfo.WorkdayRole = nil
 			} else {
-				r.RemoteInfo.WorkdayRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.WorkdayRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.WorkdayRole.RoleID = types.StringValue(resp.RemoteInfo.WorkdayRole.RoleID)
 			}
 		}

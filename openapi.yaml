@@ -882,7 +882,6 @@ paths:
             items:
               format: uuid
               type: string
-          style: form
           x-speakeasy-ignore: true
       responses:
         "200":
@@ -2476,6 +2475,24 @@ paths:
           example: 37cb7e41-12ba-46da-92ff-030abe0450b1
           in: query
           name: target_user_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
+        - description: Filter requests by the resource ID that was requested.
+          example: 37cb7e41-12ba-46da-92ff-030abe0450b1
+          in: query
+          name: resource_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
+        - description: Filter requests by the group ID that was requested.
+          example: 37cb7e41-12ba-46da-92ff-030abe0450b1
+          in: query
+          name: group_id
           required: false
           schema:
             format: uuid
@@ -6856,6 +6873,8 @@ components:
         - ROOTLY_ON_CALL_SCHEDULE
         - DEVIN_GROUP
         - GIT_HUB_ENTERPRISE_TEAM
+        - GRAFANA_TEAM
+        - CLICKHOUSE_ROLE
       example: OPAL_GROUP
       type: string
     ResourceTypeEnum:
@@ -6937,6 +6956,12 @@ components:
         - VAULT_POLICY
         - VAULT_OIDC_ROLE
         - GIT_HUB_ENTERPRISE_ROLE
+        - GRAFANA_FOLDER
+        - GRAFANA_DASHBOARD
+        - GRAFANA_BASIC_ROLE
+        - GRAFANA_ROLE
+        - CLICKHOUSE_DATABASE
+        - CLICKHOUSE_TABLE
       example: AWS_IAM_ROLE
       type: string
     VisibilityTypeEnum:
@@ -7665,6 +7690,16 @@ components:
           type: object
           required:
             - group_name
+        clickhouse_role:
+          description: Remote info for ClickHouse role.
+          properties:
+            role_id:
+              description: The name of the ClickHouse role.
+              example: my_clickhouse_role
+              type: string
+          type: object
+          required:
+            - role_id
       type: object
       x-speakeasy-entity: GroupRemote
     ResourceRemoteInfo:
@@ -8490,6 +8525,31 @@ components:
           type: object
           required:
             - role_id
+        clickhouse_database:
+          description: Remote info for ClickHouse database.
+          properties:
+            database_name:
+              description: The name of the ClickHouse database.
+              example: my_database
+              type: string
+          type: object
+          required:
+            - database_name
+        clickhouse_table:
+          description: Remote info for ClickHouse table.
+          properties:
+            database_name:
+              description: The name of the ClickHouse database containing the table.
+              example: my_database
+              type: string
+            table_name:
+              description: The name of the ClickHouse table.
+              example: my_table
+              type: string
+          type: object
+          required:
+            - database_name
+            - table_name
       type: object
     RiskSensitivityEnum:
       type: string

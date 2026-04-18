@@ -31,7 +31,7 @@ data "opal_group_list" "my_group_list" {
 
 - `group_ids` (List of String) The group ids to filter by.
 - `group_name` (String) Group name.
-- `group_type_filter` (String) The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM"]
+- `group_type_filter` (String) The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE"]
 - `page_size` (Number) Number of results to return per page. Default is 200.
 
 ### Read-Only
@@ -79,6 +79,7 @@ Read-Only:
 - `aws_sso_group` (Attributes) Remote info for AWS SSO group. (see [below for nested schema](#nestedatt--results--remote_info--aws_sso_group))
 - `azure_ad_microsoft_365_group` (Attributes) Remote info for Microsoft Entra ID Microsoft 365 group. (see [below for nested schema](#nestedatt--results--remote_info--azure_ad_microsoft_365_group))
 - `azure_ad_security_group` (Attributes) Remote info for Microsoft Entra ID Security group. (see [below for nested schema](#nestedatt--results--remote_info--azure_ad_security_group))
+- `clickhouse_role` (Attributes) Remote info for ClickHouse role. (see [below for nested schema](#nestedatt--results--remote_info--clickhouse_role))
 - `connector_group` (Attributes) Remote info for Connector group. (see [below for nested schema](#nestedatt--results--remote_info--connector_group))
 - `databricks_account_group` (Attributes) Remote info for Databricks account group. (see [below for nested schema](#nestedatt--results--remote_info--databricks_account_group))
 - `devin_group` (Attributes) Remote info for Devin group. (see [below for nested schema](#nestedatt--results--remote_info--devin_group))
@@ -127,6 +128,14 @@ Read-Only:
 Read-Only:
 
 - `group_id` (String) The id of the Microsoft Entra ID Security group.
+
+
+<a id="nestedatt--results--remote_info--clickhouse_role"></a>
+### Nested Schema for `results.remote_info.clickhouse_role`
+
+Read-Only:
+
+- `role_id` (String) The name of the ClickHouse role.
 
 
 <a id="nestedatt--results--remote_info--connector_group"></a>

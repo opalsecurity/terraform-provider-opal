@@ -87,6 +87,12 @@ const (
 	ResourceTypeEnumVaultPolicy                       ResourceTypeEnum = "VAULT_POLICY"
 	ResourceTypeEnumVaultOidcRole                     ResourceTypeEnum = "VAULT_OIDC_ROLE"
 	ResourceTypeEnumGitHubEnterpriseRole              ResourceTypeEnum = "GIT_HUB_ENTERPRISE_ROLE"
+	ResourceTypeEnumGrafanaFolder                     ResourceTypeEnum = "GRAFANA_FOLDER"
+	ResourceTypeEnumGrafanaDashboard                  ResourceTypeEnum = "GRAFANA_DASHBOARD"
+	ResourceTypeEnumGrafanaBasicRole                  ResourceTypeEnum = "GRAFANA_BASIC_ROLE"
+	ResourceTypeEnumGrafanaRole                       ResourceTypeEnum = "GRAFANA_ROLE"
+	ResourceTypeEnumClickhouseDatabase                ResourceTypeEnum = "CLICKHOUSE_DATABASE"
+	ResourceTypeEnumClickhouseTable                   ResourceTypeEnum = "CLICKHOUSE_TABLE"
 )
 
 func (e ResourceTypeEnum) ToPointer() *ResourceTypeEnum {
@@ -249,6 +255,18 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "VAULT_OIDC_ROLE":
 		fallthrough
 	case "GIT_HUB_ENTERPRISE_ROLE":
+		fallthrough
+	case "GRAFANA_FOLDER":
+		fallthrough
+	case "GRAFANA_DASHBOARD":
+		fallthrough
+	case "GRAFANA_BASIC_ROLE":
+		fallthrough
+	case "GRAFANA_ROLE":
+		fallthrough
+	case "CLICKHOUSE_DATABASE":
+		fallthrough
+	case "CLICKHOUSE_TABLE":
 		*e = ResourceTypeEnum(v)
 		return nil
 	default:

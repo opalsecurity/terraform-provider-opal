@@ -7,6 +7,7 @@ type GroupRemoteInfo struct {
 	AwsSsoGroup              *ActiveDirectoryGroup     `tfsdk:"aws_sso_group"`
 	AzureAdMicrosoft365Group *ActiveDirectoryGroup     `tfsdk:"azure_ad_microsoft_365_group"`
 	AzureAdSecurityGroup     *ActiveDirectoryGroup     `tfsdk:"azure_ad_security_group"`
+	ClickhouseRole           *ClickhouseRole           `tfsdk:"clickhouse_role"`
 	ConnectorGroup           *ActiveDirectoryGroup     `tfsdk:"connector_group"`
 	DatabricksAccountGroup   *ActiveDirectoryGroup     `tfsdk:"databricks_account_group"`
 	DevinGroup               *DevinGroup               `tfsdk:"devin_group"`
@@ -21,7 +22,7 @@ type GroupRemoteInfo struct {
 	OktaGroupRule            *OktaGroupRule            `tfsdk:"okta_group_rule"`
 	PagerdutyOnCallSchedule  *IncidentioOnCallSchedule `tfsdk:"pagerduty_on_call_schedule"`
 	RootlyOnCallSchedule     *IncidentioOnCallSchedule `tfsdk:"rootly_on_call_schedule"`
-	SnowflakeRole            *SnowflakeRole            `tfsdk:"snowflake_role"`
+	SnowflakeRole            *ClickhouseRole           `tfsdk:"snowflake_role"`
 	TailscaleGroup           *ActiveDirectoryGroup     `tfsdk:"tailscale_group"`
 	WorkdayUserSecurityGroup *ActiveDirectoryGroup     `tfsdk:"workday_user_security_group"`
 }

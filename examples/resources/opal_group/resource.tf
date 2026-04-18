@@ -28,6 +28,9 @@ resource "opal_group" "my_group" {
     azure_ad_security_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
+    clickhouse_role = {
+      role_id = "my_clickhouse_role"
+    }
     connector_group = {
       group_id = 898931321
     }

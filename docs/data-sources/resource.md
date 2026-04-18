@@ -82,6 +82,8 @@ Read-Only:
 - `azure_subscription` (Attributes) Remote info for Azure subscription. (see [below for nested schema](#nestedatt--remote_info--azure_subscription))
 - `azure_user_assigned_managed_identity` (Attributes) Remote info for Azure user assigned managed identity. (see [below for nested schema](#nestedatt--remote_info--azure_user_assigned_managed_identity))
 - `azure_virtual_machine` (Attributes) Remote info for Azure virtual machine. (see [below for nested schema](#nestedatt--remote_info--azure_virtual_machine))
+- `clickhouse_database` (Attributes) Remote info for ClickHouse database. (see [below for nested schema](#nestedatt--remote_info--clickhouse_database))
+- `clickhouse_table` (Attributes) Remote info for ClickHouse table. (see [below for nested schema](#nestedatt--remote_info--clickhouse_table))
 - `coupa_role` (Attributes) Remote info for Coupa role. (see [below for nested schema](#nestedatt--remote_info--coupa_role))
 - `cursor_organization` (Attributes) Remote info for a Cursor organization. (see [below for nested schema](#nestedatt--remote_info--cursor_organization))
 - `custom_connector` (Attributes) Remote info for a custom connector resource. (see [below for nested schema](#nestedatt--remote_info--custom_connector))
@@ -313,6 +315,23 @@ Read-Only:
 Read-Only:
 
 - `resource_id` (String) The ARM resource ID of the virtual machine.
+
+
+<a id="nestedatt--remote_info--clickhouse_database"></a>
+### Nested Schema for `remote_info.clickhouse_database`
+
+Read-Only:
+
+- `database_name` (String) The name of the ClickHouse database.
+
+
+<a id="nestedatt--remote_info--clickhouse_table"></a>
+### Nested Schema for `remote_info.clickhouse_table`
+
+Read-Only:
+
+- `database_name` (String) The name of the ClickHouse database containing the table.
+- `table_name` (String) The name of the ClickHouse table.
 
 
 <a id="nestedatt--remote_info--coupa_role"></a>
