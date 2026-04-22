@@ -74,6 +74,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.AzureAdSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.AzureAdSecurityGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.AzureAdSecurityGroup.GroupID)
 				}
+				if resultsItem.RemoteInfo.ClickhouseRole == nil {
+					results.RemoteInfo.ClickhouseRole = nil
+				} else {
+					results.RemoteInfo.ClickhouseRole = &tfTypes.ClickhouseRole{}
+					results.RemoteInfo.ClickhouseRole.RoleID = types.StringValue(resultsItem.RemoteInfo.ClickhouseRole.RoleID)
+				}
 				if resultsItem.RemoteInfo.ConnectorGroup == nil {
 					results.RemoteInfo.ConnectorGroup = nil
 				} else {
@@ -161,7 +167,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				if resultsItem.RemoteInfo.SnowflakeRole == nil {
 					results.RemoteInfo.SnowflakeRole = nil
 				} else {
-					results.RemoteInfo.SnowflakeRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.SnowflakeRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.SnowflakeRole.RoleID = types.StringValue(resultsItem.RemoteInfo.SnowflakeRole.RoleID)
 				}
 				if resultsItem.RemoteInfo.TailscaleGroup == nil {
@@ -169,6 +175,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				} else {
 					results.RemoteInfo.TailscaleGroup = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.TailscaleGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.TailscaleGroup.GroupID)
+				}
+				if resultsItem.RemoteInfo.TwingateGroup == nil {
+					results.RemoteInfo.TwingateGroup = nil
+				} else {
+					results.RemoteInfo.TwingateGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.TwingateGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.TwingateGroup.GroupID)
 				}
 				if resultsItem.RemoteInfo.WorkdayUserSecurityGroup == nil {
 					results.RemoteInfo.WorkdayUserSecurityGroup = nil

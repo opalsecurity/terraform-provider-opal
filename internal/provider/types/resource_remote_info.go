@@ -26,13 +26,16 @@ type ResourceRemoteInfo struct {
 	AzureSubscription                 *AzureEnterpriseApp                `tfsdk:"azure_subscription"`
 	AzureUserAssignedManagedIdentity  *AzureEnterpriseApp                `tfsdk:"azure_user_assigned_managed_identity"`
 	AzureVirtualMachine               *AzureEnterpriseApp                `tfsdk:"azure_virtual_machine"`
-	CoupaRole                         *SnowflakeRole                     `tfsdk:"coupa_role"`
+	ClickhouseDatabase                *ClickhouseDatabase                `tfsdk:"clickhouse_database"`
+	ClickhouseTable                   *ClickhouseTable                   `tfsdk:"clickhouse_table"`
+	CoupaRole                         *ClickhouseRole                    `tfsdk:"coupa_role"`
 	CursorOrganization                *CursorOrganization                `tfsdk:"cursor_organization"`
 	CustomConnector                   *CustomConnector                   `tfsdk:"custom_connector"`
 	DatabricksAccountServicePrincipal *DatabricksAccountServicePrincipal `tfsdk:"databricks_account_service_principal"`
-	DatastaxAstraRole                 *SnowflakeRole                     `tfsdk:"datastax_astra_role"`
+	DatadogRole                       *ClickhouseRole                    `tfsdk:"datadog_role"`
+	DatastaxAstraRole                 *ClickhouseRole                    `tfsdk:"datastax_astra_role"`
 	DevinOrganization                 *CursorOrganization                `tfsdk:"devin_organization"`
-	DevinRole                         *SnowflakeRole                     `tfsdk:"devin_role"`
+	DevinRole                         *ClickhouseRole                    `tfsdk:"devin_role"`
 	GcpBigQueryDataset                *GcpBigQueryDataset                `tfsdk:"gcp_big_query_dataset"`
 	GcpBigQueryTable                  *GcpBigQueryTable                  `tfsdk:"gcp_big_query_table"`
 	GcpBucket                         *GcpBucket                         `tfsdk:"gcp_bucket"`
@@ -43,28 +46,29 @@ type ResourceRemoteInfo struct {
 	GcpProject                        *GcpProject                        `tfsdk:"gcp_project"`
 	GcpServiceAccount                 *GcpServiceAccount                 `tfsdk:"gcp_service_account"`
 	GcpSQLInstance                    *GcpSQLInstance                    `tfsdk:"gcp_sql_instance"`
-	GithubEnterpriseRole              *SnowflakeRole                     `tfsdk:"github_enterprise_role"`
+	GithubEnterpriseRole              *ClickhouseRole                    `tfsdk:"github_enterprise_role"`
 	GithubOrg                         *GithubOrg                         `tfsdk:"github_org"`
-	GithubOrgRole                     *SnowflakeRole                     `tfsdk:"github_org_role"`
+	GithubOrgRole                     *ClickhouseRole                    `tfsdk:"github_org_role"`
 	GithubRepo                        *GithubRepo                        `tfsdk:"github_repo"`
 	GitlabProject                     *GcpProject                        `tfsdk:"gitlab_project"`
-	GoogleWorkspaceRole               *SnowflakeRole                     `tfsdk:"google_workspace_role"`
+	GoogleWorkspaceRole               *ClickhouseRole                    `tfsdk:"google_workspace_role"`
 	IlevelAdvancedRole                *IlevelAdvancedRole                `tfsdk:"ilevel_advanced_role"`
-	NetsuiteRole                      *SnowflakeRole                     `tfsdk:"netsuite_role"`
+	NetsuiteRole                      *ClickhouseRole                    `tfsdk:"netsuite_role"`
 	OktaApp                           *OktaApp                           `tfsdk:"okta_app"`
-	OktaCustomRole                    *SnowflakeRole                     `tfsdk:"okta_custom_role"`
+	OktaCustomRole                    *ClickhouseRole                    `tfsdk:"okta_custom_role"`
 	OktaStandardRole                  *OktaStandardRole                  `tfsdk:"okta_standard_role"`
 	OpenaiPlatformProject             *GcpProject                        `tfsdk:"openai_platform_project"`
 	OpenaiPlatformServiceAccount      *OpenaiPlatformServiceAccount      `tfsdk:"openai_platform_service_account"`
-	OracleFusionRole                  *SnowflakeRole                     `tfsdk:"oracle_fusion_role"`
+	OracleFusionRole                  *ClickhouseRole                    `tfsdk:"oracle_fusion_role"`
 	PagerdutyRole                     *IlevelAdvancedRole                `tfsdk:"pagerduty_role"`
 	SalesforcePermissionSet           *SalesforcePermissionSet           `tfsdk:"salesforce_permission_set"`
 	SalesforceProfile                 *SalesforceProfile                 `tfsdk:"salesforce_profile"`
-	SalesforceRole                    *SnowflakeRole                     `tfsdk:"salesforce_role"`
-	SnowflakeDatabase                 *SnowflakeDatabase                 `tfsdk:"snowflake_database"`
+	SalesforceRole                    *ClickhouseRole                    `tfsdk:"salesforce_role"`
+	SnowflakeDatabase                 *ClickhouseDatabase                `tfsdk:"snowflake_database"`
 	SnowflakeSchema                   *SnowflakeSchema                   `tfsdk:"snowflake_schema"`
 	SnowflakeTable                    *SnowflakeTable                    `tfsdk:"snowflake_table"`
 	TailscaleSSH                      *TailscaleSSH                      `tfsdk:"tailscale_ssh"`
 	TeleportRole                      *IlevelAdvancedRole                `tfsdk:"teleport_role"`
-	WorkdayRole                       *SnowflakeRole                     `tfsdk:"workday_role"`
+	TwingateResource                  *AzureEnterpriseApp                `tfsdk:"twingate_resource"`
+	WorkdayRole                       *ClickhouseRole                    `tfsdk:"workday_role"`
 }

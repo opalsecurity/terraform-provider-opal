@@ -87,6 +87,13 @@ resource "opal_resource" "my_resource" {
     azure_virtual_machine = {
       resource_id = "/subscriptions/0000/resourceGroups/rg/providers/Microsoft.Compute/virtualMachines/vm01"
     }
+    clickhouse_database = {
+      database_name = "my_database"
+    }
+    clickhouse_table = {
+      database_name = "my_database"
+      table_name    = "my_table"
+    }
     coupa_role = {
       role_id = 999
     }
@@ -100,6 +107,9 @@ resource "opal_resource" "my_resource" {
     databricks_account_service_principal = {
       application_id = "00000000-0000-0000-0000-000000000000"
       resource_id    = "00000000-0000-0000-0000-000000000000"
+    }
+    datadog_role = {
+      role_id = "123e4567-e89b-12d3-a456-426614174000"
     }
     datastax_astra_role = {
       role_id = "123e4567-e89b-12d3-a456-426614174000"
@@ -221,6 +231,9 @@ resource "opal_resource" "my_resource" {
     }
     teleport_role = {
       role_name = "admin_role"
+    }
+    twingate_resource = {
+      resource_id = "UmVzb3VyY2U6MTIzNA=="
     }
     workday_role = {
       role_id = "123abc456def"
