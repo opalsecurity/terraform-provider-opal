@@ -148,6 +148,12 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.AzureAdSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.AzureAdSecurityGroup.GroupID = types.StringValue(resp.RemoteInfo.AzureAdSecurityGroup.GroupID)
 			}
+			if resp.RemoteInfo.ClickhouseRole == nil {
+				r.RemoteInfo.ClickhouseRole = nil
+			} else {
+				r.RemoteInfo.ClickhouseRole = &tfTypes.ClickhouseRole{}
+				r.RemoteInfo.ClickhouseRole.RoleID = types.StringValue(resp.RemoteInfo.ClickhouseRole.RoleID)
+			}
 			if resp.RemoteInfo.ConnectorGroup == nil {
 				r.RemoteInfo.ConnectorGroup = nil
 			} else {
@@ -235,7 +241,7 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			if resp.RemoteInfo.SnowflakeRole == nil {
 				r.RemoteInfo.SnowflakeRole = nil
 			} else {
-				r.RemoteInfo.SnowflakeRole = &tfTypes.SnowflakeRole{}
+				r.RemoteInfo.SnowflakeRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.SnowflakeRole.RoleID = types.StringValue(resp.RemoteInfo.SnowflakeRole.RoleID)
 			}
 			if resp.RemoteInfo.TailscaleGroup == nil {
@@ -243,6 +249,12 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			} else {
 				r.RemoteInfo.TailscaleGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.TailscaleGroup.GroupID = types.StringValue(resp.RemoteInfo.TailscaleGroup.GroupID)
+			}
+			if resp.RemoteInfo.TwingateGroup == nil {
+				r.RemoteInfo.TwingateGroup = nil
+			} else {
+				r.RemoteInfo.TwingateGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.TwingateGroup.GroupID = types.StringValue(resp.RemoteInfo.TwingateGroup.GroupID)
 			}
 			if resp.RemoteInfo.WorkdayUserSecurityGroup == nil {
 				r.RemoteInfo.WorkdayUserSecurityGroup = nil
