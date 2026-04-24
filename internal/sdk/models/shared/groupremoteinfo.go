@@ -58,6 +58,19 @@ func (a *AzureAdSecurityGroup) GetGroupID() string {
 	return a.GroupID
 }
 
+// ClickhouseRole - Remote info for ClickHouse role.
+type ClickhouseRole struct {
+	// The name of the ClickHouse role.
+	RoleID string `json:"role_id"`
+}
+
+func (c *ClickhouseRole) GetRoleID() string {
+	if c == nil {
+		return ""
+	}
+	return c.RoleID
+}
+
 // ConnectorGroup - Remote info for Connector group.
 type ConnectorGroup struct {
 	// The id of the Connector group.
@@ -160,6 +173,19 @@ func (g *GoogleGroup) GetGroupID() string {
 		return ""
 	}
 	return g.GroupID
+}
+
+// GrafanaTeam - Remote info for Grafana team.
+type GrafanaTeam struct {
+	// The ID of the team.
+	TeamID string `json:"team_id"`
+}
+
+func (g *GrafanaTeam) GetTeamID() string {
+	if g == nil {
+		return ""
+	}
+	return g.TeamID
 }
 
 // IncidentioOnCallSchedule - Remote info for Incident.io on-call schedule group.
@@ -266,6 +292,19 @@ func (t *TailscaleGroup) GetGroupID() string {
 	return t.GroupID
 }
 
+// TwingateGroup - Remote info for Twingate group.
+type TwingateGroup struct {
+	// The id of the Twingate group.
+	GroupID string `json:"group_id"`
+}
+
+func (t *TwingateGroup) GetGroupID() string {
+	if t == nil {
+		return ""
+	}
+	return t.GroupID
+}
+
 // WorkdayUserSecurityGroup - Remote info for Workday User Security group.
 type WorkdayUserSecurityGroup struct {
 	// The id of the Workday User Security group.
@@ -289,6 +328,8 @@ type GroupRemoteInfo struct {
 	AzureAdMicrosoft365Group *AzureAdMicrosoft365Group `json:"azure_ad_microsoft_365_group,omitempty"`
 	// Remote info for Microsoft Entra ID Security group.
 	AzureAdSecurityGroup *AzureAdSecurityGroup `json:"azure_ad_security_group,omitempty"`
+	// Remote info for ClickHouse role.
+	ClickhouseRole *ClickhouseRole `json:"clickhouse_role,omitempty"`
 	// Remote info for Connector group.
 	ConnectorGroup *ConnectorGroup `json:"connector_group,omitempty"`
 	// Remote info for Databricks account group.
@@ -305,6 +346,8 @@ type GroupRemoteInfo struct {
 	GitlabGroup *GitlabGroup `json:"gitlab_group,omitempty"`
 	// Remote info for Google group.
 	GoogleGroup *GoogleGroup `json:"google_group,omitempty"`
+	// Remote info for Grafana team.
+	GrafanaTeam *GrafanaTeam `json:"grafana_team,omitempty"`
 	// Remote info for Incident.io on-call schedule group.
 	IncidentioOnCallSchedule *IncidentioOnCallSchedule `json:"incidentio_on_call_schedule,omitempty"`
 	// Remote info for LDAP group.
@@ -321,6 +364,8 @@ type GroupRemoteInfo struct {
 	SnowflakeRole *SnowflakeRole `json:"snowflake_role,omitempty"`
 	// Remote info for Tailscale group.
 	TailscaleGroup *TailscaleGroup `json:"tailscale_group,omitempty"`
+	// Remote info for Twingate group.
+	TwingateGroup *TwingateGroup `json:"twingate_group,omitempty"`
 	// Remote info for Workday User Security group.
 	WorkdayUserSecurityGroup *WorkdayUserSecurityGroup `json:"workday_user_security_group,omitempty"`
 }
@@ -351,6 +396,13 @@ func (g *GroupRemoteInfo) GetAzureAdSecurityGroup() *AzureAdSecurityGroup {
 		return nil
 	}
 	return g.AzureAdSecurityGroup
+}
+
+func (g *GroupRemoteInfo) GetClickhouseRole() *ClickhouseRole {
+	if g == nil {
+		return nil
+	}
+	return g.ClickhouseRole
 }
 
 func (g *GroupRemoteInfo) GetConnectorGroup() *ConnectorGroup {
@@ -409,6 +461,13 @@ func (g *GroupRemoteInfo) GetGoogleGroup() *GoogleGroup {
 	return g.GoogleGroup
 }
 
+func (g *GroupRemoteInfo) GetGrafanaTeam() *GrafanaTeam {
+	if g == nil {
+		return nil
+	}
+	return g.GrafanaTeam
+}
+
 func (g *GroupRemoteInfo) GetIncidentioOnCallSchedule() *IncidentioOnCallSchedule {
 	if g == nil {
 		return nil
@@ -463,6 +522,13 @@ func (g *GroupRemoteInfo) GetTailscaleGroup() *TailscaleGroup {
 		return nil
 	}
 	return g.TailscaleGroup
+}
+
+func (g *GroupRemoteInfo) GetTwingateGroup() *TwingateGroup {
+	if g == nil {
+		return nil
+	}
+	return g.TwingateGroup
 }
 
 func (g *GroupRemoteInfo) GetWorkdayUserSecurityGroup() *WorkdayUserSecurityGroup {

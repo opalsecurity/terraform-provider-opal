@@ -8,6 +8,7 @@ type GroupRemoteInfo struct {
 	AwsSsoGroup              *ActiveDirectoryGroup     `tfsdk:"aws_sso_group"`
 	AzureAdMicrosoft365Group *ActiveDirectoryGroup     `tfsdk:"azure_ad_microsoft_365_group"`
 	AzureAdSecurityGroup     *ActiveDirectoryGroup     `tfsdk:"azure_ad_security_group"`
+	ClickhouseRole           *ClickhouseRole           `tfsdk:"clickhouse_role"`
 	ConnectorGroup           *ActiveDirectoryGroup     `tfsdk:"connector_group"`
 	DatabricksAccountGroup   *ActiveDirectoryGroup     `tfsdk:"databricks_account_group"`
 	DevinGroup               *DevinGroup               `tfsdk:"devin_group"`
@@ -16,13 +17,15 @@ type GroupRemoteInfo struct {
 	GithubTeam               *GithubEnterpriseTeam     `tfsdk:"github_team"`
 	GitlabGroup              *ActiveDirectoryGroup     `tfsdk:"gitlab_group"`
 	GoogleGroup              *ActiveDirectoryGroup     `tfsdk:"google_group"`
+	GrafanaTeam              *GrafanaTeam              `tfsdk:"grafana_team"`
 	IncidentioOnCallSchedule *IncidentioOnCallSchedule `tfsdk:"incidentio_on_call_schedule"`
 	LdapGroup                *ActiveDirectoryGroup     `tfsdk:"ldap_group"`
 	OktaGroup                *ActiveDirectoryGroup     `tfsdk:"okta_group"`
 	OktaGroupRule            *OktaGroupRule            `tfsdk:"okta_group_rule"`
 	PagerdutyOnCallSchedule  *IncidentioOnCallSchedule `tfsdk:"pagerduty_on_call_schedule"`
 	RootlyOnCallSchedule     *IncidentioOnCallSchedule `tfsdk:"rootly_on_call_schedule"`
-	SnowflakeRole            *SnowflakeRole            `tfsdk:"snowflake_role"`
+	SnowflakeRole            *ClickhouseRole           `tfsdk:"snowflake_role"`
 	TailscaleGroup           *ActiveDirectoryGroup     `tfsdk:"tailscale_group"`
+	TwingateGroup            *ActiveDirectoryGroup     `tfsdk:"twingate_group"`
 	WorkdayUserSecurityGroup *ActiveDirectoryGroup     `tfsdk:"workday_user_security_group"`
 }
