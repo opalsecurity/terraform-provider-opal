@@ -37,6 +37,7 @@ const (
 	AppTypeEnumMongoAtlas      AppTypeEnum = "MONGO_ATLAS"
 	AppTypeEnumMysql           AppTypeEnum = "MYSQL"
 	AppTypeEnumNetsuite        AppTypeEnum = "NETSUITE"
+	AppTypeEnumDatadog         AppTypeEnum = "DATADOG"
 	AppTypeEnumOktaDirectory   AppTypeEnum = "OKTA_DIRECTORY"
 	AppTypeEnumOpenaiPlatform  AppTypeEnum = "OPENAI_PLATFORM"
 	AppTypeEnumOpal            AppTypeEnum = "OPAL"
@@ -45,6 +46,7 @@ const (
 	AppTypeEnumSnowflake       AppTypeEnum = "SNOWFLAKE"
 	AppTypeEnumTailscale       AppTypeEnum = "TAILSCALE"
 	AppTypeEnumTeleport        AppTypeEnum = "TELEPORT"
+	AppTypeEnumTwingate        AppTypeEnum = "TWINGATE"
 	AppTypeEnumWorkday         AppTypeEnum = "WORKDAY"
 )
 
@@ -107,6 +109,8 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "NETSUITE":
 		fallthrough
+	case "DATADOG":
+		fallthrough
 	case "OKTA_DIRECTORY":
 		fallthrough
 	case "OPENAI_PLATFORM":
@@ -122,6 +126,8 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 	case "TAILSCALE":
 		fallthrough
 	case "TELEPORT":
+		fallthrough
+	case "TWINGATE":
 		fallthrough
 	case "WORKDAY":
 		*e = AppTypeEnum(v)

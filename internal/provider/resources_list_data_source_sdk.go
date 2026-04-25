@@ -198,10 +198,23 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.AzureVirtualMachine = &tfTypes.AzureEnterpriseApp{}
 					results.RemoteInfo.AzureVirtualMachine.ResourceID = types.StringValue(resultsItem.RemoteInfo.AzureVirtualMachine.ResourceID)
 				}
+				if resultsItem.RemoteInfo.ClickhouseDatabase == nil {
+					results.RemoteInfo.ClickhouseDatabase = nil
+				} else {
+					results.RemoteInfo.ClickhouseDatabase = &tfTypes.ClickhouseDatabase{}
+					results.RemoteInfo.ClickhouseDatabase.DatabaseName = types.StringValue(resultsItem.RemoteInfo.ClickhouseDatabase.DatabaseName)
+				}
+				if resultsItem.RemoteInfo.ClickhouseTable == nil {
+					results.RemoteInfo.ClickhouseTable = nil
+				} else {
+					results.RemoteInfo.ClickhouseTable = &tfTypes.ClickhouseTable{}
+					results.RemoteInfo.ClickhouseTable.DatabaseName = types.StringValue(resultsItem.RemoteInfo.ClickhouseTable.DatabaseName)
+					results.RemoteInfo.ClickhouseTable.TableName = types.StringValue(resultsItem.RemoteInfo.ClickhouseTable.TableName)
+				}
 				if resultsItem.RemoteInfo.CoupaRole == nil {
 					results.RemoteInfo.CoupaRole = nil
 				} else {
-					results.RemoteInfo.CoupaRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.CoupaRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.CoupaRole.RoleID = types.StringValue(resultsItem.RemoteInfo.CoupaRole.RoleID)
 				}
 				if resultsItem.RemoteInfo.CursorOrganization == nil {
@@ -224,10 +237,16 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.DatabricksAccountServicePrincipal.ApplicationID = types.StringValue(resultsItem.RemoteInfo.DatabricksAccountServicePrincipal.ApplicationID)
 					results.RemoteInfo.DatabricksAccountServicePrincipal.ResourceID = types.StringValue(resultsItem.RemoteInfo.DatabricksAccountServicePrincipal.ResourceID)
 				}
+				if resultsItem.RemoteInfo.DatadogRole == nil {
+					results.RemoteInfo.DatadogRole = nil
+				} else {
+					results.RemoteInfo.DatadogRole = &tfTypes.ClickhouseRole{}
+					results.RemoteInfo.DatadogRole.RoleID = types.StringValue(resultsItem.RemoteInfo.DatadogRole.RoleID)
+				}
 				if resultsItem.RemoteInfo.DatastaxAstraRole == nil {
 					results.RemoteInfo.DatastaxAstraRole = nil
 				} else {
-					results.RemoteInfo.DatastaxAstraRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.DatastaxAstraRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.DatastaxAstraRole.RoleID = types.StringValue(resultsItem.RemoteInfo.DatastaxAstraRole.RoleID)
 				}
 				if resultsItem.RemoteInfo.DevinOrganization == nil {
@@ -239,7 +258,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				if resultsItem.RemoteInfo.DevinRole == nil {
 					results.RemoteInfo.DevinRole = nil
 				} else {
-					results.RemoteInfo.DevinRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.DevinRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.DevinRole.RoleID = types.StringValue(resultsItem.RemoteInfo.DevinRole.RoleID)
 				}
 				if resultsItem.RemoteInfo.GcpBigQueryDataset == nil {
@@ -313,7 +332,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				if resultsItem.RemoteInfo.GithubEnterpriseRole == nil {
 					results.RemoteInfo.GithubEnterpriseRole = nil
 				} else {
-					results.RemoteInfo.GithubEnterpriseRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.GithubEnterpriseRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.GithubEnterpriseRole.RoleID = types.StringValue(resultsItem.RemoteInfo.GithubEnterpriseRole.RoleID)
 				}
 				if resultsItem.RemoteInfo.GithubOrg == nil {
@@ -325,7 +344,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				if resultsItem.RemoteInfo.GithubOrgRole == nil {
 					results.RemoteInfo.GithubOrgRole = nil
 				} else {
-					results.RemoteInfo.GithubOrgRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.GithubOrgRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.GithubOrgRole.RoleID = types.StringValue(resultsItem.RemoteInfo.GithubOrgRole.RoleID)
 				}
 				if resultsItem.RemoteInfo.GithubRepo == nil {
@@ -343,8 +362,26 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				if resultsItem.RemoteInfo.GoogleWorkspaceRole == nil {
 					results.RemoteInfo.GoogleWorkspaceRole = nil
 				} else {
-					results.RemoteInfo.GoogleWorkspaceRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.GoogleWorkspaceRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.GoogleWorkspaceRole.RoleID = types.StringValue(resultsItem.RemoteInfo.GoogleWorkspaceRole.RoleID)
+				}
+				if resultsItem.RemoteInfo.GrafanaDashboard == nil {
+					results.RemoteInfo.GrafanaDashboard = nil
+				} else {
+					results.RemoteInfo.GrafanaDashboard = &tfTypes.GrafanaDashboard{}
+					results.RemoteInfo.GrafanaDashboard.DashboardUID = types.StringValue(resultsItem.RemoteInfo.GrafanaDashboard.DashboardUID)
+				}
+				if resultsItem.RemoteInfo.GrafanaFolder == nil {
+					results.RemoteInfo.GrafanaFolder = nil
+				} else {
+					results.RemoteInfo.GrafanaFolder = &tfTypes.GrafanaFolder{}
+					results.RemoteInfo.GrafanaFolder.FolderUID = types.StringValue(resultsItem.RemoteInfo.GrafanaFolder.FolderUID)
+				}
+				if resultsItem.RemoteInfo.GrafanaRole == nil {
+					results.RemoteInfo.GrafanaRole = nil
+				} else {
+					results.RemoteInfo.GrafanaRole = &tfTypes.GrafanaRole{}
+					results.RemoteInfo.GrafanaRole.RoleUID = types.StringValue(resultsItem.RemoteInfo.GrafanaRole.RoleUID)
 				}
 				if resultsItem.RemoteInfo.IlevelAdvancedRole == nil {
 					results.RemoteInfo.IlevelAdvancedRole = nil
@@ -355,7 +392,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				if resultsItem.RemoteInfo.NetsuiteRole == nil {
 					results.RemoteInfo.NetsuiteRole = nil
 				} else {
-					results.RemoteInfo.NetsuiteRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.NetsuiteRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.NetsuiteRole.RoleID = types.StringValue(resultsItem.RemoteInfo.NetsuiteRole.RoleID)
 				}
 				if resultsItem.RemoteInfo.OktaApp == nil {
@@ -367,7 +404,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				if resultsItem.RemoteInfo.OktaCustomRole == nil {
 					results.RemoteInfo.OktaCustomRole = nil
 				} else {
-					results.RemoteInfo.OktaCustomRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.OktaCustomRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.OktaCustomRole.RoleID = types.StringValue(resultsItem.RemoteInfo.OktaCustomRole.RoleID)
 				}
 				if resultsItem.RemoteInfo.OktaStandardRole == nil {
@@ -392,7 +429,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				if resultsItem.RemoteInfo.OracleFusionRole == nil {
 					results.RemoteInfo.OracleFusionRole = nil
 				} else {
-					results.RemoteInfo.OracleFusionRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.OracleFusionRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.OracleFusionRole.RoleID = types.StringValue(resultsItem.RemoteInfo.OracleFusionRole.RoleID)
 				}
 				if resultsItem.RemoteInfo.PagerdutyRole == nil {
@@ -417,13 +454,13 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				if resultsItem.RemoteInfo.SalesforceRole == nil {
 					results.RemoteInfo.SalesforceRole = nil
 				} else {
-					results.RemoteInfo.SalesforceRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.SalesforceRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.SalesforceRole.RoleID = types.StringValue(resultsItem.RemoteInfo.SalesforceRole.RoleID)
 				}
 				if resultsItem.RemoteInfo.SnowflakeDatabase == nil {
 					results.RemoteInfo.SnowflakeDatabase = nil
 				} else {
-					results.RemoteInfo.SnowflakeDatabase = &tfTypes.SnowflakeDatabase{}
+					results.RemoteInfo.SnowflakeDatabase = &tfTypes.ClickhouseDatabase{}
 					results.RemoteInfo.SnowflakeDatabase.DatabaseName = types.StringValue(resultsItem.RemoteInfo.SnowflakeDatabase.DatabaseName)
 				}
 				if resultsItem.RemoteInfo.SnowflakeSchema == nil {
@@ -453,10 +490,16 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.TeleportRole = &tfTypes.IlevelAdvancedRole{}
 					results.RemoteInfo.TeleportRole.RoleName = types.StringValue(resultsItem.RemoteInfo.TeleportRole.RoleName)
 				}
+				if resultsItem.RemoteInfo.TwingateResource == nil {
+					results.RemoteInfo.TwingateResource = nil
+				} else {
+					results.RemoteInfo.TwingateResource = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.TwingateResource.ResourceID = types.StringValue(resultsItem.RemoteInfo.TwingateResource.ResourceID)
+				}
 				if resultsItem.RemoteInfo.WorkdayRole == nil {
 					results.RemoteInfo.WorkdayRole = nil
 				} else {
-					results.RemoteInfo.WorkdayRole = &tfTypes.SnowflakeRole{}
+					results.RemoteInfo.WorkdayRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.WorkdayRole.RoleID = types.StringValue(resultsItem.RemoteInfo.WorkdayRole.RoleID)
 				}
 			}
