@@ -99,7 +99,7 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 			},
 			"resource_type_filter": schema.StringAttribute{
 				Optional:    true,
-				Description: `The resource type to filter by. Required when remote_id is provided. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE"]`,
+				Description: `The resource type to filter by. Required when remote_id is provided. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "TWINGATE_RESOURCE"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"AWS_IAM_ROLE",
@@ -146,6 +146,7 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 						"MONGO_INSTANCE",
 						"MONGO_ATLAS_INSTANCE",
 						"NETSUITE_ROLE",
+						"DATADOG_ROLE",
 						"OKTA_APP",
 						"OKTA_ROLE",
 						"OPAL_ROLE",
@@ -178,6 +179,13 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 						"VAULT_POLICY",
 						"VAULT_OIDC_ROLE",
 						"GIT_HUB_ENTERPRISE_ROLE",
+						"GRAFANA_FOLDER",
+						"GRAFANA_DASHBOARD",
+						"GRAFANA_BASIC_ROLE",
+						"GRAFANA_ROLE",
+						"CLICKHOUSE_DATABASE",
+						"CLICKHOUSE_TABLE",
+						"TWINGATE_RESOURCE",
 					),
 				},
 			},
@@ -525,6 +533,30 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 									},
 									Description: `Remote info for Azure virtual machine.`,
 								},
+								"clickhouse_database": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"database_name": schema.StringAttribute{
+											Computed:    true,
+											Description: `The name of the ClickHouse database.`,
+										},
+									},
+									Description: `Remote info for ClickHouse database.`,
+								},
+								"clickhouse_table": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"database_name": schema.StringAttribute{
+											Computed:    true,
+											Description: `The name of the ClickHouse database containing the table.`,
+										},
+										"table_name": schema.StringAttribute{
+											Computed:    true,
+											Description: `The name of the ClickHouse table.`,
+										},
+									},
+									Description: `Remote info for ClickHouse table.`,
+								},
 								"coupa_role": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
@@ -572,6 +604,16 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 										},
 									},
 									Description: `Remote info for Databricks account service principal.`,
+								},
+								"datadog_role": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"role_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The id of the role.`,
+										},
+									},
+									Description: `Remote info for Datadog role.`,
 								},
 								"datastax_astra_role": schema.SingleNestedAttribute{
 									Computed: true,
@@ -795,6 +837,36 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 									},
 									Description: `Remote info for GCP workspace role.`,
 								},
+								"grafana_dashboard": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"dashboard_uid": schema.StringAttribute{
+											Computed:    true,
+											Description: `The UID of the Grafana dashboard.`,
+										},
+									},
+									Description: `Remote info for Grafana dashboard.`,
+								},
+								"grafana_folder": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"folder_uid": schema.StringAttribute{
+											Computed:    true,
+											Description: `The UID of the Grafana folder.`,
+										},
+									},
+									Description: `Remote info for Grafana folder.`,
+								},
+								"grafana_role": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"role_uid": schema.StringAttribute{
+											Computed:    true,
+											Description: `The UID of the Grafana role.`,
+										},
+									},
+									Description: `Remote info for Grafana role(fixed or custom).`,
+								},
 								"ilevel_advanced_role": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
@@ -984,6 +1056,16 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 										},
 									},
 									Description: `Remote info for Teleport role.`,
+								},
+								"twingate_resource": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"resource_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The id of the Twingate resource.`,
+										},
+									},
+									Description: `Remote info for Twingate resource.`,
 								},
 								"workday_role": schema.SingleNestedAttribute{
 									Computed: true,

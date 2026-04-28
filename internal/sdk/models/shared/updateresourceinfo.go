@@ -25,6 +25,8 @@ type UpdateResourceInfo struct {
 	ID string `json:"resource_id"`
 	// The name of the resource.
 	Name *string `json:"name,omitempty"`
+	// The ID of the parent resource.
+	ParentResourceID *string `json:"parent_resource_id,omitempty"`
 	// A list of configurations for requests to this resource. If not provided, the default request configuration will be used.
 	RequestConfigurations []RequestConfiguration `json:"request_configurations"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
@@ -87,6 +89,13 @@ func (u *UpdateResourceInfo) GetName() *string {
 		return nil
 	}
 	return u.Name
+}
+
+func (u *UpdateResourceInfo) GetParentResourceID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.ParentResourceID
 }
 
 func (u *UpdateResourceInfo) GetRequestConfigurations() []RequestConfiguration {
