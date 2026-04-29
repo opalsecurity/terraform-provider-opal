@@ -28,6 +28,9 @@ resource "opal_group" "my_group" {
     azure_ad_security_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
+    clickhouse_role = {
+      role_id = "my_clickhouse_role"
+    }
     connector_group = {
       group_id = 898931321
     }
@@ -52,6 +55,9 @@ resource "opal_group" "my_group" {
     google_group = {
       group_id = "1y6w882181n7sg"
     }
+    grafana_team = {
+      team_id = 2323
+    }
     incidentio_on_call_schedule = {
       schedule_id = "01HZ8XQM9ZQX8RKMZQ8ZQX8RK"
     }
@@ -75,6 +81,9 @@ resource "opal_group" "my_group" {
     }
     tailscale_group = {
       group_id = 898931321
+    }
+    twingate_group = {
+      group_id = "R3JvdXA6MTIzNA=="
     }
     workday_user_security_group = {
       group_id = "123abc456def"
