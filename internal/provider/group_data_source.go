@@ -235,6 +235,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Microsoft Entra ID Security group.`,
 					},
+					"clickhouse_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"role_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The name of the ClickHouse role.`,
+							},
+						},
+						Description: `Remote info for ClickHouse role.`,
+					},
 					"connector_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -315,6 +325,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Google group.`,
 					},
+					"grafana_team": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"team_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the team.`,
+							},
+						},
+						Description: `Remote info for Grafana team.`,
+					},
 					"incidentio_on_call_schedule": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -394,6 +414,26 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							},
 						},
 						Description: `Remote info for Tailscale group.`,
+					},
+					"twingate_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the Twingate group.`,
+							},
+						},
+						Description: `Remote info for Twingate group.`,
+					},
+					"twingate_group_synced": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the Twingate synced group.`,
+							},
+						},
+						Description: `Remote info for Twingate synced group.`,
 					},
 					"workday_user_security_group": schema.SingleNestedAttribute{
 						Computed: true,
