@@ -36,6 +36,10 @@ const (
 	GroupTypeEnumRootlyOnCallSchedule     GroupTypeEnum = "ROOTLY_ON_CALL_SCHEDULE"
 	GroupTypeEnumDevinGroup               GroupTypeEnum = "DEVIN_GROUP"
 	GroupTypeEnumGitHubEnterpriseTeam     GroupTypeEnum = "GIT_HUB_ENTERPRISE_TEAM"
+	GroupTypeEnumGrafanaTeam              GroupTypeEnum = "GRAFANA_TEAM"
+	GroupTypeEnumClickhouseRole           GroupTypeEnum = "CLICKHOUSE_ROLE"
+	GroupTypeEnumTwingateGroup            GroupTypeEnum = "TWINGATE_GROUP"
+	GroupTypeEnumTwingateGroupSynced      GroupTypeEnum = "TWINGATE_GROUP_SYNCED"
 )
 
 func (e GroupTypeEnum) ToPointer() *GroupTypeEnum {
@@ -94,6 +98,14 @@ func (e *GroupTypeEnum) UnmarshalJSON(data []byte) error {
 	case "DEVIN_GROUP":
 		fallthrough
 	case "GIT_HUB_ENTERPRISE_TEAM":
+		fallthrough
+	case "GRAFANA_TEAM":
+		fallthrough
+	case "CLICKHOUSE_ROLE":
+		fallthrough
+	case "TWINGATE_GROUP":
+		fallthrough
+	case "TWINGATE_GROUP_SYNCED":
 		*e = GroupTypeEnum(v)
 		return nil
 	default:
