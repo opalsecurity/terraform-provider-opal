@@ -82,10 +82,13 @@ Read-Only:
 - `azure_subscription` (Attributes) Remote info for Azure subscription. (see [below for nested schema](#nestedatt--remote_info--azure_subscription))
 - `azure_user_assigned_managed_identity` (Attributes) Remote info for Azure user assigned managed identity. (see [below for nested schema](#nestedatt--remote_info--azure_user_assigned_managed_identity))
 - `azure_virtual_machine` (Attributes) Remote info for Azure virtual machine. (see [below for nested schema](#nestedatt--remote_info--azure_virtual_machine))
+- `clickhouse_database` (Attributes) Remote info for ClickHouse database. (see [below for nested schema](#nestedatt--remote_info--clickhouse_database))
+- `clickhouse_table` (Attributes) Remote info for ClickHouse table. (see [below for nested schema](#nestedatt--remote_info--clickhouse_table))
 - `coupa_role` (Attributes) Remote info for Coupa role. (see [below for nested schema](#nestedatt--remote_info--coupa_role))
 - `cursor_organization` (Attributes) Remote info for a Cursor organization. (see [below for nested schema](#nestedatt--remote_info--cursor_organization))
 - `custom_connector` (Attributes) Remote info for a custom connector resource. (see [below for nested schema](#nestedatt--remote_info--custom_connector))
 - `databricks_account_service_principal` (Attributes) Remote info for Databricks account service principal. (see [below for nested schema](#nestedatt--remote_info--databricks_account_service_principal))
+- `datadog_role` (Attributes) Remote info for Datadog role. (see [below for nested schema](#nestedatt--remote_info--datadog_role))
 - `datastax_astra_role` (Attributes) Remote info for an Astra role. (see [below for nested schema](#nestedatt--remote_info--datastax_astra_role))
 - `devin_organization` (Attributes) Remote info for Devin organization. (see [below for nested schema](#nestedatt--remote_info--devin_organization))
 - `devin_role` (Attributes) Remote info for Devin role. (see [below for nested schema](#nestedatt--remote_info--devin_role))
@@ -105,6 +108,9 @@ Read-Only:
 - `github_repo` (Attributes) Remote info for GitHub repository. (see [below for nested schema](#nestedatt--remote_info--github_repo))
 - `gitlab_project` (Attributes) Remote info for Gitlab project. (see [below for nested schema](#nestedatt--remote_info--gitlab_project))
 - `google_workspace_role` (Attributes) Remote info for GCP workspace role. (see [below for nested schema](#nestedatt--remote_info--google_workspace_role))
+- `grafana_dashboard` (Attributes) Remote info for Grafana dashboard. (see [below for nested schema](#nestedatt--remote_info--grafana_dashboard))
+- `grafana_folder` (Attributes) Remote info for Grafana folder. (see [below for nested schema](#nestedatt--remote_info--grafana_folder))
+- `grafana_role` (Attributes) Remote info for Grafana role(fixed or custom). (see [below for nested schema](#nestedatt--remote_info--grafana_role))
 - `ilevel_advanced_role` (Attributes) Remote info for iLevel Advanced role. (see [below for nested schema](#nestedatt--remote_info--ilevel_advanced_role))
 - `netsuite_role` (Attributes) Remote info for NetSuite role. (see [below for nested schema](#nestedatt--remote_info--netsuite_role))
 - `okta_app` (Attributes) Remote info for Okta directory app. (see [below for nested schema](#nestedatt--remote_info--okta_app))
@@ -122,6 +128,7 @@ Read-Only:
 - `snowflake_table` (Attributes) Remote info for Snowflake table. (see [below for nested schema](#nestedatt--remote_info--snowflake_table))
 - `tailscale_ssh` (Attributes) Remote info for Tailscale SSH tag. (see [below for nested schema](#nestedatt--remote_info--tailscale_ssh))
 - `teleport_role` (Attributes) Remote info for Teleport role. (see [below for nested schema](#nestedatt--remote_info--teleport_role))
+- `twingate_resource` (Attributes) Remote info for Twingate resource. (see [below for nested schema](#nestedatt--remote_info--twingate_resource))
 - `workday_role` (Attributes) Remote info for Workday role. (see [below for nested schema](#nestedatt--remote_info--workday_role))
 
 <a id="nestedatt--remote_info--anthropic_workspace"></a>
@@ -315,6 +322,23 @@ Read-Only:
 - `resource_id` (String) The ARM resource ID of the virtual machine.
 
 
+<a id="nestedatt--remote_info--clickhouse_database"></a>
+### Nested Schema for `remote_info.clickhouse_database`
+
+Read-Only:
+
+- `database_name` (String) The name of the ClickHouse database.
+
+
+<a id="nestedatt--remote_info--clickhouse_table"></a>
+### Nested Schema for `remote_info.clickhouse_table`
+
+Read-Only:
+
+- `database_name` (String) The name of the ClickHouse database containing the table.
+- `table_name` (String) The name of the ClickHouse table.
+
+
 <a id="nestedatt--remote_info--coupa_role"></a>
 ### Nested Schema for `remote_info.coupa_role`
 
@@ -347,6 +371,14 @@ Read-Only:
 
 - `application_id` (String) The application ID of the service principal.
 - `resource_id` (String) The resource ID of the service principal.
+
+
+<a id="nestedatt--remote_info--datadog_role"></a>
+### Nested Schema for `remote_info.datadog_role`
+
+Read-Only:
+
+- `role_id` (String) The id of the role.
 
 
 <a id="nestedatt--remote_info--datastax_astra_role"></a>
@@ -509,6 +541,30 @@ Read-Only:
 - `role_id` (String) The id of the role.
 
 
+<a id="nestedatt--remote_info--grafana_dashboard"></a>
+### Nested Schema for `remote_info.grafana_dashboard`
+
+Read-Only:
+
+- `dashboard_uid` (String) The UID of the Grafana dashboard.
+
+
+<a id="nestedatt--remote_info--grafana_folder"></a>
+### Nested Schema for `remote_info.grafana_folder`
+
+Read-Only:
+
+- `folder_uid` (String) The UID of the Grafana folder.
+
+
+<a id="nestedatt--remote_info--grafana_role"></a>
+### Nested Schema for `remote_info.grafana_role`
+
+Read-Only:
+
+- `role_uid` (String) The UID of the Grafana role.
+
+
 <a id="nestedatt--remote_info--ilevel_advanced_role"></a>
 ### Nested Schema for `remote_info.ilevel_advanced_role`
 
@@ -648,6 +704,14 @@ Read-Only:
 Read-Only:
 
 - `role_name` (String) The name role.
+
+
+<a id="nestedatt--remote_info--twingate_resource"></a>
+### Nested Schema for `remote_info.twingate_resource`
+
+Read-Only:
+
+- `resource_id` (String) The id of the Twingate resource.
 
 
 <a id="nestedatt--remote_info--workday_role"></a>

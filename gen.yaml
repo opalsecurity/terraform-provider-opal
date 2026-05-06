@@ -28,7 +28,7 @@ generation:
     skipResponseBodyAssertions: false
   flattenGlobalSecurity: true
 terraform:
-  version: 3.5.0
+  version: 3.5.1
   additionalActions: []
   additionalDataSources: []
   additionalDependencies:
@@ -68,6 +68,7 @@ terraform:
   outputModelSuffix: output
   packageName: opal
   preApplyUnionDiscriminators: false
+  providerTypeNameOverride: ""
   respectRequiredFields: false
   respectTitlesForPrimitiveUnionMembers: false
   unionStrategy: populated-fields

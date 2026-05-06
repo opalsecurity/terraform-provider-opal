@@ -43,6 +43,9 @@ resource "opal_group" "my_group" {
     azure_ad_security_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
+    clickhouse_role = {
+      role_id = "my_clickhouse_role"
+    }
     connector_group = {
       group_id = 898931321
     }
@@ -67,6 +70,9 @@ resource "opal_group" "my_group" {
     google_group = {
       group_id = "1y6w882181n7sg"
     }
+    grafana_team = {
+      team_id = 2323
+    }
     incidentio_on_call_schedule = {
       schedule_id = "01HZ8XQM9ZQX8RKMZQ8ZQX8RK"
     }
@@ -90,6 +96,12 @@ resource "opal_group" "my_group" {
     }
     tailscale_group = {
       group_id = 898931321
+    }
+    twingate_group = {
+      group_id = "R3JvdXA6MTIzNA=="
+    }
+    twingate_group_synced = {
+      group_id = "R3JvdXA6MTIzNA=="
     }
     workday_user_security_group = {
       group_id = "123abc456def"
@@ -144,7 +156,7 @@ resource "opal_group" "my_group" {
 ### Required
 
 - `app_id` (String) The ID of the app for the group. Requires replacement if changed.
-- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM"]; Requires replacement if changed.
+- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED"]; Requires replacement if changed.
 - `name` (String) The name of the group.
 - `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
@@ -221,6 +233,7 @@ Optional:
 - `aws_sso_group` (Attributes) Remote info for AWS SSO group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_sso_group))
 - `azure_ad_microsoft_365_group` (Attributes) Remote info for Microsoft Entra ID Microsoft 365 group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_ad_microsoft_365_group))
 - `azure_ad_security_group` (Attributes) Remote info for Microsoft Entra ID Security group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_ad_security_group))
+- `clickhouse_role` (Attributes) Remote info for ClickHouse role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--clickhouse_role))
 - `connector_group` (Attributes) Remote info for Connector group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--connector_group))
 - `databricks_account_group` (Attributes) Remote info for Databricks account group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--databricks_account_group))
 - `devin_group` (Attributes) Remote info for Devin group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--devin_group))
@@ -229,6 +242,7 @@ Optional:
 - `github_team` (Attributes) Remote info for GitHub team. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--github_team))
 - `gitlab_group` (Attributes) Remote info for Gitlab group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gitlab_group))
 - `google_group` (Attributes) Remote info for Google group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--google_group))
+- `grafana_team` (Attributes) Remote info for Grafana team. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--grafana_team))
 - `incidentio_on_call_schedule` (Attributes) Remote info for Incident.io on-call schedule group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--incidentio_on_call_schedule))
 - `ldap_group` (Attributes) Remote info for LDAP group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--ldap_group))
 - `okta_group` (Attributes) Remote info for Okta Directory group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_group))
@@ -237,6 +251,8 @@ Optional:
 - `rootly_on_call_schedule` (Attributes) Remote info for Rootly on-call schedule group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--rootly_on_call_schedule))
 - `snowflake_role` (Attributes) Remote info for Snowflake role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--snowflake_role))
 - `tailscale_group` (Attributes) Remote info for Tailscale group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--tailscale_group))
+- `twingate_group` (Attributes) Remote info for Twingate group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--twingate_group))
+- `twingate_group_synced` (Attributes) Remote info for Twingate synced group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--twingate_group_synced))
 - `workday_user_security_group` (Attributes) Remote info for Workday User Security group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--workday_user_security_group))
 
 <a id="nestedatt--remote_info--active_directory_group"></a>
@@ -269,6 +285,14 @@ Optional:
 Optional:
 
 - `group_id` (String) The id of the Microsoft Entra ID Security group. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--clickhouse_role"></a>
+### Nested Schema for `remote_info.clickhouse_role`
+
+Optional:
+
+- `role_id` (String) The name of the ClickHouse role. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--connector_group"></a>
@@ -335,6 +359,14 @@ Optional:
 - `group_id` (String) The id of the Google group. Not Null; Requires replacement if changed.
 
 
+<a id="nestedatt--remote_info--grafana_team"></a>
+### Nested Schema for `remote_info.grafana_team`
+
+Optional:
+
+- `team_id` (String) The ID of the team. Not Null; Requires replacement if changed.
+
+
 <a id="nestedatt--remote_info--incidentio_on_call_schedule"></a>
 ### Nested Schema for `remote_info.incidentio_on_call_schedule`
 
@@ -397,6 +429,22 @@ Optional:
 Optional:
 
 - `group_id` (String) The id of the Tailscale group. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--twingate_group"></a>
+### Nested Schema for `remote_info.twingate_group`
+
+Optional:
+
+- `group_id` (String) The id of the Twingate group. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--twingate_group_synced"></a>
+### Nested Schema for `remote_info.twingate_group_synced`
+
+Optional:
+
+- `group_id` (String) The id of the Twingate synced group. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--workday_user_security_group"></a>
