@@ -402,6 +402,30 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Azure virtual machine.`,
 					},
+					"clickhouse_database": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"database_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The name of the ClickHouse database.`,
+							},
+						},
+						Description: `Remote info for ClickHouse database.`,
+					},
+					"clickhouse_table": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"database_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The name of the ClickHouse database containing the table.`,
+							},
+							"table_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The name of the ClickHouse table.`,
+							},
+						},
+						Description: `Remote info for ClickHouse table.`,
+					},
 					"coupa_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -449,6 +473,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for Databricks account service principal.`,
+					},
+					"datadog_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"role_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the role.`,
+							},
+						},
+						Description: `Remote info for Datadog role.`,
 					},
 					"datastax_astra_role": schema.SingleNestedAttribute{
 						Computed: true,
@@ -672,6 +706,36 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for GCP workspace role.`,
 					},
+					"grafana_dashboard": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"dashboard_uid": schema.StringAttribute{
+								Computed:    true,
+								Description: `The UID of the Grafana dashboard.`,
+							},
+						},
+						Description: `Remote info for Grafana dashboard.`,
+					},
+					"grafana_folder": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"folder_uid": schema.StringAttribute{
+								Computed:    true,
+								Description: `The UID of the Grafana folder.`,
+							},
+						},
+						Description: `Remote info for Grafana folder.`,
+					},
+					"grafana_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"role_uid": schema.StringAttribute{
+								Computed:    true,
+								Description: `The UID of the Grafana role.`,
+							},
+						},
+						Description: `Remote info for Grafana role(fixed or custom).`,
+					},
 					"ilevel_advanced_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -861,6 +925,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for Teleport role.`,
+					},
+					"twingate_resource": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the Twingate resource.`,
+							},
+						},
+						Description: `Remote info for Twingate resource.`,
 					},
 					"workday_role": schema.SingleNestedAttribute{
 						Computed: true,
