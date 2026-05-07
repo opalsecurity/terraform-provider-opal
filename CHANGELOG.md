@@ -1,6 +1,11 @@
 # Changelog
 
-## v3.4.5
+## v3.5.1
+ - Adds support for setting `parent_resource_id` fields for `opal_resources`
+ - Adds GRAFANA_TEAM, CLICKHOUSE_ROLE, TWINGATE_GROUP, TWINGATE_GROUP_SYNCED types to `opal_groups`
+ - Adds "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "TWINGATE_RESOURCE" types to `opal_resources`
+
+## v3.5.0
  - Fixes bug preventing oncall schedules from being created as `opal_groups`
 
 ## v3.4.4
