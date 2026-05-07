@@ -31,7 +31,7 @@ data "opal_group_list" "my_group_list" {
 
 - `group_ids` (List of String) The group ids to filter by.
 - `group_name` (String) Group name.
-- `group_type_filter` (String) The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM"]
+- `group_type_filter` (String) The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED"]
 - `page_size` (Number) Number of results to return per page. Default is 200.
 
 ### Read-Only
@@ -79,6 +79,7 @@ Read-Only:
 - `aws_sso_group` (Attributes) Remote info for AWS SSO group. (see [below for nested schema](#nestedatt--results--remote_info--aws_sso_group))
 - `azure_ad_microsoft_365_group` (Attributes) Remote info for Microsoft Entra ID Microsoft 365 group. (see [below for nested schema](#nestedatt--results--remote_info--azure_ad_microsoft_365_group))
 - `azure_ad_security_group` (Attributes) Remote info for Microsoft Entra ID Security group. (see [below for nested schema](#nestedatt--results--remote_info--azure_ad_security_group))
+- `clickhouse_role` (Attributes) Remote info for ClickHouse role. (see [below for nested schema](#nestedatt--results--remote_info--clickhouse_role))
 - `connector_group` (Attributes) Remote info for Connector group. (see [below for nested schema](#nestedatt--results--remote_info--connector_group))
 - `databricks_account_group` (Attributes) Remote info for Databricks account group. (see [below for nested schema](#nestedatt--results--remote_info--databricks_account_group))
 - `devin_group` (Attributes) Remote info for Devin group. (see [below for nested schema](#nestedatt--results--remote_info--devin_group))
@@ -87,6 +88,7 @@ Read-Only:
 - `github_team` (Attributes) Remote info for GitHub team. (see [below for nested schema](#nestedatt--results--remote_info--github_team))
 - `gitlab_group` (Attributes) Remote info for Gitlab group. (see [below for nested schema](#nestedatt--results--remote_info--gitlab_group))
 - `google_group` (Attributes) Remote info for Google group. (see [below for nested schema](#nestedatt--results--remote_info--google_group))
+- `grafana_team` (Attributes) Remote info for Grafana team. (see [below for nested schema](#nestedatt--results--remote_info--grafana_team))
 - `incidentio_on_call_schedule` (Attributes) Remote info for Incident.io on-call schedule group. (see [below for nested schema](#nestedatt--results--remote_info--incidentio_on_call_schedule))
 - `ldap_group` (Attributes) Remote info for LDAP group. (see [below for nested schema](#nestedatt--results--remote_info--ldap_group))
 - `okta_group` (Attributes) Remote info for Okta Directory group. (see [below for nested schema](#nestedatt--results--remote_info--okta_group))
@@ -95,6 +97,8 @@ Read-Only:
 - `rootly_on_call_schedule` (Attributes) Remote info for Rootly on-call schedule group. (see [below for nested schema](#nestedatt--results--remote_info--rootly_on_call_schedule))
 - `snowflake_role` (Attributes) Remote info for Snowflake role. (see [below for nested schema](#nestedatt--results--remote_info--snowflake_role))
 - `tailscale_group` (Attributes) Remote info for Tailscale group. (see [below for nested schema](#nestedatt--results--remote_info--tailscale_group))
+- `twingate_group` (Attributes) Remote info for Twingate group. (see [below for nested schema](#nestedatt--results--remote_info--twingate_group))
+- `twingate_group_synced` (Attributes) Remote info for Twingate synced group. (see [below for nested schema](#nestedatt--results--remote_info--twingate_group_synced))
 - `workday_user_security_group` (Attributes) Remote info for Workday User Security group. (see [below for nested schema](#nestedatt--results--remote_info--workday_user_security_group))
 
 <a id="nestedatt--results--remote_info--active_directory_group"></a>
@@ -127,6 +131,14 @@ Read-Only:
 Read-Only:
 
 - `group_id` (String) The id of the Microsoft Entra ID Security group.
+
+
+<a id="nestedatt--results--remote_info--clickhouse_role"></a>
+### Nested Schema for `results.remote_info.clickhouse_role`
+
+Read-Only:
+
+- `role_id` (String) The name of the ClickHouse role.
 
 
 <a id="nestedatt--results--remote_info--connector_group"></a>
@@ -193,6 +205,14 @@ Read-Only:
 - `group_id` (String) The id of the Google group.
 
 
+<a id="nestedatt--results--remote_info--grafana_team"></a>
+### Nested Schema for `results.remote_info.grafana_team`
+
+Read-Only:
+
+- `team_id` (String) The ID of the team.
+
+
 <a id="nestedatt--results--remote_info--incidentio_on_call_schedule"></a>
 ### Nested Schema for `results.remote_info.incidentio_on_call_schedule`
 
@@ -255,6 +275,22 @@ Read-Only:
 Read-Only:
 
 - `group_id` (String) The id of the Tailscale group.
+
+
+<a id="nestedatt--results--remote_info--twingate_group"></a>
+### Nested Schema for `results.remote_info.twingate_group`
+
+Read-Only:
+
+- `group_id` (String) The id of the Twingate group.
+
+
+<a id="nestedatt--results--remote_info--twingate_group_synced"></a>
+### Nested Schema for `results.remote_info.twingate_group_synced`
+
+Read-Only:
+
+- `group_id` (String) The id of the Twingate synced group.
 
 
 <a id="nestedatt--results--remote_info--workday_user_security_group"></a>

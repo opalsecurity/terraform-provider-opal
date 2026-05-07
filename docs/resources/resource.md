@@ -20,6 +20,7 @@ resource "opal_resource" "my_resource" {
   description                    = "Engineering team Okta role."
   extensions_duration_in_minutes = 120
   name                           = "mongo-db-prod"
+  parent_resource_id             = "f454d283-ca67-4a8a-bdbb-df212eca5345"
   remote_info = {
     anthropic_workspace = {
       workspace_id = "ws-123456"
@@ -102,6 +103,13 @@ resource "opal_resource" "my_resource" {
     azure_virtual_machine = {
       resource_id = "/subscriptions/0000/resourceGroups/rg/providers/Microsoft.Compute/virtualMachines/vm01"
     }
+    clickhouse_database = {
+      database_name = "my_database"
+    }
+    clickhouse_table = {
+      database_name = "my_database"
+      table_name    = "my_table"
+    }
     coupa_role = {
       role_id = 999
     }
@@ -115,6 +123,9 @@ resource "opal_resource" "my_resource" {
     databricks_account_service_principal = {
       application_id = "00000000-0000-0000-0000-000000000000"
       resource_id    = "00000000-0000-0000-0000-000000000000"
+    }
+    datadog_role = {
+      role_id = "123e4567-e89b-12d3-a456-426614174000"
     }
     datastax_astra_role = {
       role_id = "123e4567-e89b-12d3-a456-426614174000"
@@ -181,6 +192,15 @@ resource "opal_resource" "my_resource" {
     google_workspace_role = {
       role_id = "google-workspace-role:01234567890123456"
     }
+    grafana_dashboard = {
+      dashboard_uid = "dddRTXX"
+    }
+    grafana_folder = {
+      folder_uid = "fffRTXX"
+    }
+    grafana_role = {
+      role_uid = "rrfRTXX"
+    }
     ilevel_advanced_role = {
       role_name = "IT User"
     }
@@ -236,6 +256,9 @@ resource "opal_resource" "my_resource" {
     }
     teleport_role = {
       role_name = "admin_role"
+    }
+    twingate_resource = {
+      resource_id = "UmVzb3VyY2U6MTIzNA=="
     }
     workday_role = {
       role_id = "123abc456def"
@@ -300,7 +323,7 @@ resource "opal_resource" "my_resource" {
 - `app_id` (String) The ID of the app for the resource. Requires replacement if changed.
 - `name` (String) The name of the resource.
 - `request_configurations` (Attributes List) A list of configurations for requests to this resource. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
-- `resource_type` (String) The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE"]; Requires replacement if changed.
+- `resource_type` (String) The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "TWINGATE_RESOURCE"]; Requires replacement if changed.
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 
 ### Optional
@@ -309,6 +332,7 @@ resource "opal_resource" "my_resource" {
 - `custom_request_notification` (String) Custom request notification sent upon request approval.
 - `description` (String) A description of the resource.
 - `extensions_duration_in_minutes` (Number, Deprecated) The duration for which access can be extended (in minutes). Deprecated, set the extension duration in the request_configuration you want it to apply to.
+- `parent_resource_id` (String) The ID of the parent resource.
 - `remote_info` (Attributes) Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this resource. Default: false
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to this resource.
@@ -322,7 +346,6 @@ resource "opal_resource" "my_resource" {
 - `descendant_resource_ids` (List of String) List of resource IDs that are descendants of this resource.
 - `id` (String) The ID of the resource.
 - `last_successful_sync` (Attributes) Information about the last successful sync of this resource. (see [below for nested schema](#nestedatt--last_successful_sync))
-- `parent_resource_id` (String) The ID of the parent resource.
 - `risk_sensitivity` (String) The risk sensitivity level for the resource. When an override is set, this field will match that.
 
 <a id="nestedatt--request_configurations"></a>
@@ -391,10 +414,13 @@ Optional:
 - `azure_subscription` (Attributes) Remote info for Azure subscription. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_subscription))
 - `azure_user_assigned_managed_identity` (Attributes) Remote info for Azure user assigned managed identity. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_user_assigned_managed_identity))
 - `azure_virtual_machine` (Attributes) Remote info for Azure virtual machine. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_virtual_machine))
+- `clickhouse_database` (Attributes) Remote info for ClickHouse database. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--clickhouse_database))
+- `clickhouse_table` (Attributes) Remote info for ClickHouse table. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--clickhouse_table))
 - `coupa_role` (Attributes) Remote info for Coupa role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--coupa_role))
 - `cursor_organization` (Attributes) Remote info for a Cursor organization. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--cursor_organization))
 - `custom_connector` (Attributes) Remote info for a custom connector resource. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--custom_connector))
 - `databricks_account_service_principal` (Attributes) Remote info for Databricks account service principal. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--databricks_account_service_principal))
+- `datadog_role` (Attributes) Remote info for Datadog role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--datadog_role))
 - `datastax_astra_role` (Attributes) Remote info for an Astra role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--datastax_astra_role))
 - `devin_organization` (Attributes) Remote info for Devin organization. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--devin_organization))
 - `devin_role` (Attributes) Remote info for Devin role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--devin_role))
@@ -414,6 +440,9 @@ Optional:
 - `github_repo` (Attributes) Remote info for GitHub repository. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--github_repo))
 - `gitlab_project` (Attributes) Remote info for Gitlab project. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--gitlab_project))
 - `google_workspace_role` (Attributes) Remote info for GCP workspace role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--google_workspace_role))
+- `grafana_dashboard` (Attributes) Remote info for Grafana dashboard. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--grafana_dashboard))
+- `grafana_folder` (Attributes) Remote info for Grafana folder. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--grafana_folder))
+- `grafana_role` (Attributes) Remote info for Grafana role(fixed or custom). Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--grafana_role))
 - `ilevel_advanced_role` (Attributes) Remote info for iLevel Advanced role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--ilevel_advanced_role))
 - `netsuite_role` (Attributes) Remote info for NetSuite role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--netsuite_role))
 - `okta_app` (Attributes) Remote info for Okta directory app. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_app))
@@ -431,6 +460,7 @@ Optional:
 - `snowflake_table` (Attributes) Remote info for Snowflake table. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--snowflake_table))
 - `tailscale_ssh` (Attributes) Remote info for Tailscale SSH tag. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--tailscale_ssh))
 - `teleport_role` (Attributes) Remote info for Teleport role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--teleport_role))
+- `twingate_resource` (Attributes) Remote info for Twingate resource. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--twingate_resource))
 - `workday_role` (Attributes) Remote info for Workday role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--workday_role))
 
 <a id="nestedatt--remote_info--anthropic_workspace"></a>
@@ -624,6 +654,23 @@ Optional:
 - `resource_id` (String) The ARM resource ID of the virtual machine. Not Null; Requires replacement if changed.
 
 
+<a id="nestedatt--remote_info--clickhouse_database"></a>
+### Nested Schema for `remote_info.clickhouse_database`
+
+Optional:
+
+- `database_name` (String) The name of the ClickHouse database. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--clickhouse_table"></a>
+### Nested Schema for `remote_info.clickhouse_table`
+
+Optional:
+
+- `database_name` (String) The name of the ClickHouse database containing the table. Not Null; Requires replacement if changed.
+- `table_name` (String) The name of the ClickHouse table. Not Null; Requires replacement if changed.
+
+
 <a id="nestedatt--remote_info--coupa_role"></a>
 ### Nested Schema for `remote_info.coupa_role`
 
@@ -656,6 +703,14 @@ Optional:
 
 - `application_id` (String) The application ID of the service principal. Not Null; Requires replacement if changed.
 - `resource_id` (String) The resource ID of the service principal. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--datadog_role"></a>
+### Nested Schema for `remote_info.datadog_role`
+
+Optional:
+
+- `role_id` (String) The id of the role. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--datastax_astra_role"></a>
@@ -818,6 +873,30 @@ Optional:
 - `role_id` (String) The id of the role. Not Null; Requires replacement if changed.
 
 
+<a id="nestedatt--remote_info--grafana_dashboard"></a>
+### Nested Schema for `remote_info.grafana_dashboard`
+
+Optional:
+
+- `dashboard_uid` (String) The UID of the Grafana dashboard. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--grafana_folder"></a>
+### Nested Schema for `remote_info.grafana_folder`
+
+Optional:
+
+- `folder_uid` (String) The UID of the Grafana folder. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--grafana_role"></a>
+### Nested Schema for `remote_info.grafana_role`
+
+Optional:
+
+- `role_uid` (String) The UID of the Grafana role. Not Null; Requires replacement if changed.
+
+
 <a id="nestedatt--remote_info--ilevel_advanced_role"></a>
 ### Nested Schema for `remote_info.ilevel_advanced_role`
 
@@ -957,6 +1036,14 @@ Optional:
 Optional:
 
 - `role_name` (String) The name role. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--twingate_resource"></a>
+### Nested Schema for `remote_info.twingate_resource`
+
+Optional:
+
+- `resource_id` (String) The id of the Twingate resource. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--workday_role"></a>
