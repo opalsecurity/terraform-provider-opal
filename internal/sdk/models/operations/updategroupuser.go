@@ -11,7 +11,7 @@ import (
 type UpdateGroupUserRequestBody struct {
 	// The updated remote ID of the access level granted to this user.
 	AccessLevelRemoteID *string `json:"access_level_remote_id,omitempty"`
-	// The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite.
+	// The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite, or a negative value to revoke access.
 	DurationMinutes int64 `json:"duration_minutes"`
 }
 
