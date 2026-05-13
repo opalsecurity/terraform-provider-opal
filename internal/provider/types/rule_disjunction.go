@@ -4,5 +4,6 @@
 package types
 
 type RuleDisjunction struct {
-	Selectors []TagSelector `tfsdk:"selectors"`
+	AttributeSelectors []UserAttributeSelector `tfsdk:"attribute_selectors"`
+	Selectors          []TagSelector           `tfsdk:"selectors"`
 }

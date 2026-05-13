@@ -813,8 +813,17 @@ func (g *GithubOrg) GetOrgName() string {
 
 // GithubOrgRole - Remote info for GitHub organization role.
 type GithubOrgRole struct {
+	// GitHub org role's org name, required only for Enterprise.
+	OrgName *string `json:"org_name,omitempty"`
 	// The id of the role.
 	RoleID string `json:"role_id"`
+}
+
+func (g *GithubOrgRole) GetOrgName() *string {
+	if g == nil {
+		return nil
+	}
+	return g.OrgName
 }
 
 func (g *GithubOrgRole) GetRoleID() string {
@@ -826,8 +835,17 @@ func (g *GithubOrgRole) GetRoleID() string {
 
 // GithubRepo - Remote info for GitHub repository.
 type GithubRepo struct {
+	// GitHub repo's org name, required only for Enterprise.
+	OrgName *string `json:"org_name,omitempty"`
 	// The name of the repository.
 	RepoName string `json:"repo_name"`
+}
+
+func (g *GithubRepo) GetOrgName() *string {
+	if g == nil {
+		return nil
+	}
+	return g.OrgName
 }
 
 func (g *GithubRepo) GetRepoName() string {

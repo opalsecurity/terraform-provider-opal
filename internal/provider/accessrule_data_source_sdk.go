@@ -30,6 +30,19 @@ func (r *AccessRuleDataSourceModel) RefreshFromSharedAccessRule(ctx context.Cont
 			for _, clausesItem := range resp.RuleClauses.Unless.Clauses {
 				var clauses tfTypes.RuleDisjunction
 
+				clauses.AttributeSelectors = []tfTypes.UserAttributeSelector{}
+
+				for _, attributeSelectorsItem := range clausesItem.AttributeSelectors {
+					var attributeSelectors tfTypes.UserAttributeSelector
+
+					attributeSelectors.Attribute = types.StringValue(string(attributeSelectorsItem.Attribute))
+					attributeSelectors.Values = make([]types.String, 0, len(attributeSelectorsItem.Values))
+					for _, v := range attributeSelectorsItem.Values {
+						attributeSelectors.Values = append(attributeSelectors.Values, types.StringValue(v))
+					}
+
+					clauses.AttributeSelectors = append(clauses.AttributeSelectors, attributeSelectors)
+				}
 				clauses.Selectors = []tfTypes.TagSelector{}
 
 				for _, selectorsItem := range clausesItem.Selectors {
@@ -51,6 +64,19 @@ func (r *AccessRuleDataSourceModel) RefreshFromSharedAccessRule(ctx context.Cont
 		for _, clausesItem1 := range resp.RuleClauses.When.Clauses {
 			var clauses1 tfTypes.RuleDisjunction
 
+			clauses1.AttributeSelectors = []tfTypes.UserAttributeSelector{}
+
+			for _, attributeSelectorsItem1 := range clausesItem1.AttributeSelectors {
+				var attributeSelectors1 tfTypes.UserAttributeSelector
+
+				attributeSelectors1.Attribute = types.StringValue(string(attributeSelectorsItem1.Attribute))
+				attributeSelectors1.Values = make([]types.String, 0, len(attributeSelectorsItem1.Values))
+				for _, v := range attributeSelectorsItem1.Values {
+					attributeSelectors1.Values = append(attributeSelectors1.Values, types.StringValue(v))
+				}
+
+				clauses1.AttributeSelectors = append(clauses1.AttributeSelectors, attributeSelectors1)
+			}
 			clauses1.Selectors = []tfTypes.TagSelector{}
 
 			for _, selectorsItem1 := range clausesItem1.Selectors {

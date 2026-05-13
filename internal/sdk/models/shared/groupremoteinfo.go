@@ -138,8 +138,17 @@ func (g *GithubEnterpriseTeam) GetTeamSlug() string {
 
 // GithubTeam - Remote info for GitHub team.
 type GithubTeam struct {
+	// GitHub team's org name, required only for Enterprise
+	OrgName *string `json:"org_name,omitempty"`
 	// The slug of the GitHub team.
 	TeamSlug string `json:"team_slug"`
+}
+
+func (g *GithubTeam) GetOrgName() *string {
+	if g == nil {
+		return nil
+	}
+	return g.OrgName
 }
 
 func (g *GithubTeam) GetTeamSlug() string {

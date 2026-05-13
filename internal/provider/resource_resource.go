@@ -1516,6 +1516,15 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
 						Attributes: map[string]schema.Attribute{
+							"org_name": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `GitHub org role's org name, required only for Enterprise. Requires replacement if changed.`,
+							},
 							"role_id": schema.StringAttribute{
 								Computed: true,
 								Optional: true,
@@ -1539,6 +1548,15 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
 						Attributes: map[string]schema.Attribute{
+							"org_name": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `GitHub repo's org name, required only for Enterprise. Requires replacement if changed.`,
+							},
 							"repo_name": schema.StringAttribute{
 								Computed: true,
 								Optional: true,

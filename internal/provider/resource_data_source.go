@@ -669,6 +669,10 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 					"github_org_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
+							"org_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `GitHub org role's org name, required only for Enterprise.`,
+							},
 							"role_id": schema.StringAttribute{
 								Computed:    true,
 								Description: `The id of the role.`,
@@ -679,6 +683,10 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 					"github_repo": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
+							"org_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `GitHub repo's org name, required only for Enterprise.`,
+							},
 							"repo_name": schema.StringAttribute{
 								Computed:    true,
 								Description: `The name of the repository.`,

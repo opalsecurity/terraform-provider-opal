@@ -14,7 +14,7 @@ type GroupRemoteInfo struct {
 	DevinGroup               *DevinGroup               `tfsdk:"devin_group"`
 	DuoGroup                 *ActiveDirectoryGroup     `tfsdk:"duo_group"`
 	GithubEnterpriseTeam     *GithubEnterpriseTeam     `tfsdk:"github_enterprise_team"`
-	GithubTeam               *GithubEnterpriseTeam     `tfsdk:"github_team"`
+	GithubTeam               *GithubTeam               `tfsdk:"github_team"`
 	GitlabGroup              *ActiveDirectoryGroup     `tfsdk:"gitlab_group"`
 	GoogleGroup              *ActiveDirectoryGroup     `tfsdk:"google_group"`
 	GrafanaTeam              *GrafanaTeam              `tfsdk:"grafana_team"`
