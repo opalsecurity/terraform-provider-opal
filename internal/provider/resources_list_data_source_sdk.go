@@ -344,13 +344,15 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				if resultsItem.RemoteInfo.GithubOrgRole == nil {
 					results.RemoteInfo.GithubOrgRole = nil
 				} else {
-					results.RemoteInfo.GithubOrgRole = &tfTypes.ClickhouseRole{}
+					results.RemoteInfo.GithubOrgRole = &tfTypes.GithubOrgRole{}
+					results.RemoteInfo.GithubOrgRole.OrgName = types.StringPointerValue(resultsItem.RemoteInfo.GithubOrgRole.OrgName)
 					results.RemoteInfo.GithubOrgRole.RoleID = types.StringValue(resultsItem.RemoteInfo.GithubOrgRole.RoleID)
 				}
 				if resultsItem.RemoteInfo.GithubRepo == nil {
 					results.RemoteInfo.GithubRepo = nil
 				} else {
 					results.RemoteInfo.GithubRepo = &tfTypes.GithubRepo{}
+					results.RemoteInfo.GithubRepo.OrgName = types.StringPointerValue(resultsItem.RemoteInfo.GithubRepo.OrgName)
 					results.RemoteInfo.GithubRepo.RepoName = types.StringValue(resultsItem.RemoteInfo.GithubRepo.RepoName)
 				}
 				if resultsItem.RemoteInfo.GitlabProject == nil {

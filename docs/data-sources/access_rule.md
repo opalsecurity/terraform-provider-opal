@@ -53,7 +53,17 @@ Read-Only:
 
 Read-Only:
 
+- `attribute_selectors` (Attributes List) (see [below for nested schema](#nestedatt--rule_clauses--unless--clauses--attribute_selectors))
 - `selectors` (Attributes List) (see [below for nested schema](#nestedatt--rule_clauses--unless--clauses--selectors))
+
+<a id="nestedatt--rule_clauses--unless--clauses--attribute_selectors"></a>
+### Nested Schema for `rule_clauses.unless.clauses.attribute_selectors`
+
+Read-Only:
+
+- `attribute` (String)
+- `values` (List of String)
+
 
 <a id="nestedatt--rule_clauses--unless--clauses--selectors"></a>
 ### Nested Schema for `rule_clauses.unless.clauses.selectors`
@@ -79,7 +89,17 @@ Read-Only:
 
 Read-Only:
 
+- `attribute_selectors` (Attributes List) (see [below for nested schema](#nestedatt--rule_clauses--when--clauses--attribute_selectors))
 - `selectors` (Attributes List) (see [below for nested schema](#nestedatt--rule_clauses--when--clauses--selectors))
+
+<a id="nestedatt--rule_clauses--when--clauses--attribute_selectors"></a>
+### Nested Schema for `rule_clauses.when.clauses.attribute_selectors`
+
+Read-Only:
+
+- `attribute` (String)
+- `values` (List of String)
+
 
 <a id="nestedatt--rule_clauses--when--clauses--selectors"></a>
 ### Nested Schema for `rule_clauses.when.clauses.selectors`

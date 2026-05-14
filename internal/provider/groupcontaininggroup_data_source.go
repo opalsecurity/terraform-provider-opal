@@ -56,7 +56,7 @@ func (r *GroupContainingGroupDataSource) Schema(ctx context.Context, req datasou
 			},
 			"duration_minutes": schema.Int64Attribute{
 				Computed:    true,
-				Description: `The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite.`,
+				Description: `The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite, or a negative value to revoke access.`,
 			},
 			"group_id": schema.StringAttribute{
 				Required:    true,

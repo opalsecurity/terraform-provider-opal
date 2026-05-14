@@ -75,6 +75,20 @@ func (r *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 								Computed: true,
 								NestedObject: schema.NestedAttributeObject{
 									Attributes: map[string]schema.Attribute{
+										"attribute_selectors": schema.ListNestedAttribute{
+											Computed: true,
+											NestedObject: schema.NestedAttributeObject{
+												Attributes: map[string]schema.Attribute{
+													"attribute": schema.StringAttribute{
+														Computed: true,
+													},
+													"values": schema.ListAttribute{
+														Computed:    true,
+														ElementType: types.StringType,
+													},
+												},
+											},
+										},
 										"selectors": schema.ListNestedAttribute{
 											Computed: true,
 											NestedObject: schema.NestedAttributeObject{
@@ -103,6 +117,20 @@ func (r *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 								Computed: true,
 								NestedObject: schema.NestedAttributeObject{
 									Attributes: map[string]schema.Attribute{
+										"attribute_selectors": schema.ListNestedAttribute{
+											Computed: true,
+											NestedObject: schema.NestedAttributeObject{
+												Attributes: map[string]schema.Attribute{
+													"attribute": schema.StringAttribute{
+														Computed: true,
+													},
+													"values": schema.ListAttribute{
+														Computed:    true,
+														ElementType: types.StringType,
+													},
+												},
+											},
+										},
 										"selectors": schema.ListNestedAttribute{
 											Computed: true,
 											NestedObject: schema.NestedAttributeObject{

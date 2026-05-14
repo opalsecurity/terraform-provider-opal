@@ -48,7 +48,7 @@ type ResourceRemoteInfo struct {
 	GcpSQLInstance                    *GcpSQLInstance                    `tfsdk:"gcp_sql_instance"`
 	GithubEnterpriseRole              *ClickhouseRole                    `tfsdk:"github_enterprise_role"`
 	GithubOrg                         *GithubOrg                         `tfsdk:"github_org"`
-	GithubOrgRole                     *ClickhouseRole                    `tfsdk:"github_org_role"`
+	GithubOrgRole                     *GithubOrgRole                     `tfsdk:"github_org_role"`
 	GithubRepo                        *GithubRepo                        `tfsdk:"github_repo"`
 	GitlabProject                     *GcpProject                        `tfsdk:"gitlab_project"`
 	GoogleWorkspaceRole               *ClickhouseRole                    `tfsdk:"google_workspace_role"`

@@ -4,7 +4,15 @@
 package shared
 
 type RuleDisjunction struct {
-	Selectors []TagSelector `json:"selectors"`
+	AttributeSelectors []UserAttributeSelector `json:"attribute_selectors,omitempty"`
+	Selectors          []TagSelector           `json:"selectors"`
+}
+
+func (r *RuleDisjunction) GetAttributeSelectors() []UserAttributeSelector {
+	if r == nil {
+		return nil
+	}
+	return r.AttributeSelectors
 }
 
 func (r *RuleDisjunction) GetSelectors() []TagSelector {
