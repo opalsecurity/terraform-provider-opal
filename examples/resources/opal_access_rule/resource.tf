@@ -6,6 +6,14 @@ resource "opal_access_rule" "my_accessrule" {
     unless = {
       clauses = [
         {
+          attribute_selectors = [
+            {
+              attribute = "HR_IDP_STATUS"
+              values = [
+                "..."
+              ]
+            }
+          ]
           selectors = [
             {
               connection_id = "cb74c0c0-da9a-4b2e-b301-5872b3381de2"
@@ -19,6 +27,14 @@ resource "opal_access_rule" "my_accessrule" {
     when = {
       clauses = [
         {
+          attribute_selectors = [
+            {
+              attribute = "HR_IDP_STATUS"
+              values = [
+                "..."
+              ]
+            }
+          ]
           selectors = [
             {
               connection_id = "63e7b7e6-8efd-4577-8c2a-10982993b910"

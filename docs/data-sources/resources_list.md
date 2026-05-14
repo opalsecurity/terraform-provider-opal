@@ -541,6 +541,7 @@ Read-Only:
 
 Read-Only:
 
+- `org_name` (String) GitHub org role's org name, required only for Enterprise.
 - `role_id` (String) The id of the role.
 
 
@@ -549,6 +550,7 @@ Read-Only:
 
 Read-Only:
 
+- `org_name` (String) GitHub repo's org name, required only for Enterprise.
 - `repo_name` (String) The name of the repository.
 
 

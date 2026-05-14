@@ -187,7 +187,8 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 			if resp.RemoteInfo.GithubTeam == nil {
 				r.RemoteInfo.GithubTeam = nil
 			} else {
-				r.RemoteInfo.GithubTeam = &tfTypes.GithubEnterpriseTeam{}
+				r.RemoteInfo.GithubTeam = &tfTypes.GithubTeam{}
+				r.RemoteInfo.GithubTeam.OrgName = types.StringPointerValue(resp.RemoteInfo.GithubTeam.OrgName)
 				r.RemoteInfo.GithubTeam.TeamSlug = types.StringValue(resp.RemoteInfo.GithubTeam.TeamSlug)
 			}
 			if resp.RemoteInfo.GitlabGroup == nil {
@@ -685,10 +686,17 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		}
 		var githubTeam *shared.GithubTeam
 		if r.RemoteInfo.GithubTeam != nil {
+			orgName := new(string)
+			if !r.RemoteInfo.GithubTeam.OrgName.IsUnknown() && !r.RemoteInfo.GithubTeam.OrgName.IsNull() {
+				*orgName = r.RemoteInfo.GithubTeam.OrgName.ValueString()
+			} else {
+				orgName = nil
+			}
 			var teamSlug1 string
 			teamSlug1 = r.RemoteInfo.GithubTeam.TeamSlug.ValueString()
 
 			githubTeam = &shared.GithubTeam{
+				OrgName:  orgName,
 				TeamSlug: teamSlug1,
 			}
 		}

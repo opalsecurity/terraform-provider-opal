@@ -214,6 +214,7 @@ Read-Only:
 
 Read-Only:
 
+- `org_name` (String) GitHub team's org name, required only for Enterprise
 - `team_slug` (String) The slug of the GitHub team.
 
 

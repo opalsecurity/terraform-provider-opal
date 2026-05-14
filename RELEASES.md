@@ -413,3 +413,13 @@ Based on:
 - [terraform v3.5.1] .
 ### Releases
 - [Terraform v3.5.1] https://registry.terraform.io/providers/opalsecurity/opal/3.5.1 - .
+
+## 2026-05-14 00:43:20
+### Changes
+Based on:
+- OpenAPI Doc  
+- Speakeasy CLI 1.763.0 (2.884.0) https://github.com/speakeasy-api/speakeasy
+### Generated
+- [terraform v3.5.2] .
+### Releases
+- [Terraform v3.5.2] https://registry.terraform.io/providers/opalsecurity/opal/3.5.2 - .

@@ -618,6 +618,15 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 						},
 						Attributes: map[string]schema.Attribute{
+							"org_name": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `GitHub team's org name, required only for Enterprise. Requires replacement if changed.`,
+							},
 							"team_slug": schema.StringAttribute{
 								Computed: true,
 								Optional: true,

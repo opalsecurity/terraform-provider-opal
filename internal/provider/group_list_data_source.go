@@ -269,6 +269,10 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 								"github_team": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
+										"org_name": schema.StringAttribute{
+											Computed:    true,
+											Description: `GitHub team's org name, required only for Enterprise`,
+										},
 										"team_slug": schema.StringAttribute{
 											Computed:    true,
 											Description: `The slug of the GitHub team.`,

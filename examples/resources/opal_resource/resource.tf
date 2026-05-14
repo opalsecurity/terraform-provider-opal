@@ -166,9 +166,11 @@ resource "opal_resource" "my_resource" {
       org_name = "Opal Security"
     }
     github_org_role = {
-      role_id = 112233
+      org_name = "...my_org_name..."
+      role_id  = 112233
     }
     github_repo = {
+      org_name  = "...my_org_name..."
       repo_name = "Opal Security"
     }
     gitlab_project = {

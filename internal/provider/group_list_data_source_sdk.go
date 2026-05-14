@@ -113,7 +113,8 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				if resultsItem.RemoteInfo.GithubTeam == nil {
 					results.RemoteInfo.GithubTeam = nil
 				} else {
-					results.RemoteInfo.GithubTeam = &tfTypes.GithubEnterpriseTeam{}
+					results.RemoteInfo.GithubTeam = &tfTypes.GithubTeam{}
+					results.RemoteInfo.GithubTeam.OrgName = types.StringPointerValue(resultsItem.RemoteInfo.GithubTeam.OrgName)
 					results.RemoteInfo.GithubTeam.TeamSlug = types.StringValue(resultsItem.RemoteInfo.GithubTeam.TeamSlug)
 				}
 				if resultsItem.RemoteInfo.GitlabGroup == nil {

@@ -62,6 +62,7 @@ resource "opal_group" "my_group" {
       team_slug = "opal-security"
     }
     github_team = {
+      org_name  = "...my_org_name..."
       team_slug = "opal-security"
     }
     gitlab_group = {
@@ -340,6 +341,7 @@ Optional:
 
 Optional:
 
+- `org_name` (String) GitHub team's org name, required only for Enterprise. Requires replacement if changed.
 - `team_slug` (String) The slug of the GitHub team. Not Null; Requires replacement if changed.
 
 

@@ -181,9 +181,11 @@ resource "opal_resource" "my_resource" {
       org_name = "Opal Security"
     }
     github_org_role = {
-      role_id = 112233
+      org_name = "...my_org_name..."
+      role_id  = 112233
     }
     github_repo = {
+      org_name  = "...my_org_name..."
       repo_name = "Opal Security"
     }
     gitlab_project = {
@@ -846,6 +848,7 @@ Optional:
 
 Optional:
 
+- `org_name` (String) GitHub org role's org name, required only for Enterprise. Requires replacement if changed.
 - `role_id` (String) The id of the role. Not Null; Requires replacement if changed.
 
 
@@ -854,6 +857,7 @@ Optional:
 
 Optional:
 
+- `org_name` (String) GitHub repo's org name, required only for Enterprise. Requires replacement if changed.
 - `repo_name` (String) The name of the repository. Not Null; Requires replacement if changed.
 
 

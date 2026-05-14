@@ -47,6 +47,7 @@ resource "opal_group" "my_group" {
       team_slug = "opal-security"
     }
     github_team = {
+      org_name  = "...my_org_name..."
       team_slug = "opal-security"
     }
     gitlab_group = {

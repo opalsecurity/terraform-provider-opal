@@ -30,6 +30,19 @@ func (r *AccessRuleResourceModel) RefreshFromSharedAccessRule(ctx context.Contex
 			for _, clausesItem := range resp.RuleClauses.Unless.Clauses {
 				var clauses tfTypes.RuleDisjunction
 
+				clauses.AttributeSelectors = []tfTypes.UserAttributeSelector{}
+
+				for _, attributeSelectorsItem := range clausesItem.AttributeSelectors {
+					var attributeSelectors tfTypes.UserAttributeSelector
+
+					attributeSelectors.Attribute = types.StringValue(string(attributeSelectorsItem.Attribute))
+					attributeSelectors.Values = make([]types.String, 0, len(attributeSelectorsItem.Values))
+					for _, v := range attributeSelectorsItem.Values {
+						attributeSelectors.Values = append(attributeSelectors.Values, types.StringValue(v))
+					}
+
+					clauses.AttributeSelectors = append(clauses.AttributeSelectors, attributeSelectors)
+				}
 				clauses.Selectors = []tfTypes.TagSelector{}
 
 				for _, selectorsItem := range clausesItem.Selectors {
@@ -51,6 +64,19 @@ func (r *AccessRuleResourceModel) RefreshFromSharedAccessRule(ctx context.Contex
 		for _, clausesItem1 := range resp.RuleClauses.When.Clauses {
 			var clauses1 tfTypes.RuleDisjunction
 
+			clauses1.AttributeSelectors = []tfTypes.UserAttributeSelector{}
+
+			for _, attributeSelectorsItem1 := range clausesItem1.AttributeSelectors {
+				var attributeSelectors1 tfTypes.UserAttributeSelector
+
+				attributeSelectors1.Attribute = types.StringValue(string(attributeSelectorsItem1.Attribute))
+				attributeSelectors1.Values = make([]types.String, 0, len(attributeSelectorsItem1.Values))
+				for _, v := range attributeSelectorsItem1.Values {
+					attributeSelectors1.Values = append(attributeSelectors1.Values, types.StringValue(v))
+				}
+
+				clauses1.AttributeSelectors = append(clauses1.AttributeSelectors, attributeSelectors1)
+			}
 			clauses1.Selectors = []tfTypes.TagSelector{}
 
 			for _, selectorsItem1 := range clausesItem1.Selectors {
@@ -134,6 +160,18 @@ func (r *AccessRuleResourceModel) ToSharedUpdateAccessRuleInfo(ctx context.Conte
 	if r.RuleClauses.Unless != nil {
 		clauses := make([]shared.RuleDisjunction, 0, len(r.RuleClauses.Unless.Clauses))
 		for clausesIndex := range r.RuleClauses.Unless.Clauses {
+			attributeSelectors := make([]shared.UserAttributeSelector, 0, len(r.RuleClauses.Unless.Clauses[clausesIndex].AttributeSelectors))
+			for attributeSelectorsIndex := range r.RuleClauses.Unless.Clauses[clausesIndex].AttributeSelectors {
+				attribute := shared.Attribute(r.RuleClauses.Unless.Clauses[clausesIndex].AttributeSelectors[attributeSelectorsIndex].Attribute.ValueString())
+				values := make([]string, 0, len(r.RuleClauses.Unless.Clauses[clausesIndex].AttributeSelectors[attributeSelectorsIndex].Values))
+				for valuesIndex := range r.RuleClauses.Unless.Clauses[clausesIndex].AttributeSelectors[attributeSelectorsIndex].Values {
+					values = append(values, r.RuleClauses.Unless.Clauses[clausesIndex].AttributeSelectors[attributeSelectorsIndex].Values[valuesIndex].ValueString())
+				}
+				attributeSelectors = append(attributeSelectors, shared.UserAttributeSelector{
+					Attribute: attribute,
+					Values:    values,
+				})
+			}
 			selectors := make([]shared.TagSelector, 0, len(r.RuleClauses.Unless.Clauses[clausesIndex].Selectors))
 			for selectorsIndex := range r.RuleClauses.Unless.Clauses[clausesIndex].Selectors {
 				var connectionID string
@@ -152,7 +190,8 @@ func (r *AccessRuleResourceModel) ToSharedUpdateAccessRuleInfo(ctx context.Conte
 				})
 			}
 			clauses = append(clauses, shared.RuleDisjunction{
-				Selectors: selectors,
+				AttributeSelectors: attributeSelectors,
+				Selectors:          selectors,
 			})
 		}
 		unless = &shared.RuleConjunction{
@@ -161,6 +200,18 @@ func (r *AccessRuleResourceModel) ToSharedUpdateAccessRuleInfo(ctx context.Conte
 	}
 	clauses1 := make([]shared.RuleDisjunction, 0, len(r.RuleClauses.When.Clauses))
 	for clausesIndex1 := range r.RuleClauses.When.Clauses {
+		attributeSelectors1 := make([]shared.UserAttributeSelector, 0, len(r.RuleClauses.When.Clauses[clausesIndex1].AttributeSelectors))
+		for attributeSelectorsIndex1 := range r.RuleClauses.When.Clauses[clausesIndex1].AttributeSelectors {
+			attribute1 := shared.Attribute(r.RuleClauses.When.Clauses[clausesIndex1].AttributeSelectors[attributeSelectorsIndex1].Attribute.ValueString())
+			values1 := make([]string, 0, len(r.RuleClauses.When.Clauses[clausesIndex1].AttributeSelectors[attributeSelectorsIndex1].Values))
+			for valuesIndex1 := range r.RuleClauses.When.Clauses[clausesIndex1].AttributeSelectors[attributeSelectorsIndex1].Values {
+				values1 = append(values1, r.RuleClauses.When.Clauses[clausesIndex1].AttributeSelectors[attributeSelectorsIndex1].Values[valuesIndex1].ValueString())
+			}
+			attributeSelectors1 = append(attributeSelectors1, shared.UserAttributeSelector{
+				Attribute: attribute1,
+				Values:    values1,
+			})
+		}
 		selectors1 := make([]shared.TagSelector, 0, len(r.RuleClauses.When.Clauses[clausesIndex1].Selectors))
 		for selectorsIndex1 := range r.RuleClauses.When.Clauses[clausesIndex1].Selectors {
 			var connectionId1 string
@@ -179,7 +230,8 @@ func (r *AccessRuleResourceModel) ToSharedUpdateAccessRuleInfo(ctx context.Conte
 			})
 		}
 		clauses1 = append(clauses1, shared.RuleDisjunction{
-			Selectors: selectors1,
+			AttributeSelectors: attributeSelectors1,
+			Selectors:          selectors1,
 		})
 	}
 	when := shared.RuleConjunction{

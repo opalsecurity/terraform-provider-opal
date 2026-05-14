@@ -1704,7 +1704,7 @@ paths:
                 access_level_remote_id: arn:aws:iam::590304332660:role/AdministratorAccess
               properties:
                 duration_minutes:
-                  description: The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite.
+                  description: The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite, or a negative value to revoke access.
                   type: integer
                   maximum: 525960 # One year
                   example: 120
@@ -3977,6 +3977,39 @@ paths:
       x-speakeasy-name-override: get_user_tags
       x-speakeasy-entity-operation: UserTags#get
   /access-rules:
+    get:
+      description: Returns a list of access rules for your organization.
+      operationId: get_access_rules
+      parameters:
+        - description: The pagination cursor value.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          explode: true
+          in: query
+          name: cursor
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: Number of results to return per page. Default is 200.
+          example: 200
+          explode: true
+          in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedAccessRulesList"
+          description: One page of access rules for your organization.
+      security:
+        - BearerAuth: []
+      tags:
+        - access-rules
     post:
       description: Creates a new access rule config for the given group_id.
       operationId: create_access_rule
@@ -6322,7 +6355,7 @@ components:
           format: uuid
           type: string
         duration_minutes:
-          description: The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite.
+          description: The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite, or a negative value to revoke access.
           type: integer
           maximum: 525960 # One year
           example: 120
@@ -7588,6 +7621,9 @@ components:
               description: The slug of the GitHub team.
               example: opal-security
               type: string
+            org_name:
+              description: GitHub team's org name, required only for Enterprise
+              type: string
           type: object
           required:
             - team_slug
@@ -8276,6 +8312,9 @@ components:
               example: Opal Security
               type: string
               x-speakeasy-param-force-new: true
+            org_name:
+              description: GitHub repo's org name, required only for Enterprise.
+              type: string
           type: object
           required:
             - repo_name
@@ -8285,6 +8324,9 @@ components:
             role_id:
               description: The id of the role.
               example: 112233
+              type: string
+            org_name:
+              description: GitHub org role's org name, required only for Enterprise.
               type: string
           type: object
           required:
@@ -10404,6 +10446,23 @@ components:
         - admin_owner_id
         - description
       x-speakeasy-entity: AccessRule
+    PaginatedAccessRulesList:
+      properties:
+        next:
+          description: The cursor with which to continue pagination if additional result pages exist.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          type: string
+        previous:
+          description: The cursor used to retrieve the previous page of results.
+          example: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+          type: string
+        results:
+          items:
+            $ref: "#/components/schemas/AccessRule"
+          type: array
+      required:
+        - results
+      type: object
     AccessRule:
       description: |-
         # Access Rule Object
@@ -10411,7 +10470,7 @@ components:
         The `AccessRule` object is used to represent an access rule configuration.
 
         ### Usage Example
-        Get access rule configurations from the `GET Access Rule Configs` endpoint.
+        List access rules from the `GET /access-rules` endpoint, or retrieve a single access rule from the `GET /access-rules/{access_rule_id}` endpoint.
       properties:
         access_rule_id:
           description: The ID (group ID) of the access rule.
@@ -10477,6 +10536,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TagSelector"
+        attribute_selectors:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserAttributeSelector"
       required:
         - selectors
       x-speakeasy-entity: RuleConjunction
@@ -10494,6 +10557,19 @@ components:
         - value
         - connection_id
       x-speakeasy-entity: TagSelector
+    UserAttributeSelector:
+      properties:
+        attribute:
+          type: string
+          enum:
+            - HR_IDP_STATUS
+        values:
+          type: array
+          items:
+            type: string
+      required:
+        - attribute
+        - values
     PaginatedOwnersList:
       example:
         next: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
