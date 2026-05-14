@@ -1,5 +1,10 @@
 # Changelog
 
+## v3.5.2
+ - Adds `attribute_selectors` field to `opal_access_rule` rule clauses
+ - Adds support for GitHub Enterprise Org level teams: `org_name` can now be specified on `github_team` remote info to target teams in an enterprise-managed GitHub organization
+ - Adds support for GitHub Enterprise Org level resources: `org_name` can now be specified on `github_repo` and `github_org_role` resource remote info to target resources in an enterprise-managed GitHub organization
+
 ## v3.5.1
  - Adds support for setting `parent_resource_id` fields for `opal_resources`
  - Adds GRAFANA_TEAM, CLICKHOUSE_ROLE, TWINGATE_GROUP, TWINGATE_GROUP_SYNCED types to `opal_groups`
