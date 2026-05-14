@@ -187,7 +187,8 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			if resp.RemoteInfo.GithubTeam == nil {
 				r.RemoteInfo.GithubTeam = nil
 			} else {
-				r.RemoteInfo.GithubTeam = &tfTypes.GithubEnterpriseTeam{}
+				r.RemoteInfo.GithubTeam = &tfTypes.GithubTeam{}
+				r.RemoteInfo.GithubTeam.OrgName = types.StringPointerValue(resp.RemoteInfo.GithubTeam.OrgName)
 				r.RemoteInfo.GithubTeam.TeamSlug = types.StringValue(resp.RemoteInfo.GithubTeam.TeamSlug)
 			}
 			if resp.RemoteInfo.GitlabGroup == nil {

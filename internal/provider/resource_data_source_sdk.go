@@ -337,13 +337,15 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			if resp.RemoteInfo.GithubOrgRole == nil {
 				r.RemoteInfo.GithubOrgRole = nil
 			} else {
-				r.RemoteInfo.GithubOrgRole = &tfTypes.ClickhouseRole{}
+				r.RemoteInfo.GithubOrgRole = &tfTypes.GithubOrgRole{}
+				r.RemoteInfo.GithubOrgRole.OrgName = types.StringPointerValue(resp.RemoteInfo.GithubOrgRole.OrgName)
 				r.RemoteInfo.GithubOrgRole.RoleID = types.StringValue(resp.RemoteInfo.GithubOrgRole.RoleID)
 			}
 			if resp.RemoteInfo.GithubRepo == nil {
 				r.RemoteInfo.GithubRepo = nil
 			} else {
 				r.RemoteInfo.GithubRepo = &tfTypes.GithubRepo{}
+				r.RemoteInfo.GithubRepo.OrgName = types.StringPointerValue(resp.RemoteInfo.GithubRepo.OrgName)
 				r.RemoteInfo.GithubRepo.RepoName = types.StringValue(resp.RemoteInfo.GithubRepo.RepoName)
 			}
 			if resp.RemoteInfo.GitlabProject == nil {

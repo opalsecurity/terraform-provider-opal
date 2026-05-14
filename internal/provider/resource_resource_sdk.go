@@ -337,13 +337,15 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			if resp.RemoteInfo.GithubOrgRole == nil {
 				r.RemoteInfo.GithubOrgRole = nil
 			} else {
-				r.RemoteInfo.GithubOrgRole = &tfTypes.ClickhouseRole{}
+				r.RemoteInfo.GithubOrgRole = &tfTypes.GithubOrgRole{}
+				r.RemoteInfo.GithubOrgRole.OrgName = types.StringPointerValue(resp.RemoteInfo.GithubOrgRole.OrgName)
 				r.RemoteInfo.GithubOrgRole.RoleID = types.StringValue(resp.RemoteInfo.GithubOrgRole.RoleID)
 			}
 			if resp.RemoteInfo.GithubRepo == nil {
 				r.RemoteInfo.GithubRepo = nil
 			} else {
 				r.RemoteInfo.GithubRepo = &tfTypes.GithubRepo{}
+				r.RemoteInfo.GithubRepo.OrgName = types.StringPointerValue(resp.RemoteInfo.GithubRepo.OrgName)
 				r.RemoteInfo.GithubRepo.RepoName = types.StringValue(resp.RemoteInfo.GithubRepo.RepoName)
 			}
 			if resp.RemoteInfo.GitlabProject == nil {
@@ -1279,19 +1281,33 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var githubOrgRole *shared.GithubOrgRole
 		if r.RemoteInfo.GithubOrgRole != nil {
+			orgName1 := new(string)
+			if !r.RemoteInfo.GithubOrgRole.OrgName.IsUnknown() && !r.RemoteInfo.GithubOrgRole.OrgName.IsNull() {
+				*orgName1 = r.RemoteInfo.GithubOrgRole.OrgName.ValueString()
+			} else {
+				orgName1 = nil
+			}
 			var roleId5 string
 			roleId5 = r.RemoteInfo.GithubOrgRole.RoleID.ValueString()
 
 			githubOrgRole = &shared.GithubOrgRole{
-				RoleID: roleId5,
+				OrgName: orgName1,
+				RoleID:  roleId5,
 			}
 		}
 		var githubRepo *shared.GithubRepo
 		if r.RemoteInfo.GithubRepo != nil {
+			orgName2 := new(string)
+			if !r.RemoteInfo.GithubRepo.OrgName.IsUnknown() && !r.RemoteInfo.GithubRepo.OrgName.IsNull() {
+				*orgName2 = r.RemoteInfo.GithubRepo.OrgName.ValueString()
+			} else {
+				orgName2 = nil
+			}
 			var repoName string
 			repoName = r.RemoteInfo.GithubRepo.RepoName.ValueString()
 
 			githubRepo = &shared.GithubRepo{
+				OrgName:  orgName2,
 				RepoName: repoName,
 			}
 		}

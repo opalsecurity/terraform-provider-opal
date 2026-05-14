@@ -89,6 +89,37 @@ func (r *AccessRuleResource) Schema(ctx context.Context, req resource.SchemaRequ
 										speakeasy_objectvalidators.NotNull(),
 									},
 									Attributes: map[string]schema.Attribute{
+										"attribute_selectors": schema.ListNestedAttribute{
+											Computed: true,
+											Optional: true,
+											NestedObject: schema.NestedAttributeObject{
+												Validators: []validator.Object{
+													speakeasy_objectvalidators.NotNull(),
+												},
+												Attributes: map[string]schema.Attribute{
+													"attribute": schema.StringAttribute{
+														Computed:    true,
+														Optional:    true,
+														Description: `Not Null; must be "HR_IDP_STATUS"`,
+														Validators: []validator.String{
+															speakeasy_stringvalidators.NotNull(),
+															stringvalidator.OneOf(
+																"HR_IDP_STATUS",
+															),
+														},
+													},
+													"values": schema.ListAttribute{
+														Computed:    true,
+														Optional:    true,
+														ElementType: types.StringType,
+														Description: `Not Null`,
+														Validators: []validator.List{
+															speakeasy_listvalidators.NotNull(),
+														},
+													},
+												},
+											},
+										},
 										"selectors": schema.ListNestedAttribute{
 											Computed: true,
 											Optional: true,
@@ -148,6 +179,37 @@ func (r *AccessRuleResource) Schema(ctx context.Context, req resource.SchemaRequ
 										speakeasy_objectvalidators.NotNull(),
 									},
 									Attributes: map[string]schema.Attribute{
+										"attribute_selectors": schema.ListNestedAttribute{
+											Computed: true,
+											Optional: true,
+											NestedObject: schema.NestedAttributeObject{
+												Validators: []validator.Object{
+													speakeasy_objectvalidators.NotNull(),
+												},
+												Attributes: map[string]schema.Attribute{
+													"attribute": schema.StringAttribute{
+														Computed:    true,
+														Optional:    true,
+														Description: `Not Null; must be "HR_IDP_STATUS"`,
+														Validators: []validator.String{
+															speakeasy_stringvalidators.NotNull(),
+															stringvalidator.OneOf(
+																"HR_IDP_STATUS",
+															),
+														},
+													},
+													"values": schema.ListAttribute{
+														Computed:    true,
+														Optional:    true,
+														ElementType: types.StringType,
+														Description: `Not Null`,
+														Validators: []validator.List{
+															speakeasy_listvalidators.NotNull(),
+														},
+													},
+												},
+											},
+										},
 										"selectors": schema.ListNestedAttribute{
 											Computed: true,
 											Optional: true,
