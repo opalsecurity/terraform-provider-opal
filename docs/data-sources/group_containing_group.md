@@ -30,4 +30,4 @@ data "opal_group_containing_group" "my_groupcontaininggroup" {
 ### Read-Only
 
 - `access_level_remote_id` (String) The updated remote ID of the access level granted to this group.
-- `duration_minutes` (Number) The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite, or a negative value to revoke access.
+- `duration_minutes` (Number) The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite.
