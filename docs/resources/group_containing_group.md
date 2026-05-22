@@ -32,7 +32,7 @@ resource "opal_group_containing_group" "my_groupcontaininggroup" {
 ### Optional
 
 - `access_level_remote_id` (String) The updated remote ID of the access level granted to this group. Requires replacement if changed.
-- `duration_minutes` (Number) The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite, or a negative value to revoke access. Requires replacement if changed.
+- `duration_minutes` (Number) The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite. Requires replacement if changed.
 
 ## Import
 

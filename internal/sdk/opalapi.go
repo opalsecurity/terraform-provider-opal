@@ -82,6 +82,8 @@ type OpalAPI struct {
 	OnCallSchedules *OnCallSchedules
 	// Operations related to owners
 	Owners *Owners
+	// Operations related to OpalQuery
+	OpalQueries *OpalQueries
 	// Operations related to requests
 	Requests *Requests
 	// Operations related to resources
@@ -172,9 +174,9 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *OpalAPI {
 	sdk := &OpalAPI{
-		SDKVersion: "3.5.2",
+		SDKVersion: "3.5.3",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:  "speakeasy-sdk/terraform 3.5.2 2.884.0 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
+			UserAgent:  "speakeasy-sdk/terraform 3.5.3 2.884.0 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
 			ServerList: ServerList,
 		},
 		hooks: hooks.New(),
@@ -208,6 +210,7 @@ func New(opts ...SDKOption) *OpalAPI {
 	sdk.NonHumanIdentities = newNonHumanIdentities(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.OnCallSchedules = newOnCallSchedules(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Owners = newOwners(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.OpalQueries = newOpalQueries(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Requests = newRequests(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Resources = newResources(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Sessions = newSessions(sdk, sdk.sdkConfiguration, sdk.hooks)
