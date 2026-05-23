@@ -8,49 +8,49 @@ import (
 	"fmt"
 )
 
-// Type - The type of an app.
-type Type string
+// AppType - The type of an app.
+type AppType string
 
 const (
-	TypeActiveDirectory Type = "ACTIVE_DIRECTORY"
-	TypeAnthropic       Type = "ANTHROPIC"
-	TypeAzureAd         Type = "AZURE_AD"
-	TypeAws             Type = "AWS"
-	TypeAwsSso          Type = "AWS_SSO"
-	TypeCoupa           Type = "COUPA"
-	TypeCursor          Type = "CURSOR"
-	TypeCustom          Type = "CUSTOM"
-	TypeDatabricks      Type = "DATABRICKS"
-	TypeDatastaxAstra   Type = "DATASTAX_ASTRA"
-	TypeDuo             Type = "DUO"
-	TypeGcp             Type = "GCP"
-	TypeGitHub          Type = "GIT_HUB"
-	TypeGitLab          Type = "GIT_LAB"
-	TypeGoogleGroups    Type = "GOOGLE_GROUPS"
-	TypeGoogleWorkspace Type = "GOOGLE_WORKSPACE"
-	TypeIlevel          Type = "ILEVEL"
-	TypeIncidentio      Type = "INCIDENTIO"
-	TypeLdap            Type = "LDAP"
-	TypeMariadb         Type = "MARIADB"
-	TypeMongo           Type = "MONGO"
-	TypeMongoAtlas      Type = "MONGO_ATLAS"
-	TypeMysql           Type = "MYSQL"
-	TypeNetsuite        Type = "NETSUITE"
-	TypeOktaDirectory   Type = "OKTA_DIRECTORY"
-	TypeOpenaiPlatform  Type = "OPENAI_PLATFORM"
-	TypeOpal            Type = "OPAL"
-	TypePagerduty       Type = "PAGERDUTY"
-	TypeSalesforce      Type = "SALESFORCE"
-	TypeSnowflake       Type = "SNOWFLAKE"
-	TypeTailscale       Type = "TAILSCALE"
-	TypeTeleport        Type = "TELEPORT"
-	TypeWorkday         Type = "WORKDAY"
+	AppTypeActiveDirectory AppType = "ACTIVE_DIRECTORY"
+	AppTypeAnthropic       AppType = "ANTHROPIC"
+	AppTypeAzureAd         AppType = "AZURE_AD"
+	AppTypeAws             AppType = "AWS"
+	AppTypeAwsSso          AppType = "AWS_SSO"
+	AppTypeCoupa           AppType = "COUPA"
+	AppTypeCursor          AppType = "CURSOR"
+	AppTypeCustom          AppType = "CUSTOM"
+	AppTypeDatabricks      AppType = "DATABRICKS"
+	AppTypeDatastaxAstra   AppType = "DATASTAX_ASTRA"
+	AppTypeDuo             AppType = "DUO"
+	AppTypeGcp             AppType = "GCP"
+	AppTypeGitHub          AppType = "GIT_HUB"
+	AppTypeGitLab          AppType = "GIT_LAB"
+	AppTypeGoogleGroups    AppType = "GOOGLE_GROUPS"
+	AppTypeGoogleWorkspace AppType = "GOOGLE_WORKSPACE"
+	AppTypeIlevel          AppType = "ILEVEL"
+	AppTypeIncidentio      AppType = "INCIDENTIO"
+	AppTypeLdap            AppType = "LDAP"
+	AppTypeMariadb         AppType = "MARIADB"
+	AppTypeMongo           AppType = "MONGO"
+	AppTypeMongoAtlas      AppType = "MONGO_ATLAS"
+	AppTypeMysql           AppType = "MYSQL"
+	AppTypeNetsuite        AppType = "NETSUITE"
+	AppTypeOktaDirectory   AppType = "OKTA_DIRECTORY"
+	AppTypeOpenaiPlatform  AppType = "OPENAI_PLATFORM"
+	AppTypeOpal            AppType = "OPAL"
+	AppTypePagerduty       AppType = "PAGERDUTY"
+	AppTypeSalesforce      AppType = "SALESFORCE"
+	AppTypeSnowflake       AppType = "SNOWFLAKE"
+	AppTypeTailscale       AppType = "TAILSCALE"
+	AppTypeTeleport        AppType = "TELEPORT"
+	AppTypeWorkday         AppType = "WORKDAY"
 )
 
-func (e Type) ToPointer() *Type {
+func (e AppType) ToPointer() *AppType {
 	return &e
 }
-func (e *Type) UnmarshalJSON(data []byte) error {
+func (e *AppType) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -121,10 +121,10 @@ func (e *Type) UnmarshalJSON(data []byte) error {
 	case "TELEPORT":
 		fallthrough
 	case "WORKDAY":
-		*e = Type(v)
+		*e = AppType(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for Type: %v", v)
+		return fmt.Errorf("invalid value for AppType: %v", v)
 	}
 }
 
@@ -144,7 +144,7 @@ type App struct {
 	// The name of the app.
 	Name string `json:"name"`
 	// The type of an app.
-	Type Type `json:"app_type"`
+	Type AppType `json:"app_type"`
 	// Validation checks of an apps' configuration and permissions.
 	Validations []AppValidation `json:"validations,omitempty"`
 }
@@ -177,9 +177,9 @@ func (a *App) GetName() string {
 	return a.Name
 }
 
-func (a *App) GetType() Type {
+func (a *App) GetType() AppType {
 	if a == nil {
-		return Type("")
+		return AppType("")
 	}
 	return a.Type
 }
