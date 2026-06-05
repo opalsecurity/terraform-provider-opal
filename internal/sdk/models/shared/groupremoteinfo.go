@@ -340,6 +340,32 @@ func (w *WorkdayUserSecurityGroup) GetGroupID() string {
 	return w.GroupID
 }
 
+// ZendeskGroup - Remote info for Zendesk group.
+type ZendeskGroup struct {
+	// The ID of the Zendesk group.
+	GroupID string `json:"group_id"`
+}
+
+func (z *ZendeskGroup) GetGroupID() string {
+	if z == nil {
+		return ""
+	}
+	return z.GroupID
+}
+
+// ZendeskOrganization - Remote info for Zendesk organization.
+type ZendeskOrganization struct {
+	// The ID of the Zendesk organization.
+	OrganizationID string `json:"organization_id"`
+}
+
+func (z *ZendeskOrganization) GetOrganizationID() string {
+	if z == nil {
+		return ""
+	}
+	return z.OrganizationID
+}
+
 // GroupRemoteInfo - Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided.
 type GroupRemoteInfo struct {
 	// Remote info for Active Directory group.
@@ -392,6 +418,10 @@ type GroupRemoteInfo struct {
 	TwingateGroupSynced *TwingateGroupSynced `json:"twingate_group_synced,omitempty"`
 	// Remote info for Workday User Security group.
 	WorkdayUserSecurityGroup *WorkdayUserSecurityGroup `json:"workday_user_security_group,omitempty"`
+	// Remote info for Zendesk group.
+	ZendeskGroup *ZendeskGroup `json:"zendesk_group,omitempty"`
+	// Remote info for Zendesk organization.
+	ZendeskOrganization *ZendeskOrganization `json:"zendesk_organization,omitempty"`
 }
 
 func (g *GroupRemoteInfo) GetActiveDirectoryGroup() *ActiveDirectoryGroup {
@@ -567,4 +597,18 @@ func (g *GroupRemoteInfo) GetWorkdayUserSecurityGroup() *WorkdayUserSecurityGrou
 		return nil
 	}
 	return g.WorkdayUserSecurityGroup
+}
+
+func (g *GroupRemoteInfo) GetZendeskGroup() *ZendeskGroup {
+	if g == nil {
+		return nil
+	}
+	return g.ZendeskGroup
+}
+
+func (g *GroupRemoteInfo) GetZendeskOrganization() *ZendeskOrganization {
+	if g == nil {
+		return nil
+	}
+	return g.ZendeskOrganization
 }
