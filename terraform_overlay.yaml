@@ -632,6 +632,73 @@ actions:
   - target: $["paths"]["/resources/{resource_id}"]["delete"]
     update:
       x-speakeasy-entity-operation: Resource#delete
+  # Custom access levels endpoints
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels"]["get"]["operationId"]
+    update: getResourceCustomAccessLevels
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: resource_id
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels"]["get"]["responses"]
+    update:
+      "404":
+        description: Not Found
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels"]["get"]
+    update:
+      x-speakeasy-name-override: get_custom_access_levels
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels"]["get"]
+    update:
+      x-speakeasy-entity-operation: ResourceCustomAccessLevelList#get
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels"]["post"]["operationId"]
+    update: createResourceCustomAccessLevel
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels"]["post"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: resource_id
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels"]["post"]["responses"]
+    update:
+      "404":
+        description: Not Found
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels"]["post"]
+    update:
+      x-speakeasy-name-override: create_custom_access_level
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels"]["post"]
+    update:
+      x-speakeasy-entity-operation: ResourceCustomAccessLevel#create
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels/{access_level_remote_id}"]["patch"]["operationId"]
+    update: updateResourceCustomAccessLevel
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels/{access_level_remote_id}"]["patch"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: resource_id
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels/{access_level_remote_id}"]["patch"]["parameters"][1]
+    update:
+      x-speakeasy-name-override: access_level_remote_id
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels/{access_level_remote_id}"]["patch"]["responses"]
+    update:
+      "404":
+        description: Not Found
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels/{access_level_remote_id}"]["patch"]
+    update:
+      x-speakeasy-name-override: update_custom_access_level
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels/{access_level_remote_id}"]["patch"]
+    update:
+      x-speakeasy-entity-operation: ResourceCustomAccessLevel#update
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels/{access_level_remote_id}"]["delete"]["operationId"]
+    update: deleteResourceCustomAccessLevel
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels/{access_level_remote_id}"]["delete"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: resource_id
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels/{access_level_remote_id}"]["delete"]["parameters"][1]
+    update:
+      x-speakeasy-name-override: access_level_remote_id
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels/{access_level_remote_id}"]["delete"]["responses"]
+    update:
+      "404":
+        description: Not Found
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels/{access_level_remote_id}"]["delete"]
+    update:
+      x-speakeasy-name-override: delete_custom_access_level
+  - target: $["paths"]["/resources/{resource_id}/custom-access-levels/{access_level_remote_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: ResourceCustomAccessLevel#delete
   - target: $["paths"]["/resources/{resource_id}/message-channels"]["get"]["operationId"]
     update: getResourceMessageChannels
   - target: $["paths"]["/resources/{resource_id}/message-channels"]["get"]["responses"]

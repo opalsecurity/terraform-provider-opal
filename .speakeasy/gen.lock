@@ -1,26 +1,22 @@
-lockVersion: 2.0.0
-id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
+lockVersion: ""
+id: ""
 management:
-  docChecksum: 88c693748ddaad00b7a137245bcd4a51
+  docChecksum: d79b74e5751b44d4dc39adbb43c7f5f2
   docVersion: "1.0"
-  speakeasyVersion: 1.763.0
-  generationVersion: 2.884.0
+  speakeasyVersion: 1.769.1
+  generationVersion: 2.892.1
   releaseVersion: 3.5.2
   configChecksum: 7e6913ae6e4e14190834fea4a6737205
-  repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
-  repoSubDirectory: .
-  installationURL: https://github.com/opalsecurity/terraform-provider-opal
-  published: true
 persistentEdits:
-  generation_id: f468cd30-64ba-4e7e-a682-b47ce87ae3ee
-  pristine_commit_hash: a1a13d6fe5ff8087343e83ae21cd82284a5c24bb
-  pristine_tree_hash: 3a60c324e38f048addf685b850d46ceb99426767
+  generation_id: be1d4153-8e05-4226-be84-e3b423a683d5
+  pristine_commit_hash: 0378618e53af0b3a72f6c256a2d9e6e4604d314d
+  pristine_tree_hash: e6f8469d4d599aa63978a07c1d8f0205f21e372a
 features:
   terraform:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.4
     constsAndDefaults: 0.3.2
-    core: 3.47.4
+    core: 3.47.7
     deprecations: 2.82.0
     globalSecurity: 2.82.3
     globalServerURLs: 2.83.2
@@ -161,6 +157,10 @@ trackedFiles:
     id: ed2bed7b597f
     last_write_checksum: sha1:63228586f861ee16353244ee838b89512150f873
     pristine_git_object: 0d246ef89365cff33a3a0d91cfe119d5add98579
+  examples/data-sources/opal_resource_custom_access_level_list/data-source.tf:
+    id: 2ab1cb9daacf
+    last_write_checksum: sha1:320005b5f2ab6e851398468d632ee5ef4681fdb6
+    pristine_git_object: ed9f7894f9ff38b531ad767f90b8945f372ac21c
   examples/data-sources/opal_resource_message_channel_list/data-source.tf:
     id: e41bd9fb55c7
     last_write_checksum: sha1:428fd9213d5e1f56dbcc638e30f1591e0e7a0adf
@@ -287,8 +287,8 @@ trackedFiles:
     pristine_git_object: 39cd2986b89851df6bcfb5cb71393f59a6fc33bf
   examples/resources/opal_group/resource.tf:
     id: b7cc88eba8dd
-    last_write_checksum: sha1:40c0d478915c15b925ec050919a7125e193af382
-    pristine_git_object: ede3cdce5879a211f2eed792017d93292b5052a1
+    last_write_checksum: sha1:2a0dda3173f4d5d6d606af332336e1bb9cf50251
+    pristine_git_object: 1a45c43bb3150ce1812e6becf4b4b8c226573873
   examples/resources/opal_group_catalog_mapping/import-by-string-id.tf:
     id: 9c5b4ad06078
     last_write_checksum: sha1:049dc3fc4961231b63bada319374318a815a5912
@@ -391,8 +391,12 @@ trackedFiles:
     pristine_git_object: 2cfcd78fd85c3fd0215467af467ba369e9b72128
   examples/resources/opal_resource/resource.tf:
     id: 82d3aaf089f0
-    last_write_checksum: sha1:3678ad7633409ed73f599fdd2057bf838bb3c71a
-    pristine_git_object: 479c411ab91e776dec98eea940fb430a98883e7d
+    last_write_checksum: sha1:8eede2cd296fffa76d7c069e3d8faaf49164d8f7
+    pristine_git_object: 72cf372c3f0fdfd251db5c98748a1a766ac5f40a
+  examples/resources/opal_resource_custom_access_level/resource.tf:
+    id: 8d4118ae6f2a
+    last_write_checksum: sha1:edefc80392529cc7ebdc9609798c7d21c646d73b
+    pristine_git_object: a178d04650bbcabd8f6b710bd7a10b6539330e4b
   examples/resources/opal_resource_tag/resource.tf:
     id: 0dfa36ff3fdb
     last_write_checksum: sha1:58407c23f4c4f428d3940cbdaa84539b2ff06232
@@ -427,8 +431,8 @@ trackedFiles:
     pristine_git_object: ad40456bb8fc65645b0081fd325ed66905e7d1ad
   go.mod:
     id: c47645c391ad
-    last_write_checksum: sha1:f9b0ef5157d6fed4f0ad5b3a3162156218be2fa7
-    pristine_git_object: ec00436a2485a2e90d843cb436bc158d10a89b84
+    last_write_checksum: sha1:8634157be2b83a92e8d292e40d67bfe86c0630f2
+    pristine_git_object: c5bb8b0157bb5cdf60dc985b17451f79e975ec3a
   internal/planmodifiers/boolplanmodifier/suppress_diff.go:
     id: 3cf85b98963e
     last_write_checksum: sha1:5b0ce6bd2591e94f26cf4b258e44c0a8709b396b
@@ -691,28 +695,28 @@ trackedFiles:
     pristine_git_object: d658d235a609b19aba4d662100c8c76c7d1aa5d2
   internal/provider/group_data_source.go:
     id: 42985a05e298
-    last_write_checksum: sha1:13fde1953204a897f936d84708975f53725d2ed3
-    pristine_git_object: bf2d4aa70f062b2bda4d1939609d7f2382cadf2f
+    last_write_checksum: sha1:0459e8f85f34fb55702e74e65209418ea25d1ecb
+    pristine_git_object: 2054781ad4618fc82d102d5068c142ddae47ac2d
   internal/provider/group_data_source_sdk.go:
     id: 987dcf32f584
-    last_write_checksum: sha1:d5d4f0c8c13a785d5f3400aaf657e0e8d6537c2b
-    pristine_git_object: b52f6df0e5103fd6a3e35588c29a40424b505df5
+    last_write_checksum: sha1:c436013596880ef4df1ca447ab9203b304883490
+    pristine_git_object: 1c2fe2a7a894cfd5697983c4b6a6af7b27f57de4
   internal/provider/group_list_data_source.go:
     id: f894c3b0f7c5
-    last_write_checksum: sha1:5dd0cc059d1511c46acecbb16997fd0008f7eb11
-    pristine_git_object: 1eb6cbd9a214ff676b5d2246ac0639b7135a3423
+    last_write_checksum: sha1:d4c5e4774c35714cf7f42ff3e73f0770d5707e7f
+    pristine_git_object: 0615654b52d88643a6601d403ffbb8012b0ac794
   internal/provider/group_list_data_source_sdk.go:
     id: cb52cc9f24b9
-    last_write_checksum: sha1:bd89b6b2e88d10d12e10b8497acff46d5249d1a3
-    pristine_git_object: a583923abbbc8685dcf2ead83769e3523e583437
+    last_write_checksum: sha1:7c724626c945bdeb71fa9a9fa2fdecdfd6a8ac95
+    pristine_git_object: d0266a46d2b4065ef90dcbf7380a98abc2545007
   internal/provider/group_resource.go:
     id: 77b83309e259
-    last_write_checksum: sha1:b7533181fa98811c465d87d8eac45b2914a209bd
-    pristine_git_object: 32bee540cecf8cff4ff7f1f963c4e92ea462d128
+    last_write_checksum: sha1:5a4330eab776432203724026509987c8504a9cfd
+    pristine_git_object: d26b2279f980b1f44e21752c9868ea756fababd7
   internal/provider/group_resource_sdk.go:
     id: 318ed979ef04
-    last_write_checksum: sha1:3e88c0129e5982890a8a0d0eb35c2197cdb4435d
-    pristine_git_object: 3dd16bdc4c49f2cab0e5ef0aa9ed358cca272b78
+    last_write_checksum: sha1:385e86617fa693c8496a9591dc24aebdf472552a
+    pristine_git_object: 873c0a94042fed56de677eecbc1cc9e47d56774a
   internal/provider/groupcatalogmapping_data_source.go:
     id: ed35f07bdf45
     last_write_checksum: sha1:e3b84cd5157bf00feed3dc6f13b372b7536ec59e
@@ -731,16 +735,16 @@ trackedFiles:
     pristine_git_object: 7937d78d8b1e52b3331213a4a099a592d42963e4
   internal/provider/groupcontaininggroup_data_source.go:
     id: 7d1bd544c60a
-    last_write_checksum: sha1:c0dd3688ab02d523d300aa100ae7812861d84141
-    pristine_git_object: 97da1d4f172c5bcb0a6efc372ad401dc6b114642
+    last_write_checksum: sha1:ef242590513541705167638e1f2e0a2182264c7a
+    pristine_git_object: 793303d98ea124424c9135afb2f45b1c72a3c28f
   internal/provider/groupcontaininggroup_data_source_sdk.go:
     id: 8aec24b9c1c1
     last_write_checksum: sha1:b970c52601ce9287b6e62591eaa47815a50691d2
     pristine_git_object: 49c4d8708f336a535ebe5265860af9582ea0df8c
   internal/provider/groupcontaininggroup_resource.go:
     id: b9de5105b733
-    last_write_checksum: sha1:51de5417cefb9e56d379f0d7f7742dcf1ce8952d
-    pristine_git_object: 3fcddd209693b3b8a75075143caceb4161d6978d
+    last_write_checksum: sha1:f1b56da534aa6b2ba1831bdef72b7a7193a81112
+    pristine_git_object: fe86533707c6fe6cee34ba32ef37e32c09026cd6
   internal/provider/groupcontaininggroup_resource_sdk.go:
     id: f022871018d0
     last_write_checksum: sha1:99df4ba90349582b0b20ebce9e9986b138d4e604
@@ -923,8 +927,8 @@ trackedFiles:
     pristine_git_object: 3a66061da45a96b55397aea9455cbfdeb639c49b
   internal/provider/provider.go:
     id: 1e7e86841cf3
-    last_write_checksum: sha1:4a0910da3eda152b90d277fac2b3d2c1f63def89
-    pristine_git_object: 8449fdc3da41093b4e60e65f377235a6301a4048
+    last_write_checksum: sha1:843811624b6d8f3419353ecb512da7d66d27b155
+    pristine_git_object: 2c5f4e7f9384b728ca50a861556fc4727c90a545
   internal/provider/reflect/diags.go:
     id: 35b6b44972e2
     last_write_checksum: sha1:42e02d5e7e31b0a5d4e14deb739cf5020c79f2e0
@@ -991,20 +995,36 @@ trackedFiles:
     pristine_git_object: 5362d851bb19d2faf43791f5c17a1c6b7b237099
   internal/provider/resource_data_source.go:
     id: 64fda544ba1a
-    last_write_checksum: sha1:e96d298214bd17b8951bc1ea511554ffb8170744
-    pristine_git_object: 4752775d9ea7a8b3b83940bfa582a198fccbc1c6
+    last_write_checksum: sha1:769cf39edc942aac39753ed8fe5c2e587798ab65
+    pristine_git_object: c84da5f5dc4ea6eacf6abe0506f4dad5544fc1f7
   internal/provider/resource_data_source_sdk.go:
     id: e2f7a9e5ff6f
-    last_write_checksum: sha1:e1f898729046b6cba7b12c39a986835fc20526f6
-    pristine_git_object: a8f2cbd2be01c1537f1e43164d669da364ffbdc5
+    last_write_checksum: sha1:c4857e8a494b58590aa883a04f916bfd5c6da79b
+    pristine_git_object: ebc1575e10b97c34694fc9856142206cfdb5b457
   internal/provider/resource_resource.go:
     id: c3e3cbee6fcf
-    last_write_checksum: sha1:7b427bacbeba1da56d804fe1c22b66edd4a3aa10
-    pristine_git_object: 539ee4a81506f59467daaca0197d16629a2e7d6a
+    last_write_checksum: sha1:fc2479ab62334647c30eafc6c8bba567b22f4436
+    pristine_git_object: 364037b50627d4cafd0baa93340d6c18aced34bf
   internal/provider/resource_resource_sdk.go:
     id: f39dc8616490
-    last_write_checksum: sha1:1c37dfe3430b2d18006053698309f541c39bc814
-    pristine_git_object: 8f28a633738c4cde7be31d7e89d80c0b9cfa5956
+    last_write_checksum: sha1:3c5fb757f6766d8106c34c9da6dfe332df234357
+    pristine_git_object: d0a38b0205a898ceddafd55f2d1fdfceb571524f
+  internal/provider/resourcecustomaccesslevel_resource.go:
+    id: 71c825a35e2a
+    last_write_checksum: sha1:6ef155c28a223f9b9e082e45676350ead1273f89
+    pristine_git_object: 5db93b4e5d262baa1794e1c5b69178538714e1e8
+  internal/provider/resourcecustomaccesslevel_resource_sdk.go:
+    id: acfd01a62fef
+    last_write_checksum: sha1:ec43d0d79ad9c27e8ac30a9bacdeae467474858d
+    pristine_git_object: e118ab01c8ebd43fd1203c764bb5156d86f386a1
+  internal/provider/resourcecustomaccesslevellist_data_source.go:
+    id: 39ada5ff4b69
+    last_write_checksum: sha1:29945fbc5c49694f1cfed9db3926d4c3ce445c05
+    pristine_git_object: 1d2285b13a514a61283c6455cc71ff07383136b8
+  internal/provider/resourcecustomaccesslevellist_data_source_sdk.go:
+    id: 43c7460bf2e9
+    last_write_checksum: sha1:34befa2b69482993e00fa15e541748d7f57e1bbf
+    pristine_git_object: 90015090192f1f4414a84b8634936a083779b2d4
   internal/provider/resourcemessagechannellist_data_source.go:
     id: 6d9ae1b954d6
     last_write_checksum: sha1:23eddd732644212f6c564078234391cf9cb6e771
@@ -1023,12 +1043,12 @@ trackedFiles:
     pristine_git_object: 3824f024a9025639f3794c40abb8aba7daf25c47
   internal/provider/resources_list_data_source.go:
     id: 016d6b406b76
-    last_write_checksum: sha1:60f8799d17c3f09941b79da92ce6098d85cd673b
-    pristine_git_object: 0b69d87b5c5c0b1f941e076c803a293866fbaeb7
+    last_write_checksum: sha1:aded63c20929517092cfc822cf7f7025a7298a8c
+    pristine_git_object: a57155936cdf39785617263ce258e7ce9652da8e
   internal/provider/resources_list_data_source_sdk.go:
     id: 2032115ad2d7
-    last_write_checksum: sha1:0b06647383c2cd81b69266c5dd1a77b58060f2f6
-    pristine_git_object: 5f8d01d49440173845b1c6fab39f7959fe059668
+    last_write_checksum: sha1:9e00341f000b2d2f1369cab235a1ed6cd50ff1c9
+    pristine_git_object: 2f161395d9ae415cf8b410138f7c36986529b1bf
   internal/provider/resourcesaccessstatus_data_source.go:
     id: fea5501a6684
     last_write_checksum: sha1:c4683a9d2544c7248ed7e632a3b3c628664aaae1
@@ -1273,10 +1293,6 @@ trackedFiles:
     id: 41aee7b8afa4
     last_write_checksum: sha1:c9595a4a5d0857f9447171d9a6e2abdd11864e13
     pristine_git_object: 736fc3fb9cfa0ea805b40d75319d7d72e4f70f6e
-  internal/provider/types/gcp_organization.go:
-    id: fafdcce3f020
-    last_write_checksum: sha1:8b16d9673a43060d7e82588d45ffcabdc1787eed
-    pristine_git_object: 67080d51aafcabf10b3475ebeb4c5a4f16c92736
   internal/provider/types/gcp_project.go:
     id: e8dc76362b27
     last_write_checksum: sha1:64a066199564d92811cbf3869f4887331b3ef082
@@ -1339,8 +1355,8 @@ trackedFiles:
     pristine_git_object: 14c571835af42cd8def3388d12dabaf653fc9e14
   internal/provider/types/group_remote_info.go:
     id: 4e7dc5645eb9
-    last_write_checksum: sha1:779abfe355c9830a9df89ed9c40ef920df92c223
-    pristine_git_object: 58024b9265bf4d7336699f129576c62274249ae6
+    last_write_checksum: sha1:9dde610e88b42ff9c74bb283b5b7f523ebba317d
+    pristine_git_object: 36fff248d69ad85d68bdada24a2435e79d255010
   internal/provider/types/group_resource.go:
     id: 3a0b82228e60
     last_write_checksum: sha1:116d64890feccf9e18657ae8b05c4d65c6ef6c94
@@ -1445,10 +1461,14 @@ trackedFiles:
     id: bada12062def
     last_write_checksum: sha1:4f13750b10ea7eb860db627d3f870b731eb020bd
     pristine_git_object: e468d529225fef4b0b1e447b10608b27c910c84b
+  internal/provider/types/resource_custom_access_level_response.go:
+    id: 013589e02a2b
+    last_write_checksum: sha1:1b190e50913deb0770bfd8e7d40ec2433e462ff1
+    pristine_git_object: b528331d6c62300f824f00e53396c5f8ffb9740e
   internal/provider/types/resource_remote_info.go:
     id: cfc23f447d93
-    last_write_checksum: sha1:dcaa4061b791ad6d8464fa608ec8bec95f41be68
-    pristine_git_object: 9960f378a11ed9c34cdff6b85303c85b72a57430
+    last_write_checksum: sha1:98e74931a16b2fe06061085ed1abc5de76e9fdc5
+    pristine_git_object: 3c4c7ed3c65544144d8f884919c036565c51ad9b
   internal/provider/types/resource_with_access_level.go:
     id: 017c7bf96c2d
     last_write_checksum: sha1:05d0bce659df7427af1bdb287e2a69e145968fdb
@@ -1541,6 +1561,10 @@ trackedFiles:
     id: 6ff0ca95c6be
     last_write_checksum: sha1:6d3b53f6474e7575b05a7ada643d5aa17e07f9c3
     pristine_git_object: 765cb842acc1ab18c1125c918f553143cbde77da
+  internal/provider/types/zendesk_organization.go:
+    id: e06a8fa2555b
+    last_write_checksum: sha1:248f9c369f77c2d900965954c83f30bdfbdf7fe1
+    pristine_git_object: 092b15085aa5b5d1d1ff18ddc369783756d8a7e3
   internal/provider/uar_data_source.go:
     id: 9d6376c363b4
     last_write_checksum: sha1:37d204842fcbc7adb83871527e8356f1eafc1bee
@@ -1617,6 +1641,10 @@ trackedFiles:
     id: f57c428ba828
     last_write_checksum: sha1:7f901278c2ec66cc52c582542f4f906ee6c23579
     pristine_git_object: c711a474d6abed3107a894868e123e6fa052c20a
+  internal/sdk/eventstreams.go:
+    id: f5140b84d062
+    last_write_checksum: sha1:ace7c4457b38327beb815d9e600fa37e10bb683d
+    pristine_git_object: 5dd2e282aeba86fffc9c0d09a9fa8007c2cb6027
   internal/sdk/groupbindings.go:
     id: 6e4043fc50a8
     last_write_checksum: sha1:f9195b4266a194d92487e452453a3f9ff23d2ac2
@@ -1655,8 +1683,8 @@ trackedFiles:
     pristine_git_object: b4cc0786652fbafeae5dfbddb5ab67d6f1840129
   internal/sdk/internal/utils/json.go:
     id: 2231afac3add
-    last_write_checksum: sha1:627b016c5a0e17f62c0a9d5a7ebbc17ddc3f821f
-    pristine_git_object: 04d4f738ee3853479a5b2eb4d1d1f3ba51a59a2d
+    last_write_checksum: sha1:445fef3d4a7647bea738d6eaee55992009508eb5
+    pristine_git_object: 231409598111057e7008b1335c8f8e7edee6b47f
   internal/sdk/internal/utils/pathparams.go:
     id: e7fec2afe4a6
     last_write_checksum: sha1:82a8d36321ab23e21a6bcd04b59f023b99f317f9
@@ -1733,6 +1761,10 @@ trackedFiles:
     id: e89b82c7f7dd
     last_write_checksum: sha1:8fbdb0aac039e51c0f6143f2a9ad97a378f95da3
     pristine_git_object: d52572b8d89ffdaf7377bea9152b0aa7c46d2057
+  internal/sdk/models/operations/createeventstream.go:
+    id: ba745ad0bbfa
+    last_write_checksum: sha1:801709a62c11a08daeb07890a1e8103f8c84fa32
+    pristine_git_object: 3afde8233577a08d49d4dc430268693102bb7560
   internal/sdk/models/operations/creategroup.go:
     id: b5d908361ccf
     last_write_checksum: sha1:89fdb0fd1d8faa59f2c27d44452f325dad322692
@@ -1781,6 +1813,10 @@ trackedFiles:
     id: 2d9b83ec3a23
     last_write_checksum: sha1:65ebfe24ae8d7fad5872db57d973d333b6da4239
     pristine_git_object: 880686c1220ea54bfa4d33b9e9ae1e84fde79982
+  internal/sdk/models/operations/createresourcecustomaccesslevel.go:
+    id: f3001e4beb41
+    last_write_checksum: sha1:3cd49e4aa51a5e87be1bf5951afa3332fcbc1240
+    pristine_git_object: b04c296383810cfd5a57e1bdeb985e359f67317a
   internal/sdk/models/operations/createresourcetag.go:
     id: fa6748ab377e
     last_write_checksum: sha1:0e055811f27763bf37c1a9b68dbf8651f2430900
@@ -1809,6 +1845,10 @@ trackedFiles:
     id: b436a9998a0a
     last_write_checksum: sha1:09a1df0270e6a110e9d10955efd0e8855274b0b8
     pristine_git_object: 044532ad86963fd75ed26412796d9350976c1d9b
+  internal/sdk/models/operations/deleteeventstream.go:
+    id: 7481527073b4
+    last_write_checksum: sha1:ff17ac83d4f43e134b5cd7c8d8e70b643eb9e72d
+    pristine_git_object: 7f7b68a1944cc448515dc726dc6c861c5bfb91ea
   internal/sdk/models/operations/deletegroup.go:
     id: 0a472bbb782d
     last_write_checksum: sha1:08b1981957f624c9efe29573432cce7ffc80a428
@@ -1837,6 +1877,10 @@ trackedFiles:
     id: a6a721224c5a
     last_write_checksum: sha1:4f500cb6373297c95b6994c0e1186b90fb4b3599
     pristine_git_object: 69f34a3ce205a64286ac03202029cf06cea2fb7a
+  internal/sdk/models/operations/deleteresourcecustomaccesslevel.go:
+    id: 2b4b21d91ec5
+    last_write_checksum: sha1:e7d642665d7e7b35c01c3e278cebe8a66dd0c83b
+    pristine_git_object: 18892a978a557fe5f7e61ce275d5a068bda56b8b
   internal/sdk/models/operations/deleteresourcenhi.go:
     id: f3a3ff6a21cd
     last_write_checksum: sha1:e3e81db5f2bb8571316ac2e7d0b345f281912bd3
@@ -1917,6 +1961,10 @@ trackedFiles:
     id: 77c96a572dbe
     last_write_checksum: sha1:2f941ed3f78b082ace1a5be4cec8410882f2d379
     pristine_git_object: fcf0e6ffe23ea43cf7f9157f721abe062a2ab405
+  internal/sdk/models/operations/geteventstreams.go:
+    id: 80555c3dcb3b
+    last_write_checksum: sha1:320126779744c0b4192406f06f00f892e480d509
+    pristine_git_object: 404ea4031e55783f3e74cc9c058b2cb9e109519a
   internal/sdk/models/operations/getgroup.go:
     id: 9dd8a5ce6f45
     last_write_checksum: sha1:ee39949a532fcb25c8343197a57c943e6a30ca2d
@@ -2025,6 +2073,10 @@ trackedFiles:
     id: 5186c0606b28
     last_write_checksum: sha1:06a7367d0e473e459819bfa867480a6ced937fac
     pristine_git_object: d15ffc4326bf7e73441cae3698d62ce5b8a0612a
+  internal/sdk/models/operations/getresourcecustomaccesslevels.go:
+    id: 78ba0e3157a8
+    last_write_checksum: sha1:d9581a7f8ce6990355ec42c57f0e764d885545b6
+    pristine_git_object: a7da362e14fbbc3fe8725ea008201743080ae7fa
   internal/sdk/models/operations/getresourcegroups.go:
     id: d34fb0b7f5e5
     last_write_checksum: sha1:36f09fbc08d40932c00561fe1ccd054573847dd5
@@ -2133,6 +2185,10 @@ trackedFiles:
     id: ff14388d215e
     last_write_checksum: sha1:453f31e500fe6d7cc1b3eca657afa7726fbe0ce4
     pristine_git_object: b94310ce2921471b769c7fedb102bf50acce642c
+  internal/sdk/models/operations/runopalquery.go:
+    id: 342e278232d6
+    last_write_checksum: sha1:ac6826da412595f07b07bb47b0fd6bfddcb575c2
+    pristine_git_object: 51cc265c8a260f3f18db95eff40474602ca747ec
   internal/sdk/models/operations/setbundlevisibility.go:
     id: 83af1d2591a1
     last_write_checksum: sha1:e4c5697885c1fd822b63a0830464afa4b27690c7
@@ -2153,6 +2209,10 @@ trackedFiles:
     id: f2d98e2a09d9
     last_write_checksum: sha1:ac7841f7ecf4669cd6eaaada850d1d66d774e213
     pristine_git_object: 0b35d0bc9b4f5654ace444996b7070857b5cb6a9
+  internal/sdk/models/operations/updateeventstream.go:
+    id: 51e4e98d11de
+    last_write_checksum: sha1:1b369b37157e471797d1f7c3fbff6d497a318194
+    pristine_git_object: 576aa0b1a0aaa9547edd8b636bdde6735f86c5ff
   internal/sdk/models/operations/updategroupbindings.go:
     id: 6714f449c9a7
     last_write_checksum: sha1:6cc5da5aef3ad2710f4df86860e605b40e3d9c85
@@ -2197,6 +2257,10 @@ trackedFiles:
     id: 9fa3733f2fd2
     last_write_checksum: sha1:aaca129d1821636162eff5de7c12bdea25d0c19a
     pristine_git_object: 4949af54f69f368b47b6eeec345073a5b95a61b9
+  internal/sdk/models/operations/updateresourcecustomaccesslevel.go:
+    id: c2571cda008d
+    last_write_checksum: sha1:c3234e9c71a3594b7d7dacc369e6b9e5a5c8467f
+    pristine_git_object: 9f6ce8460b1efbd3b1896599f19b9313d6a484ff
   internal/sdk/models/operations/updateresourcemessagechannels.go:
     id: 0dc59fa8aab0
     last_write_checksum: sha1:336d6d236bf84c715ac1e37b8f5a3d7501efd148
@@ -2217,10 +2281,18 @@ trackedFiles:
     id: b2a3d71ce510
     last_write_checksum: sha1:1afd4b8ab1a4e8f0a99fd63451452b7cbf579406
     pristine_git_object: 771920715f6c6b81ad109532b48faab2bb48ee0d
+  internal/sdk/models/shared/accessentityfilters.go:
+    id: 93c90a7f4c87
+    last_write_checksum: sha1:385e3928239845b7def0a3fb0ce8726d1c4aacbc
+    pristine_git_object: e16ef68d80ac7df29b00abc5ef6c68322c3c1659
   internal/sdk/models/shared/accesslist.go:
     id: 810be4c09014
     last_write_checksum: sha1:f0f7bfa43ff9a19efc3956ccbd986e78de2edce7
     pristine_git_object: 180e037b012b7c8cffa878d41f6d652c33511b55
+  internal/sdk/models/shared/accessrelationshipfilters.go:
+    id: f15a0c0f2ca9
+    last_write_checksum: sha1:f5318fb144f0d5cc5efe0af9fbb26d31322cd7ba
+    pristine_git_object: 98f54bed5f20e706e13dcca1f9d669bc4d2530e7
   internal/sdk/models/shared/accessrule.go:
     id: ad30b36bf74c
     last_write_checksum: sha1:be6c97dc8ca2ea837e43aa81d5fef4dccdbc5a28
@@ -2231,8 +2303,8 @@ trackedFiles:
     pristine_git_object: 9c13611f9227004ba3739d5996deaf7979510018
   internal/sdk/models/shared/app.go:
     id: 595aa09b4211
-    last_write_checksum: sha1:85bab0884a236bc436e7370a5166dde215735fa1
-    pristine_git_object: 4845b763c70345b23b788f07b0d181a3a60c2ddc
+    last_write_checksum: sha1:4f1c0e466c8ac3bd750cf7a8a704977b4655d180
+    pristine_git_object: a7e0262396c3b9eb79e75a52f7d84082074578e0
   internal/sdk/models/shared/appslist.go:
     id: 46b7256ae71e
     last_write_checksum: sha1:e74a9971f1ad08f4037eeb3ce9feb7d88424d3e5
@@ -2285,6 +2357,10 @@ trackedFiles:
     id: ad9087838ad2
     last_write_checksum: sha1:e169cd60cb8fd834e5628758dd4e485a7c4a1702
     pristine_git_object: fce144803146b7d69ca49bc4ff5cdb127e5ac7fd
+  internal/sdk/models/shared/createeventstreaminfo.go:
+    id: b17fffa14d1d
+    last_write_checksum: sha1:796d7cfbf32d63ab527382ec856f8e21f079195e
+    pristine_git_object: 144f2c40e65e77d9d5c2df5b104f09fecc12ab7f
   internal/sdk/models/shared/creategroupbindinginfo.go:
     id: 5b9b80c58faf
     last_write_checksum: sha1:2b26b82d9d04f4a32877e529c6453793f5cd351e
@@ -2309,6 +2385,10 @@ trackedFiles:
     id: 7912b80bc7cf
     last_write_checksum: sha1:49aab4397eba613188b28dd27594925bc8a7a185
     pristine_git_object: 6bdda16c914b954e621061856c8dac490700fd0d
+  internal/sdk/models/shared/createresourcecustomaccesslevelinfo.go:
+    id: ab1b7f1a8930
+    last_write_checksum: sha1:a630aed9c0aa636f4988f771a1392bccd4ddcb71
+    pristine_git_object: 76713387a17906a48064972ae410edfaf9e25113
   internal/sdk/models/shared/createresourceinfo.go:
     id: 37d560c90863
     last_write_checksum: sha1:43d59956729e848b98cf08fdd8df72ffc3c63fe6
@@ -2325,6 +2405,18 @@ trackedFiles:
     id: f26b4b24e060
     last_write_checksum: sha1:78720869a1375edb7dc0b89caf047785462449cf
     pristine_git_object: 58b0ff1ca38ca4af3a00ae2eefe8af0b97fca148
+  internal/sdk/models/shared/entityitemtypeenum.go:
+    id: 1ac7b52f1d6c
+    last_write_checksum: sha1:0814b592725c42289caae370df67602a0ce9d41c
+    pristine_git_object: 6a79421130f2d9c4c63125580efcd0d27af9034d
+  internal/sdk/models/shared/entitynamefilter.go:
+    id: af2b2dc71cc0
+    last_write_checksum: sha1:c3ba8f1d69f448206d84a1804466370c1dee5fe6
+    pristine_git_object: 4cb5c25e4cd5698aec9131928c0745a47dceb77b
+  internal/sdk/models/shared/entitytagfilter.go:
+    id: 5a7951ca786c
+    last_write_checksum: sha1:2f02e1754e2db0883ebe4a127e743a814dc26447
+    pristine_git_object: cb9218e7c888af82aec2e76946d912c4e89ee9de
   internal/sdk/models/shared/entitytypeenum.go:
     id: cee2edbc3fe3
     last_write_checksum: sha1:287b80bfd1b243d538bfba9e8967a81144820ece
@@ -2333,6 +2425,22 @@ trackedFiles:
     id: bee561505dba
     last_write_checksum: sha1:e945a63de2c532eb9186010dce02b135d1fd4803
     pristine_git_object: daf84da87a564cc3544d7356022afc8d5f4460b8
+  internal/sdk/models/shared/eventstream.go:
+    id: 42def8d98667
+    last_write_checksum: sha1:c735ea295621c6ddae61acc45c684a5f2ce7c8b7
+    pristine_git_object: a8a0c12a7ee0a5987961b6cd996cb3394b02bc87
+  internal/sdk/models/shared/eventstreamconnection.go:
+    id: 83f034ee0fe4
+    last_write_checksum: sha1:3e3c4f5c208d935142829c0fc7e23318e86629eb
+    pristine_git_object: 9c6a16ae2e83dfda7e607f775cde28d81438b57f
+  internal/sdk/models/shared/eventstreamconnectiontypeenum.go:
+    id: 3abbeab6ef53
+    last_write_checksum: sha1:7fc37d398185e3fe5a9accf4cfb0ac3848f886a1
+    pristine_git_object: d91c82ab2e3152f9262d9a5cab4cd46d2d1a095a
+  internal/sdk/models/shared/eventstreamlist.go:
+    id: c811b7784d00
+    last_write_checksum: sha1:605856a84f1b513b940336b2f905a2fae00117d0
+    pristine_git_object: 3d069586ff670cad2477ce274f7d834308fa81d9
   internal/sdk/models/shared/group.go:
     id: 941f75eafff0
     last_write_checksum: sha1:f5bee4ca258a017d44fca2cd83e71c794891f22f
@@ -2351,12 +2459,12 @@ trackedFiles:
     pristine_git_object: dd2df422b1b70b83d917744e22a058bb35d6c128
   internal/sdk/models/shared/groupcontaininggroup.go:
     id: 09e1d8376074
-    last_write_checksum: sha1:e31f41ae1212860ee7fcda10b1343a2caba42e43
-    pristine_git_object: 93eeaa6832b5485279c053d4587e9b8799931c03
+    last_write_checksum: sha1:c844c3e8ae3a07c0269a2fa9d22770fb9b5d2610
+    pristine_git_object: 722dce02c10aac81edd044693d2952dd56b9e1fd
   internal/sdk/models/shared/groupremoteinfo.go:
     id: ee743d6102f1
-    last_write_checksum: sha1:d3ee025baa21d6f49fd97c6da6bb9760fddf82a6
-    pristine_git_object: ffbce29a3b9c6acd9684e64448695021127845c7
+    last_write_checksum: sha1:128a9a9a8af907b445f23366e52fcfa66e4a4088
+    pristine_git_object: 7ddf7e59dc2ccc768e7c6ff1c368f102192af69c
   internal/sdk/models/shared/groupresource.go:
     id: 3a66cc0f1279
     last_write_checksum: sha1:82fd35da9b437f13f94b29d9d50211870c4300fa
@@ -2367,8 +2475,8 @@ trackedFiles:
     pristine_git_object: 70979a9a86ee740d43ea046cd227466dfdb9982b
   internal/sdk/models/shared/grouptypeenum.go:
     id: d738e6db2ecd
-    last_write_checksum: sha1:6543d20f069176b8a0651cf53a19b2ceaec8d658
-    pristine_git_object: 285659474e4a4003e0b8facc6365c5be5f702dc4
+    last_write_checksum: sha1:5ef090ed979ec782e4fcd327243f32480559e871
+    pristine_git_object: 68b8979b29793e980263e8719e3be48599b87a65
   internal/sdk/models/shared/groupuser.go:
     id: 3c4ac2b3e891
     last_write_checksum: sha1:0871cbd9929f4c6941c2b7654b182cccb7a86e89
@@ -2417,14 +2525,38 @@ trackedFiles:
     id: 6dc2e1b094ad
     last_write_checksum: sha1:873fd82c46e62e889a7dc5de7448e6a152627ac9
     pristine_git_object: 91703fbfe03f8ce84aee086431077e849e7f4d0b
+  internal/sdk/models/shared/opalnodequery.go:
+    id: 665e6f77a749
+    last_write_checksum: sha1:d0c80279ed78b6263dc49aafbfe7728a5dfb2e35
+    pristine_git_object: 9aa801ac900e46763387440469aca030716fc384
+  internal/sdk/models/shared/opalnodequerybody.go:
+    id: 4ba2d48f39e9
+    last_write_checksum: sha1:3fc3e6fbf9885d20deec61282d58d06ba4fae0f1
+    pristine_git_object: 4d354e80d6910e79a066d4a5ea9e07219bf7d918
+  internal/sdk/models/shared/opalnodequeryresults.go:
+    id: 72fced818700
+    last_write_checksum: sha1:8b7173f4634d126248d0210eda104927b9b344c8
+    pristine_git_object: 834868dccd2ffa60dca561d72b359f582e1f99cb
+  internal/sdk/models/shared/opalqueryresultedge.go:
+    id: 5eb3f1d7bd0a
+    last_write_checksum: sha1:6e7ca16d666517345ffe364211bed985e0bee0d5
+    pristine_git_object: 63dcdbfe7648a9a1568ff65a9ba63a9a2f36a9ad
+  internal/sdk/models/shared/opalqueryresultnode.go:
+    id: 9056d7464727
+    last_write_checksum: sha1:ee13f1e8a14837130b5b54dfb5128f3f24c672b7
+    pristine_git_object: 2d3b528792f80c7ca92780a66b17f12c2d71d97a
+  internal/sdk/models/shared/opalqueryresults.go:
+    id: 63f9ddc5d685
+    last_write_checksum: sha1:422068007aa1cdf13d847635a96f34cdfc812a05
+    pristine_git_object: 37382d7e0298e704b6fd318b062bc82c434e6800
   internal/sdk/models/shared/owner.go:
     id: 6019c7ec7b4e
     last_write_checksum: sha1:ee4d9d285afddb3bc5bd2236a6750695953c76b4
     pristine_git_object: b08bdb9564c60172b7401d380964d82654dbd020
   internal/sdk/models/shared/pageinfo.go:
     id: 6b64337e053e
-    last_write_checksum: sha1:be6fe6649c30da16a3159c0b362a5efe81174d21
-    pristine_git_object: 16265631aeb2b6804ad47e2092f2eb51abe76e3f
+    last_write_checksum: sha1:150a54781bb46caced0ea8fcbfa5cb8bccde3d40
+    pristine_git_object: 3530f0f2d0734f3be6001b80916208315134fbb3
   internal/sdk/models/shared/paginatedaccessruleslist.go:
     id: be3c38e61552
     last_write_checksum: sha1:a0d7eca76563930ba0bc64d6601a196c04526d9c
@@ -2585,18 +2717,26 @@ trackedFiles:
     id: f5da5a737e48
     last_write_checksum: sha1:74ce992e4f1c2d63c416b6b45b47ea7b17e01396
     pristine_git_object: 6386d4cd0d15349ca0fa11ecffef0d3b02e45c62
+  internal/sdk/models/shared/resourcecustomaccesslevellist.go:
+    id: e9849736afc1
+    last_write_checksum: sha1:7fc1f5085350821dce87b620dce584cd6e8cc036
+    pristine_git_object: 7870633a10c401f06fb4586e8fb54453954595ea
+  internal/sdk/models/shared/resourcecustomaccesslevelresponse.go:
+    id: 2f9a8438f17f
+    last_write_checksum: sha1:50c8d9576fd172a51fed15ea54aec2f2aac8b610
+    pristine_git_object: 2c6d99a5d9ec315b4e2111a1f629c5a6ab5ac4f3
   internal/sdk/models/shared/resourcenhi.go:
     id: 661a809be669
     last_write_checksum: sha1:e280aacf94b8109d3e8734f78d560be921cc40b3
     pristine_git_object: f0fc096296eba779d54fa584848807fa7dc0475d
   internal/sdk/models/shared/resourceremoteinfo.go:
     id: cc36e094ca47
-    last_write_checksum: sha1:60deeccdf36c1a55ac3460a839bbd863da7013d8
-    pristine_git_object: 04dbe64ecf01446c073a1878b6a075bb2fcd0f99
+    last_write_checksum: sha1:5d8410f46372546331738fa7ea378283de7827f3
+    pristine_git_object: 586a737cfa59f931e7956fcd9d8a83371f684194
   internal/sdk/models/shared/resourcetypeenum.go:
     id: ec8612dafade
-    last_write_checksum: sha1:859a7d4935063b89bc8a722dd71e54eede2deabc
-    pristine_git_object: 2d9ed41f8d9507db57549852d001b77e943ff397
+    last_write_checksum: sha1:904424d938ffe052ceead128855d0efb14d41866
+    pristine_git_object: ee4650ea5acbecd8c6574e5abc75a9ac1a65ba2b
   internal/sdk/models/shared/resourceuseraccessstatus.go:
     id: e38151cf8efe
     last_write_checksum: sha1:c53047751d6808dd5dbb73edeaa1b4ab0a3d8c6e
@@ -2649,6 +2789,10 @@ trackedFiles:
     id: 3500d18cc3c4
     last_write_checksum: sha1:c3b013dc32ee2ee2ca3537cf202a80a1890127d2
     pristine_git_object: ffd99b29f3b9a9964224f23e015d6a6e033dd9b1
+  internal/sdk/models/shared/runopalqueryrequest.go:
+    id: 3826a025ec0c
+    last_write_checksum: sha1:0b138db2024cae031443b1e0384d9c892febf42c
+    pristine_git_object: dad91b2701341417aace0782c52d836f2e9b6fe6
   internal/sdk/models/shared/scopedrolepermission.go:
     id: aa0d614359d8
     last_write_checksum: sha1:024784b6b957d8f4ef47dac610ef97c6b7f291e3
@@ -2669,6 +2813,10 @@ trackedFiles:
     id: 6bd877299bfe
     last_write_checksum: sha1:6ebfdec238167d23aadbc182f7d71c38ddf041d6
     pristine_git_object: 20caaa1cbb1f8b8db019bca865cb1858ec02d857
+  internal/sdk/models/shared/stringmatchtype.go:
+    id: e327795ebd1a
+    last_write_checksum: sha1:22b5a0e1882ba85a81edbac79c18dd67eb5076fc
+    pristine_git_object: 14368293a12c05b0db92314a9a00d49c4b45c031
   internal/sdk/models/shared/subevent.go:
     id: 03993073a46c
     last_write_checksum: sha1:bb8ab1c145914a5211e8464c7388cb2933eb21ea
@@ -2733,6 +2881,10 @@ trackedFiles:
     id: 0ee7df48a265
     last_write_checksum: sha1:339c5997a7855033da751a7c19409a0369502bed
     pristine_git_object: 00f942bd6b4ea82263fd8e143a001ac857e590b8
+  internal/sdk/models/shared/updateeventstreaminfo.go:
+    id: be6a145cfdfb
+    last_write_checksum: sha1:1351dbe37c14299fa17e3850ddcf9c6abf009020
+    pristine_git_object: b542811e6d4d2daadd7bb96211dd12945a54e577
   internal/sdk/models/shared/updategroupbindinginfo.go:
     id: 1abb59619a70
     last_write_checksum: sha1:cd429ec781fb0298f114de6c89f49a0d6ded40ec
@@ -2761,6 +2913,10 @@ trackedFiles:
     id: 5fba29a2b574
     last_write_checksum: sha1:50dbc8a2383fc3f51d0c57b1c18175a398b48474
     pristine_git_object: c6afb1037082b272b3f91a9dcce535094977c318
+  internal/sdk/models/shared/updateresourcecustomaccesslevelinfo.go:
+    id: 01cfe3c4913f
+    last_write_checksum: sha1:3c847e7a90b084c75fa7a75575dbbbdee70057a0
+    pristine_git_object: f95850935492779047c6a5fa10898e605eb9bf83
   internal/sdk/models/shared/updateresourceinfo.go:
     id: 1b9fbe5e6c02
     last_write_checksum: sha1:6a74c5f49a0dab0b7d5b0a75f33d08c6672f0251
@@ -2797,6 +2953,26 @@ trackedFiles:
     id: 68f7f7bd180d
     last_write_checksum: sha1:6a63bb63f80fedd7bd7cdd4e3ca338535332525c
     pristine_git_object: 0c0eb0133572b70eeb5e87cfc4c1972fa8a26127
+  internal/sdk/models/shared/webhookapikeycredential.go:
+    id: ab35fdd85d55
+    last_write_checksum: sha1:f51b590e963b9ed1cbb06db864b9ded64029f00f
+    pristine_git_object: 80e9036ba9362f5c5f43ea0790a095c704d17719
+  internal/sdk/models/shared/webhookapikeylocationenum.go:
+    id: 5b5170f5982f
+    last_write_checksum: sha1:7b6c564d037664514575e5577cb56a983d4f47d8
+    pristine_git_object: 2fb4567577af1e1e312372933d52a70457e9f003
+  internal/sdk/models/shared/webhookauthtypeenum.go:
+    id: acfd23213c7b
+    last_write_checksum: sha1:bd9df4efc8e72b0b110cb379273ca698909db364
+    pristine_git_object: 6da0c3a665da4afa9daa7498b97126346893524b
+  internal/sdk/models/shared/webhookcredentials.go:
+    id: 3b967b8e2c37
+    last_write_checksum: sha1:c11edeef9b64e6e314dfe5ba3aa9035ff1029d8c
+    pristine_git_object: 8d6968e0e948f2c1926c274ec922e129d066d06f
+  internal/sdk/models/shared/webhookhmaccredential.go:
+    id: 4af50152598e
+    last_write_checksum: sha1:0b5c60307c07e02fa796deeffeeb6719219f54ac
+    pristine_git_object: 3c3a38c9a2a57e3503ec71640b7534a04746d2ce
   internal/sdk/nonhumanidentities.go:
     id: 93d37b2d6344
     last_write_checksum: sha1:7e3f0b4f50ace8b9a068ee63e5d652a8b7c5e756
@@ -2807,8 +2983,12 @@ trackedFiles:
     pristine_git_object: 84445f102b7610634d28b20e4872db65b059dc8a
   internal/sdk/opalapi.go:
     id: 115b79f30ba9
-    last_write_checksum: sha1:1bbb3e39d762c3cbd86ff22a71bef2740d91e418
-    pristine_git_object: f19c211cb3e846c2ff7be09b2b8f2e228b36b8aa
+    last_write_checksum: sha1:840af9fc1b374f3448e5f5cadef8e0e8b933ba19
+    pristine_git_object: 64bf61102071f4451ef4e3f89f6d87137c97b4ed
+  internal/sdk/opalqueries.go:
+    id: 42aa5bddbe00
+    last_write_checksum: sha1:fb2060a9f7db58cbeaec8e447250315f0ef6ffcb
+    pristine_git_object: bcabe5e98452a8283f4054f9f49ec4b909bf3be3
   internal/sdk/optionalnullable/optionalnullable.go:
     id: 4b83aa3f3df3
     last_write_checksum: sha1:eb1c7d4333d39fff54827fd3b98443df8e2a22a8
@@ -2827,8 +3007,8 @@ trackedFiles:
     pristine_git_object: 3a282413b1ba3f85405abcf6b23b336367f7558a
   internal/sdk/resources.go:
     id: 14837874a84c
-    last_write_checksum: sha1:dbaf1db9257d3a0dd77486c227479f7f26df7c20
-    pristine_git_object: 30f8b01707adf1c12880ae0f4d4ad5c2829e01a8
+    last_write_checksum: sha1:fa1bbf14245d7092889911e0bed2820b9b9f661c
+    pristine_git_object: 463f30fc63568b299c75c72332fa51868301be6d
   internal/sdk/retry/config.go:
     id: 7ea5fa9128b6
     last_write_checksum: sha1:1cdb99de13f9db4dbcd610122cef47332cf02ec7
@@ -2957,6 +3137,15 @@ examples:
       responses:
         "200":
           application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This access rule represents all platform engineers in the company.", "access_rule_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "name": "Platform Engineering", "ruleClauses": {"when": {"clauses": []}}, "status": "ACTIVE"}
+  get_access_rules:
+    speakeasy-default-get-access-rules:
+      parameters:
+        query:
+          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+          page_size: 200
+      responses:
+        "200":
+          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": []}
   update_access_rule:
     speakeasy-default-update-access-rule:
       parameters:
@@ -3131,6 +3320,64 @@ examples:
       responses:
         "200":
           application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "break_glass_user_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "configuration_template_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "linked_audit_message_channel_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "member_oncall_schedule_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "name": "Prod AWS Template", "request_configuration_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "require_mfa_to_approve": false, "require_mfa_to_connect": false, "visibility": {"visibility": "GLOBAL", "visibility_group_ids": []}}
+  createDelegation:
+    speakeasy-default-create-delegation:
+      requestBody:
+        application/json: {"delegate_user_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "delegator_user_id": "123e4567-e89b-12d3-a456-426614174000", "end_time": "2023-10-01T12:00:00Z", "reason": "I need to be out of the office", "start_time": "2023-10-01T12:00:00Z"}
+      responses:
+        "200":
+          application/json: {"created_at": "2023-10-01T12:00:00Z", "delegate_user_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "delegator_user_id": "123e4567-e89b-12d3-a456-426614174000", "end_time": "2023-10-01T12:00:00Z", "id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "reason": "I need to be out of the office", "start_time": "2023-10-01T12:00:00Z", "updated_at": "2023-10-01T12:00:00Z"}
+  deleteDelegation:
+    speakeasy-default-delete-delegation:
+      parameters:
+        path:
+          delegation_id: "32acc112-21ff-4669-91c2-21e27683eaa1"
+  getDelegation:
+    speakeasy-default-get-delegation:
+      parameters:
+        path:
+          delegation_id: "32acc112-21ff-4669-91c2-21e27683eaa1"
+      responses:
+        "200":
+          application/json: {"created_at": "2023-10-01T12:00:00Z", "delegate_user_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "delegator_user_id": "123e4567-e89b-12d3-a456-426614174000", "end_time": "2023-10-01T12:00:00Z", "id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "reason": "I need to be out of the office", "start_time": "2023-10-01T12:00:00Z", "updated_at": "2023-10-01T12:00:00Z"}
+  getDelegations:
+    speakeasy-default-get-delegations:
+      parameters:
+        query:
+          delegator_user_id: "29827fb8-f2dd-4e80-9576-28e31e9934ac"
+          delegate_user_id: "29827fb8-f2dd-4e80-9576-28e31e9934ac"
+          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+          page_size: 200
+      responses:
+        "200":
+          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"created_at": "2023-10-01T12:00:00Z", "delegate_user_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "delegator_user_id": "123e4567-e89b-12d3-a456-426614174000", "end_time": "2023-10-01T12:00:00Z", "id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "reason": "I need to be out of the office", "start_time": "2023-10-01T12:00:00Z", "updated_at": "2023-10-01T12:00:00Z"}], "total_count": 2}
+  createEventStream:
+    speakeasy-default-create-event-stream:
+      requestBody:
+        application/json: {"connection_type": "WEBHOOK", "name": "<value>"}
+      responses:
+        "200":
+          application/json: {"connection": {"connection_type": "WEBHOOK", "enabled": true, "name": "<value>"}, "event_stream_id": "86fe32c2-7fec-4e9d-85f9-35cd27166898"}
+  deleteEventStream:
+    speakeasy-default-delete-event-stream:
+      parameters:
+        path:
+          event_stream_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+  getEventStreams:
+    speakeasy-default-get-event-streams:
+      responses:
+        "200":
+          application/json: {"event_streams": [{"connection": {"connection_type": "WEBHOOK", "enabled": true, "name": "<value>"}, "event_stream_id": "b074544b-b754-453a-b48e-2668d577be2b"}]}
+  updateEventStream:
+    speakeasy-default-update-event-stream:
+      parameters:
+        path:
+          event_stream_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+      requestBody:
+        application/json: {}
+      responses:
+        "200":
+          application/json: {"connection": {"connection_type": "WEBHOOK", "enabled": false, "name": "<value>"}, "event_stream_id": "cf1b3c90-4dbc-4424-91e5-a57deb1826d5"}
   getEvents:
     withDate:
       parameters:
@@ -3172,6 +3419,14 @@ examples:
       responses:
         "200":
           application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"actor_name": "John Smith", "actor_user_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "created_at": "2022-01-23T04:56:07Z", "event_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac", "event_type": "USERS_CREATED"}, {"actor_name": "John Smith", "actor_user_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "created_at": "2022-02-03T12:33:02Z", "event_id": "7646aa9a-e2ee-4eb5-8c62-91f29038a373", "event_type": "USER_TEAM_UPDATED"}]}
+  getEvent:
+    speakeasy-default-get-event:
+      parameters:
+        path:
+          event_id: "29827fb8-f2dd-4e80-9576-28e31e9934ac"
+      responses:
+        "200":
+          application/json: {"actor_name": "John Smith", "actor_user_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "created_at": "2022-01-23T04:56:07Z", "event_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac", "event_type": "USERS_CREATED"}
   createGroupBinding:
     speakeasy-default-create-group-binding:
       requestBody:
@@ -3305,7 +3560,7 @@ examples:
           group_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
       responses:
         "200":
-          application/json: [{"operator": "AND", "owner_ids": ["7870617d-e72a-47f5-a84c-693817ab4567", "1520617d-e72a-47f5-a84c-693817ab48ad2"], "require_admin_approval": false, "require_manager_approval": false}]
+          application/json: [{"operator": "AND", "owner_ids": ["7870617d-e72a-47f5-a84c-693817ab4567", "1520617d-e72a-47f5-a84c-693817ab48ad2"], "require_admin_approval": false, "require_manager_approval": false, "service_user_ids": ["7870617d-e72a-47f5-a84c-693817ab4568"]}]
   getGroupTags:
     speakeasy-default-get-group-tags:
       parameters:
@@ -3314,6 +3569,17 @@ examples:
       responses:
         "200":
           application/json: {"tags": [{"created_at": "2022-01-23T04:56:07Z", "tag_id": "f290a738-5f9f-43c2-ad67-fa31ff0eb946", "key": "database-name", "updated_at": "2022-02-23T01:34:07Z", "user_creator_id": "d4a7d928-783e-4599-8ec6-088d635a5bcc", "value": "redis_db"}]}
+  get_user_groups:
+    speakeasy-default-get-user-groups:
+      parameters:
+        path:
+          user_id: "1b978423-db0a-4037-a4cf-f79c60cb67b3"
+        query:
+          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+          page_size: 200
+      responses:
+        "200":
+          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"description": "Group required to request API's", "email": "jake@company.dev", "expiration_date": "2022-01-23T04:56:07Z", "full_name": "Jake Barnes", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "group_name": "API Group", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}, {"description": "Group required to request API's", "email": "brett@company.dev", "expiration_date": "2022-02-03T12:33:02Z", "full_name": "Brett Ashley", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "group_name": "API Group", "user_id": "7646aa9a-e2ee-4eb5-8c62-91f29038a373"}]}
   getGroupUsers:
     speakeasy-default-get-group-users:
       parameters:
@@ -3397,10 +3663,10 @@ examples:
         path:
           group_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
       requestBody:
-        application/json: {"stages": [{"operator": "AND", "owner_ids": ["7870617d-e72a-47f5-a84c-693817ab4567", "1520617d-e72a-47f5-a84c-693817ab48ad2"], "require_admin_approval": false, "require_manager_approval": false}]}
+        application/json: {"stages": [{"operator": "AND", "owner_ids": ["7870617d-e72a-47f5-a84c-693817ab4567", "1520617d-e72a-47f5-a84c-693817ab48ad2"], "require_admin_approval": false, "require_manager_approval": false, "service_user_ids": ["7870617d-e72a-47f5-a84c-693817ab4568"]}]}
       responses:
         "200":
-          application/json: [{"operator": "AND", "owner_ids": ["7870617d-e72a-47f5-a84c-693817ab4567", "1520617d-e72a-47f5-a84c-693817ab48ad2"], "require_admin_approval": false, "require_manager_approval": false}]
+          application/json: [{"operator": "AND", "owner_ids": ["7870617d-e72a-47f5-a84c-693817ab4567", "1520617d-e72a-47f5-a84c-693817ab48ad2"], "require_admin_approval": false, "require_manager_approval": false, "service_user_ids": ["7870617d-e72a-47f5-a84c-693817ab4568"]}]
   updateGroupVisibility:
     speakeasy-default-update-group-visibility:
       parameters:
@@ -3408,12 +3674,30 @@ examples:
           group_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
       requestBody:
         application/json: {"visibility": "LIMITED", "visibility_group_ids": ["7870617d-e72a-47f5-a84c-693817ab4567", "1520617d-e72a-47f5-a84c-693817ab48ad2"]}
+  createIdpGroupMapping:
+    speakeasy-default-create-idp-group-mapping:
+      parameters:
+        path:
+          app_resource_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+          group_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+      responses:
+        "200":
+          application/json: {"alias": "finance-team", "app_resource_id": "1520617d-e72a-47f5-a84c-693817ab48ad2", "group_id": "6f99639b-7928-4043-8184-47cbc6766145", "hidden_from_end_user": false}
   delete_idp_group_mappings:
     speakeasy-default-delete-idp-group-mappings:
       parameters:
         path:
           app_resource_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
           group_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+  getIdpGroupMapping:
+    speakeasy-default-get-idp-group-mapping:
+      parameters:
+        path:
+          app_resource_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+          group_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+      responses:
+        "200":
+          application/json: {"alias": "finance-team", "app_resource_id": "1520617d-e72a-47f5-a84c-693817ab48ad2", "group_id": "6f99639b-7928-4043-8184-47cbc6766145", "hidden_from_end_user": false}
   getIdpGroupMappings:
     speakeasy-default-get-idp-group-mappings:
       parameters:
@@ -3533,6 +3817,13 @@ examples:
       responses:
         "200":
           application/json: {"users": [{"email": "john.doe@company.dev", "first_name": "John", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac", "last_name": "Doe", "full_name": "John Doe", "position": "Engineer"}]}
+  runOpalQuery:
+    speakeasy-default-run-opal-query:
+      requestBody:
+        application/json: {"first": 50, "query": {"accessFilters": {"isAccessibleBy": {"entityTag": {"key": "contractor"}, "entityTypes": ["USER"]}}, "nodeFilters": {"entityTag": {"key": "env", "value": "prod"}, "entityTypes": ["RESOURCE"]}}, "type": "NODE"}
+      responses:
+        "200":
+          application/json: {"edges": [{"cursor": "<value>", "node": {"entityItemType": "OPAL_ROLE", "entityType": "GROUP", "id": "6a642c6a-36b1-4ea5-87bc-101eecc2b958", "name": "<value>"}}], "pageInfo": {"endCursor": "<value>", "hasNextPage": true, "hasPreviousPage": true, "startCursor": "<value>"}, "type": "NODE"}
   approveRequest:
     speakeasy-default-approve-request:
       parameters:
@@ -3542,7 +3833,7 @@ examples:
         application/json: {"comment": "Approved after security review", "level": "REGULAR"}
       responses:
         "200":
-          application/json: {"request": {"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "reviewer_stages": [{"item_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "item_name": "<value>", "stages": [{"operator": "AND", "reviewers": [{"id": "7c86c85d-0651-43e2-a748-d69d658418e8", "status": "PENDING"}], "stage": 1}, {"operator": "OR", "reviewers": [{"id": "8d86c85d-0651-43e2-a748-d69d658418e9", "status": "APPROVED"}], "stage": 2}]}], "status": "DENIED", "target_group_id": "r86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}}
+          application/json: {"request": {"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "reviewer_stages": "<value>", "status": "DENIED", "target_group_id": "r86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}}
   createRequest:
     speakeasy-default-create-request:
       requestBody:
@@ -3550,18 +3841,38 @@ examples:
       responses:
         "200":
           application/json: {"id": "4baf8423-db0a-4037-a4cf-f79c60cb67a5"}
+  createRequestComment:
+    speakeasy-default-create-request-comment:
+      parameters:
+        path:
+          id: "4a929b40-a2e3-4dca-b8ec-1af35bdc7e43"
+      requestBody:
+        application/json: {"comment": "The Apollotech B340 is an affordable wireless mouse with reliable connectivity, 12 months battery life and modern design"}
+      responses:
+        "200":
+          application/json: {"request": {"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "reviewer_stages": "<value>", "status": "DENIED", "target_group_id": "r86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}}
+  denyRequest:
+    speakeasy-default-deny-request:
+      parameters:
+        path:
+          id: "83015915-58ae-4cce-b92d-608ff073ece1"
+      requestBody:
+        application/json: {"comment": "Denied due to insufficient justification", "level": "REGULAR"}
+      responses:
+        "200":
+          application/json: {"request": {"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "reviewer_stages": "<value>", "status": "CANCELED", "target_group_id": "r86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}}
   getRequests:
     withDate:
       parameters:
         query:
           start_date_filter: "2021-11-01T00:00:00Z"
           end_date_filter: "2021-11-12T00:00:00Z"
-          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
-          page_size: 200
           requester_id: "37cb7e41-12ba-46da-92ff-030abe0450b1"
           target_user_id: "37cb7e41-12ba-46da-92ff-030abe0450b1"
           resource_id: "37cb7e41-12ba-46da-92ff-030abe0450b1"
           group_id: "37cb7e41-12ba-46da-92ff-030abe0450b1"
+          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+          page_size: 200
       responses:
         "200":
           application/json: {"cursor": "eyJjcmVhdGVkX2F0IjoiMjAyMS0wMS0wNlQyMDo0NzowMFoiLCJ2YWx1ZSI6ImFkbWluIn0=", "requests": [{"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "status": "PENDING", "target_group_id": "g86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}]}
@@ -3570,27 +3881,43 @@ examples:
         query:
           start_date_filter: "2025-01-01T00:00:00Z"
           end_date_filter: "2025-01-01T00:00:00Z"
-          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
-          page_size: 200
           requester_id: "37cb7e41-12ba-46da-92ff-030abe0450b1"
           target_user_id: "37cb7e41-12ba-46da-92ff-030abe0450b1"
           resource_id: "37cb7e41-12ba-46da-92ff-030abe0450b1"
           group_id: "37cb7e41-12ba-46da-92ff-030abe0450b1"
+          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+          page_size: 200
       responses:
         "200":
           application/json: {"cursor": "eyJjcmVhdGVkX2F0IjoiMjAyMS0wMS0wNlQyMDo0NzowMFoiLCJ2YWx1ZSI6ImFkbWluIn0=", "requests": [{"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "status": "CANCELED", "target_group_id": "g86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}]}
     speakeasy-default-get-requests:
       parameters:
         query:
-          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
-          page_size: 200
           requester_id: "37cb7e41-12ba-46da-92ff-030abe0450b1"
           target_user_id: "37cb7e41-12ba-46da-92ff-030abe0450b1"
           resource_id: "37cb7e41-12ba-46da-92ff-030abe0450b1"
           group_id: "37cb7e41-12ba-46da-92ff-030abe0450b1"
+          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+          page_size: 200
       responses:
         "200":
           application/json: {"cursor": "eyJjcmVhdGVkX2F0IjoiMjAyMS0wMS0wNlQyMDo0NzowMFoiLCJ2YWx1ZSI6ImFkbWluIn0=", "requests": [{"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "status": "PENDING", "target_group_id": "g86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}]}
+  getRequest:
+    speakeasy-default-get-request:
+      parameters:
+        path:
+          id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+      responses:
+        "200":
+          application/json: {"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "reviewer_stages": [], "status": "PENDING", "target_group_id": "r86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}
+  getRequestComments:
+    speakeasy-default-get-request-comments:
+      parameters:
+        path:
+          id: "bfb1ef34-8ecf-46e5-bdf4-38abe7c6da89"
+      responses:
+        "200":
+          application/json: {"comments": [{"comment": "This is a comment.", "created_at": "2021-01-06T20:00:00Z", "request_id": "4c86c85d-0651-43e2-a748-d69d658418e8", "user_id": "c86c85d-0651-43e2-a748-d69d658418e8"}]}
   getRequestsRelay:
     speakeasy-default-get-requests-relay:
       parameters:
@@ -3604,7 +3931,7 @@ examples:
           from: "37cb7e41-12ba-46da-92ff-030abe0450b1"
       responses:
         "200":
-          application/json: {"edges": [{"cursor": "<value>", "node": {"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "stages": {"requestedItemName": "AWS Production Account", "requestedRoleName": "Admin", "stages": [{"operator": "AND", "reviewers": [{"id": "7c86c85d-0651-43e2-a748-d69d658418e8", "status": "PENDING"}], "stage": 1}, {"operator": "OR", "reviewers": [{"id": "8d86c85d-0651-43e2-a748-d69d658418e9", "status": "APPROVED"}], "stage": 2}]}, "status": "CANCELED", "target_group_id": "r86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}}], "pageInfo": {"endCursor": "<value>", "hasNextPage": false, "hasPreviousPage": false, "startCursor": "<value>"}, "totalCount": 774565}
+          application/json: {"edges": [{"cursor": "<value>", "node": {"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "reviewer_stages": "<value>", "status": "CANCELED", "target_group_id": "r86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}}], "pageInfo": {"endCursor": "<value>", "hasNextPage": false, "hasPreviousPage": false, "startCursor": "<value>"}, "totalCount": 472622}
   add_resource_nhi:
     speakeasy-default-add-resource-nhi:
       parameters:
@@ -3623,11 +3950,27 @@ examples:
       responses:
         "200":
           application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "ancestor_resource_ids": ["f454d283-ca67-4a8a-bdbb-df212eca5345"], "app_id": "b5a5ca27-0ea3-4d86-9199-2126d57d1fbd", "descendant_resource_ids": ["f454d283-ca67-4a8a-bdbb-df212eca5345"], "description": "This resource represents AWS IAM role \"SupportUser\".", "resource_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "parent_resource_id": "f454d283-ca67-4a8a-bdbb-df212eca5345", "require_mfa_to_approve": false}
+  createResourceCustomAccessLevel:
+    speakeasy-default-create-resource-custom-access-level:
+      parameters:
+        path:
+          resource_id: "1b978423-db0a-4037-a4cf-f79c60cb67b3"
+      requestBody:
+        application/json: {"access_level": {"access_level_name": "AdminRole", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess"}}
+      responses:
+        "200":
+          application/json: {"access_level": {"access_level_name": "AdminRole", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess"}, "requestable_by_default": true, "resource_custom_access_level_id": "11b6b255-41d8-401e-8d45-b49c77e51a99", "resource_id": "6ca12e04-afbf-466c-9343-13fe135085da"}
   deleteResource:
     speakeasy-default-delete-resource:
       parameters:
         path:
           resource_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+  deleteResourceCustomAccessLevel:
+    speakeasy-default-delete-resource-custom-access-level:
+      parameters:
+        path:
+          resource_id: "1b978423-db0a-4037-a4cf-f79c60cb67b3"
+          access_level_remote_id: "admin"
   delete_resource_nhi:
     speakeasy-default-delete-resource-nhi:
       parameters:
@@ -3663,6 +4006,14 @@ examples:
       responses:
         "200":
           application/json: {"expiration_date": "2022-01-23T04:56:07Z", "resource_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "status": "AUTHORIZED", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}
+  getResourceCustomAccessLevels:
+    speakeasy-default-get-resource-custom-access-levels:
+      parameters:
+        path:
+          resource_id: "1b978423-db0a-4037-a4cf-f79c60cb67b3"
+      responses:
+        "200":
+          application/json: {"custom_access_levels": [{"access_level": {"access_level_name": "AdminRole", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess"}, "requestable_by_default": true, "resource_custom_access_level_id": "fda671c1-d043-4ea7-987d-8f7fe1fbef18", "resource_id": "0b2e0ebf-7ebe-42b6-8273-bed4ceb355c0"}]}
   getResourceID:
     speakeasy-default-get-resource-ID:
       parameters:
@@ -3679,6 +4030,14 @@ examples:
       responses:
         "200":
           application/json: {"channels": [{"message_channel_id": "7870617d-e72a-47f5-a84c-693817ab4567", "is_private": false, "name": "api-team-audit-channel", "remote_id": "C03FJR97276", "third_party_provider": "SLACK"}, {"message_channel_id": "1520617d-e72a-47f5-a84c-693817ab48ad2", "is_private": false, "name": "api-team-monitor-channel", "remote_id": "A4FJR97365D", "third_party_provider": "SLACK"}]}
+  get_resource_groups:
+    speakeasy-default-get-resource-groups:
+      parameters:
+        path:
+          resource_id: "1b978423-db0a-4037-a4cf-f79c60cb67b3"
+      responses:
+        "200":
+          application/json: {"group_resources": [{"access_level": {"access_level_name": "AdminRole", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess"}, "group_id": "7870617d-e72a-47f5-a84c-693817ab4567", "resource_id": "1520617d-e72a-47f5-a84c-693817ab48ad2"}, {"access_level": {"access_level_name": "AdminRole", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess"}, "group_id": "50333e67-73ce-47ab-b049-d8abcd45f7a1", "resource_id": "6f99639b-7928-4043-8184-47cbc6766145"}]}
   get_resource_nhis:
     speakeasy-default-get-resource-nhis:
       parameters:
@@ -3697,6 +4056,14 @@ examples:
       responses:
         "200":
           application/json: ["1b978423-db0a-4037-a4cf-f79c60cb67b3"]
+  get_resource_scoped_role_permissions:
+    speakeasy-default-get-resource-scoped-role-permissions:
+      parameters:
+        path:
+          resource_id: "1b978423-db0a-4037-a4cf-f79c60cb67b3"
+      responses:
+        "200":
+          application/json: {"permissions": [{"allow_all": true, "permission_name": "READ", "target_ids": ["a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "8294e9c9-deb6-48e9-9c99-da2a1e04a87f"], "target_type": "RESOURCE"}]}
   getResourceTags:
     speakeasy-default-get-resource-tags:
       parameters:
@@ -3705,6 +4072,18 @@ examples:
       responses:
         "200":
           application/json: {"tags": [{"created_at": "2022-01-23T04:56:07Z", "tag_id": "f290a738-5f9f-43c2-ad67-fa31ff0eb946", "key": "database-name", "updated_at": "2022-02-23T01:34:07Z", "user_creator_id": "d4a7d928-783e-4599-8ec6-088d635a5bcc", "value": "redis_db"}]}
+  get_user_resources:
+    speakeasy-default-get-user-resources:
+      parameters:
+        path:
+          user_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
+        query:
+          limit: 200
+          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+          include_unmanaged: false
+      responses:
+        "200":
+          application/json: {"results": [{"access_level": {"access_level_name": "AdminRole", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess"}, "email": "jake@company.dev", "expiration_date": "2022-01-23T04:56:07Z", "full_name": "Jake Barnes", "has_direct_access": true, "num_access_paths": 2, "resource_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}, {"access_level": {"access_level_name": "AdminRole", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess"}, "email": "brett@company.dev", "expiration_date": "2022-02-03T12:33:02Z", "full_name": "Brett Ashley", "has_direct_access": true, "num_access_paths": 3, "resource_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "7646aa9a-e2ee-4eb5-8c62-91f29038a373"}]}
   getResourceUsers:
     speakeasy-default-get-resource-users:
       parameters:
@@ -3730,6 +4109,17 @@ examples:
       responses:
         "200":
           application/json: {"resources": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This resource represents AWS IAM role \"SupportUser\".", "resource_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "my-mongo-db", "request_configurations": [{"allow_requests": true, "auto_approval": false, "condition": {"group_ids": ["1b978423-db0a-4037-a4cf-f79c60cb67b3"], "role_remote_ids": ["arn:aws:iam::590304332660:role/AdministratorAccess"]}, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_admin_approval": false, "require_manager_approval": false}]}], "require_mfa_to_approve": false}, {"admin_owner_id": "4220bc12-ab8a-4b5d-be7b-f6bbcf9159f3", "description": "This resource represents GCP project \"app-demo\".", "resource_id": "99d0b81d-14be-4cf6-bd27-348b4af1d11b", "name": "Admin Role", "request_configurations": [{"allow_requests": true, "auto_approval": false, "condition": {"group_ids": ["1b978423-db0a-4037-a4cf-f79c60cb67b3"], "role_remote_ids": ["arn:aws:iam::590304332660:role/AdministratorAccess"]}, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_admin_approval": false, "require_manager_approval": false}]}], "require_mfa_to_approve": false}]}
+  updateResourceCustomAccessLevel:
+    speakeasy-default-update-resource-custom-access-level:
+      parameters:
+        path:
+          resource_id: "1b978423-db0a-4037-a4cf-f79c60cb67b3"
+          access_level_remote_id: "admin"
+      requestBody:
+        application/json: {}
+      responses:
+        "200":
+          application/json: {"access_level": {"access_level_name": "AdminRole", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess"}, "requestable_by_default": false, "resource_custom_access_level_id": "11ac2856-3aae-4e75-8f3e-d790f2afb142", "resource_id": "c2584a05-ea3c-433f-aa87-d6fc0e4c697f"}
   updateResourceMessageChannels:
     speakeasy-default-update-resource-message-channels:
       parameters:
@@ -3750,6 +4140,16 @@ examples:
       responses:
         "200":
           application/json: ["1b978423-db0a-4037-a4cf-f79c60cb67b3"]
+  set_resource_scoped_role_permissions:
+    speakeasy-default-set-resource-scoped-role-permissions:
+      parameters:
+        path:
+          resource_id: "1b978423-db0a-4037-a4cf-f79c60cb67b3"
+      requestBody:
+        application/json: {"permissions": [{"allow_all": false, "permission_name": "READ", "target_ids": ["a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "8294e9c9-deb6-48e9-9c99-da2a1e04a87f"], "target_type": "RESOURCE"}]}
+      responses:
+        "200":
+          application/json: {"permissions": [{"allow_all": false, "permission_name": "READ", "target_ids": ["a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "8294e9c9-deb6-48e9-9c99-da2a1e04a87f"], "target_type": "RESOURCE"}]}
   updateResourceVisibility:
     speakeasy-default-update-resource-visibility:
       parameters:
@@ -3831,6 +4231,21 @@ examples:
       responses:
         "200":
           application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"created_at": "2022-01-23T04:56:07Z", "tag_id": "f290a738-5f9f-43c2-ad67-fa31ff0eb946", "key": "database-name", "updated_at": "2022-02-23T01:34:07Z", "user_creator_id": "d4a7d928-783e-4599-8ec6-088d635a5bcc", "value": "redis_db"}, {"created_at": "2022-03-23T04:56:07Z", "tag_id": "92f0a738-5f9f-43c2-ad67-fa31ff0eb052", "key": "database-type", "updated_at": "2022-04-23T01:34:07Z", "user_creator_id": "a4d7d928-783e-4599-8ec6-088d635af4ac", "value": "sql"}]}
+  deleteToken:
+    speakeasy-default-delete-token:
+      parameters:
+        path:
+          token_id: "f454d283-ca87-4a8a-bdbb-df212eca5353"
+  getTokens:
+    speakeasy-default-get-tokens:
+      parameters:
+        query:
+          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+          page_size: 200
+          user_id: "29827fb8-f2dd-4e80-9576-28e31e9934ac"
+      responses:
+        "200":
+          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"access_level": "READ_ONLY", "created_at": "2022-01-23T04:56:07Z", "creator_user_id": "d4a7d928-783e-4599-8ec6-088d635a5bcc", "token_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "token_label": "My API Token", "user_id": "d4a7d928-783e-4599-8ec6-088d635a5bcc"}]}
   createUAR:
     speakeasy-default-create-UAR:
       requestBody:
@@ -3864,6 +4279,18 @@ examples:
       responses:
         "200":
           application/json: {"email": "john.doe@company.dev", "first_name": "John", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac", "last_name": "Doe", "full_name": "John Doe", "position": "Engineer"}
+  getRemoteUsers:
+    speakeasy-default-get-remote-users:
+      parameters:
+        query:
+          third_party_provider: ["GIT_HUB"]
+          user_id: ["32acc112-21ff-4669-91c2-21e27683eaa1"]
+          remote_id: ["1234567890"]
+          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+          page_size: 200
+      responses:
+        "200":
+          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"remote_id": "1234567890", "third_party_provider": "GIT_LAB", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}, {"remote_id": "remoteid123", "third_party_provider": "GIT_HUB", "user_id": "29827fb8-f2dd-4e80-9576-238979927392"}]}
   getUserTags:
     speakeasy-default-get-user-tags:
       parameters:
@@ -3881,866 +4308,4 @@ examples:
       responses:
         "200":
           application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"email": "john.doe@company.dev", "first_name": "John", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac", "last_name": "Doe", "full_name": "John Doe", "position": "Senior Engineer"}, {"email": "jane.smith@company.dev", "first_name": "John", "user_id": "e8581682-04f7-473a-a419-472f0fb26d46", "last_name": "Doe", "full_name": "Jane Smith", "position": "Product Marketing Lead"}]}
-  getRequest:
-    speakeasy-default-get-request:
-      parameters:
-        path:
-          id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
-      responses:
-        "200":
-          application/json: {"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "reviewer_stages": [{"item_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "item_name": "<value>", "stages": [{"operator": "AND", "reviewers": [{"id": "7c86c85d-0651-43e2-a748-d69d658418e8", "status": "PENDING"}], "stage": 1}, {"operator": "OR", "reviewers": [{"id": "8d86c85d-0651-43e2-a748-d69d658418e9", "status": "APPROVED"}], "stage": 2}]}], "status": "APPROVED", "target_group_id": "r86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}
-  get_resource_scoped_role_permissions:
-    speakeasy-default-get-resource-scoped-role-permissions:
-      parameters:
-        path:
-          resource_id: "1b978423-db0a-4037-a4cf-f79c60cb67b3"
-      responses:
-        "200":
-          application/json: {"permissions": [{"allow_all": true, "permission_name": "READ", "target_ids": ["a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "8294e9c9-deb6-48e9-9c99-da2a1e04a87f"], "target_type": "RESOURCE"}]}
-  set_resource_scoped_role_permissions:
-    speakeasy-default-set-resource-scoped-role-permissions:
-      parameters:
-        path:
-          resource_id: "1b978423-db0a-4037-a4cf-f79c60cb67b3"
-      requestBody:
-        application/json: {"permissions": [{"allow_all": false, "permission_name": "READ", "target_ids": ["a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "8294e9c9-deb6-48e9-9c99-da2a1e04a87f"], "target_type": "RESOURCE"}]}
-      responses:
-        "200":
-          application/json: {"permissions": [{"allow_all": false, "permission_name": "READ", "target_ids": ["a381e7a3-e5e0-4c48-b1d6-4ccb4c191bc1", "8294e9c9-deb6-48e9-9c99-da2a1e04a87f"], "target_type": "RESOURCE"}]}
-  getRemoteUsers:
-    speakeasy-default-get-remote-users:
-      parameters:
-        query:
-          third_party_provider: ["GIT_HUB"]
-          user_id: ["32acc112-21ff-4669-91c2-21e27683eaa1"]
-          remote_id: ["1234567890"]
-          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
-          page_size: 200
-      responses:
-        "200":
-          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"remote_id": "1234567890", "third_party_provider": "GIT_LAB", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}, {"remote_id": "remoteid123", "third_party_provider": "GIT_HUB", "user_id": "29827fb8-f2dd-4e80-9576-238979927392"}]}
-  get_user_resources:
-    speakeasy-default-get-user-resources:
-      parameters:
-        path:
-          user_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
-        query:
-          limit: 200
-          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
-          include_unmanaged: false
-      responses:
-        "200":
-          application/json: {"results": [{"access_level": {"access_level_name": "AdminRole", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess"}, "email": "jake@company.dev", "expiration_date": "2022-01-23T04:56:07Z", "full_name": "Jake Barnes", "has_direct_access": true, "num_access_paths": 2, "resource_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}, {"access_level": {"access_level_name": "AdminRole", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess"}, "email": "brett@company.dev", "expiration_date": "2022-02-03T12:33:02Z", "full_name": "Brett Ashley", "has_direct_access": true, "num_access_paths": 3, "resource_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "user_id": "7646aa9a-e2ee-4eb5-8c62-91f29038a373"}]}
-  createIdpGroupMapping:
-    speakeasy-default-create-idp-group-mapping:
-      parameters:
-        path:
-          app_resource_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
-          group_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
-      responses:
-        "200":
-          application/json: {"alias": "finance-team", "app_resource_id": "1520617d-e72a-47f5-a84c-693817ab48ad2", "group_id": "6f99639b-7928-4043-8184-47cbc6766145", "hidden_from_end_user": false}
-  createDelegation:
-    speakeasy-default-create-delegation:
-      requestBody:
-        application/json: {"delegate_user_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "delegator_user_id": "123e4567-e89b-12d3-a456-426614174000", "end_time": "2023-10-01T12:00:00Z", "reason": "I need to be out of the office", "start_time": "2023-10-01T12:00:00Z"}
-      responses:
-        "200":
-          application/json: {"created_at": "2023-10-01T12:00:00Z", "delegate_user_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "delegator_user_id": "123e4567-e89b-12d3-a456-426614174000", "end_time": "2023-10-01T12:00:00Z", "id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "reason": "I need to be out of the office", "start_time": "2023-10-01T12:00:00Z", "updated_at": "2023-10-01T12:00:00Z"}
-  deleteDelegation:
-    speakeasy-default-delete-delegation:
-      parameters:
-        path:
-          delegation_id: "32acc112-21ff-4669-91c2-21e27683eaa1"
-  getDelegation:
-    speakeasy-default-get-delegation:
-      parameters:
-        path:
-          delegation_id: "32acc112-21ff-4669-91c2-21e27683eaa1"
-      responses:
-        "200":
-          application/json: {"created_at": "2023-10-01T12:00:00Z", "delegate_user_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "delegator_user_id": "123e4567-e89b-12d3-a456-426614174000", "end_time": "2023-10-01T12:00:00Z", "id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "reason": "I need to be out of the office", "start_time": "2023-10-01T12:00:00Z", "updated_at": "2023-10-01T12:00:00Z"}
-  getDelegations:
-    speakeasy-default-get-delegations:
-      parameters:
-        query:
-          delegator_user_id: "29827fb8-f2dd-4e80-9576-28e31e9934ac"
-          delegate_user_id: "29827fb8-f2dd-4e80-9576-28e31e9934ac"
-          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
-          page_size: 200
-      responses:
-        "200":
-          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"created_at": "2023-10-01T12:00:00Z", "delegate_user_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "delegator_user_id": "123e4567-e89b-12d3-a456-426614174000", "end_time": "2023-10-01T12:00:00Z", "id": "4aed3e8a-727b-4d72-8010-3b8710c50bec", "reason": "I need to be out of the office", "start_time": "2023-10-01T12:00:00Z", "updated_at": "2023-10-01T12:00:00Z"}], "total_count": 2}
-  get_user_groups:
-    speakeasy-default-get-user-groups:
-      parameters:
-        path:
-          user_id: "1b978423-db0a-4037-a4cf-f79c60cb67b3"
-        query:
-          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
-          page_size: 200
-      responses:
-        "200":
-          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"description": "Group required to request API's", "email": "jake@company.dev", "expiration_date": "2022-01-23T04:56:07Z", "full_name": "Jake Barnes", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "group_name": "API Group", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac"}, {"description": "Group required to request API's", "email": "brett@company.dev", "expiration_date": "2022-02-03T12:33:02Z", "full_name": "Brett Ashley", "group_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "group_name": "API Group", "user_id": "7646aa9a-e2ee-4eb5-8c62-91f29038a373"}]}
-  getIdpGroupMapping:
-    speakeasy-default-get-idp-group-mapping:
-      parameters:
-        path:
-          app_resource_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
-          group_id: "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
-      responses:
-        "200":
-          application/json: {"alias": "finance-team", "app_resource_id": "1520617d-e72a-47f5-a84c-693817ab48ad2", "group_id": "6f99639b-7928-4043-8184-47cbc6766145", "hidden_from_end_user": false}
-  createRequestComment:
-    speakeasy-default-create-request-comment:
-      parameters:
-        path:
-          id: "4a929b40-a2e3-4dca-b8ec-1af35bdc7e43"
-      requestBody:
-        application/json: {"comment": "The Apollotech B340 is an affordable wireless mouse with reliable connectivity, 12 months battery life and modern design"}
-      responses:
-        "200":
-          application/json: {"request": {"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "reviewer_stages": [{"item_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "item_name": "<value>", "stages": [{"operator": "AND", "reviewers": [{"id": "7c86c85d-0651-43e2-a748-d69d658418e8", "status": "PENDING"}], "stage": 1}, {"operator": "OR", "reviewers": [{"id": "8d86c85d-0651-43e2-a748-d69d658418e9", "status": "APPROVED"}], "stage": 2}]}], "status": "DENIED", "target_group_id": "r86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}}
-  denyRequest:
-    speakeasy-default-deny-request:
-      parameters:
-        path:
-          id: "83015915-58ae-4cce-b92d-608ff073ece1"
-      requestBody:
-        application/json: {"comment": "Denied due to insufficient justification", "level": "REGULAR"}
-      responses:
-        "200":
-          application/json: {"request": {"created_at": "2021-01-06T20:00:00Z", "duration_minutes": 1440, "id": "7c86c85d-0651-43e2-a748-d69d658418e8", "reason": "I need this resource.", "requester_id": "c86c85d-0651-43e2-a748-d69d658418e8", "reviewer_stages": [{"item_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "item_name": "<value>", "stages": [{"operator": "AND", "reviewers": [{"id": "7c86c85d-0651-43e2-a748-d69d658418e8", "status": "PENDING"}], "stage": 1}, {"operator": "OR", "reviewers": [{"id": "8d86c85d-0651-43e2-a748-d69d658418e9", "status": "APPROVED"}], "stage": 2}]}], "status": "CANCELED", "target_group_id": "r86c85d-0651-43e2-a748-d69d658418e8", "target_user_id": "r86c85d-0651-43e2-a748-d69d658418e8", "updated_at": "2021-01-06T20:00:00Z"}}
-  getRequestComments:
-    speakeasy-default-get-request-comments:
-      parameters:
-        path:
-          id: "bfb1ef34-8ecf-46e5-bdf4-38abe7c6da89"
-      responses:
-        "200":
-          application/json: {"comments": [{"comment": "This is a comment.", "created_at": "2021-01-06T20:00:00Z", "request_id": "4c86c85d-0651-43e2-a748-d69d658418e8", "user_id": "c86c85d-0651-43e2-a748-d69d658418e8"}]}
-  get_resource_groups:
-    speakeasy-default-get-resource-groups:
-      parameters:
-        path:
-          resource_id: "1b978423-db0a-4037-a4cf-f79c60cb67b3"
-      responses:
-        "200":
-          application/json: {"group_resources": [{"access_level": {"access_level_name": "AdminRole", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess"}, "group_id": "7870617d-e72a-47f5-a84c-693817ab4567", "resource_id": "1520617d-e72a-47f5-a84c-693817ab48ad2"}, {"access_level": {"access_level_name": "AdminRole", "access_level_remote_id": "arn:aws:iam::590304332660:role/AdministratorAccess"}, "group_id": "50333e67-73ce-47ab-b049-d8abcd45f7a1", "resource_id": "6f99639b-7928-4043-8184-47cbc6766145"}]}
-  getEvent:
-    speakeasy-default-get-event:
-      parameters:
-        path:
-          event_id: "29827fb8-f2dd-4e80-9576-28e31e9934ac"
-      responses:
-        "200":
-          application/json: {"actor_name": "John Smith", "actor_user_id": "1b978423-db0a-4037-a4cf-f79c60cb67b3", "created_at": "2022-01-23T04:56:07Z", "event_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac", "event_type": "USERS_CREATED"}
-  deleteToken:
-    speakeasy-default-delete-token:
-      parameters:
-        path:
-          token_id: "f454d283-ca87-4a8a-bdbb-df212eca5353"
-  getTokens:
-    speakeasy-default-get-tokens:
-      parameters:
-        query:
-          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
-          page_size: 200
-          user_id: "29827fb8-f2dd-4e80-9576-28e31e9934ac"
-      responses:
-        "200":
-          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": [{"access_level": "READ_ONLY", "created_at": "2022-01-23T04:56:07Z", "creator_user_id": "d4a7d928-783e-4599-8ec6-088d635a5bcc", "token_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "token_label": "My API Token", "user_id": "d4a7d928-783e-4599-8ec6-088d635a5bcc"}]}
-  get_access_rules:
-    speakeasy-default-get-access-rules:
-      parameters:
-        query:
-          cursor: "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
-          page_size: 200
-      responses:
-        "200":
-          application/json: {"next": "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw", "previous": "cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ", "results": []}
 examplesVersion: 1.0.2
-generatedTests: {}
-releaseNotes: "## Terraform SDK Changes:\n* `Opal-API.access-rules.get_access_rules()`: **Added**\n* `Opal-API.access-rules.create_access_rule()`: \n  *  `request.ruleClauses.unless.clauses[].attribute_selectors` **Added**\n  *  `response.ruleClauses.unless.clauses[].attribute_selectors` **Added**\n* `Opal-API.access-rules.get_access_rule()`:  `response.ruleClauses.unless.clauses[].attribute_selectors` **Added**\n* `Opal-API.access-rules.update_access_rule()`: \n  *  `request.UpdateAccessRuleInfo.ruleClauses.unless.clauses[].attribute_selectors` **Added**\n  *  `response.ruleClauses.unless.clauses[].attribute_selectors` **Added**\n* `Opal-API.groups.create()`: \n  *  `request.remote_info.github_team.org_name` **Added**\n  *  `response.remote_info.github_team.org_name` **Added**\n* `Opal-API.groups.getGroup()`:  `response.remote_info.github_team.org_name` **Added**\n* `Opal-API.groups.list()`:  `response.results[].remote_info.github_team.org_name` **Added**\n* `Opal-API.non-human-identities.get_nhis()`:  `response.results[].remote_info` **Changed**\n* `Opal-API.resources.create()`: \n  *  `request.remote_info` **Changed**\n  *  `response.remote_info` **Changed**\n* `Opal-API.resources.get()`:  `response.results[].remote_info` **Changed**\n* `Opal-API.resources.get_id()`:  `response.remote_info` **Changed**\n"
-generatedFiles:
-  - .gitattributes
-  - USAGE.md
-  - examples/data-sources/opal_access_rule/data-source.tf
-  - examples/data-sources/opal_app/data-source.tf
-  - examples/data-sources/opal_apps/data-source.tf
-  - examples/data-sources/opal_bundle/data-source.tf
-  - examples/data-sources/opal_bundle_visibility/data-source.tf
-  - examples/data-sources/opal_configuration_template_list/data-source.tf
-  - examples/data-sources/opal_delegation/data-source.tf
-  - examples/data-sources/opal_delegations/data-source.tf
-  - examples/data-sources/opal_events/data-source.tf
-  - examples/data-sources/opal_group/data-source.tf
-  - examples/data-sources/opal_group_catalog_mapping/data-source.tf
-  - examples/data-sources/opal_group_containing_group/data-source.tf
-  - examples/data-sources/opal_group_list/data-source.tf
-  - examples/data-sources/opal_group_resource_list/data-source.tf
-  - examples/data-sources/opal_group_reviewers_stages_list/data-source.tf
-  - examples/data-sources/opal_group_tags/data-source.tf
-  - examples/data-sources/opal_group_users/data-source.tf
-  - examples/data-sources/opal_idp_group_mappings/data-source.tf
-  - examples/data-sources/opal_message_channel/data-source.tf
-  - examples/data-sources/opal_message_channel_list/data-source.tf
-  - examples/data-sources/opal_on_call_schedule/data-source.tf
-  - examples/data-sources/opal_on_call_schedule_list/data-source.tf
-  - examples/data-sources/opal_owner/data-source.tf
-  - examples/data-sources/opal_owner_from_name/data-source.tf
-  - examples/data-sources/opal_owners/data-source.tf
-  - examples/data-sources/opal_paginated_bundle_group_list/data-source.tf
-  - examples/data-sources/opal_paginated_bundle_list/data-source.tf
-  - examples/data-sources/opal_paginated_bundle_resource_list/data-source.tf
-  - examples/data-sources/opal_requests/data-source.tf
-  - examples/data-sources/opal_resource/data-source.tf
-  - examples/data-sources/opal_resource_message_channel_list/data-source.tf
-  - examples/data-sources/opal_resource_reviewers_list/data-source.tf
-  - examples/data-sources/opal_resource_tags/data-source.tf
-  - examples/data-sources/opal_resource_visibility/data-source.tf
-  - examples/data-sources/opal_resources_access_status/data-source.tf
-  - examples/data-sources/opal_resources_list/data-source.tf
-  - examples/data-sources/opal_resources_users_list/data-source.tf
-  - examples/data-sources/opal_scoped_role_permission_list/data-source.tf
-  - examples/data-sources/opal_sessions/data-source.tf
-  - examples/data-sources/opal_tag/data-source.tf
-  - examples/data-sources/opal_tags_list/data-source.tf
-  - examples/data-sources/opal_uar/data-source.tf
-  - examples/data-sources/opal_uars_list/data-source.tf
-  - examples/data-sources/opal_user/data-source.tf
-  - examples/data-sources/opal_user_tags/data-source.tf
-  - examples/data-sources/opal_users/data-source.tf
-  - examples/provider/provider.tf
-  - examples/resources/opal_access_rule/import-by-string-id.tf
-  - examples/resources/opal_access_rule/import.sh
-  - examples/resources/opal_access_rule/resource.tf
-  - examples/resources/opal_bundle/import-by-string-id.tf
-  - examples/resources/opal_bundle/import.sh
-  - examples/resources/opal_bundle/resource.tf
-  - examples/resources/opal_bundle_group/resource.tf
-  - examples/resources/opal_bundle_resource/resource.tf
-  - examples/resources/opal_configuration_template/resource.tf
-  - examples/resources/opal_delegation/import-by-string-id.tf
-  - examples/resources/opal_delegation/import.sh
-  - examples/resources/opal_delegation/resource.tf
-  - examples/resources/opal_group/import-by-string-id.tf
-  - examples/resources/opal_group/import.sh
-  - examples/resources/opal_group/resource.tf
-  - examples/resources/opal_group_catalog_mapping/import-by-string-id.tf
-  - examples/resources/opal_group_catalog_mapping/import.sh
-  - examples/resources/opal_group_catalog_mapping/resource.tf
-  - examples/resources/opal_group_containing_group/import-by-string-id.tf
-  - examples/resources/opal_group_containing_group/import.sh
-  - examples/resources/opal_group_containing_group/resource.tf
-  - examples/resources/opal_group_resource_list/import-by-string-id.tf
-  - examples/resources/opal_group_resource_list/import.sh
-  - examples/resources/opal_group_resource_list/resource.tf
-  - examples/resources/opal_group_tag/resource.tf
-  - examples/resources/opal_group_user/resource.tf
-  - examples/resources/opal_idp_group_mappings/import-by-string-id.tf
-  - examples/resources/opal_idp_group_mappings/import.sh
-  - examples/resources/opal_idp_group_mappings/resource.tf
-  - examples/resources/opal_message_channel/import-by-string-id.tf
-  - examples/resources/opal_message_channel/import.sh
-  - examples/resources/opal_message_channel/resource.tf
-  - examples/resources/opal_on_call_schedule/import-by-string-id.tf
-  - examples/resources/opal_on_call_schedule/import.sh
-  - examples/resources/opal_on_call_schedule/resource.tf
-  - examples/resources/opal_owner/import-by-string-id.tf
-  - examples/resources/opal_owner/import.sh
-  - examples/resources/opal_owner/resource.tf
-  - examples/resources/opal_resource/import-by-string-id.tf
-  - examples/resources/opal_resource/import.sh
-  - examples/resources/opal_resource/resource.tf
-  - examples/resources/opal_resource_tag/resource.tf
-  - examples/resources/opal_scoped_role_permission_list/import-by-string-id.tf
-  - examples/resources/opal_scoped_role_permission_list/import.sh
-  - examples/resources/opal_scoped_role_permission_list/resource.tf
-  - examples/resources/opal_tag/import-by-string-id.tf
-  - examples/resources/opal_tag/import.sh
-  - examples/resources/opal_tag/resource.tf
-  - examples/resources/opal_tag_user/resource.tf
-  - go.mod
-  - go.sum
-  - internal/planmodifiers/boolplanmodifier/suppress_diff.go
-  - internal/planmodifiers/float32planmodifier/suppress_diff.go
-  - internal/planmodifiers/float64planmodifier/suppress_diff.go
-  - internal/planmodifiers/int32planmodifier/suppress_diff.go
-  - internal/planmodifiers/int64planmodifier/suppress_diff.go
-  - internal/planmodifiers/listplanmodifier/suppress_diff.go
-  - internal/planmodifiers/mapplanmodifier/suppress_diff.go
-  - internal/planmodifiers/numberplanmodifier/suppress_diff.go
-  - internal/planmodifiers/objectplanmodifier/suppress_diff.go
-  - internal/planmodifiers/setplanmodifier/suppress_diff.go
-  - internal/planmodifiers/stringplanmodifier/suppress_diff.go
-  - internal/planmodifiers/utils/state_check.go
-  - internal/provider/accessrule_data_source.go
-  - internal/provider/accessrule_data_source_sdk.go
-  - internal/provider/accessrule_resource.go
-  - internal/provider/accessrule_resource_sdk.go
-  - internal/provider/app_data_source.go
-  - internal/provider/app_data_source_sdk.go
-  - internal/provider/apps_data_source.go
-  - internal/provider/apps_data_source_sdk.go
-  - internal/provider/bundle_data_source.go
-  - internal/provider/bundle_data_source_sdk.go
-  - internal/provider/bundle_resource.go
-  - internal/provider/bundle_resource_sdk.go
-  - internal/provider/bundlegroup_resource.go
-  - internal/provider/bundlegroup_resource_sdk.go
-  - internal/provider/bundleresource_resource.go
-  - internal/provider/bundleresource_resource_sdk.go
-  - internal/provider/bundlevisibility_data_source.go
-  - internal/provider/bundlevisibility_data_source_sdk.go
-  - internal/provider/configurationtemplate_resource.go
-  - internal/provider/configurationtemplate_resource_sdk.go
-  - internal/provider/configurationtemplatelist_data_source.go
-  - internal/provider/configurationtemplatelist_data_source_sdk.go
-  - internal/provider/delegation_data_source.go
-  - internal/provider/delegation_data_source_sdk.go
-  - internal/provider/delegation_resource.go
-  - internal/provider/delegation_resource_sdk.go
-  - internal/provider/delegations_data_source.go
-  - internal/provider/delegations_data_source_sdk.go
-  - internal/provider/events_data_source.go
-  - internal/provider/events_data_source_sdk.go
-  - internal/provider/group_data_source.go
-  - internal/provider/group_data_source_sdk.go
-  - internal/provider/group_list_data_source.go
-  - internal/provider/group_list_data_source_sdk.go
-  - internal/provider/group_resource.go
-  - internal/provider/group_resource_sdk.go
-  - internal/provider/groupcatalogmapping_data_source.go
-  - internal/provider/groupcatalogmapping_data_source_sdk.go
-  - internal/provider/groupcatalogmapping_resource.go
-  - internal/provider/groupcatalogmapping_resource_sdk.go
-  - internal/provider/groupcontaininggroup_data_source.go
-  - internal/provider/groupcontaininggroup_data_source_sdk.go
-  - internal/provider/groupcontaininggroup_resource.go
-  - internal/provider/groupcontaininggroup_resource_sdk.go
-  - internal/provider/groupresourcelist_data_source.go
-  - internal/provider/groupresourcelist_data_source_sdk.go
-  - internal/provider/groupresourcelist_resource.go
-  - internal/provider/groupresourcelist_resource_sdk.go
-  - internal/provider/groupreviewersstageslist_data_source.go
-  - internal/provider/groupreviewersstageslist_data_source_sdk.go
-  - internal/provider/grouptag_resource.go
-  - internal/provider/grouptag_resource_sdk.go
-  - internal/provider/grouptags_data_source.go
-  - internal/provider/grouptags_data_source_sdk.go
-  - internal/provider/groupuser_resource.go
-  - internal/provider/groupuser_resource_sdk.go
-  - internal/provider/groupusers_data_source.go
-  - internal/provider/groupusers_data_source_sdk.go
-  - internal/provider/idpgroupmappings_data_source.go
-  - internal/provider/idpgroupmappings_data_source_sdk.go
-  - internal/provider/idpgroupmappings_resource.go
-  - internal/provider/idpgroupmappings_resource_sdk.go
-  - internal/provider/messagechannel_data_source.go
-  - internal/provider/messagechannel_data_source_sdk.go
-  - internal/provider/messagechannel_resource.go
-  - internal/provider/messagechannel_resource_sdk.go
-  - internal/provider/messagechannellist_data_source.go
-  - internal/provider/messagechannellist_data_source_sdk.go
-  - internal/provider/oncallschedule_data_source.go
-  - internal/provider/oncallschedule_data_source_sdk.go
-  - internal/provider/oncallschedule_list_data_source.go
-  - internal/provider/oncallschedule_list_data_source_sdk.go
-  - internal/provider/oncallschedule_resource.go
-  - internal/provider/oncallschedule_resource_sdk.go
-  - internal/provider/owner_data_source.go
-  - internal/provider/owner_data_source_sdk.go
-  - internal/provider/owner_resource.go
-  - internal/provider/owner_resource_sdk.go
-  - internal/provider/ownerfromname_data_source.go
-  - internal/provider/ownerfromname_data_source_sdk.go
-  - internal/provider/owners_data_source.go
-  - internal/provider/owners_data_source_sdk.go
-  - internal/provider/paginatedbundlegrouplist_data_source.go
-  - internal/provider/paginatedbundlegrouplist_data_source_sdk.go
-  - internal/provider/paginatedbundlelist_data_source.go
-  - internal/provider/paginatedbundlelist_data_source_sdk.go
-  - internal/provider/paginatedbundleresourcelist_data_source.go
-  - internal/provider/paginatedbundleresourcelist_data_source_sdk.go
-  - internal/provider/provider.go
-  - internal/provider/reflect/diags.go
-  - internal/provider/reflect/doc.go
-  - internal/provider/reflect/generic_attr_value.go
-  - internal/provider/reflect/helpers.go
-  - internal/provider/reflect/interfaces.go
-  - internal/provider/reflect/into.go
-  - internal/provider/reflect/map.go
-  - internal/provider/reflect/number.go
-  - internal/provider/reflect/options.go
-  - internal/provider/reflect/outof.go
-  - internal/provider/reflect/pointer.go
-  - internal/provider/reflect/primitive.go
-  - internal/provider/reflect/slice.go
-  - internal/provider/reflect/struct.go
-  - internal/provider/requests_data_source.go
-  - internal/provider/requests_data_source_sdk.go
-  - internal/provider/resource_data_source.go
-  - internal/provider/resource_data_source_sdk.go
-  - internal/provider/resource_resource.go
-  - internal/provider/resource_resource_sdk.go
-  - internal/provider/resourcemessagechannellist_data_source.go
-  - internal/provider/resourcemessagechannellist_data_source_sdk.go
-  - internal/provider/resourcereviewerslist_data_source.go
-  - internal/provider/resourcereviewerslist_data_source_sdk.go
-  - internal/provider/resources_list_data_source.go
-  - internal/provider/resources_list_data_source_sdk.go
-  - internal/provider/resourcesaccessstatus_data_source.go
-  - internal/provider/resourcesaccessstatus_data_source_sdk.go
-  - internal/provider/resourcesusers_list_data_source.go
-  - internal/provider/resourcesusers_list_data_source_sdk.go
-  - internal/provider/resourcetag_resource.go
-  - internal/provider/resourcetag_resource_sdk.go
-  - internal/provider/resourcetags_data_source.go
-  - internal/provider/resourcetags_data_source_sdk.go
-  - internal/provider/resourcevisibility_data_source.go
-  - internal/provider/resourcevisibility_data_source_sdk.go
-  - internal/provider/scopedrolepermissionlist_data_source.go
-  - internal/provider/scopedrolepermissionlist_data_source_sdk.go
-  - internal/provider/scopedrolepermissionlist_resource.go
-  - internal/provider/scopedrolepermissionlist_resource_sdk.go
-  - internal/provider/sessions_data_source.go
-  - internal/provider/sessions_data_source_sdk.go
-  - internal/provider/tag_data_source.go
-  - internal/provider/tag_data_source_sdk.go
-  - internal/provider/tag_resource.go
-  - internal/provider/tag_resource_sdk.go
-  - internal/provider/tags_list_data_source.go
-  - internal/provider/tags_list_data_source_sdk.go
-  - internal/provider/taguser_resource.go
-  - internal/provider/taguser_resource_sdk.go
-  - internal/provider/typeconvert/date.go
-  - internal/provider/typeconvert/datetime.go
-  - internal/provider/typeconvert/int.go
-  - internal/provider/types/active_directory_group.go
-  - internal/provider/types/anthropic_workspace.go
-  - internal/provider/types/app.go
-  - internal/provider/types/app_validation.go
-  - internal/provider/types/aws_account.go
-  - internal/provider/types/aws_ec2_instance.go
-  - internal/provider/types/aws_eks_cluster.go
-  - internal/provider/types/aws_organizational_unit.go
-  - internal/provider/types/aws_permission_set.go
-  - internal/provider/types/aws_rds_cluster.go
-  - internal/provider/types/aws_rds_instance.go
-  - internal/provider/types/azure_enterprise_app.go
-  - internal/provider/types/bundle.go
-  - internal/provider/types/bundle_group.go
-  - internal/provider/types/bundle_resource.go
-  - internal/provider/types/condition.go
-  - internal/provider/types/configuration_template.go
-  - internal/provider/types/create_user_tag_request_body.go
-  - internal/provider/types/cursor_organization.go
-  - internal/provider/types/custom_connector.go
-  - internal/provider/types/databricks_account_service_principal.go
-  - internal/provider/types/delegation.go
-  - internal/provider/types/event.go
-  - internal/provider/types/field_value.go
-  - internal/provider/types/gcp_big_query_dataset.go
-  - internal/provider/types/gcp_big_query_table.go
-  - internal/provider/types/gcp_bucket.go
-  - internal/provider/types/gcp_compute_instance.go
-  - internal/provider/types/gcp_folder.go
-  - internal/provider/types/gcp_gke_cluster.go
-  - internal/provider/types/gcp_organization.go
-  - internal/provider/types/gcp_project.go
-  - internal/provider/types/gcp_service_account.go
-  - internal/provider/types/gcp_sql_instance.go
-  - internal/provider/types/get_group_message_channels_response_body.go
-  - internal/provider/types/get_group_on_call_schedules_response_body.go
-  - internal/provider/types/github_org.go
-  - internal/provider/types/github_repo.go
-  - internal/provider/types/github_team.go
-  - internal/provider/types/group.go
-  - internal/provider/types/group_remote_info.go
-  - internal/provider/types/group_resource.go
-  - internal/provider/types/group_user.go
-  - internal/provider/types/idp_group_mapping.go
-  - internal/provider/types/ilevel_advanced_role.go
-  - internal/provider/types/last_successful_sync.go
-  - internal/provider/types/mappings.go
-  - internal/provider/types/message_channel.go
-  - internal/provider/types/okta_app.go
-  - internal/provider/types/okta_group_rule.go
-  - internal/provider/types/okta_standard_role.go
-  - internal/provider/types/on_call_schedule.go
-  - internal/provider/types/openai_platform_service_account.go
-  - internal/provider/types/owner.go
-  - internal/provider/types/propagation_status.go
-  - internal/provider/types/request.go
-  - internal/provider/types/request_configuration.go
-  - internal/provider/types/request_custom_field_response.go
-  - internal/provider/types/request_item_stages.go
-  - internal/provider/types/request_reviewer.go
-  - internal/provider/types/request_reviewer_stages.go
-  - internal/provider/types/request_stage.go
-  - internal/provider/types/requested_item.go
-  - internal/provider/types/resource.go
-  - internal/provider/types/resource_access_level.go
-  - internal/provider/types/resource_access_user.go
-  - internal/provider/types/resource_remote_info.go
-  - internal/provider/types/resource_with_access_level.go
-  - internal/provider/types/reviewer_stage.go
-  - internal/provider/types/rule_clauses.go
-  - internal/provider/types/rule_conjunction.go
-  - internal/provider/types/rule_disjunction.go
-  - internal/provider/types/salesforce_permission_set.go
-  - internal/provider/types/salesforce_profile.go
-  - internal/provider/types/scoped_role_permission.go
-  - internal/provider/types/session.go
-  - internal/provider/types/snowflake_database.go
-  - internal/provider/types/snowflake_role.go
-  - internal/provider/types/snowflake_schema.go
-  - internal/provider/types/snowflake_table.go
-  - internal/provider/types/sub_event.go
-  - internal/provider/types/tag.go
-  - internal/provider/types/tag_filter.go
-  - internal/provider/types/tag_selector.go
-  - internal/provider/types/tailscale_ssh.go
-  - internal/provider/types/ticket_propagation_configuration.go
-  - internal/provider/types/uar.go
-  - internal/provider/types/uar_scope.go
-  - internal/provider/types/user.go
-  - internal/provider/types/visibility_info.go
-  - internal/provider/uar_data_source.go
-  - internal/provider/uar_data_source_sdk.go
-  - internal/provider/uars_list_data_source.go
-  - internal/provider/uars_list_data_source_sdk.go
-  - internal/provider/user_data_source.go
-  - internal/provider/user_data_source_sdk.go
-  - internal/provider/users_data_source.go
-  - internal/provider/users_data_source_sdk.go
-  - internal/provider/usertags_data_source.go
-  - internal/provider/usertags_data_source_sdk.go
-  - internal/provider/utils.go
-  - internal/sdk/.gitattributes
-  - internal/sdk/accessrules.go
-  - internal/sdk/apps.go
-  - internal/sdk/bundles.go
-  - internal/sdk/configurationtemplates.go
-  - internal/sdk/delegations.go
-  - internal/sdk/docs/models/operations/option.md
-  - internal/sdk/events.go
-  - internal/sdk/groupbindings.go
-  - internal/sdk/groups.go
-  - internal/sdk/idpgroupmappings.go
-  - internal/sdk/internal/config/sdkconfiguration.go
-  - internal/sdk/internal/hooks/hooks.go
-  - internal/sdk/internal/utils/contenttype.go
-  - internal/sdk/internal/utils/env.go
-  - internal/sdk/internal/utils/form.go
-  - internal/sdk/internal/utils/headers.go
-  - internal/sdk/internal/utils/json.go
-  - internal/sdk/internal/utils/pathparams.go
-  - internal/sdk/internal/utils/queryparams.go
-  - internal/sdk/internal/utils/requestbody.go
-  - internal/sdk/internal/utils/retries.go
-  - internal/sdk/internal/utils/security.go
-  - internal/sdk/internal/utils/utils.go
-  - internal/sdk/messagechannels.go
-  - internal/sdk/models/errors/sdkerror.go
-  - internal/sdk/models/operations/addbundlegroup.go
-  - internal/sdk/models/operations/addbundleresource.go
-  - internal/sdk/models/operations/addgroupcontaininggroup.go
-  - internal/sdk/models/operations/addresourcenhi.go
-  - internal/sdk/models/operations/approverequest.go
-  - internal/sdk/models/operations/createaccessrule.go
-  - internal/sdk/models/operations/createbundle.go
-  - internal/sdk/models/operations/createconfigurationtemplate.go
-  - internal/sdk/models/operations/createdelegation.go
-  - internal/sdk/models/operations/creategroup.go
-  - internal/sdk/models/operations/creategroupbinding.go
-  - internal/sdk/models/operations/creategroupresources.go
-  - internal/sdk/models/operations/creategrouptag.go
-  - internal/sdk/models/operations/creategroupuser.go
-  - internal/sdk/models/operations/createidpgroupmapping.go
-  - internal/sdk/models/operations/createmessagechannel.go
-  - internal/sdk/models/operations/createoncallschedule.go
-  - internal/sdk/models/operations/createowner.go
-  - internal/sdk/models/operations/createrequest.go
-  - internal/sdk/models/operations/createrequestcomment.go
-  - internal/sdk/models/operations/createresource.go
-  - internal/sdk/models/operations/createresourcetag.go
-  - internal/sdk/models/operations/createtag.go
-  - internal/sdk/models/operations/createuar.go
-  - internal/sdk/models/operations/createusertag.go
-  - internal/sdk/models/operations/deletebundle.go
-  - internal/sdk/models/operations/deleteconfigurationtemplate.go
-  - internal/sdk/models/operations/deletedelegation.go
-  - internal/sdk/models/operations/deletegroup.go
-  - internal/sdk/models/operations/deletegroupbinding.go
-  - internal/sdk/models/operations/deletegrouptag.go
-  - internal/sdk/models/operations/deletegroupuser.go
-  - internal/sdk/models/operations/deleteidpgroupmappings.go
-  - internal/sdk/models/operations/deleteowner.go
-  - internal/sdk/models/operations/deleteresource.go
-  - internal/sdk/models/operations/deleteresourcenhi.go
-  - internal/sdk/models/operations/deleteresourcetag.go
-  - internal/sdk/models/operations/deletetagbyid.go
-  - internal/sdk/models/operations/deleteusertag.go
-  - internal/sdk/models/operations/denyrequest.go
-  - internal/sdk/models/operations/getaccessrule.go
-  - internal/sdk/models/operations/getappid.go
-  - internal/sdk/models/operations/getapps.go
-  - internal/sdk/models/operations/getbundle.go
-  - internal/sdk/models/operations/getbundlegroups.go
-  - internal/sdk/models/operations/getbundleresources.go
-  - internal/sdk/models/operations/getbundles.go
-  - internal/sdk/models/operations/getbundlevisibility.go
-  - internal/sdk/models/operations/getconfigurationtemplates.go
-  - internal/sdk/models/operations/getdelegation.go
-  - internal/sdk/models/operations/getdelegations.go
-  - internal/sdk/models/operations/getevents.go
-  - internal/sdk/models/operations/getgroup.go
-  - internal/sdk/models/operations/getgroupbinding.go
-  - internal/sdk/models/operations/getgroupbindings.go
-  - internal/sdk/models/operations/getgroupcontaininggroup.go
-  - internal/sdk/models/operations/getgroupmessagechannels.go
-  - internal/sdk/models/operations/getgrouponcallschedules.go
-  - internal/sdk/models/operations/getgroupresources.go
-  - internal/sdk/models/operations/getgroupreviewersstages.go
-  - internal/sdk/models/operations/getgroups.go
-  - internal/sdk/models/operations/getgrouptags.go
-  - internal/sdk/models/operations/getgroupusers.go
-  - internal/sdk/models/operations/getgroupvisibility.go
-  - internal/sdk/models/operations/getidpgroupmapping.go
-  - internal/sdk/models/operations/getidpgroupmappings.go
-  - internal/sdk/models/operations/getmessagechannelid.go
-  - internal/sdk/models/operations/getmessagechannels.go
-  - internal/sdk/models/operations/getnhis.go
-  - internal/sdk/models/operations/getoncallschedule.go
-  - internal/sdk/models/operations/getoncallscheduleid.go
-  - internal/sdk/models/operations/getownerfromname.go
-  - internal/sdk/models/operations/getownerid.go
-  - internal/sdk/models/operations/getowners.go
-  - internal/sdk/models/operations/getremoteusers.go
-  - internal/sdk/models/operations/getrequest.go
-  - internal/sdk/models/operations/getrequestcomments.go
-  - internal/sdk/models/operations/getrequests.go
-  - internal/sdk/models/operations/getrequestsrelay.go
-  - internal/sdk/models/operations/getresourceid.go
-  - internal/sdk/models/operations/getresourcemessagechannels.go
-  - internal/sdk/models/operations/getresourcenhis.go
-  - internal/sdk/models/operations/getresourcereviewers.go
-  - internal/sdk/models/operations/getresources.go
-  - internal/sdk/models/operations/getresourcescopedrolepermissions.go
-  - internal/sdk/models/operations/getresourcetags.go
-  - internal/sdk/models/operations/getresourceuseraccessstatus.go
-  - internal/sdk/models/operations/getresourceusers.go
-  - internal/sdk/models/operations/getresourcevisibility.go
-  - internal/sdk/models/operations/getsessions.go
-  - internal/sdk/models/operations/getsyncerrors.go
-  - internal/sdk/models/operations/gettagbyid.go
-  - internal/sdk/models/operations/gettags.go
-  - internal/sdk/models/operations/getuarid.go
-  - internal/sdk/models/operations/getuars.go
-  - internal/sdk/models/operations/getuser.go
-  - internal/sdk/models/operations/getusergroups.go
-  - internal/sdk/models/operations/getuserresources.go
-  - internal/sdk/models/operations/getusers.go
-  - internal/sdk/models/operations/getusertags.go
-  - internal/sdk/models/operations/options.go
-  - internal/sdk/models/operations/removebundlegroup.go
-  - internal/sdk/models/operations/removebundleresource.go
-  - internal/sdk/models/operations/removegroupcontaininggroup.go
-  - internal/sdk/models/operations/setbundlevisibility.go
-  - internal/sdk/models/operations/setresourcescopedrolepermissions.go
-  - internal/sdk/models/operations/updateaccessrule.go
-  - internal/sdk/models/operations/updatebundle.go
-  - internal/sdk/models/operations/updateconfigurationtemplate.go
-  - internal/sdk/models/operations/updategroupbindings.go
-  - internal/sdk/models/operations/updategroupmessagechannels.go
-  - internal/sdk/models/operations/updategrouponcallschedules.go
-  - internal/sdk/models/operations/updategroupresources.go
-  - internal/sdk/models/operations/updategroupreviewersstages.go
-  - internal/sdk/models/operations/updategroups.go
-  - internal/sdk/models/operations/updategroupuser.go
-  - internal/sdk/models/operations/updategroupvisibility.go
-  - internal/sdk/models/operations/updateidpgroupmappings.go
-  - internal/sdk/models/operations/updateowners.go
-  - internal/sdk/models/operations/updateownerusers.go
-  - internal/sdk/models/operations/updateresourcemessagechannels.go
-  - internal/sdk/models/operations/updateresourcereviewers.go
-  - internal/sdk/models/operations/updateresources.go
-  - internal/sdk/models/operations/updateresourcevisibility.go
-  - internal/sdk/models/shared/access.go
-  - internal/sdk/models/shared/accesslist.go
-  - internal/sdk/models/shared/accessrule.go
-  - internal/sdk/models/shared/app.go
-  - internal/sdk/models/shared/appslist.go
-  - internal/sdk/models/shared/apptypeenum.go
-  - internal/sdk/models/shared/appvalidation.go
-  - internal/sdk/models/shared/appvalidationseverityenum.go
-  - internal/sdk/models/shared/appvalidationstatusenum.go
-  - internal/sdk/models/shared/bundle.go
-  - internal/sdk/models/shared/bundlegroup.go
-  - internal/sdk/models/shared/bundleinput.go
-  - internal/sdk/models/shared/bundleresource.go
-  - internal/sdk/models/shared/configurationtemplate.go
-  - internal/sdk/models/shared/createbundleinfo.go
-  - internal/sdk/models/shared/createconfigurationtemplateinfo.go
-  - internal/sdk/models/shared/createdelegationrequest.go
-  - internal/sdk/models/shared/creategroupbindinginfo.go
-  - internal/sdk/models/shared/creategroupinfo.go
-  - internal/sdk/models/shared/createmessagechannelinfo.go
-  - internal/sdk/models/shared/createoncallscheduleinfo.go
-  - internal/sdk/models/shared/createownerinfo.go
-  - internal/sdk/models/shared/createrequestinfo.go
-  - internal/sdk/models/shared/createresourceinfo.go
-  - internal/sdk/models/shared/createtaginfo.go
-  - internal/sdk/models/shared/createuarinfo.go
-  - internal/sdk/models/shared/delegation.go
-  - internal/sdk/models/shared/entitytypeenum.go
-  - internal/sdk/models/shared/event.go
-  - internal/sdk/models/shared/group.go
-  - internal/sdk/models/shared/groupaccesslevel.go
-  - internal/sdk/models/shared/groupbinding.go
-  - internal/sdk/models/shared/groupbindinggroup.go
-  - internal/sdk/models/shared/groupcontaininggroup.go
-  - internal/sdk/models/shared/groupremoteinfo.go
-  - internal/sdk/models/shared/groupresource.go
-  - internal/sdk/models/shared/groupresourcelist.go
-  - internal/sdk/models/shared/grouptypeenum.go
-  - internal/sdk/models/shared/groupuser.go
-  - internal/sdk/models/shared/groupuserlist.go
-  - internal/sdk/models/shared/idpgroupmapping.go
-  - internal/sdk/models/shared/idpgroupmappinglist.go
-  - internal/sdk/models/shared/messagechannel.go
-  - internal/sdk/models/shared/messagechannelidlist.go
-  - internal/sdk/models/shared/messagechannellist.go
-  - internal/sdk/models/shared/messagechannelproviderenum.go
-  - internal/sdk/models/shared/oncallschedule.go
-  - internal/sdk/models/shared/oncallscheduleidlist.go
-  - internal/sdk/models/shared/oncallschedulelist.go
-  - internal/sdk/models/shared/oncallscheduleproviderenum.go
-  - internal/sdk/models/shared/owner.go
-  - internal/sdk/models/shared/pageinfo.go
-  - internal/sdk/models/shared/paginatedbundlegrouplist.go
-  - internal/sdk/models/shared/paginatedbundlelist.go
-  - internal/sdk/models/shared/paginatedbundleresourcelist.go
-  - internal/sdk/models/shared/paginatedconfigurationtemplatelist.go
-  - internal/sdk/models/shared/paginateddelegationslist.go
-  - internal/sdk/models/shared/paginatedeventlist.go
-  - internal/sdk/models/shared/paginatedgroupbindingslist.go
-  - internal/sdk/models/shared/paginatedgroupslist.go
-  - internal/sdk/models/shared/paginatedownerslist.go
-  - internal/sdk/models/shared/paginatedremoteuserslist.go
-  - internal/sdk/models/shared/paginatedresourceslist.go
-  - internal/sdk/models/shared/paginatedtagslist.go
-  - internal/sdk/models/shared/paginateduarslist.go
-  - internal/sdk/models/shared/paginateduserslist.go
-  - internal/sdk/models/shared/propagationstatus.go
-  - internal/sdk/models/shared/propagationstatusenum.go
-  - internal/sdk/models/shared/rdsengineenum.go
-  - internal/sdk/models/shared/remoteuser.go
-  - internal/sdk/models/shared/request.go
-  - internal/sdk/models/shared/requestapprovalenum.go
-  - internal/sdk/models/shared/requestcomment.go
-  - internal/sdk/models/shared/requestcommentlist.go
-  - internal/sdk/models/shared/requestconfiguration.go
-  - internal/sdk/models/shared/requestconnection.go
-  - internal/sdk/models/shared/requestcustomfieldresponse.go
-  - internal/sdk/models/shared/requestedge.go
-  - internal/sdk/models/shared/requesteditem.go
-  - internal/sdk/models/shared/requestitemstages.go
-  - internal/sdk/models/shared/requestlist.go
-  - internal/sdk/models/shared/requestreviewer.go
-  - internal/sdk/models/shared/requestreviewerstages.go
-  - internal/sdk/models/shared/requeststage.go
-  - internal/sdk/models/shared/requeststatusenum.go
-  - internal/sdk/models/shared/requesttemplatecustomfieldtypeenum.go
-  - internal/sdk/models/shared/resource.go
-  - internal/sdk/models/shared/resourceaccesslevel.go
-  - internal/sdk/models/shared/resourceaccessuser.go
-  - internal/sdk/models/shared/resourceaccessuserlist.go
-  - internal/sdk/models/shared/resourcenhi.go
-  - internal/sdk/models/shared/resourceremoteinfo.go
-  - internal/sdk/models/shared/resourcetypeenum.go
-  - internal/sdk/models/shared/resourceuseraccessstatus.go
-  - internal/sdk/models/shared/resourceuseraccessstatusenum.go
-  - internal/sdk/models/shared/resourcewithaccesslevel.go
-  - internal/sdk/models/shared/revieweridlist.go
-  - internal/sdk/models/shared/reviewerstage.go
-  - internal/sdk/models/shared/reviewerstagelist.go
-  - internal/sdk/models/shared/reviewstageoperator.go
-  - internal/sdk/models/shared/risksensitivityenum.go
-  - internal/sdk/models/shared/rolepermissionnameenum.go
-  - internal/sdk/models/shared/rolepermissiontargettypeenum.go
-  - internal/sdk/models/shared/ruleclauses.go
-  - internal/sdk/models/shared/ruleconjunction.go
-  - internal/sdk/models/shared/ruledisjunction.go
-  - internal/sdk/models/shared/scopedrolepermission.go
-  - internal/sdk/models/shared/scopedrolepermissionlist.go
-  - internal/sdk/models/shared/security.go
-  - internal/sdk/models/shared/session.go
-  - internal/sdk/models/shared/sessionslist.go
-  - internal/sdk/models/shared/subevent.go
-  - internal/sdk/models/shared/syncerror.go
-  - internal/sdk/models/shared/syncerrorlist.go
-  - internal/sdk/models/shared/tag.go
-  - internal/sdk/models/shared/tagfilter.go
-  - internal/sdk/models/shared/tagselector.go
-  - internal/sdk/models/shared/tagslist.go
-  - internal/sdk/models/shared/thirdpartyproviderenum.go
-  - internal/sdk/models/shared/ticketingproviderenum.go
-  - internal/sdk/models/shared/ticketpropagationconfiguration.go
-  - internal/sdk/models/shared/uar.go
-  - internal/sdk/models/shared/uarreviewerassignmentpolicyenum.go
-  - internal/sdk/models/shared/uarscope.go
-  - internal/sdk/models/shared/updateaccessruleinfo.go
-  - internal/sdk/models/shared/updateconfigurationtemplateinfo.go
-  - internal/sdk/models/shared/updategroupbindinginfo.go
-  - internal/sdk/models/shared/updategroupbindinginfolist.go
-  - internal/sdk/models/shared/updategroupinfo.go
-  - internal/sdk/models/shared/updategroupinfolist.go
-  - internal/sdk/models/shared/updategroupresourcesinfo.go
-  - internal/sdk/models/shared/updateownerinfo.go
-  - internal/sdk/models/shared/updateownerinfolist.go
-  - internal/sdk/models/shared/updateresourceinfo.go
-  - internal/sdk/models/shared/updateresourceinfolist.go
-  - internal/sdk/models/shared/user.go
-  - internal/sdk/models/shared/userhridpstatusenum.go
-  - internal/sdk/models/shared/useridlist.go
-  - internal/sdk/models/shared/userlist.go
-  - internal/sdk/models/shared/visibilityinfo.go
-  - internal/sdk/models/shared/visibilitytypeenum.go
-  - internal/sdk/nonhumanidentities.go
-  - internal/sdk/oncallschedules.go
-  - internal/sdk/opalapi.go
-  - internal/sdk/optionalnullable/optionalnullable.go
-  - internal/sdk/optionalnullable/optionalnullable_test.go
-  - internal/sdk/owners.go
-  - internal/sdk/requests.go
-  - internal/sdk/resources.go
-  - internal/sdk/retry/config.go
-  - internal/sdk/sessions.go
-  - internal/sdk/tags.go
-  - internal/sdk/types/bigint.go
-  - internal/sdk/types/date.go
-  - internal/sdk/types/datetime.go
-  - internal/sdk/types/pointers.go
-  - internal/sdk/uars.go
-  - internal/sdk/users.go
-  - internal/validators/DateValidator.go
-  - internal/validators/ExactlyOneChild.go
-  - internal/validators/JSONParseValidator.go
-  - internal/validators/RFC3339Validator.go
-  - internal/validators/boolvalidators/not_null.go
-  - internal/validators/float32validators/not_null.go
-  - internal/validators/float64validators/not_null.go
-  - internal/validators/int32validators/not_null.go
-  - internal/validators/int64validators/not_null.go
-  - internal/validators/listvalidators/not_null.go
-  - internal/validators/mapvalidators/not_null.go
-  - internal/validators/numbervalidators/not_null.go
-  - internal/validators/objectvalidators/not_null.go
-  - internal/validators/setvalidators/not_null.go
-  - internal/validators/stringvalidators/not_null.go
-  - main.go
-  - terraform-registry-manifest.json
-  - tools/tools.go

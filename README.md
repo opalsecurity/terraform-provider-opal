@@ -31,7 +31,7 @@ terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "3.5.1"
+      version = "3.5.2"
     }
   }
 }
@@ -82,6 +82,7 @@ Available configuration:
 * [opal_on_call_schedule](docs/resources/on_call_schedule.md)
 * [opal_owner](docs/resources/owner.md)
 * [opal_resource](docs/resources/resource.md)
+* [opal_resource_custom_access_level](docs/resources/resource_custom_access_level.md)
 * [opal_resource_tag](docs/resources/resource_tag.md)
 * [opal_scoped_role_permission_list](docs/resources/scoped_role_permission_list.md)
 * [opal_tag](docs/resources/tag.md)
@@ -119,6 +120,7 @@ Available configuration:
 * [opal_paginated_bundle_resource_list](docs/data-sources/paginated_bundle_resource_list.md)
 * [opal_requests](docs/data-sources/requests.md)
 * [opal_resource](docs/data-sources/resource.md)
+* [opal_resource_custom_access_level_list](docs/data-sources/resource_custom_access_level_list.md)
 * [opal_resource_message_channel_list](docs/data-sources/resource_message_channel_list.md)
 * [opal_resource_reviewers_list](docs/data-sources/resource_reviewers_list.md)
 * [opal_resource_tags](docs/data-sources/resource_tags.md)
