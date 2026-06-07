@@ -275,6 +275,18 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.WorkdayUserSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.WorkdayUserSecurityGroup.GroupID = types.StringValue(resp.RemoteInfo.WorkdayUserSecurityGroup.GroupID)
 			}
+			if resp.RemoteInfo.ZendeskGroup == nil {
+				r.RemoteInfo.ZendeskGroup = nil
+			} else {
+				r.RemoteInfo.ZendeskGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.ZendeskGroup.GroupID = types.StringValue(resp.RemoteInfo.ZendeskGroup.GroupID)
+			}
+			if resp.RemoteInfo.ZendeskOrganization == nil {
+				r.RemoteInfo.ZendeskOrganization = nil
+			} else {
+				r.RemoteInfo.ZendeskOrganization = &tfTypes.ZendeskOrganization{}
+				r.RemoteInfo.ZendeskOrganization.OrganizationID = types.StringValue(resp.RemoteInfo.ZendeskOrganization.OrganizationID)
+			}
 		}
 		r.RemoteName = types.StringPointerValue(resp.RemoteName)
 		r.RequestConfigurations = []tfTypes.RequestConfiguration{}

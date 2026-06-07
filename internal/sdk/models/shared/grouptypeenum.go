@@ -40,6 +40,8 @@ const (
 	GroupTypeEnumClickhouseRole           GroupTypeEnum = "CLICKHOUSE_ROLE"
 	GroupTypeEnumTwingateGroup            GroupTypeEnum = "TWINGATE_GROUP"
 	GroupTypeEnumTwingateGroupSynced      GroupTypeEnum = "TWINGATE_GROUP_SYNCED"
+	GroupTypeEnumZendeskGroup             GroupTypeEnum = "ZENDESK_GROUP"
+	GroupTypeEnumZendeskOrganization      GroupTypeEnum = "ZENDESK_ORGANIZATION"
 )
 
 func (e GroupTypeEnum) ToPointer() *GroupTypeEnum {
@@ -106,6 +108,10 @@ func (e *GroupTypeEnum) UnmarshalJSON(data []byte) error {
 	case "TWINGATE_GROUP":
 		fallthrough
 	case "TWINGATE_GROUP_SYNCED":
+		fallthrough
+	case "ZENDESK_GROUP":
+		fallthrough
+	case "ZENDESK_ORGANIZATION":
 		*e = GroupTypeEnum(v)
 		return nil
 	default:
