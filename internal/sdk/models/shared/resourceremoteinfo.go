@@ -1212,6 +1212,19 @@ func (w *WorkdayRole) GetRoleID() string {
 	return w.RoleID
 }
 
+// ZendeskRole - Remote info for Zendesk custom role.
+type ZendeskRole struct {
+	// The ID of the Zendesk custom role.
+	RoleID string `json:"role_id"`
+}
+
+func (z *ZendeskRole) GetRoleID() string {
+	if z == nil {
+		return ""
+	}
+	return z.RoleID
+}
+
 // ResourceRemoteInfo - Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields.
 type ResourceRemoteInfo struct {
 	// Remote info for Anthropic workspace.
@@ -1354,6 +1367,8 @@ type ResourceRemoteInfo struct {
 	TwingateResource *TwingateResource `json:"twingate_resource,omitempty"`
 	// Remote info for Workday role.
 	WorkdayRole *WorkdayRole `json:"workday_role,omitempty"`
+	// Remote info for Zendesk custom role.
+	ZendeskRole *ZendeskRole `json:"zendesk_role,omitempty"`
 }
 
 func (r *ResourceRemoteInfo) GetAnthropicWorkspace() *AnthropicWorkspace {
@@ -1844,4 +1859,11 @@ func (r *ResourceRemoteInfo) GetWorkdayRole() *WorkdayRole {
 		return nil
 	}
 	return r.WorkdayRole
+}
+
+func (r *ResourceRemoteInfo) GetZendeskRole() *ZendeskRole {
+	if r == nil {
+		return nil
+	}
+	return r.ZendeskRole
 }
