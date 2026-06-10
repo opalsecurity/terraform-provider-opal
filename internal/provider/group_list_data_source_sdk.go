@@ -201,6 +201,18 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.WorkdayUserSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.WorkdayUserSecurityGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.WorkdayUserSecurityGroup.GroupID)
 				}
+				if resultsItem.RemoteInfo.ZendeskGroup == nil {
+					results.RemoteInfo.ZendeskGroup = nil
+				} else {
+					results.RemoteInfo.ZendeskGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.ZendeskGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.ZendeskGroup.GroupID)
+				}
+				if resultsItem.RemoteInfo.ZendeskOrganization == nil {
+					results.RemoteInfo.ZendeskOrganization = nil
+				} else {
+					results.RemoteInfo.ZendeskOrganization = &tfTypes.ZendeskOrganization{}
+					results.RemoteInfo.ZendeskOrganization.OrganizationID = types.StringValue(resultsItem.RemoteInfo.ZendeskOrganization.OrganizationID)
+				}
 			}
 			results.RemoteName = types.StringPointerValue(resultsItem.RemoteName)
 			results.RequestConfigurations = []tfTypes.RequestConfiguration{}
