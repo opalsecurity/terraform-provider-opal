@@ -449,6 +449,26 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Workday User Security group.`,
 					},
+					"zendesk_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Zendesk group.`,
+							},
+						},
+						Description: `Remote info for Zendesk group.`,
+					},
+					"zendesk_organization": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"organization_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Zendesk organization.`,
+							},
+						},
+						Description: `Remote info for Zendesk organization.`,
+					},
 				},
 				Description: `Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided.`,
 			},
