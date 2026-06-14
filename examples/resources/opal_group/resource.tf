@@ -92,6 +92,12 @@ resource "opal_group" "my_group" {
     workday_user_security_group = {
       group_id = "123abc456def"
     }
+    zendesk_group = {
+      group_id = "12345"
+    }
+    zendesk_organization = {
+      organization_id = "67890"
+    }
   }
   request_configurations = [
     {

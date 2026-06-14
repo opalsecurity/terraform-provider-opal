@@ -275,6 +275,18 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 				r.RemoteInfo.WorkdayUserSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.WorkdayUserSecurityGroup.GroupID = types.StringValue(resp.RemoteInfo.WorkdayUserSecurityGroup.GroupID)
 			}
+			if resp.RemoteInfo.ZendeskGroup == nil {
+				r.RemoteInfo.ZendeskGroup = nil
+			} else {
+				r.RemoteInfo.ZendeskGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.ZendeskGroup.GroupID = types.StringValue(resp.RemoteInfo.ZendeskGroup.GroupID)
+			}
+			if resp.RemoteInfo.ZendeskOrganization == nil {
+				r.RemoteInfo.ZendeskOrganization = nil
+			} else {
+				r.RemoteInfo.ZendeskOrganization = &tfTypes.ZendeskOrganization{}
+				r.RemoteInfo.ZendeskOrganization.OrganizationID = types.StringValue(resp.RemoteInfo.ZendeskOrganization.OrganizationID)
+			}
 		}
 		r.RemoteName = types.StringPointerValue(resp.RemoteName)
 		r.RequestConfigurations = []tfTypes.RequestConfiguration{}
@@ -826,6 +838,24 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 				GroupID: groupId14,
 			}
 		}
+		var zendeskGroup *shared.ZendeskGroup
+		if r.RemoteInfo.ZendeskGroup != nil {
+			var groupId15 string
+			groupId15 = r.RemoteInfo.ZendeskGroup.GroupID.ValueString()
+
+			zendeskGroup = &shared.ZendeskGroup{
+				GroupID: groupId15,
+			}
+		}
+		var zendeskOrganization *shared.ZendeskOrganization
+		if r.RemoteInfo.ZendeskOrganization != nil {
+			var organizationID string
+			organizationID = r.RemoteInfo.ZendeskOrganization.OrganizationID.ValueString()
+
+			zendeskOrganization = &shared.ZendeskOrganization{
+				OrganizationID: organizationID,
+			}
+		}
 		remoteInfo = &shared.GroupRemoteInfo{
 			ActiveDirectoryGroup:     activeDirectoryGroup,
 			AwsSsoGroup:              awsSsoGroup,
@@ -852,6 +882,8 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 			TwingateGroup:            twingateGroup,
 			TwingateGroupSynced:      twingateGroupSynced,
 			WorkdayUserSecurityGroup: workdayUserSecurityGroup,
+			ZendeskGroup:             zendeskGroup,
+			ZendeskOrganization:      zendeskOrganization,
 		}
 	}
 	riskSensitivityOverride := new(shared.RiskSensitivityEnum)
