@@ -250,6 +250,9 @@ resource "opal_resource" "my_resource" {
     workday_role = {
       role_id = "123abc456def"
     }
+    zendesk_role = {
+      role_id = "12345"
+    }
   }
   request_configurations = [
     {
