@@ -44,6 +44,7 @@ const (
 	AppTypeEnumPagerduty       AppTypeEnum = "PAGERDUTY"
 	AppTypeEnumSalesforce      AppTypeEnum = "SALESFORCE"
 	AppTypeEnumSnowflake       AppTypeEnum = "SNOWFLAKE"
+	AppTypeEnumSlack           AppTypeEnum = "SLACK"
 	AppTypeEnumTailscale       AppTypeEnum = "TAILSCALE"
 	AppTypeEnumTeleport        AppTypeEnum = "TELEPORT"
 	AppTypeEnumTwingate        AppTypeEnum = "TWINGATE"
@@ -122,6 +123,8 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 	case "SALESFORCE":
 		fallthrough
 	case "SNOWFLAKE":
+		fallthrough
+	case "SLACK":
 		fallthrough
 	case "TAILSCALE":
 		fallthrough
