@@ -24,9 +24,12 @@ type GroupRemoteInfo struct {
 	OktaGroupRule            *OktaGroupRule            `tfsdk:"okta_group_rule"`
 	PagerdutyOnCallSchedule  *IncidentioOnCallSchedule `tfsdk:"pagerduty_on_call_schedule"`
 	RootlyOnCallSchedule     *IncidentioOnCallSchedule `tfsdk:"rootly_on_call_schedule"`
+	SlackUserGroup           *ActiveDirectoryGroup     `tfsdk:"slack_user_group"`
 	SnowflakeRole            *ClickhouseRole           `tfsdk:"snowflake_role"`
 	TailscaleGroup           *ActiveDirectoryGroup     `tfsdk:"tailscale_group"`
 	TwingateGroup            *ActiveDirectoryGroup     `tfsdk:"twingate_group"`
 	TwingateGroupSynced      *ActiveDirectoryGroup     `tfsdk:"twingate_group_synced"`
 	WorkdayUserSecurityGroup *ActiveDirectoryGroup     `tfsdk:"workday_user_security_group"`
+	ZendeskGroup             *ActiveDirectoryGroup     `tfsdk:"zendesk_group"`
+	ZendeskOrganization      *ZendeskOrganization      `tfsdk:"zendesk_organization"`
 }
