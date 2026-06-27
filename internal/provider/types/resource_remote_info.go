@@ -42,7 +42,7 @@ type ResourceRemoteInfo struct {
 	GcpComputeInstance                *GcpComputeInstance                `tfsdk:"gcp_compute_instance"`
 	GcpFolder                         *GcpFolder                         `tfsdk:"gcp_folder"`
 	GcpGkeCluster                     *GcpGkeCluster                     `tfsdk:"gcp_gke_cluster"`
-	GcpOrganization                   *GcpOrganization                   `tfsdk:"gcp_organization"`
+	GcpOrganization                   *ZendeskOrganization               `tfsdk:"gcp_organization"`
 	GcpProject                        *GcpProject                        `tfsdk:"gcp_project"`
 	GcpServiceAccount                 *GcpServiceAccount                 `tfsdk:"gcp_service_account"`
 	GcpSQLInstance                    *GcpSQLInstance                    `tfsdk:"gcp_sql_instance"`
@@ -74,4 +74,5 @@ type ResourceRemoteInfo struct {
 	TeleportRole                      *IlevelAdvancedRole                `tfsdk:"teleport_role"`
 	TwingateResource                  *AzureEnterpriseApp                `tfsdk:"twingate_resource"`
 	WorkdayRole                       *ClickhouseRole                    `tfsdk:"workday_role"`
+	ZendeskRole                       *ClickhouseRole                    `tfsdk:"zendesk_role"`
 }

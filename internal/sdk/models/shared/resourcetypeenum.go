@@ -96,6 +96,7 @@ const (
 	ResourceTypeEnumClickhouseDatabase                ResourceTypeEnum = "CLICKHOUSE_DATABASE"
 	ResourceTypeEnumClickhouseTable                   ResourceTypeEnum = "CLICKHOUSE_TABLE"
 	ResourceTypeEnumTwingateResource                  ResourceTypeEnum = "TWINGATE_RESOURCE"
+	ResourceTypeEnumZendeskRole                       ResourceTypeEnum = "ZENDESK_ROLE"
 )
 
 func (e ResourceTypeEnum) ToPointer() *ResourceTypeEnum {
@@ -274,6 +275,8 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "CLICKHOUSE_TABLE":
 		fallthrough
 	case "TWINGATE_RESOURCE":
+		fallthrough
+	case "ZENDESK_ROLE":
 		*e = ResourceTypeEnum(v)
 		return nil
 	default:
