@@ -38,8 +38,11 @@ const (
 	GroupTypeEnumGitHubEnterpriseTeam     GroupTypeEnum = "GIT_HUB_ENTERPRISE_TEAM"
 	GroupTypeEnumGrafanaTeam              GroupTypeEnum = "GRAFANA_TEAM"
 	GroupTypeEnumClickhouseRole           GroupTypeEnum = "CLICKHOUSE_ROLE"
+	GroupTypeEnumSlackUserGroup           GroupTypeEnum = "SLACK_USER_GROUP"
 	GroupTypeEnumTwingateGroup            GroupTypeEnum = "TWINGATE_GROUP"
 	GroupTypeEnumTwingateGroupSynced      GroupTypeEnum = "TWINGATE_GROUP_SYNCED"
+	GroupTypeEnumZendeskGroup             GroupTypeEnum = "ZENDESK_GROUP"
+	GroupTypeEnumZendeskOrganization      GroupTypeEnum = "ZENDESK_ORGANIZATION"
 )
 
 func (e GroupTypeEnum) ToPointer() *GroupTypeEnum {
@@ -103,9 +106,15 @@ func (e *GroupTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "CLICKHOUSE_ROLE":
 		fallthrough
+	case "SLACK_USER_GROUP":
+		fallthrough
 	case "TWINGATE_GROUP":
 		fallthrough
 	case "TWINGATE_GROUP_SYNCED":
+		fallthrough
+	case "ZENDESK_GROUP":
+		fallthrough
+	case "ZENDESK_ORGANIZATION":
 		*e = GroupTypeEnum(v)
 		return nil
 	default:
