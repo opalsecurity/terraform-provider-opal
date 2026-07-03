@@ -920,6 +920,19 @@ func (g *GrafanaRole) GetRoleUID() string {
 	return g.RoleUID
 }
 
+// HubspotRole - Remote info for HubSpot role.
+type HubspotRole struct {
+	// The ID of the HubSpot role.
+	RoleID string `json:"role_id"`
+}
+
+func (h *HubspotRole) GetRoleID() string {
+	if h == nil {
+		return ""
+	}
+	return h.RoleID
+}
+
 // IlevelAdvancedRole - Remote info for iLevel Advanced role.
 type IlevelAdvancedRole struct {
 	// The name of the role.
@@ -1212,6 +1225,19 @@ func (w *WorkdayRole) GetRoleID() string {
 	return w.RoleID
 }
 
+// ZendeskRole - Remote info for Zendesk custom role.
+type ZendeskRole struct {
+	// The ID of the Zendesk custom role.
+	RoleID string `json:"role_id"`
+}
+
+func (z *ZendeskRole) GetRoleID() string {
+	if z == nil {
+		return ""
+	}
+	return z.RoleID
+}
+
 // ResourceRemoteInfo - Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields.
 type ResourceRemoteInfo struct {
 	// Remote info for Anthropic workspace.
@@ -1316,6 +1342,8 @@ type ResourceRemoteInfo struct {
 	GrafanaFolder *GrafanaFolder `json:"grafana_folder,omitempty"`
 	// Remote info for Grafana role(fixed or custom).
 	GrafanaRole *GrafanaRole `json:"grafana_role,omitempty"`
+	// Remote info for HubSpot role.
+	HubspotRole *HubspotRole `json:"hubspot_role,omitempty"`
 	// Remote info for iLevel Advanced role.
 	IlevelAdvancedRole *IlevelAdvancedRole `json:"ilevel_advanced_role,omitempty"`
 	// Remote info for NetSuite role.
@@ -1354,6 +1382,8 @@ type ResourceRemoteInfo struct {
 	TwingateResource *TwingateResource `json:"twingate_resource,omitempty"`
 	// Remote info for Workday role.
 	WorkdayRole *WorkdayRole `json:"workday_role,omitempty"`
+	// Remote info for Zendesk custom role.
+	ZendeskRole *ZendeskRole `json:"zendesk_role,omitempty"`
 }
 
 func (r *ResourceRemoteInfo) GetAnthropicWorkspace() *AnthropicWorkspace {
@@ -1713,6 +1743,13 @@ func (r *ResourceRemoteInfo) GetGrafanaRole() *GrafanaRole {
 	return r.GrafanaRole
 }
 
+func (r *ResourceRemoteInfo) GetHubspotRole() *HubspotRole {
+	if r == nil {
+		return nil
+	}
+	return r.HubspotRole
+}
+
 func (r *ResourceRemoteInfo) GetIlevelAdvancedRole() *IlevelAdvancedRole {
 	if r == nil {
 		return nil
@@ -1844,4 +1881,11 @@ func (r *ResourceRemoteInfo) GetWorkdayRole() *WorkdayRole {
 		return nil
 	}
 	return r.WorkdayRole
+}
+
+func (r *ResourceRemoteInfo) GetZendeskRole() *ZendeskRole {
+	if r == nil {
+		return nil
+	}
+	return r.ZendeskRole
 }
