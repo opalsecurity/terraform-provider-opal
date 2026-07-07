@@ -197,6 +197,19 @@ func (g *GrafanaTeam) GetTeamID() string {
 	return g.TeamID
 }
 
+// HubspotTeam - Remote info for HubSpot team.
+type HubspotTeam struct {
+	// The ID of the HubSpot team.
+	TeamID string `json:"team_id"`
+}
+
+func (h *HubspotTeam) GetTeamID() string {
+	if h == nil {
+		return ""
+	}
+	return h.TeamID
+}
+
 // IncidentioOnCallSchedule - Remote info for Incident.io on-call schedule group.
 type IncidentioOnCallSchedule struct {
 	// The id of the Incident.io on-call schedule.
@@ -275,6 +288,19 @@ func (r *RootlyOnCallSchedule) GetScheduleID() string {
 	return r.ScheduleID
 }
 
+// SlackUserGroup - Remote info for Slack user group.
+type SlackUserGroup struct {
+	// The id of the Slack user group.
+	GroupID string `json:"group_id"`
+}
+
+func (s *SlackUserGroup) GetGroupID() string {
+	if s == nil {
+		return ""
+	}
+	return s.GroupID
+}
+
 // SnowflakeRole - Remote info for Snowflake role.
 type SnowflakeRole struct {
 	// The id of the Snowflake role.
@@ -340,6 +366,32 @@ func (w *WorkdayUserSecurityGroup) GetGroupID() string {
 	return w.GroupID
 }
 
+// ZendeskGroup - Remote info for Zendesk group.
+type ZendeskGroup struct {
+	// The ID of the Zendesk group.
+	GroupID string `json:"group_id"`
+}
+
+func (z *ZendeskGroup) GetGroupID() string {
+	if z == nil {
+		return ""
+	}
+	return z.GroupID
+}
+
+// ZendeskOrganization - Remote info for Zendesk organization.
+type ZendeskOrganization struct {
+	// The ID of the Zendesk organization.
+	OrganizationID string `json:"organization_id"`
+}
+
+func (z *ZendeskOrganization) GetOrganizationID() string {
+	if z == nil {
+		return ""
+	}
+	return z.OrganizationID
+}
+
 // GroupRemoteInfo - Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided.
 type GroupRemoteInfo struct {
 	// Remote info for Active Directory group.
@@ -370,6 +422,8 @@ type GroupRemoteInfo struct {
 	GoogleGroup *GoogleGroup `json:"google_group,omitempty"`
 	// Remote info for Grafana team.
 	GrafanaTeam *GrafanaTeam `json:"grafana_team,omitempty"`
+	// Remote info for HubSpot team.
+	HubspotTeam *HubspotTeam `json:"hubspot_team,omitempty"`
 	// Remote info for Incident.io on-call schedule group.
 	IncidentioOnCallSchedule *IncidentioOnCallSchedule `json:"incidentio_on_call_schedule,omitempty"`
 	// Remote info for LDAP group.
@@ -382,6 +436,8 @@ type GroupRemoteInfo struct {
 	PagerdutyOnCallSchedule *PagerdutyOnCallSchedule `json:"pagerduty_on_call_schedule,omitempty"`
 	// Remote info for Rootly on-call schedule group.
 	RootlyOnCallSchedule *RootlyOnCallSchedule `json:"rootly_on_call_schedule,omitempty"`
+	// Remote info for Slack user group.
+	SlackUserGroup *SlackUserGroup `json:"slack_user_group,omitempty"`
 	// Remote info for Snowflake role.
 	SnowflakeRole *SnowflakeRole `json:"snowflake_role,omitempty"`
 	// Remote info for Tailscale group.
@@ -392,6 +448,10 @@ type GroupRemoteInfo struct {
 	TwingateGroupSynced *TwingateGroupSynced `json:"twingate_group_synced,omitempty"`
 	// Remote info for Workday User Security group.
 	WorkdayUserSecurityGroup *WorkdayUserSecurityGroup `json:"workday_user_security_group,omitempty"`
+	// Remote info for Zendesk group.
+	ZendeskGroup *ZendeskGroup `json:"zendesk_group,omitempty"`
+	// Remote info for Zendesk organization.
+	ZendeskOrganization *ZendeskOrganization `json:"zendesk_organization,omitempty"`
 }
 
 func (g *GroupRemoteInfo) GetActiveDirectoryGroup() *ActiveDirectoryGroup {
@@ -492,6 +552,13 @@ func (g *GroupRemoteInfo) GetGrafanaTeam() *GrafanaTeam {
 	return g.GrafanaTeam
 }
 
+func (g *GroupRemoteInfo) GetHubspotTeam() *HubspotTeam {
+	if g == nil {
+		return nil
+	}
+	return g.HubspotTeam
+}
+
 func (g *GroupRemoteInfo) GetIncidentioOnCallSchedule() *IncidentioOnCallSchedule {
 	if g == nil {
 		return nil
@@ -534,6 +601,13 @@ func (g *GroupRemoteInfo) GetRootlyOnCallSchedule() *RootlyOnCallSchedule {
 	return g.RootlyOnCallSchedule
 }
 
+func (g *GroupRemoteInfo) GetSlackUserGroup() *SlackUserGroup {
+	if g == nil {
+		return nil
+	}
+	return g.SlackUserGroup
+}
+
 func (g *GroupRemoteInfo) GetSnowflakeRole() *SnowflakeRole {
 	if g == nil {
 		return nil
@@ -567,4 +641,18 @@ func (g *GroupRemoteInfo) GetWorkdayUserSecurityGroup() *WorkdayUserSecurityGrou
 		return nil
 	}
 	return g.WorkdayUserSecurityGroup
+}
+
+func (g *GroupRemoteInfo) GetZendeskGroup() *ZendeskGroup {
+	if g == nil {
+		return nil
+	}
+	return g.ZendeskGroup
+}
+
+func (g *GroupRemoteInfo) GetZendeskOrganization() *ZendeskOrganization {
+	if g == nil {
+		return nil
+	}
+	return g.ZendeskOrganization
 }

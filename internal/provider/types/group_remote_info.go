@@ -18,15 +18,19 @@ type GroupRemoteInfo struct {
 	GitlabGroup              *ActiveDirectoryGroup     `tfsdk:"gitlab_group"`
 	GoogleGroup              *ActiveDirectoryGroup     `tfsdk:"google_group"`
 	GrafanaTeam              *GrafanaTeam              `tfsdk:"grafana_team"`
+	HubspotTeam              *GrafanaTeam              `tfsdk:"hubspot_team"`
 	IncidentioOnCallSchedule *IncidentioOnCallSchedule `tfsdk:"incidentio_on_call_schedule"`
 	LdapGroup                *ActiveDirectoryGroup     `tfsdk:"ldap_group"`
 	OktaGroup                *ActiveDirectoryGroup     `tfsdk:"okta_group"`
 	OktaGroupRule            *OktaGroupRule            `tfsdk:"okta_group_rule"`
 	PagerdutyOnCallSchedule  *IncidentioOnCallSchedule `tfsdk:"pagerduty_on_call_schedule"`
 	RootlyOnCallSchedule     *IncidentioOnCallSchedule `tfsdk:"rootly_on_call_schedule"`
+	SlackUserGroup           *ActiveDirectoryGroup     `tfsdk:"slack_user_group"`
 	SnowflakeRole            *ClickhouseRole           `tfsdk:"snowflake_role"`
 	TailscaleGroup           *ActiveDirectoryGroup     `tfsdk:"tailscale_group"`
 	TwingateGroup            *ActiveDirectoryGroup     `tfsdk:"twingate_group"`
 	TwingateGroupSynced      *ActiveDirectoryGroup     `tfsdk:"twingate_group_synced"`
 	WorkdayUserSecurityGroup *ActiveDirectoryGroup     `tfsdk:"workday_user_security_group"`
+	ZendeskGroup             *ActiveDirectoryGroup     `tfsdk:"zendesk_group"`
+	ZendeskOrganization      *ZendeskOrganization      `tfsdk:"zendesk_organization"`
 }

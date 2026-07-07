@@ -203,6 +203,9 @@ resource "opal_resource" "my_resource" {
     grafana_role = {
       role_uid = "rrfRTXX"
     }
+    hubspot_role = {
+      role_id = "12345"
+    }
     ilevel_advanced_role = {
       role_name = "IT User"
     }
@@ -265,6 +268,9 @@ resource "opal_resource" "my_resource" {
     workday_role = {
       role_id = "123abc456def"
     }
+    zendesk_role = {
+      role_id = "12345"
+    }
   }
   request_configurations = [
     {
@@ -325,7 +331,7 @@ resource "opal_resource" "my_resource" {
 - `app_id` (String) The ID of the app for the resource. Requires replacement if changed.
 - `name` (String) The name of the resource.
 - `request_configurations` (Attributes List) A list of configurations for requests to this resource. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
-- `resource_type` (String) The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "TWINGATE_RESOURCE"]; Requires replacement if changed.
+- `resource_type` (String) The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE"]; Requires replacement if changed.
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 
 ### Optional
@@ -445,6 +451,7 @@ Optional:
 - `grafana_dashboard` (Attributes) Remote info for Grafana dashboard. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--grafana_dashboard))
 - `grafana_folder` (Attributes) Remote info for Grafana folder. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--grafana_folder))
 - `grafana_role` (Attributes) Remote info for Grafana role(fixed or custom). Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--grafana_role))
+- `hubspot_role` (Attributes) Remote info for HubSpot role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--hubspot_role))
 - `ilevel_advanced_role` (Attributes) Remote info for iLevel Advanced role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--ilevel_advanced_role))
 - `netsuite_role` (Attributes) Remote info for NetSuite role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--netsuite_role))
 - `okta_app` (Attributes) Remote info for Okta directory app. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_app))
@@ -464,6 +471,7 @@ Optional:
 - `teleport_role` (Attributes) Remote info for Teleport role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--teleport_role))
 - `twingate_resource` (Attributes) Remote info for Twingate resource. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--twingate_resource))
 - `workday_role` (Attributes) Remote info for Workday role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--workday_role))
+- `zendesk_role` (Attributes) Remote info for Zendesk custom role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--zendesk_role))
 
 <a id="nestedatt--remote_info--anthropic_workspace"></a>
 ### Nested Schema for `remote_info.anthropic_workspace`
@@ -901,6 +909,14 @@ Optional:
 - `role_uid` (String) The UID of the Grafana role. Not Null; Requires replacement if changed.
 
 
+<a id="nestedatt--remote_info--hubspot_role"></a>
+### Nested Schema for `remote_info.hubspot_role`
+
+Optional:
+
+- `role_id` (String) The ID of the HubSpot role. Not Null; Requires replacement if changed.
+
+
 <a id="nestedatt--remote_info--ilevel_advanced_role"></a>
 ### Nested Schema for `remote_info.ilevel_advanced_role`
 
@@ -1056,6 +1072,14 @@ Optional:
 Optional:
 
 - `role_id` (String) The id of the role. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--zendesk_role"></a>
+### Nested Schema for `remote_info.zendesk_role`
+
+Optional:
+
+- `role_id` (String) The ID of the Zendesk custom role. Not Null; Requires replacement if changed.
 
 
 

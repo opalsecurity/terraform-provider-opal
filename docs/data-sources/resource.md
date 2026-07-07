@@ -111,6 +111,7 @@ Read-Only:
 - `grafana_dashboard` (Attributes) Remote info for Grafana dashboard. (see [below for nested schema](#nestedatt--remote_info--grafana_dashboard))
 - `grafana_folder` (Attributes) Remote info for Grafana folder. (see [below for nested schema](#nestedatt--remote_info--grafana_folder))
 - `grafana_role` (Attributes) Remote info for Grafana role(fixed or custom). (see [below for nested schema](#nestedatt--remote_info--grafana_role))
+- `hubspot_role` (Attributes) Remote info for HubSpot role. (see [below for nested schema](#nestedatt--remote_info--hubspot_role))
 - `ilevel_advanced_role` (Attributes) Remote info for iLevel Advanced role. (see [below for nested schema](#nestedatt--remote_info--ilevel_advanced_role))
 - `netsuite_role` (Attributes) Remote info for NetSuite role. (see [below for nested schema](#nestedatt--remote_info--netsuite_role))
 - `okta_app` (Attributes) Remote info for Okta directory app. (see [below for nested schema](#nestedatt--remote_info--okta_app))
@@ -130,6 +131,7 @@ Read-Only:
 - `teleport_role` (Attributes) Remote info for Teleport role. (see [below for nested schema](#nestedatt--remote_info--teleport_role))
 - `twingate_resource` (Attributes) Remote info for Twingate resource. (see [below for nested schema](#nestedatt--remote_info--twingate_resource))
 - `workday_role` (Attributes) Remote info for Workday role. (see [below for nested schema](#nestedatt--remote_info--workday_role))
+- `zendesk_role` (Attributes) Remote info for Zendesk custom role. (see [below for nested schema](#nestedatt--remote_info--zendesk_role))
 
 <a id="nestedatt--remote_info--anthropic_workspace"></a>
 ### Nested Schema for `remote_info.anthropic_workspace`
@@ -567,6 +569,14 @@ Read-Only:
 - `role_uid` (String) The UID of the Grafana role.
 
 
+<a id="nestedatt--remote_info--hubspot_role"></a>
+### Nested Schema for `remote_info.hubspot_role`
+
+Read-Only:
+
+- `role_id` (String) The ID of the HubSpot role.
+
+
 <a id="nestedatt--remote_info--ilevel_advanced_role"></a>
 ### Nested Schema for `remote_info.ilevel_advanced_role`
 
@@ -722,6 +732,14 @@ Read-Only:
 Read-Only:
 
 - `role_id` (String) The id of the role.
+
+
+<a id="nestedatt--remote_info--zendesk_role"></a>
+### Nested Schema for `remote_info.zendesk_role`
+
+Read-Only:
+
+- `role_id` (String) The ID of the Zendesk custom role.
 
 
 

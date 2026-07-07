@@ -23,6 +23,8 @@ tags:
     description: Operations related to configuration templates
   - name: delegations
     description: Operations related to request reviewer delegations
+  - name: event-streams
+    description: Operations related to event streaming connections
   - name: events
     description: Operations related to events
   - name: groups
@@ -37,6 +39,8 @@ tags:
     description: Operations related to non-human identities
   - name: on-call-schedules
     description: Operations related to on-call schedules
+  - name: opal-queries
+    description: Operations related to OpalQuery
   - name: owners
     description: Operations related to owners
   - name: requests
@@ -678,6 +682,98 @@ paths:
         - configuration-templates
       x-speakeasy-name-override: delete
       x-speakeasy-entity-operation: ConfigurationTemplate#delete
+  /event-streams:
+    get:
+      summary: Get event streams
+      description: Returns a list of configured event streaming connections for your organization.
+      operationId: getEventStreams
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventStreamList"
+          description: A list of event streams for your organization.
+      security:
+        - BearerAuth: []
+      tags:
+        - event-streams
+    post:
+      summary: Create event stream
+      description: Creates a new event streaming connection.
+      operationId: createEventStream
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEventStreamInfo"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventStream"
+          description: The event stream just created. Credentials are returned in clear text only on creation.
+      security:
+        - BearerAuth: []
+      tags:
+        - event-streams
+  /event-streams/{event_stream_id}:
+    put:
+      summary: Update event stream
+      description: Updates an existing event streaming connection.
+      operationId: updateEventStream
+      parameters:
+        - description: The ID of the event stream.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: event_stream_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateEventStreamInfo"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventStream"
+          description: The updated event stream.
+      security:
+        - BearerAuth: []
+      tags:
+        - event-streams
+    delete:
+      summary: Delete event stream
+      description: Deletes an event streaming connection.
+      operationId: deleteEventStream
+      parameters:
+        - description: The ID of the event stream.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: event_stream_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          description: The event stream was successfully deleted.
+      security:
+        - BearerAuth: []
+      tags:
+        - event-streams
   /events:
     get:
       description: Returns a list of `Event` objects.
@@ -1645,7 +1741,7 @@ paths:
           schema:
             type: string
           style: form
-        - description: Number of results to return per page. Default is 200.
+        - description: Number of results to return per page, up to 1000. When set (or when a cursor is provided), the response contains a single page of results and a `next` cursor; the default page size is 200. When both page_size and cursor are omitted, the entire group membership is returned in one response with no `next` cursor. For large groups, prefer setting page_size and following `next`.
           example: 200
           explode: true
           in: query
@@ -4565,6 +4661,28 @@ paths:
         - on-call-schedules
       x-speakeasy-name-override: get_id
       x-speakeasy-entity-operation: OnCallSchedule#get
+  /queries/run:
+    post:
+      summary: Run an ad-hoc OpalQuery
+      description: Runs an ad-hoc OpalQuery and returns the results. Currently supports NODE queries (users, resources, groups). This endpoint is only available to our OpalQuery beta group. Please contact Opal support if you'd like to be added to the beta.
+      operationId: runOpalQuery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RunOpalQueryRequest"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpalQueryResults"
+          description: The results of the OpalQuery.
+      security:
+        - BearerAuth: []
+      tags:
+        - opal-queries
   /tokens:
     get:
       summary: Get tokens
@@ -4921,6 +5039,256 @@ paths:
       x-speakeasy-entity-operation: Delegation#delete
 components:
   schemas:
+    AccessEntityFilters:
+      type: object
+      description: Filters for matching entities by type, name, tag, IDs, connections, or access levels. Supports recursive logical composition via allOf/anyOf.
+      properties:
+        entityTypes:
+          type: array
+          description: Filter by entity type. Only RESOURCE, GROUP, and USER are queryable via OpalQuery.
+          items:
+            type: string
+            enum: [RESOURCE, GROUP, USER]
+        entityItemTypes:
+          type: array
+          description: Filter by entity item types.
+          items:
+            $ref: "#/components/schemas/EntityItemTypeEnum"
+        entityName:
+          $ref: "#/components/schemas/EntityNameFilter"
+        entityTag:
+          $ref: "#/components/schemas/EntityTagFilter"
+        entityIDs:
+          type: array
+          description: Filter by specific entity UUIDs.
+          items:
+            type: string
+            format: uuid
+        importedFromApp:
+          type: array
+          description: Filter by app IDs from which returned nodes will be imported from.
+          items:
+            type: string
+            format: uuid
+        roleRemoteIds:
+          type: array
+          description: Filter by role remote IDs. Can only be applied within a hasAccessTo clause.
+          items:
+            type: string
+        roleNames:
+          type: array
+          description: Filter by role display names (e.g. "Admin", "Read"). Can only be applied within a hasAccessTo clause.
+          items:
+            type: string
+        allOf:
+          type: array
+          description: >
+            A list of nested filters that must all match (logical AND). Each
+
+             item has the same shape as this object — scalar fields like
+             `entityTypes` or `entityTag`, and can further nest `allOf`,
+             `anyOf`, or `not`.
+          items:
+            $ref: "#/components/schemas/AccessEntityFilters"
+        anyOf:
+          type: array
+          description: >
+            A list of nested filters where at least one must match (logical
+
+             OR). Each item has the same shape as this object.
+          items:
+            $ref: "#/components/schemas/AccessEntityFilters"
+        not:
+          description: >
+            Excludes entities matching the embedded filter (logical NOT). Pass a filter object with the same shape as this one — typically a single scalar field, like `{not: {entityTypes: ["RESOURCE"]}}` to exclude resources.
+
+          type: object
+          x-go-type: AccessEntityFilters
+    RunOpalQueryRequest:
+      description: Request body for running an ad-hoc OpalQuery. The `type` field determines which query schema applies.
+      oneOf:
+        - $ref: "#/components/schemas/OpalNodeQuery"
+      discriminator:
+        propertyName: type
+        mapping:
+          NODE: "#/components/schemas/OpalNodeQuery"
+      # example:
+      #   type: NODE
+      #   query:
+      #     nodeFilters:
+      #       entityTypes: [RESOURCE]
+      #       allOf:
+      #         - entityTag:
+      #             key: env
+      #             value: prod
+      #         - entityTag:
+      #             key: team
+      #             value: platform
+      #       not:
+      #         entityItemTypes: [AWS_IAM_ROLE]
+      #     accessFilters:
+      #       isAccessibleBy:
+      #         entityTypes: [USER]
+      #         entityTag:
+      #           key: contractor
+      #   first: 50
+    OpalNodeQuery:
+      type: object
+      required:
+        - type
+      description: Request body for a NODE-type OpalQuery. Returns entities (users, resources, groups) matching the given filters.
+      example:
+        type: NODE
+        query:
+          nodeFilters:
+            entityTypes: [RESOURCE]
+            entityTag:
+              key: env
+              value: prod
+          accessFilters:
+            isAccessibleBy:
+              entityTypes: [USER]
+              entityTag:
+                key: contractor
+        first: 50
+      properties:
+        type:
+          type: string
+          enum:
+            - NODE
+        query:
+          $ref: "#/components/schemas/OpalNodeQueryBody"
+        first:
+          type: integer
+          description: Maximum number of results to return. Defaults to 200.
+          example: 200
+        after:
+          type: string
+          description: Cursor from a previous response to fetch the next page of results.
+          example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+    OpalNodeQueryBody:
+      type: object
+      description: The filter body for a NODE-type OpalQuery.
+      properties:
+        nodeFilters:
+          $ref: "#/components/schemas/AccessEntityFilters"
+        accessFilters:
+          $ref: "#/components/schemas/AccessRelationshipFilters"
+    OpalQueryResultNode:
+      type: object
+      required:
+        - id
+        - name
+        - entityType
+        - entityItemType
+      description: A matched entity from an OpalQuery result.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The entity's unique identifier.
+        name:
+          type: string
+          description: The display name of the entity.
+        entityType:
+          type: string
+          enum:
+            - USER
+            - GROUP
+            - RESOURCE
+          description: The top-level entity type.
+        entityItemType:
+          $ref: "#/components/schemas/EntityItemTypeEnum"
+    OpalQueryResultEdge:
+      type: object
+      required:
+        - node
+        - cursor
+      description: A single result edge from an OpalQuery, containing the matched entity and its pagination cursor.
+      properties:
+        node:
+          $ref: "#/components/schemas/OpalQueryResultNode"
+        cursor:
+          type: string
+          description: Opaque cursor for this entity, used for pagination.
+    OpalQueryResults:
+      description: Paginated results of an OpalQuery. The `type` field discriminates which result schema applies and mirrors the `type` field on the request.
+      oneOf:
+        - $ref: "#/components/schemas/OpalNodeQueryResults"
+      discriminator:
+        propertyName: type
+        mapping:
+          NODE: "#/components/schemas/OpalNodeQueryResults"
+    OpalNodeQueryResults:
+      type: object
+      required:
+        - type
+        - edges
+        - pageInfo
+      description: Paginated results of a NODE-type OpalQuery — one edge per matched entity (user, resource, or group).
+      properties:
+        type:
+          type: string
+          enum:
+            - NODE
+        edges:
+          type: array
+          description: List of matched entities.
+          items:
+            $ref: "#/components/schemas/OpalQueryResultEdge"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
+    AccessRelationshipFilters:
+      type: object
+      description: >
+        Filters the returned nodes by the access edges connected to them. When `isAccessibleBy` and `hasAccessTo` are provided, the returned nodes must satisfy both edge constraints simultaneously.
+
+      properties:
+        isAccessibleBy:
+          description: Inbound-edge filter. The returned node must be accessible by at least one entity matching this filter.
+          $ref: "#/components/schemas/AccessEntityFilters"
+        hasAccessTo:
+          description: Outbound-edge filter. The returned node must have access to at least one entity matching this filter.
+          $ref: "#/components/schemas/AccessEntityFilters"
+    EntityNameFilter:
+      type: object
+      required:
+        - stringMatchType
+        - string
+      description: Filters entities by name using a string match strategy.
+      properties:
+        stringMatchType:
+          $ref: "#/components/schemas/StringMatchType"
+        string:
+          type: string
+          description: The string value to match against the entity name.
+          example: engineering
+    EntityTagFilter:
+      type: object
+      required:
+        - key
+      description: Filters entities by a tag key/value pair, optionally scoped to a connection.
+      properties:
+        key:
+          type: string
+          description: The tag key to filter by.
+          example: team
+        value:
+          type: string
+          description: The tag value to filter by. If omitted, matches any value for the given key.
+          example: platform
+        connectionId:
+          type: string
+          format: uuid
+          description: If specified, filters by tags associated with this connection.
+    StringMatchType:
+      type: string
+      description: How to match a string value against entity names.
+      enum:
+        - CONTAINS
+        - EQUALS
+        - STARTS_WITH
+        - ENDS_WITH
     PaginatedAssignedRequestList:
       type: object
       required:
@@ -5403,18 +5771,22 @@ components:
         - AZURE_AD
         - AWS
         - AWS_SSO
+        - CLICKHOUSE
         - COUPA
         - CURSOR
         - CUSTOM
         - CUSTOM_CONNECTOR
         - DATABRICKS
         - DATASTAX_ASTRA
+        - DEVIN
         - DUO
         - GCP
         - GIT_HUB
         - GIT_LAB
         - GOOGLE_GROUPS
         - GOOGLE_WORKSPACE
+        - GRAFANA
+        - HUBSPOT
         - ILEVEL
         - INCIDENTIO
         - LDAP
@@ -5424,16 +5796,23 @@ components:
         - MYSQL
         - NETSUITE
         - DATADOG
+        - OKTA_CIAM
         - OKTA_DIRECTORY
         - OPENAI_PLATFORM
         - OPAL
+        - ORACLE_FUSION
         - PAGERDUTY
+        - POSTGRES
+        - ROOTLY
         - SALESFORCE
         - SNOWFLAKE
+        - SLACK
         - TAILSCALE
         - TELEPORT
         - TWINGATE
+        - VAULT
         - WORKDAY
+        - ZENDESK
       example: OKTA_DIRECTORY
       type: string
     EntityTypeEnum:
@@ -6355,7 +6734,7 @@ components:
           format: uuid
           type: string
         duration_minutes:
-          description: The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite, or a negative value to revoke access.
+          description: The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite.
           type: integer
           maximum: 525960 # One year
           example: 120
@@ -6944,8 +7323,12 @@ components:
         - GIT_HUB_ENTERPRISE_TEAM
         - GRAFANA_TEAM
         - CLICKHOUSE_ROLE
+        - SLACK_USER_GROUP
         - TWINGATE_GROUP
         - TWINGATE_GROUP_SYNCED
+        - ZENDESK_GROUP
+        - ZENDESK_ORGANIZATION
+        - HUBSPOT_TEAM
       example: OPAL_GROUP
       type: string
     ResourceTypeEnum:
@@ -7035,7 +7418,98 @@ components:
         - CLICKHOUSE_DATABASE
         - CLICKHOUSE_TABLE
         - TWINGATE_RESOURCE
+        - ZENDESK_ROLE
+        - HUBSPOT_ROLE
       example: AWS_IAM_ROLE
+      type: string
+    EntityItemTypeEnum:
+      description: Granular subtype of an entity.
+      enum:
+        - USER
+        - SERVICE_USER
+        - ACTIVE_DIRECTORY_GROUP
+        - AWS_SSO_GROUP
+        - DUO_GROUP
+        - GIT_HUB_TEAM
+        - GIT_LAB_GROUP
+        - GOOGLE_GROUPS_GROUP
+        - GOOGLE_GROUPS_GKE_GROUP
+        - LDAP_GROUP
+        - OKTA_GROUP
+        - OKTA_GROUP_RULE
+        - TAILSCALE_GROUP
+        - TWINGATE_GROUP
+        - TWINGATE_GROUP_SYNCED
+        - OPAL_GROUP
+        - OPAL_ACCESS_RULE
+        - AZURE_AD_SECURITY_GROUP
+        - AZURE_AD_MICROSOFT_365_GROUP
+        - CONNECTOR_GROUP
+        - SNOWFLAKE_ROLE
+        - WORKDAY_USER_SECURITY_GROUP
+        - DATABRICKS_ACCOUNT_GROUP
+        - AWS_IAM_ROLE
+        - AWS_EC2_INSTANCE
+        - AWS_EKS_CLUSTER
+        - AWS_RDS_POSTGRES_INSTANCE
+        - AWS_RDS_POSTGRES_CLUSTER
+        - AWS_RDS_MYSQL_INSTANCE
+        - AWS_RDS_MYSQL_CLUSTER
+        - AWS_ACCOUNT
+        - AWS_SSO_PERMISSION_SET
+        - AZURE_MANAGEMENT_GROUP
+        - AZURE_RESOURCE_GROUP
+        - AZURE_SUBSCRIPTION
+        - AZURE_VIRTUAL_MACHINE
+        - AZURE_STORAGE_ACCOUNT
+        - AZURE_STORAGE_CONTAINER
+        - AZURE_SQL_SERVER
+        - AZURE_SQL_MANAGED_INSTANCE
+        - AZURE_SQL_DATABASE
+        - AZURE_SQL_MANAGED_DATABASE
+        - AZURE_USER_ASSIGNED_MANAGED_Identity
+        - AZURE_ENTRA_ID_ROLE
+        - AZURE_ENTERPRISE_APP
+        - CUSTOM
+        - CUSTOM_CONNECTOR
+        - GCP_ORGANIZATION
+        - GCP_BUCKET
+        - GCP_COMPUTE_INSTANCE
+        - GCP_BIG_QUERY_DATASET
+        - GCP_BIG_QUERY_TABLE
+        - GCP_FOLDER
+        - GCP_GKE_CLUSTER
+        - GCP_PROJECT
+        - GCP_CLOUD_SQL_POSTGRES_INSTANCE
+        - GCP_CLOUD_SQL_MYSQL_INSTANCE
+        - GCP_SERVICE_ACCOUNT
+        - GIT_HUB_REPO
+        - GIT_HUB_ORG_ROLE
+        - GIT_LAB_PROJECT
+        - GOOGLE_WORKSPACE_ROLE
+        - MONGO_INSTANCE
+        - MONGO_ATLAS_INSTANCE
+        - OKTA_APP
+        - OKTA_ROLE
+        - OPAL_ROLE
+        - OPAL_SCOPED_ROLE
+        - PAGERDUTY_ROLE
+        - TAILSCALE_SSH
+        - TWINGATE_RESOURCE
+        - SALESFORCE_PERMISSION_SET
+        - SALESFORCE_PROFILE
+        - SALESFORCE_ROLE
+        - SNOWFLAKE_DATABASE
+        - SNOWFLAKE_SCHEMA
+        - SNOWFLAKE_TABLE
+        - WORKDAY_ROLE
+        - MYSQL_INSTANCE
+        - MARIADB_INSTANCE
+        - POSTGRES_INSTANCE
+        - TELEPORT_ROLE
+        - DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL
+        - ILEVEL_ADVANCED_ROLE
+      example: OPAL_ROLE
       type: string
     VisibilityTypeEnum:
       description: The visibility level of the entity.
@@ -7806,6 +8280,46 @@ components:
           type: object
           required:
             - team_id
+        zendesk_group:
+          description: Remote info for Zendesk group.
+          properties:
+            group_id:
+              description: The ID of the Zendesk group.
+              example: "12345"
+              type: string
+          type: object
+          required:
+            - group_id
+        slack_user_group:
+          description: Remote info for Slack user group.
+          properties:
+            group_id:
+              description: The id of the Slack user group.
+              example: S0614TZR7
+              type: string
+          type: object
+          required:
+            - group_id
+        zendesk_organization:
+          description: Remote info for Zendesk organization.
+          properties:
+            organization_id:
+              description: The ID of the Zendesk organization.
+              example: "67890"
+              type: string
+          type: object
+          required:
+            - organization_id
+        hubspot_team:
+          description: Remote info for HubSpot team.
+          properties:
+            team_id:
+              description: The ID of the HubSpot team.
+              example: "12345"
+              type: string
+          type: object
+          required:
+            - team_id
       type: object
       x-speakeasy-entity: GroupRemote
     ResourceRemoteInfo:
@@ -8277,7 +8791,7 @@ components:
               type: string
             service_account_id:
               description: The id of the service account.
-              example: 103561576023829463298
+              example: 103561576023829460000
               type: string
             project_id:
               description: The id of the project the service account is in.
@@ -8712,6 +9226,26 @@ components:
           type: object
           required:
             - role_uid
+        zendesk_role:
+          description: Remote info for Zendesk custom role.
+          properties:
+            role_id:
+              description: The ID of the Zendesk custom role.
+              example: "12345"
+              type: string
+          type: object
+          required:
+            - role_id
+        hubspot_role:
+          description: Remote info for HubSpot role.
+          properties:
+            role_id:
+              description: The ID of the HubSpot role.
+              example: "12345"
+              type: string
+          type: object
+          required:
+            - role_id
       type: object
     RiskSensitivityEnum:
       type: string
@@ -11910,6 +12444,161 @@ components:
         - READ_ONLY
         - FULL_ACCESS
       type: string
+    EventStreamConnectionTypeEnum:
+      description: The type of event stream connection.
+      enum:
+        - WEBHOOK
+      type: string
+    WebhookAuthTypeEnum:
+      description: The authentication type for webhook connections.
+      enum:
+        - NONE
+        - API_KEY
+        - HMAC
+      type: string
+    WebhookApiKeyLocationEnum:
+      description: Where the API key is placed in webhook requests.
+      enum:
+        - HEADER
+        - QUERY_PARAM
+      type: string
+    WebhookApiKeyCredential:
+      description: An API key credential for webhook authentication.
+      properties:
+        id:
+          description: The unique identifier for the credential.
+          format: uuid
+          type: string
+        name:
+          description: The name of the API key.
+          type: string
+        value:
+          description: The value of the API key.
+          type: string
+        location:
+          $ref: "#/components/schemas/WebhookApiKeyLocationEnum"
+      required:
+        - id
+        - name
+        - value
+        - location
+      type: object
+    WebhookHmacCredential:
+      description: An HMAC credential for webhook authentication.
+      properties:
+        id:
+          description: The unique identifier for the credential.
+          format: uuid
+          type: string
+        secret:
+          description: The HMAC secret value.
+          type: string
+        created_at:
+          description: When the credential was created.
+          format: date-time
+          type: string
+      required:
+        - id
+        - secret
+        - created_at
+      type: object
+    WebhookCredentials:
+      description: Authentication credentials for a webhook connection.
+      properties:
+        auth_type:
+          $ref: "#/components/schemas/WebhookAuthTypeEnum"
+        api_key_credentials:
+          description: API key credentials, present when auth_type is API_KEY.
+          items:
+            $ref: "#/components/schemas/WebhookApiKeyCredential"
+          type: array
+        hmac_credential_1:
+          description: Primary HMAC credential, present when auth_type is HMAC.
+          nullable: true
+          $ref: "#/components/schemas/WebhookHmacCredential"
+        hmac_credential_2:
+          description: Secondary HMAC credential for rotation, present when auth_type is HMAC.
+          nullable: true
+          $ref: "#/components/schemas/WebhookHmacCredential"
+      required:
+        - auth_type
+      type: object
+    EventStreamConnection:
+      description: The connection configuration for an event stream.
+      properties:
+        name:
+          description: The name of the connection.
+          type: string
+        connection_type:
+          $ref: "#/components/schemas/EventStreamConnectionTypeEnum"
+        enabled:
+          description: Whether the connection is enabled.
+          type: boolean
+        webhook_url:
+          description: The webhook URL, present when connection_type is WEBHOOK.
+          type: string
+        credentials:
+          $ref: "#/components/schemas/WebhookCredentials"
+      required:
+        - name
+        - connection_type
+        - enabled
+      type: object
+    EventStream:
+      description: An event streaming connection that publishes events to an external system.
+      properties:
+        event_stream_id:
+          description: The ID of the event stream.
+          format: uuid
+          type: string
+        connection:
+          $ref: "#/components/schemas/EventStreamConnection"
+      required:
+        - event_stream_id
+        - connection
+      type: object
+    EventStreamList:
+      description: A list of event streams.
+      properties:
+        event_streams:
+          items:
+            $ref: "#/components/schemas/EventStream"
+          type: array
+      required:
+        - event_streams
+      type: object
+    CreateEventStreamInfo:
+      description: Information needed to create an event stream.
+      properties:
+        name:
+          description: The name for the event stream.
+          type: string
+        connection_type:
+          $ref: "#/components/schemas/EventStreamConnectionTypeEnum"
+        webhook_url:
+          description: The webhook URL. Required when connection_type is WEBHOOK.
+          type: string
+        credentials:
+          $ref: "#/components/schemas/WebhookCredentials"
+      required:
+        - name
+        - connection_type
+      type: object
+    UpdateEventStreamInfo:
+      description: Information needed to update an event stream.
+      properties:
+        name:
+          description: Updated name for the event stream.
+          type: string
+        enabled:
+          description: Whether the event stream should be enabled.
+          type: boolean
+        webhook_url:
+          description: Updated webhook URL.
+          type: string
+        credentials:
+          $ref: "#/components/schemas/WebhookCredentials"
+      type: object
     Token:
       description: A first-party API token.
       example:

@@ -117,17 +117,21 @@ Read-Only:
 - `gitlab_group` (Attributes) Remote info for Gitlab group. (see [below for nested schema](#nestedatt--remote_info--gitlab_group))
 - `google_group` (Attributes) Remote info for Google group. (see [below for nested schema](#nestedatt--remote_info--google_group))
 - `grafana_team` (Attributes) Remote info for Grafana team. (see [below for nested schema](#nestedatt--remote_info--grafana_team))
+- `hubspot_team` (Attributes) Remote info for HubSpot team. (see [below for nested schema](#nestedatt--remote_info--hubspot_team))
 - `incidentio_on_call_schedule` (Attributes) Remote info for Incident.io on-call schedule group. (see [below for nested schema](#nestedatt--remote_info--incidentio_on_call_schedule))
 - `ldap_group` (Attributes) Remote info for LDAP group. (see [below for nested schema](#nestedatt--remote_info--ldap_group))
 - `okta_group` (Attributes) Remote info for Okta Directory group. (see [below for nested schema](#nestedatt--remote_info--okta_group))
 - `okta_group_rule` (Attributes) Remote info for Okta Directory group rule. (see [below for nested schema](#nestedatt--remote_info--okta_group_rule))
 - `pagerduty_on_call_schedule` (Attributes) Remote info for PagerDuty on-call schedule group. (see [below for nested schema](#nestedatt--remote_info--pagerduty_on_call_schedule))
 - `rootly_on_call_schedule` (Attributes) Remote info for Rootly on-call schedule group. (see [below for nested schema](#nestedatt--remote_info--rootly_on_call_schedule))
+- `slack_user_group` (Attributes) Remote info for Slack user group. (see [below for nested schema](#nestedatt--remote_info--slack_user_group))
 - `snowflake_role` (Attributes) Remote info for Snowflake role. (see [below for nested schema](#nestedatt--remote_info--snowflake_role))
 - `tailscale_group` (Attributes) Remote info for Tailscale group. (see [below for nested schema](#nestedatt--remote_info--tailscale_group))
 - `twingate_group` (Attributes) Remote info for Twingate group. (see [below for nested schema](#nestedatt--remote_info--twingate_group))
 - `twingate_group_synced` (Attributes) Remote info for Twingate synced group. (see [below for nested schema](#nestedatt--remote_info--twingate_group_synced))
 - `workday_user_security_group` (Attributes) Remote info for Workday User Security group. (see [below for nested schema](#nestedatt--remote_info--workday_user_security_group))
+- `zendesk_group` (Attributes) Remote info for Zendesk group. (see [below for nested schema](#nestedatt--remote_info--zendesk_group))
+- `zendesk_organization` (Attributes) Remote info for Zendesk organization. (see [below for nested schema](#nestedatt--remote_info--zendesk_organization))
 
 <a id="nestedatt--remote_info--active_directory_group"></a>
 ### Nested Schema for `remote_info.active_directory_group`
@@ -242,6 +246,14 @@ Read-Only:
 - `team_id` (String) The ID of the team.
 
 
+<a id="nestedatt--remote_info--hubspot_team"></a>
+### Nested Schema for `remote_info.hubspot_team`
+
+Read-Only:
+
+- `team_id` (String) The ID of the HubSpot team.
+
+
 <a id="nestedatt--remote_info--incidentio_on_call_schedule"></a>
 ### Nested Schema for `remote_info.incidentio_on_call_schedule`
 
@@ -290,6 +302,14 @@ Read-Only:
 - `schedule_id` (String) The id of the Rootly on-call schedule.
 
 
+<a id="nestedatt--remote_info--slack_user_group"></a>
+### Nested Schema for `remote_info.slack_user_group`
+
+Read-Only:
+
+- `group_id` (String) The id of the Slack user group.
+
+
 <a id="nestedatt--remote_info--snowflake_role"></a>
 ### Nested Schema for `remote_info.snowflake_role`
 
@@ -328,6 +348,22 @@ Read-Only:
 Read-Only:
 
 - `group_id` (String) The id of the Workday User Security group.
+
+
+<a id="nestedatt--remote_info--zendesk_group"></a>
+### Nested Schema for `remote_info.zendesk_group`
+
+Read-Only:
+
+- `group_id` (String) The ID of the Zendesk group.
+
+
+<a id="nestedatt--remote_info--zendesk_organization"></a>
+### Nested Schema for `remote_info.zendesk_organization`
+
+Read-Only:
+
+- `organization_id` (String) The ID of the Zendesk organization.
 
 
 
