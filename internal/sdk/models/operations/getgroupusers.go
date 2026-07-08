@@ -13,7 +13,7 @@ type GetGroupUsersRequest struct {
 	Cursor *string `queryParam:"style=form,explode=true,name=cursor"`
 	// The ID of the group.
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
-	// Number of results to return per page. Default is 200.
+	// Number of results to return per page, up to 1000. When set (or when a cursor is provided), the response contains a single page of results and a `next` cursor; the default page size is 200. When both page_size and cursor are omitted, the entire group membership is returned in one response with no `next` cursor. For large groups, prefer setting page_size and following `next`.
 	PageSize *int64 `queryParam:"style=form,explode=true,name=page_size"`
 }
 
