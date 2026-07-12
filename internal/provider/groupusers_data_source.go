@@ -65,7 +65,7 @@ func (r *GroupUsersDataSource) Schema(ctx context.Context, req datasource.Schema
 			},
 			"page_size": schema.Int64Attribute{
 				Optional:    true,
-				Description: `Number of results to return per page. Default is 200.`,
+				Description: `Number of results to return per page, up to 1000. When set (or when a cursor is provided), the response contains a single page of results and a ` + "`" + `next` + "`" + ` cursor; the default page size is 200. When both page_size and cursor are omitted, the entire group membership is returned in one response with no ` + "`" + `next` + "`" + ` cursor. For large groups, prefer setting page_size and following ` + "`" + `next` + "`" + `.`,
 				Validators: []validator.Int64{
 					int64validator.AtMost(1000),
 				},
