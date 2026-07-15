@@ -209,6 +209,12 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 				r.RemoteInfo.GrafanaTeam = &tfTypes.GrafanaTeam{}
 				r.RemoteInfo.GrafanaTeam.TeamID = types.StringValue(resp.RemoteInfo.GrafanaTeam.TeamID)
 			}
+			if resp.RemoteInfo.HubspotTeam == nil {
+				r.RemoteInfo.HubspotTeam = nil
+			} else {
+				r.RemoteInfo.HubspotTeam = &tfTypes.GrafanaTeam{}
+				r.RemoteInfo.HubspotTeam.TeamID = types.StringValue(resp.RemoteInfo.HubspotTeam.TeamID)
+			}
 			if resp.RemoteInfo.IncidentioOnCallSchedule == nil {
 				r.RemoteInfo.IncidentioOnCallSchedule = nil
 			} else {
@@ -245,6 +251,12 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 				r.RemoteInfo.RootlyOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
 				r.RemoteInfo.RootlyOnCallSchedule.ScheduleID = types.StringValue(resp.RemoteInfo.RootlyOnCallSchedule.ScheduleID)
 			}
+			if resp.RemoteInfo.SlackUserGroup == nil {
+				r.RemoteInfo.SlackUserGroup = nil
+			} else {
+				r.RemoteInfo.SlackUserGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.SlackUserGroup.GroupID = types.StringValue(resp.RemoteInfo.SlackUserGroup.GroupID)
+			}
 			if resp.RemoteInfo.SnowflakeRole == nil {
 				r.RemoteInfo.SnowflakeRole = nil
 			} else {
@@ -274,6 +286,18 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 			} else {
 				r.RemoteInfo.WorkdayUserSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.WorkdayUserSecurityGroup.GroupID = types.StringValue(resp.RemoteInfo.WorkdayUserSecurityGroup.GroupID)
+			}
+			if resp.RemoteInfo.ZendeskGroup == nil {
+				r.RemoteInfo.ZendeskGroup = nil
+			} else {
+				r.RemoteInfo.ZendeskGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.ZendeskGroup.GroupID = types.StringValue(resp.RemoteInfo.ZendeskGroup.GroupID)
+			}
+			if resp.RemoteInfo.ZendeskOrganization == nil {
+				r.RemoteInfo.ZendeskOrganization = nil
+			} else {
+				r.RemoteInfo.ZendeskOrganization = &tfTypes.ZendeskOrganization{}
+				r.RemoteInfo.ZendeskOrganization.OrganizationID = types.StringValue(resp.RemoteInfo.ZendeskOrganization.OrganizationID)
 			}
 		}
 		r.RemoteName = types.StringPointerValue(resp.RemoteName)
@@ -727,6 +751,15 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 				TeamID: teamID,
 			}
 		}
+		var hubspotTeam *shared.HubspotTeam
+		if r.RemoteInfo.HubspotTeam != nil {
+			var teamId1 string
+			teamId1 = r.RemoteInfo.HubspotTeam.TeamID.ValueString()
+
+			hubspotTeam = &shared.HubspotTeam{
+				TeamID: teamId1,
+			}
+		}
 		var incidentioOnCallSchedule *shared.IncidentioOnCallSchedule
 		if r.RemoteInfo.IncidentioOnCallSchedule != nil {
 			var scheduleID string
@@ -781,6 +814,15 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 				ScheduleID: scheduleId2,
 			}
 		}
+		var slackUserGroup *shared.SlackUserGroup
+		if r.RemoteInfo.SlackUserGroup != nil {
+			var groupId11 string
+			groupId11 = r.RemoteInfo.SlackUserGroup.GroupID.ValueString()
+
+			slackUserGroup = &shared.SlackUserGroup{
+				GroupID: groupId11,
+			}
+		}
 		var snowflakeRole *shared.SnowflakeRole
 		if r.RemoteInfo.SnowflakeRole != nil {
 			var roleId1 string
@@ -792,38 +834,56 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		}
 		var tailscaleGroup *shared.TailscaleGroup
 		if r.RemoteInfo.TailscaleGroup != nil {
-			var groupId11 string
-			groupId11 = r.RemoteInfo.TailscaleGroup.GroupID.ValueString()
+			var groupId12 string
+			groupId12 = r.RemoteInfo.TailscaleGroup.GroupID.ValueString()
 
 			tailscaleGroup = &shared.TailscaleGroup{
-				GroupID: groupId11,
+				GroupID: groupId12,
 			}
 		}
 		var twingateGroup *shared.TwingateGroup
 		if r.RemoteInfo.TwingateGroup != nil {
-			var groupId12 string
-			groupId12 = r.RemoteInfo.TwingateGroup.GroupID.ValueString()
+			var groupId13 string
+			groupId13 = r.RemoteInfo.TwingateGroup.GroupID.ValueString()
 
 			twingateGroup = &shared.TwingateGroup{
-				GroupID: groupId12,
+				GroupID: groupId13,
 			}
 		}
 		var twingateGroupSynced *shared.TwingateGroupSynced
 		if r.RemoteInfo.TwingateGroupSynced != nil {
-			var groupId13 string
-			groupId13 = r.RemoteInfo.TwingateGroupSynced.GroupID.ValueString()
+			var groupId14 string
+			groupId14 = r.RemoteInfo.TwingateGroupSynced.GroupID.ValueString()
 
 			twingateGroupSynced = &shared.TwingateGroupSynced{
-				GroupID: groupId13,
+				GroupID: groupId14,
 			}
 		}
 		var workdayUserSecurityGroup *shared.WorkdayUserSecurityGroup
 		if r.RemoteInfo.WorkdayUserSecurityGroup != nil {
-			var groupId14 string
-			groupId14 = r.RemoteInfo.WorkdayUserSecurityGroup.GroupID.ValueString()
+			var groupId15 string
+			groupId15 = r.RemoteInfo.WorkdayUserSecurityGroup.GroupID.ValueString()
 
 			workdayUserSecurityGroup = &shared.WorkdayUserSecurityGroup{
-				GroupID: groupId14,
+				GroupID: groupId15,
+			}
+		}
+		var zendeskGroup *shared.ZendeskGroup
+		if r.RemoteInfo.ZendeskGroup != nil {
+			var groupId16 string
+			groupId16 = r.RemoteInfo.ZendeskGroup.GroupID.ValueString()
+
+			zendeskGroup = &shared.ZendeskGroup{
+				GroupID: groupId16,
+			}
+		}
+		var zendeskOrganization *shared.ZendeskOrganization
+		if r.RemoteInfo.ZendeskOrganization != nil {
+			var organizationID string
+			organizationID = r.RemoteInfo.ZendeskOrganization.OrganizationID.ValueString()
+
+			zendeskOrganization = &shared.ZendeskOrganization{
+				OrganizationID: organizationID,
 			}
 		}
 		remoteInfo = &shared.GroupRemoteInfo{
@@ -841,17 +901,21 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 			GitlabGroup:              gitlabGroup,
 			GoogleGroup:              googleGroup,
 			GrafanaTeam:              grafanaTeam,
+			HubspotTeam:              hubspotTeam,
 			IncidentioOnCallSchedule: incidentioOnCallSchedule,
 			LdapGroup:                ldapGroup,
 			OktaGroup:                oktaGroup,
 			OktaGroupRule:            oktaGroupRule,
 			PagerdutyOnCallSchedule:  pagerdutyOnCallSchedule,
 			RootlyOnCallSchedule:     rootlyOnCallSchedule,
+			SlackUserGroup:           slackUserGroup,
 			SnowflakeRole:            snowflakeRole,
 			TailscaleGroup:           tailscaleGroup,
 			TwingateGroup:            twingateGroup,
 			TwingateGroupSynced:      twingateGroupSynced,
 			WorkdayUserSecurityGroup: workdayUserSecurityGroup,
+			ZendeskGroup:             zendeskGroup,
+			ZendeskOrganization:      zendeskOrganization,
 		}
 	}
 	riskSensitivityOverride := new(shared.RiskSensitivityEnum)
