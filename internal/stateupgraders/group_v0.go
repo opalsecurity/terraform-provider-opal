@@ -117,6 +117,13 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 		}}},
 	}}}
 
+	var lastSuccessfulSyncType = tftypes.Object{
+		AttributeTypes: map[string]tftypes.Type{
+			"completed_at": tftypes.String,
+			"id": tftypes.String,
+		},
+	}
+
 	var GroupV3 = tftypes.Object{
 		AttributeTypes: map[string]tftypes.Type{
 			"id":                 tftypes.String,
@@ -134,12 +141,14 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"message_channel_ids": tftypes.List{ElementType:  tftypes.String},
 			"message_channels": messageChannelsType,
 			"on_call_schedule_ids": tftypes.List{ElementType:  tftypes.String},
-			"oncall_schedules": oncallSchedulesType,
+			"on_call_schedules": oncallSchedulesType,
 			"remote_name": tftypes.String,
 			"request_configurations": requestConfigurationsType,
 			"custom_request_notification": tftypes.String,
 			"risk_sensitivity": tftypes.String,
 			"risk_sensitivity_override": tftypes.String,
+			"extensions_duration_in_minutes": tftypes.Number,
+			"last_successful_sync": lastSuccessfulSyncType,
 		},
 	}
 	
@@ -293,11 +302,13 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"message_channel_ids": tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, auditMessageChannelIDs),
 			"message_channels": tftypes.NewValue(messageChannelsType, nil), // Will be populated on a state refresh
 			"on_call_schedule_ids": tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, oncallScheduleIDs),
-			"oncall_schedules": tftypes.NewValue(oncallSchedulesType, nil), // Will be populated on a state refresh
+			"on_call_schedules": tftypes.NewValue(oncallSchedulesType, nil), // Will be populated on a state refresh
 			"request_configurations": tftypes.NewValue(requestConfigurationsType, nil), // Will be populated on a state refresh
 			"custom_request_notification": tftypes.NewValue(tftypes.String, nil),
 			"risk_sensitivity": tftypes.NewValue(tftypes.String, nil), // read only field
 			"risk_sensitivity_override": tftypes.NewValue(tftypes.String, nil),
+			"extensions_duration_in_minutes": tftypes.NewValue(tftypes.Number, nil),
+			"last_successful_sync": tftypes.NewValue(lastSuccessfulSyncType, nil), // read only field to be filled in by refresh
 		}),
 	)
 	if err != nil {
