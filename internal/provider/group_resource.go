@@ -6,7 +6,6 @@ package provider
 import (
 	"context"
 	"fmt"
-
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -79,17 +78,6 @@ type GroupResourceModel struct {
 	RiskSensitivityOverride     types.String                                 `tfsdk:"risk_sensitivity_override"`
 	Visibility                  types.String                                 `tfsdk:"visibility"`
 	VisibilityGroupIds          []types.String                               `tfsdk:"visibility_group_ids"`
-}
-
-// isOnCallScheduleGroupType returns true for group types that are synced from an external
-// on-call schedule provider (PagerDuty, Incident.io, Rootly). These groups cannot have
-// on-call schedules assigned to them via the API.
-func isOnCallScheduleGroupType(groupType string) bool {
-	switch groupType {
-	case "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE":
-		return true
-	}
-	return false
 }
 
 func (r *GroupResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -167,7 +155,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED"]; Requires replacement if changed.`,
+				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"ACTIVE_DIRECTORY_GROUP",
@@ -198,6 +186,8 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						"CLICKHOUSE_ROLE",
 						"TWINGATE_GROUP",
 						"TWINGATE_GROUP_SYNCED",
+						"ZENDESK_GROUP",
+						"ZENDESK_ORGANIZATION",
 					),
 				},
 			},
@@ -964,6 +954,52 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						},
 						Description: `Remote info for Workday User Security group. Requires replacement if changed.`,
 					},
+					"zendesk_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Zendesk group. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Zendesk group. Requires replacement if changed.`,
+					},
+					"zendesk_organization": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"organization_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Zendesk organization. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Zendesk organization. Requires replacement if changed.`,
+					},
 				},
 				Description: `Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided. Requires replacement if changed.`,
 			},
@@ -1366,38 +1402,33 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	// On-call schedule group types (PAGERDUTY_ON_CALL_SCHEDULE, INCIDENTIO_ON_CALL_SCHEDULE,
-	// ROOTLY_ON_CALL_SCHEDULE) are synced from their respective providers and cannot have
-	// on-call schedules assigned to them via the API.
-	if !isOnCallScheduleGroupType(data.GroupType.ValueString()) {
-		request3, request3Diags := data.ToOperationsUpdateGroupOnCallSchedulesRequest(ctx)
-		resp.Diagnostics.Append(request3Diags...)
+	request3, request3Diags := data.ToOperationsUpdateGroupOnCallSchedulesRequest(ctx)
+	resp.Diagnostics.Append(request3Diags...)
 
-		if resp.Diagnostics.HasError() {
-			return
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res3, err := r.client.Groups.UpdateOnCallSchedules(ctx, *request3)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res3 != nil && res3.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res3.RawResponse))
 		}
-		res3, err := r.client.Groups.UpdateOnCallSchedules(ctx, *request3)
-		if err != nil {
-			resp.Diagnostics.AddError("failure to invoke API", err.Error())
-			if res3 != nil && res3.RawResponse != nil {
-				resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res3.RawResponse))
-			}
-			return
-		}
-		if res3 == nil {
-			resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res3))
-			return
-		}
-		if res3.StatusCode != 200 {
-			resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res3.StatusCode), debugResponse(res3.RawResponse))
-			return
-		}
+		return
+	}
+	if res3 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res3))
+		return
+	}
+	if res3.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res3.StatusCode), debugResponse(res3.RawResponse))
+		return
+	}
 
-		resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
 
-		if resp.Diagnostics.HasError() {
-			return
-		}
+	if resp.Diagnostics.HasError() {
+		return
 	}
 	request4, request4Diags := data.ToOperationsUpdateGroupVisibilityRequest(ctx)
 	resp.Diagnostics.Append(request4Diags...)
@@ -1822,35 +1853,33 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	if !isOnCallScheduleGroupType(data.GroupType.ValueString()) {
-		request2, request2Diags := data.ToOperationsUpdateGroupOnCallSchedulesRequest(ctx)
-		resp.Diagnostics.Append(request2Diags...)
+	request2, request2Diags := data.ToOperationsUpdateGroupOnCallSchedulesRequest(ctx)
+	resp.Diagnostics.Append(request2Diags...)
 
-		if resp.Diagnostics.HasError() {
-			return
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res2, err := r.client.Groups.UpdateOnCallSchedules(ctx, *request2)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res2 != nil && res2.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res2.RawResponse))
 		}
-		res2, err := r.client.Groups.UpdateOnCallSchedules(ctx, *request2)
-		if err != nil {
-			resp.Diagnostics.AddError("failure to invoke API", err.Error())
-			if res2 != nil && res2.RawResponse != nil {
-				resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res2.RawResponse))
-			}
-			return
-		}
-		if res2 == nil {
-			resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res2))
-			return
-		}
-		if res2.StatusCode != 200 {
-			resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
-			return
-		}
+		return
+	}
+	if res2 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res2))
+		return
+	}
+	if res2.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
+		return
+	}
 
-		resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
 
-		if resp.Diagnostics.HasError() {
-			return
-		}
+	if resp.Diagnostics.HasError() {
+		return
 	}
 	request3, request3Diags := data.ToOperationsUpdateGroupVisibilityRequest(ctx)
 	resp.Diagnostics.Append(request3Diags...)
