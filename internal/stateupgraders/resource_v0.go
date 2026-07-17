@@ -100,6 +100,13 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 		},
 	}
 
+	var lastSuccessfulSyncType = tftypes.Object{
+		AttributeTypes: map[string]tftypes.Type{
+			"completed_at": tftypes.String,
+			"id": tftypes.String,
+		},
+	}
+
 	var ResourceV3 = tftypes.Object{
 		AttributeTypes: map[string]tftypes.Type{
 			"id":                 tftypes.String,
@@ -119,6 +126,10 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 			"custom_request_notification": tftypes.String,
 			"risk_sensitivity": tftypes.String,
 			"risk_sensitivity_override": tftypes.String,
+			"ancestor_resource_ids": tftypes.List{ElementType: tftypes.String},
+			"descendant_resource_ids": tftypes.List{ElementType: tftypes.String},
+			"extensions_duration_in_minutes": tftypes.Number,
+			"last_successful_sync": lastSuccessfulSyncType,
 		},
 	}
 	
@@ -242,6 +253,10 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 			"custom_request_notification": tftypes.NewValue(tftypes.String, nil),
 			"risk_sensitivity": tftypes.NewValue(tftypes.String, nil), // read only field
 			"risk_sensitivity_override": tftypes.NewValue(tftypes.String, nil),
+			"ancestor_resource_ids": tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, nil), // read only field to be filled in by refresh
+			"descendant_resource_ids": tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, nil), // read only field to be filled in by refresh
+			"extensions_duration_in_minutes": tftypes.NewValue(tftypes.Number, nil),
+			"last_successful_sync": tftypes.NewValue(lastSuccessfulSyncType, nil), // read only field to be filled in by refresh
 		}),
 	)
 
