@@ -188,6 +188,9 @@ resource "opal_resource" "my_resource" {
     grafana_role = {
       role_uid = "rrfRTXX"
     }
+    hubspot_role = {
+      role_id = "12345"
+    }
     ilevel_advanced_role = {
       role_name = "IT User"
     }
@@ -249,6 +252,9 @@ resource "opal_resource" "my_resource" {
     }
     workday_role = {
       role_id = "123abc456def"
+    }
+    zendesk_role = {
+      role_id = "12345"
     }
   }
   request_configurations = [
