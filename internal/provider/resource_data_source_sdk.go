@@ -298,7 +298,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			if resp.RemoteInfo.GcpOrganization == nil {
 				r.RemoteInfo.GcpOrganization = nil
 			} else {
-				r.RemoteInfo.GcpOrganization = &tfTypes.GcpOrganization{}
+				r.RemoteInfo.GcpOrganization = &tfTypes.ZendeskOrganization{}
 				r.RemoteInfo.GcpOrganization.OrganizationID = types.StringValue(resp.RemoteInfo.GcpOrganization.OrganizationID)
 			}
 			if resp.RemoteInfo.GcpProject == nil {
@@ -377,6 +377,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			} else {
 				r.RemoteInfo.GrafanaRole = &tfTypes.GrafanaRole{}
 				r.RemoteInfo.GrafanaRole.RoleUID = types.StringValue(resp.RemoteInfo.GrafanaRole.RoleUID)
+			}
+			if resp.RemoteInfo.HubspotRole == nil {
+				r.RemoteInfo.HubspotRole = nil
+			} else {
+				r.RemoteInfo.HubspotRole = &tfTypes.ClickhouseRole{}
+				r.RemoteInfo.HubspotRole.RoleID = types.StringValue(resp.RemoteInfo.HubspotRole.RoleID)
 			}
 			if resp.RemoteInfo.IlevelAdvancedRole == nil {
 				r.RemoteInfo.IlevelAdvancedRole = nil
@@ -496,6 +502,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			} else {
 				r.RemoteInfo.WorkdayRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.WorkdayRole.RoleID = types.StringValue(resp.RemoteInfo.WorkdayRole.RoleID)
+			}
+			if resp.RemoteInfo.ZendeskRole == nil {
+				r.RemoteInfo.ZendeskRole = nil
+			} else {
+				r.RemoteInfo.ZendeskRole = &tfTypes.ClickhouseRole{}
+				r.RemoteInfo.ZendeskRole.RoleID = types.StringValue(resp.RemoteInfo.ZendeskRole.RoleID)
 			}
 		}
 		r.RequestConfigurations = []tfTypes.RequestConfiguration{}
