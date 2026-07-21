@@ -1,5 +1,8 @@
 # Changelog
 
+## v3.5.3
+ - Fixes the v2→v3 state upgraders for `opal_group` and `opal_resource` so that state written by provider 2.x upgrades directly to the current release in one hop, instead of failing with `Unable to Upgrade Resource State ... error decoding object`. The upgraders now emit every current top-level schema attribute (previously drifted, missing `extensions_duration_in_minutes`, `last_successful_sync`, `ancestor_resource_ids`, and `descendant_resource_ids`). No intermediate version step is required.
+
 ## v3.5.2
  - Adds `attribute_selectors` field to `opal_access_rule` rule clauses
  - Adds support for GitHub Enterprise Org level teams: `org_name` can now be specified on `github_team` remote info to target teams in an enterprise-managed GitHub organization
