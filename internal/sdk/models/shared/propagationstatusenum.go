@@ -33,6 +33,7 @@ const (
 	PropagationStatusEnumErrDryRunModeEnabled              PropagationStatusEnum = "ERR_DRY_RUN_MODE_ENABLED"
 	PropagationStatusEnumErrHrIdpProviderNotLinked         PropagationStatusEnum = "ERR_HR_IDP_PROVIDER_NOT_LINKED"
 	PropagationStatusEnumErrRemoteUnrecoverableError       PropagationStatusEnum = "ERR_REMOTE_UNRECOVERABLE_ERROR"
+	PropagationStatusEnumErrRemoteTicketNotFound           PropagationStatusEnum = "ERR_REMOTE_TICKET_NOT_FOUND"
 )
 
 func (e PropagationStatusEnum) ToPointer() *PropagationStatusEnum {
@@ -85,6 +86,8 @@ func (e *PropagationStatusEnum) UnmarshalJSON(data []byte) error {
 	case "ERR_HR_IDP_PROVIDER_NOT_LINKED":
 		fallthrough
 	case "ERR_REMOTE_UNRECOVERABLE_ERROR":
+		fallthrough
+	case "ERR_REMOTE_TICKET_NOT_FOUND":
 		*e = PropagationStatusEnum(v)
 		return nil
 	default:
