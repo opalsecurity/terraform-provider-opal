@@ -339,6 +339,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Grafana team.`,
 					},
+					"hubspot_team": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"team_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the HubSpot team.`,
+							},
+						},
+						Description: `Remote info for HubSpot team.`,
+					},
 					"incidentio_on_call_schedule": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -399,6 +409,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Rootly on-call schedule group.`,
 					},
+					"slack_user_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the Slack user group.`,
+							},
+						},
+						Description: `Remote info for Slack user group.`,
+					},
 					"snowflake_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -408,6 +428,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							},
 						},
 						Description: `Remote info for Snowflake role.`,
+					},
+					"tableau_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Tableau group.`,
+							},
+						},
+						Description: `Remote info for Tableau group.`,
 					},
 					"tailscale_group": schema.SingleNestedAttribute{
 						Computed: true,
@@ -448,6 +478,26 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							},
 						},
 						Description: `Remote info for Workday User Security group.`,
+					},
+					"zendesk_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Zendesk group.`,
+							},
+						},
+						Description: `Remote info for Zendesk group.`,
+					},
+					"zendesk_organization": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"organization_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Zendesk organization.`,
+							},
+						},
+						Description: `Remote info for Zendesk organization.`,
 					},
 				},
 				Description: `Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided.`,
