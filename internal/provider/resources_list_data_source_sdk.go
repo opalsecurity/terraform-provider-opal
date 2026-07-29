@@ -305,7 +305,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				if resultsItem.RemoteInfo.GcpOrganization == nil {
 					results.RemoteInfo.GcpOrganization = nil
 				} else {
-					results.RemoteInfo.GcpOrganization = &tfTypes.GcpOrganization{}
+					results.RemoteInfo.GcpOrganization = &tfTypes.ZendeskOrganization{}
 					results.RemoteInfo.GcpOrganization.OrganizationID = types.StringValue(resultsItem.RemoteInfo.GcpOrganization.OrganizationID)
 				}
 				if resultsItem.RemoteInfo.GcpProject == nil {
@@ -384,6 +384,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				} else {
 					results.RemoteInfo.GrafanaRole = &tfTypes.GrafanaRole{}
 					results.RemoteInfo.GrafanaRole.RoleUID = types.StringValue(resultsItem.RemoteInfo.GrafanaRole.RoleUID)
+				}
+				if resultsItem.RemoteInfo.HubspotRole == nil {
+					results.RemoteInfo.HubspotRole = nil
+				} else {
+					results.RemoteInfo.HubspotRole = &tfTypes.ClickhouseRole{}
+					results.RemoteInfo.HubspotRole.RoleID = types.StringValue(resultsItem.RemoteInfo.HubspotRole.RoleID)
 				}
 				if resultsItem.RemoteInfo.IlevelAdvancedRole == nil {
 					results.RemoteInfo.IlevelAdvancedRole = nil
@@ -503,6 +509,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				} else {
 					results.RemoteInfo.WorkdayRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.WorkdayRole.RoleID = types.StringValue(resultsItem.RemoteInfo.WorkdayRole.RoleID)
+				}
+				if resultsItem.RemoteInfo.ZendeskRole == nil {
+					results.RemoteInfo.ZendeskRole = nil
+				} else {
+					results.RemoteInfo.ZendeskRole = &tfTypes.ClickhouseRole{}
+					results.RemoteInfo.ZendeskRole.RoleID = types.StringValue(resultsItem.RemoteInfo.ZendeskRole.RoleID)
 				}
 			}
 			results.RequestConfigurations = []tfTypes.RequestConfiguration{}
