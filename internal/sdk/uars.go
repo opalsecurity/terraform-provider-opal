@@ -18,7 +18,7 @@ import (
 	"net/url"
 )
 
-// Uars - Operations related to UARs
+// Uars - Operations related to UARs. Deprecated in favor of the `campaigns` API.
 type Uars struct {
 	rootSDK          *OpalAPI
 	sdkConfiguration config.SDKConfiguration
@@ -33,7 +33,9 @@ func newUars(rootSDK *OpalAPI, sdkConfig config.SDKConfiguration, hooks *hooks.H
 	}
 }
 
-// Create - Starts a User Access Review.
+// Create - Starts a User Access Review. Deprecated in favor of `POST /campaigns`.
+//
+// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
 func (s *Uars) Create(ctx context.Context, request shared.CreateUARInfo, opts ...operations.Option) (*operations.CreateUARResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -238,7 +240,9 @@ func (s *Uars) Create(ctx context.Context, request shared.CreateUARInfo, opts ..
 
 }
 
-// Get - Returns a list of `UAR` objects.
+// Get - Returns a list of `UAR` objects. Deprecated in favor of `GET /campaigns`.
+//
+// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
 func (s *Uars) Get(ctx context.Context, request operations.GetUARsRequest, opts ...operations.Option) (*operations.GetUARsResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -442,7 +446,9 @@ func (s *Uars) Get(ctx context.Context, request operations.GetUARsRequest, opts 
 
 }
 
-// GetID - Retrieves a specific UAR.
+// GetID - Retrieves a specific UAR. Deprecated in favor of `GET /campaigns/{campaign_id}`.
+//
+// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
 func (s *Uars) GetID(ctx context.Context, request operations.GetUARIDRequest, opts ...operations.Option) (*operations.GetUARIDResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
