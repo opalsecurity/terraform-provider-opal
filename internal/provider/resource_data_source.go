@@ -122,6 +122,26 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"remote_info": schema.SingleNestedAttribute{
 				Computed: true,
 				Attributes: map[string]schema.Attribute{
+					"alicloud_ecs_instance": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"instance_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the ECS instance.`,
+							},
+						},
+						Description: `Remote info for AliCloud ECS instance.`,
+					},
+					"alicloud_ram_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"role_arn": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ARN of the AliCloud RAM role.`,
+							},
+						},
+						Description: `Remote info for AliCloud RAM role.`,
+					},
 					"anthropic_workspace": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -744,6 +764,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Grafana role(fixed or custom).`,
 					},
+					"hubspot_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"role_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the HubSpot role.`,
+							},
+						},
+						Description: `Remote info for HubSpot role.`,
+					},
 					"ilevel_advanced_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -953,6 +983,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for Workday role.`,
+					},
+					"zendesk_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"role_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Zendesk custom role.`,
+							},
+						},
+						Description: `Remote info for Zendesk custom role.`,
 					},
 				},
 				Description: `Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields.`,
