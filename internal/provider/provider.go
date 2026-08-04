@@ -189,6 +189,8 @@ func (p *OpalProvider) DataSources(ctx context.Context) []func() datasource.Data
 		NewPaginatedBundleGroupListDataSource,
 		NewPaginatedBundleListDataSource,
 		NewPaginatedBundleResourceListDataSource,
+		NewPaladinDataSource,
+		NewPaladinFromNameDataSource,
 		NewRequestsDataSource,
 		NewResourceDataSource,
 		NewResourceMessageChannelListDataSource,
