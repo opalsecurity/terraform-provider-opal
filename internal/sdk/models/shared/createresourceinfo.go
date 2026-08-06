@@ -16,6 +16,10 @@ type CreateResourceInfo struct {
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the remote resource.
 	Description *string `json:"description,omitempty"`
+	// A bool representing whether or not the resource's description should be synced from the end system. When true, the description is overwritten with the remote description on each sync, so a `description` provided together with this field set to true will be replaced at the next sync. Defaults to false.
+	MatchRemoteDescription *bool `json:"match_remote_description,omitempty"`
+	// A bool representing whether or not the resource's name should be synced from the end system. When true, the name is overwritten with the remote name on each sync, so a `name` provided together with this field set to true will be replaced at the next sync. Defaults to false.
+	MatchRemoteName *bool `json:"match_remote_name,omitempty"`
 	// The name of the remote resource.
 	Name string `json:"name"`
 	// Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields.
@@ -44,6 +48,20 @@ func (c *CreateResourceInfo) GetDescription() *string {
 		return nil
 	}
 	return c.Description
+}
+
+func (c *CreateResourceInfo) GetMatchRemoteDescription() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.MatchRemoteDescription
+}
+
+func (c *CreateResourceInfo) GetMatchRemoteName() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.MatchRemoteName
 }
 
 func (c *CreateResourceInfo) GetName() string {
