@@ -21,6 +21,7 @@ func (r *PaladinResourceModel) RefreshFromSharedPaladin(ctx context.Context, res
 			r.EnabledConnectors = append(r.EnabledConnectors, types.StringValue(string(v)))
 		}
 		r.ID = types.StringValue(resp.ID)
+		r.Instructions = types.StringValue(resp.Instructions)
 		r.MonitorMode = types.BoolValue(resp.MonitorMode)
 		r.Name = types.StringValue(resp.Name)
 		r.OwnerID = types.StringValue(resp.OwnerID)
@@ -89,6 +90,12 @@ func (r *PaladinResourceModel) ToSharedCreatePaladinInfo(ctx context.Context) (*
 	for _, enabledConnectorsItem := range r.EnabledConnectors {
 		enabledConnectors = append(enabledConnectors, shared.PaladinConnector(enabledConnectorsItem.ValueString()))
 	}
+	instructions := new(string)
+	if !r.Instructions.IsUnknown() && !r.Instructions.IsNull() {
+		*instructions = r.Instructions.ValueString()
+	} else {
+		instructions = nil
+	}
 	monitorMode := new(bool)
 	if !r.MonitorMode.IsUnknown() && !r.MonitorMode.IsNull() {
 		*monitorMode = r.MonitorMode.ValueBool()
@@ -104,6 +111,7 @@ func (r *PaladinResourceModel) ToSharedCreatePaladinInfo(ctx context.Context) (*
 	out := shared.CreatePaladinInfo{
 		AdminViewOnly:     adminViewOnly,
 		EnabledConnectors: enabledConnectors,
+		Instructions:      instructions,
 		MonitorMode:       monitorMode,
 		Name:              name,
 		OwnerID:           ownerID,
@@ -125,6 +133,12 @@ func (r *PaladinResourceModel) ToSharedUpdatePaladinInfo(ctx context.Context) (*
 	for _, enabledConnectorsItem := range r.EnabledConnectors {
 		enabledConnectors = append(enabledConnectors, shared.PaladinConnector(enabledConnectorsItem.ValueString()))
 	}
+	instructions := new(string)
+	if !r.Instructions.IsUnknown() && !r.Instructions.IsNull() {
+		*instructions = r.Instructions.ValueString()
+	} else {
+		instructions = nil
+	}
 	monitorMode := new(bool)
 	if !r.MonitorMode.IsUnknown() && !r.MonitorMode.IsNull() {
 		*monitorMode = r.MonitorMode.ValueBool()
@@ -137,6 +151,7 @@ func (r *PaladinResourceModel) ToSharedUpdatePaladinInfo(ctx context.Context) (*
 	out := shared.UpdatePaladinInfo{
 		AdminViewOnly:     adminViewOnly,
 		EnabledConnectors: enabledConnectors,
+		Instructions:      instructions,
 		MonitorMode:       monitorMode,
 		Name:              name,
 	}

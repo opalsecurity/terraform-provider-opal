@@ -21,6 +21,7 @@ func (r *PaladinDataSourceModel) RefreshFromSharedPaladin(ctx context.Context, r
 			r.EnabledConnectors = append(r.EnabledConnectors, types.StringValue(string(v)))
 		}
 		r.ID = types.StringValue(resp.ID)
+		r.Instructions = types.StringValue(resp.Instructions)
 		r.MonitorMode = types.BoolValue(resp.MonitorMode)
 		r.Name = types.StringValue(resp.Name)
 		r.OwnerID = types.StringValue(resp.OwnerID)

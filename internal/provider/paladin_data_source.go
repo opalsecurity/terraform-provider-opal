@@ -32,6 +32,7 @@ type PaladinDataSourceModel struct {
 	AdminViewOnly     types.Bool     `tfsdk:"admin_view_only"`
 	EnabledConnectors []types.String `tfsdk:"enabled_connectors"`
 	ID                types.String   `tfsdk:"id"`
+	Instructions      types.String   `tfsdk:"instructions"`
 	MonitorMode       types.Bool     `tfsdk:"monitor_mode"`
 	Name              types.String   `tfsdk:"name"`
 	OwnerID           types.String   `tfsdk:"owner_id"`
@@ -60,6 +61,10 @@ func (r *PaladinDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 			"id": schema.StringAttribute{
 				Required:    true,
 				Description: `The ID of the Paladin. Use this value as a reviewer in a request configuration's service_user_ids.`,
+			},
+			"instructions": schema.StringAttribute{
+				Computed:    true,
+				Description: `The free-form instructions that guide the Paladin's decisions.`,
 			},
 			"monitor_mode": schema.BoolAttribute{
 				Computed:    true,

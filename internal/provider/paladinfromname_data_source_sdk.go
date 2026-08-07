@@ -27,6 +27,7 @@ func (r *PaladinFromNameDataSourceModel) RefreshFromSharedPaladinList(ctx contex
 				results.EnabledConnectors = append(results.EnabledConnectors, types.StringValue(string(v)))
 			}
 			results.ID = types.StringValue(resultsItem.ID)
+			results.Instructions = types.StringValue(resultsItem.Instructions)
 			results.MonitorMode = types.BoolValue(resultsItem.MonitorMode)
 			results.Name = types.StringValue(resultsItem.Name)
 			results.OwnerID = types.StringValue(resultsItem.OwnerID)

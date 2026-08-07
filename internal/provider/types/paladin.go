@@ -11,6 +11,7 @@ type Paladin struct {
 	AdminViewOnly     types.Bool     `tfsdk:"admin_view_only"`
 	EnabledConnectors []types.String `tfsdk:"enabled_connectors"`
 	ID                types.String   `tfsdk:"id"`
+	Instructions      types.String   `tfsdk:"instructions"`
 	MonitorMode       types.Bool     `tfsdk:"monitor_mode"`
 	Name              types.String   `tfsdk:"name"`
 	OwnerID           types.String   `tfsdk:"owner_id"`

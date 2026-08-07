@@ -37,6 +37,7 @@ type PaladinResourceModel struct {
 	AdminViewOnly     types.Bool     `tfsdk:"admin_view_only"`
 	EnabledConnectors []types.String `tfsdk:"enabled_connectors"`
 	ID                types.String   `tfsdk:"id"`
+	Instructions      types.String   `tfsdk:"instructions"`
 	MonitorMode       types.Bool     `tfsdk:"monitor_mode"`
 	Name              types.String   `tfsdk:"name"`
 	OwnerID           types.String   `tfsdk:"owner_id"`
@@ -68,6 +69,11 @@ func (r *PaladinResource) Schema(ctx context.Context, req resource.SchemaRequest
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 				Description: `The ID of the Paladin.`,
+			},
+			"instructions": schema.StringAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `The free-form instructions that guide the Paladin's decisions. Optional; if omitted the Paladin is created without instructions.`,
 			},
 			"monitor_mode": schema.BoolAttribute{
 				Computed:    true,

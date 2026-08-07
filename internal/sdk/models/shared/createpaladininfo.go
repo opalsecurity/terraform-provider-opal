@@ -13,6 +13,8 @@ type CreatePaladinInfo struct {
 	AdminViewOnly *bool `default:"false" json:"admin_view_only"`
 	// The connectors the Paladin is allowed to use.
 	EnabledConnectors []PaladinConnector `json:"enabled_connectors,omitempty"`
+	// The free-form instructions that guide the Paladin's decisions. Optional; if omitted the Paladin is created without instructions.
+	Instructions *string `json:"instructions,omitempty"`
 	// When true, the Paladin reasons about requests but takes no action. Defaults to true.
 	MonitorMode *bool `default:"true" json:"monitor_mode"`
 	// The name of the Paladin.
@@ -44,6 +46,13 @@ func (c *CreatePaladinInfo) GetEnabledConnectors() []PaladinConnector {
 		return nil
 	}
 	return c.EnabledConnectors
+}
+
+func (c *CreatePaladinInfo) GetInstructions() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Instructions
 }
 
 func (c *CreatePaladinInfo) GetMonitorMode() *bool {

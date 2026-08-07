@@ -14,6 +14,8 @@ type Paladin struct {
 	EnabledConnectors []PaladinConnector `json:"enabled_connectors"`
 	// The ID of the Paladin. Use this value as a reviewer in a request configuration's service_user_ids.
 	ID string `json:"paladin_id"`
+	// The free-form instructions that guide the Paladin's decisions.
+	Instructions string `json:"instructions"`
 	// When true, the Paladin reasons about requests but takes no action. Shown as "Monitor mode" in the UI.
 	MonitorMode bool `json:"monitor_mode"`
 	// The name of the Paladin.
@@ -41,6 +43,13 @@ func (p *Paladin) GetID() string {
 		return ""
 	}
 	return p.ID
+}
+
+func (p *Paladin) GetInstructions() string {
+	if p == nil {
+		return ""
+	}
+	return p.Instructions
 }
 
 func (p *Paladin) GetMonitorMode() bool {
