@@ -17,18 +17,24 @@ const (
 	AppTypeEnumAzureAd         AppTypeEnum = "AZURE_AD"
 	AppTypeEnumAws             AppTypeEnum = "AWS"
 	AppTypeEnumAwsSso          AppTypeEnum = "AWS_SSO"
+	AppTypeEnumClickhouse      AppTypeEnum = "CLICKHOUSE"
 	AppTypeEnumCoupa           AppTypeEnum = "COUPA"
 	AppTypeEnumCursor          AppTypeEnum = "CURSOR"
 	AppTypeEnumCustom          AppTypeEnum = "CUSTOM"
 	AppTypeEnumCustomConnector AppTypeEnum = "CUSTOM_CONNECTOR"
 	AppTypeEnumDatabricks      AppTypeEnum = "DATABRICKS"
 	AppTypeEnumDatastaxAstra   AppTypeEnum = "DATASTAX_ASTRA"
+	AppTypeEnumAlicloud        AppTypeEnum = "ALICLOUD"
+	AppTypeEnumDevin           AppTypeEnum = "DEVIN"
+	AppTypeEnumDocusign        AppTypeEnum = "DOCUSIGN"
 	AppTypeEnumDuo             AppTypeEnum = "DUO"
 	AppTypeEnumGcp             AppTypeEnum = "GCP"
 	AppTypeEnumGitHub          AppTypeEnum = "GIT_HUB"
 	AppTypeEnumGitLab          AppTypeEnum = "GIT_LAB"
 	AppTypeEnumGoogleGroups    AppTypeEnum = "GOOGLE_GROUPS"
 	AppTypeEnumGoogleWorkspace AppTypeEnum = "GOOGLE_WORKSPACE"
+	AppTypeEnumGrafana         AppTypeEnum = "GRAFANA"
+	AppTypeEnumHubspot         AppTypeEnum = "HUBSPOT"
 	AppTypeEnumIlevel          AppTypeEnum = "ILEVEL"
 	AppTypeEnumIncidentio      AppTypeEnum = "INCIDENTIO"
 	AppTypeEnumLdap            AppTypeEnum = "LDAP"
@@ -38,16 +44,24 @@ const (
 	AppTypeEnumMysql           AppTypeEnum = "MYSQL"
 	AppTypeEnumNetsuite        AppTypeEnum = "NETSUITE"
 	AppTypeEnumDatadog         AppTypeEnum = "DATADOG"
+	AppTypeEnumOktaCiam        AppTypeEnum = "OKTA_CIAM"
 	AppTypeEnumOktaDirectory   AppTypeEnum = "OKTA_DIRECTORY"
 	AppTypeEnumOpenaiPlatform  AppTypeEnum = "OPENAI_PLATFORM"
 	AppTypeEnumOpal            AppTypeEnum = "OPAL"
+	AppTypeEnumOracleFusion    AppTypeEnum = "ORACLE_FUSION"
 	AppTypeEnumPagerduty       AppTypeEnum = "PAGERDUTY"
+	AppTypeEnumPostgres        AppTypeEnum = "POSTGRES"
+	AppTypeEnumRootly          AppTypeEnum = "ROOTLY"
 	AppTypeEnumSalesforce      AppTypeEnum = "SALESFORCE"
 	AppTypeEnumSnowflake       AppTypeEnum = "SNOWFLAKE"
+	AppTypeEnumSlack           AppTypeEnum = "SLACK"
+	AppTypeEnumTableau         AppTypeEnum = "TABLEAU"
 	AppTypeEnumTailscale       AppTypeEnum = "TAILSCALE"
 	AppTypeEnumTeleport        AppTypeEnum = "TELEPORT"
 	AppTypeEnumTwingate        AppTypeEnum = "TWINGATE"
+	AppTypeEnumVault           AppTypeEnum = "VAULT"
 	AppTypeEnumWorkday         AppTypeEnum = "WORKDAY"
+	AppTypeEnumZendesk         AppTypeEnum = "ZENDESK"
 )
 
 func (e AppTypeEnum) ToPointer() *AppTypeEnum {
@@ -69,6 +83,8 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "AWS_SSO":
 		fallthrough
+	case "CLICKHOUSE":
+		fallthrough
 	case "COUPA":
 		fallthrough
 	case "CURSOR":
@@ -81,6 +97,12 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "DATASTAX_ASTRA":
 		fallthrough
+	case "ALICLOUD":
+		fallthrough
+	case "DEVIN":
+		fallthrough
+	case "DOCUSIGN":
+		fallthrough
 	case "DUO":
 		fallthrough
 	case "GCP":
@@ -92,6 +114,10 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 	case "GOOGLE_GROUPS":
 		fallthrough
 	case "GOOGLE_WORKSPACE":
+		fallthrough
+	case "GRAFANA":
+		fallthrough
+	case "HUBSPOT":
 		fallthrough
 	case "ILEVEL":
 		fallthrough
@@ -111,17 +137,29 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "DATADOG":
 		fallthrough
+	case "OKTA_CIAM":
+		fallthrough
 	case "OKTA_DIRECTORY":
 		fallthrough
 	case "OPENAI_PLATFORM":
 		fallthrough
 	case "OPAL":
 		fallthrough
+	case "ORACLE_FUSION":
+		fallthrough
 	case "PAGERDUTY":
+		fallthrough
+	case "POSTGRES":
+		fallthrough
+	case "ROOTLY":
 		fallthrough
 	case "SALESFORCE":
 		fallthrough
 	case "SNOWFLAKE":
+		fallthrough
+	case "SLACK":
+		fallthrough
+	case "TABLEAU":
 		fallthrough
 	case "TAILSCALE":
 		fallthrough
@@ -129,7 +167,11 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "TWINGATE":
 		fallthrough
+	case "VAULT":
+		fallthrough
 	case "WORKDAY":
+		fallthrough
+	case "ZENDESK":
 		*e = AppTypeEnum(v)
 		return nil
 	default:

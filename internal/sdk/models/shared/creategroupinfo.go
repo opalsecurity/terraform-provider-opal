@@ -18,6 +18,10 @@ type CreateGroupInfo struct {
 	Description *string `json:"description,omitempty"`
 	// The type of the group.
 	GroupType GroupTypeEnum `json:"group_type"`
+	// A bool representing whether or not the group's description should be synced from the end system. When true, the description is overwritten with the remote description on each sync, so a `description` provided together with this field set to true will be replaced at the next sync. Defaults to false.
+	MatchRemoteDescription *bool `json:"match_remote_description,omitempty"`
+	// A bool representing whether or not the group's name should be synced from the end system. When true, the name is overwritten with the remote name on each sync, so a `name` provided together with this field set to true will be replaced at the next sync. Defaults to false.
+	MatchRemoteName *bool `json:"match_remote_name,omitempty"`
 	// The name of the remote group.
 	Name string `json:"name"`
 	// Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided.
@@ -51,6 +55,20 @@ func (c *CreateGroupInfo) GetGroupType() GroupTypeEnum {
 		return GroupTypeEnum("")
 	}
 	return c.GroupType
+}
+
+func (c *CreateGroupInfo) GetMatchRemoteDescription() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.MatchRemoteDescription
+}
+
+func (c *CreateGroupInfo) GetMatchRemoteName() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.MatchRemoteName
 }
 
 func (c *CreateGroupInfo) GetName() string {

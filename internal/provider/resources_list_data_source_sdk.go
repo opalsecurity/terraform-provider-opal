@@ -45,12 +45,26 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				results.LastSuccessfulSync.CompletedAt = types.StringValue(typeconvert.TimeToString(resultsItem.LastSuccessfulSync.CompletedAt))
 				results.LastSuccessfulSync.ID = types.StringValue(resultsItem.LastSuccessfulSync.ID)
 			}
+			results.MatchRemoteDescription = types.BoolPointerValue(resultsItem.MatchRemoteDescription)
+			results.MatchRemoteName = types.BoolPointerValue(resultsItem.MatchRemoteName)
 			results.Name = types.StringPointerValue(resultsItem.Name)
 			results.ParentResourceID = types.StringPointerValue(resultsItem.ParentResourceID)
 			if resultsItem.RemoteInfo == nil {
 				results.RemoteInfo = nil
 			} else {
 				results.RemoteInfo = &tfTypes.ResourceRemoteInfo{}
+				if resultsItem.RemoteInfo.AlicloudEcsInstance == nil {
+					results.RemoteInfo.AlicloudEcsInstance = nil
+				} else {
+					results.RemoteInfo.AlicloudEcsInstance = &tfTypes.AlicloudEcsInstance{}
+					results.RemoteInfo.AlicloudEcsInstance.InstanceID = types.StringValue(resultsItem.RemoteInfo.AlicloudEcsInstance.InstanceID)
+				}
+				if resultsItem.RemoteInfo.AlicloudRAMRole == nil {
+					results.RemoteInfo.AlicloudRAMRole = nil
+				} else {
+					results.RemoteInfo.AlicloudRAMRole = &tfTypes.AlicloudRAMRole{}
+					results.RemoteInfo.AlicloudRAMRole.RoleArn = types.StringValue(resultsItem.RemoteInfo.AlicloudRAMRole.RoleArn)
+				}
 				if resultsItem.RemoteInfo.AnthropicWorkspace == nil {
 					results.RemoteInfo.AnthropicWorkspace = nil
 				} else {
@@ -261,6 +275,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.DevinRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.DevinRole.RoleID = types.StringValue(resultsItem.RemoteInfo.DevinRole.RoleID)
 				}
+				if resultsItem.RemoteInfo.DocusignPermissionProfile == nil {
+					results.RemoteInfo.DocusignPermissionProfile = nil
+				} else {
+					results.RemoteInfo.DocusignPermissionProfile = &tfTypes.DocusignPermissionProfile{}
+					results.RemoteInfo.DocusignPermissionProfile.PermissionProfileID = types.StringValue(resultsItem.RemoteInfo.DocusignPermissionProfile.PermissionProfileID)
+				}
 				if resultsItem.RemoteInfo.GcpBigQueryDataset == nil {
 					results.RemoteInfo.GcpBigQueryDataset = nil
 				} else {
@@ -305,7 +325,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				if resultsItem.RemoteInfo.GcpOrganization == nil {
 					results.RemoteInfo.GcpOrganization = nil
 				} else {
-					results.RemoteInfo.GcpOrganization = &tfTypes.GcpOrganization{}
+					results.RemoteInfo.GcpOrganization = &tfTypes.ZendeskOrganization{}
 					results.RemoteInfo.GcpOrganization.OrganizationID = types.StringValue(resultsItem.RemoteInfo.GcpOrganization.OrganizationID)
 				}
 				if resultsItem.RemoteInfo.GcpProject == nil {
@@ -384,6 +404,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				} else {
 					results.RemoteInfo.GrafanaRole = &tfTypes.GrafanaRole{}
 					results.RemoteInfo.GrafanaRole.RoleUID = types.StringValue(resultsItem.RemoteInfo.GrafanaRole.RoleUID)
+				}
+				if resultsItem.RemoteInfo.HubspotRole == nil {
+					results.RemoteInfo.HubspotRole = nil
+				} else {
+					results.RemoteInfo.HubspotRole = &tfTypes.ClickhouseRole{}
+					results.RemoteInfo.HubspotRole.RoleID = types.StringValue(resultsItem.RemoteInfo.HubspotRole.RoleID)
 				}
 				if resultsItem.RemoteInfo.IlevelAdvancedRole == nil {
 					results.RemoteInfo.IlevelAdvancedRole = nil
@@ -503,6 +529,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				} else {
 					results.RemoteInfo.WorkdayRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.WorkdayRole.RoleID = types.StringValue(resultsItem.RemoteInfo.WorkdayRole.RoleID)
+				}
+				if resultsItem.RemoteInfo.ZendeskRole == nil {
+					results.RemoteInfo.ZendeskRole = nil
+				} else {
+					results.RemoteInfo.ZendeskRole = &tfTypes.ClickhouseRole{}
+					results.RemoteInfo.ZendeskRole.RoleID = types.StringValue(resultsItem.RemoteInfo.ZendeskRole.RoleID)
 				}
 			}
 			results.RequestConfigurations = []tfTypes.RequestConfiguration{}

@@ -4,6 +4,8 @@
 package types
 
 type ResourceRemoteInfo struct {
+	AlicloudEcsInstance               *AlicloudEcsInstance               `tfsdk:"alicloud_ecs_instance"`
+	AlicloudRAMRole                   *AlicloudRAMRole                   `tfsdk:"alicloud_ram_role"`
 	AnthropicWorkspace                *AnthropicWorkspace                `tfsdk:"anthropic_workspace"`
 	AwsAccount                        *AwsAccount                        `tfsdk:"aws_account"`
 	AwsEc2Instance                    *AwsEc2Instance                    `tfsdk:"aws_ec2_instance"`
@@ -36,13 +38,14 @@ type ResourceRemoteInfo struct {
 	DatastaxAstraRole                 *ClickhouseRole                    `tfsdk:"datastax_astra_role"`
 	DevinOrganization                 *CursorOrganization                `tfsdk:"devin_organization"`
 	DevinRole                         *ClickhouseRole                    `tfsdk:"devin_role"`
+	DocusignPermissionProfile         *DocusignPermissionProfile         `tfsdk:"docusign_permission_profile"`
 	GcpBigQueryDataset                *GcpBigQueryDataset                `tfsdk:"gcp_big_query_dataset"`
 	GcpBigQueryTable                  *GcpBigQueryTable                  `tfsdk:"gcp_big_query_table"`
 	GcpBucket                         *GcpBucket                         `tfsdk:"gcp_bucket"`
 	GcpComputeInstance                *GcpComputeInstance                `tfsdk:"gcp_compute_instance"`
 	GcpFolder                         *GcpFolder                         `tfsdk:"gcp_folder"`
 	GcpGkeCluster                     *GcpGkeCluster                     `tfsdk:"gcp_gke_cluster"`
-	GcpOrganization                   *GcpOrganization                   `tfsdk:"gcp_organization"`
+	GcpOrganization                   *ZendeskOrganization               `tfsdk:"gcp_organization"`
 	GcpProject                        *GcpProject                        `tfsdk:"gcp_project"`
 	GcpServiceAccount                 *GcpServiceAccount                 `tfsdk:"gcp_service_account"`
 	GcpSQLInstance                    *GcpSQLInstance                    `tfsdk:"gcp_sql_instance"`
@@ -55,6 +58,7 @@ type ResourceRemoteInfo struct {
 	GrafanaDashboard                  *GrafanaDashboard                  `tfsdk:"grafana_dashboard"`
 	GrafanaFolder                     *GrafanaFolder                     `tfsdk:"grafana_folder"`
 	GrafanaRole                       *GrafanaRole                       `tfsdk:"grafana_role"`
+	HubspotRole                       *ClickhouseRole                    `tfsdk:"hubspot_role"`
 	IlevelAdvancedRole                *IlevelAdvancedRole                `tfsdk:"ilevel_advanced_role"`
 	NetsuiteRole                      *ClickhouseRole                    `tfsdk:"netsuite_role"`
 	OktaApp                           *OktaApp                           `tfsdk:"okta_app"`
@@ -74,4 +78,5 @@ type ResourceRemoteInfo struct {
 	TeleportRole                      *IlevelAdvancedRole                `tfsdk:"teleport_role"`
 	TwingateResource                  *AzureEnterpriseApp                `tfsdk:"twingate_resource"`
 	WorkdayRole                       *ClickhouseRole                    `tfsdk:"workday_role"`
+	ZendeskRole                       *ClickhouseRole                    `tfsdk:"zendesk_role"`
 }
