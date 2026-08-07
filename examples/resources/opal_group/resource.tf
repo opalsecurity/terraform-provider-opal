@@ -7,7 +7,9 @@ resource "opal_group" "my_group" {
   group_leader_user_ids = [
     "23ac9822-9f43-4e31-a31d-6a6109f207ae"
   ]
-  group_type = "OPAL_GROUP"
+  group_type               = "OPAL_GROUP"
+  match_remote_description = false
+  match_remote_name        = false
   message_channel_ids = [
     "01f0dea1-52d3-4b76-b362-1ee677e90fd2"
   ]
@@ -59,6 +61,9 @@ resource "opal_group" "my_group" {
     grafana_team = {
       team_id = 2323
     }
+    hubspot_team = {
+      team_id = "12345"
+    }
     incidentio_on_call_schedule = {
       schedule_id = "01HZ8XQM9ZQX8RKMZQ8ZQX8RK"
     }
@@ -77,8 +82,14 @@ resource "opal_group" "my_group" {
     rootly_on_call_schedule = {
       schedule_id = "01HZ8XQM9ZQX8RKMZQ8ZQX8RK"
     }
+    slack_user_group = {
+      group_id = "S0614TZR7"
+    }
     snowflake_role = {
       role_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    tableau_group = {
+      group_id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
     }
     tailscale_group = {
       group_id = 898931321
@@ -91,6 +102,12 @@ resource "opal_group" "my_group" {
     }
     workday_user_security_group = {
       group_id = "123abc456def"
+    }
+    zendesk_group = {
+      group_id = "12345"
+    }
+    zendesk_organization = {
+      organization_id = "67890"
     }
   }
   request_configurations = [
