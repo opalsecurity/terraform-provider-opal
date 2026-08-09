@@ -119,6 +119,8 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			r.LastSuccessfulSync.CompletedAt = types.StringValue(typeconvert.TimeToString(resp.LastSuccessfulSync.CompletedAt))
 			r.LastSuccessfulSync.ID = types.StringValue(resp.LastSuccessfulSync.ID)
 		}
+		r.MatchRemoteDescription = types.BoolPointerValue(resp.MatchRemoteDescription)
+		r.MatchRemoteName = types.BoolPointerValue(resp.MatchRemoteName)
 		r.Name = types.StringPointerValue(resp.Name)
 		if resp.RemoteInfo == nil {
 			r.RemoteInfo = nil
@@ -209,6 +211,12 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.GrafanaTeam = &tfTypes.GrafanaTeam{}
 				r.RemoteInfo.GrafanaTeam.TeamID = types.StringValue(resp.RemoteInfo.GrafanaTeam.TeamID)
 			}
+			if resp.RemoteInfo.HubspotTeam == nil {
+				r.RemoteInfo.HubspotTeam = nil
+			} else {
+				r.RemoteInfo.HubspotTeam = &tfTypes.GrafanaTeam{}
+				r.RemoteInfo.HubspotTeam.TeamID = types.StringValue(resp.RemoteInfo.HubspotTeam.TeamID)
+			}
 			if resp.RemoteInfo.IncidentioOnCallSchedule == nil {
 				r.RemoteInfo.IncidentioOnCallSchedule = nil
 			} else {
@@ -245,11 +253,23 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.RootlyOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
 				r.RemoteInfo.RootlyOnCallSchedule.ScheduleID = types.StringValue(resp.RemoteInfo.RootlyOnCallSchedule.ScheduleID)
 			}
+			if resp.RemoteInfo.SlackUserGroup == nil {
+				r.RemoteInfo.SlackUserGroup = nil
+			} else {
+				r.RemoteInfo.SlackUserGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.SlackUserGroup.GroupID = types.StringValue(resp.RemoteInfo.SlackUserGroup.GroupID)
+			}
 			if resp.RemoteInfo.SnowflakeRole == nil {
 				r.RemoteInfo.SnowflakeRole = nil
 			} else {
 				r.RemoteInfo.SnowflakeRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.SnowflakeRole.RoleID = types.StringValue(resp.RemoteInfo.SnowflakeRole.RoleID)
+			}
+			if resp.RemoteInfo.TableauGroup == nil {
+				r.RemoteInfo.TableauGroup = nil
+			} else {
+				r.RemoteInfo.TableauGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.TableauGroup.GroupID = types.StringValue(resp.RemoteInfo.TableauGroup.GroupID)
 			}
 			if resp.RemoteInfo.TailscaleGroup == nil {
 				r.RemoteInfo.TailscaleGroup = nil
@@ -274,6 +294,18 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			} else {
 				r.RemoteInfo.WorkdayUserSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.WorkdayUserSecurityGroup.GroupID = types.StringValue(resp.RemoteInfo.WorkdayUserSecurityGroup.GroupID)
+			}
+			if resp.RemoteInfo.ZendeskGroup == nil {
+				r.RemoteInfo.ZendeskGroup = nil
+			} else {
+				r.RemoteInfo.ZendeskGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.ZendeskGroup.GroupID = types.StringValue(resp.RemoteInfo.ZendeskGroup.GroupID)
+			}
+			if resp.RemoteInfo.ZendeskOrganization == nil {
+				r.RemoteInfo.ZendeskOrganization = nil
+			} else {
+				r.RemoteInfo.ZendeskOrganization = &tfTypes.ZendeskOrganization{}
+				r.RemoteInfo.ZendeskOrganization.OrganizationID = types.StringValue(resp.RemoteInfo.ZendeskOrganization.OrganizationID)
 			}
 		}
 		r.RemoteName = types.StringPointerValue(resp.RemoteName)
