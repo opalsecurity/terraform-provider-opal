@@ -17,6 +17,8 @@ type Resource struct {
 	ExtensionsDurationInMinutes types.Int64                     `tfsdk:"extensions_duration_in_minutes"`
 	ID                          types.String                    `tfsdk:"id"`
 	LastSuccessfulSync          *LastSuccessfulSync             `tfsdk:"last_successful_sync"`
+	MatchRemoteDescription      types.Bool                      `tfsdk:"match_remote_description"`
+	MatchRemoteName             types.Bool                      `tfsdk:"match_remote_name"`
 	Name                        types.String                    `tfsdk:"name"`
 	ParentResourceID            types.String                    `tfsdk:"parent_resource_id"`
 	RemoteInfo                  *ResourceRemoteInfo             `tfsdk:"remote_info"`
