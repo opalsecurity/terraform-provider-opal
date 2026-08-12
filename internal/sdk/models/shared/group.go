@@ -150,6 +150,10 @@ type Group struct {
 	ID string `json:"group_id"`
 	// Information about the last successful sync of this group.
 	LastSuccessfulSync *LastSuccessfulSync `json:"last_successful_sync,omitempty"`
+	// A bool representing whether or not the group's description is synced from the end system. When true, the description is overwritten with the remote description on each sync. Defaults to false.
+	MatchRemoteDescription *bool `json:"match_remote_description,omitempty"`
+	// A bool representing whether or not the group's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.
+	MatchRemoteName *bool `json:"match_remote_name,omitempty"`
 	// The name of the group.
 	Name *string `json:"name,omitempty"`
 	// Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided.
@@ -244,6 +248,20 @@ func (g *Group) GetLastSuccessfulSync() *LastSuccessfulSync {
 		return nil
 	}
 	return g.LastSuccessfulSync
+}
+
+func (g *Group) GetMatchRemoteDescription() *bool {
+	if g == nil {
+		return nil
+	}
+	return g.MatchRemoteDescription
+}
+
+func (g *Group) GetMatchRemoteName() *bool {
+	if g == nil {
+		return nil
+	}
+	return g.MatchRemoteName
 }
 
 func (g *Group) GetName() *string {

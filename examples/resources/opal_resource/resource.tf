@@ -4,9 +4,17 @@ resource "opal_resource" "my_resource" {
   custom_request_notification    = "Check your email to register your account."
   description                    = "Engineering team Okta role."
   extensions_duration_in_minutes = 120
+  match_remote_description       = false
+  match_remote_name              = false
   name                           = "mongo-db-prod"
   parent_resource_id             = "f454d283-ca67-4a8a-bdbb-df212eca5345"
   remote_info = {
+    alicloud_ecs_instance = {
+      instance_id = "i-bp1a1234567890abcd"
+    }
+    alicloud_ram_role = {
+      role_arn = "acs:ram::1234567890:role/MyRole"
+    }
     anthropic_workspace = {
       workspace_id = "ws-123456"
     }
@@ -121,6 +129,9 @@ resource "opal_resource" "my_resource" {
     devin_role = {
       role_id = "devin-role-01"
     }
+    docusign_permission_profile = {
+      permission_profile_id = "12345"
+    }
     gcp_big_query_dataset = {
       dataset_id = "example-dataset-898931321"
       project_id = "example-project-898931321"
@@ -188,6 +199,9 @@ resource "opal_resource" "my_resource" {
     grafana_role = {
       role_uid = "rrfRTXX"
     }
+    hubspot_role = {
+      role_id = "12345"
+    }
     ilevel_advanced_role = {
       role_name = "IT User"
     }
@@ -249,6 +263,9 @@ resource "opal_resource" "my_resource" {
     }
     workday_role = {
       role_id = "123abc456def"
+    }
+    zendesk_role = {
+      role_id = "12345"
     }
   }
   request_configurations = [

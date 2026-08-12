@@ -39,6 +39,8 @@ type ResourceDataSourceModel struct {
 	ExtensionsDurationInMinutes types.Int64                             `tfsdk:"extensions_duration_in_minutes"`
 	ID                          types.String                            `tfsdk:"id"`
 	LastSuccessfulSync          *tfTypes.LastSuccessfulSync             `tfsdk:"last_successful_sync"`
+	MatchRemoteDescription      types.Bool                              `tfsdk:"match_remote_description"`
+	MatchRemoteName             types.Bool                              `tfsdk:"match_remote_name"`
 	Name                        types.String                            `tfsdk:"name"`
 	ParentResourceID            types.String                            `tfsdk:"parent_resource_id"`
 	RemoteInfo                  *tfTypes.ResourceRemoteInfo             `tfsdk:"remote_info"`
@@ -111,6 +113,14 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				},
 				Description: `Information about the last successful sync of this resource.`,
 			},
+			"match_remote_description": schema.BoolAttribute{
+				Computed:    true,
+				Description: `A bool representing whether or not the resource's description is synced from the end system. When true, the description is overwritten with the remote description on each sync. Defaults to false.`,
+			},
+			"match_remote_name": schema.BoolAttribute{
+				Computed:    true,
+				Description: `A bool representing whether or not the resource's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.`,
+			},
 			"name": schema.StringAttribute{
 				Computed:    true,
 				Description: `The name of the resource.`,
@@ -122,6 +132,26 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"remote_info": schema.SingleNestedAttribute{
 				Computed: true,
 				Attributes: map[string]schema.Attribute{
+					"alicloud_ecs_instance": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"instance_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the ECS instance.`,
+							},
+						},
+						Description: `Remote info for AliCloud ECS instance.`,
+					},
+					"alicloud_ram_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"role_arn": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ARN of the AliCloud RAM role.`,
+							},
+						},
+						Description: `Remote info for AliCloud RAM role.`,
+					},
 					"anthropic_workspace": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -514,6 +544,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Devin role.`,
 					},
+					"docusign_permission_profile": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"permission_profile_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Docusign permission profile.`,
+							},
+						},
+						Description: `Remote info for Docusign permission profile.`,
+					},
 					"gcp_big_query_dataset": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -744,6 +784,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Grafana role(fixed or custom).`,
 					},
+					"hubspot_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"role_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the HubSpot role.`,
+							},
+						},
+						Description: `Remote info for HubSpot role.`,
+					},
 					"ilevel_advanced_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -953,6 +1003,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for Workday role.`,
+					},
+					"zendesk_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"role_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Zendesk custom role.`,
+							},
+						},
+						Description: `Remote info for Zendesk custom role.`,
 					},
 				},
 				Description: `Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields.`,

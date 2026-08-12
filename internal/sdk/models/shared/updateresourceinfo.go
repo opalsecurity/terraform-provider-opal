@@ -23,6 +23,10 @@ type UpdateResourceInfo struct {
 	ExtensionsDurationInMinutes *int64 `json:"extensions_duration_in_minutes,omitempty"`
 	// The ID of the resource.
 	ID string `json:"resource_id"`
+	// A bool representing whether or not the resource's description should be synced from the end system. When true, the description is overwritten with the remote description on each sync, so a `description` provided together with this field set to true will be replaced at the next sync. If not provided, the current value is left unchanged.
+	MatchRemoteDescription *bool `json:"match_remote_description,omitempty"`
+	// A bool representing whether or not the resource's name should be synced from the end system. When true, the name is overwritten with the remote name on each sync, so a `name` provided together with this field set to true will be replaced at the next sync. If not provided, the current value is left unchanged.
+	MatchRemoteName *bool `json:"match_remote_name,omitempty"`
 	// The name of the resource.
 	Name *string `json:"name,omitempty"`
 	// The ID of the parent resource.
@@ -82,6 +86,20 @@ func (u *UpdateResourceInfo) GetID() string {
 		return ""
 	}
 	return u.ID
+}
+
+func (u *UpdateResourceInfo) GetMatchRemoteDescription() *bool {
+	if u == nil {
+		return nil
+	}
+	return u.MatchRemoteDescription
+}
+
+func (u *UpdateResourceInfo) GetMatchRemoteName() *bool {
+	if u == nil {
+		return nil
+	}
+	return u.MatchRemoteName
 }
 
 func (u *UpdateResourceInfo) GetName() *string {
