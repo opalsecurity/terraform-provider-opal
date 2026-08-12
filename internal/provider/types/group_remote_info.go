@@ -9,7 +9,6 @@ type GroupRemoteInfo struct {
 	AzureAdMicrosoft365Group *ActiveDirectoryGroup     `tfsdk:"azure_ad_microsoft_365_group"`
 	AzureAdSecurityGroup     *ActiveDirectoryGroup     `tfsdk:"azure_ad_security_group"`
 	ClickhouseRole           *ClickhouseRole           `tfsdk:"clickhouse_role"`
-	ConfluenceGroup          *ActiveDirectoryGroup     `tfsdk:"confluence_group"`
 	ConnectorGroup           *ActiveDirectoryGroup     `tfsdk:"connector_group"`
 	DatabricksAccountGroup   *ActiveDirectoryGroup     `tfsdk:"databricks_account_group"`
 	DevinGroup               *DevinGroup               `tfsdk:"devin_group"`
@@ -23,7 +22,6 @@ type GroupRemoteInfo struct {
 	GrafanaTeam              *GrafanaTeam              `tfsdk:"grafana_team"`
 	HubspotTeam              *GrafanaTeam              `tfsdk:"hubspot_team"`
 	IncidentioOnCallSchedule *IncidentioOnCallSchedule `tfsdk:"incidentio_on_call_schedule"`
-	JiraGroup                *ActiveDirectoryGroup     `tfsdk:"jira_group"`
 	LdapGroup                *ActiveDirectoryGroup     `tfsdk:"ldap_group"`
 	OktaGroup                *ActiveDirectoryGroup     `tfsdk:"okta_group"`
 	OktaGroupRule            *OktaGroupRule            `tfsdk:"okta_group_rule"`
@@ -38,5 +36,4 @@ type GroupRemoteInfo struct {
 	WorkdayUserSecurityGroup *ActiveDirectoryGroup     `tfsdk:"workday_user_security_group"`
 	ZendeskGroup             *ActiveDirectoryGroup     `tfsdk:"zendesk_group"`
 	ZendeskOrganization      *ZendeskOrganization      `tfsdk:"zendesk_organization"`
-	ZoomGroup                *ActiveDirectoryGroup     `tfsdk:"zoom_group"`
 }

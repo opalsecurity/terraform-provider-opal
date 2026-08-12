@@ -21,7 +21,6 @@ const (
 	AppTypeEnumCoupa           AppTypeEnum = "COUPA"
 	AppTypeEnumCursor          AppTypeEnum = "CURSOR"
 	AppTypeEnumCustom          AppTypeEnum = "CUSTOM"
-	AppTypeEnumConfluence      AppTypeEnum = "CONFLUENCE"
 	AppTypeEnumCustomConnector AppTypeEnum = "CUSTOM_CONNECTOR"
 	AppTypeEnumDatabricks      AppTypeEnum = "DATABRICKS"
 	AppTypeEnumDatastaxAstra   AppTypeEnum = "DATASTAX_ASTRA"
@@ -38,7 +37,6 @@ const (
 	AppTypeEnumHubspot         AppTypeEnum = "HUBSPOT"
 	AppTypeEnumIlevel          AppTypeEnum = "ILEVEL"
 	AppTypeEnumIncidentio      AppTypeEnum = "INCIDENTIO"
-	AppTypeEnumJira            AppTypeEnum = "JIRA"
 	AppTypeEnumLdap            AppTypeEnum = "LDAP"
 	AppTypeEnumMariadb         AppTypeEnum = "MARIADB"
 	AppTypeEnumMongo           AppTypeEnum = "MONGO"
@@ -64,7 +62,6 @@ const (
 	AppTypeEnumVault           AppTypeEnum = "VAULT"
 	AppTypeEnumWorkday         AppTypeEnum = "WORKDAY"
 	AppTypeEnumZendesk         AppTypeEnum = "ZENDESK"
-	AppTypeEnumZoom            AppTypeEnum = "ZOOM"
 )
 
 func (e AppTypeEnum) ToPointer() *AppTypeEnum {
@@ -93,8 +90,6 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 	case "CURSOR":
 		fallthrough
 	case "CUSTOM":
-		fallthrough
-	case "CONFLUENCE":
 		fallthrough
 	case "CUSTOM_CONNECTOR":
 		fallthrough
@@ -127,8 +122,6 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 	case "ILEVEL":
 		fallthrough
 	case "INCIDENTIO":
-		fallthrough
-	case "JIRA":
 		fallthrough
 	case "LDAP":
 		fallthrough
@@ -179,8 +172,6 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 	case "WORKDAY":
 		fallthrough
 	case "ZENDESK":
-		fallthrough
-	case "ZOOM":
 		*e = AppTypeEnum(v)
 		return nil
 	default:

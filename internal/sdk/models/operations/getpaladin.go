@@ -10,14 +10,14 @@ import (
 
 type GetPaladinRequest struct {
 	// The ID of the Paladin.
-	PaladinID string `pathParam:"style=simple,explode=true,name=paladin_id"`
+	ID string `pathParam:"style=simple,explode=true,name=paladin_id"`
 }
 
-func (g *GetPaladinRequest) GetPaladinID() string {
+func (g *GetPaladinRequest) GetID() string {
 	if g == nil {
 		return ""
 	}
-	return g.PaladinID
+	return g.ID
 }
 
 type GetPaladinResponse struct {

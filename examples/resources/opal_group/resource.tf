@@ -33,9 +33,6 @@ resource "opal_group" "my_group" {
     clickhouse_role = {
       role_id = "my_clickhouse_role"
     }
-    confluence_group = {
-      group_id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
-    }
     connector_group = {
       group_id = 898931321
     }
@@ -75,9 +72,6 @@ resource "opal_group" "my_group" {
     }
     incidentio_on_call_schedule = {
       schedule_id = "01HZ8XQM9ZQX8RKMZQ8ZQX8RK"
-    }
-    jira_group = {
-      group_id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
     }
     ldap_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
@@ -120,9 +114,6 @@ resource "opal_group" "my_group" {
     }
     zendesk_organization = {
       organization_id = "67890"
-    }
-    zoom_group = {
-      group_id = "SoBVexyrQjqCkcxjpBWi6w"
     }
   }
   request_configurations = [

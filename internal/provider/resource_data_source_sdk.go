@@ -529,18 +529,6 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.ZendeskRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.ZendeskRole.RoleID = types.StringValue(resp.RemoteInfo.ZendeskRole.RoleID)
 			}
-			if resp.RemoteInfo.ZoomLicense == nil {
-				r.RemoteInfo.ZoomLicense = nil
-			} else {
-				r.RemoteInfo.ZoomLicense = &tfTypes.ZoomLicense{}
-				r.RemoteInfo.ZoomLicense.LicenseType = types.StringValue(resp.RemoteInfo.ZoomLicense.LicenseType)
-			}
-			if resp.RemoteInfo.ZoomRole == nil {
-				r.RemoteInfo.ZoomRole = nil
-			} else {
-				r.RemoteInfo.ZoomRole = &tfTypes.ClickhouseRole{}
-				r.RemoteInfo.ZoomRole.RoleID = types.StringValue(resp.RemoteInfo.ZoomRole.RoleID)
-			}
 		}
 		r.RequestConfigurations = []tfTypes.RequestConfiguration{}
 

@@ -255,16 +255,6 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for ClickHouse role.`,
 					},
-					"confluence_group": schema.SingleNestedAttribute{
-						Computed: true,
-						Attributes: map[string]schema.Attribute{
-							"group_id": schema.StringAttribute{
-								Computed:    true,
-								Description: `The ID of the Confluence group.`,
-							},
-						},
-						Description: `Remote info for Confluence group.`,
-					},
 					"connector_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -398,16 +388,6 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							},
 						},
 						Description: `Remote info for Incident.io on-call schedule group.`,
-					},
-					"jira_group": schema.SingleNestedAttribute{
-						Computed: true,
-						Attributes: map[string]schema.Attribute{
-							"group_id": schema.StringAttribute{
-								Computed:    true,
-								Description: `The ID of the Jira group.`,
-							},
-						},
-						Description: `Remote info for Jira group.`,
 					},
 					"ldap_group": schema.SingleNestedAttribute{
 						Computed: true,
@@ -548,16 +528,6 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							},
 						},
 						Description: `Remote info for Zendesk organization.`,
-					},
-					"zoom_group": schema.SingleNestedAttribute{
-						Computed: true,
-						Attributes: map[string]schema.Attribute{
-							"group_id": schema.StringAttribute{
-								Computed:    true,
-								Description: `The ID of the Zoom group.`,
-							},
-						},
-						Description: `Remote info for Zoom group.`,
 					},
 				},
 				Description: `Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided.`,

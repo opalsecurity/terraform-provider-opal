@@ -267,12 +267,6 @@ resource "opal_resource" "my_resource" {
     zendesk_role = {
       role_id = "12345"
     }
-    zoom_license = {
-      license_type = "2"
-    }
-    zoom_role = {
-      role_id = "0"
-    }
   }
   request_configurations = [
     {

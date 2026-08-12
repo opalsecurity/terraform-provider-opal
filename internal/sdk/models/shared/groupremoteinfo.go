@@ -71,19 +71,6 @@ func (c *ClickhouseRole) GetRoleID() string {
 	return c.RoleID
 }
 
-// ConfluenceGroup - Remote info for Confluence group.
-type ConfluenceGroup struct {
-	// The ID of the Confluence group.
-	GroupID string `json:"group_id"`
-}
-
-func (c *ConfluenceGroup) GetGroupID() string {
-	if c == nil {
-		return ""
-	}
-	return c.GroupID
-}
-
 // ConnectorGroup - Remote info for Connector group.
 type ConnectorGroup struct {
 	// The id of the Connector group.
@@ -260,19 +247,6 @@ func (i *IncidentioOnCallSchedule) GetScheduleID() string {
 		return ""
 	}
 	return i.ScheduleID
-}
-
-// JiraGroup - Remote info for Jira group.
-type JiraGroup struct {
-	// The ID of the Jira group.
-	GroupID string `json:"group_id"`
-}
-
-func (j *JiraGroup) GetGroupID() string {
-	if j == nil {
-		return ""
-	}
-	return j.GroupID
 }
 
 // LdapGroup - Remote info for LDAP group.
@@ -457,19 +431,6 @@ func (z *ZendeskOrganization) GetOrganizationID() string {
 	return z.OrganizationID
 }
 
-// ZoomGroup - Remote info for Zoom group.
-type ZoomGroup struct {
-	// The ID of the Zoom group.
-	GroupID string `json:"group_id"`
-}
-
-func (z *ZoomGroup) GetGroupID() string {
-	if z == nil {
-		return ""
-	}
-	return z.GroupID
-}
-
 // GroupRemoteInfo - Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided.
 type GroupRemoteInfo struct {
 	// Remote info for Active Directory group.
@@ -482,8 +443,6 @@ type GroupRemoteInfo struct {
 	AzureAdSecurityGroup *AzureAdSecurityGroup `json:"azure_ad_security_group,omitempty"`
 	// Remote info for ClickHouse role.
 	ClickhouseRole *ClickhouseRole `json:"clickhouse_role,omitempty"`
-	// Remote info for Confluence group.
-	ConfluenceGroup *ConfluenceGroup `json:"confluence_group,omitempty"`
 	// Remote info for Connector group.
 	ConnectorGroup *ConnectorGroup `json:"connector_group,omitempty"`
 	// Remote info for Databricks account group.
@@ -510,8 +469,6 @@ type GroupRemoteInfo struct {
 	HubspotTeam *HubspotTeam `json:"hubspot_team,omitempty"`
 	// Remote info for Incident.io on-call schedule group.
 	IncidentioOnCallSchedule *IncidentioOnCallSchedule `json:"incidentio_on_call_schedule,omitempty"`
-	// Remote info for Jira group.
-	JiraGroup *JiraGroup `json:"jira_group,omitempty"`
 	// Remote info for LDAP group.
 	LdapGroup *LdapGroup `json:"ldap_group,omitempty"`
 	// Remote info for Okta Directory group.
@@ -540,8 +497,6 @@ type GroupRemoteInfo struct {
 	ZendeskGroup *ZendeskGroup `json:"zendesk_group,omitempty"`
 	// Remote info for Zendesk organization.
 	ZendeskOrganization *ZendeskOrganization `json:"zendesk_organization,omitempty"`
-	// Remote info for Zoom group.
-	ZoomGroup *ZoomGroup `json:"zoom_group,omitempty"`
 }
 
 func (g *GroupRemoteInfo) GetActiveDirectoryGroup() *ActiveDirectoryGroup {
@@ -577,13 +532,6 @@ func (g *GroupRemoteInfo) GetClickhouseRole() *ClickhouseRole {
 		return nil
 	}
 	return g.ClickhouseRole
-}
-
-func (g *GroupRemoteInfo) GetConfluenceGroup() *ConfluenceGroup {
-	if g == nil {
-		return nil
-	}
-	return g.ConfluenceGroup
 }
 
 func (g *GroupRemoteInfo) GetConnectorGroup() *ConnectorGroup {
@@ -675,13 +623,6 @@ func (g *GroupRemoteInfo) GetIncidentioOnCallSchedule() *IncidentioOnCallSchedul
 		return nil
 	}
 	return g.IncidentioOnCallSchedule
-}
-
-func (g *GroupRemoteInfo) GetJiraGroup() *JiraGroup {
-	if g == nil {
-		return nil
-	}
-	return g.JiraGroup
 }
 
 func (g *GroupRemoteInfo) GetLdapGroup() *LdapGroup {
@@ -780,11 +721,4 @@ func (g *GroupRemoteInfo) GetZendeskOrganization() *ZendeskOrganization {
 		return nil
 	}
 	return g.ZendeskOrganization
-}
-
-func (g *GroupRemoteInfo) GetZoomGroup() *ZoomGroup {
-	if g == nil {
-		return nil
-	}
-	return g.ZoomGroup
 }

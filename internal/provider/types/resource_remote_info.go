@@ -79,6 +79,4 @@ type ResourceRemoteInfo struct {
 	TwingateResource                  *AzureEnterpriseApp                `tfsdk:"twingate_resource"`
 	WorkdayRole                       *ClickhouseRole                    `tfsdk:"workday_role"`
 	ZendeskRole                       *ClickhouseRole                    `tfsdk:"zendesk_role"`
-	ZoomLicense                       *ZoomLicense                       `tfsdk:"zoom_license"`
-	ZoomRole                          *ClickhouseRole                    `tfsdk:"zoom_role"`
 }

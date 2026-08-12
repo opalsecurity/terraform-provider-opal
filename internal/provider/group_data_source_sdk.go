@@ -156,12 +156,6 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.ClickhouseRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.ClickhouseRole.RoleID = types.StringValue(resp.RemoteInfo.ClickhouseRole.RoleID)
 			}
-			if resp.RemoteInfo.ConfluenceGroup == nil {
-				r.RemoteInfo.ConfluenceGroup = nil
-			} else {
-				r.RemoteInfo.ConfluenceGroup = &tfTypes.ActiveDirectoryGroup{}
-				r.RemoteInfo.ConfluenceGroup.GroupID = types.StringValue(resp.RemoteInfo.ConfluenceGroup.GroupID)
-			}
 			if resp.RemoteInfo.ConnectorGroup == nil {
 				r.RemoteInfo.ConnectorGroup = nil
 			} else {
@@ -240,12 +234,6 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			} else {
 				r.RemoteInfo.IncidentioOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
 				r.RemoteInfo.IncidentioOnCallSchedule.ScheduleID = types.StringValue(resp.RemoteInfo.IncidentioOnCallSchedule.ScheduleID)
-			}
-			if resp.RemoteInfo.JiraGroup == nil {
-				r.RemoteInfo.JiraGroup = nil
-			} else {
-				r.RemoteInfo.JiraGroup = &tfTypes.ActiveDirectoryGroup{}
-				r.RemoteInfo.JiraGroup.GroupID = types.StringValue(resp.RemoteInfo.JiraGroup.GroupID)
 			}
 			if resp.RemoteInfo.LdapGroup == nil {
 				r.RemoteInfo.LdapGroup = nil
@@ -330,12 +318,6 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			} else {
 				r.RemoteInfo.ZendeskOrganization = &tfTypes.ZendeskOrganization{}
 				r.RemoteInfo.ZendeskOrganization.OrganizationID = types.StringValue(resp.RemoteInfo.ZendeskOrganization.OrganizationID)
-			}
-			if resp.RemoteInfo.ZoomGroup == nil {
-				r.RemoteInfo.ZoomGroup = nil
-			} else {
-				r.RemoteInfo.ZoomGroup = &tfTypes.ActiveDirectoryGroup{}
-				r.RemoteInfo.ZoomGroup.GroupID = types.StringValue(resp.RemoteInfo.ZoomGroup.GroupID)
 			}
 		}
 		r.RemoteName = types.StringPointerValue(resp.RemoteName)

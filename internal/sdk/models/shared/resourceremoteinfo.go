@@ -1277,32 +1277,6 @@ func (z *ZendeskRole) GetRoleID() string {
 	return z.RoleID
 }
 
-// ZoomLicense - Remote info for Zoom license (user type).
-type ZoomLicense struct {
-	// The Zoom user type representing the license (e.g. "2" for Licensed).
-	LicenseType string `json:"license_type"`
-}
-
-func (z *ZoomLicense) GetLicenseType() string {
-	if z == nil {
-		return ""
-	}
-	return z.LicenseType
-}
-
-// ZoomRole - Remote info for Zoom role.
-type ZoomRole struct {
-	// The ID of the Zoom role.
-	RoleID string `json:"role_id"`
-}
-
-func (z *ZoomRole) GetRoleID() string {
-	if z == nil {
-		return ""
-	}
-	return z.RoleID
-}
-
 // ResourceRemoteInfo - Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields.
 type ResourceRemoteInfo struct {
 	// Remote info for AliCloud ECS instance.
@@ -1455,10 +1429,6 @@ type ResourceRemoteInfo struct {
 	WorkdayRole *WorkdayRole `json:"workday_role,omitempty"`
 	// Remote info for Zendesk custom role.
 	ZendeskRole *ZendeskRole `json:"zendesk_role,omitempty"`
-	// Remote info for Zoom license (user type).
-	ZoomLicense *ZoomLicense `json:"zoom_license,omitempty"`
-	// Remote info for Zoom role.
-	ZoomRole *ZoomRole `json:"zoom_role,omitempty"`
 }
 
 func (r *ResourceRemoteInfo) GetAlicloudEcsInstance() *AlicloudEcsInstance {
@@ -1984,18 +1954,4 @@ func (r *ResourceRemoteInfo) GetZendeskRole() *ZendeskRole {
 		return nil
 	}
 	return r.ZendeskRole
-}
-
-func (r *ResourceRemoteInfo) GetZoomLicense() *ZoomLicense {
-	if r == nil {
-		return nil
-	}
-	return r.ZoomLicense
-}
-
-func (r *ResourceRemoteInfo) GetZoomRole() *ZoomRole {
-	if r == nil {
-		return nil
-	}
-	return r.ZoomRole
 }

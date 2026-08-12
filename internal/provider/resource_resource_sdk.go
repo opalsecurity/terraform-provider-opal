@@ -529,18 +529,6 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.ZendeskRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.ZendeskRole.RoleID = types.StringValue(resp.RemoteInfo.ZendeskRole.RoleID)
 			}
-			if resp.RemoteInfo.ZoomLicense == nil {
-				r.RemoteInfo.ZoomLicense = nil
-			} else {
-				r.RemoteInfo.ZoomLicense = &tfTypes.ZoomLicense{}
-				r.RemoteInfo.ZoomLicense.LicenseType = types.StringValue(resp.RemoteInfo.ZoomLicense.LicenseType)
-			}
-			if resp.RemoteInfo.ZoomRole == nil {
-				r.RemoteInfo.ZoomRole = nil
-			} else {
-				r.RemoteInfo.ZoomRole = &tfTypes.ClickhouseRole{}
-				r.RemoteInfo.ZoomRole.RoleID = types.StringValue(resp.RemoteInfo.ZoomRole.RoleID)
-			}
 		}
 		r.RequestConfigurations = []tfTypes.RequestConfiguration{}
 
@@ -1650,24 +1638,6 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				RoleID: roleId13,
 			}
 		}
-		var zoomLicense *shared.ZoomLicense
-		if r.RemoteInfo.ZoomLicense != nil {
-			var licenseType string
-			licenseType = r.RemoteInfo.ZoomLicense.LicenseType.ValueString()
-
-			zoomLicense = &shared.ZoomLicense{
-				LicenseType: licenseType,
-			}
-		}
-		var zoomRole *shared.ZoomRole
-		if r.RemoteInfo.ZoomRole != nil {
-			var roleId14 string
-			roleId14 = r.RemoteInfo.ZoomRole.RoleID.ValueString()
-
-			zoomRole = &shared.ZoomRole{
-				RoleID: roleId14,
-			}
-		}
 		remoteInfo = &shared.ResourceRemoteInfo{
 			AlicloudEcsInstance:               alicloudEcsInstance,
 			AlicloudRAMRole:                   alicloudRAMRole,
@@ -1744,8 +1714,6 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			TwingateResource:                  twingateResource,
 			WorkdayRole:                       workdayRole,
 			ZendeskRole:                       zendeskRole,
-			ZoomLicense:                       zoomLicense,
-			ZoomRole:                          zoomRole,
 		}
 	}
 	resourceType := shared.ResourceTypeEnum(r.ResourceType.ValueString())

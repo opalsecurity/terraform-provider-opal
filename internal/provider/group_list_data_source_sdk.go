@@ -82,12 +82,6 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.ClickhouseRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.ClickhouseRole.RoleID = types.StringValue(resultsItem.RemoteInfo.ClickhouseRole.RoleID)
 				}
-				if resultsItem.RemoteInfo.ConfluenceGroup == nil {
-					results.RemoteInfo.ConfluenceGroup = nil
-				} else {
-					results.RemoteInfo.ConfluenceGroup = &tfTypes.ActiveDirectoryGroup{}
-					results.RemoteInfo.ConfluenceGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.ConfluenceGroup.GroupID)
-				}
 				if resultsItem.RemoteInfo.ConnectorGroup == nil {
 					results.RemoteInfo.ConnectorGroup = nil
 				} else {
@@ -166,12 +160,6 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				} else {
 					results.RemoteInfo.IncidentioOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
 					results.RemoteInfo.IncidentioOnCallSchedule.ScheduleID = types.StringValue(resultsItem.RemoteInfo.IncidentioOnCallSchedule.ScheduleID)
-				}
-				if resultsItem.RemoteInfo.JiraGroup == nil {
-					results.RemoteInfo.JiraGroup = nil
-				} else {
-					results.RemoteInfo.JiraGroup = &tfTypes.ActiveDirectoryGroup{}
-					results.RemoteInfo.JiraGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.JiraGroup.GroupID)
 				}
 				if resultsItem.RemoteInfo.LdapGroup == nil {
 					results.RemoteInfo.LdapGroup = nil
@@ -256,12 +244,6 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				} else {
 					results.RemoteInfo.ZendeskOrganization = &tfTypes.ZendeskOrganization{}
 					results.RemoteInfo.ZendeskOrganization.OrganizationID = types.StringValue(resultsItem.RemoteInfo.ZendeskOrganization.OrganizationID)
-				}
-				if resultsItem.RemoteInfo.ZoomGroup == nil {
-					results.RemoteInfo.ZoomGroup = nil
-				} else {
-					results.RemoteInfo.ZoomGroup = &tfTypes.ActiveDirectoryGroup{}
-					results.RemoteInfo.ZoomGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.ZoomGroup.GroupID)
 				}
 			}
 			results.RemoteName = types.StringPointerValue(resultsItem.RemoteName)

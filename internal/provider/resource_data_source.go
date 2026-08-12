@@ -1014,26 +1014,6 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Zendesk custom role.`,
 					},
-					"zoom_license": schema.SingleNestedAttribute{
-						Computed: true,
-						Attributes: map[string]schema.Attribute{
-							"license_type": schema.StringAttribute{
-								Computed:    true,
-								Description: `The Zoom user type representing the license (e.g. "2" for Licensed).`,
-							},
-						},
-						Description: `Remote info for Zoom license (user type).`,
-					},
-					"zoom_role": schema.SingleNestedAttribute{
-						Computed: true,
-						Attributes: map[string]schema.Attribute{
-							"role_id": schema.StringAttribute{
-								Computed:    true,
-								Description: `The ID of the Zoom role.`,
-							},
-						},
-						Description: `Remote info for Zoom role.`,
-					},
 				},
 				Description: `Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields.`,
 			},

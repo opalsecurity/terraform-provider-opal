@@ -536,18 +536,6 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.ZendeskRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.ZendeskRole.RoleID = types.StringValue(resultsItem.RemoteInfo.ZendeskRole.RoleID)
 				}
-				if resultsItem.RemoteInfo.ZoomLicense == nil {
-					results.RemoteInfo.ZoomLicense = nil
-				} else {
-					results.RemoteInfo.ZoomLicense = &tfTypes.ZoomLicense{}
-					results.RemoteInfo.ZoomLicense.LicenseType = types.StringValue(resultsItem.RemoteInfo.ZoomLicense.LicenseType)
-				}
-				if resultsItem.RemoteInfo.ZoomRole == nil {
-					results.RemoteInfo.ZoomRole = nil
-				} else {
-					results.RemoteInfo.ZoomRole = &tfTypes.ClickhouseRole{}
-					results.RemoteInfo.ZoomRole.RoleID = types.StringValue(resultsItem.RemoteInfo.ZoomRole.RoleID)
-				}
 			}
 			results.RequestConfigurations = []tfTypes.RequestConfiguration{}
 

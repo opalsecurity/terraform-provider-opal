@@ -62,7 +62,7 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 			},
 			"group_type_filter": schema.StringAttribute{
 				Optional:    true,
-				Description: `The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "DOCUSIGN_SIGNING_GROUP", "ZOOM_GROUP"]`,
+				Description: `The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "DOCUSIGN_GROUP", "DOCUSIGN_SIGNING_GROUP"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"ACTIVE_DIRECTORY_GROUP",
@@ -98,11 +98,8 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 						"ZENDESK_ORGANIZATION",
 						"HUBSPOT_TEAM",
 						"TABLEAU_GROUP",
-						"CONFLUENCE_GROUP",
-						"JIRA_GROUP",
 						"DOCUSIGN_GROUP",
 						"DOCUSIGN_SIGNING_GROUP",
-						"ZOOM_GROUP",
 					),
 				},
 			},
@@ -233,16 +230,6 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 										},
 									},
 									Description: `Remote info for ClickHouse role.`,
-								},
-								"confluence_group": schema.SingleNestedAttribute{
-									Computed: true,
-									Attributes: map[string]schema.Attribute{
-										"group_id": schema.StringAttribute{
-											Computed:    true,
-											Description: `The ID of the Confluence group.`,
-										},
-									},
-									Description: `Remote info for Confluence group.`,
 								},
 								"connector_group": schema.SingleNestedAttribute{
 									Computed: true,
@@ -377,16 +364,6 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 										},
 									},
 									Description: `Remote info for Incident.io on-call schedule group.`,
-								},
-								"jira_group": schema.SingleNestedAttribute{
-									Computed: true,
-									Attributes: map[string]schema.Attribute{
-										"group_id": schema.StringAttribute{
-											Computed:    true,
-											Description: `The ID of the Jira group.`,
-										},
-									},
-									Description: `Remote info for Jira group.`,
 								},
 								"ldap_group": schema.SingleNestedAttribute{
 									Computed: true,
@@ -527,16 +504,6 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 										},
 									},
 									Description: `Remote info for Zendesk organization.`,
-								},
-								"zoom_group": schema.SingleNestedAttribute{
-									Computed: true,
-									Attributes: map[string]schema.Attribute{
-										"group_id": schema.StringAttribute{
-											Computed:    true,
-											Description: `The ID of the Zoom group.`,
-										},
-									},
-									Description: `Remote info for Zoom group.`,
 								},
 							},
 							Description: `Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided.`,
