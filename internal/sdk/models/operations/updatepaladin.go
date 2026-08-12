@@ -11,7 +11,7 @@ import (
 type UpdatePaladinRequest struct {
 	UpdatePaladinInfo shared.UpdatePaladinInfo `request:"mediaType=application/json"`
 	// The ID of the Paladin.
-	PaladinID string `pathParam:"style=simple,explode=true,name=paladin_id"`
+	ID string `pathParam:"style=simple,explode=true,name=paladin_id"`
 }
 
 func (u *UpdatePaladinRequest) GetUpdatePaladinInfo() shared.UpdatePaladinInfo {
@@ -21,11 +21,11 @@ func (u *UpdatePaladinRequest) GetUpdatePaladinInfo() shared.UpdatePaladinInfo {
 	return u.UpdatePaladinInfo
 }
 
-func (u *UpdatePaladinRequest) GetPaladinID() string {
+func (u *UpdatePaladinRequest) GetID() string {
 	if u == nil {
 		return ""
 	}
-	return u.PaladinID
+	return u.ID
 }
 
 type UpdatePaladinResponse struct {

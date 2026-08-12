@@ -9,14 +9,14 @@ import (
 
 type DeletePaladinRequest struct {
 	// The ID of the Paladin.
-	PaladinID string `pathParam:"style=simple,explode=true,name=paladin_id"`
+	ID string `pathParam:"style=simple,explode=true,name=paladin_id"`
 }
 
-func (d *DeletePaladinRequest) GetPaladinID() string {
+func (d *DeletePaladinRequest) GetID() string {
 	if d == nil {
 		return ""
 	}
-	return d.PaladinID
+	return d.ID
 }
 
 type DeletePaladinResponse struct {

@@ -33,9 +33,9 @@ func newPaladin(rootSDK *OpalAPI, sdkConfig config.SDKConfiguration, hooks *hook
 	}
 }
 
-// CreatePaladin - Create Paladin
+// Create Paladin
 // Creates a new `Paladin`.
-func (s *Paladin) CreatePaladin(ctx context.Context, request shared.CreatePaladinInfo, opts ...operations.Option) (*operations.CreatePaladinResponse, error) {
+func (s *Paladin) Create(ctx context.Context, request shared.CreatePaladinInfo, opts ...operations.Option) (*operations.CreatePaladinResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -239,9 +239,9 @@ func (s *Paladin) CreatePaladin(ctx context.Context, request shared.CreatePaladi
 
 }
 
-// CreatePaladinContextSource - Add a Paladin context source
+// CreateContextSource - Add a Paladin context source
 // Configures a context source (a Slack channel or a document) for a Paladin to read. Idempotent, so re-adding an existing source returns it.
-func (s *Paladin) CreatePaladinContextSource(ctx context.Context, request operations.CreatePaladinContextSourceRequest, opts ...operations.Option) (*operations.CreatePaladinContextSourceResponse, error) {
+func (s *Paladin) CreateContextSource(ctx context.Context, request operations.CreatePaladinContextSourceRequest, opts ...operations.Option) (*operations.CreatePaladinContextSourceResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -445,9 +445,9 @@ func (s *Paladin) CreatePaladinContextSource(ctx context.Context, request operat
 
 }
 
-// DeletePaladin - Delete Paladin
+// Delete Paladin
 // Deletes a Paladin, removing the underlying service user.
-func (s *Paladin) DeletePaladin(ctx context.Context, request operations.DeletePaladinRequest, opts ...operations.Option) (*operations.DeletePaladinResponse, error) {
+func (s *Paladin) Delete(ctx context.Context, request operations.DeletePaladinRequest, opts ...operations.Option) (*operations.DeletePaladinResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -613,6 +613,8 @@ func (s *Paladin) DeletePaladin(ctx context.Context, request operations.DeletePa
 	switch {
 	case httpRes.StatusCode == 200:
 		utils.DrainBody(httpRes)
+	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -625,9 +627,9 @@ func (s *Paladin) DeletePaladin(ctx context.Context, request operations.DeletePa
 
 }
 
-// DeletePaladinContextSource - Remove a Paladin context source
+// DeleteContextSource - Remove a Paladin context source
 // Removes a context source from a Paladin.
-func (s *Paladin) DeletePaladinContextSource(ctx context.Context, request operations.DeletePaladinContextSourceRequest, opts ...operations.Option) (*operations.DeletePaladinContextSourceResponse, error) {
+func (s *Paladin) DeleteContextSource(ctx context.Context, request operations.DeletePaladinContextSourceRequest, opts ...operations.Option) (*operations.DeletePaladinContextSourceResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -793,6 +795,8 @@ func (s *Paladin) DeletePaladinContextSource(ctx context.Context, request operat
 	switch {
 	case httpRes.StatusCode == 200:
 		utils.DrainBody(httpRes)
+	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -805,9 +809,9 @@ func (s *Paladin) DeletePaladinContextSource(ctx context.Context, request operat
 
 }
 
-// GetPaladin - Get Paladin by ID
+// Get Paladin by ID
 // Returns a `Paladin` object.
-func (s *Paladin) GetPaladin(ctx context.Context, request operations.GetPaladinRequest, opts ...operations.Option) (*operations.GetPaladinResponse, error) {
+func (s *Paladin) Get(ctx context.Context, request operations.GetPaladinRequest, opts ...operations.Option) (*operations.GetPaladinResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -992,6 +996,8 @@ func (s *Paladin) GetPaladin(ctx context.Context, request operations.GetPaladinR
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -1004,9 +1010,9 @@ func (s *Paladin) GetPaladin(ctx context.Context, request operations.GetPaladinR
 
 }
 
-// GetPaladinFromName - Get Paladins by name
+// GetFromName - Get Paladins by name
 // Returns all Paladins whose name exactly matches the given name. Names are not unique, so the result is a list and may be empty.
-func (s *Paladin) GetPaladinFromName(ctx context.Context, request operations.GetPaladinFromNameRequest, opts ...operations.Option) (*operations.GetPaladinFromNameResponse, error) {
+func (s *Paladin) GetFromName(ctx context.Context, request operations.GetPaladinFromNameRequest, opts ...operations.Option) (*operations.GetPaladinFromNameResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1191,6 +1197,8 @@ func (s *Paladin) GetPaladinFromName(ctx context.Context, request operations.Get
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -1203,9 +1211,9 @@ func (s *Paladin) GetPaladinFromName(ctx context.Context, request operations.Get
 
 }
 
-// ListPaladinContextSources - List Paladin context sources
+// ListContextSources - List Paladin context sources
 // Returns the context sources (Slack channels and documents) configured for a Paladin.
-func (s *Paladin) ListPaladinContextSources(ctx context.Context, request operations.ListPaladinContextSourcesRequest, opts ...operations.Option) (*operations.ListPaladinContextSourcesResponse, error) {
+func (s *Paladin) ListContextSources(ctx context.Context, request operations.ListPaladinContextSourcesRequest, opts ...operations.Option) (*operations.ListPaladinContextSourcesResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -1390,6 +1398,8 @@ func (s *Paladin) ListPaladinContextSources(ctx context.Context, request operati
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -1402,9 +1412,9 @@ func (s *Paladin) ListPaladinContextSources(ctx context.Context, request operati
 
 }
 
-// UpdatePaladin - Update Paladin
+// Update Paladin
 // Updates a `Paladin` object.
-func (s *Paladin) UpdatePaladin(ctx context.Context, request operations.UpdatePaladinRequest, opts ...operations.Option) (*operations.UpdatePaladinResponse, error) {
+func (s *Paladin) Update(ctx context.Context, request operations.UpdatePaladinRequest, opts ...operations.Option) (*operations.UpdatePaladinResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,

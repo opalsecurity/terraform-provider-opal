@@ -9,16 +9,16 @@ import (
 
 type DeletePaladinContextSourceRequest struct {
 	// The ID of the context source.
-	ContextSourceID string `pathParam:"style=simple,explode=true,name=context_source_id"`
+	ID string `pathParam:"style=simple,explode=true,name=context_source_id"`
 	// The ID of the Paladin.
 	PaladinID string `pathParam:"style=simple,explode=true,name=paladin_id"`
 }
 
-func (d *DeletePaladinContextSourceRequest) GetContextSourceID() string {
+func (d *DeletePaladinContextSourceRequest) GetID() string {
 	if d == nil {
 		return ""
 	}
-	return d.ContextSourceID
+	return d.ID
 }
 
 func (d *DeletePaladinContextSourceRequest) GetPaladinID() string {

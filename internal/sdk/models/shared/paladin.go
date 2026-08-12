@@ -12,6 +12,8 @@ type Paladin struct {
 	AdminViewOnly bool `json:"admin_view_only"`
 	// The connectors the Paladin is allowed to use.
 	EnabledConnectors []PaladinConnector `json:"enabled_connectors"`
+	// The ID of the Paladin. Use this value as a reviewer in a request configuration's service_user_ids.
+	ID string `json:"paladin_id"`
 	// The free-form instructions that guide the Paladin's decisions.
 	Instructions string `json:"instructions"`
 	// When true, the Paladin reasons about requests but takes no action. Shown as "Monitor mode" in the UI.
@@ -20,8 +22,6 @@ type Paladin struct {
 	Name string `json:"name"`
 	// The ID of the owner of the Paladin.
 	OwnerID string `json:"owner_id"`
-	// The ID of the Paladin. Use this value as a reviewer in a request configuration's service_user_ids.
-	PaladinID string `json:"paladin_id"`
 }
 
 func (p *Paladin) GetAdminViewOnly() bool {
@@ -36,6 +36,13 @@ func (p *Paladin) GetEnabledConnectors() []PaladinConnector {
 		return []PaladinConnector{}
 	}
 	return p.EnabledConnectors
+}
+
+func (p *Paladin) GetID() string {
+	if p == nil {
+		return ""
+	}
+	return p.ID
 }
 
 func (p *Paladin) GetInstructions() string {
@@ -64,11 +71,4 @@ func (p *Paladin) GetOwnerID() string {
 		return ""
 	}
 	return p.OwnerID
-}
-
-func (p *Paladin) GetPaladinID() string {
-	if p == nil {
-		return ""
-	}
-	return p.PaladinID
 }
