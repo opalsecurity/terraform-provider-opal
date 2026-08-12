@@ -62,7 +62,7 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 			},
 			"group_type_filter": schema.StringAttribute{
 				Optional:    true,
-				Description: `The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED"]`,
+				Description: `The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "DOCUSIGN_GROUP", "DOCUSIGN_SIGNING_GROUP"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"ACTIVE_DIRECTORY_GROUP",
@@ -91,8 +91,15 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 						"GIT_HUB_ENTERPRISE_TEAM",
 						"GRAFANA_TEAM",
 						"CLICKHOUSE_ROLE",
+						"SLACK_USER_GROUP",
 						"TWINGATE_GROUP",
 						"TWINGATE_GROUP_SYNCED",
+						"ZENDESK_GROUP",
+						"ZENDESK_ORGANIZATION",
+						"HUBSPOT_TEAM",
+						"TABLEAU_GROUP",
+						"DOCUSIGN_GROUP",
+						"DOCUSIGN_SIGNING_GROUP",
 					),
 				},
 			},
@@ -158,6 +165,14 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 								},
 							},
 							Description: `Information about the last successful sync of this group.`,
+						},
+						"match_remote_description": schema.BoolAttribute{
+							Computed:    true,
+							Description: `A bool representing whether or not the group's description is synced from the end system. When true, the description is overwritten with the remote description on each sync. Defaults to false.`,
+						},
+						"match_remote_name": schema.BoolAttribute{
+							Computed:    true,
+							Description: `A bool representing whether or not the group's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.`,
 						},
 						"name": schema.StringAttribute{
 							Computed:    true,
@@ -246,6 +261,26 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 									},
 									Description: `Remote info for Devin group.`,
 								},
+								"docusign_group": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"group_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The ID of the Docusign group.`,
+										},
+									},
+									Description: `Remote info for Docusign group.`,
+								},
+								"docusign_signing_group": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"signing_group_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The ID of the Docusign signing group.`,
+										},
+									},
+									Description: `Remote info for Docusign signing group.`,
+								},
 								"duo_group": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
@@ -310,6 +345,16 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 									},
 									Description: `Remote info for Grafana team.`,
 								},
+								"hubspot_team": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"team_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The ID of the HubSpot team.`,
+										},
+									},
+									Description: `Remote info for HubSpot team.`,
+								},
 								"incidentio_on_call_schedule": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
@@ -370,6 +415,16 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 									},
 									Description: `Remote info for Rootly on-call schedule group.`,
 								},
+								"slack_user_group": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"group_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The id of the Slack user group.`,
+										},
+									},
+									Description: `Remote info for Slack user group.`,
+								},
 								"snowflake_role": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
@@ -379,6 +434,16 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 										},
 									},
 									Description: `Remote info for Snowflake role.`,
+								},
+								"tableau_group": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"group_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The ID of the Tableau group.`,
+										},
+									},
+									Description: `Remote info for Tableau group.`,
 								},
 								"tailscale_group": schema.SingleNestedAttribute{
 									Computed: true,
@@ -419,6 +484,26 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 										},
 									},
 									Description: `Remote info for Workday User Security group.`,
+								},
+								"zendesk_group": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"group_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The ID of the Zendesk group.`,
+										},
+									},
+									Description: `Remote info for Zendesk group.`,
+								},
+								"zendesk_organization": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"organization_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The ID of the Zendesk organization.`,
+										},
+									},
+									Description: `Remote info for Zendesk organization.`,
 								},
 							},
 							Description: `Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided.`,

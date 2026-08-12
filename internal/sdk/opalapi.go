@@ -62,10 +62,14 @@ type OpalAPI struct {
 	Apps *Apps
 	// Operations related to bundles
 	Bundles *Bundles
+	// Operations related to access review campaigns
+	Campaigns *Campaigns
 	// Operations related to configuration templates
 	ConfigurationTemplates *ConfigurationTemplates
 	// Operations related to request reviewer delegations
 	Delegations *Delegations
+	// Operations related to event streaming connections
+	EventStreams *EventStreams
 	// Operations related to events
 	Events *Events
 	// Operations related to group bindings
@@ -82,6 +86,10 @@ type OpalAPI struct {
 	OnCallSchedules *OnCallSchedules
 	// Operations related to owners
 	Owners *Owners
+	// Operations related to Paladin
+	Paladin *Paladin
+	// Operations related to OpalQuery
+	OpalQueries *OpalQueries
 	// Operations related to requests
 	Requests *Requests
 	// Operations related to resources
@@ -92,7 +100,7 @@ type OpalAPI struct {
 	Tags *Tags
 	// Operations related to API tokens
 	Tokens *Tokens
-	// Operations related to UARs
+	// Operations related to UARs. Deprecated in favor of the `campaigns` API.
 	Uars *Uars
 	// Operations related to users
 	Users *Users
@@ -198,8 +206,10 @@ func New(opts ...SDKOption) *OpalAPI {
 	sdk.AccessRules = newAccessRules(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Apps = newApps(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Bundles = newBundles(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Campaigns = newCampaigns(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.ConfigurationTemplates = newConfigurationTemplates(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Delegations = newDelegations(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.EventStreams = newEventStreams(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Events = newEvents(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.GroupBindings = newGroupBindings(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Groups = newGroups(sdk, sdk.sdkConfiguration, sdk.hooks)
@@ -208,6 +218,8 @@ func New(opts ...SDKOption) *OpalAPI {
 	sdk.NonHumanIdentities = newNonHumanIdentities(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.OnCallSchedules = newOnCallSchedules(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Owners = newOwners(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.Paladin = newPaladin(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.OpalQueries = newOpalQueries(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Requests = newRequests(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Resources = newResources(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Sessions = newSessions(sdk, sdk.sdkConfiguration, sdk.hooks)
