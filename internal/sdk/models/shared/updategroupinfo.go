@@ -25,6 +25,10 @@ type UpdateGroupInfo struct {
 	GroupLeaderUserIds []string `json:"group_leader_user_ids,omitempty"`
 	// The ID of the group.
 	ID string `json:"group_id"`
+	// A bool representing whether or not the group's description should be synced from the end system. When true, the description is overwritten with the remote description on each sync, so a `description` provided together with this field set to true will be replaced at the next sync. If not provided, the current value is left unchanged.
+	MatchRemoteDescription *bool `json:"match_remote_description,omitempty"`
+	// A bool representing whether or not the group's name should be synced from the end system. When true, the name is overwritten with the remote name on each sync, so a `name` provided together with this field set to true will be replaced at the next sync. If not provided, the current value is left unchanged.
+	MatchRemoteName *bool `json:"match_remote_name,omitempty"`
 	// The name of the group.
 	Name *string `json:"name,omitempty"`
 	// The request configuration list of the configuration template. If not provided, the default request configuration will be used.
@@ -85,6 +89,20 @@ func (u *UpdateGroupInfo) GetID() string {
 		return ""
 	}
 	return u.ID
+}
+
+func (u *UpdateGroupInfo) GetMatchRemoteDescription() *bool {
+	if u == nil {
+		return nil
+	}
+	return u.MatchRemoteDescription
+}
+
+func (u *UpdateGroupInfo) GetMatchRemoteName() *bool {
+	if u == nil {
+		return nil
+	}
+	return u.MatchRemoteName
 }
 
 func (u *UpdateGroupInfo) GetName() *string {
