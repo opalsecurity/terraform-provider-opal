@@ -28,11 +28,11 @@ generation:
     skipResponseBodyAssertions: false
   flattenGlobalSecurity: true
 terraform:
-  version: 3.5.2
+  version: 3.6.0
   additionalActions: []
   additionalDataSources: []
   additionalDependencies:
-    github.com/hashicorp/terraform-plugin-testing: v1.15.0
+    github.com/hashicorp/terraform-plugin-testing: v1.16.0
   additionalEphemeralResources: []
   additionalFunctions: []
   additionalListResources: []

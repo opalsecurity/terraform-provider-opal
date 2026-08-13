@@ -129,6 +129,8 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"id":                 tftypes.String,
 			"name": tftypes.String,
 			"description": tftypes.String,
+			"match_remote_description": tftypes.Bool,
+			"match_remote_name": tftypes.Bool,
 			"group_type": tftypes.String,
 			"app_id": tftypes.String,
 			"group_binding_id": tftypes.String,
@@ -289,6 +291,8 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"id":                 oldRawState["id"],
 			"name": oldRawState["name"], // should be required in v2
 			"description": tftypes.NewValue(tftypes.String, description),
+			"match_remote_description": tftypes.NewValue(tftypes.Bool, nil), // read only until first refresh
+			"match_remote_name": tftypes.NewValue(tftypes.Bool, nil), // read only until first refresh
 			"group_type": oldRawState["group_type"], // should be required in v2
 			"group_binding_id": tftypes.NewValue(tftypes.String, nil), // read only field to be filled in by refresh
 			"app_id": tftypes.NewValue(tftypes.String, app_id),
