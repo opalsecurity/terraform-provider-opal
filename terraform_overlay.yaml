@@ -1247,9 +1247,6 @@ actions:
   - target: $["components"]["schemas"]["Group"]["properties"]["request_template_id"]
     update:
       x-speakeasy-ignore: true
-  - target: $["components"]["schemas"]["Group"]["properties"]["configuration_template_id"]
-    update:
-      x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["Group"]["properties"]["group_binding_id"]
     update:
       x-speakeasy-param-suppress-computed-diff: true # there's no way to set this through this resource in tf
@@ -1341,9 +1338,6 @@ actions:
     update:
       x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["auto_approval"]
-    update:
-      x-speakeasy-ignore: true
-  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["configuration_template_id"]
     update:
       x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_template_id"]
@@ -1840,9 +1834,6 @@ actions:
   - target: $["components"]["schemas"]["Resource"]["properties"]["parent_resource_id"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
-  - target: $["components"]["schemas"]["Resource"]["properties"]["configuration_template_id"]
-    update:
-      x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["request_configurations"]
     update:
       minItems: 1
@@ -1931,9 +1922,6 @@ actions:
     update:
       x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["auto_approval"]
-    update:
-      x-speakeasy-ignore: true
-  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["configuration_template_id"]
     update:
       x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_template_id"]
