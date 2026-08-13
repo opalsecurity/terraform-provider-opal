@@ -2202,6 +2202,91 @@ actions:
     remove: true
   - target: $["components"]["schemas"]["GroupContainingGroupList"]
     remove: true
+  - target: $["components"]["schemas"]["Paladin"]
+    update:
+      x-speakeasy-entity: Paladin
+  - target: $["components"]["schemas"]["PaladinList"]
+    update:
+      x-speakeasy-entity: PaladinFromName
+  - target: $["components"]["schemas"]["Paladin"]["properties"]["paladin_id"]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["components"]["schemas"]["Paladin"]["properties"]["paladin_id"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Paladin"]["properties"]["owner_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["paths"]["/paladin/{paladin_id}"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/paladin/{paladin_id}"]["get"]["responses"]
+    update:
+      "404":
+        description: Not Found
+  - target: $["paths"]["/paladin/{paladin_id}"]["get"]
+    update:
+      x-speakeasy-name-override: get
+  - target: $["paths"]["/paladin/{paladin_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: Paladin#get
+  - target: $["paths"]["/paladin/name/{paladin_name}"]["get"]
+    update:
+      x-speakeasy-name-override: get_from_name
+  - target: $["paths"]["/paladin/name/{paladin_name}"]["get"]
+    update:
+      x-speakeasy-entity-operation: PaladinFromName#get
+  - target: $["paths"]["/paladin"]["post"]
+    update:
+      x-speakeasy-name-override: create
+  - target: $["paths"]["/paladin"]["post"]
+    update:
+      x-speakeasy-entity-operation: Paladin#create
+  - target: $["paths"]["/paladin/{paladin_id}"]["put"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/paladin/{paladin_id}"]["put"]
+    update:
+      x-speakeasy-name-override: update
+  - target: $["paths"]["/paladin/{paladin_id}"]["put"]
+    update:
+      x-speakeasy-entity-operation: Paladin#update
+  - target: $["paths"]["/paladin/{paladin_id}"]["delete"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/paladin/{paladin_id}"]["delete"]
+    update:
+      x-speakeasy-name-override: delete
+  - target: $["paths"]["/paladin/{paladin_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: Paladin#delete
+  - target: $["components"]["schemas"]["PaladinContextSource"]
+    update:
+      x-speakeasy-entity: PaladinContextSource
+  - target: $["components"]["schemas"]["PaladinContextSourceList"]
+    update:
+      x-speakeasy-entity: PaladinContextSources
+  - target: $["paths"]["/paladin/{paladin_id}/context-sources"]["get"]
+    update:
+      x-speakeasy-name-override: list_context_sources
+  - target: $["paths"]["/paladin/{paladin_id}/context-sources"]["get"]
+    update:
+      x-speakeasy-entity-operation: PaladinContextSources#get
+  - target: $["paths"]["/paladin/{paladin_id}/context-sources"]["post"]
+    update:
+      x-speakeasy-name-override: create_context_source
+  - target: $["paths"]["/paladin/{paladin_id}/context-sources"]["post"]
+    update:
+      x-speakeasy-entity-operation: PaladinContextSource#create
+  - target: $["paths"]["/paladin/{paladin_id}/context-sources/{context_source_id}"]["delete"]["parameters"][1]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/paladin/{paladin_id}/context-sources/{context_source_id}"]["delete"]
+    update:
+      x-speakeasy-name-override: delete_context_source
+  - target: $["paths"]["/paladin/{paladin_id}/context-sources/{context_source_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: PaladinContextSource#delete
   - target: $
     update:
       x-speakeasy-retries:
