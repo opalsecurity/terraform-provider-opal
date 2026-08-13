@@ -148,6 +148,10 @@ type Resource struct {
 	ID string `json:"resource_id"`
 	// Information about the last successful sync of this resource.
 	LastSuccessfulSync *ResourceLastSuccessfulSync `json:"last_successful_sync,omitempty"`
+	// A bool representing whether or not the resource's description is synced from the end system. When true, the description is overwritten with the remote description on each sync. Defaults to false.
+	MatchRemoteDescription *bool `json:"match_remote_description,omitempty"`
+	// A bool representing whether or not the resource's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.
+	MatchRemoteName *bool `json:"match_remote_name,omitempty"`
 	// The name of the resource.
 	Name *string `json:"name,omitempty"`
 	// The ID of the parent resource.
@@ -241,6 +245,20 @@ func (r *Resource) GetLastSuccessfulSync() *ResourceLastSuccessfulSync {
 		return nil
 	}
 	return r.LastSuccessfulSync
+}
+
+func (r *Resource) GetMatchRemoteDescription() *bool {
+	if r == nil {
+		return nil
+	}
+	return r.MatchRemoteDescription
+}
+
+func (r *Resource) GetMatchRemoteName() *bool {
+	if r == nil {
+		return nil
+	}
+	return r.MatchRemoteName
 }
 
 func (r *Resource) GetName() *string {
