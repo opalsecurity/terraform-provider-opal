@@ -9,24 +9,34 @@ type GroupRemoteInfo struct {
 	AzureAdMicrosoft365Group *ActiveDirectoryGroup     `tfsdk:"azure_ad_microsoft_365_group"`
 	AzureAdSecurityGroup     *ActiveDirectoryGroup     `tfsdk:"azure_ad_security_group"`
 	ClickhouseRole           *ClickhouseRole           `tfsdk:"clickhouse_role"`
+	ConfluenceGroup          *ActiveDirectoryGroup     `tfsdk:"confluence_group"`
 	ConnectorGroup           *ActiveDirectoryGroup     `tfsdk:"connector_group"`
 	DatabricksAccountGroup   *ActiveDirectoryGroup     `tfsdk:"databricks_account_group"`
 	DevinGroup               *DevinGroup               `tfsdk:"devin_group"`
+	DocusignGroup            *ActiveDirectoryGroup     `tfsdk:"docusign_group"`
+	DocusignSigningGroup     *DocusignSigningGroup     `tfsdk:"docusign_signing_group"`
 	DuoGroup                 *ActiveDirectoryGroup     `tfsdk:"duo_group"`
 	GithubEnterpriseTeam     *GithubEnterpriseTeam     `tfsdk:"github_enterprise_team"`
 	GithubTeam               *GithubTeam               `tfsdk:"github_team"`
 	GitlabGroup              *ActiveDirectoryGroup     `tfsdk:"gitlab_group"`
 	GoogleGroup              *ActiveDirectoryGroup     `tfsdk:"google_group"`
 	GrafanaTeam              *GrafanaTeam              `tfsdk:"grafana_team"`
+	HubspotTeam              *GrafanaTeam              `tfsdk:"hubspot_team"`
 	IncidentioOnCallSchedule *IncidentioOnCallSchedule `tfsdk:"incidentio_on_call_schedule"`
+	JiraGroup                *ActiveDirectoryGroup     `tfsdk:"jira_group"`
 	LdapGroup                *ActiveDirectoryGroup     `tfsdk:"ldap_group"`
 	OktaGroup                *ActiveDirectoryGroup     `tfsdk:"okta_group"`
 	OktaGroupRule            *OktaGroupRule            `tfsdk:"okta_group_rule"`
 	PagerdutyOnCallSchedule  *IncidentioOnCallSchedule `tfsdk:"pagerduty_on_call_schedule"`
 	RootlyOnCallSchedule     *IncidentioOnCallSchedule `tfsdk:"rootly_on_call_schedule"`
+	SlackUserGroup           *ActiveDirectoryGroup     `tfsdk:"slack_user_group"`
 	SnowflakeRole            *ClickhouseRole           `tfsdk:"snowflake_role"`
+	TableauGroup             *ActiveDirectoryGroup     `tfsdk:"tableau_group"`
 	TailscaleGroup           *ActiveDirectoryGroup     `tfsdk:"tailscale_group"`
 	TwingateGroup            *ActiveDirectoryGroup     `tfsdk:"twingate_group"`
 	TwingateGroupSynced      *ActiveDirectoryGroup     `tfsdk:"twingate_group_synced"`
 	WorkdayUserSecurityGroup *ActiveDirectoryGroup     `tfsdk:"workday_user_security_group"`
+	ZendeskGroup             *ActiveDirectoryGroup     `tfsdk:"zendesk_group"`
+	ZendeskOrganization      *ZendeskOrganization      `tfsdk:"zendesk_organization"`
+	ZoomGroup                *ActiveDirectoryGroup     `tfsdk:"zoom_group"`
 }

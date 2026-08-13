@@ -18,6 +18,8 @@ type Group struct {
 	GroupType                   types.String           `tfsdk:"group_type"`
 	ID                          types.String           `tfsdk:"id"`
 	LastSuccessfulSync          *LastSuccessfulSync    `tfsdk:"last_successful_sync"`
+	MatchRemoteDescription      types.Bool             `tfsdk:"match_remote_description"`
+	MatchRemoteName             types.Bool             `tfsdk:"match_remote_name"`
 	Name                        types.String           `tfsdk:"name"`
 	RemoteInfo                  *GroupRemoteInfo       `tfsdk:"remote_info"`
 	RemoteName                  types.String           `tfsdk:"remote_name"`

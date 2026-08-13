@@ -65,6 +65,8 @@ type GroupResourceModel struct {
 	GroupType                   types.String                                 `tfsdk:"group_type"`
 	ID                          types.String                                 `tfsdk:"id"`
 	LastSuccessfulSync          *tfTypes.LastSuccessfulSync                  `tfsdk:"last_successful_sync"`
+	MatchRemoteDescription      types.Bool                                   `tfsdk:"match_remote_description"`
+	MatchRemoteName             types.Bool                                   `tfsdk:"match_remote_name"`
 	MessageChannelIds           []types.String                               `tfsdk:"message_channel_ids"`
 	MessageChannels             *tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
 	Name                        types.String                                 `tfsdk:"name"`
@@ -155,7 +157,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED"]; Requires replacement if changed.`,
+				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"ACTIVE_DIRECTORY_GROUP",
@@ -184,8 +186,17 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						"GIT_HUB_ENTERPRISE_TEAM",
 						"GRAFANA_TEAM",
 						"CLICKHOUSE_ROLE",
+						"SLACK_USER_GROUP",
 						"TWINGATE_GROUP",
 						"TWINGATE_GROUP_SYNCED",
+						"ZENDESK_GROUP",
+						"ZENDESK_ORGANIZATION",
+						"HUBSPOT_TEAM",
+						"TABLEAU_GROUP",
+						"CONFLUENCE_GROUP",
+						"JIRA_GROUP",
+						"DOCUSIGN_GROUP",
+						"ZOOM_GROUP",
 					),
 				},
 			},
@@ -218,6 +229,16 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					},
 				},
 				Description: `Information about the last successful sync of this group.`,
+			},
+			"match_remote_description": schema.BoolAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `A bool representing whether or not the group's description should be synced from the end system. When true, the description is overwritten with the remote description on each sync, so a ` + "`" + `description` + "`" + ` provided together with this field set to true will be replaced at the next sync. If not provided, the current value is left unchanged.`,
+			},
+			"match_remote_name": schema.BoolAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `A bool representing whether or not the group's name should be synced from the end system. When true, the name is overwritten with the remote name on each sync, so a ` + "`" + `name` + "`" + ` provided together with this field set to true will be replaced at the next sync. If not provided, the current value is left unchanged.`,
 			},
 			"message_channel_ids": schema.SetAttribute{
 				Computed:    true,
@@ -483,6 +504,29 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						},
 						Description: `Remote info for ClickHouse role. Requires replacement if changed.`,
 					},
+					"confluence_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Confluence group. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Confluence group. Requires replacement if changed.`,
+					},
 					"connector_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -551,6 +595,52 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							},
 						},
 						Description: `Remote info for Devin group. Requires replacement if changed.`,
+					},
+					"docusign_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Docusign group. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Docusign group. Requires replacement if changed.`,
+					},
+					"docusign_signing_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"signing_group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Docusign signing group. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Docusign signing group. Requires replacement if changed.`,
 					},
 					"duo_group": schema.SingleNestedAttribute{
 						Computed: true,
@@ -699,6 +789,29 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						},
 						Description: `Remote info for Grafana team. Requires replacement if changed.`,
 					},
+					"hubspot_team": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"team_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the HubSpot team. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for HubSpot team. Requires replacement if changed.`,
+					},
 					"incidentio_on_call_schedule": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -721,6 +834,29 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							},
 						},
 						Description: `Remote info for Incident.io on-call schedule group. Requires replacement if changed.`,
+					},
+					"jira_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Jira group. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Jira group. Requires replacement if changed.`,
 					},
 					"ldap_group": schema.SingleNestedAttribute{
 						Computed: true,
@@ -837,6 +973,29 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						},
 						Description: `Remote info for Rootly on-call schedule group. Requires replacement if changed.`,
 					},
+					"slack_user_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The id of the Slack user group. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Slack user group. Requires replacement if changed.`,
+					},
 					"snowflake_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -859,6 +1018,29 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							},
 						},
 						Description: `Remote info for Snowflake role. Requires replacement if changed.`,
+					},
+					"tableau_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Tableau group. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Tableau group. Requires replacement if changed.`,
 					},
 					"tailscale_group": schema.SingleNestedAttribute{
 						Computed: true,
@@ -951,6 +1133,75 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							},
 						},
 						Description: `Remote info for Workday User Security group. Requires replacement if changed.`,
+					},
+					"zendesk_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Zendesk group. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Zendesk group. Requires replacement if changed.`,
+					},
+					"zendesk_organization": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"organization_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Zendesk organization. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Zendesk organization. Requires replacement if changed.`,
+					},
+					"zoom_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Zoom group. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Zoom group. Requires replacement if changed.`,
 					},
 				},
 				Description: `Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided. Requires replacement if changed.`,

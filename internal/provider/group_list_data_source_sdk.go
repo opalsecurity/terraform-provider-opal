@@ -45,6 +45,8 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				results.LastSuccessfulSync.CompletedAt = types.StringValue(typeconvert.TimeToString(resultsItem.LastSuccessfulSync.CompletedAt))
 				results.LastSuccessfulSync.ID = types.StringValue(resultsItem.LastSuccessfulSync.ID)
 			}
+			results.MatchRemoteDescription = types.BoolPointerValue(resultsItem.MatchRemoteDescription)
+			results.MatchRemoteName = types.BoolPointerValue(resultsItem.MatchRemoteName)
 			results.Name = types.StringPointerValue(resultsItem.Name)
 			if resultsItem.RemoteInfo == nil {
 				results.RemoteInfo = nil
@@ -80,6 +82,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.ClickhouseRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.ClickhouseRole.RoleID = types.StringValue(resultsItem.RemoteInfo.ClickhouseRole.RoleID)
 				}
+				if resultsItem.RemoteInfo.ConfluenceGroup == nil {
+					results.RemoteInfo.ConfluenceGroup = nil
+				} else {
+					results.RemoteInfo.ConfluenceGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.ConfluenceGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.ConfluenceGroup.GroupID)
+				}
 				if resultsItem.RemoteInfo.ConnectorGroup == nil {
 					results.RemoteInfo.ConnectorGroup = nil
 				} else {
@@ -97,6 +105,18 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				} else {
 					results.RemoteInfo.DevinGroup = &tfTypes.DevinGroup{}
 					results.RemoteInfo.DevinGroup.GroupName = types.StringValue(resultsItem.RemoteInfo.DevinGroup.GroupName)
+				}
+				if resultsItem.RemoteInfo.DocusignGroup == nil {
+					results.RemoteInfo.DocusignGroup = nil
+				} else {
+					results.RemoteInfo.DocusignGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.DocusignGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.DocusignGroup.GroupID)
+				}
+				if resultsItem.RemoteInfo.DocusignSigningGroup == nil {
+					results.RemoteInfo.DocusignSigningGroup = nil
+				} else {
+					results.RemoteInfo.DocusignSigningGroup = &tfTypes.DocusignSigningGroup{}
+					results.RemoteInfo.DocusignSigningGroup.SigningGroupID = types.StringValue(resultsItem.RemoteInfo.DocusignSigningGroup.SigningGroupID)
 				}
 				if resultsItem.RemoteInfo.DuoGroup == nil {
 					results.RemoteInfo.DuoGroup = nil
@@ -135,11 +155,23 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.GrafanaTeam = &tfTypes.GrafanaTeam{}
 					results.RemoteInfo.GrafanaTeam.TeamID = types.StringValue(resultsItem.RemoteInfo.GrafanaTeam.TeamID)
 				}
+				if resultsItem.RemoteInfo.HubspotTeam == nil {
+					results.RemoteInfo.HubspotTeam = nil
+				} else {
+					results.RemoteInfo.HubspotTeam = &tfTypes.GrafanaTeam{}
+					results.RemoteInfo.HubspotTeam.TeamID = types.StringValue(resultsItem.RemoteInfo.HubspotTeam.TeamID)
+				}
 				if resultsItem.RemoteInfo.IncidentioOnCallSchedule == nil {
 					results.RemoteInfo.IncidentioOnCallSchedule = nil
 				} else {
 					results.RemoteInfo.IncidentioOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
 					results.RemoteInfo.IncidentioOnCallSchedule.ScheduleID = types.StringValue(resultsItem.RemoteInfo.IncidentioOnCallSchedule.ScheduleID)
+				}
+				if resultsItem.RemoteInfo.JiraGroup == nil {
+					results.RemoteInfo.JiraGroup = nil
+				} else {
+					results.RemoteInfo.JiraGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.JiraGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.JiraGroup.GroupID)
 				}
 				if resultsItem.RemoteInfo.LdapGroup == nil {
 					results.RemoteInfo.LdapGroup = nil
@@ -171,11 +203,23 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.RootlyOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
 					results.RemoteInfo.RootlyOnCallSchedule.ScheduleID = types.StringValue(resultsItem.RemoteInfo.RootlyOnCallSchedule.ScheduleID)
 				}
+				if resultsItem.RemoteInfo.SlackUserGroup == nil {
+					results.RemoteInfo.SlackUserGroup = nil
+				} else {
+					results.RemoteInfo.SlackUserGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.SlackUserGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.SlackUserGroup.GroupID)
+				}
 				if resultsItem.RemoteInfo.SnowflakeRole == nil {
 					results.RemoteInfo.SnowflakeRole = nil
 				} else {
 					results.RemoteInfo.SnowflakeRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.SnowflakeRole.RoleID = types.StringValue(resultsItem.RemoteInfo.SnowflakeRole.RoleID)
+				}
+				if resultsItem.RemoteInfo.TableauGroup == nil {
+					results.RemoteInfo.TableauGroup = nil
+				} else {
+					results.RemoteInfo.TableauGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.TableauGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.TableauGroup.GroupID)
 				}
 				if resultsItem.RemoteInfo.TailscaleGroup == nil {
 					results.RemoteInfo.TailscaleGroup = nil
@@ -200,6 +244,24 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				} else {
 					results.RemoteInfo.WorkdayUserSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.WorkdayUserSecurityGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.WorkdayUserSecurityGroup.GroupID)
+				}
+				if resultsItem.RemoteInfo.ZendeskGroup == nil {
+					results.RemoteInfo.ZendeskGroup = nil
+				} else {
+					results.RemoteInfo.ZendeskGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.ZendeskGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.ZendeskGroup.GroupID)
+				}
+				if resultsItem.RemoteInfo.ZendeskOrganization == nil {
+					results.RemoteInfo.ZendeskOrganization = nil
+				} else {
+					results.RemoteInfo.ZendeskOrganization = &tfTypes.ZendeskOrganization{}
+					results.RemoteInfo.ZendeskOrganization.OrganizationID = types.StringValue(resultsItem.RemoteInfo.ZendeskOrganization.OrganizationID)
+				}
+				if resultsItem.RemoteInfo.ZoomGroup == nil {
+					results.RemoteInfo.ZoomGroup = nil
+				} else {
+					results.RemoteInfo.ZoomGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.ZoomGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.ZoomGroup.GroupID)
 				}
 			}
 			results.RemoteName = types.StringPointerValue(resultsItem.RemoteName)
