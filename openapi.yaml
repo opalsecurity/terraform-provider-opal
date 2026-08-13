@@ -19,10 +19,14 @@ tags:
     description: Operations related to apps
   - name: bundles
     description: Operations related to bundles
+  - name: campaigns
+    description: Operations related to access review campaigns
   - name: configuration-templates
     description: Operations related to configuration templates
   - name: delegations
     description: Operations related to request reviewer delegations
+  - name: event-streams
+    description: Operations related to event streaming connections
   - name: events
     description: Operations related to events
   - name: groups
@@ -37,12 +41,16 @@ tags:
     description: Operations related to non-human identities
   - name: on-call-schedules
     description: Operations related to on-call schedules
+  - name: opal-queries
+    description: Operations related to OpalQuery
   - name: owners
     description: Operations related to owners
   - name: requests
     description: Operations related to requests
   - name: resources
     description: Operations related to resources
+  - name: paladin
+    description: Operations related to Paladin
   - name: sessions
     description: Operations related to sessions
   - name: tags
@@ -50,7 +58,7 @@ tags:
   - name: tokens
     description: Operations related to API tokens
   - name: uars
-    description: Operations related to UARs
+    description: Operations related to UARs. Deprecated in favor of the `campaigns` API.
   - name: users
     description: Operations related to users
 paths:
@@ -590,6 +598,329 @@ paths:
       x-speakeasy-entity-operation:
         - Bundle#create#2
         - Bundle#update#2
+  /campaigns:
+    get:
+      description: Returns a list of `Campaign` objects.
+      operationId: getCampaigns
+      parameters:
+        - description: The pagination cursor value.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          explode: true
+          in: query
+          name: cursor
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: Number of results to return per page. Default is 200.
+          example: 200
+          explode: true
+          in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+          style: form
+        - description: Campaign name to filter by. Returns campaigns whose names contain this substring (case-insensitive).
+          example: Q3 Access Review
+          explode: true
+          in: query
+          name: name
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: Filter by campaign status. Status is derived from lifecycle timestamps and review progress.
+          example: ONGOING
+          explode: true
+          in: query
+          name: status
+          required: false
+          schema:
+            $ref: "#/components/schemas/CampaignStatusEnum"
+          style: form
+        - description: Include campaigns created after this timestamp (exclusive). ISO 8601 format.
+          example: 2026-01-01T00:00:00Z
+          explode: true
+          in: query
+          name: created_at_after
+          required: false
+          schema:
+            type: string
+            format: date-time
+          style: form
+        - description: Include campaigns created before this timestamp (exclusive). ISO 8601 format.
+          example: 2026-12-31T23:59:59Z
+          explode: true
+          in: query
+          name: created_at_before
+          required: false
+          schema:
+            type: string
+            format: date-time
+          style: form
+        - description: Include campaigns started after this timestamp (exclusive). ISO 8601 format.
+          example: 2026-01-01T00:00:00Z
+          explode: true
+          in: query
+          name: started_at_after
+          required: false
+          schema:
+            type: string
+            format: date-time
+          style: form
+        - description: Include campaigns started before this timestamp (exclusive). ISO 8601 format.
+          example: 2026-12-31T23:59:59Z
+          explode: true
+          in: query
+          name: started_at_before
+          required: false
+          schema:
+            type: string
+            format: date-time
+          style: form
+        - description: Include campaigns ended after this timestamp (exclusive). ISO 8601 format.
+          example: 2026-01-01T00:00:00Z
+          explode: true
+          in: query
+          name: ended_at_after
+          required: false
+          schema:
+            type: string
+            format: date-time
+          style: form
+        - description: Include campaigns ended before this timestamp (exclusive). ISO 8601 format.
+          example: 2026-12-31T23:59:59Z
+          explode: true
+          in: query
+          name: ended_at_before
+          required: false
+          schema:
+            type: string
+            format: date-time
+          style: form
+        - description: Include campaigns stopped after this timestamp (exclusive). ISO 8601 format.
+          example: 2026-01-01T00:00:00Z
+          explode: true
+          in: query
+          name: stopped_at_after
+          required: false
+          schema:
+            type: string
+            format: date-time
+          style: form
+        - description: Include campaigns stopped before this timestamp (exclusive). ISO 8601 format.
+          example: 2026-12-31T23:59:59Z
+          explode: true
+          in: query
+          name: stopped_at_before
+          required: false
+          schema:
+            type: string
+            format: date-time
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedCampaignsList"
+          description: A list of campaigns for your organization.
+      security:
+        - BearerAuth: []
+      tags:
+        - campaigns
+    post:
+      description: |
+        Creates a campaign. Campaign scope only supports direct access edges:
+        `configuration.query.edgeFilter.directOnly` defaults to `true`, is
+        always stored as `true`, and passing `false` returns 400.
+      operationId: createCampaign
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCampaignInfo"
+      responses:
+        "201":
+          description: The campaign successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+      security:
+        - BearerAuth: []
+      tags:
+        - campaigns
+  /campaigns/{campaign_id}:
+    get:
+      summary: Get campaign by ID
+      description: Returns a `Campaign` object.
+      operationId: getCampaign
+      parameters:
+        - description: The ID of the campaign.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          explode: true
+          in: path
+          name: campaign_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+          description: The requested `Campaign`.
+      security:
+        - BearerAuth: []
+      tags:
+        - campaigns
+    put:
+      summary: Update campaign
+      description: |
+        Partially updates a campaign. Omitted fields are left unchanged.
+        `configuration.query` and `configuration.reviewer_assignment_policy`
+        cannot be updated after create; including either field returns 400.
+        `configuration.cron_expression` and
+        `configuration.recurring_duration_days` may only be set on template
+        campaigns; setting them on a one-off campaign returns 400.
+        `configuration.is_template` is immutable and not accepted on update.
+        Configuration updates on a stopped or ended (non-template) campaign
+        return 400. Name-only updates are still allowed.
+      operationId: updateCampaign
+      parameters:
+        - description: The ID of the campaign.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          explode: true
+          in: path
+          name: campaign_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCampaignInfo"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+          description: The updated `Campaign`.
+      security:
+        - BearerAuth: []
+      tags:
+        - campaigns
+  /campaigns/{campaign_id}/start:
+    post:
+      summary: Start campaign
+      description: |
+        Starts a draft campaign immediately, setting `started_at` and
+        `started_by_user_id`. Returns 400 if the campaign is not in draft
+        state, or if it is a recurring template (`is_template: true`) —
+        templates spawn draft campaigns on their schedule and cannot be
+        started directly.
+      operationId: startCampaign
+      parameters:
+        - description: The ID of the campaign.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          explode: true
+          in: path
+          name: campaign_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+          description: The started `Campaign`.
+      security:
+        - BearerAuth: []
+      tags:
+        - campaigns
+  /campaigns/{campaign_id}/stop:
+    post:
+      summary: Stop campaign
+      description: |
+        Stops an ongoing campaign immediately, setting `stopped_at` and
+        `stopped_by_user_id`. Returns 400 if the campaign has not started or
+        has already stopped.
+      operationId: stopCampaign
+      parameters:
+        - description: The ID of the campaign.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          explode: true
+          in: path
+          name: campaign_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StopCampaignRequest"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+          description: The stopped `Campaign`.
+      security:
+        - BearerAuth: []
+      tags:
+        - campaigns
+  /campaigns/{campaign_id}/end:
+    post:
+      summary: End campaign
+      description: |
+        Ends a stopped campaign, setting `ended_at` and `ended_by_user_id`,
+        applying pending access changes, and queuing report generation.
+        Returns 400 unless the campaign is started and stopped and not already
+        ended.
+      operationId: endCampaign
+      parameters:
+        - description: The ID of the campaign.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          explode: true
+          in: path
+          name: campaign_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+          description: The ended `Campaign`.
+      security:
+        - BearerAuth: []
+      tags:
+        - campaigns
   /configuration-templates:
     get:
       description: Returns a list of `ConfigurationTemplate` objects.
@@ -678,6 +1009,98 @@ paths:
         - configuration-templates
       x-speakeasy-name-override: delete
       x-speakeasy-entity-operation: ConfigurationTemplate#delete
+  /event-streams:
+    get:
+      summary: Get event streams
+      description: Returns a list of configured event streaming connections for your organization.
+      operationId: getEventStreams
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventStreamList"
+          description: A list of event streams for your organization.
+      security:
+        - BearerAuth: []
+      tags:
+        - event-streams
+    post:
+      summary: Create event stream
+      description: Creates a new event streaming connection.
+      operationId: createEventStream
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEventStreamInfo"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventStream"
+          description: The event stream just created. Credentials are returned in clear text only on creation.
+      security:
+        - BearerAuth: []
+      tags:
+        - event-streams
+  /event-streams/{event_stream_id}:
+    put:
+      summary: Update event stream
+      description: Updates an existing event streaming connection.
+      operationId: updateEventStream
+      parameters:
+        - description: The ID of the event stream.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: event_stream_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateEventStreamInfo"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventStream"
+          description: The updated event stream.
+      security:
+        - BearerAuth: []
+      tags:
+        - event-streams
+    delete:
+      summary: Delete event stream
+      description: Deletes an event streaming connection.
+      operationId: deleteEventStream
+      parameters:
+        - description: The ID of the event stream.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: event_stream_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          description: The event stream was successfully deleted.
+      security:
+        - BearerAuth: []
+      tags:
+        - event-streams
   /events:
     get:
       description: Returns a list of `Event` objects.
@@ -1645,7 +2068,7 @@ paths:
           schema:
             type: string
           style: form
-        - description: Number of results to return per page. Default is 200.
+        - description: Number of results to return per page, up to 1000. When set (or when a cursor is provided), the response contains a single page of results and a `next` cursor; the default page size is 200. When both page_size and cursor are omitted, the entire group membership is returned in one response with no `next` cursor. For large groups, prefer setting page_size and following `next`.
           example: 200
           explode: true
           in: query
@@ -3751,6 +4174,249 @@ paths:
         - BearerAuth: []
       tags:
         - resources
+  /paladin:
+    post:
+      summary: Create Paladin
+      description: Creates a new `Paladin`.
+      operationId: createPaladin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePaladinInfo"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Paladin"
+          description: The created Paladin.
+      security:
+        - BearerAuth: []
+      tags:
+        - paladin
+      x-speakeasy-name-override: create
+      x-speakeasy-entity-operation: Paladin#create
+  /paladin/{paladin_id}:
+    get:
+      summary: Get Paladin by ID
+      description: Returns a `Paladin` object.
+      operationId: getPaladin
+      parameters:
+        - description: The ID of the Paladin.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: true
+          in: path
+          name: paladin_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+          x-speakeasy-name-override: id
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Paladin"
+          description: The Paladin associated with the passed-in ID.
+        "404":
+          description: Not Found
+      security:
+        - BearerAuth: []
+      tags:
+        - paladin
+      x-speakeasy-name-override: get
+      x-speakeasy-entity-operation: Paladin#get
+    put:
+      summary: Update Paladin
+      description: Updates a `Paladin` object.
+      operationId: updatePaladin
+      parameters:
+        - description: The ID of the Paladin.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: true
+          in: path
+          name: paladin_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+          x-speakeasy-name-override: id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePaladinInfo"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Paladin"
+          description: The updated Paladin.
+      security:
+        - BearerAuth: []
+      tags:
+        - paladin
+      x-speakeasy-name-override: update
+      x-speakeasy-entity-operation: Paladin#update
+    delete:
+      summary: Delete Paladin
+      description: Deletes a Paladin, removing the underlying service user.
+      operationId: deletePaladin
+      parameters:
+        - description: The ID of the Paladin.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: true
+          in: path
+          name: paladin_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+          x-speakeasy-name-override: id
+      responses:
+        "200":
+          description: The Paladin was deleted.
+      security:
+        - BearerAuth: []
+      tags:
+        - paladin
+      x-speakeasy-name-override: delete
+      x-speakeasy-entity-operation: Paladin#delete
+  /paladin/name/{paladin_name}:
+    get:
+      summary: Get Paladins by name
+      description: Returns all Paladins whose name exactly matches the given name. Names are not unique, so the result is a list and may be empty.
+      operationId: getPaladinFromName
+      parameters:
+        - description: The name of the Paladin.
+          example: paladin-agent-1
+          explode: true
+          in: path
+          name: paladin_name
+          required: true
+          schema:
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaladinList"
+          description: The list of Paladins matching the passed-in name.
+      security:
+        - BearerAuth: []
+      tags:
+        - paladin
+      x-speakeasy-name-override: get_from_name
+      x-speakeasy-entity-operation: PaladinFromName#get
+  /paladin/{paladin_id}/context-sources:
+    get:
+      summary: List Paladin context sources
+      description: Returns the context sources (Slack channels and documents) configured for a Paladin.
+      operationId: listPaladinContextSources
+      parameters:
+        - description: The ID of the Paladin.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: true
+          in: path
+          name: paladin_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaladinContextSourceList"
+          description: The context sources configured for the Paladin.
+      security:
+        - BearerAuth: []
+      tags:
+        - paladin
+      x-speakeasy-name-override: list_context_sources
+      x-speakeasy-entity-operation: PaladinContextSources#get
+    post:
+      summary: Add a Paladin context source
+      description: Configures a context source (a Slack channel or a document) for a Paladin to read. Idempotent, so re-adding an existing source returns it.
+      operationId: createPaladinContextSource
+      parameters:
+        - description: The ID of the Paladin.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: true
+          in: path
+          name: paladin_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePaladinContextSourceInfo"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaladinContextSource"
+          description: The configured context source.
+      security:
+        - BearerAuth: []
+      tags:
+        - paladin
+      x-speakeasy-name-override: create_context_source
+      x-speakeasy-entity-operation: PaladinContextSource#create
+  /paladin/{paladin_id}/context-sources/{context_source_id}:
+    delete:
+      summary: Remove a Paladin context source
+      description: Removes a context source from a Paladin.
+      operationId: deletePaladinContextSource
+      parameters:
+        - description: The ID of the Paladin.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: true
+          in: path
+          name: paladin_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the context source.
+          example: 8a1f2c3d-4b5e-6f70-8192-a3b4c5d6e7f8
+          explode: true
+          in: path
+          name: context_source_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+          x-speakeasy-name-override: id
+      responses:
+        "200":
+          description: The context source was removed.
+      security:
+        - BearerAuth: []
+      tags:
+        - paladin
+      x-speakeasy-name-override: delete_context_source
+      x-speakeasy-entity-operation: PaladinContextSource#delete
   /sessions:
     get:
       description: Returns a list of `Session` objects.
@@ -3942,6 +4608,21 @@ paths:
               schema:
                 $ref: "#/components/schemas/PaginatedRemoteUsersList"
           description: One page worth users in your organization.
+      security:
+        - BearerAuth: []
+      tags:
+        - users
+  /users/whoami:
+    get:
+      description: Returns the user that the provided API token authenticates as.
+      operationId: getUserWhoami
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+          description: The user that the API token authenticates as.
       security:
         - BearerAuth: []
       tags:
@@ -4565,6 +5246,28 @@ paths:
         - on-call-schedules
       x-speakeasy-name-override: get_id
       x-speakeasy-entity-operation: OnCallSchedule#get
+  /queries/run:
+    post:
+      summary: Run an ad-hoc OpalQuery
+      description: Runs an ad-hoc OpalQuery and returns the results. Supports NODE queries (users, resources, groups) and ACCESS_PATH queries (principal-to-entitlement access edges). This endpoint is only available to our OpalQuery beta group. Please contact Opal support if you'd like to be added to the beta.
+      operationId: runOpalQuery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RunOpalQueryRequest"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpalQueryResults"
+          description: The results of the OpalQuery.
+      security:
+        - BearerAuth: []
+      tags:
+        - opal-queries
   /tokens:
     get:
       summary: Get tokens
@@ -4651,7 +5354,8 @@ paths:
         - tokens
   /uars:
     get:
-      description: Returns a list of `UAR` objects.
+      deprecated: true
+      description: Returns a list of `UAR` objects. Deprecated in favor of `GET /campaigns`.
       operationId: getUARs
       parameters:
         - description: The pagination cursor value.
@@ -4690,7 +5394,8 @@ paths:
       x-speakeasy-entity-operation: UARS_list#get
   /uar:
     post:
-      description: Starts a User Access Review.
+      deprecated: true
+      description: Starts a User Access Review. Deprecated in favor of `POST /campaigns`.
       operationId: createUAR
       requestBody:
         description: The settings of the UAR.
@@ -4713,7 +5418,8 @@ paths:
       x-speakeasy-name-override: create
   /uar/{uar_id}:
     get:
-      description: Retrieves a specific UAR.
+      deprecated: true
+      description: Retrieves a specific UAR. Deprecated in favor of `GET /campaigns/{campaign_id}`.
       operationId: getUARID
       parameters:
         - description: The ID of the UAR.
@@ -4921,6 +5627,447 @@ paths:
       x-speakeasy-entity-operation: Delegation#delete
 components:
   schemas:
+    AccessEntityFilters:
+      type: object
+      description: Filters for matching entities by type, name, tag, IDs, connections, or access levels. Supports recursive logical composition via allOf/anyOf.
+      properties:
+        entityTypes:
+          type: array
+          description: Filter by entity type. Only RESOURCE, GROUP, and USER are queryable via OpalQuery.
+          items:
+            type: string
+            enum: [RESOURCE, GROUP, USER]
+        entityItemTypes:
+          type: array
+          description: Filter by entity item types.
+          items:
+            $ref: "#/components/schemas/EntityItemTypeEnum"
+        entityName:
+          $ref: "#/components/schemas/EntityNameFilter"
+        entityTag:
+          $ref: "#/components/schemas/EntityTagFilter"
+        hrIdpStatus:
+          $ref: "#/components/schemas/IdpStatusFilter"
+        entityAdminOwner:
+          $ref: "#/components/schemas/EntityAdminFilter"
+        entityIDs:
+          type: array
+          description: Filter by specific entity UUIDs.
+          items:
+            type: string
+            format: uuid
+        importedFromApp:
+          type: array
+          description: Filter by app IDs from which returned nodes will be imported from.
+          items:
+            type: string
+            format: uuid
+        roleRemoteIds:
+          type: array
+          description: Filter by role remote IDs. Can only be applied within a hasAccessTo clause.
+          items:
+            type: string
+        roleNames:
+          type: array
+          description: Filter by role display names (e.g. "Admin", "Read"). Can only be applied within a hasAccessTo clause.
+          items:
+            type: string
+        allOf:
+          type: array
+          description: >
+            A list of nested filters that must all match (logical AND). Each
+
+             item has the same shape as this object — scalar fields like
+             `entityTypes` or `entityTag`, and can further nest `allOf`,
+             `anyOf`, or `not`.
+          items:
+            $ref: "#/components/schemas/AccessEntityFilters"
+        anyOf:
+          type: array
+          description: >
+            A list of nested filters where at least one must match (logical
+
+             OR). Each item has the same shape as this object.
+          items:
+            $ref: "#/components/schemas/AccessEntityFilters"
+        not:
+          description: >
+            Excludes entities matching the embedded filter (logical NOT). Pass a filter object with the same shape as this one — typically a single scalar field, like `{not: {entityTypes: ["RESOURCE"]}}` to exclude resources.
+
+          type: object
+          x-go-type: AccessEntityFilters
+    RunOpalQueryRequest:
+      description: Request body for running an ad-hoc OpalQuery. The `type` field determines which query schema applies.
+      oneOf:
+        - $ref: "#/components/schemas/OpalNodeQuery"
+        - $ref: "#/components/schemas/OpalAccessPathQuery"
+      discriminator:
+        propertyName: type
+        mapping:
+          NODE: "#/components/schemas/OpalNodeQuery"
+          ACCESS_PATH: "#/components/schemas/OpalAccessPathQuery"
+      # example:
+      #   type: NODE
+      #   query:
+      #     nodeFilters:
+      #       entityTypes: [RESOURCE]
+      #       allOf:
+      #         - entityTag:
+      #             key: env
+      #             value: prod
+      #         - entityTag:
+      #             key: team
+      #             value: platform
+      #       not:
+      #         entityItemTypes: [AWS_IAM_ROLE]
+      #     accessFilters:
+      #       isAccessibleBy:
+      #         entityTypes: [USER]
+      #         entityTag:
+      #           key: contractor
+      #   first: 50
+    OpalNodeQuery:
+      type: object
+      required:
+        - type
+      description: Request body for a NODE-type OpalQuery. Returns entities (users, resources, groups) matching the given filters.
+      example:
+        type: NODE
+        query:
+          nodeFilters:
+            entityTypes: [RESOURCE]
+            entityTag:
+              key: env
+              value: prod
+          accessFilters:
+            isAccessibleBy:
+              entityTypes: [USER]
+              entityTag:
+                key: contractor
+        first: 50
+      properties:
+        type:
+          type: string
+          enum:
+            - NODE
+        query:
+          $ref: "#/components/schemas/OpalNodeQueryBody"
+        first:
+          type: integer
+          description: Maximum number of results to return. Defaults to 200.
+          example: 200
+        after:
+          type: string
+          description: Cursor from a previous response to fetch the next page of results.
+          example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+    OpalNodeQueryBody:
+      type: object
+      description: The filter body for a NODE-type OpalQuery.
+      properties:
+        nodeFilters:
+          $ref: "#/components/schemas/AccessEntityFilters"
+        accessFilters:
+          $ref: "#/components/schemas/AccessRelationshipFilters"
+    OpalQueryResultNode:
+      type: object
+      required:
+        - id
+        - name
+        - entityType
+        - entityItemType
+      description: A matched entity from an OpalQuery result.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The entity's unique identifier.
+        name:
+          type: string
+          description: The display name of the entity.
+        entityType:
+          type: string
+          enum:
+            - USER
+            - GROUP
+            - RESOURCE
+          description: The top-level entity type.
+        entityItemType:
+          $ref: "#/components/schemas/EntityItemTypeEnum"
+    OpalQueryResultEdge:
+      type: object
+      required:
+        - node
+        - cursor
+      description: A single result edge from an OpalQuery, containing the matched entity and its pagination cursor.
+      properties:
+        node:
+          $ref: "#/components/schemas/OpalQueryResultNode"
+        cursor:
+          type: string
+          description: Opaque cursor for this entity, used for pagination.
+    OpalQueryResults:
+      description: Paginated results of an OpalQuery. The `type` field discriminates which result schema applies and mirrors the `type` field on the request.
+      oneOf:
+        - $ref: "#/components/schemas/OpalNodeQueryResults"
+        - $ref: "#/components/schemas/OpalAccessPathQueryResults"
+      discriminator:
+        propertyName: type
+        mapping:
+          NODE: "#/components/schemas/OpalNodeQueryResults"
+          ACCESS_PATH: "#/components/schemas/OpalAccessPathQueryResults"
+    OpalNodeQueryResults:
+      type: object
+      required:
+        - type
+        - edges
+        - pageInfo
+      description: Paginated results of a NODE-type OpalQuery — one edge per matched entity (user, resource, or group).
+      properties:
+        type:
+          type: string
+          enum:
+            - NODE
+        edges:
+          type: array
+          description: List of matched entities.
+          items:
+            $ref: "#/components/schemas/OpalQueryResultEdge"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
+    OpalAccessPathQuery:
+      type: object
+      required:
+        - type
+      description: Request body for an ACCESS_PATH-type OpalQuery. Returns principal-to- entitlement access paths matching the given edge filters.
+      example:
+        type: ACCESS_PATH
+        query:
+          principalFilter:
+            entityTypes: [USER]
+          entitlementFilter:
+            entityItemTypes: [AWS_IAM_ROLE]
+          edgeFilter:
+            directOnly: true
+        first: 50
+      properties:
+        type:
+          type: string
+          enum:
+            - ACCESS_PATH
+        query:
+          $ref: "#/components/schemas/OpalAccessPathQueryBody"
+        first:
+          type: integer
+          description: Maximum number of results to return. Defaults to 200.
+          example: 200
+        after:
+          type: string
+          description: Opaque cursor from a previous ACCESS_PATH response to fetch the next page of results.
+        includeCount:
+          type: boolean
+          description: When true, populate totalCount in the response. Defaults to false.
+          example: false
+    OpalAccessPathQueryBody:
+      type: object
+      description: Edge-query filters for an ACCESS_PATH OpalQuery. At least one of principalFilter or entitlementFilter is required.
+      properties:
+        principalFilter:
+          $ref: "#/components/schemas/AccessEntityFilters"
+        entitlementFilter:
+          $ref: "#/components/schemas/AccessEntityFilters"
+        principalAccessFilters:
+          description: >
+            Advanced access filter on the principal side of each path. Restricts results to principals that additionally satisfy these access-edge constraints: `hasAccessTo` keeps only principals that also have access to a matching entity; `isAccessibleBy` keeps only principals that are also accessible by a matching entity. Only takes effect when `principalFilter` is also supplied (it refines that filter); on its own it has no effect.
+
+          $ref: "#/components/schemas/AccessRelationshipFilters"
+        entitlementAccessFilters:
+          description: >
+            Advanced access filter on the entitlement side of each path. Restricts results to entitlements that additionally satisfy these access-edge constraints: `hasAccessTo` keeps only entitlements that also have access to a matching entity; `isAccessibleBy` keeps only entitlements that are also accessible by a matching entity. Only takes effect when `entitlementFilter` is also supplied (it refines that filter); on its own it has no effect.
+
+          $ref: "#/components/schemas/AccessRelationshipFilters"
+        accessLevelRemoteIds:
+          type: array
+          description: Filter by access-level remote IDs on the terminal edge.
+          items:
+            type: string
+        accessLevelNames:
+          type: array
+          description: Filter by access-level display names on the terminal edge.
+          items:
+            type: string
+        edgeFilter:
+          $ref: "#/components/schemas/OpalAccessPathEdgeFilter"
+    OpalAccessPathEdgeFilter:
+      type: object
+      description: Constraints on the access path edges themselves.
+      properties:
+        directOnly:
+          type: boolean
+          description: When true, only return direct (depth-1) principal-to-entitlement edges.
+          example: true
+        accessDurationType:
+          type: string
+          description: Constrain results by whether the terminal access expires.
+          enum:
+            - EXPIRING_ONLY
+            - PERMANENT_ONLY
+          example: EXPIRING_ONLY
+    OpalAccessPathResultNode:
+      type: object
+      required:
+        - principalId
+        - entitlementId
+        - depth
+        - path
+      description: A matched access path from an ACCESS_PATH OpalQuery.
+      properties:
+        principalId:
+          type: string
+          format: uuid
+          description: The principal entity ID.
+        entitlementId:
+          type: string
+          format: uuid
+          description: The entitlement entity ID.
+        accessLevelRemoteId:
+          type: string
+          nullable: true
+          description: Remote ID of the terminal access level.
+        accessLevelName:
+          type: string
+          nullable: true
+          description: Display name of the terminal access level.
+        expiration:
+          type: string
+          format: date-time
+          nullable: true
+          description: Expiration of the terminal access, if any.
+        depth:
+          type: integer
+          description: Number of hops from principal to entitlement (path length - 1).
+        path:
+          type: array
+          description: Entity IDs along the path from principal to entitlement.
+          items:
+            type: string
+            format: uuid
+    OpalAccessPathResultEdge:
+      type: object
+      required:
+        - node
+        - cursor
+      description: A single ACCESS_PATH result edge containing the matched path and its pagination cursor.
+      properties:
+        node:
+          $ref: "#/components/schemas/OpalAccessPathResultNode"
+        cursor:
+          type: string
+          description: Opaque cursor for this path, used for pagination.
+    OpalAccessPathQueryResults:
+      type: object
+      required:
+        - type
+        - edges
+        - pageInfo
+      description: Paginated results of an ACCESS_PATH-type OpalQuery — one edge per matched principal-to-entitlement access path.
+      properties:
+        type:
+          type: string
+          enum:
+            - ACCESS_PATH
+        edges:
+          type: array
+          description: List of matched access paths.
+          items:
+            $ref: "#/components/schemas/OpalAccessPathResultEdge"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
+        totalCount:
+          type: integer
+          nullable: true
+          description: Exact total number of matching paths when includeCount was true on the request; otherwise null.
+    AccessRelationshipFilters:
+      type: object
+      description: >
+        Filters the returned nodes by the access edges connected to them. When `isAccessibleBy` and `hasAccessTo` are provided, the returned nodes must satisfy both edge constraints simultaneously.
+
+      properties:
+        isAccessibleBy:
+          description: Inbound-edge filter. The returned node must be accessible by at least one entity matching this filter.
+          $ref: "#/components/schemas/AccessEntityFilters"
+        hasAccessTo:
+          description: Outbound-edge filter. The returned node must have access to at least one entity matching this filter.
+          $ref: "#/components/schemas/AccessEntityFilters"
+    EntityNameFilter:
+      type: object
+      required:
+        - stringMatchType
+        - string
+      description: Filters entities by name using a string match strategy.
+      properties:
+        stringMatchType:
+          $ref: "#/components/schemas/StringMatchType"
+        string:
+          type: string
+          description: The string value to match against the entity name.
+          example: engineering
+    EntityTagFilter:
+      type: object
+      required:
+        - key
+      description: Filters entities by a tag key/value pair, optionally scoped to a connection.
+      properties:
+        key:
+          type: string
+          description: The tag key to filter by.
+          example: team
+        value:
+          type: string
+          description: The tag value to filter by. If omitted, matches any value for the given key.
+          example: platform
+        connectionId:
+          type: string
+          format: uuid
+          description: If specified, filters by tags associated with this connection.
+    IdpStatusFilter:
+      type: object
+      description: >
+        Filters USER entities by their HR/IDP lifecycle status. Only applies to USER entities; GROUP and RESOURCE entities never match, in either polarity. `statuses` combine with OR. `not` inverts the match within the user domain (e.g. "IDP status is NOT active"), so it still returns only users rather than sweeping in groups/resources.
+
+      properties:
+        statuses:
+          type: array
+          description: Match users whose HR/IDP status is one of these values.
+          items:
+            $ref: "#/components/schemas/UserHrIdpStatusEnum"
+        not:
+          type: boolean
+          description: Invert the match within the user domain (e.g. "IDP status is NOT active").
+    EntityAdminFilter:
+      type: object
+      required:
+        - ownerIDs
+      description: >
+        Filters GROUP and RESOURCE entities by their admin owner. USER entities never match, in either polarity. `not` inverts the match within the resource/group domain (self-negating, like IdpStatusFilter): omit it (or false) to include entities owned by the given owners, set it true to exclude them.
+
+      properties:
+        ownerIDs:
+          type: array
+          description: The owner (group) UUIDs to match entities against.
+          items:
+            type: string
+            format: uuid
+        not:
+          type: boolean
+          description: Invert the match — return resources/groups NOT owned by the given owners.
+    StringMatchType:
+      type: string
+      description: How to match a string value against entity names.
+      enum:
+        - CONTAINS
+        - EQUALS
+        - STARTS_WITH
+        - ENDS_WITH
     PaginatedAssignedRequestList:
       type: object
       required:
@@ -5068,6 +6215,547 @@ components:
             example: demo
             type: string
           type: array
+      type: object
+    CampaignStatusEnum:
+      description: The current status of a campaign.
+      enum:
+        - DRAFT
+        - ONGOING
+        - COMPLETED
+        - STOPPED
+        - ENDED
+      example: ONGOING
+      type: string
+    CampaignRevokeOnEnum:
+      description: When access decisions take effect during a campaign.
+      enum:
+        - ACTION
+        - END
+        - NONE
+      example: END
+      type: string
+    CampaignGroupAssetVisibilityPolicyEnum:
+      description: Controls what group assets reviewers can see during the campaign.
+      enum:
+        - STRICT
+        - VIEW_VISIBLE_AND_ASSIGNED
+        - VIEW_ALL
+      example: STRICT
+      type: string
+    CampaignConfiguration:
+      description: Configuration for an access review campaign.
+      example:
+        configuration_id: 39a4d283-ca87-4a8a-bdbb-df212eca5fdb
+        created_at: 2026-07-01T00:00:00Z
+        updated_at: 2026-07-01T00:00:00Z
+        query: null
+        reviewer_assignment_policy: MANUALLY
+        allow_self_review: false
+        send_reviewer_assignment_notification: true
+        allow_reviewer_reassignment: false
+        start_date: null
+        end_date: 2026-09-30T00:00:00Z
+        timezone: America/Los_Angeles
+        revoke_on: END
+        reminder_schedule: [7, 3, 1]
+        reminder_include_manager: true
+        require_reason_on_denial: false
+        hide_ai_suggestions: false
+        custom_start_message: null
+        group_asset_visibility_policy: STRICT
+        is_template: false
+        cron_expression: null
+        next_scheduled_run: null
+        last_scheduled_run: null
+        recurring_duration_days: null
+      properties:
+        configuration_id:
+          description: The ID of the campaign configuration.
+          example: 39a4d283-ca87-4a8a-bdbb-df212eca5fdb
+          format: uuid
+          type: string
+        created_at:
+          description: The creation time of the configuration.
+          example: 2026-07-01T00:00:00Z
+          format: date-time
+          type: string
+        updated_at:
+          description: The last updated time of the configuration.
+          example: 2026-07-01T00:00:00Z
+          format: date-time
+          type: string
+        query:
+          description: Access-path query defining the scope of access to review. Uses the same principalFilter / entitlementFilter shape as ACCESS_PATH OpalQuery.
+          allOf:
+            - $ref: "#/components/schemas/OpalAccessPathQueryBody"
+          nullable: true
+        reviewer_assignment_policy:
+          $ref: "#/components/schemas/UARReviewerAssignmentPolicyEnum"
+        allow_self_review:
+          description: Whether reviewers can review their own access.
+          example: false
+          type: boolean
+        send_reviewer_assignment_notification:
+          description: Whether to notify reviewers upon assignment.
+          example: true
+          type: boolean
+        allow_reviewer_reassignment:
+          description: Whether reviewers may reassign their reviews to another user.
+          example: false
+          type: boolean
+        start_date:
+          description: Scheduled start date of the campaign.
+          example: 2026-07-02T00:00:00Z
+          format: date-time
+          nullable: true
+          type: string
+        end_date:
+          description: Scheduled end date of the campaign.
+          example: 2026-09-30T00:00:00Z
+          format: date-time
+          nullable: true
+          type: string
+        timezone:
+          description: IANA timezone used to interpret campaign deadlines (e.g. America/Los_Angeles).
+          example: America/Los_Angeles
+          type: string
+        revoke_on:
+          $ref: "#/components/schemas/CampaignRevokeOnEnum"
+        reminder_schedule:
+          description: Days before end date to send reminder notifications.
+          example: [7, 3, 1]
+          items:
+            type: integer
+          type: array
+        reminder_include_manager:
+          description: Whether to include the reviewer's manager in reminders.
+          example: true
+          type: boolean
+        require_reason_on_denial:
+          description: Whether reviewers must provide a reason when denying (revoking) access.
+          example: false
+          type: boolean
+        hide_ai_suggestions:
+          description: Whether AI suggestions are hidden from reviewers.
+          example: false
+          type: boolean
+        custom_start_message:
+          description: Optional custom message included when notifying reviewers that the campaign started.
+          example: Please complete your reviews by Friday.
+          nullable: true
+          type: string
+        group_asset_visibility_policy:
+          $ref: "#/components/schemas/CampaignGroupAssetVisibilityPolicyEnum"
+        is_template:
+          description: Whether this configuration is a recurring schedule template.
+          example: false
+          type: boolean
+        cron_expression:
+          description: Cron expression driving the recurring schedule. Null for one-off campaigns.
+          example: 0 9 1 * *
+          nullable: true
+          type: string
+        next_scheduled_run:
+          description: Next time a draft will be generated from this template.
+          example: 2026-08-01T16:00:00Z
+          format: date-time
+          nullable: true
+          type: string
+        last_scheduled_run:
+          description: Most recent time a draft was generated from this template.
+          example: 2026-07-01T16:00:00Z
+          format: date-time
+          nullable: true
+          type: string
+        recurring_duration_days:
+          description: Deadline window in days applied to each draft generated from this template.
+          example: 14
+          nullable: true
+          type: integer
+      required:
+        - configuration_id
+        - created_at
+        - updated_at
+        - reviewer_assignment_policy
+        - allow_self_review
+        - send_reviewer_assignment_notification
+        - allow_reviewer_reassignment
+        - timezone
+        - revoke_on
+        - reminder_include_manager
+        - require_reason_on_denial
+        - hide_ai_suggestions
+        - group_asset_visibility_policy
+        - is_template
+      type: object
+    CreateCampaignConfigurationInfo:
+      description: Configuration to apply when creating a campaign. `query` is required; other omitted fields use defaults.
+      example:
+        query:
+          principalFilter:
+            entityTypes: [USER]
+        end_date: 2026-09-30T00:00:00Z
+        timezone: America/Los_Angeles
+        allow_self_review: false
+      properties:
+        query:
+          description: |
+            Access-path query defining the scope of access to review. Required.
+            Uses the same principalFilter / entitlementFilter shape as
+            ACCESS_PATH OpalQuery. Must include at least one of
+            principalFilter or entitlementFilter.
+
+            Campaign scope only supports direct access edges:
+            `edgeFilter.directOnly` defaults to `true`, is always stored as
+            `true`, and passing `false` returns 400.
+          allOf:
+            - $ref: "#/components/schemas/OpalAccessPathQueryBody"
+        reviewer_assignment_policy:
+          $ref: "#/components/schemas/UARReviewerAssignmentPolicyEnum"
+        allow_self_review:
+          description: Whether reviewers can review their own access.
+          example: false
+          type: boolean
+        send_reviewer_assignment_notification:
+          description: Whether to notify reviewers upon assignment.
+          example: true
+          type: boolean
+        allow_reviewer_reassignment:
+          description: Whether reviewers may reassign their reviews to another user.
+          example: false
+          type: boolean
+        start_date:
+          description: Scheduled start date of the campaign.
+          example: 2026-07-02T00:00:00Z
+          format: date-time
+          nullable: true
+          type: string
+        end_date:
+          description: Scheduled end date of the campaign.
+          example: 2026-09-30T00:00:00Z
+          format: date-time
+          nullable: true
+          type: string
+        timezone:
+          description: IANA timezone used to interpret campaign deadlines (e.g. America/Los_Angeles).
+          example: America/Los_Angeles
+          type: string
+        revoke_on:
+          $ref: "#/components/schemas/CampaignRevokeOnEnum"
+        reminder_schedule:
+          description: Days before end date to send reminder notifications.
+          example: [7, 3, 1]
+          items:
+            type: integer
+          type: array
+        reminder_include_manager:
+          description: Whether to include the reviewer's manager in reminders.
+          example: true
+          type: boolean
+        require_reason_on_denial:
+          description: Whether reviewers must provide a reason when denying (revoking) access.
+          example: false
+          type: boolean
+        hide_ai_suggestions:
+          description: Whether AI suggestions are hidden from reviewers.
+          example: false
+          type: boolean
+        custom_start_message:
+          description: Optional custom message included when notifying reviewers that the campaign started.
+          example: Please complete your reviews by Friday.
+          nullable: true
+          type: string
+        group_asset_visibility_policy:
+          $ref: "#/components/schemas/CampaignGroupAssetVisibilityPolicyEnum"
+        is_template:
+          description: Whether this configuration is a recurring schedule template.
+          example: false
+          type: boolean
+        cron_expression:
+          description: Cron expression driving the recurring schedule. Null for one-off campaigns.
+          example: 0 9 1 * *
+          nullable: true
+          type: string
+        recurring_duration_days:
+          description: Deadline window in days applied to each draft generated from this template.
+          example: 14
+          nullable: true
+          type: integer
+        excluded_role_assignment_ids:
+          description: Role assignment IDs to exclude from the campaign scope during population.
+          items:
+            format: uuid
+            type: string
+          type: array
+      required:
+        - query
+      type: object
+    CreateCampaignInfo:
+      description: |-
+        # CreateCampaignInfo Object
+        ### Description
+        The `CreateCampaignInfo` object is used to create a campaign.
+
+        ### Usage Example
+        Use in the `POST Campaigns` endpoint.
+      example:
+        name: Q3 Access Review
+        configuration:
+          query:
+            principalFilter:
+              entityTypes: [USER]
+          end_date: 2026-09-30T00:00:00Z
+          timezone: America/Los_Angeles
+      properties:
+        name:
+          description: The name of the campaign.
+          example: Q3 Access Review
+          type: string
+        configuration:
+          description: Configuration for the campaign. Required; must include a query. Other omitted fields use defaults.
+          allOf:
+            - $ref: "#/components/schemas/CreateCampaignConfigurationInfo"
+      required:
+        - name
+        - configuration
+      type: object
+    UpdateCampaignConfigurationInfo:
+      description: |
+        Configuration fields to update on a campaign. All fields are optional;
+        omitted fields are left unchanged. `query` and
+        `reviewer_assignment_policy` are set at create time and cannot be
+        updated here; including either field returns 400.
+        `cron_expression` and `recurring_duration_days` may only be set when
+        the campaign is a template; setting them on a one-off campaign returns
+        400. `is_template` is immutable and not accepted on update.
+      example:
+        end_date: 2026-09-30T00:00:00Z
+        timezone: America/Los_Angeles
+        allow_self_review: false
+      properties:
+        allow_self_review:
+          description: Whether reviewers can review their own access.
+          example: false
+          type: boolean
+        send_reviewer_assignment_notification:
+          description: Whether to notify reviewers upon assignment.
+          example: true
+          type: boolean
+        allow_reviewer_reassignment:
+          description: Whether reviewers may reassign their reviews to another user.
+          example: false
+          type: boolean
+        start_date:
+          description: |
+            Scheduled start date of the campaign. May only be updated while the
+            campaign has not started (started_at is null). When set, the date's
+            calendar day in the campaign timezone must be at least tomorrow.
+          example: 2026-07-02T00:00:00Z
+          format: date-time
+          nullable: true
+          type: string
+        end_date:
+          description: |
+            Scheduled end date of the campaign. When set, the date's calendar
+            day in the campaign timezone must be at least tomorrow.
+          example: 2026-09-30T00:00:00Z
+          format: date-time
+          nullable: true
+          type: string
+        timezone:
+          description: IANA timezone used to interpret campaign deadlines (e.g. America/Los_Angeles).
+          example: America/Los_Angeles
+          type: string
+        revoke_on:
+          $ref: "#/components/schemas/CampaignRevokeOnEnum"
+        reminder_schedule:
+          description: Days before end date to send reminder notifications.
+          example: [7, 3, 1]
+          items:
+            type: integer
+          type: array
+        reminder_include_manager:
+          description: Whether to include the reviewer's manager in reminders.
+          example: true
+          type: boolean
+        require_reason_on_denial:
+          description: Whether reviewers must provide a reason when denying (revoking) access.
+          example: false
+          type: boolean
+        hide_ai_suggestions:
+          description: Whether AI suggestions are hidden from reviewers.
+          example: false
+          type: boolean
+        custom_start_message:
+          description: Optional custom message included when notifying reviewers that the campaign started.
+          example: Please complete your reviews by Friday.
+          nullable: true
+          type: string
+        group_asset_visibility_policy:
+          $ref: "#/components/schemas/CampaignGroupAssetVisibilityPolicyEnum"
+        cron_expression:
+          description: Cron expression driving the recurring schedule. Only valid on template campaigns. Pass an empty string to clear the active months (next_scheduled_run is cleared); the campaign remains a template.
+          example: 0 9 1 * *
+          nullable: true
+          type: string
+        recurring_duration_days:
+          description: Deadline window in days applied to each draft generated from this template. Only valid on template campaigns.
+          example: 14
+          nullable: true
+          type: integer
+      type: object
+    UpdateCampaignInfo:
+      description: |-
+        # UpdateCampaignInfo Object
+        ### Description
+        The `UpdateCampaignInfo` object is used to partially update a campaign.
+        Omitted fields are left unchanged.
+
+        ### Usage Example
+        Use in the `PUT Campaign` endpoint.
+      example:
+        name: Q3 Access Review (Updated)
+        configuration:
+          end_date: 2026-09-30T00:00:00Z
+          timezone: America/Los_Angeles
+      properties:
+        name:
+          description: The name of the campaign.
+          example: Q3 Access Review (Updated)
+          type: string
+        configuration:
+          description: Configuration fields to create or update.
+          allOf:
+            - $ref: "#/components/schemas/UpdateCampaignConfigurationInfo"
+      type: object
+    Campaign:
+      description: An access review campaign.
+      example:
+        campaign_id: f454d283-ca87-4a8a-bdbb-df212eca5353
+        name: Q3 Access Review
+        status: DRAFT
+        is_template: false
+        created_at: 2026-07-01T00:00:00Z
+        updated_at: 2026-07-01T00:00:00Z
+        created_by_user_id: 32acc112-21ff-4669-91c2-21e27683eaa1
+        configuration: null
+        started_at: null
+        started_by_user_id: null
+        stopped_at: null
+        stopped_by_user_id: null
+        ended_at: null
+        ended_by_user_id: null
+      properties:
+        campaign_id:
+          description: The ID of the campaign.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          format: uuid
+          type: string
+        name:
+          description: The name of the campaign.
+          example: Q3 Access Review
+          type: string
+        status:
+          $ref: "#/components/schemas/CampaignStatusEnum"
+        is_template:
+          description: Whether this campaign is a recurring schedule template. Templates spawn draft campaigns on schedule rather than being reviewed directly.
+          example: false
+          type: boolean
+        created_at:
+          description: The creation time of the campaign.
+          example: 2026-07-01T00:00:00Z
+          format: date-time
+          type: string
+        updated_at:
+          description: The last updated time of the campaign.
+          example: 2026-07-01T00:00:00Z
+          format: date-time
+          type: string
+        created_by_user_id:
+          description: The ID of the user who created the campaign.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          format: uuid
+          type: string
+        configuration:
+          description: The campaign's configuration, if set.
+          allOf:
+            - $ref: "#/components/schemas/CampaignConfiguration"
+          nullable: true
+        started_at:
+          description: The time the campaign was started, if started.
+          example: 2026-07-02T00:00:00Z
+          format: date-time
+          nullable: true
+          type: string
+        started_by_user_id:
+          description: The ID of the user who started the campaign, if started.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          format: uuid
+          nullable: true
+          type: string
+        stopped_at:
+          description: The time the campaign was manually stopped, if stopped.
+          example: 2026-07-10T00:00:00Z
+          format: date-time
+          nullable: true
+          type: string
+        stopped_by_user_id:
+          description: The ID of the user who stopped the campaign, if stopped.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          format: uuid
+          nullable: true
+          type: string
+        ended_at:
+          description: The time the campaign reached its scheduled end, if ended.
+          example: 2026-07-14T00:00:00Z
+          format: date-time
+          nullable: true
+          type: string
+        ended_by_user_id:
+          description: The ID of the user who ended the campaign, if ended.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          format: uuid
+          nullable: true
+          type: string
+      required:
+        - campaign_id
+        - name
+        - status
+        - is_template
+        - created_at
+        - updated_at
+        - created_by_user_id
+      type: object
+    PaginatedCampaignsList:
+      description: A list of campaigns.
+      example:
+        next: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+        previous: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+        results:
+          - campaign_id: f454d283-ca87-4a8a-bdbb-df212eca5353
+            name: Q3 Access Review
+            status: DRAFT
+            is_template: false
+            created_at: 2026-07-01T00:00:00Z
+            updated_at: 2026-07-01T00:00:00Z
+            created_by_user_id: 32acc112-21ff-4669-91c2-21e27683eaa1
+      properties:
+        next:
+          description: The cursor with which to continue pagination if additional result pages exist.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          nullable: true
+          type: string
+        previous:
+          description: The cursor used to obtain the current result page.
+          example: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: "#/components/schemas/Campaign"
+          type: array
+      required:
+        - results
       type: object
     PaginatedUARsList:
       description: A list of UARs.
@@ -5403,20 +7091,28 @@ components:
         - AZURE_AD
         - AWS
         - AWS_SSO
+        - CLICKHOUSE
         - COUPA
         - CURSOR
         - CUSTOM
+        - CONFLUENCE
         - CUSTOM_CONNECTOR
         - DATABRICKS
         - DATASTAX_ASTRA
+        - ALICLOUD
+        - DEVIN
+        - DOCUSIGN
         - DUO
         - GCP
         - GIT_HUB
         - GIT_LAB
         - GOOGLE_GROUPS
         - GOOGLE_WORKSPACE
+        - GRAFANA
+        - HUBSPOT
         - ILEVEL
         - INCIDENTIO
+        - JIRA
         - LDAP
         - MARIADB
         - MONGO
@@ -5424,16 +7120,25 @@ components:
         - MYSQL
         - NETSUITE
         - DATADOG
+        - OKTA_CIAM
         - OKTA_DIRECTORY
         - OPENAI_PLATFORM
         - OPAL
+        - ORACLE_FUSION
         - PAGERDUTY
+        - POSTGRES
+        - ROOTLY
         - SALESFORCE
         - SNOWFLAKE
+        - SLACK
+        - TABLEAU
         - TAILSCALE
         - TELEPORT
         - TWINGATE
+        - VAULT
         - WORKDAY
+        - ZENDESK
+        - ZOOM
       example: OKTA_DIRECTORY
       type: string
     EntityTypeEnum:
@@ -5990,6 +7695,252 @@ components:
           type: array
       type: object
       x-speakeasy-entity: Sessions
+    Paladin:
+      description: |-
+        # Paladin Object
+        ### Description
+        The `Paladin` object represents a Paladin, Opal's AI access-request
+        reviewer.
+      example:
+        paladin_id: 32acc112-21ff-4669-91c2-21e27683eaa1
+        name: paladin-agent-1
+        owner_id: 7c86c85d-0651-43e2-a748-d69d658418e8
+        monitor_mode: true
+        admin_view_only: false
+        enabled_connectors:
+          - SLACK
+      properties:
+        paladin_id:
+          description: The ID of the Paladin. Use this value as a reviewer in a request configuration's service_user_ids.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          format: uuid
+          type: string
+          x-speakeasy-name-override: id
+          x-speakeasy-param-suppress-computed-diff: true
+        name:
+          description: The name of the Paladin.
+          example: paladin-agent-1
+          type: string
+        owner_id:
+          description: The ID of the owner of the Paladin.
+          example: 7c86c85d-0651-43e2-a748-d69d658418e8
+          format: uuid
+          type: string
+          x-speakeasy-param-force-new: true
+        monitor_mode:
+          description: When true, the Paladin reasons about requests but takes no action. Shown as "Monitor mode" in the UI.
+          type: boolean
+        admin_view_only:
+          description: When true, the Paladin's recommendations are visible only to admins. Only meaningful when monitor_mode is true.
+          type: boolean
+        enabled_connectors:
+          description: The connectors the Paladin is allowed to use.
+          type: array
+          items:
+            $ref: "#/components/schemas/PaladinConnector"
+        instructions:
+          description: The free-form instructions that guide the Paladin's decisions.
+          example: Approve read-only access; escalate anything that grants write access.
+          type: string
+      required:
+        - paladin_id
+        - name
+        - owner_id
+        - monitor_mode
+        - admin_view_only
+        - enabled_connectors
+        - instructions
+      type: object
+      x-speakeasy-entity: Paladin
+    PaladinList:
+      description: |-
+        # PaladinList Object
+        ### Description
+        A list of `Paladin` objects.
+      properties:
+        results:
+          items:
+            $ref: "#/components/schemas/Paladin"
+          type: array
+      required:
+        - results
+      type: object
+      x-speakeasy-entity: PaladinFromName
+    PaladinConnector:
+      description: A connector a Paladin is allowed to use.
+      enum:
+        - NOTION
+        - JIRA
+        - LINEAR
+        - SERVICE_NOW
+        - NOTION_TICKETS
+        - FRESH_SERVICE
+        - SHORTCUT
+        - SLACK
+        - PAGER_DUTY
+        - CONFLUENCE
+        - FLEET_DM
+      type: string
+    PaladinContextSourceKind:
+      description: The kind of source a Paladin can read. A SLACK_CHANNEL is a Slack channel; a DOCUMENT is a Notion or Confluence page.
+      enum:
+        - SLACK_CHANNEL
+        - DOCUMENT
+      type: string
+    PaladinContextSourceProvider:
+      description: The integration a Paladin context source comes from.
+      enum:
+        - SLACK
+        - NOTION
+        - CONFLUENCE
+      type: string
+    PaladinContextSource:
+      description: |-
+        # PaladinContextSource Object
+        ### Description
+        A context source (a Slack channel or a document) that a Paladin is
+        configured to read during access-request review.
+      example:
+        id: 8a1f2c3d-4b5e-6f70-8192-a3b4c5d6e7f8
+        paladin_id: 32acc112-21ff-4669-91c2-21e27683eaa1
+        source_kind: SLACK_CHANNEL
+        third_party_provider: SLACK
+        remote_id: C0123456789
+        name: "#access-requests"
+        url: https://example.slack.com/archives/C0123456789
+      properties:
+        id:
+          description: The ID of the context source.
+          format: uuid
+          type: string
+        paladin_id:
+          description: The ID of the Paladin this source belongs to.
+          format: uuid
+          type: string
+        source_kind:
+          $ref: "#/components/schemas/PaladinContextSourceKind"
+        third_party_provider:
+          $ref: "#/components/schemas/PaladinContextSourceProvider"
+        remote_id:
+          description: The provider's identifier for the source. The Slack channel ID for a channel, or the Notion/Confluence page ID for a document.
+          type: string
+        name:
+          description: A human-readable name for the source.
+          type: string
+        url:
+          description: A link to the source.
+          type: string
+      required:
+        - id
+        - paladin_id
+        - source_kind
+        - third_party_provider
+        - remote_id
+        - name
+        - url
+      type: object
+      x-speakeasy-entity: PaladinContextSource
+    PaladinContextSourceList:
+      description: |-
+        # PaladinContextSourceList Object
+        ### Description
+        A list of `PaladinContextSource` objects.
+      properties:
+        results:
+          items:
+            $ref: "#/components/schemas/PaladinContextSource"
+          type: array
+      required:
+        - results
+      type: object
+      x-speakeasy-entity: PaladinContextSources
+    CreatePaladinContextSourceInfo:
+      description: Information for adding a context source to a Paladin.
+      example:
+        source_kind: SLACK_CHANNEL
+        third_party_provider: SLACK
+        remote_id: C0123456789
+        name: "#access-requests"
+      properties:
+        source_kind:
+          $ref: "#/components/schemas/PaladinContextSourceKind"
+        third_party_provider:
+          $ref: "#/components/schemas/PaladinContextSourceProvider"
+        remote_id:
+          description: The provider's identifier for the source. The Slack channel ID for a channel, or the Notion/Confluence page ID for a document.
+          type: string
+        name:
+          description: An optional human-readable name for the source.
+          type: string
+        url:
+          description: An optional link to the source.
+          type: string
+      required:
+        - source_kind
+        - third_party_provider
+        - remote_id
+      type: object
+    CreatePaladinInfo:
+      description: Information for creating a Paladin.
+      example:
+        name: paladin-agent-1
+        owner_id: 7c86c85d-0651-43e2-a748-d69d658418e8
+      properties:
+        name:
+          description: The name of the Paladin.
+          example: paladin-agent-1
+          type: string
+        owner_id:
+          description: The ID of the owner of the Paladin.
+          example: 7c86c85d-0651-43e2-a748-d69d658418e8
+          format: uuid
+          type: string
+        monitor_mode:
+          description: When true, the Paladin reasons about requests but takes no action. Defaults to true.
+          type: boolean
+          default: true
+        admin_view_only:
+          description: When true, recommendations are visible only to admins. Only meaningful when monitor_mode is true. Defaults to false.
+          type: boolean
+          default: false
+        enabled_connectors:
+          description: The connectors the Paladin is allowed to use.
+          type: array
+          items:
+            $ref: "#/components/schemas/PaladinConnector"
+        instructions:
+          description: The free-form instructions that guide the Paladin's decisions. Optional; if omitted the Paladin is created without instructions.
+          type: string
+      required:
+        - name
+        - owner_id
+      type: object
+    UpdatePaladinInfo:
+      description: Information for updating a Paladin.
+      example:
+        name: paladin-agent-1
+      properties:
+        name:
+          description: The name of the Paladin.
+          example: paladin-agent-1
+          type: string
+        monitor_mode:
+          description: When true, the Paladin reasons about requests but takes no action. If omitted, the existing value is preserved.
+          type: boolean
+        admin_view_only:
+          description: When true, recommendations are visible only to admins. Only meaningful when monitor_mode is true. If omitted, the existing value is preserved.
+          type: boolean
+        enabled_connectors:
+          description: The connectors the Paladin is allowed to use. If omitted, the existing connectors are preserved.
+          type: array
+          items:
+            $ref: "#/components/schemas/PaladinConnector"
+        instructions:
+          description: The free-form instructions that guide the Paladin's decisions. If omitted, the existing instructions are preserved.
+          type: string
+      required:
+        - name
+      type: object
     Session:
       description: |-
         # Session Object
@@ -6355,7 +8306,7 @@ components:
           format: uuid
           type: string
         duration_minutes:
-          description: The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite, or a negative value to revoke access.
+          description: The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite.
           type: integer
           maximum: 525960 # One year
           example: 120
@@ -6549,6 +8500,14 @@ components:
           allOf:
             - $ref: "#/components/schemas/RiskSensitivityEnum"
           x-speakeasy-param-suppress-computed-diff: true
+        match_remote_name:
+          description: A bool representing whether or not the group's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.
+          example: False
+          type: boolean
+        match_remote_description:
+          description: A bool representing whether or not the group's description is synced from the end system. When true, the description is overwritten with the remote description on each sync. Defaults to false.
+          example: False
+          type: boolean
         last_successful_sync:
           readOnly: true
           description: Information about the last successful sync of this group.
@@ -6712,6 +8671,7 @@ components:
         - ERR_DRY_RUN_MODE_ENABLED
         - ERR_HR_IDP_PROVIDER_NOT_LINKED
         - ERR_REMOTE_UNRECOVERABLE_ERROR
+        - ERR_REMOTE_TICKET_NOT_FOUND
       example:
         - SUCCESS
       type: string
@@ -6910,6 +8870,14 @@ components:
         risk_sensitivity_override:
           allOf:
             - $ref: "#/components/schemas/RiskSensitivityEnum"
+        match_remote_name:
+          description: A bool representing whether or not the group's name should be synced from the end system. When true, the name is overwritten with the remote name on each sync, so a `name` provided together with this field set to true will be replaced at the next sync. If not provided, the current value is left unchanged.
+          example: False
+          type: boolean
+        match_remote_description:
+          description: A bool representing whether or not the group's description should be synced from the end system. When true, the description is overwritten with the remote description on each sync, so a `description` provided together with this field set to true will be replaced at the next sync. If not provided, the current value is left unchanged.
+          example: False
+          type: boolean
       required:
         - group_id
         - request_configurations
@@ -6944,8 +8912,17 @@ components:
         - GIT_HUB_ENTERPRISE_TEAM
         - GRAFANA_TEAM
         - CLICKHOUSE_ROLE
+        - SLACK_USER_GROUP
         - TWINGATE_GROUP
         - TWINGATE_GROUP_SYNCED
+        - ZENDESK_GROUP
+        - ZENDESK_ORGANIZATION
+        - HUBSPOT_TEAM
+        - TABLEAU_GROUP
+        - CONFLUENCE_GROUP
+        - JIRA_GROUP
+        - DOCUSIGN_GROUP
+        - ZOOM_GROUP
       example: OPAL_GROUP
       type: string
     ResourceTypeEnum:
@@ -7035,7 +9012,103 @@ components:
         - CLICKHOUSE_DATABASE
         - CLICKHOUSE_TABLE
         - TWINGATE_RESOURCE
+        - ZENDESK_ROLE
+        - HUBSPOT_ROLE
+        - ALICLOUD_RAM_ROLE
+        - ALICLOUD_ECS_INSTANCE
+        - DOCUSIGN_PERMISSION_PROFILE
+        - ZOOM_ROLE
+        - ZOOM_LICENSE
       example: AWS_IAM_ROLE
+      type: string
+    EntityItemTypeEnum:
+      description: Granular subtype of an entity.
+      enum:
+        - USER
+        - SERVICE_USER
+        - ACTIVE_DIRECTORY_GROUP
+        - AWS_SSO_GROUP
+        - DUO_GROUP
+        - GIT_HUB_TEAM
+        - GIT_LAB_GROUP
+        - GOOGLE_GROUPS_GROUP
+        - GOOGLE_GROUPS_GKE_GROUP
+        - LDAP_GROUP
+        - OKTA_GROUP
+        - OKTA_GROUP_RULE
+        - TAILSCALE_GROUP
+        - TWINGATE_GROUP
+        - TWINGATE_GROUP_SYNCED
+        - OPAL_GROUP
+        - OPAL_ACCESS_RULE
+        - AZURE_AD_SECURITY_GROUP
+        - AZURE_AD_MICROSOFT_365_GROUP
+        - CONNECTOR_GROUP
+        - SNOWFLAKE_ROLE
+        - WORKDAY_USER_SECURITY_GROUP
+        - DATABRICKS_ACCOUNT_GROUP
+        - AWS_IAM_ROLE
+        - AWS_EC2_INSTANCE
+        - AWS_EKS_CLUSTER
+        - AWS_RDS_POSTGRES_INSTANCE
+        - AWS_RDS_POSTGRES_CLUSTER
+        - AWS_RDS_MYSQL_INSTANCE
+        - AWS_RDS_MYSQL_CLUSTER
+        - AWS_ACCOUNT
+        - AWS_SSO_PERMISSION_SET
+        - AZURE_MANAGEMENT_GROUP
+        - AZURE_RESOURCE_GROUP
+        - AZURE_SUBSCRIPTION
+        - AZURE_VIRTUAL_MACHINE
+        - AZURE_STORAGE_ACCOUNT
+        - AZURE_STORAGE_CONTAINER
+        - AZURE_SQL_SERVER
+        - AZURE_SQL_MANAGED_INSTANCE
+        - AZURE_SQL_DATABASE
+        - AZURE_SQL_MANAGED_DATABASE
+        - AZURE_USER_ASSIGNED_MANAGED_Identity
+        - AZURE_ENTRA_ID_ROLE
+        - AZURE_ENTERPRISE_APP
+        - CUSTOM
+        - CUSTOM_CONNECTOR
+        - GCP_ORGANIZATION
+        - GCP_BUCKET
+        - GCP_COMPUTE_INSTANCE
+        - GCP_BIG_QUERY_DATASET
+        - GCP_BIG_QUERY_TABLE
+        - GCP_FOLDER
+        - GCP_GKE_CLUSTER
+        - GCP_PROJECT
+        - GCP_CLOUD_SQL_POSTGRES_INSTANCE
+        - GCP_CLOUD_SQL_MYSQL_INSTANCE
+        - GCP_SERVICE_ACCOUNT
+        - GIT_HUB_REPO
+        - GIT_HUB_ORG_ROLE
+        - GIT_LAB_PROJECT
+        - GOOGLE_WORKSPACE_ROLE
+        - MONGO_INSTANCE
+        - MONGO_ATLAS_INSTANCE
+        - OKTA_APP
+        - OKTA_ROLE
+        - OPAL_ROLE
+        - OPAL_SCOPED_ROLE
+        - PAGERDUTY_ROLE
+        - TAILSCALE_SSH
+        - TWINGATE_RESOURCE
+        - SALESFORCE_PERMISSION_SET
+        - SALESFORCE_PROFILE
+        - SALESFORCE_ROLE
+        - SNOWFLAKE_DATABASE
+        - SNOWFLAKE_SCHEMA
+        - SNOWFLAKE_TABLE
+        - WORKDAY_ROLE
+        - MYSQL_INSTANCE
+        - MARIADB_INSTANCE
+        - POSTGRES_INSTANCE
+        - TELEPORT_ROLE
+        - DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL
+        - ILEVEL_ADVANCED_ROLE
+      example: OPAL_ROLE
       type: string
     VisibilityTypeEnum:
       description: The visibility level of the entity.
@@ -7806,6 +9879,106 @@ components:
           type: object
           required:
             - team_id
+        zendesk_group:
+          description: Remote info for Zendesk group.
+          properties:
+            group_id:
+              description: The ID of the Zendesk group.
+              example: "12345"
+              type: string
+          type: object
+          required:
+            - group_id
+        slack_user_group:
+          description: Remote info for Slack user group.
+          properties:
+            group_id:
+              description: The id of the Slack user group.
+              example: S0614TZR7
+              type: string
+          type: object
+          required:
+            - group_id
+        zendesk_organization:
+          description: Remote info for Zendesk organization.
+          properties:
+            organization_id:
+              description: The ID of the Zendesk organization.
+              example: "67890"
+              type: string
+          type: object
+          required:
+            - organization_id
+        hubspot_team:
+          description: Remote info for HubSpot team.
+          properties:
+            team_id:
+              description: The ID of the HubSpot team.
+              example: "12345"
+              type: string
+          type: object
+          required:
+            - team_id
+        tableau_group:
+          description: Remote info for Tableau group.
+          properties:
+            group_id:
+              description: The ID of the Tableau group.
+              example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+              type: string
+          type: object
+          required:
+            - group_id
+        confluence_group:
+          description: Remote info for Confluence group.
+          properties:
+            group_id:
+              description: The ID of the Confluence group.
+              example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+              type: string
+          type: object
+          required:
+            - group_id
+        jira_group:
+          description: Remote info for Jira group.
+          properties:
+            group_id:
+              description: The ID of the Jira group.
+              example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+              type: string
+          type: object
+          required:
+            - group_id
+        docusign_group:
+          description: Remote info for Docusign group.
+          properties:
+            group_id:
+              description: The ID of the Docusign group.
+              example: "12345"
+              type: string
+          type: object
+          required:
+            - group_id
+        zoom_group:
+          description: Remote info for Zoom group.
+          properties:
+            group_id:
+              description: The ID of the Zoom group.
+              example: "SoBVexyrQjqCkcxjpBWi6w"
+              type: string
+          type: object
+          required:
+            - group_id
+        docusign_signing_group:
+          description: Remote info for Docusign signing group.
+          properties:
+            signing_group_id:
+              description: The ID of the Docusign signing group.
+              example: "12345"
+              type: string
+          type: object
+          required:
+            - signing_group_id
       type: object
       x-speakeasy-entity: GroupRemote
     ResourceRemoteInfo:
@@ -8277,7 +10450,7 @@ components:
               type: string
             service_account_id:
               description: The id of the service account.
-              example: 103561576023829463298
+              example: 103561576023829460000
               type: string
             project_id:
               description: The id of the project the service account is in.
@@ -8519,6 +10692,16 @@ components:
           required:
             - profile_id
             - user_license_id
+        docusign_permission_profile:
+          description: Remote info for Docusign permission profile.
+          properties:
+            permission_profile_id:
+              description: The ID of the Docusign permission profile.
+              example: "12345"
+              type: string
+          type: object
+          required:
+            - permission_profile_id
         salesforce_role:
           description: Remote info for Salesforce role.
           properties:
@@ -8712,6 +10895,66 @@ components:
           type: object
           required:
             - role_uid
+        zendesk_role:
+          description: Remote info for Zendesk custom role.
+          properties:
+            role_id:
+              description: The ID of the Zendesk custom role.
+              example: "12345"
+              type: string
+          type: object
+          required:
+            - role_id
+        hubspot_role:
+          description: Remote info for HubSpot role.
+          properties:
+            role_id:
+              description: The ID of the HubSpot role.
+              example: "12345"
+              type: string
+          type: object
+          required:
+            - role_id
+        alicloud_ram_role:
+          description: Remote info for AliCloud RAM role.
+          properties:
+            role_arn:
+              description: The ARN of the AliCloud RAM role.
+              example: "acs:ram::1234567890:role/MyRole"
+              type: string
+          type: object
+          required:
+            - role_arn
+        alicloud_ecs_instance:
+          description: Remote info for AliCloud ECS instance.
+          properties:
+            instance_id:
+              description: The ID of the ECS instance.
+              example: "i-bp1a1234567890abcd"
+              type: string
+          type: object
+          required:
+            - instance_id
+        zoom_role:
+          description: Remote info for Zoom role.
+          properties:
+            role_id:
+              description: The ID of the Zoom role.
+              example: "0"
+              type: string
+          type: object
+          required:
+            - role_id
+        zoom_license:
+          description: Remote info for Zoom license (user type).
+          properties:
+            license_type:
+              description: The Zoom user type representing the license (e.g. "2" for Licensed).
+              example: "2"
+              type: string
+          type: object
+          required:
+            - license_type
       type: object
     RiskSensitivityEnum:
       type: string
@@ -9009,6 +11252,14 @@ components:
         risk_sensitivity_override:
           allOf:
             - $ref: "#/components/schemas/RiskSensitivityEnum"
+        match_remote_name:
+          description: A bool representing whether or not the resource's name should be synced from the end system. When true, the name is overwritten with the remote name on each sync, so a `name` provided together with this field set to true will be replaced at the next sync. Defaults to false.
+          example: False
+          type: boolean
+        match_remote_description:
+          description: A bool representing whether or not the resource's description should be synced from the end system. When true, the description is overwritten with the remote description on each sync, so a `description` provided together with this field set to true will be replaced at the next sync. Defaults to false.
+          example: False
+          type: boolean
       required:
         - name
         - resource_type
@@ -9191,6 +11442,14 @@ components:
         risk_sensitivity_override:
           allOf:
             - $ref: "#/components/schemas/RiskSensitivityEnum"
+        match_remote_name:
+          description: A bool representing whether or not the group's name should be synced from the end system. When true, the name is overwritten with the remote name on each sync, so a `name` provided together with this field set to true will be replaced at the next sync. Defaults to false.
+          example: False
+          type: boolean
+        match_remote_description:
+          description: A bool representing whether or not the group's description should be synced from the end system. When true, the description is overwritten with the remote description on each sync, so a `description` provided together with this field set to true will be replaced at the next sync. Defaults to false.
+          example: False
+          type: boolean
       required:
         - name
         - group_type
@@ -9834,6 +12093,14 @@ components:
             - f454d283-ca67-4a8a-bdbb-df212eca5347
             - f454d283-ca67-4a8a-bdbb-df212eca5348
           x-speakeasy-param-suppress-computed-diff: true
+        match_remote_name:
+          description: A bool representing whether or not the resource's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.
+          example: False
+          type: boolean
+        match_remote_description:
+          description: A bool representing whether or not the resource's description is synced from the end system. When true, the description is overwritten with the remote description on each sync. Defaults to false.
+          example: False
+          type: boolean
         last_successful_sync:
           readOnly: true
           description: Information about the last successful sync of this resource.
@@ -9981,6 +12248,14 @@ components:
         risk_sensitivity_override:
           allOf:
             - $ref: "#/components/schemas/RiskSensitivityEnum"
+        match_remote_name:
+          description: A bool representing whether or not the resource's name should be synced from the end system. When true, the name is overwritten with the remote name on each sync, so a `name` provided together with this field set to true will be replaced at the next sync. If not provided, the current value is left unchanged.
+          example: False
+          type: boolean
+        match_remote_description:
+          description: A bool representing whether or not the resource's description should be synced from the end system. When true, the description is overwritten with the remote description on each sync, so a `description` provided together with this field set to true will be replaced at the next sync. If not provided, the current value is left unchanged.
+          example: False
+          type: boolean
         configuration_template_id:
           description: The ID of the associated configuration template.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -11910,6 +14185,161 @@ components:
         - READ_ONLY
         - FULL_ACCESS
       type: string
+    EventStreamConnectionTypeEnum:
+      description: The type of event stream connection.
+      enum:
+        - WEBHOOK
+      type: string
+    WebhookAuthTypeEnum:
+      description: The authentication type for webhook connections.
+      enum:
+        - NONE
+        - API_KEY
+        - HMAC
+      type: string
+    WebhookApiKeyLocationEnum:
+      description: Where the API key is placed in webhook requests.
+      enum:
+        - HEADER
+        - QUERY_PARAM
+      type: string
+    WebhookApiKeyCredential:
+      description: An API key credential for webhook authentication.
+      properties:
+        id:
+          description: The unique identifier for the credential.
+          format: uuid
+          type: string
+        name:
+          description: The name of the API key.
+          type: string
+        value:
+          description: The value of the API key.
+          type: string
+        location:
+          $ref: "#/components/schemas/WebhookApiKeyLocationEnum"
+      required:
+        - id
+        - name
+        - value
+        - location
+      type: object
+    WebhookHmacCredential:
+      description: An HMAC credential for webhook authentication.
+      properties:
+        id:
+          description: The unique identifier for the credential.
+          format: uuid
+          type: string
+        secret:
+          description: The HMAC secret value.
+          type: string
+        created_at:
+          description: When the credential was created.
+          format: date-time
+          type: string
+      required:
+        - id
+        - secret
+        - created_at
+      type: object
+    WebhookCredentials:
+      description: Authentication credentials for a webhook connection.
+      properties:
+        auth_type:
+          $ref: "#/components/schemas/WebhookAuthTypeEnum"
+        api_key_credentials:
+          description: API key credentials, present when auth_type is API_KEY.
+          items:
+            $ref: "#/components/schemas/WebhookApiKeyCredential"
+          type: array
+        hmac_credential_1:
+          description: Primary HMAC credential, present when auth_type is HMAC.
+          nullable: true
+          $ref: "#/components/schemas/WebhookHmacCredential"
+        hmac_credential_2:
+          description: Secondary HMAC credential for rotation, present when auth_type is HMAC.
+          nullable: true
+          $ref: "#/components/schemas/WebhookHmacCredential"
+      required:
+        - auth_type
+      type: object
+    EventStreamConnection:
+      description: The connection configuration for an event stream.
+      properties:
+        name:
+          description: The name of the connection.
+          type: string
+        connection_type:
+          $ref: "#/components/schemas/EventStreamConnectionTypeEnum"
+        enabled:
+          description: Whether the connection is enabled.
+          type: boolean
+        webhook_url:
+          description: The webhook URL, present when connection_type is WEBHOOK.
+          type: string
+        credentials:
+          $ref: "#/components/schemas/WebhookCredentials"
+      required:
+        - name
+        - connection_type
+        - enabled
+      type: object
+    EventStream:
+      description: An event streaming connection that publishes events to an external system.
+      properties:
+        event_stream_id:
+          description: The ID of the event stream.
+          format: uuid
+          type: string
+        connection:
+          $ref: "#/components/schemas/EventStreamConnection"
+      required:
+        - event_stream_id
+        - connection
+      type: object
+    EventStreamList:
+      description: A list of event streams.
+      properties:
+        event_streams:
+          items:
+            $ref: "#/components/schemas/EventStream"
+          type: array
+      required:
+        - event_streams
+      type: object
+    CreateEventStreamInfo:
+      description: Information needed to create an event stream.
+      properties:
+        name:
+          description: The name for the event stream.
+          type: string
+        connection_type:
+          $ref: "#/components/schemas/EventStreamConnectionTypeEnum"
+        webhook_url:
+          description: The webhook URL. Required when connection_type is WEBHOOK.
+          type: string
+        credentials:
+          $ref: "#/components/schemas/WebhookCredentials"
+      required:
+        - name
+        - connection_type
+      type: object
+    UpdateEventStreamInfo:
+      description: Information needed to update an event stream.
+      properties:
+        name:
+          description: Updated name for the event stream.
+          type: string
+        enabled:
+          description: Whether the event stream should be enabled.
+          type: boolean
+        webhook_url:
+          description: Updated webhook URL.
+          type: string
+        credentials:
+          $ref: "#/components/schemas/WebhookCredentials"
+      type: object
     Token:
       description: A first-party API token.
       example:
@@ -11995,6 +14425,13 @@ components:
           type: array
       required:
         - results
+      type: object
+    StopCampaignRequest:
+      properties:
+        revoke_unreviewed:
+          default: false
+          description: Revoke all unreviewed access grants. Access grants with no reviewer decision will be immediately revoked.
+          type: boolean
       type: object
     BundlesVisibilityTypeEnum:
       description: The visibility level of the entity.

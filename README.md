@@ -31,7 +31,7 @@ terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "3.5.1"
+      version = "3.5.2"
     }
   }
 }
@@ -81,6 +81,8 @@ Available configuration:
 * [opal_message_channel](docs/resources/message_channel.md)
 * [opal_on_call_schedule](docs/resources/on_call_schedule.md)
 * [opal_owner](docs/resources/owner.md)
+* [opal_paladin](docs/resources/paladin.md)
+* [opal_paladin_context_source](docs/resources/paladin_context_source.md)
 * [opal_resource](docs/resources/resource.md)
 * [opal_resource_tag](docs/resources/resource_tag.md)
 * [opal_scoped_role_permission_list](docs/resources/scoped_role_permission_list.md)
@@ -117,6 +119,9 @@ Available configuration:
 * [opal_paginated_bundle_group_list](docs/data-sources/paginated_bundle_group_list.md)
 * [opal_paginated_bundle_list](docs/data-sources/paginated_bundle_list.md)
 * [opal_paginated_bundle_resource_list](docs/data-sources/paginated_bundle_resource_list.md)
+* [opal_paladin](docs/data-sources/paladin.md)
+* [opal_paladin_context_sources](docs/data-sources/paladin_context_sources.md)
+* [opal_paladin_from_name](docs/data-sources/paladin_from_name.md)
 * [opal_requests](docs/data-sources/requests.md)
 * [opal_resource](docs/data-sources/resource.md)
 * [opal_resource_message_channel_list](docs/data-sources/resource_message_channel_list.md)

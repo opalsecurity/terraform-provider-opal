@@ -96,6 +96,13 @@ const (
 	ResourceTypeEnumClickhouseDatabase                ResourceTypeEnum = "CLICKHOUSE_DATABASE"
 	ResourceTypeEnumClickhouseTable                   ResourceTypeEnum = "CLICKHOUSE_TABLE"
 	ResourceTypeEnumTwingateResource                  ResourceTypeEnum = "TWINGATE_RESOURCE"
+	ResourceTypeEnumZendeskRole                       ResourceTypeEnum = "ZENDESK_ROLE"
+	ResourceTypeEnumHubspotRole                       ResourceTypeEnum = "HUBSPOT_ROLE"
+	ResourceTypeEnumAlicloudRAMRole                   ResourceTypeEnum = "ALICLOUD_RAM_ROLE"
+	ResourceTypeEnumAlicloudEcsInstance               ResourceTypeEnum = "ALICLOUD_ECS_INSTANCE"
+	ResourceTypeEnumDocusignPermissionProfile         ResourceTypeEnum = "DOCUSIGN_PERMISSION_PROFILE"
+	ResourceTypeEnumZoomRole                          ResourceTypeEnum = "ZOOM_ROLE"
+	ResourceTypeEnumZoomLicense                       ResourceTypeEnum = "ZOOM_LICENSE"
 )
 
 func (e ResourceTypeEnum) ToPointer() *ResourceTypeEnum {
@@ -274,6 +281,20 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "CLICKHOUSE_TABLE":
 		fallthrough
 	case "TWINGATE_RESOURCE":
+		fallthrough
+	case "ZENDESK_ROLE":
+		fallthrough
+	case "HUBSPOT_ROLE":
+		fallthrough
+	case "ALICLOUD_RAM_ROLE":
+		fallthrough
+	case "ALICLOUD_ECS_INSTANCE":
+		fallthrough
+	case "DOCUSIGN_PERMISSION_PROFILE":
+		fallthrough
+	case "ZOOM_ROLE":
+		fallthrough
+	case "ZOOM_LICENSE":
 		*e = ResourceTypeEnum(v)
 		return nil
 	default:

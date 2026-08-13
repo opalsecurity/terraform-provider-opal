@@ -3,6 +3,32 @@
 
 package shared
 
+// AlicloudEcsInstance - Remote info for AliCloud ECS instance.
+type AlicloudEcsInstance struct {
+	// The ID of the ECS instance.
+	InstanceID string `json:"instance_id"`
+}
+
+func (a *AlicloudEcsInstance) GetInstanceID() string {
+	if a == nil {
+		return ""
+	}
+	return a.InstanceID
+}
+
+// AlicloudRAMRole - Remote info for AliCloud RAM role.
+type AlicloudRAMRole struct {
+	// The ARN of the AliCloud RAM role.
+	RoleArn string `json:"role_arn"`
+}
+
+func (a *AlicloudRAMRole) GetRoleArn() string {
+	if a == nil {
+		return ""
+	}
+	return a.RoleArn
+}
+
 // AnthropicWorkspace - Remote info for Anthropic workspace.
 type AnthropicWorkspace struct {
 	// The id of the workspace.
@@ -583,6 +609,19 @@ func (d *DevinRole) GetRoleID() string {
 	return d.RoleID
 }
 
+// DocusignPermissionProfile - Remote info for Docusign permission profile.
+type DocusignPermissionProfile struct {
+	// The ID of the Docusign permission profile.
+	PermissionProfileID string `json:"permission_profile_id"`
+}
+
+func (d *DocusignPermissionProfile) GetPermissionProfileID() string {
+	if d == nil {
+		return ""
+	}
+	return d.PermissionProfileID
+}
+
 // GcpBigQueryDataset - Remote info for GCP BigQuery Dataset.
 type GcpBigQueryDataset struct {
 	// The id of the dataset.
@@ -920,6 +959,19 @@ func (g *GrafanaRole) GetRoleUID() string {
 	return g.RoleUID
 }
 
+// HubspotRole - Remote info for HubSpot role.
+type HubspotRole struct {
+	// The ID of the HubSpot role.
+	RoleID string `json:"role_id"`
+}
+
+func (h *HubspotRole) GetRoleID() string {
+	if h == nil {
+		return ""
+	}
+	return h.RoleID
+}
+
 // IlevelAdvancedRole - Remote info for iLevel Advanced role.
 type IlevelAdvancedRole struct {
 	// The name of the role.
@@ -1212,8 +1264,51 @@ func (w *WorkdayRole) GetRoleID() string {
 	return w.RoleID
 }
 
+// ZendeskRole - Remote info for Zendesk custom role.
+type ZendeskRole struct {
+	// The ID of the Zendesk custom role.
+	RoleID string `json:"role_id"`
+}
+
+func (z *ZendeskRole) GetRoleID() string {
+	if z == nil {
+		return ""
+	}
+	return z.RoleID
+}
+
+// ZoomLicense - Remote info for Zoom license (user type).
+type ZoomLicense struct {
+	// The Zoom user type representing the license (e.g. "2" for Licensed).
+	LicenseType string `json:"license_type"`
+}
+
+func (z *ZoomLicense) GetLicenseType() string {
+	if z == nil {
+		return ""
+	}
+	return z.LicenseType
+}
+
+// ZoomRole - Remote info for Zoom role.
+type ZoomRole struct {
+	// The ID of the Zoom role.
+	RoleID string `json:"role_id"`
+}
+
+func (z *ZoomRole) GetRoleID() string {
+	if z == nil {
+		return ""
+	}
+	return z.RoleID
+}
+
 // ResourceRemoteInfo - Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields.
 type ResourceRemoteInfo struct {
+	// Remote info for AliCloud ECS instance.
+	AlicloudEcsInstance *AlicloudEcsInstance `json:"alicloud_ecs_instance,omitempty"`
+	// Remote info for AliCloud RAM role.
+	AlicloudRAMRole *AlicloudRAMRole `json:"alicloud_ram_role,omitempty"`
 	// Remote info for Anthropic workspace.
 	AnthropicWorkspace *AnthropicWorkspace `json:"anthropic_workspace,omitempty"`
 	// Remote info for AWS account.
@@ -1278,6 +1373,8 @@ type ResourceRemoteInfo struct {
 	DevinOrganization *DevinOrganization `json:"devin_organization,omitempty"`
 	// Remote info for Devin role.
 	DevinRole *DevinRole `json:"devin_role,omitempty"`
+	// Remote info for Docusign permission profile.
+	DocusignPermissionProfile *DocusignPermissionProfile `json:"docusign_permission_profile,omitempty"`
 	// Remote info for GCP BigQuery Dataset.
 	GcpBigQueryDataset *GcpBigQueryDataset `json:"gcp_big_query_dataset,omitempty"`
 	// Remote info for GCP BigQuery Table.
@@ -1316,6 +1413,8 @@ type ResourceRemoteInfo struct {
 	GrafanaFolder *GrafanaFolder `json:"grafana_folder,omitempty"`
 	// Remote info for Grafana role(fixed or custom).
 	GrafanaRole *GrafanaRole `json:"grafana_role,omitempty"`
+	// Remote info for HubSpot role.
+	HubspotRole *HubspotRole `json:"hubspot_role,omitempty"`
 	// Remote info for iLevel Advanced role.
 	IlevelAdvancedRole *IlevelAdvancedRole `json:"ilevel_advanced_role,omitempty"`
 	// Remote info for NetSuite role.
@@ -1354,6 +1453,26 @@ type ResourceRemoteInfo struct {
 	TwingateResource *TwingateResource `json:"twingate_resource,omitempty"`
 	// Remote info for Workday role.
 	WorkdayRole *WorkdayRole `json:"workday_role,omitempty"`
+	// Remote info for Zendesk custom role.
+	ZendeskRole *ZendeskRole `json:"zendesk_role,omitempty"`
+	// Remote info for Zoom license (user type).
+	ZoomLicense *ZoomLicense `json:"zoom_license,omitempty"`
+	// Remote info for Zoom role.
+	ZoomRole *ZoomRole `json:"zoom_role,omitempty"`
+}
+
+func (r *ResourceRemoteInfo) GetAlicloudEcsInstance() *AlicloudEcsInstance {
+	if r == nil {
+		return nil
+	}
+	return r.AlicloudEcsInstance
+}
+
+func (r *ResourceRemoteInfo) GetAlicloudRAMRole() *AlicloudRAMRole {
+	if r == nil {
+		return nil
+	}
+	return r.AlicloudRAMRole
 }
 
 func (r *ResourceRemoteInfo) GetAnthropicWorkspace() *AnthropicWorkspace {
@@ -1580,6 +1699,13 @@ func (r *ResourceRemoteInfo) GetDevinRole() *DevinRole {
 	return r.DevinRole
 }
 
+func (r *ResourceRemoteInfo) GetDocusignPermissionProfile() *DocusignPermissionProfile {
+	if r == nil {
+		return nil
+	}
+	return r.DocusignPermissionProfile
+}
+
 func (r *ResourceRemoteInfo) GetGcpBigQueryDataset() *GcpBigQueryDataset {
 	if r == nil {
 		return nil
@@ -1713,6 +1839,13 @@ func (r *ResourceRemoteInfo) GetGrafanaRole() *GrafanaRole {
 	return r.GrafanaRole
 }
 
+func (r *ResourceRemoteInfo) GetHubspotRole() *HubspotRole {
+	if r == nil {
+		return nil
+	}
+	return r.HubspotRole
+}
+
 func (r *ResourceRemoteInfo) GetIlevelAdvancedRole() *IlevelAdvancedRole {
 	if r == nil {
 		return nil
@@ -1844,4 +1977,25 @@ func (r *ResourceRemoteInfo) GetWorkdayRole() *WorkdayRole {
 		return nil
 	}
 	return r.WorkdayRole
+}
+
+func (r *ResourceRemoteInfo) GetZendeskRole() *ZendeskRole {
+	if r == nil {
+		return nil
+	}
+	return r.ZendeskRole
+}
+
+func (r *ResourceRemoteInfo) GetZoomLicense() *ZoomLicense {
+	if r == nil {
+		return nil
+	}
+	return r.ZoomLicense
+}
+
+func (r *ResourceRemoteInfo) GetZoomRole() *ZoomRole {
+	if r == nil {
+		return nil
+	}
+	return r.ZoomRole
 }
