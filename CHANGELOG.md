@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.6.0
+ - Adds support for managing Paladin, Opal's AI access-request reviewer:
+   - `opal_paladin` resource and `opal_paladin` / `opal_paladin_from_name` data sources to create, read, update, and delete a Paladin agent (its owner, monitor mode, instructions, and enabled connectors) and look one up by id or name
+   - `opal_paladin_context_source` resource to attach a specific Slack channel or Notion/Confluence document as a context source the agent may read
+   - `opal_paladin_context_sources` data source to list a Paladin's context sources
+ - Brings the provider up to date with the current API, adding new app, resource, and group types, additional remote-info types, and `match_remote_name` / `match_remote_description` on `opal_group` and `opal_resource`.
+ - Fixes the v0 state upgraders for `opal_group` and `opal_resource` to emit those new top-level attributes, so state written by older provider versions upgrades cleanly.
+
 ## v3.5.3
  - Fixes the v2→v3 state upgraders for `opal_group` and `opal_resource` so that state written by provider 2.x upgrades directly to the current release in one hop, instead of failing with `Unable to Upgrade Resource State ... error decoding object`. The upgraders now emit every current top-level schema attribute (previously drifted, missing `extensions_duration_in_minutes`, `last_successful_sync`, `ancestor_resource_ids`, and `descendant_resource_ids`). No intermediate version step is required.
 
