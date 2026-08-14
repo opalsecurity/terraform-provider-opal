@@ -31,7 +31,7 @@ data "opal_group_list" "my_group_list" {
 
 - `group_ids` (List of String) The group ids to filter by.
 - `group_name` (String) Group name.
-- `group_type_filter` (String) The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED"]
+- `group_type_filter` (String) The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP"]
 - `page_size` (Number) Number of results to return per page. Default is 200.
 
 ### Read-Only
@@ -53,6 +53,8 @@ Read-Only:
 - `group_type` (String) The type of the group.
 - `id` (String) The ID of the group.
 - `last_successful_sync` (Attributes) Information about the last successful sync of this group. (see [below for nested schema](#nestedatt--results--last_successful_sync))
+- `match_remote_description` (Boolean) A bool representing whether or not the group's description is synced from the end system. When true, the description is overwritten with the remote description on each sync. Defaults to false.
+- `match_remote_name` (Boolean) A bool representing whether or not the group's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.
 - `name` (String) The name of the group.
 - `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided. (see [below for nested schema](#nestedatt--results--remote_info))
 - `remote_name` (String) The name of the remote.
@@ -80,26 +82,36 @@ Read-Only:
 - `azure_ad_microsoft_365_group` (Attributes) Remote info for Microsoft Entra ID Microsoft 365 group. (see [below for nested schema](#nestedatt--results--remote_info--azure_ad_microsoft_365_group))
 - `azure_ad_security_group` (Attributes) Remote info for Microsoft Entra ID Security group. (see [below for nested schema](#nestedatt--results--remote_info--azure_ad_security_group))
 - `clickhouse_role` (Attributes) Remote info for ClickHouse role. (see [below for nested schema](#nestedatt--results--remote_info--clickhouse_role))
+- `confluence_group` (Attributes) Remote info for Confluence group. (see [below for nested schema](#nestedatt--results--remote_info--confluence_group))
 - `connector_group` (Attributes) Remote info for Connector group. (see [below for nested schema](#nestedatt--results--remote_info--connector_group))
 - `databricks_account_group` (Attributes) Remote info for Databricks account group. (see [below for nested schema](#nestedatt--results--remote_info--databricks_account_group))
 - `devin_group` (Attributes) Remote info for Devin group. (see [below for nested schema](#nestedatt--results--remote_info--devin_group))
+- `docusign_group` (Attributes) Remote info for Docusign group. (see [below for nested schema](#nestedatt--results--remote_info--docusign_group))
+- `docusign_signing_group` (Attributes) Remote info for Docusign signing group. (see [below for nested schema](#nestedatt--results--remote_info--docusign_signing_group))
 - `duo_group` (Attributes) Remote info for Duo Security group. (see [below for nested schema](#nestedatt--results--remote_info--duo_group))
 - `github_enterprise_team` (Attributes) Remote info for GitHub Enterprise team. (see [below for nested schema](#nestedatt--results--remote_info--github_enterprise_team))
 - `github_team` (Attributes) Remote info for GitHub team. (see [below for nested schema](#nestedatt--results--remote_info--github_team))
 - `gitlab_group` (Attributes) Remote info for Gitlab group. (see [below for nested schema](#nestedatt--results--remote_info--gitlab_group))
 - `google_group` (Attributes) Remote info for Google group. (see [below for nested schema](#nestedatt--results--remote_info--google_group))
 - `grafana_team` (Attributes) Remote info for Grafana team. (see [below for nested schema](#nestedatt--results--remote_info--grafana_team))
+- `hubspot_team` (Attributes) Remote info for HubSpot team. (see [below for nested schema](#nestedatt--results--remote_info--hubspot_team))
 - `incidentio_on_call_schedule` (Attributes) Remote info for Incident.io on-call schedule group. (see [below for nested schema](#nestedatt--results--remote_info--incidentio_on_call_schedule))
+- `jira_group` (Attributes) Remote info for Jira group. (see [below for nested schema](#nestedatt--results--remote_info--jira_group))
 - `ldap_group` (Attributes) Remote info for LDAP group. (see [below for nested schema](#nestedatt--results--remote_info--ldap_group))
 - `okta_group` (Attributes) Remote info for Okta Directory group. (see [below for nested schema](#nestedatt--results--remote_info--okta_group))
 - `okta_group_rule` (Attributes) Remote info for Okta Directory group rule. (see [below for nested schema](#nestedatt--results--remote_info--okta_group_rule))
 - `pagerduty_on_call_schedule` (Attributes) Remote info for PagerDuty on-call schedule group. (see [below for nested schema](#nestedatt--results--remote_info--pagerduty_on_call_schedule))
 - `rootly_on_call_schedule` (Attributes) Remote info for Rootly on-call schedule group. (see [below for nested schema](#nestedatt--results--remote_info--rootly_on_call_schedule))
+- `slack_user_group` (Attributes) Remote info for Slack user group. (see [below for nested schema](#nestedatt--results--remote_info--slack_user_group))
 - `snowflake_role` (Attributes) Remote info for Snowflake role. (see [below for nested schema](#nestedatt--results--remote_info--snowflake_role))
+- `tableau_group` (Attributes) Remote info for Tableau group. (see [below for nested schema](#nestedatt--results--remote_info--tableau_group))
 - `tailscale_group` (Attributes) Remote info for Tailscale group. (see [below for nested schema](#nestedatt--results--remote_info--tailscale_group))
 - `twingate_group` (Attributes) Remote info for Twingate group. (see [below for nested schema](#nestedatt--results--remote_info--twingate_group))
 - `twingate_group_synced` (Attributes) Remote info for Twingate synced group. (see [below for nested schema](#nestedatt--results--remote_info--twingate_group_synced))
 - `workday_user_security_group` (Attributes) Remote info for Workday User Security group. (see [below for nested schema](#nestedatt--results--remote_info--workday_user_security_group))
+- `zendesk_group` (Attributes) Remote info for Zendesk group. (see [below for nested schema](#nestedatt--results--remote_info--zendesk_group))
+- `zendesk_organization` (Attributes) Remote info for Zendesk organization. (see [below for nested schema](#nestedatt--results--remote_info--zendesk_organization))
+- `zoom_group` (Attributes) Remote info for Zoom group. (see [below for nested schema](#nestedatt--results--remote_info--zoom_group))
 
 <a id="nestedatt--results--remote_info--active_directory_group"></a>
 ### Nested Schema for `results.remote_info.active_directory_group`
@@ -141,6 +153,14 @@ Read-Only:
 - `role_id` (String) The name of the ClickHouse role.
 
 
+<a id="nestedatt--results--remote_info--confluence_group"></a>
+### Nested Schema for `results.remote_info.confluence_group`
+
+Read-Only:
+
+- `group_id` (String) The ID of the Confluence group.
+
+
 <a id="nestedatt--results--remote_info--connector_group"></a>
 ### Nested Schema for `results.remote_info.connector_group`
 
@@ -163,6 +183,22 @@ Read-Only:
 Read-Only:
 
 - `group_name` (String) The name of the Devin group.
+
+
+<a id="nestedatt--results--remote_info--docusign_group"></a>
+### Nested Schema for `results.remote_info.docusign_group`
+
+Read-Only:
+
+- `group_id` (String) The ID of the Docusign group.
+
+
+<a id="nestedatt--results--remote_info--docusign_signing_group"></a>
+### Nested Schema for `results.remote_info.docusign_signing_group`
+
+Read-Only:
+
+- `signing_group_id` (String) The ID of the Docusign signing group.
 
 
 <a id="nestedatt--results--remote_info--duo_group"></a>
@@ -214,12 +250,28 @@ Read-Only:
 - `team_id` (String) The ID of the team.
 
 
+<a id="nestedatt--results--remote_info--hubspot_team"></a>
+### Nested Schema for `results.remote_info.hubspot_team`
+
+Read-Only:
+
+- `team_id` (String) The ID of the HubSpot team.
+
+
 <a id="nestedatt--results--remote_info--incidentio_on_call_schedule"></a>
 ### Nested Schema for `results.remote_info.incidentio_on_call_schedule`
 
 Read-Only:
 
 - `schedule_id` (String) The id of the Incident.io on-call schedule.
+
+
+<a id="nestedatt--results--remote_info--jira_group"></a>
+### Nested Schema for `results.remote_info.jira_group`
+
+Read-Only:
+
+- `group_id` (String) The ID of the Jira group.
 
 
 <a id="nestedatt--results--remote_info--ldap_group"></a>
@@ -262,12 +314,28 @@ Read-Only:
 - `schedule_id` (String) The id of the Rootly on-call schedule.
 
 
+<a id="nestedatt--results--remote_info--slack_user_group"></a>
+### Nested Schema for `results.remote_info.slack_user_group`
+
+Read-Only:
+
+- `group_id` (String) The id of the Slack user group.
+
+
 <a id="nestedatt--results--remote_info--snowflake_role"></a>
 ### Nested Schema for `results.remote_info.snowflake_role`
 
 Read-Only:
 
 - `role_id` (String) The id of the Snowflake role.
+
+
+<a id="nestedatt--results--remote_info--tableau_group"></a>
+### Nested Schema for `results.remote_info.tableau_group`
+
+Read-Only:
+
+- `group_id` (String) The ID of the Tableau group.
 
 
 <a id="nestedatt--results--remote_info--tailscale_group"></a>
@@ -300,6 +368,30 @@ Read-Only:
 Read-Only:
 
 - `group_id` (String) The id of the Workday User Security group.
+
+
+<a id="nestedatt--results--remote_info--zendesk_group"></a>
+### Nested Schema for `results.remote_info.zendesk_group`
+
+Read-Only:
+
+- `group_id` (String) The ID of the Zendesk group.
+
+
+<a id="nestedatt--results--remote_info--zendesk_organization"></a>
+### Nested Schema for `results.remote_info.zendesk_organization`
+
+Read-Only:
+
+- `organization_id` (String) The ID of the Zendesk organization.
+
+
+<a id="nestedatt--results--remote_info--zoom_group"></a>
+### Nested Schema for `results.remote_info.zoom_group`
+
+Read-Only:
+
+- `group_id` (String) The ID of the Zoom group.
 
 
 

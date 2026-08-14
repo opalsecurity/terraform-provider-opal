@@ -112,6 +112,8 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 			"id":                 tftypes.String,
 			"name": tftypes.String,
 			"description": tftypes.String,
+			"match_remote_description": tftypes.Bool,
+			"match_remote_name": tftypes.Bool,
 			"resource_type": tftypes.String,
 			"app_id": tftypes.String,
 			"parent_resource_id": tftypes.String,
@@ -239,6 +241,8 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 			"id":                 oldRawState["id"], // required field
 			"name": oldRawState["name"], // required field
 			"description": tftypes.NewValue(tftypes.String, description),
+			"match_remote_description": tftypes.NewValue(tftypes.Bool, nil), // read only until first refresh
+			"match_remote_name": tftypes.NewValue(tftypes.Bool, nil), // read only until first refresh
 			"resource_type": oldRawState["resource_type"],  // required field
 			"app_id": oldRawState["app_id"], // required field
 			"parent_resource_id": tftypes.NewValue(tftypes.String, parentResourceID),

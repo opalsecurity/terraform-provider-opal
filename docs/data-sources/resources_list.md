@@ -40,7 +40,7 @@ data "opal_resources_list" "my_resources_list" {
 - `remote_id` (String) Filter resources by their remote id. This will return all resources that have a remote id that matches the provided remote id. Note that this requires resource_type_filter to be provided.
 - `resource_ids` (List of String) The resource ids to filter by.
 - `resource_name` (String) Resource name.
-- `resource_type_filter` (String) The resource type to filter by. Required when remote_id is provided. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "TWINGATE_RESOURCE"]
+- `resource_type_filter` (String) The resource type to filter by. Required when remote_id is provided. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE"]
 
 ### Read-Only
 
@@ -62,6 +62,8 @@ Read-Only:
 - `extensions_duration_in_minutes` (Number, Deprecated) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 - `id` (String) The ID of the resource.
 - `last_successful_sync` (Attributes) Information about the last successful sync of this resource. (see [below for nested schema](#nestedatt--results--last_successful_sync))
+- `match_remote_description` (Boolean) A bool representing whether or not the resource's description is synced from the end system. When true, the description is overwritten with the remote description on each sync. Defaults to false.
+- `match_remote_name` (Boolean) A bool representing whether or not the resource's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.
 - `name` (String) The name of the resource.
 - `parent_resource_id` (String) The ID of the parent resource.
 - `remote_info` (Attributes) Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields. (see [below for nested schema](#nestedatt--results--remote_info))
@@ -87,6 +89,8 @@ Read-Only:
 
 Read-Only:
 
+- `alicloud_ecs_instance` (Attributes) Remote info for AliCloud ECS instance. (see [below for nested schema](#nestedatt--results--remote_info--alicloud_ecs_instance))
+- `alicloud_ram_role` (Attributes) Remote info for AliCloud RAM role. (see [below for nested schema](#nestedatt--results--remote_info--alicloud_ram_role))
 - `anthropic_workspace` (Attributes) Remote info for Anthropic workspace. (see [below for nested schema](#nestedatt--results--remote_info--anthropic_workspace))
 - `aws_account` (Attributes) Remote info for AWS account. (see [below for nested schema](#nestedatt--results--remote_info--aws_account))
 - `aws_ec2_instance` (Attributes) Remote info for AWS EC2 instance. (see [below for nested schema](#nestedatt--results--remote_info--aws_ec2_instance))
@@ -119,6 +123,7 @@ Read-Only:
 - `datastax_astra_role` (Attributes) Remote info for an Astra role. (see [below for nested schema](#nestedatt--results--remote_info--datastax_astra_role))
 - `devin_organization` (Attributes) Remote info for Devin organization. (see [below for nested schema](#nestedatt--results--remote_info--devin_organization))
 - `devin_role` (Attributes) Remote info for Devin role. (see [below for nested schema](#nestedatt--results--remote_info--devin_role))
+- `docusign_permission_profile` (Attributes) Remote info for Docusign permission profile. (see [below for nested schema](#nestedatt--results--remote_info--docusign_permission_profile))
 - `gcp_big_query_dataset` (Attributes) Remote info for GCP BigQuery Dataset. (see [below for nested schema](#nestedatt--results--remote_info--gcp_big_query_dataset))
 - `gcp_big_query_table` (Attributes) Remote info for GCP BigQuery Table. (see [below for nested schema](#nestedatt--results--remote_info--gcp_big_query_table))
 - `gcp_bucket` (Attributes) Remote info for GCP bucket. (see [below for nested schema](#nestedatt--results--remote_info--gcp_bucket))
@@ -138,6 +143,7 @@ Read-Only:
 - `grafana_dashboard` (Attributes) Remote info for Grafana dashboard. (see [below for nested schema](#nestedatt--results--remote_info--grafana_dashboard))
 - `grafana_folder` (Attributes) Remote info for Grafana folder. (see [below for nested schema](#nestedatt--results--remote_info--grafana_folder))
 - `grafana_role` (Attributes) Remote info for Grafana role(fixed or custom). (see [below for nested schema](#nestedatt--results--remote_info--grafana_role))
+- `hubspot_role` (Attributes) Remote info for HubSpot role. (see [below for nested schema](#nestedatt--results--remote_info--hubspot_role))
 - `ilevel_advanced_role` (Attributes) Remote info for iLevel Advanced role. (see [below for nested schema](#nestedatt--results--remote_info--ilevel_advanced_role))
 - `netsuite_role` (Attributes) Remote info for NetSuite role. (see [below for nested schema](#nestedatt--results--remote_info--netsuite_role))
 - `okta_app` (Attributes) Remote info for Okta directory app. (see [below for nested schema](#nestedatt--results--remote_info--okta_app))
@@ -157,6 +163,25 @@ Read-Only:
 - `teleport_role` (Attributes) Remote info for Teleport role. (see [below for nested schema](#nestedatt--results--remote_info--teleport_role))
 - `twingate_resource` (Attributes) Remote info for Twingate resource. (see [below for nested schema](#nestedatt--results--remote_info--twingate_resource))
 - `workday_role` (Attributes) Remote info for Workday role. (see [below for nested schema](#nestedatt--results--remote_info--workday_role))
+- `zendesk_role` (Attributes) Remote info for Zendesk custom role. (see [below for nested schema](#nestedatt--results--remote_info--zendesk_role))
+- `zoom_license` (Attributes) Remote info for Zoom license (user type). (see [below for nested schema](#nestedatt--results--remote_info--zoom_license))
+- `zoom_role` (Attributes) Remote info for Zoom role. (see [below for nested schema](#nestedatt--results--remote_info--zoom_role))
+
+<a id="nestedatt--results--remote_info--alicloud_ecs_instance"></a>
+### Nested Schema for `results.remote_info.alicloud_ecs_instance`
+
+Read-Only:
+
+- `instance_id` (String) The ID of the ECS instance.
+
+
+<a id="nestedatt--results--remote_info--alicloud_ram_role"></a>
+### Nested Schema for `results.remote_info.alicloud_ram_role`
+
+Read-Only:
+
+- `role_arn` (String) The ARN of the AliCloud RAM role.
+
 
 <a id="nestedatt--results--remote_info--anthropic_workspace"></a>
 ### Nested Schema for `results.remote_info.anthropic_workspace`
@@ -432,6 +457,14 @@ Read-Only:
 - `role_id` (String) The id of the role.
 
 
+<a id="nestedatt--results--remote_info--docusign_permission_profile"></a>
+### Nested Schema for `results.remote_info.docusign_permission_profile`
+
+Read-Only:
+
+- `permission_profile_id` (String) The ID of the Docusign permission profile.
+
+
 <a id="nestedatt--results--remote_info--gcp_big_query_dataset"></a>
 ### Nested Schema for `results.remote_info.gcp_big_query_dataset`
 
@@ -594,6 +627,14 @@ Read-Only:
 - `role_uid` (String) The UID of the Grafana role.
 
 
+<a id="nestedatt--results--remote_info--hubspot_role"></a>
+### Nested Schema for `results.remote_info.hubspot_role`
+
+Read-Only:
+
+- `role_id` (String) The ID of the HubSpot role.
+
+
 <a id="nestedatt--results--remote_info--ilevel_advanced_role"></a>
 ### Nested Schema for `results.remote_info.ilevel_advanced_role`
 
@@ -749,6 +790,30 @@ Read-Only:
 Read-Only:
 
 - `role_id` (String) The id of the role.
+
+
+<a id="nestedatt--results--remote_info--zendesk_role"></a>
+### Nested Schema for `results.remote_info.zendesk_role`
+
+Read-Only:
+
+- `role_id` (String) The ID of the Zendesk custom role.
+
+
+<a id="nestedatt--results--remote_info--zoom_license"></a>
+### Nested Schema for `results.remote_info.zoom_license`
+
+Read-Only:
+
+- `license_type` (String) The Zoom user type representing the license (e.g. "2" for Licensed).
+
+
+<a id="nestedatt--results--remote_info--zoom_role"></a>
+### Nested Schema for `results.remote_info.zoom_role`
+
+Read-Only:
+
+- `role_id` (String) The ID of the Zoom role.
 
 
 
