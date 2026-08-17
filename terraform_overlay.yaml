@@ -1080,42 +1080,6 @@ actions:
       description: The type of an app.
   - target: $["components"]["schemas"]["App"]["properties"]["app_type"]
     update:
-      enum:
-        - ACTIVE_DIRECTORY
-        - ANTHROPIC
-        - AZURE_AD
-        - AWS
-        - AWS_SSO
-        - COUPA
-        - CURSOR
-        - CUSTOM
-        - DATABRICKS
-        - DATASTAX_ASTRA
-        - DUO
-        - GCP
-        - GIT_HUB
-        - GIT_LAB
-        - GOOGLE_GROUPS
-        - GOOGLE_WORKSPACE
-        - ILEVEL
-        - INCIDENTIO
-        - LDAP
-        - MARIADB
-        - MONGO
-        - MONGO_ATLAS
-        - MYSQL
-        - NETSUITE
-        - OKTA_DIRECTORY
-        - OPENAI_PLATFORM
-        - OPAL
-        - PAGERDUTY
-        - SALESFORCE
-        - SNOWFLAKE
-        - TAILSCALE
-        - TELEPORT
-        - WORKDAY
-  - target: $["components"]["schemas"]["App"]["properties"]["app_type"]
-    update:
       example: OKTA_DIRECTORY
   - target: $["components"]["schemas"]["App"]["properties"]["app_type"]
     update:
