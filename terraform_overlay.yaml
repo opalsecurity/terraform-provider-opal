@@ -1080,6 +1080,67 @@ actions:
       description: The type of an app.
   - target: $["components"]["schemas"]["App"]["properties"]["app_type"]
     update:
+      # keep this list in sync with components.schemas.AppTypeEnum in openapi.yaml
+      enum:
+        - ACTIVE_DIRECTORY
+        - ANTHROPIC
+        - AZURE_AD
+        - AWS
+        - AWS_SSO
+        - CLICKHOUSE
+        - COUPA
+        - CURSOR
+        - CUSTOM
+        - CONFLUENCE
+        - CUSTOM_CONNECTOR
+        - DATABRICKS
+        - DATASTAX_ASTRA
+        - ALICLOUD
+        - DEVIN
+        - DOCUSIGN
+        - DUO
+        - GCP
+        - GIT_HUB
+        - GIT_LAB
+        - GOOGLE_GROUPS
+        - GOOGLE_WORKSPACE
+        - GRAFANA
+        - HUBSPOT
+        - ILEVEL
+        - INCIDENTIO
+        - JIRA
+        - LDAP
+        - MARIADB
+        - MONGO
+        - MONGO_ATLAS
+        - MYSQL
+        - NETSUITE
+        - DATADOG
+        - OKTA_CIAM
+        - OKTA_DIRECTORY
+        - OPENAI_PLATFORM
+        - OPAL
+        - ORACLE_FUSION
+        - PAGERDUTY
+        - POSTGRES
+        - ROOTLY
+        - SALESFORCE
+        - SNOWFLAKE
+        - SLACK
+        - TABLEAU
+        - TAILSCALE
+        - TELEPORT
+        - TWINGATE
+        - VAULT
+        - WORKDAY
+        - ZENDESK
+        - ZOOM
+  - target: $["components"]["schemas"]["App"]["properties"]["app_type"]
+    update:
+      # let unknown future app types decode as raw strings instead of erroring
+      x-speakeasy-unknown-values: allow
+  - target: $["components"]["schemas"]["App"]["properties"]["app_type"]
+    update:
       example: OKTA_DIRECTORY
   - target: $["components"]["schemas"]["App"]["properties"]["app_type"]
     update:
