@@ -11,7 +11,7 @@ import (
 type EntityNameFilter struct {
 	// The string value to match against the entity name.
 	String string `json:"string"`
-	// How to match a string value against entity names.
+	// How to match a string value against entity names. REGEX matches the value as a case-insensitive regular expression.
 	StringMatchType StringMatchType `json:"stringMatchType"`
 }
 
