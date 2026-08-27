@@ -8,7 +8,7 @@ import (
 	"fmt"
 )
 
-// RequestTemplateCustomFieldTypeEnum - The type of the custom request field.
+// RequestTemplateCustomFieldTypeEnum - The type of the custom request field. `CALLOUT` fields are display-only -- they show a message to the requester and collect no answer, so they never appear in a request's `custom_fields`.
 type RequestTemplateCustomFieldTypeEnum string
 
 const (
@@ -16,6 +16,8 @@ const (
 	RequestTemplateCustomFieldTypeEnumLongText    RequestTemplateCustomFieldTypeEnum = "LONG_TEXT"
 	RequestTemplateCustomFieldTypeEnumBoolean     RequestTemplateCustomFieldTypeEnum = "BOOLEAN"
 	RequestTemplateCustomFieldTypeEnumMultiChoice RequestTemplateCustomFieldTypeEnum = "MULTI_CHOICE"
+	RequestTemplateCustomFieldTypeEnumMultiSelect RequestTemplateCustomFieldTypeEnum = "MULTI_SELECT"
+	RequestTemplateCustomFieldTypeEnumCallout     RequestTemplateCustomFieldTypeEnum = "CALLOUT"
 )
 
 func (e RequestTemplateCustomFieldTypeEnum) ToPointer() *RequestTemplateCustomFieldTypeEnum {
@@ -34,6 +36,10 @@ func (e *RequestTemplateCustomFieldTypeEnum) UnmarshalJSON(data []byte) error {
 	case "BOOLEAN":
 		fallthrough
 	case "MULTI_CHOICE":
+		fallthrough
+	case "MULTI_SELECT":
+		fallthrough
+	case "CALLOUT":
 		*e = RequestTemplateCustomFieldTypeEnum(v)
 		return nil
 	default:
