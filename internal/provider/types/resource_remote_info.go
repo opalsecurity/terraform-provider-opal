@@ -41,6 +41,7 @@ type ResourceRemoteInfo struct {
 	DocusignPermissionProfile         *DocusignPermissionProfile         `tfsdk:"docusign_permission_profile"`
 	GcpBigQueryDataset                *GcpBigQueryDataset                `tfsdk:"gcp_big_query_dataset"`
 	GcpBigQueryTable                  *GcpBigQueryTable                  `tfsdk:"gcp_big_query_table"`
+	GcpBillingAccount                 *GcpBillingAccount                 `tfsdk:"gcp_billing_account"`
 	GcpBucket                         *GcpBucket                         `tfsdk:"gcp_bucket"`
 	GcpComputeInstance                *GcpComputeInstance                `tfsdk:"gcp_compute_instance"`
 	GcpFolder                         *GcpFolder                         `tfsdk:"gcp_folder"`

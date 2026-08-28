@@ -141,6 +141,9 @@ resource "opal_resource" "my_resource" {
       project_id = "example-project-898931321"
       table_id   = "example-table-898931321"
     }
+    gcp_billing_account = {
+      billing_account_id = "billingAccounts/012345-567890-ABCDEF"
+    }
     gcp_bucket = {
       bucket_id = "example-bucket-898931321"
     }

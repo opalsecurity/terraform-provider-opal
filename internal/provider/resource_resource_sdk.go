@@ -289,6 +289,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.GcpBigQueryTable.ProjectID = types.StringValue(resp.RemoteInfo.GcpBigQueryTable.ProjectID)
 				r.RemoteInfo.GcpBigQueryTable.TableID = types.StringValue(resp.RemoteInfo.GcpBigQueryTable.TableID)
 			}
+			if resp.RemoteInfo.GcpBillingAccount == nil {
+				r.RemoteInfo.GcpBillingAccount = nil
+			} else {
+				r.RemoteInfo.GcpBillingAccount = &tfTypes.GcpBillingAccount{}
+				r.RemoteInfo.GcpBillingAccount.BillingAccountID = types.StringValue(resp.RemoteInfo.GcpBillingAccount.BillingAccountID)
+			}
 			if resp.RemoteInfo.GcpBucket == nil {
 				r.RemoteInfo.GcpBucket = nil
 			} else {
@@ -1254,6 +1260,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				TableID:   tableID,
 			}
 		}
+		var gcpBillingAccount *shared.GcpBillingAccount
+		if r.RemoteInfo.GcpBillingAccount != nil {
+			var billingAccountID string
+			billingAccountID = r.RemoteInfo.GcpBillingAccount.BillingAccountID.ValueString()
+
+			gcpBillingAccount = &shared.GcpBillingAccount{
+				BillingAccountID: billingAccountID,
+			}
+		}
 		var gcpBucket *shared.GcpBucket
 		if r.RemoteInfo.GcpBucket != nil {
 			var bucketID string
@@ -1706,6 +1721,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			DocusignPermissionProfile:         docusignPermissionProfile,
 			GcpBigQueryDataset:                gcpBigQueryDataset,
 			GcpBigQueryTable:                  gcpBigQueryTable,
+			GcpBillingAccount:                 gcpBillingAccount,
 			GcpBucket:                         gcpBucket,
 			GcpComputeInstance:                gcpComputeInstance,
 			GcpFolder:                         gcpFolder,
