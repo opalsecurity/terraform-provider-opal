@@ -30,6 +30,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				results.AncestorResourceIds = append(results.AncestorResourceIds, types.StringValue(v))
 			}
 			results.AppID = types.StringPointerValue(resultsItem.AppID)
+			results.ConfigurationTemplateID = types.StringPointerValue(resultsItem.ConfigurationTemplateID)
 			results.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
 			results.DescendantResourceIds = make([]types.String, 0, len(resultsItem.DescendantResourceIds))
 			for _, v := range resultsItem.DescendantResourceIds {
@@ -295,6 +296,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.GcpBigQueryTable.DatasetID = types.StringValue(resultsItem.RemoteInfo.GcpBigQueryTable.DatasetID)
 					results.RemoteInfo.GcpBigQueryTable.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpBigQueryTable.ProjectID)
 					results.RemoteInfo.GcpBigQueryTable.TableID = types.StringValue(resultsItem.RemoteInfo.GcpBigQueryTable.TableID)
+				}
+				if resultsItem.RemoteInfo.GcpBillingAccount == nil {
+					results.RemoteInfo.GcpBillingAccount = nil
+				} else {
+					results.RemoteInfo.GcpBillingAccount = &tfTypes.GcpBillingAccount{}
+					results.RemoteInfo.GcpBillingAccount.BillingAccountID = types.StringValue(resultsItem.RemoteInfo.GcpBillingAccount.BillingAccountID)
 				}
 				if resultsItem.RemoteInfo.GcpBucket == nil {
 					results.RemoteInfo.GcpBucket = nil

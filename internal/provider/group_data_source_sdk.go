@@ -98,6 +98,7 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 	if resp != nil {
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 		r.AppID = types.StringPointerValue(resp.AppID)
+		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.Description = types.StringPointerValue(resp.Description)
 		r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)

@@ -100,7 +100,7 @@ func (u FieldValue) MarshalJSON() ([]byte, error) {
 
 type RequestCustomFieldResponse struct {
 	FieldName string `json:"field_name"`
-	// The type of the custom request field.
+	// The type of the custom request field. `CALLOUT` fields are display-only -- they show a message to the requester and collect no answer, so they never appear in a request's `custom_fields`.
 	FieldType  RequestTemplateCustomFieldTypeEnum `json:"field_type"`
 	FieldValue FieldValue                         `json:"field_value"`
 }

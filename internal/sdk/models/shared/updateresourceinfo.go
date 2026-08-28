@@ -13,6 +13,8 @@ import (
 type UpdateResourceInfo struct {
 	// The ID of the owner of the resource.
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
+	// The ID of the associated configuration template.
+	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
 	// Custom request notification sent upon request approval.
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the resource.
@@ -32,7 +34,7 @@ type UpdateResourceInfo struct {
 	// The ID of the parent resource.
 	ParentResourceID *string `json:"parent_resource_id,omitempty"`
 	// A list of configurations for requests to this resource. If not provided, the default request configuration will be used.
-	RequestConfigurations []RequestConfiguration `json:"request_configurations"`
+	RequestConfigurations []RequestConfiguration `json:"request_configurations,omitempty"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
 	RequireMfaToApprove *bool `default:"false" json:"require_mfa_to_approve"`
 	// A bool representing whether or not to require MFA to connect to this resource.
@@ -58,6 +60,13 @@ func (u *UpdateResourceInfo) GetAdminOwnerID() *string {
 		return nil
 	}
 	return u.AdminOwnerID
+}
+
+func (u *UpdateResourceInfo) GetConfigurationTemplateID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.ConfigurationTemplateID
 }
 
 func (u *UpdateResourceInfo) GetCustomRequestNotification() *string {
@@ -118,7 +127,7 @@ func (u *UpdateResourceInfo) GetParentResourceID() *string {
 
 func (u *UpdateResourceInfo) GetRequestConfigurations() []RequestConfiguration {
 	if u == nil {
-		return []RequestConfiguration{}
+		return nil
 	}
 	return u.RequestConfigurations
 }

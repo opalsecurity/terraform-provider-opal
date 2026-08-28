@@ -1,6 +1,7 @@
 resource "opal_resource" "my_resource" {
   admin_owner_id                 = "7c86c85d-0651-43e2-a748-d69d658418e8"
   app_id                         = "f454d283-ca87-4a8a-bdbb-df212eca5353"
+  configuration_template_id      = "06851574-e50d-40ca-8c78-f72ae6ab4304"
   custom_request_notification    = "Check your email to register your account."
   description                    = "Engineering team Okta role."
   extensions_duration_in_minutes = 120
@@ -140,6 +141,9 @@ resource "opal_resource" "my_resource" {
       dataset_id = "example-dataset-898931321"
       project_id = "example-project-898931321"
       table_id   = "example-table-898931321"
+    }
+    gcp_billing_account = {
+      billing_account_id = "billingAccounts/012345-567890-ABCDEF"
     }
     gcp_bucket = {
       bucket_id = "example-bucket-898931321"

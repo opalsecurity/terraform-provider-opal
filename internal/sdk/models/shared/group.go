@@ -132,6 +132,8 @@ type Group struct {
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
 	// The ID of the group's app.
 	AppID *string `json:"app_id,omitempty"`
+	// The ID of the associated configuration template.
+	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
 	// Custom request notification sent to the requester when the request is approved.
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the group.
@@ -192,6 +194,13 @@ func (g *Group) GetAppID() *string {
 		return nil
 	}
 	return g.AppID
+}
+
+func (g *Group) GetConfigurationTemplateID() *string {
+	if g == nil {
+		return nil
+	}
+	return g.ConfigurationTemplateID
 }
 
 func (g *Group) GetCustomRequestNotification() *string {

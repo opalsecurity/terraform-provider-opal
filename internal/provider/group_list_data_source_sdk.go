@@ -24,6 +24,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 
 			results.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
 			results.AppID = types.StringPointerValue(resultsItem.AppID)
+			results.ConfigurationTemplateID = types.StringPointerValue(resultsItem.ConfigurationTemplateID)
 			results.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
 			results.Description = types.StringPointerValue(resultsItem.Description)
 			results.ExtensionsDurationInMinutes = types.Int64PointerValue(resultsItem.ExtensionsDurationInMinutes)
