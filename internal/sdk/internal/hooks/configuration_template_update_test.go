@@ -1,0 +1,65 @@
+package hooks
+
+import (
+	"io"
+	"net/http"
+	"strings"
+	"testing"
+
+	"github.com/stretchr/testify/require"
+)
+
+func TestConfigurationTemplateUpdateHook(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name        string
+		operationID string
+		body        string
+		wantBody    string
+	}{
+		{
+			name:        "group attach strips conflicting fields",
+			operationID: "updateGroups",
+			body:        `{"groups":[{"group_id":"group-id","configuration_template_id":"template-id","admin_owner_id":"owner-id","custom_request_notification":"message","request_configurations":[],"require_mfa_to_approve":false,"name":"Engineering"}]}`,
+			wantBody:    `{"groups":[{"configuration_template_id":"template-id","group_id":"group-id","name":"Engineering"}]}`,
+		},
+		{
+			name:        "resource attach strips conflicting fields",
+			operationID: "updateResources",
+			body:        `{"resources":[{"resource_id":"resource-id","configuration_template_id":"template-id","admin_owner_id":"owner-id","custom_request_notification":"message","request_configurations":[],"require_mfa_to_approve":false,"require_mfa_to_connect":false,"ticket_propagation":{"enabled_on_grant":true},"name":"Production"}]}`,
+			wantBody:    `{"resources":[{"configuration_template_id":"template-id","name":"Production","resource_id":"resource-id"}]}`,
+		},
+		{
+			name:        "ordinary update is unchanged",
+			operationID: "updateGroups",
+			body:        `{"groups":[{"group_id":"group-id","request_configurations":[]}]}`,
+			wantBody:    `{"groups":[{"group_id":"group-id","request_configurations":[]}]}`,
+		},
+		{
+			name:        "unrelated operation is unchanged",
+			operationID: "createGroup",
+			body:        `{"configuration_template_id":"template-id","request_configurations":[]}`,
+			wantBody:    `{"configuration_template_id":"template-id","request_configurations":[]}`,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+
+			req, err := http.NewRequest(http.MethodPut, "https://example.com", strings.NewReader(test.body))
+			require.NoError(t, err)
+
+			hook := &configurationTemplateUpdateHook{}
+			req, err = hook.BeforeRequest(BeforeRequestContext{
+				HookContext: HookContext{OperationID: test.operationID},
+			}, req)
+			require.NoError(t, err)
+
+			gotBody, err := io.ReadAll(req.Body)
+			require.NoError(t, err)
+			require.JSONEq(t, test.wantBody, string(gotBody))
+		})
+	}
+}
