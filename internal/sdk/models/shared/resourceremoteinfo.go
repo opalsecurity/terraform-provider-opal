@@ -675,6 +675,19 @@ func (g *GcpBigQueryTable) GetTableID() string {
 	return g.TableID
 }
 
+// GcpBillingAccount - Remote info for a GCP billing account.
+type GcpBillingAccount struct {
+	// The resource name of the billing account.
+	BillingAccountID string `json:"billing_account_id"`
+}
+
+func (g *GcpBillingAccount) GetBillingAccountID() string {
+	if g == nil {
+		return ""
+	}
+	return g.BillingAccountID
+}
+
 // GcpBucket - Remote info for GCP bucket.
 type GcpBucket struct {
 	// The id of the bucket.
@@ -1379,6 +1392,8 @@ type ResourceRemoteInfo struct {
 	GcpBigQueryDataset *GcpBigQueryDataset `json:"gcp_big_query_dataset,omitempty"`
 	// Remote info for GCP BigQuery Table.
 	GcpBigQueryTable *GcpBigQueryTable `json:"gcp_big_query_table,omitempty"`
+	// Remote info for a GCP billing account.
+	GcpBillingAccount *GcpBillingAccount `json:"gcp_billing_account,omitempty"`
 	// Remote info for GCP bucket.
 	GcpBucket *GcpBucket `json:"gcp_bucket,omitempty"`
 	// Remote info for GCP compute instance.
@@ -1718,6 +1733,13 @@ func (r *ResourceRemoteInfo) GetGcpBigQueryTable() *GcpBigQueryTable {
 		return nil
 	}
 	return r.GcpBigQueryTable
+}
+
+func (r *ResourceRemoteInfo) GetGcpBillingAccount() *GcpBillingAccount {
+	if r == nil {
+		return nil
+	}
+	return r.GcpBillingAccount
 }
 
 func (r *ResourceRemoteInfo) GetGcpBucket() *GcpBucket {
