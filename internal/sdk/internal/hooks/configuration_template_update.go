@@ -8,27 +8,26 @@ import (
 	"net/http"
 )
 
-var configurationTemplateConflicts = map[string][]string{
+type configurationTemplateUpdateOperation struct {
+	itemsKey string
+	idKey    string
+}
+
+var configurationTemplateUpdateOperations = map[string]configurationTemplateUpdateOperation{
 	"updateGroups": {
-		"admin_owner_id",
-		"custom_request_notification",
-		"request_configurations",
-		"require_mfa_to_approve",
+		itemsKey: "groups",
+		idKey:    "group_id",
 	},
 	"updateResources": {
-		"admin_owner_id",
-		"custom_request_notification",
-		"request_configurations",
-		"require_mfa_to_approve",
-		"require_mfa_to_connect",
-		"ticket_propagation",
+		itemsKey: "resources",
+		idKey:    "resource_id",
 	},
 }
 
 type configurationTemplateUpdateHook struct{}
 
 func (h *configurationTemplateUpdateHook) BeforeRequest(hookCtx BeforeRequestContext, req *http.Request) (*http.Request, error) {
-	conflicts, ok := configurationTemplateConflicts[hookCtx.OperationID]
+	operation, ok := configurationTemplateUpdateOperations[hookCtx.OperationID]
 	if !ok || req.Body == nil {
 		return req, nil
 	}
@@ -46,19 +45,15 @@ func (h *configurationTemplateUpdateHook) BeforeRequest(hookCtx BeforeRequestCon
 		return req, fmt.Errorf("decode configuration template update request: %w", err)
 	}
 
-	itemsKey := "groups"
-	if hookCtx.OperationID == "updateResources" {
-		itemsKey = "resources"
-	}
-
 	changed := false
-	for _, item := range payload[itemsKey] {
+	for _, item := range payload[operation.itemsKey] {
 		templateID, present := item["configuration_template_id"]
 		if !present || bytes.Equal(templateID, []byte("null")) || bytes.Equal(templateID, []byte(`""`)) {
 			continue
 		}
-		for _, field := range conflicts {
-			if _, present := item[field]; present {
+
+		for field := range item {
+			if field != operation.idKey && field != "configuration_template_id" {
 				delete(item, field)
 				changed = true
 			}

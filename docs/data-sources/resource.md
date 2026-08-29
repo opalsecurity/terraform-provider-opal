@@ -30,6 +30,7 @@ data "opal_resource" "my_resource" {
 - `admin_owner_id` (String) The ID of the owner of the resource.
 - `ancestor_resource_ids` (List of String) List of resource IDs that are ancestors of this resource.
 - `app_id` (String) The ID of the app.
+- `configuration_template_id` (String) The ID of the associated configuration template.
 - `custom_request_notification` (String) Custom request notification sent upon request approval.
 - `descendant_resource_ids` (List of String) List of resource IDs that are descendants of this resource.
 - `description` (String) A description of the resource.
@@ -99,6 +100,7 @@ Read-Only:
 - `docusign_permission_profile` (Attributes) Remote info for Docusign permission profile. (see [below for nested schema](#nestedatt--remote_info--docusign_permission_profile))
 - `gcp_big_query_dataset` (Attributes) Remote info for GCP BigQuery Dataset. (see [below for nested schema](#nestedatt--remote_info--gcp_big_query_dataset))
 - `gcp_big_query_table` (Attributes) Remote info for GCP BigQuery Table. (see [below for nested schema](#nestedatt--remote_info--gcp_big_query_table))
+- `gcp_billing_account` (Attributes) Remote info for a GCP billing account. (see [below for nested schema](#nestedatt--remote_info--gcp_billing_account))
 - `gcp_bucket` (Attributes) Remote info for GCP bucket. (see [below for nested schema](#nestedatt--remote_info--gcp_bucket))
 - `gcp_compute_instance` (Attributes) Remote info for GCP compute instance. (see [below for nested schema](#nestedatt--remote_info--gcp_compute_instance))
 - `gcp_folder` (Attributes) Remote info for GCP folder. (see [below for nested schema](#nestedatt--remote_info--gcp_folder))
@@ -455,6 +457,14 @@ Read-Only:
 - `dataset_id` (String) The id of the dataset the table is in.
 - `project_id` (String) The id of the project the table is in.
 - `table_id` (String) The id of the table.
+
+
+<a id="nestedatt--remote_info--gcp_billing_account"></a>
+### Nested Schema for `remote_info.gcp_billing_account`
+
+Read-Only:
+
+- `billing_account_id` (String) The resource name of the billing account.
 
 
 <a id="nestedatt--remote_info--gcp_bucket"></a>

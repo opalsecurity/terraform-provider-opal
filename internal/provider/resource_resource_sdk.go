@@ -23,6 +23,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			r.AncestorResourceIds = append(r.AncestorResourceIds, types.StringValue(v))
 		}
 		r.AppID = types.StringPointerValue(resp.AppID)
+		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.DescendantResourceIds = make([]types.String, 0, len(resp.DescendantResourceIds))
 		for _, v := range resp.DescendantResourceIds {
@@ -288,6 +289,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.GcpBigQueryTable.DatasetID = types.StringValue(resp.RemoteInfo.GcpBigQueryTable.DatasetID)
 				r.RemoteInfo.GcpBigQueryTable.ProjectID = types.StringValue(resp.RemoteInfo.GcpBigQueryTable.ProjectID)
 				r.RemoteInfo.GcpBigQueryTable.TableID = types.StringValue(resp.RemoteInfo.GcpBigQueryTable.TableID)
+			}
+			if resp.RemoteInfo.GcpBillingAccount == nil {
+				r.RemoteInfo.GcpBillingAccount = nil
+			} else {
+				r.RemoteInfo.GcpBillingAccount = &tfTypes.GcpBillingAccount{}
+				r.RemoteInfo.GcpBillingAccount.BillingAccountID = types.StringValue(resp.RemoteInfo.GcpBillingAccount.BillingAccountID)
 			}
 			if resp.RemoteInfo.GcpBucket == nil {
 				r.RemoteInfo.GcpBucket = nil
@@ -634,6 +641,7 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.
 	var diags diag.Diagnostics
 
 	r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
+	r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
 	r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 	r.Description = types.StringPointerValue(resp.Description)
 	r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)
@@ -1254,6 +1262,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				TableID:   tableID,
 			}
 		}
+		var gcpBillingAccount *shared.GcpBillingAccount
+		if r.RemoteInfo.GcpBillingAccount != nil {
+			var billingAccountID string
+			billingAccountID = r.RemoteInfo.GcpBillingAccount.BillingAccountID.ValueString()
+
+			gcpBillingAccount = &shared.GcpBillingAccount{
+				BillingAccountID: billingAccountID,
+			}
+		}
 		var gcpBucket *shared.GcpBucket
 		if r.RemoteInfo.GcpBucket != nil {
 			var bucketID string
@@ -1706,6 +1723,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			DocusignPermissionProfile:         docusignPermissionProfile,
 			GcpBigQueryDataset:                gcpBigQueryDataset,
 			GcpBigQueryTable:                  gcpBigQueryTable,
+			GcpBillingAccount:                 gcpBillingAccount,
 			GcpBucket:                         gcpBucket,
 			GcpComputeInstance:                gcpComputeInstance,
 			GcpFolder:                         gcpFolder,
@@ -1778,6 +1796,12 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 		*adminOwnerID = r.AdminOwnerID.ValueString()
 	} else {
 		adminOwnerID = nil
+	}
+	configurationTemplateID := new(string)
+	if !r.ConfigurationTemplateID.IsUnknown() && !r.ConfigurationTemplateID.IsNull() {
+		*configurationTemplateID = r.ConfigurationTemplateID.ValueString()
+	} else {
+		configurationTemplateID = nil
 	}
 	customRequestNotification := new(string)
 	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
@@ -1977,6 +2001,7 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 	}
 	out := shared.UpdateResourceInfo{
 		AdminOwnerID:                adminOwnerID,
+		ConfigurationTemplateID:     configurationTemplateID,
 		CustomRequestNotification:   customRequestNotification,
 		Description:                 description,
 		ExtensionsDurationInMinutes: extensionsDurationInMinutes,

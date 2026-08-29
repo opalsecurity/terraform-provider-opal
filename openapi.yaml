@@ -1564,6 +1564,35 @@ paths:
       x-speakeasy-entity-operation:
         - Group#create#4
         - Group#update#3
+  /groups/{group_id}/access_levels:
+    get:
+      summary: Get group access levels
+      description: Returns the list of access levels defined for the group. Groups that only offer default (unnamed) access return an empty list.
+      operationId: get_group_access_levels
+      parameters:
+        - description: The ID of the group whose access levels to return.
+          name: group_id
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupAccessLevelList"
+          description: The access levels defined for the group.
+        "404":
+          description: Group not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
   /groups/{group_id}/resources:
     get:
       description: Gets the list of resources that the group gives access to.
@@ -2849,6 +2878,109 @@ paths:
         - owners
       x-speakeasy-name-override: update_users
       x-speakeasy-entity-operation: Owner#update#2
+  /request-templates:
+    get:
+      description: Returns a list of `RequestTemplate` objects.
+      operationId: getRequestTemplates
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedRequestTemplateList"
+          description: One page worth of request templates for your organization.
+      security:
+        - BearerAuth: []
+      tags:
+        - request-templates
+    post:
+      description: Creates a request template.
+      operationId: createRequestTemplate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRequestTemplateInfo"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestTemplate"
+          description: The request template just created.
+      security:
+        - BearerAuth: []
+      tags:
+        - request-templates
+    put:
+      description: Updates a request template.
+      operationId: updateRequestTemplate
+      requestBody:
+        description: Request template to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateRequestTemplateInfo"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestTemplate"
+          description: The request template just updated.
+      security:
+        - BearerAuth: []
+      tags:
+        - request-templates
+  /request-templates/{request_template_id}:
+    get:
+      description: Returns a `RequestTemplate` object.
+      operationId: getRequestTemplate
+      parameters:
+        - description: The ID of the request template.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: request_template_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RequestTemplate"
+          description: The requested request template.
+      security:
+        - BearerAuth: []
+      tags:
+        - request-templates
+    delete:
+      description: Deletes a request template.
+      operationId: deleteRequestTemplate
+      parameters:
+        - description: The ID of the request template.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: request_template_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          description: The request template was successfully deleted.
+      security:
+        - BearerAuth: []
+      tags:
+        - request-templates
   /requests:
     get:
       summary: Get requests
@@ -4170,6 +4302,35 @@ paths:
               schema:
                 $ref: "#/components/schemas/GroupResourceList"
           description: The groups that grant access to the resource.
+      security:
+        - BearerAuth: []
+      tags:
+        - resources
+  /resources/{resource_id}/access_levels:
+    get:
+      summary: Get resource access levels
+      description: Returns the list of access levels defined for the resource. Resources that only offer default (unnamed) access return an empty list.
+      operationId: get_resource_access_levels
+      parameters:
+        - description: The ID of the resource whose access levels to return.
+          name: resource_id
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceAccessLevelList"
+          description: The access levels defined for the resource.
+        "404":
+          description: Resource not found.
       security:
         - BearerAuth: []
       tags:
@@ -6062,12 +6223,14 @@ components:
           description: Invert the match — return resources/groups NOT owned by the given owners.
     StringMatchType:
       type: string
-      description: How to match a string value against entity names.
+      description: >-
+        How to match a string value against entity names. REGEX matches the value as a case-insensitive regular expression.
       enum:
         - CONTAINS
         - EQUALS
         - STARTS_WITH
         - ENDS_WITH
+        - REGEX
     PaginatedAssignedRequestList:
       type: object
       required:
@@ -7391,6 +7554,20 @@ components:
         - access_level_remote_id
       type: object
       x-speakeasy-entity: Resources
+    ResourceAccessLevelList:
+      description: A list of access levels defined for a resource.
+      example:
+        results:
+          - access_level_name: AdminRole
+            access_level_remote_id: arn:aws:iam::590304332660:role/AdministratorAccess
+          - access_level_name: ReadOnly
+            access_level_remote_id: arn:aws:iam::590304332660:role/ReadOnlyAccess
+      properties:
+        results:
+          items:
+            $ref: "#/components/schemas/ResourceAccessLevel"
+          type: array
+      type: object
     ResourceUserAccessStatus:
       description: |-
         # AccessStatus Object
@@ -8446,7 +8623,7 @@ components:
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
-          x-speakeasy-ignore: true
+          x-speakeasy-plan-validators: GroupConfigurationTemplateID
         group_binding_id:
           description: The ID of the associated group binding.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -8464,7 +8641,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/RequestConfiguration"
-          minItems: 1
         request_configuration_list:
           description: A list of request configurations for this group. Deprecated in favor of `request_configurations`.
           deprecated: true
@@ -8579,6 +8755,20 @@ components:
         - access_level_remote_id
       type: object
       x-speakeasy-entity: Groups
+    GroupAccessLevelList:
+      description: A list of access levels defined for a group.
+      example:
+        results:
+          - access_level_name: Developer
+            access_level_remote_id: "30"
+          - access_level_name: Maintainer
+            access_level_remote_id: "40"
+      properties:
+        results:
+          items:
+            $ref: "#/components/schemas/GroupAccessLevel"
+          type: array
+      type: object
     GroupUser:
       description: |-
         # Group Access User Object
@@ -8787,7 +8977,7 @@ components:
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
-          x-speakeasy-ignore: true
+          x-speakeasy-plan-validators: GroupConfigurationTemplateID
         request_template_id:
           description: The ID of the associated request template. Deprecated in favor of `request_configurations`.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -8880,7 +9070,6 @@ components:
           type: boolean
       required:
         - group_id
-        - request_configurations
       type: object
       x-speakeasy-entity: Group
     GroupTypeEnum:
@@ -8965,6 +9154,7 @@ components:
         - GCP_BIG_QUERY_DATASET
         - GCP_BIG_QUERY_TABLE
         - GCP_SERVICE_ACCOUNT
+        - GCP_BILLING_ACCOUNT
         - GIT_HUB_REPO
         - GIT_HUB_ORG_ROLE
         - GIT_LAB_PROJECT
@@ -9082,6 +9272,7 @@ components:
         - GCP_CLOUD_SQL_POSTGRES_INSTANCE
         - GCP_CLOUD_SQL_MYSQL_INSTANCE
         - GCP_SERVICE_ACCOUNT
+        - GCP_BILLING_ACCOUNT
         - GIT_HUB_REPO
         - GIT_HUB_ORG_ROLE
         - GIT_LAB_PROJECT
@@ -10441,6 +10632,16 @@ components:
           required:
             - instance_id
             - project_id
+        gcp_billing_account:
+          description: Remote info for a GCP billing account.
+          properties:
+            billing_account_id:
+              description: The resource name of the billing account.
+              example: billingAccounts/012345-567890-ABCDEF
+              type: string
+          type: object
+          required:
+            - billing_account_id
         gcp_service_account:
           description: Remote info for a GCP service account.
           properties:
@@ -11846,13 +12047,172 @@ components:
         - field_name
         - field_type
         - field_value
+    RequestTemplateCustomFieldCalloutMetadata:
+      description: The message shown to a requester by a `CALLOUT` field, and how prominently to show it.
+      type: object
+      properties:
+        severity:
+          description: How prominently the message is shown.
+          enum:
+            - INFO
+            - WARNING
+            - ERROR
+          type: string
+          example: WARNING
+        text:
+          description: The message shown to the requester.
+          type: string
+          example: This role grants access to production customer data.
+      required:
+        - severity
+        - text
+    RequestTemplateCustomFieldMultiChoiceMetadata:
+      description: The options a requester can pick from in a `MULTI_CHOICE` or `MULTI_SELECT` field.
+      type: object
+      properties:
+        options:
+          items:
+            type: string
+          type: array
+          example:
+            - Incident response
+            - Scheduled maintenance
+      required:
+        - options
+    RequestTemplateCustomFieldInput:
+      description: A field to put on a request template. Separate from `RequestTemplateCustomField` because a callout's name may be omitted on write, while a field read back always has one.
+      type: object
+      properties:
+        name:
+          description: The label shown to the requester. Required for every type except `CALLOUT`, which is display-only -- its name is an internal identifier, never displayed, and is generated if omitted.
+          type: string
+          example: Why do you need this access?
+        description:
+          description: Helper text shown beneath the field.
+          type: string
+          nullable: true
+        type:
+          $ref: "#/components/schemas/RequestTemplateCustomFieldTypeEnum"
+        required:
+          description: Whether the requester must answer. Ignored for `CALLOUT` fields, which collect no answer.
+          type: boolean
+          example: true
+        metadata:
+          $ref: "#/components/schemas/RequestTemplateCustomFieldMetadata"
+      required:
+        - type
+    RequestTemplateCustomFieldMetadata:
+      description: Extra configuration for field types that need it. Exactly one member is set, and which one is determined by the field's `type`.
+      type: object
+      properties:
+        callout_data:
+          $ref: "#/components/schemas/RequestTemplateCustomFieldCalloutMetadata"
+        multi_choice_data:
+          $ref: "#/components/schemas/RequestTemplateCustomFieldMultiChoiceMetadata"
+    RequestTemplateCustomField:
+      description: A field on a request template.
+      type: object
+      properties:
+        name:
+          description: The label shown to the requester. `CALLOUT` fields are display-only, so their name is an internal identifier and is never displayed.
+          type: string
+          example: Why do you need this access?
+        description:
+          description: Helper text shown beneath the field.
+          type: string
+          nullable: true
+        type:
+          $ref: "#/components/schemas/RequestTemplateCustomFieldTypeEnum"
+        required:
+          description: Whether the requester must answer. Always false for `CALLOUT` fields, which collect no answer.
+          type: boolean
+          example: true
+        metadata:
+          $ref: "#/components/schemas/RequestTemplateCustomFieldMetadata"
+      required:
+        - name
+        - type
+    RequestTemplate:
+      description: A template describing what a requester is asked when requesting access.
+      type: object
+      properties:
+        request_template_id:
+          description: The ID of the request template.
+          example: 7c86c85d-0651-43e2-a748-d69d658418e8
+          format: uuid
+          type: string
+        name:
+          description: The name of the request template.
+          example: Production access questions
+          type: string
+        custom_fields:
+          description: The fields on this template, in the order they are shown.
+          items:
+            $ref: "#/components/schemas/RequestTemplateCustomField"
+          type: array
+      required:
+        - request_template_id
+        - name
+    PaginatedRequestTemplateList:
+      type: object
+      properties:
+        next:
+          description: The cursor with which to continue pagination if additional result pages exist.
+          type: string
+          nullable: true
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzAyMTMlMkIwMCUzQTAw
+        previous:
+          description: The cursor used to obtain the current result page.
+          type: string
+          nullable: true
+          example: cj0xJnA9MjAyMS0wMS0wNSswMyUzQTI0JTNBNTMuNDMwMjEz
+        results:
+          items:
+            $ref: "#/components/schemas/RequestTemplate"
+          type: array
+    CreateRequestTemplateInfo:
+      description: Information for creating a request template.
+      type: object
+      properties:
+        name:
+          description: The name of the request template.
+          example: Production access questions
+          type: string
+        custom_fields:
+          description: The fields to put on the template, in the order they are shown.
+          items:
+            $ref: "#/components/schemas/RequestTemplateCustomFieldInput"
+          type: array
+      required:
+        - name
+    UpdateRequestTemplateInfo:
+      description: Information for updating a request template. Omitted properties are left unchanged, but `custom_fields` replaces the template's fields wholesale when provided.
+      type: object
+      properties:
+        request_template_id:
+          description: The ID of the request template to update.
+          example: 7c86c85d-0651-43e2-a748-d69d658418e8
+          format: uuid
+          type: string
+        name:
+          description: The new name of the request template.
+          type: string
+        custom_fields:
+          description: The complete set of fields for the template. Any field not included is removed.
+          items:
+            $ref: "#/components/schemas/RequestTemplateCustomFieldInput"
+          type: array
+      required:
+        - request_template_id
     RequestTemplateCustomFieldTypeEnum:
-      description: The type of the custom request field.
+      description: The type of the custom request field. `CALLOUT` fields are display-only -- they show a message to the requester and collect no answer, so they never appear in a request's `custom_fields`.
       enum:
         - SHORT_TEXT
         - LONG_TEXT
         - BOOLEAN
         - MULTI_CHOICE
+        - MULTI_SELECT
+        - CALLOUT
       type: string
     RequestList:
       description: |-
@@ -12025,13 +12385,12 @@ components:
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
-          x-speakeasy-ignore: true
+          x-speakeasy-plan-validators: ResourceConfigurationTemplateID
         request_configurations:
           type: array
           items:
             $ref: "#/components/schemas/RequestConfiguration"
           description: A list of configurations for requests to this resource.
-          minItems: 1
         request_configuration_list:
           description: A list of configurations for requests to this resource. Deprecated in favor of `request_configurations`.
           deprecated: true
@@ -12261,7 +12620,7 @@ components:
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
-          x-speakeasy-ignore: true
+          x-speakeasy-plan-validators: ResourceConfigurationTemplateID
         request_template_id:
           description: The ID of the associated request template. Deprecated in favor of `request_configurations`.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -12335,7 +12694,6 @@ components:
           x-speakeasy-ignore: true
       required:
         - resource_id
-        - request_configurations
       type: object
       x-speakeasy-entity: Resource
     PaginatedTagsList:

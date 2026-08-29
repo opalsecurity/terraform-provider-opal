@@ -145,6 +145,7 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"on_call_schedule_ids": tftypes.List{ElementType:  tftypes.String},
 			"on_call_schedules": oncallSchedulesType,
 			"remote_name": tftypes.String,
+			"configuration_template_id": tftypes.String,
 			"request_configurations": requestConfigurationsType,
 			"custom_request_notification": tftypes.String,
 			"risk_sensitivity": tftypes.String,
@@ -307,6 +308,7 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"message_channels": tftypes.NewValue(messageChannelsType, nil), // Will be populated on a state refresh
 			"on_call_schedule_ids": tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, oncallScheduleIDs),
 			"on_call_schedules": tftypes.NewValue(oncallSchedulesType, nil), // Will be populated on a state refresh
+			"configuration_template_id": tftypes.NewValue(tftypes.String, nil),
 			"request_configurations": tftypes.NewValue(requestConfigurationsType, nil), // Will be populated on a state refresh
 			"custom_request_notification": tftypes.NewValue(tftypes.String, nil),
 			"risk_sensitivity": tftypes.NewValue(tftypes.String, nil), // read only field

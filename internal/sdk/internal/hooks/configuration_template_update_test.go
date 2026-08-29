@@ -19,22 +19,34 @@ func TestConfigurationTemplateUpdateHook(t *testing.T) {
 		wantBody    string
 	}{
 		{
-			name:        "group attach strips conflicting fields",
+			name:        "group attach sends REST-compatible minimal update",
 			operationID: "updateGroups",
 			body:        `{"groups":[{"group_id":"group-id","configuration_template_id":"template-id","admin_owner_id":"owner-id","custom_request_notification":"message","request_configurations":[],"require_mfa_to_approve":false,"name":"Engineering"}]}`,
-			wantBody:    `{"groups":[{"configuration_template_id":"template-id","group_id":"group-id","name":"Engineering"}]}`,
+			wantBody:    `{"groups":[{"configuration_template_id":"template-id","group_id":"group-id"}]}`,
 		},
 		{
-			name:        "resource attach strips conflicting fields",
+			name:        "resource attach sends REST-compatible minimal update",
 			operationID: "updateResources",
-			body:        `{"resources":[{"resource_id":"resource-id","configuration_template_id":"template-id","admin_owner_id":"owner-id","custom_request_notification":"message","request_configurations":[],"require_mfa_to_approve":false,"require_mfa_to_connect":false,"ticket_propagation":{"enabled_on_grant":true},"name":"Production"}]}`,
-			wantBody:    `{"resources":[{"configuration_template_id":"template-id","name":"Production","resource_id":"resource-id"}]}`,
+			body:        `{"resources":[{"resource_id":"resource-id","configuration_template_id":"template-id","admin_owner_id":"owner-id","custom_request_notification":"message","description":"Production repository","match_remote_name":false,"request_configurations":[],"require_mfa_to_approve":false,"require_mfa_to_connect":false,"ticket_propagation":{"enabled_on_grant":true},"name":"Production"}]}`,
+			wantBody:    `{"resources":[{"configuration_template_id":"template-id","resource_id":"resource-id"}]}`,
 		},
 		{
 			name:        "ordinary update is unchanged",
 			operationID: "updateGroups",
 			body:        `{"groups":[{"group_id":"group-id","request_configurations":[]}]}`,
 			wantBody:    `{"groups":[{"group_id":"group-id","request_configurations":[]}]}`,
+		},
+		{
+			name:        "null template ID is unchanged",
+			operationID: "updateResources",
+			body:        `{"resources":[{"resource_id":"resource-id","configuration_template_id":null,"name":"Production"}]}`,
+			wantBody:    `{"resources":[{"resource_id":"resource-id","configuration_template_id":null,"name":"Production"}]}`,
+		},
+		{
+			name:        "empty template ID is unchanged",
+			operationID: "updateGroups",
+			body:        `{"groups":[{"group_id":"group-id","configuration_template_id":"","name":"Engineering"}]}`,
+			wantBody:    `{"groups":[{"group_id":"group-id","configuration_template_id":"","name":"Engineering"}]}`,
 		},
 		{
 			name:        "unrelated operation is unchanged",

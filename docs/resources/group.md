@@ -16,6 +16,7 @@ Group Resource
 resource "opal_group" "my_group" {
   admin_owner_id                 = "7c86c85d-0651-43e2-a748-d69d658418e8"
   app_id                         = "f454d283-ca87-4a8a-bdbb-df212eca5353"
+  configuration_template_id      = "06851574-e50d-40ca-8c78-f72ae6ab4304"
   custom_request_notification    = "Check your email to register your account."
   description                    = "Engineering team Okta group."
   extensions_duration_in_minutes = 120
@@ -191,12 +192,12 @@ resource "opal_group" "my_group" {
 - `app_id` (String) The ID of the app for the group. Requires replacement if changed.
 - `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP"]; Requires replacement if changed.
 - `name` (String) The name of the group.
-- `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 
 ### Optional
 
 - `admin_owner_id` (String) The ID of the owner of the group.
+- `configuration_template_id` (String) The ID of the associated configuration template.
 - `custom_request_notification` (String) Custom request notification sent to the requester when the request is approved.
 - `description` (String) A description of the group.
 - `extensions_duration_in_minutes` (Number, Deprecated) The duration for which access can be extended (in minutes). Deprecated, set the extension duration in the request_configuration you want it to apply to.
@@ -206,6 +207,7 @@ resource "opal_group" "my_group" {
 - `message_channel_ids` (Set of String) Default: []
 - `on_call_schedule_ids` (Set of String) Default: []
 - `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info))
+- `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this group. Default: false
 - `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
 - `visibility_group_ids` (Set of String) Default: []
@@ -219,45 +221,6 @@ resource "opal_group" "my_group" {
 - `on_call_schedules` (Attributes) The on call schedules attached to the group. (see [below for nested schema](#nestedatt--on_call_schedules))
 - `remote_name` (String) The name of the remote.
 - `risk_sensitivity` (String) The risk sensitivity level for the group. When an override is set, this field will match that.
-
-<a id="nestedatt--request_configurations"></a>
-### Nested Schema for `request_configurations`
-
-Optional:
-
-- `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource. Not Null
-- `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource. Not Null
-- `condition` (Attributes) The condition for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--condition))
-- `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
-- `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
-- `priority` (Number) The priority of the request configuration. Not Null
-- `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
-- `request_template_id` (String) The ID of the associated request template.
-- `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this resource. Not Null
-- `require_support_ticket` (Boolean) A bool representing whether or not access requests to the resource require an access ticket. Not Null
-- `reviewer_stages` (Attributes List) The list of reviewer stages for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages))
-
-<a id="nestedatt--request_configurations--condition"></a>
-### Nested Schema for `request_configurations.condition`
-
-Optional:
-
-- `group_ids` (Set of String) The list of group IDs to match. Default: []
-- `role_remote_ids` (Set of String) The list of role remote IDs to match. Default: []
-
-
-<a id="nestedatt--request_configurations--reviewer_stages"></a>
-### Nested Schema for `request_configurations.reviewer_stages`
-
-Optional:
-
-- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. Default: "AND"; must be one of ["AND", "OR"]
-- `owner_ids` (Set of String) The IDs of owners assigned as reviewers for this stage. Not Null
-- `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval. Default: false
-- `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval. Default: false
-- `service_user_ids` (List of String) The IDs of service users assigned as reviewers for this stage.
-
-
 
 <a id="nestedatt--remote_info"></a>
 ### Nested Schema for `remote_info`
@@ -579,6 +542,45 @@ Optional:
 Optional:
 
 - `group_id` (String) The ID of the Zoom group. Not Null; Requires replacement if changed.
+
+
+
+<a id="nestedatt--request_configurations"></a>
+### Nested Schema for `request_configurations`
+
+Optional:
+
+- `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource. Not Null
+- `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource. Not Null
+- `condition` (Attributes) The condition for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--condition))
+- `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
+- `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
+- `priority` (Number) The priority of the request configuration. Not Null
+- `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
+- `request_template_id` (String) The ID of the associated request template.
+- `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this resource. Not Null
+- `require_support_ticket` (Boolean) A bool representing whether or not access requests to the resource require an access ticket. Not Null
+- `reviewer_stages` (Attributes List) The list of reviewer stages for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages))
+
+<a id="nestedatt--request_configurations--condition"></a>
+### Nested Schema for `request_configurations.condition`
+
+Optional:
+
+- `group_ids` (Set of String) The list of group IDs to match. Default: []
+- `role_remote_ids` (Set of String) The list of role remote IDs to match. Default: []
+
+
+<a id="nestedatt--request_configurations--reviewer_stages"></a>
+### Nested Schema for `request_configurations.reviewer_stages`
+
+Optional:
+
+- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. Default: "AND"; must be one of ["AND", "OR"]
+- `owner_ids` (Set of String) The IDs of owners assigned as reviewers for this stage. Not Null
+- `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval. Default: false
+- `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval. Default: false
+- `service_user_ids` (List of String) The IDs of service users assigned as reviewers for this stage.
 
 
 

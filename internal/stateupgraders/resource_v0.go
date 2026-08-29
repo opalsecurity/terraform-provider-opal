@@ -123,6 +123,7 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 			"remote_info": remoteInfoObjectType,
 			"visibility": tftypes.String,
 			"visibility_group_ids": tftypes.List{ElementType: tftypes.String},
+			"configuration_template_id": tftypes.String,
 			"request_configurations": requestConfigurationsType,
 			"ticket_propagation": ticketPropagationType,
 			"custom_request_notification": tftypes.String,
@@ -252,6 +253,7 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 			"remote_info": tftypes.NewValue(remoteInfoObjectType, nil),
 			"visibility": tftypes.NewValue(tftypes.String, visibility), // Will be populated on a state refresh
 			"visibility_group_ids":tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, visibilityGroupIDs), // Will be populated by first terraform apply
+			"configuration_template_id": tftypes.NewValue(tftypes.String, nil),
 			"request_configurations": tftypes.NewValue(requestConfigurationsType, nil), // Will be populated on a state refresh
 			"ticket_propagation": tftypes.NewValue(ticketPropagationType, nil), // cannot have been set in the prior version
 			"custom_request_notification": tftypes.NewValue(tftypes.String, nil),
