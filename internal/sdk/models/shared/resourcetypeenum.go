@@ -49,6 +49,7 @@ const (
 	ResourceTypeEnumGcpBigQueryDataset                ResourceTypeEnum = "GCP_BIG_QUERY_DATASET"
 	ResourceTypeEnumGcpBigQueryTable                  ResourceTypeEnum = "GCP_BIG_QUERY_TABLE"
 	ResourceTypeEnumGcpServiceAccount                 ResourceTypeEnum = "GCP_SERVICE_ACCOUNT"
+	ResourceTypeEnumGcpBillingAccount                 ResourceTypeEnum = "GCP_BILLING_ACCOUNT"
 	ResourceTypeEnumGitHubRepo                        ResourceTypeEnum = "GIT_HUB_REPO"
 	ResourceTypeEnumGitHubOrgRole                     ResourceTypeEnum = "GIT_HUB_ORG_ROLE"
 	ResourceTypeEnumGitLabProject                     ResourceTypeEnum = "GIT_LAB_PROJECT"
@@ -187,6 +188,8 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "GCP_BIG_QUERY_TABLE":
 		fallthrough
 	case "GCP_SERVICE_ACCOUNT":
+		fallthrough
+	case "GCP_BILLING_ACCOUNT":
 		fallthrough
 	case "GIT_HUB_REPO":
 		fallthrough
