@@ -98,6 +98,7 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 	if resp != nil {
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 		r.AppID = types.StringPointerValue(resp.AppID)
+		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.Description = types.StringPointerValue(resp.Description)
 		r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)
@@ -412,6 +413,7 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(ctx context.Contex
 	var diags diag.Diagnostics
 
 	r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
+	r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
 	r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 	r.Description = types.StringPointerValue(resp.Description)
 	r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)
@@ -1088,6 +1090,12 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 	} else {
 		adminOwnerID = nil
 	}
+	configurationTemplateID := new(string)
+	if !r.ConfigurationTemplateID.IsUnknown() && !r.ConfigurationTemplateID.IsNull() {
+		*configurationTemplateID = r.ConfigurationTemplateID.ValueString()
+	} else {
+		configurationTemplateID = nil
+	}
 	customRequestNotification := new(string)
 	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
 		*customRequestNotification = r.CustomRequestNotification.ValueString()
@@ -1251,6 +1259,7 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 	}
 	out := shared.UpdateGroupInfo{
 		AdminOwnerID:                adminOwnerID,
+		ConfigurationTemplateID:     configurationTemplateID,
 		CustomRequestNotification:   customRequestNotification,
 		Description:                 description,
 		ExtensionsDurationInMinutes: extensionsDurationInMinutes,

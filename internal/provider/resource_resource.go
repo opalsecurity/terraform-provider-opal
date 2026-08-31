@@ -6,7 +6,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -37,6 +36,7 @@ import (
 	custom_listvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/listvalidators"
 	speakeasy_objectvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/objectvalidators"
 	speakeasy_setvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/setvalidators"
+	custom_stringvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/stringvalidators"
 	speakeasy_stringvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/stringvalidators"
 )
 
@@ -59,6 +59,7 @@ type ResourceResourceModel struct {
 	AdminOwnerID                types.String                            `tfsdk:"admin_owner_id"`
 	AncestorResourceIds         []types.String                          `tfsdk:"ancestor_resource_ids"`
 	AppID                       types.String                            `tfsdk:"app_id"`
+	ConfigurationTemplateID     types.String                            `tfsdk:"configuration_template_id"`
 	CustomRequestNotification   types.String                            `tfsdk:"custom_request_notification"`
 	DescendantResourceIds       []types.String                          `tfsdk:"descendant_resource_ids"`
 	Description                 types.String                            `tfsdk:"description"`
@@ -113,6 +114,14 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 				Description: `The ID of the app for the resource. Requires replacement if changed.`,
+			},
+			"configuration_template_id": schema.StringAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `The ID of the associated configuration template.`,
+				Validators: []validator.String{
+					custom_stringvalidators.ResourceConfigurationTemplateID(),
+				},
 			},
 			"custom_request_notification": schema.StringAttribute{
 				Computed: true,
@@ -181,13 +190,19 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Description: `Information about the last successful sync of this resource.`,
 			},
 			"match_remote_description": schema.BoolAttribute{
-				Computed:    true,
-				Optional:    true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+				},
 				Description: `A bool representing whether or not the resource's description should be synced from the end system. When true, the description is overwritten with the remote description on each sync, so a ` + "`" + `description` + "`" + ` provided together with this field set to true will be replaced at the next sync. If not provided, the current value is left unchanged.`,
 			},
 			"match_remote_name": schema.BoolAttribute{
-				Computed:    true,
-				Optional:    true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+				},
 				Description: `A bool representing whether or not the resource's name should be synced from the end system. When true, the name is overwritten with the remote name on each sync, so a ` + "`" + `name` + "`" + ` provided together with this field set to true will be replaced at the next sync. If not provided, the current value is left unchanged.`,
 			},
 			"name": schema.StringAttribute{
@@ -1299,6 +1314,29 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						},
 						Description: `Remote info for GCP BigQuery Table. Requires replacement if changed.`,
 					},
+					"gcp_billing_account": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"billing_account_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The resource name of the billing account. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for a GCP billing account. Requires replacement if changed.`,
+					},
 					"gcp_bucket": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -2361,23 +2399,36 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Description: `Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed.`,
 			},
 			"request_configurations": schema.ListNestedAttribute{
-				Required: true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.List{
+					speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
+				},
 				NestedObject: schema.NestedAttributeObject{
 					Validators: []validator.Object{
 						speakeasy_objectvalidators.NotNull(),
 					},
+					PlanModifiers: []planmodifier.Object{
+						speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+					},
 					Attributes: map[string]schema.Attribute{
 						"allow_requests": schema.BoolAttribute{
-							Computed:    true,
-							Optional:    true,
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Bool{
+								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+							},
 							Description: `A bool representing whether or not to allow requests for this resource. Not Null`,
 							Validators: []validator.Bool{
 								speakeasy_boolvalidators.NotNull(),
 							},
 						},
 						"auto_approval": schema.BoolAttribute{
-							Computed:    true,
-							Optional:    true,
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Bool{
+								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+							},
 							Description: `A bool representing whether or not to automatically approve requests for this resource. Not Null`,
 							Validators: []validator.Bool{
 								speakeasy_boolvalidators.NotNull(),
@@ -2438,8 +2489,11 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 							Description: `The maximum duration for which the resource can be requested (in minutes).`,
 						},
 						"priority": schema.Int64Attribute{
-							Computed:    true,
-							Optional:    true,
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Int64{
+								speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
+							},
 							Description: `The priority of the request configuration. Not Null`,
 							Validators: []validator.Int64{
 								speakeasy_int64validators.NotNull(),
@@ -2462,16 +2516,22 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 							Description: `The ID of the associated request template.`,
 						},
 						"require_mfa_to_request": schema.BoolAttribute{
-							Computed:    true,
-							Optional:    true,
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Bool{
+								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+							},
 							Description: `A bool representing whether or not to require MFA for requesting access to this resource. Not Null`,
 							Validators: []validator.Bool{
 								speakeasy_boolvalidators.NotNull(),
 							},
 						},
 						"require_support_ticket": schema.BoolAttribute{
-							Computed:    true,
-							Optional:    true,
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Bool{
+								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+							},
 							Description: `A bool representing whether or not access requests to the resource require an access ticket. Not Null`,
 							Validators: []validator.Bool{
 								speakeasy_boolvalidators.NotNull(),
@@ -2553,7 +2613,6 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				},
 				Description: `A list of configurations for requests to this resource. If not provided, the default request configuration will be used.`,
 				Validators: []validator.List{
-					listvalidator.SizeAtLeast(1),
 					custom_listvalidators.RequestConfigurations(),
 				},
 			},
@@ -2577,7 +2636,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE"]; Requires replacement if changed.`,
+				Description: `The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GCP_BILLING_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"AWS_IAM_ROLE",
@@ -2617,6 +2676,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						"GCP_BIG_QUERY_DATASET",
 						"GCP_BIG_QUERY_TABLE",
 						"GCP_SERVICE_ACCOUNT",
+						"GCP_BILLING_ACCOUNT",
 						"GIT_HUB_REPO",
 						"GIT_HUB_ORG_ROLE",
 						"GIT_LAB_PROJECT",
