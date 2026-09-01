@@ -32,6 +32,11 @@ var configurationTemplateBlockedFollowUpOperations = map[string]struct{}{
 	"updateResourceVisibility":   {},
 }
 
+var configurationTemplateVisibilityOperations = map[string]struct{}{
+	"updateGroupVisibility":    {},
+	"updateResourceVisibility": {},
+}
+
 type configurationTemplateUpdateHook struct{}
 
 func (h *configurationTemplateUpdateHook) BeforeRequest(hookCtx BeforeRequestContext, req *http.Request) (*http.Request, error) {
@@ -104,7 +109,7 @@ func (h *configurationTemplateUpdateHook) AfterError(
 	}
 	_ = res.Body.Close()
 
-	if !strings.Contains(string(body), "linked to configuration templates") {
+	if !suppressConfigurationTemplateFollowUpError(hookCtx.OperationID, string(body)) {
 		res.Body = io.NopCloser(bytes.NewReader(body))
 		return res, err
 	}
@@ -117,4 +122,27 @@ func (h *configurationTemplateUpdateHook) AfterError(
 	res.Header.Del("Content-Type")
 
 	return res, nil
+}
+
+// suppressConfigurationTemplateFollowUpError reports whether a 400 from one of
+// the follow-up endpoints should be treated as success because the entity's
+// configuration is governed by an attached configuration template.
+func suppressConfigurationTemplateFollowUpError(operationID, body string) bool {
+	if strings.Contains(body, "linked to configuration templates") {
+		return true
+	}
+
+	// When a configuration template is attached, the Terraform configuration
+	// omits `visibility` (the template governs it), so the generated
+	// provider still calls the visibility endpoint with an empty visibility
+	// level. The API parses the enum before checking for an attached
+	// template, so it responds with `Unrecognized visibility level: ` (with
+	// an empty value) rather than the linked-template message. Match only
+	// the empty-value form: a non-empty invalid level is a genuine error and
+	// is caught by the plan-time enum validator anyway.
+	if _, ok := configurationTemplateVisibilityOperations[operationID]; ok {
+		return strings.Contains(body, `Unrecognized visibility level: "`)
+	}
+
+	return false
 }
