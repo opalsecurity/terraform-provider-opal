@@ -111,7 +111,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 			"configuration_template_id": schema.StringAttribute{
 				Computed:    true,
 				Optional:    true,
-				Description: `The ID of the associated configuration template.`,
+				Description: `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
 				Validators: []validator.String{
 					custom_stringvalidators.GroupConfigurationTemplateID(),
 				},

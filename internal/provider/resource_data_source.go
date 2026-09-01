@@ -52,6 +52,8 @@ type ResourceDataSourceModel struct {
 	RiskSensitivity             types.String                            `tfsdk:"risk_sensitivity"`
 	RiskSensitivityOverride     types.String                            `tfsdk:"risk_sensitivity_override"`
 	TicketPropagation           *tfTypes.TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
+	Visibility                  types.String                            `tfsdk:"visibility"`
+	VisibilityGroupIds          []types.String                          `tfsdk:"visibility_group_ids"`
 }
 
 // Metadata returns the data source type name.
@@ -80,7 +82,7 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			},
 			"configuration_template_id": schema.StringAttribute{
 				Computed:    true,
-				Description: `The ID of the associated configuration template.`,
+				Description: `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
 			},
 			"custom_request_notification": schema.StringAttribute{
 				Computed:    true,
@@ -1171,6 +1173,14 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				},
 				Description: `Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.`,
 			},
+			"visibility": schema.StringAttribute{
+				Computed:    true,
+				Description: `The visibility level of the entity.`,
+			},
+			"visibility_group_ids": schema.SetAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
+			},
 		},
 	}
 }
@@ -1240,6 +1250,37 @@ func (r *ResourceDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 	resp.Diagnostics.Append(data.RefreshFromSharedResource(ctx, res.Resource)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request1, request1Diags := data.ToOperationsGetResourceVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res1, err := r.client.Resources.GetVisibility(ctx, *request1)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res1 != nil && res1.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+		}
+		return
+	}
+	if res1 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
+		return
+	}
+	if res1.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
+		return
+	}
+	if !(res1.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetResourceVisibilityResponseBody(ctx, res1.Object)...)
 
 	if resp.Diagnostics.HasError() {
 		return

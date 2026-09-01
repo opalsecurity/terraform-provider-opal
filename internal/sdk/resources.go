@@ -3201,12 +3201,12 @@ func (s *Resources) GetVisibility(ctx context.Context, request operations.GetRes
 				return nil, err
 			}
 
-			var out shared.VisibilityInfo
+			var out operations.GetResourceVisibilityResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.VisibilityInfo = &out
+			res.Object = &out
 		default:
 			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {

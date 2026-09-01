@@ -134,7 +134,7 @@ type Resource struct {
 	AncestorResourceIds []string `json:"ancestor_resource_ids,omitempty"`
 	// The ID of the app.
 	AppID *string `json:"app_id,omitempty"`
-	// The ID of the associated configuration template.
+	// The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
 	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
 	// Custom request notification sent upon request approval.
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
