@@ -23,6 +23,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			r.AncestorResourceIds = append(r.AncestorResourceIds, types.StringValue(v))
 		}
 		r.AppID = types.StringPointerValue(resp.AppID)
+		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.DescendantResourceIds = make([]types.String, 0, len(resp.DescendantResourceIds))
 		for _, v := range resp.DescendantResourceIds {
@@ -634,6 +635,7 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.
 	var diags diag.Diagnostics
 
 	r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
+	r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
 	r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 	r.Description = types.StringPointerValue(resp.Description)
 	r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)
@@ -768,8 +770,8 @@ func (r *ResourceResourceModel) ToOperationsGetResourceIDRequest(ctx context.Con
 func (r *ResourceResourceModel) ToOperationsUpdateResourceVisibilityRequest(ctx context.Context) (*operations.UpdateResourceVisibilityRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	visibilityInfo, visibilityInfoDiags := r.ToSharedVisibilityInfo(ctx)
-	diags.Append(visibilityInfoDiags...)
+	updateVisibilityInfo, updateVisibilityInfoDiags := r.ToSharedUpdateVisibilityInfo(ctx)
+	diags.Append(updateVisibilityInfoDiags...)
 
 	if diags.HasError() {
 		return nil, diags
@@ -779,8 +781,8 @@ func (r *ResourceResourceModel) ToOperationsUpdateResourceVisibilityRequest(ctx 
 	id = r.ID.ValueString()
 
 	out := operations.UpdateResourceVisibilityRequest{
-		VisibilityInfo: *visibilityInfo,
-		ID:             id,
+		UpdateVisibilityInfo: *updateVisibilityInfo,
+		ID:                   id,
 	}
 
 	return &out, diags
@@ -1779,6 +1781,12 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 	} else {
 		adminOwnerID = nil
 	}
+	configurationTemplateID := new(string)
+	if !r.ConfigurationTemplateID.IsUnknown() && !r.ConfigurationTemplateID.IsNull() {
+		*configurationTemplateID = r.ConfigurationTemplateID.ValueString()
+	} else {
+		configurationTemplateID = nil
+	}
 	customRequestNotification := new(string)
 	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
 		*customRequestNotification = r.CustomRequestNotification.ValueString()
@@ -1977,6 +1985,7 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 	}
 	out := shared.UpdateResourceInfo{
 		AdminOwnerID:                adminOwnerID,
+		ConfigurationTemplateID:     configurationTemplateID,
 		CustomRequestNotification:   customRequestNotification,
 		Description:                 description,
 		ExtensionsDurationInMinutes: extensionsDurationInMinutes,
@@ -2012,15 +2021,20 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfoList(ctx context.Conte
 	return &out, diags
 }
 
-func (r *ResourceResourceModel) ToSharedVisibilityInfo(ctx context.Context) (*shared.VisibilityInfo, diag.Diagnostics) {
+func (r *ResourceResourceModel) ToSharedUpdateVisibilityInfo(ctx context.Context) (*shared.UpdateVisibilityInfo, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	visibility := shared.VisibilityTypeEnum(r.Visibility.ValueString())
+	visibility := new(shared.VisibilityTypeEnum)
+	if !r.Visibility.IsUnknown() && !r.Visibility.IsNull() {
+		*visibility = shared.VisibilityTypeEnum(r.Visibility.ValueString())
+	} else {
+		visibility = nil
+	}
 	visibilityGroupIds := make([]string, 0, len(r.VisibilityGroupIds))
 	for visibilityGroupIdsIndex := range r.VisibilityGroupIds {
 		visibilityGroupIds = append(visibilityGroupIds, r.VisibilityGroupIds[visibilityGroupIdsIndex].ValueString())
 	}
-	out := shared.VisibilityInfo{
+	out := shared.UpdateVisibilityInfo{
 		Visibility:         visibility,
 		VisibilityGroupIds: visibilityGroupIds,
 	}

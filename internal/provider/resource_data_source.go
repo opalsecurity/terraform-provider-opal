@@ -33,6 +33,7 @@ type ResourceDataSourceModel struct {
 	AdminOwnerID                types.String                            `tfsdk:"admin_owner_id"`
 	AncestorResourceIds         []types.String                          `tfsdk:"ancestor_resource_ids"`
 	AppID                       types.String                            `tfsdk:"app_id"`
+	ConfigurationTemplateID     types.String                            `tfsdk:"configuration_template_id"`
 	CustomRequestNotification   types.String                            `tfsdk:"custom_request_notification"`
 	DescendantResourceIds       []types.String                          `tfsdk:"descendant_resource_ids"`
 	Description                 types.String                            `tfsdk:"description"`
@@ -76,6 +77,10 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"app_id": schema.StringAttribute{
 				Computed:    true,
 				Description: `The ID of the app.`,
+			},
+			"configuration_template_id": schema.StringAttribute{
+				Computed:    true,
+				Description: `The ID of the associated configuration template.`,
 			},
 			"custom_request_notification": schema.StringAttribute{
 				Computed:    true,
