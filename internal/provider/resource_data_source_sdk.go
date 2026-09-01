@@ -289,6 +289,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.GcpBigQueryTable.ProjectID = types.StringValue(resp.RemoteInfo.GcpBigQueryTable.ProjectID)
 				r.RemoteInfo.GcpBigQueryTable.TableID = types.StringValue(resp.RemoteInfo.GcpBigQueryTable.TableID)
 			}
+			if resp.RemoteInfo.GcpBillingAccount == nil {
+				r.RemoteInfo.GcpBillingAccount = nil
+			} else {
+				r.RemoteInfo.GcpBillingAccount = &tfTypes.GcpBillingAccount{}
+				r.RemoteInfo.GcpBillingAccount.BillingAccountID = types.StringValue(resp.RemoteInfo.GcpBillingAccount.BillingAccountID)
+			}
 			if resp.RemoteInfo.GcpBucket == nil {
 				r.RemoteInfo.GcpBucket = nil
 			} else {
