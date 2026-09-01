@@ -676,6 +676,7 @@ actions:
     update:
       x-speakeasy-entity-operation:
         - Resource#get#2
+        - Resource#create#4
         - ResourceVisibility#get
   - target: $["paths"]["/resources/{resource_id}/visibility"]["put"]["operationId"]
     update: updateResourceVisibility

@@ -3549,6 +3549,7 @@ paths:
       x-speakeasy-name-override: get_visibility
       x-speakeasy-entity-operation:
         - Resource#get#2
+        - Resource#create#4
         - ResourceVisibility#get
     put:
       description: Sets the visibility of this resource.
