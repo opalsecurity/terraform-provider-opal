@@ -16,6 +16,7 @@ Resource Resource
 resource "opal_resource" "my_resource" {
   admin_owner_id                 = "7c86c85d-0651-43e2-a748-d69d658418e8"
   app_id                         = "f454d283-ca87-4a8a-bdbb-df212eca5353"
+  configuration_template_id      = "06851574-e50d-40ca-8c78-f72ae6ab4304"
   custom_request_notification    = "Check your email to register your account."
   description                    = "Engineering team Okta role."
   extensions_duration_in_minutes = 120
@@ -347,13 +348,12 @@ resource "opal_resource" "my_resource" {
 
 - `app_id` (String) The ID of the app for the resource. Requires replacement if changed.
 - `name` (String) The name of the resource.
-- `request_configurations` (Attributes List) A list of configurations for requests to this resource. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `resource_type` (String) The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE"]; Requires replacement if changed.
-- `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 
 ### Optional
 
 - `admin_owner_id` (String) The ID of the owner of the resource.
+- `configuration_template_id` (String) The ID of the associated configuration template.
 - `custom_request_notification` (String) Custom request notification sent upon request approval.
 - `description` (String) A description of the resource.
 - `extensions_duration_in_minutes` (Number, Deprecated) The duration for which access can be extended (in minutes). Deprecated, set the extension duration in the request_configuration you want it to apply to.
@@ -361,10 +361,12 @@ resource "opal_resource" "my_resource" {
 - `match_remote_name` (Boolean) A bool representing whether or not the resource's name should be synced from the end system. When true, the name is overwritten with the remote name on each sync, so a `name` provided together with this field set to true will be replaced at the next sync. If not provided, the current value is left unchanged.
 - `parent_resource_id` (String) The ID of the parent resource.
 - `remote_info` (Attributes) Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info))
+- `request_configurations` (Attributes List) A list of configurations for requests to this resource. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this resource. Default: false
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to this resource.
 - `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
 - `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--ticket_propagation))
+- `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 - `visibility_group_ids` (Set of String) Default: []
 
 ### Read-Only
@@ -374,45 +376,6 @@ resource "opal_resource" "my_resource" {
 - `id` (String) The ID of the resource.
 - `last_successful_sync` (Attributes) Information about the last successful sync of this resource. (see [below for nested schema](#nestedatt--last_successful_sync))
 - `risk_sensitivity` (String) The risk sensitivity level for the resource. When an override is set, this field will match that.
-
-<a id="nestedatt--request_configurations"></a>
-### Nested Schema for `request_configurations`
-
-Optional:
-
-- `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource. Not Null
-- `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource. Not Null
-- `condition` (Attributes) The condition for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--condition))
-- `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
-- `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
-- `priority` (Number) The priority of the request configuration. Not Null
-- `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
-- `request_template_id` (String) The ID of the associated request template.
-- `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this resource. Not Null
-- `require_support_ticket` (Boolean) A bool representing whether or not access requests to the resource require an access ticket. Not Null
-- `reviewer_stages` (Attributes List) The list of reviewer stages for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages))
-
-<a id="nestedatt--request_configurations--condition"></a>
-### Nested Schema for `request_configurations.condition`
-
-Optional:
-
-- `group_ids` (Set of String) The list of group IDs to match. Default: []
-- `role_remote_ids` (Set of String) The list of role remote IDs to match. Default: []
-
-
-<a id="nestedatt--request_configurations--reviewer_stages"></a>
-### Nested Schema for `request_configurations.reviewer_stages`
-
-Optional:
-
-- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. Default: "AND"; must be one of ["AND", "OR"]
-- `owner_ids` (Set of String) The IDs of owners assigned as reviewers for this stage. Not Null
-- `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval. Default: false
-- `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval. Default: false
-- `service_user_ids` (List of String) The IDs of service users assigned as reviewers for this stage.
-
-
 
 <a id="nestedatt--remote_info"></a>
 ### Nested Schema for `remote_info`
@@ -1144,6 +1107,45 @@ Optional:
 Optional:
 
 - `role_id` (String) The ID of the Zoom role. Not Null; Requires replacement if changed.
+
+
+
+<a id="nestedatt--request_configurations"></a>
+### Nested Schema for `request_configurations`
+
+Optional:
+
+- `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource. Not Null
+- `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource. Not Null
+- `condition` (Attributes) The condition for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--condition))
+- `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
+- `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
+- `priority` (Number) The priority of the request configuration. Not Null
+- `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
+- `request_template_id` (String) The ID of the associated request template.
+- `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this resource. Not Null
+- `require_support_ticket` (Boolean) A bool representing whether or not access requests to the resource require an access ticket. Not Null
+- `reviewer_stages` (Attributes List) The list of reviewer stages for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages))
+
+<a id="nestedatt--request_configurations--condition"></a>
+### Nested Schema for `request_configurations.condition`
+
+Optional:
+
+- `group_ids` (Set of String) The list of group IDs to match. Default: []
+- `role_remote_ids` (Set of String) The list of role remote IDs to match. Default: []
+
+
+<a id="nestedatt--request_configurations--reviewer_stages"></a>
+### Nested Schema for `request_configurations.reviewer_stages`
+
+Optional:
+
+- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. Default: "AND"; must be one of ["AND", "OR"]
+- `owner_ids` (Set of String) The IDs of owners assigned as reviewers for this stage. Not Null
+- `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval. Default: false
+- `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval. Default: false
+- `service_user_ids` (List of String) The IDs of service users assigned as reviewers for this stage.
 
 
 
