@@ -215,7 +215,7 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 						},
 						"configuration_template_id": schema.StringAttribute{
 							Computed:    true,
-							Description: `The ID of the associated configuration template.`,
+							Description: `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
 						},
 						"custom_request_notification": schema.StringAttribute{
 							Computed:    true,

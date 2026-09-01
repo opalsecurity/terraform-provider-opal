@@ -3537,7 +3537,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/VisibilityInfo"
+                allOf:
+                  - $ref: "#/components/schemas/VisibilityInfo"
           description: The visibility info of this resource.
         "404":
           description: Not Found
@@ -3546,7 +3547,9 @@ paths:
       tags:
         - resources
       x-speakeasy-name-override: get_visibility
-      x-speakeasy-entity-operation: ResourceVisibility#get
+      x-speakeasy-entity-operation:
+        - Resource#get#2
+        - ResourceVisibility#get
     put:
       description: Sets the visibility of this resource.
       operationId: updateResourceVisibility

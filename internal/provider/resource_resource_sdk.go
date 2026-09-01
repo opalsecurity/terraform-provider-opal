@@ -13,6 +13,20 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
 )
 
+func (r *ResourceResourceModel) RefreshFromOperationsGetResourceVisibilityResponseBody(ctx context.Context, resp *operations.GetResourceVisibilityResponseBody) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.Visibility = types.StringValue(string(resp.Visibility))
+		r.VisibilityGroupIds = make([]types.String, 0, len(resp.VisibilityGroupIds))
+		for _, v := range resp.VisibilityGroupIds {
+			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
+		}
+	}
+
+	return diags
+}
+
 func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, resp *shared.Resource) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -761,6 +775,19 @@ func (r *ResourceResourceModel) ToOperationsGetResourceIDRequest(ctx context.Con
 	id = r.ID.ValueString()
 
 	out := operations.GetResourceIDRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *ResourceResourceModel) ToOperationsGetResourceVisibilityRequest(ctx context.Context) (*operations.GetResourceVisibilityRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetResourceVisibilityRequest{
 		ID: id,
 	}
 

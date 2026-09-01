@@ -353,7 +353,7 @@ resource "opal_resource" "my_resource" {
 ### Optional
 
 - `admin_owner_id` (String) The ID of the owner of the resource.
-- `configuration_template_id` (String) The ID of the associated configuration template.
+- `configuration_template_id` (String) The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
 - `custom_request_notification` (String) Custom request notification sent upon request approval.
 - `description` (String) A description of the resource.
 - `extensions_duration_in_minutes` (Number, Deprecated) The duration for which access can be extended (in minutes). Deprecated, set the extension duration in the request_configuration you want it to apply to.

@@ -30,7 +30,7 @@ data "opal_resource" "my_resource" {
 - `admin_owner_id` (String) The ID of the owner of the resource.
 - `ancestor_resource_ids` (List of String) List of resource IDs that are ancestors of this resource.
 - `app_id` (String) The ID of the app.
-- `configuration_template_id` (String) The ID of the associated configuration template.
+- `configuration_template_id` (String) The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
 - `custom_request_notification` (String) Custom request notification sent upon request approval.
 - `descendant_resource_ids` (List of String) List of resource IDs that are descendants of this resource.
 - `description` (String) A description of the resource.
@@ -48,6 +48,8 @@ data "opal_resource" "my_resource" {
 - `risk_sensitivity` (String) The risk sensitivity level for the resource. When an override is set, this field will match that.
 - `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur.
 - `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--ticket_propagation))
+- `visibility` (String) The visibility level of the entity.
+- `visibility_group_ids` (Set of String)
 
 <a id="nestedatt--last_successful_sync"></a>
 ### Nested Schema for `last_successful_sync`

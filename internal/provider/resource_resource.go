@@ -118,7 +118,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 			"configuration_template_id": schema.StringAttribute{
 				Computed:    true,
 				Optional:    true,
-				Description: `The ID of the associated configuration template.`,
+				Description: `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
 				Validators: []validator.String{
 					custom_stringvalidators.ResourceConfigurationTemplateID(),
 				},
@@ -2790,6 +2790,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Description: `Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.`,
 			},
 			"visibility": schema.StringAttribute{
+				Computed:    true,
 				Optional:    true,
 				Description: `The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]`,
 				Validators: []validator.String{
@@ -2800,9 +2801,12 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				},
 			},
 			"visibility_group_ids": schema.SetAttribute{
-				Computed:    true,
-				Optional:    true,
-				Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
+				Computed: true,
+				Optional: true,
+				Default:  setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
+				PlanModifiers: []planmodifier.Set{
+					speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
+				},
 				ElementType: types.StringType,
 				Description: `Default: []`,
 			},
@@ -3008,6 +3012,41 @@ func (r *ResourceResource) Read(ctx context.Context, req resource.ReadRequest, r
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	request1, request1Diags := data.ToOperationsGetResourceVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res1, err := r.client.Resources.GetVisibility(ctx, *request1)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res1 != nil && res1.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+		}
+		return
+	}
+	if res1 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
+		return
+	}
+	if res1.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
+		return
+	}
+	if res1.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
+		return
+	}
+	if !(res1.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetResourceVisibilityResponseBody(ctx, res1.Object)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -3119,6 +3158,43 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 		return
 	}
 	resp.Diagnostics.Append(data.RefreshFromSharedResource(ctx, res2.Resource)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request3, request3Diags := data.ToOperationsGetResourceVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request3Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res3, err := r.client.Resources.GetVisibility(ctx, *request3)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		if res3 != nil && res3.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res3.RawResponse))
+		}
+		return
+	}
+	if res3 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res3))
+		return
+	}
+	if res3.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res3.StatusCode), debugResponse(res3.RawResponse))
+		return
+	}
+	if !(res3.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res3.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetResourceVisibilityResponseBody(ctx, res3.Object)...)
 
 	if resp.Diagnostics.HasError() {
 		return
