@@ -8,11 +8,19 @@ import (
 
 // ResourceConfigurationTemplateID prevents configurations that the API rejects
 // when a resource is attached to a configuration template.
+//
+// Visibility stays required for untemplated resources (the previous schema
+// marked it required). ExactlyOneOf with visibility restores that without
+// forcing a value that the template would ignore.
 func ResourceConfigurationTemplateID() validator.String {
 	return stringvalidator.All(
 		stringvalidator.ExactlyOneOf(
 			path.MatchRoot("configuration_template_id"),
 			path.MatchRoot("request_configurations"),
+		),
+		stringvalidator.ExactlyOneOf(
+			path.MatchRoot("configuration_template_id"),
+			path.MatchRoot("visibility"),
 		),
 		stringvalidator.ConflictsWith(
 			path.MatchRoot("admin_owner_id"),
@@ -21,6 +29,7 @@ func ResourceConfigurationTemplateID() validator.String {
 			path.MatchRoot("ticket_propagation"),
 			path.MatchRoot("custom_request_notification"),
 			path.MatchRoot("extensions_duration_in_minutes"),
+			path.MatchRoot("visibility_group_ids"),
 		),
 	)
 }

@@ -9347,7 +9347,7 @@ components:
       x-speakeasy-plan-validators:
         - VisibilityInfo
     UpdateVisibilityInfo:
-      description: Visibility information to set on a group or resource. When the entity is linked to a configuration template, the template governs visibility, so `visibility` must be omitted and `configuration_template_id` set instead.
+      description: Visibility information to set on a group or resource. Unlike VisibilityInfo, `visibility` is not required here so a Terraform configuration can omit it when attaching a configuration template. Untemplated groups and resources still require `visibility`. When `configuration_template_id` is set, the template governs visibility; omit `visibility` and `visibility_group_ids` rather than setting them alongside the template.
       example:
         visibility: LIMITED
         visibility_group_ids:

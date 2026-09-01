@@ -15,21 +15,13 @@ var (
 	_ resource.ResourceWithModifyPlan = &ResourceResource{}
 )
 
-// Attributes the API accepts only while an entity is unlinked. The conflicts
-// that apply at configuration time live in the GroupConfigurationTemplateID and
-// ResourceConfigurationTemplateID validators; these attributes cannot go there
-// because they are defined in schemas shared with other entities, so a
-// conflict declared on them would leak to unrelated resources.
+// message_channel_ids and on_call_schedule_ids live in schemas shared with
+// other entities, so they cannot be added to GroupConfigurationTemplateID
+// without leaking the conflict. Visibility and visibility_group_ids are
+// enforced there instead.
 var groupConfigurationTemplateLinkedOnlyUpdates = []string{
 	"message_channel_ids",
 	"on_call_schedule_ids",
-	"visibility",
-	"visibility_group_ids",
-}
-
-var resourceConfigurationTemplateLinkedOnlyUpdates = []string{
-	"visibility",
-	"visibility_group_ids",
 }
 
 func (r *GroupResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
@@ -37,7 +29,7 @@ func (r *GroupResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanR
 }
 
 func (r *ResourceResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
-	validateConfigurationTemplatePlan(ctx, req, resp, resourceConfigurationTemplateLinkedOnlyUpdates)
+	validateConfigurationTemplatePlan(ctx, req, resp, nil)
 }
 
 func validateConfigurationTemplatePlan(
