@@ -9,16 +9,16 @@ import (
 )
 
 type UpdateResourceVisibilityRequest struct {
-	VisibilityInfo shared.VisibilityInfo `request:"mediaType=application/json"`
+	UpdateVisibilityInfo shared.UpdateVisibilityInfo `request:"mediaType=application/json"`
 	// The ID of the resource.
 	ID string `pathParam:"style=simple,explode=false,name=resource_id"`
 }
 
-func (u *UpdateResourceVisibilityRequest) GetVisibilityInfo() shared.VisibilityInfo {
+func (u *UpdateResourceVisibilityRequest) GetUpdateVisibilityInfo() shared.UpdateVisibilityInfo {
 	if u == nil {
-		return shared.VisibilityInfo{}
+		return shared.UpdateVisibilityInfo{}
 	}
-	return u.VisibilityInfo
+	return u.UpdateVisibilityInfo
 }
 
 func (u *UpdateResourceVisibilityRequest) GetID() string {

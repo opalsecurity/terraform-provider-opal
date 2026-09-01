@@ -98,6 +98,7 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 	if resp != nil {
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 		r.AppID = types.StringPointerValue(resp.AppID)
+		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.Description = types.StringPointerValue(resp.Description)
 		r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)
@@ -412,6 +413,7 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(ctx context.Contex
 	var diags diag.Diagnostics
 
 	r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
+	r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
 	r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 	r.Description = types.StringPointerValue(resp.Description)
 	r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)
@@ -616,8 +618,8 @@ func (r *GroupResourceModel) ToOperationsUpdateGroupOnCallSchedulesRequest(ctx c
 func (r *GroupResourceModel) ToOperationsUpdateGroupVisibilityRequest(ctx context.Context) (*operations.UpdateGroupVisibilityRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	visibilityInfo, visibilityInfoDiags := r.ToSharedVisibilityInfo(ctx)
-	diags.Append(visibilityInfoDiags...)
+	updateVisibilityInfo, updateVisibilityInfoDiags := r.ToSharedUpdateVisibilityInfo(ctx)
+	diags.Append(updateVisibilityInfoDiags...)
 
 	if diags.HasError() {
 		return nil, diags
@@ -627,8 +629,8 @@ func (r *GroupResourceModel) ToOperationsUpdateGroupVisibilityRequest(ctx contex
 	id = r.ID.ValueString()
 
 	out := operations.UpdateGroupVisibilityRequest{
-		VisibilityInfo: *visibilityInfo,
-		ID:             id,
+		UpdateVisibilityInfo: *updateVisibilityInfo,
+		ID:                   id,
 	}
 
 	return &out, diags
@@ -1088,6 +1090,12 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 	} else {
 		adminOwnerID = nil
 	}
+	configurationTemplateID := new(string)
+	if !r.ConfigurationTemplateID.IsUnknown() && !r.ConfigurationTemplateID.IsNull() {
+		*configurationTemplateID = r.ConfigurationTemplateID.ValueString()
+	} else {
+		configurationTemplateID = nil
+	}
 	customRequestNotification := new(string)
 	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
 		*customRequestNotification = r.CustomRequestNotification.ValueString()
@@ -1251,6 +1259,7 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 	}
 	out := shared.UpdateGroupInfo{
 		AdminOwnerID:                adminOwnerID,
+		ConfigurationTemplateID:     configurationTemplateID,
 		CustomRequestNotification:   customRequestNotification,
 		Description:                 description,
 		ExtensionsDurationInMinutes: extensionsDurationInMinutes,
@@ -1284,15 +1293,20 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfoList(ctx context.Context) (*
 	return &out, diags
 }
 
-func (r *GroupResourceModel) ToSharedVisibilityInfo(ctx context.Context) (*shared.VisibilityInfo, diag.Diagnostics) {
+func (r *GroupResourceModel) ToSharedUpdateVisibilityInfo(ctx context.Context) (*shared.UpdateVisibilityInfo, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	visibility := shared.VisibilityTypeEnum(r.Visibility.ValueString())
+	visibility := new(shared.VisibilityTypeEnum)
+	if !r.Visibility.IsUnknown() && !r.Visibility.IsNull() {
+		*visibility = shared.VisibilityTypeEnum(r.Visibility.ValueString())
+	} else {
+		visibility = nil
+	}
 	visibilityGroupIds := make([]string, 0, len(r.VisibilityGroupIds))
 	for visibilityGroupIdsIndex := range r.VisibilityGroupIds {
 		visibilityGroupIds = append(visibilityGroupIds, r.VisibilityGroupIds[visibilityGroupIdsIndex].ValueString())
 	}
-	out := shared.VisibilityInfo{
+	out := shared.UpdateVisibilityInfo{
 		Visibility:         visibility,
 		VisibilityGroupIds: visibilityGroupIds,
 	}

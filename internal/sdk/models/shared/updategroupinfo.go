@@ -13,6 +13,8 @@ import (
 type UpdateGroupInfo struct {
 	// The ID of the owner of the group.
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
+	// The ID of the associated configuration template.
+	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
 	// Custom request notification sent to the requester when the request is approved.
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the group.
@@ -32,7 +34,7 @@ type UpdateGroupInfo struct {
 	// The name of the group.
 	Name *string `json:"name,omitempty"`
 	// The request configuration list of the configuration template. If not provided, the default request configuration will be used.
-	RequestConfigurations []RequestConfiguration `json:"request_configurations"`
+	RequestConfigurations []RequestConfiguration `json:"request_configurations,omitempty"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this group.
 	RequireMfaToApprove     *bool                `default:"false" json:"require_mfa_to_approve"`
 	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
@@ -54,6 +56,13 @@ func (u *UpdateGroupInfo) GetAdminOwnerID() *string {
 		return nil
 	}
 	return u.AdminOwnerID
+}
+
+func (u *UpdateGroupInfo) GetConfigurationTemplateID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.ConfigurationTemplateID
 }
 
 func (u *UpdateGroupInfo) GetCustomRequestNotification() *string {
@@ -114,7 +123,7 @@ func (u *UpdateGroupInfo) GetName() *string {
 
 func (u *UpdateGroupInfo) GetRequestConfigurations() []RequestConfiguration {
 	if u == nil {
-		return []RequestConfiguration{}
+		return nil
 	}
 	return u.RequestConfigurations
 }
