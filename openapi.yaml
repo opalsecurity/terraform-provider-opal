@@ -8442,7 +8442,7 @@ components:
           type: string
           x-speakeasy-ignore: true
         configuration_template_id:
-          description: The ID of the associated configuration template.
+          description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
@@ -8785,7 +8785,7 @@ components:
           deprecated: true
           x-speakeasy-ignore: true
         configuration_template_id:
-          description: The ID of the associated configuration template.
+          description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
@@ -12042,7 +12042,7 @@ components:
           type: string
           x-speakeasy-param-suppress-computed-diff: true
         configuration_template_id:
-          description: The ID of the associated configuration template.
+          description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
@@ -12280,7 +12280,7 @@ components:
           example: False
           type: boolean
         configuration_template_id:
-          description: The ID of the associated configuration template.
+          description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string

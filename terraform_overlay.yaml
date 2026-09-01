@@ -1259,6 +1259,7 @@ actions:
       x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["Group"]["properties"]["configuration_template_id"]
     update:
+      description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
       x-speakeasy-plan-validators: GroupConfigurationTemplateID
   - target: $["components"]["schemas"]["Group"]["properties"]["match_remote_description"]
     update:
@@ -1360,6 +1361,7 @@ actions:
       x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["configuration_template_id"]
     update:
+      description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
       x-speakeasy-plan-validators: GroupConfigurationTemplateID
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["is_requestable"]
     update:
@@ -1873,6 +1875,7 @@ actions:
       x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["configuration_template_id"]
     update:
+      description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
       x-speakeasy-plan-validators: ResourceConfigurationTemplateID
   - target: $["components"]["schemas"]["Resource"]["properties"]["match_remote_description"]
     update:
@@ -1977,6 +1980,7 @@ actions:
       x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["configuration_template_id"]
     update:
+      description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
       x-speakeasy-plan-validators: ResourceConfigurationTemplateID
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["is_requestable"]
     update:
