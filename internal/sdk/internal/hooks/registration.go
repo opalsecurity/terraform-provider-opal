@@ -10,8 +10,8 @@ package hooks
 
 func initHooks(h *Hooks) {
 	configurationTemplateHook := &configurationTemplateUpdateHook{}
+	h.registerSDKInitHook(configurationTemplateHook)
 	h.registerBeforeRequestHook(configurationTemplateHook)
-	h.registerAfterErrorHook(configurationTemplateHook)
 
 	// exampleHook := &ExampleHook{}
 	// h.registerBeforeRequestHook(exampleHook)

@@ -1259,12 +1259,7 @@ actions:
       x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["Group"]["properties"]["configuration_template_id"]
     update:
-      x-speakeasy-xor-with:
-        - ../request_configurations
-      x-speakeasy-conflicts-with:
-        - ../admin_owner_id
-        - ../require_mfa_to_approve
-        - ../custom_request_notification
+      x-speakeasy-plan-validators: GroupConfigurationTemplateID
   - target: $["components"]["schemas"]["Group"]["properties"]["match_remote_description"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
@@ -1365,12 +1360,7 @@ actions:
       x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["configuration_template_id"]
     update:
-      x-speakeasy-xor-with:
-        - ../request_configurations
-      x-speakeasy-conflicts-with:
-        - ../admin_owner_id
-        - ../require_mfa_to_approve
-        - ../custom_request_notification
+      x-speakeasy-plan-validators: GroupConfigurationTemplateID
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["is_requestable"]
     update:
       x-speakeasy-ignore: true
@@ -1469,8 +1459,6 @@ actions:
         properties:
           visibility:
             $ref: "#/components/schemas/VisibilityTypeEnum"
-            x-speakeasy-xor-with:
-              - ../configuration_template_id
             x-speakeasy-param-suppress-computed-diff: true
           visibility_group_ids:
             items:
@@ -1480,8 +1468,6 @@ actions:
             format: set
             default: []
             x-speakeasy-param-suppress-computed-diff: true
-            x-speakeasy-conflicts-with:
-              - ../configuration_template_id
         type: object
   - target: $["components"]["schemas"]["MessageChannelIDList"]["properties"]["message_channel_ids"]
     update:
@@ -1887,14 +1873,7 @@ actions:
       x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["configuration_template_id"]
     update:
-      x-speakeasy-xor-with:
-        - ../request_configurations
-      x-speakeasy-conflicts-with:
-        - ../admin_owner_id
-        - ../require_mfa_to_approve
-        - ../require_mfa_to_connect
-        - ../ticket_propagation
-        - ../custom_request_notification
+      x-speakeasy-plan-validators: ResourceConfigurationTemplateID
   - target: $["components"]["schemas"]["Resource"]["properties"]["match_remote_description"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
@@ -1998,14 +1977,7 @@ actions:
       x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["configuration_template_id"]
     update:
-      x-speakeasy-xor-with:
-        - ../request_configurations
-      x-speakeasy-conflicts-with:
-        - ../admin_owner_id
-        - ../require_mfa_to_approve
-        - ../require_mfa_to_connect
-        - ../ticket_propagation
-        - ../custom_request_notification
+      x-speakeasy-plan-validators: ResourceConfigurationTemplateID
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["is_requestable"]
     update:
       x-speakeasy-ignore: true

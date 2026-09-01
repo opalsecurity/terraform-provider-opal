@@ -8446,12 +8446,7 @@ components:
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
-          x-speakeasy-xor-with:
-            - ../request_configurations
-          x-speakeasy-conflicts-with:
-            - ../admin_owner_id
-            - ../require_mfa_to_approve
-            - ../custom_request_notification
+          x-speakeasy-plan-validators: GroupConfigurationTemplateID
         group_binding_id:
           description: The ID of the associated group binding.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -8794,12 +8789,7 @@ components:
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
-          x-speakeasy-xor-with:
-            - ../request_configurations
-          x-speakeasy-conflicts-with:
-            - ../admin_owner_id
-            - ../require_mfa_to_approve
-            - ../custom_request_notification
+          x-speakeasy-plan-validators: GroupConfigurationTemplateID
         request_template_id:
           description: The ID of the associated request template. Deprecated in favor of `request_configurations`.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -9366,8 +9356,6 @@ components:
       properties:
         visibility:
           $ref: "#/components/schemas/VisibilityTypeEnum"
-          x-speakeasy-xor-with:
-            - ../configuration_template_id
           x-speakeasy-param-suppress-computed-diff: true
         visibility_group_ids:
           items:
@@ -9377,8 +9365,6 @@ components:
           format: set
           default: []
           x-speakeasy-param-suppress-computed-diff: true
-          x-speakeasy-conflicts-with:
-            - ../configuration_template_id
       type: object
     MessageChannelIDList:
       description: A list of message channel IDs.
@@ -12060,14 +12046,7 @@ components:
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
-          x-speakeasy-xor-with:
-            - ../request_configurations
-          x-speakeasy-conflicts-with:
-            - ../admin_owner_id
-            - ../require_mfa_to_approve
-            - ../require_mfa_to_connect
-            - ../ticket_propagation
-            - ../custom_request_notification
+          x-speakeasy-plan-validators: ResourceConfigurationTemplateID
         request_configurations:
           type: array
           items:
@@ -12305,14 +12284,7 @@ components:
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
-          x-speakeasy-xor-with:
-            - ../request_configurations
-          x-speakeasy-conflicts-with:
-            - ../admin_owner_id
-            - ../require_mfa_to_approve
-            - ../require_mfa_to_connect
-            - ../ticket_propagation
-            - ../custom_request_notification
+          x-speakeasy-plan-validators: ResourceConfigurationTemplateID
         request_template_id:
           description: The ID of the associated request template. Deprecated in favor of `request_configurations`.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304

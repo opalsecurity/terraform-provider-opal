@@ -9,6 +9,12 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+type roundTripFunc func(*http.Request) (*http.Response, error)
+
+func (f roundTripFunc) Do(req *http.Request) (*http.Response, error) {
+	return f(req)
+}
+
 func TestConfigurationTemplateUpdateHook(t *testing.T) {
 	t.Parallel()
 
@@ -19,16 +25,16 @@ func TestConfigurationTemplateUpdateHook(t *testing.T) {
 		wantBody    string
 	}{
 		{
-			name:        "group attach sends REST-compatible minimal update",
+			name:        "group attach removes template-owned fields",
 			operationID: "updateGroups",
 			body:        `{"groups":[{"group_id":"group-id","configuration_template_id":"template-id","admin_owner_id":"owner-id","custom_request_notification":"message","request_configurations":[],"require_mfa_to_approve":false,"name":"Engineering"}]}`,
-			wantBody:    `{"groups":[{"configuration_template_id":"template-id","group_id":"group-id"}]}`,
+			wantBody:    `{"groups":[{"configuration_template_id":"template-id","group_id":"group-id","name":"Engineering"}]}`,
 		},
 		{
-			name:        "resource attach sends REST-compatible minimal update",
+			name:        "resource attach removes template-owned fields",
 			operationID: "updateResources",
 			body:        `{"resources":[{"resource_id":"resource-id","configuration_template_id":"template-id","admin_owner_id":"owner-id","custom_request_notification":"message","description":"Production repository","match_remote_name":false,"request_configurations":[],"require_mfa_to_approve":false,"require_mfa_to_connect":false,"ticket_propagation":{"enabled_on_grant":true},"name":"Production"}]}`,
-			wantBody:    `{"resources":[{"configuration_template_id":"template-id","resource_id":"resource-id"}]}`,
+			wantBody:    `{"resources":[{"configuration_template_id":"template-id","description":"Production repository","match_remote_name":false,"name":"Production","resource_id":"resource-id"}]}`,
 		},
 		{
 			name:        "ordinary update is unchanged",
@@ -76,99 +82,60 @@ func TestConfigurationTemplateUpdateHook(t *testing.T) {
 	}
 }
 
-func TestConfigurationTemplateUpdateHookSuppressesBlockedFollowUp(t *testing.T) {
+func TestConfigurationTemplateUpdateHookSkipsFollowUpsAfterSuccessfulAttach(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct {
-		name        string
-		operationID string
-		statusCode  int
-		body        string
-		wantStatus  int
-	}{
-		{
-			name:        "linked resource visibility update",
-			operationID: "updateResourceVisibility",
-			statusCode:  http.StatusBadRequest,
-			body:        `{"detail":"Cannot use API to update resources linked to configuration templates"}`,
-			wantStatus:  http.StatusOK,
-		},
-		{
-			name:        "linked group message channel update",
-			operationID: "updateGroupMessageChannels",
-			statusCode:  http.StatusBadRequest,
-			body:        `{"detail":"Cannot use API to update groups linked to configuration templates"}`,
-			wantStatus:  http.StatusOK,
-		},
-		{
-			name:        "unrelated bad request",
-			operationID: "updateResourceVisibility",
-			statusCode:  http.StatusBadRequest,
-			body:        `{"detail":"invalid visibility"}`,
-			wantStatus:  http.StatusBadRequest,
-		},
-		{
-			name:        "empty visibility level on group visibility update",
-			operationID: "updateGroupVisibility",
-			statusCode:  http.StatusBadRequest,
-			body:        `{"Status":"Bad Request","Message":"Unrecognized visibility level: "}`,
-			wantStatus:  http.StatusOK,
-		},
-		{
-			name:        "empty visibility level on resource visibility update",
-			operationID: "updateResourceVisibility",
-			statusCode:  http.StatusBadRequest,
-			body:        `{"Status":"Bad Request","Message":"Unrecognized visibility level: "}`,
-			wantStatus:  http.StatusOK,
-		},
-		{
-			name:        "non-empty invalid visibility level is a genuine error",
-			operationID: "updateGroupVisibility",
-			statusCode:  http.StatusBadRequest,
-			body:        `{"Status":"Bad Request","Message":"Unrecognized visibility level: FOO"}`,
-			wantStatus:  http.StatusBadRequest,
-		},
-		{
-			name:        "visibility message on non-visibility operation is a genuine error",
-			operationID: "updateGroupMessageChannels",
-			statusCode:  http.StatusBadRequest,
-			body:        `{"Status":"Bad Request","Message":"Unrecognized visibility level: "}`,
-			wantStatus:  http.StatusBadRequest,
-		},
-		{
-			name:        "unrelated operation",
-			operationID: "updateResources",
-			statusCode:  http.StatusBadRequest,
-			body:        `{"detail":"Cannot use API to update resources linked to configuration templates"}`,
-			wantStatus:  http.StatusBadRequest,
-		},
+	requests := 0
+	client := roundTripFunc(func(req *http.Request) (*http.Response, error) {
+		requests++
+		return &http.Response{
+			StatusCode: http.StatusOK,
+			Status:     "200 OK",
+			Header:     make(http.Header),
+			Body:       http.NoBody,
+			Request:    req,
+		}, nil
+	})
+
+	hook := &configurationTemplateUpdateHook{}
+	_, wrapped := hook.SDKInit("https://example.com/v1", client)
+
+	attach, err := http.NewRequest(
+		http.MethodPut,
+		"https://example.com/v1/groups",
+		strings.NewReader(`{"groups":[{"group_id":"group-id","configuration_template_id":"template-id","admin_owner_id":"owner-id"}]}`),
+	)
+	require.NoError(t, err)
+	attach, err = hook.BeforeRequest(BeforeRequestContext{
+		HookContext: HookContext{OperationID: "updateGroups"},
+	}, attach)
+	require.NoError(t, err)
+
+	_, err = wrapped.Do(attach)
+	require.NoError(t, err)
+	require.Equal(t, 1, requests)
+
+	for _, operation := range []string{"message-channels", "on-call-schedules", "visibility"} {
+		followUp, requestErr := http.NewRequest(
+			http.MethodPut,
+			"https://example.com/v1/groups/group-id/"+operation,
+			http.NoBody,
+		)
+		require.NoError(t, requestErr)
+
+		res, requestErr := wrapped.Do(followUp)
+		require.NoError(t, requestErr)
+		require.Equal(t, http.StatusOK, res.StatusCode)
+		require.Equal(t, 1, requests, operation+" should not reach the API")
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			t.Parallel()
-
-			hook := &configurationTemplateUpdateHook{}
-			res := &http.Response{
-				StatusCode: test.statusCode,
-				Status:     http.StatusText(test.statusCode),
-				Header:     make(http.Header),
-				Body:       io.NopCloser(strings.NewReader(test.body)),
-			}
-
-			got, err := hook.AfterError(AfterErrorContext{
-				HookContext: HookContext{OperationID: test.operationID},
-			}, res, nil)
-			require.NoError(t, err)
-			require.Equal(t, test.wantStatus, got.StatusCode)
-
-			if test.wantStatus == http.StatusOK {
-				require.Equal(t, http.NoBody, got.Body)
-			} else {
-				gotBody, readErr := io.ReadAll(got.Body)
-				require.NoError(t, readErr)
-				require.JSONEq(t, test.body, string(gotBody))
-			}
-		})
-	}
+	unrelated, err := http.NewRequest(
+		http.MethodPut,
+		"https://example.com/v1/groups/other-group/visibility",
+		http.NoBody,
+	)
+	require.NoError(t, err)
+	_, err = wrapped.Do(unrelated)
+	require.NoError(t, err)
+	require.Equal(t, 2, requests)
 }

@@ -4,12 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/operations"
 )
 
 var (
@@ -17,30 +15,11 @@ var (
 	_ resource.ResourceWithModifyPlan = &ResourceResource{}
 )
 
-// These attributes are sent through the bulk group/resource update endpoints.
-// The public API rejects changes to them while a configuration template is
-// attached. Attributes managed by dedicated endpoints, such as visibility and
-// group message channels, are intentionally not included.
-var groupConfigurationTemplateRestrictedUpdates = []string{
-	"description",
-	"extensions_duration_in_minutes",
-	"group_leader_user_ids",
-	"match_remote_description",
-	"match_remote_name",
-	"name",
-	"risk_sensitivity_override",
-}
-
-var resourceConfigurationTemplateRestrictedUpdates = []string{
-	"description",
-	"extensions_duration_in_minutes",
-	"match_remote_description",
-	"match_remote_name",
-	"name",
-	"parent_resource_id",
-	"risk_sensitivity_override",
-}
-
+// Attributes the API accepts only while an entity is unlinked. The conflicts
+// that apply at configuration time live in the GroupConfigurationTemplateID and
+// ResourceConfigurationTemplateID validators; these attributes cannot go there
+// because they are defined in schemas shared with other entities, so a
+// conflict declared on them would leak to unrelated resources.
 var groupConfigurationTemplateLinkedOnlyUpdates = []string{
 	"message_channel_ids",
 	"on_call_schedule_ids",
@@ -53,28 +32,18 @@ var resourceConfigurationTemplateLinkedOnlyUpdates = []string{
 	"visibility_group_ids",
 }
 
-func (r *GroupResource) ModifyPlan(_ context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
-	validateConfigurationTemplatePlan(
-		req,
-		resp,
-		groupConfigurationTemplateRestrictedUpdates,
-		groupConfigurationTemplateLinkedOnlyUpdates,
-	)
+func (r *GroupResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
+	validateConfigurationTemplatePlan(ctx, req, resp, groupConfigurationTemplateLinkedOnlyUpdates)
 }
 
-func (r *ResourceResource) ModifyPlan(_ context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
-	validateConfigurationTemplatePlan(
-		req,
-		resp,
-		resourceConfigurationTemplateRestrictedUpdates,
-		resourceConfigurationTemplateLinkedOnlyUpdates,
-	)
+func (r *ResourceResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
+	validateConfigurationTemplatePlan(ctx, req, resp, resourceConfigurationTemplateLinkedOnlyUpdates)
 }
 
 func validateConfigurationTemplatePlan(
+	ctx context.Context,
 	req resource.ModifyPlanRequest,
 	resp *resource.ModifyPlanResponse,
-	restrictedUpdates []string,
 	linkedOnlyUpdates []string,
 ) {
 	// Creation is supported as two REST calls: create the entity, then attach
@@ -108,12 +77,41 @@ func validateConfigurationTemplatePlan(
 		return
 	}
 
-	validateConfiguredChanges(config, state, restrictedUpdates, resp)
-
 	stateTemplateID, stateHasTemplate := state["configuration_template_id"]
 	if stateHasTemplate && stateTemplateID.IsKnown() && !stateTemplateID.IsNull() {
 		validateConfiguredChanges(config, state, linkedOnlyUpdates, resp)
 	}
+
+	preserveTemplateGovernedVisibility(ctx, config, state, resp)
+}
+
+// preserveTemplateGovernedVisibility keeps the prior visibility in the plan when
+// the template governs it. The group's visibility is populated by its read
+// operation, so leaving it unconfigured would otherwise plan as "known after
+// apply" on every run and produce a permanent diff.
+func preserveTemplateGovernedVisibility(
+	ctx context.Context,
+	config map[string]tftypes.Value,
+	state map[string]tftypes.Value,
+	resp *resource.ModifyPlanResponse,
+) {
+	if configured, ok := config["visibility"]; !ok || !configured.IsNull() {
+		return
+	}
+
+	stateValue, ok := state["visibility"]
+	if !ok || !stateValue.IsKnown() || stateValue.IsNull() {
+		return
+	}
+
+	var visibility string
+	if err := stateValue.As(&visibility); err != nil {
+		return
+	}
+
+	resp.Diagnostics.Append(
+		resp.Plan.SetAttribute(ctx, path.Root("visibility"), types.StringValue(visibility))...,
+	)
 }
 
 func validateConfiguredChanges(
@@ -152,35 +150,4 @@ func terraformObjectValues(value tftypes.Value) (map[string]tftypes.Value, error
 		return nil, err
 	}
 	return values, nil
-}
-
-// refreshResourceVisibility keeps the resource state aligned with the
-// dedicated public REST endpoint. The base resource response does not include
-// visibility, which otherwise makes an imported linked resource appear to
-// change visibility on every plan.
-func (r *ResourceResource) refreshResourceVisibility(ctx context.Context, data *ResourceResourceModel) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	res, err := r.client.Resources.GetVisibility(ctx, operations.GetResourceVisibilityRequest{
-		ID: data.ID.ValueString(),
-	})
-	if err != nil {
-		diags.AddError("failure to invoke API", err.Error())
-		if res != nil && res.RawResponse != nil {
-			diags.AddError("unexpected http request/response", debugResponse(res.RawResponse))
-		}
-		return diags
-	}
-	if res == nil || res.StatusCode != 200 || res.VisibilityInfo == nil {
-		diags.AddError("unexpected response from API", "Unable to read resource visibility")
-		return diags
-	}
-
-	data.Visibility = types.StringValue(string(res.VisibilityInfo.Visibility))
-	data.VisibilityGroupIds = make([]types.String, 0, len(res.VisibilityInfo.VisibilityGroupIds))
-	for _, groupID := range res.VisibilityInfo.VisibilityGroupIds {
-		data.VisibilityGroupIds = append(data.VisibilityGroupIds, types.StringValue(groupID))
-	}
-
-	return diags
 }
