@@ -636,6 +636,17 @@ actions:
       x-speakeasy-entity-operation: Resource#delete
   - target: $["paths"]["/resources/{resource_id}/message-channels"]["get"]["operationId"]
     update: getResourceMessageChannels
+  - target: $["paths"]["/resources/{resource_id}/message-channels"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/resources/{resource_id}/message-channels"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]
+    update:
+      allOf:
+        - $ref: "#/components/schemas/MessageChannelList"
+        - x-speakeasy-wrapped-attribute: "message_channels"
+        - x-speakeasy-param-suppress-computed-diff: true
+  - target: $["paths"]["/resources/{resource_id}/message-channels"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]["$ref"]
+    remove: true
   - target: $["paths"]["/resources/{resource_id}/message-channels"]["get"]["responses"]
     update:
       "404":
@@ -645,15 +656,27 @@ actions:
       x-speakeasy-name-override: get_message_channels
   - target: $["paths"]["/resources/{resource_id}/message-channels"]["get"]
     update:
-      x-speakeasy-entity-operation: ResourceMessageChannelList#get
+      x-speakeasy-entity-operation:
+        - Resource#read#2
+        - ResourceMessageChannelList#get
   - target: $["paths"]["/resources/{resource_id}/message-channels"]["put"]["operationId"]
     update: updateResourceMessageChannels
+  - target: $["paths"]["/resources/{resource_id}/message-channels"]["put"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/resources/{resource_id}/message-channels"]["put"]["responses"]["200"]["content"]["application/json"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["paths"]["/resources/{resource_id}/message-channels"]["put"]["responses"]["200"]["content"]["application/json"]["schema"]
+    remove: true
   - target: $["paths"]["/resources/{resource_id}/message-channels"]["put"]
     update:
       x-speakeasy-name-override: update_message_channels
   - target: $["paths"]["/resources/{resource_id}/message-channels"]["put"]
     update:
-      x-speakeasy-entity-operation: ResourceMessageChannels#update
+      x-speakeasy-entity-operation:
+        - Resource#create#4
+        - Resource#update#3
   - target: $["paths"]["/resources/{resource_id}/visibility"]["get"]["operationId"]
     update: getResourceVisibility
   - target: $["paths"]["/resources/{resource_id}/visibility"]["get"]["parameters"][0]
