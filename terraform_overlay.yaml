@@ -319,6 +319,8 @@ actions:
   - target: $["paths"]["/groups/{group_id}/visibility"]["put"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
+  - target: $["paths"]["/groups/{group_id}/visibility"]["put"]["requestBody"]["content"]["application/json"]["schema"]["$ref"]
+    update: "#/components/schemas/UpdateVisibilityInfo"
   - target: $["paths"]["/groups/{group_id}/visibility"]["put"]["responses"]["200"]["content"]["application/json"]
     update:
       x-speakeasy-ignore: true
@@ -657,6 +659,12 @@ actions:
   - target: $["paths"]["/resources/{resource_id}/visibility"]["get"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
+  - target: $["paths"]["/resources/{resource_id}/visibility"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]
+    update:
+      allOf:
+        - $ref: "#/components/schemas/VisibilityInfo"
+  - target: $["paths"]["/resources/{resource_id}/visibility"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]["$ref"]
+    remove: true
   - target: $["paths"]["/resources/{resource_id}/visibility"]["get"]["responses"]
     update:
       "404":
@@ -666,12 +674,17 @@ actions:
       x-speakeasy-name-override: get_visibility
   - target: $["paths"]["/resources/{resource_id}/visibility"]["get"]
     update:
-      x-speakeasy-entity-operation: ResourceVisibility#get
+      x-speakeasy-entity-operation:
+        - Resource#get#2
+        - Resource#create#4
+        - ResourceVisibility#get
   - target: $["paths"]["/resources/{resource_id}/visibility"]["put"]["operationId"]
     update: updateResourceVisibility
   - target: $["paths"]["/resources/{resource_id}/visibility"]["put"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
+  - target: $["paths"]["/resources/{resource_id}/visibility"]["put"]["requestBody"]["content"]["application/json"]["schema"]["$ref"]
+    update: "#/components/schemas/UpdateVisibilityInfo"
   - target: $["paths"]["/resources/{resource_id}/visibility"]["put"]["responses"]["200"]["content"]["application/json"]
     update:
       x-speakeasy-ignore: true
@@ -1247,18 +1260,27 @@ actions:
   - target: $["components"]["schemas"]["Group"]["properties"]["request_template_id"]
     update:
       x-speakeasy-ignore: true
-  - target: $["components"]["schemas"]["Group"]["properties"]["configuration_template_id"]
-    update:
-      x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["Group"]["properties"]["group_binding_id"]
     update:
       x-speakeasy-param-suppress-computed-diff: true # there's no way to set this through this resource in tf
   - target: $["components"]["schemas"]["Group"]["properties"]["is_requestable"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["configuration_template_id"]
+    update:
+      description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+      x-speakeasy-plan-validators: GroupConfigurationTemplateID
+  - target: $["components"]["schemas"]["Group"]["properties"]["match_remote_description"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["match_remote_name"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["Group"]["properties"]["request_configurations"]
     update:
-      minItems: 1
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Group"]["properties"]["request_configurations"]["minItems"]
+    remove: true
   - target: $["components"]["schemas"]["Group"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
@@ -1343,12 +1365,13 @@ actions:
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["auto_approval"]
     update:
       x-speakeasy-ignore: true
-  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["configuration_template_id"]
-    update:
-      x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_template_id"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["configuration_template_id"]
+    update:
+      description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+      x-speakeasy-plan-validators: GroupConfigurationTemplateID
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["is_requestable"]
     update:
       x-speakeasy-ignore: true
@@ -1367,9 +1390,6 @@ actions:
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
-  - target: $["components"]["schemas"]["UpdateGroupInfo"]["required"]
-    update:
-      - request_configurations
   - target: $["components"]["schemas"]["UpdateGroupInfo"]
     update:
       x-speakeasy-entity: Group
@@ -1438,6 +1458,28 @@ actions:
     update:
       x-speakeasy-plan-validators:
         - VisibilityInfo
+  - target: $["components"]["schemas"]
+    update:
+      UpdateVisibilityInfo:
+        description: Visibility information to set on a group or resource. Unlike VisibilityInfo, `visibility` is not required here so a Terraform configuration can omit it when attaching a configuration template. Untemplated groups and resources still require `visibility`. When `configuration_template_id` is set, the template governs visibility; omit `visibility` and `visibility_group_ids` rather than setting them alongside the template.
+        example:
+          visibility: LIMITED
+          visibility_group_ids:
+            - 7870617d-e72a-47f5-a84c-693817ab4567
+            - 1520617d-e72a-47f5-a84c-693817ab48ad2
+        properties:
+          visibility:
+            $ref: "#/components/schemas/VisibilityTypeEnum"
+            x-speakeasy-param-suppress-computed-diff: true
+          visibility_group_ids:
+            items:
+              type: string
+              format: uuid
+            type: array
+            format: set
+            default: []
+            x-speakeasy-param-suppress-computed-diff: true
+        type: object
   - target: $["components"]["schemas"]["MessageChannelIDList"]["properties"]["message_channel_ids"]
     update:
       default: []
@@ -1842,10 +1884,19 @@ actions:
       x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["configuration_template_id"]
     update:
-      x-speakeasy-ignore: true
+      description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+      x-speakeasy-plan-validators: ResourceConfigurationTemplateID
+  - target: $["components"]["schemas"]["Resource"]["properties"]["match_remote_description"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["match_remote_name"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["request_configurations"]
     update:
-      minItems: 1
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["Resource"]["properties"]["request_configurations"]["minItems"]
+    remove: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
@@ -1933,12 +1984,13 @@ actions:
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["auto_approval"]
     update:
       x-speakeasy-ignore: true
-  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["configuration_template_id"]
-    update:
-      x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_template_id"]
     update:
       x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["configuration_template_id"]
+    update:
+      description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+      x-speakeasy-plan-validators: ResourceConfigurationTemplateID
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["is_requestable"]
     update:
       x-speakeasy-ignore: true
@@ -1951,9 +2003,6 @@ actions:
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_configuration_list"]
     update:
       x-speakeasy-ignore: true
-  - target: $["components"]["schemas"]["UpdateResourceInfo"]["required"]
-    update:
-      - request_configurations
   - target: $["components"]["schemas"]["UpdateResourceInfo"]
     update:
       x-speakeasy-entity: Resource

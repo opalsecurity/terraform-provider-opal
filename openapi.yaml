@@ -1856,7 +1856,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/VisibilityInfo"
+              $ref: "#/components/schemas/UpdateVisibilityInfo"
       responses:
         "200":
           content:
@@ -3537,7 +3537,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/VisibilityInfo"
+                allOf:
+                  - $ref: "#/components/schemas/VisibilityInfo"
           description: The visibility info of this resource.
         "404":
           description: Not Found
@@ -3546,7 +3547,10 @@ paths:
       tags:
         - resources
       x-speakeasy-name-override: get_visibility
-      x-speakeasy-entity-operation: ResourceVisibility#get
+      x-speakeasy-entity-operation:
+        - Resource#get#2
+        - Resource#create#4
+        - ResourceVisibility#get
     put:
       description: Sets the visibility of this resource.
       operationId: updateResourceVisibility
@@ -3567,7 +3571,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/VisibilityInfo"
+              $ref: "#/components/schemas/UpdateVisibilityInfo"
       responses:
         "200":
           content:
@@ -8442,11 +8446,11 @@ components:
           type: string
           x-speakeasy-ignore: true
         configuration_template_id:
-          description: The ID of the associated configuration template.
+          description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
-          x-speakeasy-ignore: true
+          x-speakeasy-plan-validators: GroupConfigurationTemplateID
         group_binding_id:
           description: The ID of the associated group binding.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -8464,7 +8468,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/RequestConfiguration"
-          minItems: 1
+          x-speakeasy-param-suppress-computed-diff: true
         request_configuration_list:
           description: A list of request configurations for this group. Deprecated in favor of `request_configurations`.
           deprecated: true
@@ -8504,10 +8508,12 @@ components:
           description: A bool representing whether or not the group's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.
           example: False
           type: boolean
+          x-speakeasy-param-suppress-computed-diff: true
         match_remote_description:
           description: A bool representing whether or not the group's description is synced from the end system. When true, the description is overwritten with the remote description on each sync. Defaults to false.
           example: False
           type: boolean
+          x-speakeasy-param-suppress-computed-diff: true
         last_successful_sync:
           readOnly: true
           description: Information about the last successful sync of this group.
@@ -8783,11 +8789,11 @@ components:
           deprecated: true
           x-speakeasy-ignore: true
         configuration_template_id:
-          description: The ID of the associated configuration template.
+          description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
-          x-speakeasy-ignore: true
+          x-speakeasy-plan-validators: GroupConfigurationTemplateID
         request_template_id:
           description: The ID of the associated request template. Deprecated in favor of `request_configurations`.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -8880,7 +8886,6 @@ components:
           type: boolean
       required:
         - group_id
-        - request_configurations
       type: object
       x-speakeasy-entity: Group
     GroupTypeEnum:
@@ -9345,6 +9350,26 @@ components:
         - BundleVisibility
       x-speakeasy-plan-validators:
         - VisibilityInfo
+    UpdateVisibilityInfo:
+      description: Visibility information to set on a group or resource. Unlike VisibilityInfo, `visibility` is not required here so a Terraform configuration can omit it when attaching a configuration template. Untemplated groups and resources still require `visibility`. When `configuration_template_id` is set, the template governs visibility; omit `visibility` and `visibility_group_ids` rather than setting them alongside the template.
+      example:
+        visibility: LIMITED
+        visibility_group_ids:
+          - 7870617d-e72a-47f5-a84c-693817ab4567
+          - 1520617d-e72a-47f5-a84c-693817ab48ad2
+      properties:
+        visibility:
+          $ref: "#/components/schemas/VisibilityTypeEnum"
+          x-speakeasy-param-suppress-computed-diff: true
+        visibility_group_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          format: set
+          default: []
+          x-speakeasy-param-suppress-computed-diff: true
+      type: object
     MessageChannelIDList:
       description: A list of message channel IDs.
       example:
@@ -12021,17 +12046,17 @@ components:
           type: string
           x-speakeasy-param-suppress-computed-diff: true
         configuration_template_id:
-          description: The ID of the associated configuration template.
+          description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
-          x-speakeasy-ignore: true
+          x-speakeasy-plan-validators: ResourceConfigurationTemplateID
         request_configurations:
           type: array
           items:
             $ref: "#/components/schemas/RequestConfiguration"
           description: A list of configurations for requests to this resource.
-          minItems: 1
+          x-speakeasy-param-suppress-computed-diff: true
         request_configuration_list:
           description: A list of configurations for requests to this resource. Deprecated in favor of `request_configurations`.
           deprecated: true
@@ -12097,10 +12122,12 @@ components:
           description: A bool representing whether or not the resource's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.
           example: False
           type: boolean
+          x-speakeasy-param-suppress-computed-diff: true
         match_remote_description:
           description: A bool representing whether or not the resource's description is synced from the end system. When true, the description is overwritten with the remote description on each sync. Defaults to false.
           example: False
           type: boolean
+          x-speakeasy-param-suppress-computed-diff: true
         last_successful_sync:
           readOnly: true
           description: Information about the last successful sync of this resource.
@@ -12257,11 +12284,11 @@ components:
           example: False
           type: boolean
         configuration_template_id:
-          description: The ID of the associated configuration template.
+          description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
-          x-speakeasy-ignore: true
+          x-speakeasy-plan-validators: ResourceConfigurationTemplateID
         request_template_id:
           description: The ID of the associated request template. Deprecated in favor of `request_configurations`.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -12335,7 +12362,6 @@ components:
           x-speakeasy-ignore: true
       required:
         - resource_id
-        - request_configurations
       type: object
       x-speakeasy-entity: Resource
     PaginatedTagsList:

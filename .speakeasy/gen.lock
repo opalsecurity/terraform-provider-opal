@@ -1,26 +1,26 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: cb028bf6f1a5f863943b4ca34c693ebc
+  docChecksum: d0a0ca76db2b805899f10657912bb225
   docVersion: "1.0"
-  speakeasyVersion: 1.793.1
-  generationVersion: 2.928.0
-  releaseVersion: 3.6.0
-  configChecksum: 5aa01bc4e14fc56f5f88fb4ac31f2290
+  speakeasyVersion: 1.796.2
+  generationVersion: 2.933.0
+  releaseVersion: 3.6.4
+  configChecksum: eb6c6334b96216d2037c726b6d2729b0
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   installationURL: https://github.com/opalsecurity/terraform-provider-opal
   published: true
 persistentEdits:
-  generation_id: c172b2a8-d0b0-4607-9816-6fcaa269f1ad
-  pristine_commit_hash: c10bf346d1e4f6ac8b01e3a1753782590a0a8b76
-  pristine_tree_hash: a590476f9d7b7ce7b464b100401db69dd128d3cd
+  generation_id: fde3ca7e-7acb-45d0-a639-332cc8e7dcce
+  pristine_commit_hash: 156cd1375ac83fa21a0cf660adff27784cb44014
+  pristine_tree_hash: a02603d3d7200c301359a7712ea7aabf8f6deed2
 features:
   terraform:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.5
     constsAndDefaults: 0.3.2
-    core: 3.47.11
+    core: 3.47.14
     deprecations: 2.82.0
     globalSecurity: 2.82.3
     globalServerURLs: 2.83.2
@@ -31,7 +31,7 @@ features:
     retries: 2.81.5
     serverIDs: 2.81.1
     sets: 0.1.2
-    unions: 2.82.16
+    unions: 2.82.18
 trackedFiles:
   .gitattributes:
     id: 24139dae6567
@@ -239,8 +239,8 @@ trackedFiles:
     pristine_git_object: eb8eb0132c74305a9a4c668c0f802c6ea4c5da8a
   examples/provider/provider.tf:
     id: 954e955c0240
-    last_write_checksum: sha1:f1764b33b6f6da0f87535c3560896e84f91d4840
-    pristine_git_object: 0676abfacedcca763873faa738be1abe32f6777b
+    last_write_checksum: sha1:7bb76143ae57234392a2902fc8b9737192bfbab1
+    pristine_git_object: 42648c6ee9ad9a49c596841e89629059a40cde93
   examples/resources/opal_access_rule/import-by-string-id.tf:
     id: 5d07a05dc439
     last_write_checksum: sha1:9978da2497ab3366e081ddfd1f5bcf2237e3d024
@@ -299,8 +299,8 @@ trackedFiles:
     pristine_git_object: 39cd2986b89851df6bcfb5cb71393f59a6fc33bf
   examples/resources/opal_group/resource.tf:
     id: b7cc88eba8dd
-    last_write_checksum: sha1:95fa41a452a96986b40618bfd590e19c7689f5bb
-    pristine_git_object: bf44152b98ea44c07886e7b93442591e9282f8c1
+    last_write_checksum: sha1:60f6c77d220642a87204ab620524b245fb37633e
+    pristine_git_object: 5facbdfcd4e7c29e95690e05d787029adff58115
   examples/resources/opal_group_catalog_mapping/import-by-string-id.tf:
     id: 9c5b4ad06078
     last_write_checksum: sha1:049dc3fc4961231b63bada319374318a815a5912
@@ -419,8 +419,8 @@ trackedFiles:
     pristine_git_object: 2cfcd78fd85c3fd0215467af467ba369e9b72128
   examples/resources/opal_resource/resource.tf:
     id: 82d3aaf089f0
-    last_write_checksum: sha1:3d39c277f1ac79dca0776aea3b190a62a829c196
-    pristine_git_object: cdd4811da8a063af3a565c24947333a5c6791bb8
+    last_write_checksum: sha1:6d83ec39d4aa0eaaf5128c7ba33f2c3e35acd4cf
+    pristine_git_object: e8c641f1a45d89566dc18703e447e0b875d9bf9e
   examples/resources/opal_resource_tag/resource.tf:
     id: 0dfa36ff3fdb
     last_write_checksum: sha1:58407c23f4c4f428d3940cbdaa84539b2ff06232
@@ -455,8 +455,8 @@ trackedFiles:
     pristine_git_object: ad40456bb8fc65645b0081fd325ed66905e7d1ad
   go.mod:
     id: c47645c391ad
-    last_write_checksum: sha1:3aefe801980ca2fa14b45f56a443858d86d38c04
-    pristine_git_object: 5a0e02f878fc8579f60d8ceed926f0862dfed7f1
+    last_write_checksum: sha1:47d38acb9e81100a531cde054e42efe2bf790d41
+    pristine_git_object: d92940f2f9c1d76b072697fedea07c77fd8c048a
   internal/planmodifiers/boolplanmodifier/suppress_diff.go:
     id: 3cf85b98963e
     last_write_checksum: sha1:5b0ce6bd2591e94f26cf4b258e44c0a8709b396b
@@ -587,8 +587,8 @@ trackedFiles:
     pristine_git_object: 31801d062c99f262c96b5be50c90007472f85370
   internal/planmodifiers/stringplanmodifier/use_hoisted_value.go:
     id: f9220e0f9187
-    last_write_checksum: sha1:d264ca23cd2c650349933ff9b3fd50d5b934a203
-    pristine_git_object: 1038c6c10694f8e589c673075fb8d8ecd26fd979
+    last_write_checksum: sha1:6ca9135d6b5a4b9aab9d39f899709aed328d6fd9
+    pristine_git_object: 0605b6e4a6c05631568897817c85eb0392c8640b
   internal/planmodifiers/utils/hoisted_value.go:
     id: 7c3741509670
     last_write_checksum: sha1:f1dabb2748bc9a550311eb7fd0be80fc506fad95
@@ -719,28 +719,28 @@ trackedFiles:
     pristine_git_object: d658d235a609b19aba4d662100c8c76c7d1aa5d2
   internal/provider/group_data_source.go:
     id: 42985a05e298
-    last_write_checksum: sha1:f0803749fa9408aa14ce3214666e6e0953a57384
-    pristine_git_object: 3dc0c04f465122b23ee1c80d2b7ed7154723c50f
+    last_write_checksum: sha1:34816594fc036a0922708edb50a2fa3e56fee9e8
+    pristine_git_object: cfb94c9cbf4ca53e075f043096a2ed243a094c99
   internal/provider/group_data_source_sdk.go:
     id: 987dcf32f584
-    last_write_checksum: sha1:a95ef8df70b6d27c9612c61c09188480fec22e6c
-    pristine_git_object: 3313055c8ebe1978873db6557488e9476334a789
+    last_write_checksum: sha1:7974ad87a8f0a0e57598ded397ce81928968ad25
+    pristine_git_object: e0c73e7474d4747f131cc788892150e28a524ae3
   internal/provider/group_list_data_source.go:
     id: f894c3b0f7c5
-    last_write_checksum: sha1:95be776a362a80d0a019581b361d78d9e67abc6a
-    pristine_git_object: cf69a013c5fa4cdc8ae97a522a7781f7a4695620
+    last_write_checksum: sha1:7e879f0bda814a130db794e48830856cce189253
+    pristine_git_object: a2829edd51a74920d8bee43251f1e55e32f88b85
   internal/provider/group_list_data_source_sdk.go:
     id: cb52cc9f24b9
-    last_write_checksum: sha1:c0ee62f4fc1a8ebf4c959f5cdadab78bc2fce2d0
-    pristine_git_object: 6b9a454a2428c8ce5112593127a5ec52cc5830b8
+    last_write_checksum: sha1:d390c873e4e345d072d5c046c97d4510f799b947
+    pristine_git_object: 4e28bd42448e967aa99e28487a10d7e8834f6da7
   internal/provider/group_resource.go:
     id: 77b83309e259
-    last_write_checksum: sha1:05414c78dbbc0d34e898704f5d4d3deca9a65ab8
-    pristine_git_object: 038823758e3817aa4915ba59b59bbea618b72a23
+    last_write_checksum: sha1:fb166864b85279c0203aedb378374c48e5fb5741
+    pristine_git_object: 0ae6c2d6ef231b4f42844f32c5dbeb7729ed2ba5
   internal/provider/group_resource_sdk.go:
     id: 318ed979ef04
-    last_write_checksum: sha1:810f7e13a108f775c56ccebb60016c764875b41e
-    pristine_git_object: 0f51062cba06e4f080cc9633fb4b35babe57d471
+    last_write_checksum: sha1:5df501bafa5cfbfc4cced863a40d4cf3bd39b686
+    pristine_git_object: bf49abd3933cfc860315be193219b31709b71439
   internal/provider/groupcatalogmapping_data_source.go:
     id: ed35f07bdf45
     last_write_checksum: sha1:e3b84cd5157bf00feed3dc6f13b372b7536ec59e
@@ -1059,20 +1059,20 @@ trackedFiles:
     pristine_git_object: 5362d851bb19d2faf43791f5c17a1c6b7b237099
   internal/provider/resource_data_source.go:
     id: 64fda544ba1a
-    last_write_checksum: sha1:56f063668aa61b448c2056da854a05a6eaba87b3
-    pristine_git_object: 4efac5a572980ae710e248ea526172b675a4fded
+    last_write_checksum: sha1:872fc10aaf895bdaf1e391dedeb1148d0c66441f
+    pristine_git_object: 6071285bc0620b652a933f662721b1427ab7af05
   internal/provider/resource_data_source_sdk.go:
     id: e2f7a9e5ff6f
-    last_write_checksum: sha1:5b4eba08de55bcf597a4b7fbb6e69d7515c4f1c1
-    pristine_git_object: 5d5cd47e4a7368d7396a1bb0f03fb02204b91767
+    last_write_checksum: sha1:eb0746f7dbbf20912c16beafde96b87ffdcd82e5
+    pristine_git_object: 6dc298227bd7dd3c9fc3d3c1a0b4396bd72da816
   internal/provider/resource_resource.go:
     id: c3e3cbee6fcf
-    last_write_checksum: sha1:3e6787646b699927c6aaf9a007dc7a96dc50b14a
-    pristine_git_object: f8e9bf98e766b4103ba04c241e6fae70ff0354c6
+    last_write_checksum: sha1:58d8fddd1e037f45efc84d36c438105b419232cf
+    pristine_git_object: 69041b7dd08934e1278102d709da25585084ae10
   internal/provider/resource_resource_sdk.go:
     id: f39dc8616490
-    last_write_checksum: sha1:b1966d9db69ea68993b70b11d15a0a1fac9f035b
-    pristine_git_object: ed1441ce38d55098690d342b6918d5d7f5090a9e
+    last_write_checksum: sha1:8c7d5737e8913b3da9cb18a9cb48c830dd4287ab
+    pristine_git_object: a741504efa686fe5d6d84a92f548afbf4fa10154
   internal/provider/resourcemessagechannellist_data_source.go:
     id: 6d9ae1b954d6
     last_write_checksum: sha1:23eddd732644212f6c564078234391cf9cb6e771
@@ -1091,12 +1091,12 @@ trackedFiles:
     pristine_git_object: 3824f024a9025639f3794c40abb8aba7daf25c47
   internal/provider/resources_list_data_source.go:
     id: 016d6b406b76
-    last_write_checksum: sha1:5908cd63a4b2db9a76daf1149e448990f8f14b27
-    pristine_git_object: 22c832343fb9efefcd3e4d5488323a4586fbc6d6
+    last_write_checksum: sha1:4c667b08289b58d7df892e3ced111808ad672378
+    pristine_git_object: f31ed8e6e8dda4ee36b63937e292ee9d4e49bf26
   internal/provider/resources_list_data_source_sdk.go:
     id: 2032115ad2d7
-    last_write_checksum: sha1:80efa73d6b405533bc26e251068d003b1c0246e6
-    pristine_git_object: 1a0ceeecb384817b5ff269c62d69ba198ceacf2c
+    last_write_checksum: sha1:995c723539cc0811fc2dc934e060ff390ac5c153
+    pristine_git_object: 83577db44c803ec83394ce7157deb17fab977fea
   internal/provider/resourcesaccessstatus_data_source.go:
     id: fea5501a6684
     last_write_checksum: sha1:c4683a9d2544c7248ed7e632a3b3c628664aaae1
@@ -1131,12 +1131,12 @@ trackedFiles:
     pristine_git_object: f2126e7130974bdc4ee30dd1951cdb92a3fb2439
   internal/provider/resourcevisibility_data_source.go:
     id: 22ab3d1210d9
-    last_write_checksum: sha1:643b2a9cc3c9a58fb3112f65f07aa65ca7f7fc2e
-    pristine_git_object: cb005fb36521cd0bf6fe9f0092cc8e4e85c70244
+    last_write_checksum: sha1:829ca2f371b56859f897b119087038e5f5d7dc9c
+    pristine_git_object: 6cafabb1bfda17c9b51da2b7544aecbdfc8b63be
   internal/provider/resourcevisibility_data_source_sdk.go:
     id: f2c134fe459d
-    last_write_checksum: sha1:aef94d1c998bc2ac904b15a19aff47f9b87aa3e4
-    pristine_git_object: da2529fcd7a2930545bc4f07ee1c6eca025ee5dd
+    last_write_checksum: sha1:cfef0cb78df6ef88f1b3b5f59e3efb7f57ca1fea
+    pristine_git_object: 964ba28f167b77dcb35e425ef9234c4a36482416
   internal/provider/scopedrolepermissionlist_data_source.go:
     id: 4910f0e1da05
     last_write_checksum: sha1:ef180db549fc0936df451f6036669b56e40f9932
@@ -1415,8 +1415,8 @@ trackedFiles:
     pristine_git_object: c1cf6d4c4dfafafea2347c389b5c7f27f1fd63cc
   internal/provider/types/group.go:
     id: d73edf066222
-    last_write_checksum: sha1:23671d2e6f8a319ec7ae425acbbe5305b634342e
-    pristine_git_object: 850fea7a6d71528bc71a22d8caa41da5b24e8749
+    last_write_checksum: sha1:cf1ea715aa1d4895cdf535a5fdd8fc2c69769ed2
+    pristine_git_object: 3ad32ed6ab1a2329e6b3e838fb1188ca1eb043e4
   internal/provider/types/group_remote_info.go:
     id: 4e7dc5645eb9
     last_write_checksum: sha1:eb15aeaea0c86d94dc846c3baa968f6221bb2bb4
@@ -1523,8 +1523,8 @@ trackedFiles:
     pristine_git_object: 59ddd8119a176554db798deab585cf181bccb2fc
   internal/provider/types/resource.go:
     id: d3af26fa0a1d
-    last_write_checksum: sha1:eda27e2f8079b0ccf1c289fb799ca83b6a237387
-    pristine_git_object: 3bcc57d5d0f539bfc42adb46eebf813c4709da81
+    last_write_checksum: sha1:7bcfff6ba155a011f976cca2ef9e4a51a79e4731
+    pristine_git_object: 600b6801e68611727710ce490e21422b945b2497
   internal/provider/types/resource_access_level.go:
     id: d72ff54edce4
     last_write_checksum: sha1:efc8607b0fc3dbd3b354593a4db1572264c36d54
@@ -1727,8 +1727,8 @@ trackedFiles:
     pristine_git_object: eff68a137b6b8e1ba620e471f2ca50cb3d3890bd
   internal/sdk/groups.go:
     id: 2bfe17bcb000
-    last_write_checksum: sha1:5151293d06b1b2165405bf4c625f58a52ff2e030
-    pristine_git_object: 322edfcb4cd6d21ae39b14a17009ca36832c6884
+    last_write_checksum: sha1:46cd7db1f2bab0e077b5f9d72d74c82699307a19
+    pristine_git_object: 7b92a158165bfba726bb6f2f9e28d2480c67c79f
   internal/sdk/idpgroupmappings.go:
     id: 28c6e8cf4b03
     last_write_checksum: sha1:7c5aa3add8e013c96aaf1deb43afd8d516f81c6d
@@ -2223,8 +2223,8 @@ trackedFiles:
     pristine_git_object: c83b08a56483b80a242d9c7d8aed9f787bbef77e
   internal/sdk/models/operations/getresourcevisibility.go:
     id: 98858288dadb
-    last_write_checksum: sha1:449ff51772558aa66a6ab27619fa0759dbd8628d
-    pristine_git_object: 3700f57b3a9d2edde7b767521c7971a0353b7518
+    last_write_checksum: sha1:f8253019d3a7e548ccad41367f129b8edfd0dcb2
+    pristine_git_object: 2e1a01cd219ff8588fe6e32e43f74e863e8f506a
   internal/sdk/models/operations/getsessions.go:
     id: 1cb1bc5778a4
     last_write_checksum: sha1:14ed20f14bcd946705afbb2176676ed59bda5e08
@@ -2367,8 +2367,8 @@ trackedFiles:
     pristine_git_object: 947446399cf6a1856e85624ec1d603b9b1c0a1e1
   internal/sdk/models/operations/updategroupvisibility.go:
     id: 4c57f96ffdad
-    last_write_checksum: sha1:dec3117c72f6e0375a7358409cf8bc7e45390565
-    pristine_git_object: 557f3a656723d2385b29427e91fb6cfb574ff04e
+    last_write_checksum: sha1:3a9ea7416e4584403d0e350da7b9acd2f083cdd0
+    pristine_git_object: 68f5b74d599c98f8c9d34619642a1eb9cd8abd2d
   internal/sdk/models/operations/updateidpgroupmappings.go:
     id: 57ba1a0d5800
     last_write_checksum: sha1:eb746eac0b33d83af217420ec3a9efb765e0653f
@@ -2399,8 +2399,8 @@ trackedFiles:
     pristine_git_object: 9c56f8e8a10c190077431fbaa17eb8b60c652bfc
   internal/sdk/models/operations/updateresourcevisibility.go:
     id: 0966af50e517
-    last_write_checksum: sha1:7d65012f899b835730041487a97af4c80757b8cd
-    pristine_git_object: cdb01a037c49d0d84a2f56038425789ded9b9bd9
+    last_write_checksum: sha1:98f6afe8655a060f5378c01481e215489251f0d6
+    pristine_git_object: 2f9242656a29eac827db705170cfd178454d1613
   internal/sdk/models/shared/access.go:
     id: b2a3d71ce510
     last_write_checksum: sha1:1afd4b8ab1a4e8f0a99fd63451452b7cbf579406
@@ -2603,8 +2603,8 @@ trackedFiles:
     pristine_git_object: 3d069586ff670cad2477ce274f7d834308fa81d9
   internal/sdk/models/shared/group.go:
     id: 941f75eafff0
-    last_write_checksum: sha1:92bcfb2b894e754f3c2bc2541a4d83369f6d88e3
-    pristine_git_object: a47aae04efa5da478c9af9e682ddb92cd4a0ea69
+    last_write_checksum: sha1:e53691b7145b2b164a23429bd6c9f19eaf963b47
+    pristine_git_object: ab23edd245e642796232cc59d91ea2acc6a4584a
   internal/sdk/models/shared/groupaccesslevel.go:
     id: 4d470fee385f
     last_write_checksum: sha1:ef038e3acea964486131db613f6b6c3ed0685a3f
@@ -2923,8 +2923,8 @@ trackedFiles:
     pristine_git_object: 91cbf47e81bf0040af26c921b9e71439895b78c3
   internal/sdk/models/shared/resource.go:
     id: b17c21751fed
-    last_write_checksum: sha1:8e0b853aa20c01fea57885ad6277118a38fc91be
-    pristine_git_object: 3943caf33d7d3dc657a44d3d552d98d41c0e919a
+    last_write_checksum: sha1:89de6aee7e33ccae1ef9d1213001121c8247db10
+    pristine_git_object: f74d1e563c586dd817a620e517cddcd30e03489e
   internal/sdk/models/shared/resourceaccesslevel.go:
     id: b95c93692200
     last_write_checksum: sha1:39173d07599f1ae0065c86631f7d674035508260
@@ -3119,8 +3119,8 @@ trackedFiles:
     pristine_git_object: 6499e263c49f55396f75ce6583d82cfacdc50ec6
   internal/sdk/models/shared/updategroupinfo.go:
     id: fa8018b759f6
-    last_write_checksum: sha1:d47daec1a559c1811173175175f7283ad0e4204f
-    pristine_git_object: e2e640667b8519931e96909da4badbc319819e84
+    last_write_checksum: sha1:2d5bb082da74381a6e081eb722977b6bd1ac4d99
+    pristine_git_object: 8ccb6faa1cbd367a9158b94ab338f80037ff3104
   internal/sdk/models/shared/updategroupinfolist.go:
     id: 296195da1c7c
     last_write_checksum: sha1:717a8cb445a3af8241d210d5b0b6abb73bb5633f
@@ -3143,12 +3143,16 @@ trackedFiles:
     pristine_git_object: 0cb6b34427e971e8cc8c8f53bb6ca591e7d94323
   internal/sdk/models/shared/updateresourceinfo.go:
     id: 1b9fbe5e6c02
-    last_write_checksum: sha1:7ba11ac96f1e53d75406f60e9df7168aa8936e39
-    pristine_git_object: 76e9f74e13bdb941405b91fcb8b851a109d42e4a
+    last_write_checksum: sha1:a2d584beb317798c9a6998add6bb9b5843e31320
+    pristine_git_object: 9793d17d0ce307e0f0c97ce85c5de7056d90cd61
   internal/sdk/models/shared/updateresourceinfolist.go:
     id: 50c8449e317c
     last_write_checksum: sha1:3f948f760f34367380a9c4137033793820c4c8e6
     pristine_git_object: f3d5ba420fba21afbf5c660da8d0a1dbdf7140f4
+  internal/sdk/models/shared/updatevisibilityinfo.go:
+    id: cf5f946e2e0c
+    last_write_checksum: sha1:8674a9777a47feb3d36b165e1a6b93225e07d316
+    pristine_git_object: 407e4ebdb86f65db0e0be39b206a2068d66b6f26
   internal/sdk/models/shared/user.go:
     id: 9a5b526115dc
     last_write_checksum: sha1:d3ee5205dc56fb2d32bcea940424c89df6e35079
@@ -3207,8 +3211,8 @@ trackedFiles:
     pristine_git_object: 84445f102b7610634d28b20e4872db65b059dc8a
   internal/sdk/opalapi.go:
     id: 115b79f30ba9
-    last_write_checksum: sha1:a0baac5c61720a10244cb731d20d5eb8cde9a218
-    pristine_git_object: 8e7983913549cd1e40555a4671b32ba17883c862
+    last_write_checksum: sha1:4e2b3a20460dff13e41ae4aa143aab796ba9815c
+    pristine_git_object: 60b2e433149270016491084ad6f51ad11cdc84ee
   internal/sdk/opalqueries.go:
     id: 42aa5bddbe00
     last_write_checksum: sha1:77c79b11fca7e067c4b20bfc61c03207e63a0ea7
@@ -3235,8 +3239,8 @@ trackedFiles:
     pristine_git_object: 3a282413b1ba3f85405abcf6b23b336367f7558a
   internal/sdk/resources.go:
     id: 14837874a84c
-    last_write_checksum: sha1:dbaf1db9257d3a0dd77486c227479f7f26df7c20
-    pristine_git_object: 30f8b01707adf1c12880ae0f4d4ad5c2829e01a8
+    last_write_checksum: sha1:670c1f540e8506859d3b2e00b75004a0e937ed69
+    pristine_git_object: e53d3b727937c54521d731f55dbeca100aa17f5d
   internal/sdk/retry/config.go:
     id: 7ea5fa9128b6
     last_write_checksum: sha1:22068a7fd6e154053ff85678a7fdb6a0d02ac790
@@ -3763,10 +3767,10 @@ examples:
   updateGroups:
     speakeasy-default-update-groups:
       requestBody:
-        application/json: {"groups": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "group_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "api-group", "request_configurations": [{"allow_requests": true, "auto_approval": false, "condition": {"group_ids": ["1b978423-db0a-4037-a4cf-f79c60cb67b3"], "role_remote_ids": ["arn:aws:iam::590304332660:role/AdministratorAccess"]}, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_admin_approval": false, "require_manager_approval": false}]}], "require_mfa_to_approve": false}, {"admin_owner_id": "4220bc12-ab8a-4b5d-be7b-f6bbcf9159f3", "description": "Manages the Integrations Team on-call privileged resources. This group is automatically synced with the on-call rotation defined in PagerDuty.", "group_id": "99d0b81d-14be-4cf6-bd27-348b4af1d11b", "name": "on-call-integrations", "request_configurations": [{"allow_requests": true, "auto_approval": false, "condition": {"group_ids": ["1b978423-db0a-4037-a4cf-f79c60cb67b3"], "role_remote_ids": ["arn:aws:iam::590304332660:role/AdministratorAccess"]}, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_admin_approval": false, "require_manager_approval": false}]}], "require_mfa_to_approve": false}]}
+        application/json: {"groups": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "group_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "api-group", "require_mfa_to_approve": false}, {"admin_owner_id": "4220bc12-ab8a-4b5d-be7b-f6bbcf9159f3", "description": "Manages the Integrations Team on-call privileged resources. This group is automatically synced with the on-call rotation defined in PagerDuty.", "group_id": "99d0b81d-14be-4cf6-bd27-348b4af1d11b", "name": "on-call-integrations", "require_mfa_to_approve": false}]}
       responses:
         "200":
-          application/json: {"groups": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "group_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "api-group", "request_configurations": [{"allow_requests": true, "auto_approval": false, "condition": {"group_ids": ["1b978423-db0a-4037-a4cf-f79c60cb67b3"], "role_remote_ids": ["arn:aws:iam::590304332660:role/AdministratorAccess"]}, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_admin_approval": false, "require_manager_approval": false}]}], "require_mfa_to_approve": false}, {"admin_owner_id": "4220bc12-ab8a-4b5d-be7b-f6bbcf9159f3", "description": "Manages the Integrations Team on-call privileged resources. This group is automatically synced with the on-call rotation defined in PagerDuty.", "group_id": "99d0b81d-14be-4cf6-bd27-348b4af1d11b", "name": "on-call-integrations", "request_configurations": [{"allow_requests": true, "auto_approval": false, "condition": {"group_ids": ["1b978423-db0a-4037-a4cf-f79c60cb67b3"], "role_remote_ids": ["arn:aws:iam::590304332660:role/AdministratorAccess"]}, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_admin_approval": false, "require_manager_approval": false}]}], "require_mfa_to_approve": false}]}
+          application/json: {"groups": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This group represents Active Directory group \"Payments Production Admin\". We use this AD group to facilitate staging deployments and qualifying new releases.", "group_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "api-group", "require_mfa_to_approve": false}, {"admin_owner_id": "4220bc12-ab8a-4b5d-be7b-f6bbcf9159f3", "description": "Manages the Integrations Team on-call privileged resources. This group is automatically synced with the on-call rotation defined in PagerDuty.", "group_id": "99d0b81d-14be-4cf6-bd27-348b4af1d11b", "name": "on-call-integrations", "require_mfa_to_approve": false}]}
   update_group_user:
     speakeasy-default-update-group-user:
       parameters:
@@ -4134,10 +4138,10 @@ examples:
   updateResources:
     speakeasy-default-update-resources:
       requestBody:
-        application/json: {"resources": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This resource represents AWS IAM role \"SupportUser\".", "resource_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "my-mongo-db", "request_configurations": [{"allow_requests": true, "auto_approval": false, "condition": {"group_ids": ["1b978423-db0a-4037-a4cf-f79c60cb67b3"], "role_remote_ids": ["arn:aws:iam::590304332660:role/AdministratorAccess"]}, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_admin_approval": false, "require_manager_approval": false}]}], "require_mfa_to_approve": false}, {"admin_owner_id": "4220bc12-ab8a-4b5d-be7b-f6bbcf9159f3", "description": "This resource represents GCP project \"app-demo\".", "resource_id": "99d0b81d-14be-4cf6-bd27-348b4af1d11b", "name": "Admin Role", "request_configurations": [{"allow_requests": true, "auto_approval": false, "condition": {"group_ids": ["1b978423-db0a-4037-a4cf-f79c60cb67b3"], "role_remote_ids": ["arn:aws:iam::590304332660:role/AdministratorAccess"]}, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_admin_approval": false, "require_manager_approval": false}]}], "require_mfa_to_approve": false}]}
+        application/json: {"resources": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This resource represents AWS IAM role \"SupportUser\".", "resource_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "my-mongo-db", "require_mfa_to_approve": false}, {"admin_owner_id": "4220bc12-ab8a-4b5d-be7b-f6bbcf9159f3", "description": "This resource represents GCP project \"app-demo\".", "resource_id": "99d0b81d-14be-4cf6-bd27-348b4af1d11b", "name": "Admin Role", "require_mfa_to_approve": false}]}
       responses:
         "200":
-          application/json: {"resources": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This resource represents AWS IAM role \"SupportUser\".", "resource_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "my-mongo-db", "request_configurations": [{"allow_requests": true, "auto_approval": false, "condition": {"group_ids": ["1b978423-db0a-4037-a4cf-f79c60cb67b3"], "role_remote_ids": ["arn:aws:iam::590304332660:role/AdministratorAccess"]}, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_admin_approval": false, "require_manager_approval": false}]}], "require_mfa_to_approve": false}, {"admin_owner_id": "4220bc12-ab8a-4b5d-be7b-f6bbcf9159f3", "description": "This resource represents GCP project \"app-demo\".", "resource_id": "99d0b81d-14be-4cf6-bd27-348b4af1d11b", "name": "Admin Role", "request_configurations": [{"allow_requests": true, "auto_approval": false, "condition": {"group_ids": ["1b978423-db0a-4037-a4cf-f79c60cb67b3"], "role_remote_ids": ["arn:aws:iam::590304332660:role/AdministratorAccess"]}, "max_duration_minutes": 120, "priority": 1, "recommended_duration_minutes": 120, "require_mfa_to_request": false, "require_support_ticket": false, "reviewer_stages": [{"operator": "AND", "owner_ids": ["37cb7e41-12ba-46da-92ff-030abe0450b1", "37cb7e41-12ba-46da-92ff-030abe0450b2"], "require_admin_approval": false, "require_manager_approval": false}]}], "require_mfa_to_approve": false}]}
+          application/json: {"resources": [{"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "This resource represents AWS IAM role \"SupportUser\".", "resource_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "my-mongo-db", "require_mfa_to_approve": false}, {"admin_owner_id": "4220bc12-ab8a-4b5d-be7b-f6bbcf9159f3", "description": "This resource represents GCP project \"app-demo\".", "resource_id": "99d0b81d-14be-4cf6-bd27-348b4af1d11b", "name": "Admin Role", "require_mfa_to_approve": false}]}
   updateResourceMessageChannels:
     speakeasy-default-update-resource-message-channels:
       parameters:
@@ -4638,7 +4642,6 @@ examples:
           application/json: {"email": "john.doe@company.dev", "first_name": "John", "user_id": "29827fb8-f2dd-4e80-9576-28e31e9934ac", "last_name": "Doe", "full_name": "John Doe", "position": "Engineer"}
 examplesVersion: 1.0.2
 generatedTests: {}
-releaseNotes: "## Terraform SDK Changes:\n* `Opal-API.non-human-identities.get_nhis()`:  `response.results[]` **Changed** (Breaking ⚠️)\n* `Opal-API.resources.get_users()`:  `response.results[].propagation_status.status.enum(ERR_REMOTE_TICKET_NOT_FOUND)` **Added** (Breaking ⚠️)\n* `Opal-API.uars.get_id()`:  `response.uar_scope` **Changed** (Breaking ⚠️)\n* `Opal-API.uars.get()`:  `response.results[].uar_scope` **Changed** (Breaking ⚠️)\n* `Opal-API.uars.create()`: \n  *  `request.uar_scope` **Changed**\n  *  `response.uar_scope` **Changed** (Breaking ⚠️)\n* `Opal-API.group-bindings.getGroupBindings()`:  `response.results[].groups[].group_type` **Changed** (Breaking ⚠️)\n* `Opal-API.resources.get_user_resources()`:  `response.results[].propagation_status.status.enum(ERR_REMOTE_TICKET_NOT_FOUND)` **Added** (Breaking ⚠️)\n* `Opal-API.resources.get_id()`:  `response` **Changed** (Breaking ⚠️)\n* `Opal-API.resources.get()`: \n  *  `request.resource_type_filter` **Changed**\n  *  `response.results[]` **Changed** (Breaking ⚠️)\n* `Opal-API.resources.create()`: \n  *  `request` **Changed**\n  *  `response` **Changed** (Breaking ⚠️)\n* `Opal-API.groups.update_group_user()`:  `response.propagation_status.status.enum(ERR_REMOTE_TICKET_NOT_FOUND)` **Added** (Breaking ⚠️)\n* `Opal-API.groups.list()`: \n  *  `request.group_type_filter` **Changed**\n  *  `response.results[]` **Changed** (Breaking ⚠️)\n* `Opal-API.group-bindings.createGroupBinding()`:  `response.groups[].group_type` **Changed** (Breaking ⚠️)\n* `Opal-API.groups.get_users()`:  `response.results[].propagation_status.status.enum(ERR_REMOTE_TICKET_NOT_FOUND)` **Added** (Breaking ⚠️)\n* `Opal-API.groups.get_user_groups()`:  `response.results[].propagation_status.status.enum(ERR_REMOTE_TICKET_NOT_FOUND)` **Added** (Breaking ⚠️)\n* `Opal-API.group-bindings.getGroupBinding()`:  `response.groups[].group_type` **Changed** (Breaking ⚠️)\n* `Opal-API.groups.getGroup()`:  `response` **Changed** (Breaking ⚠️)\n* `Opal-API.groups.create_user()`:  `response.propagation_status.status.enum(ERR_REMOTE_TICKET_NOT_FOUND)` **Added** (Breaking ⚠️)\n* `Opal-API.groups.create()`: \n  *  `request` **Changed**\n  *  `response` **Changed** (Breaking ⚠️)\n* `Opal-API.paladin.create_context_source()`: **Added**\n* `Opal-API.event-streams.updateEventStream()`: **Added**\n* `Opal-API.apps.get()`: \n  *  `request.app_type_filter` **Changed**\n* `Opal-API.campaigns.endCampaign()`: **Added**\n* `Opal-API.paladin.get()`: **Added**\n* `Opal-API.opal-queries.runOpalQuery()`: **Added**\n* `Opal-API.paladin.update()`: **Added**\n* `Opal-API.paladin.list_context_sources()`: **Added**\n* `Opal-API.paladin.get_from_name()`: **Added**\n* `Opal-API.paladin.delete_context_source()`: **Added**\n* `Opal-API.paladin.delete()`: **Added**\n* `Opal-API.paladin.create()`: **Added**\n* `Opal-API.groups.update()`: \n  *  `request.groups[]` **Changed**\n  *  `response.groups[]` **Changed**\n* `Opal-API.users.getUserWhoami()`: **Added**\n* `Opal-API.campaigns.createCampaign()`: **Added**\n* `Opal-API.event-streams.getEventStreams()`: **Added**\n* `Opal-API.event-streams.deleteEventStream()`: **Added**\n* `Opal-API.event-streams.createEventStream()`: **Added**\n* `Opal-API.campaigns.updateCampaign()`: **Added**\n* `Opal-API.campaigns.stopCampaign()`: **Added**\n* `Opal-API.resources.update()`: \n  *  `request.resources[]` **Changed**\n  *  `response.resources[]` **Changed**\n* `Opal-API.uars.create()`: **Deprecated**\n* `Opal-API.campaigns.startCampaign()`: **Added**\n* `Opal-API.uars.get()`: **Deprecated**\n* `Opal-API.campaigns.getCampaigns()`: **Added**\n* `Opal-API.uars.get_id()`: **Deprecated**\n* `Opal-API.campaigns.getCampaign()`: **Added**\n"
 generatedFiles:
   - .gitattributes
   - USAGE.md

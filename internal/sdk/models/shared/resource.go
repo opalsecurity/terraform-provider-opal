@@ -134,6 +134,8 @@ type Resource struct {
 	AncestorResourceIds []string `json:"ancestor_resource_ids,omitempty"`
 	// The ID of the app.
 	AppID *string `json:"app_id,omitempty"`
+	// The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
 	// Custom request notification sent upon request approval.
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// List of resource IDs that are descendants of this resource.
@@ -203,6 +205,13 @@ func (r *Resource) GetAppID() *string {
 		return nil
 	}
 	return r.AppID
+}
+
+func (r *Resource) GetConfigurationTemplateID() *string {
+	if r == nil {
+		return nil
+	}
+	return r.ConfigurationTemplateID
 }
 
 func (r *Resource) GetCustomRequestNotification() *string {
