@@ -296,6 +296,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.GcpBigQueryTable.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpBigQueryTable.ProjectID)
 					results.RemoteInfo.GcpBigQueryTable.TableID = types.StringValue(resultsItem.RemoteInfo.GcpBigQueryTable.TableID)
 				}
+				if resultsItem.RemoteInfo.GcpBillingAccount == nil {
+					results.RemoteInfo.GcpBillingAccount = nil
+				} else {
+					results.RemoteInfo.GcpBillingAccount = &tfTypes.GcpBillingAccount{}
+					results.RemoteInfo.GcpBillingAccount.BillingAccountID = types.StringValue(resultsItem.RemoteInfo.GcpBillingAccount.BillingAccountID)
+				}
 				if resultsItem.RemoteInfo.GcpBucket == nil {
 					results.RemoteInfo.GcpBucket = nil
 				} else {
