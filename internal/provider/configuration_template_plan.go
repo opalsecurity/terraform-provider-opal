@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -77,33 +78,77 @@ func validateConfigurationTemplatePlan(
 	preserveTemplateGovernedVisibility(ctx, config, state, resp)
 }
 
-// preserveTemplateGovernedVisibility keeps the prior visibility in the plan when
-// the template governs it. The group's visibility is populated by its read
-// operation, so leaving it unconfigured would otherwise plan as "known after
-// apply" on every run and produce a permanent diff.
+// preserveTemplateGovernedVisibility keeps prior visibility fields in the plan
+// when the template governs them. Refresh populates those attributes from GET
+// /visibility, but they are omitted in HCL (ConflictsWith / ExactlyOneOf).
+// visibility would otherwise plan as unknown; visibility_group_ids has Default
+// [] so it would plan an empty set and drift against a LIMITED template.
 func preserveTemplateGovernedVisibility(
 	ctx context.Context,
 	config map[string]tftypes.Value,
 	state map[string]tftypes.Value,
 	resp *resource.ModifyPlanResponse,
 ) {
-	if configured, ok := config["visibility"]; !ok || !configured.IsNull() {
-		return
+	if attributeOmitted(config, "visibility") {
+		if stateValue, ok := knownStateValue(state, "visibility"); ok {
+			var visibility string
+			if err := stateValue.As(&visibility); err == nil {
+				resp.Diagnostics.Append(
+					resp.Plan.SetAttribute(ctx, path.Root("visibility"), types.StringValue(visibility))...,
+				)
+			}
+		}
 	}
 
-	stateValue, ok := state["visibility"]
-	if !ok || !stateValue.IsKnown() || stateValue.IsNull() {
-		return
+	if attributeOmitted(config, "visibility_group_ids") {
+		if stateValue, ok := knownStateValue(state, "visibility_group_ids"); ok {
+			ids, ok := stringIDsFromTerraformCollection(stateValue)
+			if !ok {
+				return
+			}
+			setValue, diags := types.SetValue(types.StringType, ids)
+			resp.Diagnostics.Append(diags...)
+			if diags.HasError() {
+				return
+			}
+			resp.Diagnostics.Append(
+				resp.Plan.SetAttribute(ctx, path.Root("visibility_group_ids"), setValue)...,
+			)
+		}
+	}
+}
+
+func attributeOmitted(config map[string]tftypes.Value, name string) bool {
+	configured, ok := config[name]
+	return !ok || configured.IsNull()
+}
+
+func knownStateValue(state map[string]tftypes.Value, name string) (tftypes.Value, bool) {
+	value, ok := state[name]
+	if !ok || !value.IsKnown() || value.IsNull() {
+		return tftypes.Value{}, false
+	}
+	return value, true
+}
+
+func stringIDsFromTerraformCollection(value tftypes.Value) ([]attr.Value, bool) {
+	var elems []tftypes.Value
+	if err := value.As(&elems); err != nil {
+		return nil, false
 	}
 
-	var visibility string
-	if err := stateValue.As(&visibility); err != nil {
-		return
+	ids := make([]attr.Value, 0, len(elems))
+	for _, elem := range elems {
+		if !elem.IsKnown() || elem.IsNull() {
+			return nil, false
+		}
+		var id string
+		if err := elem.As(&id); err != nil {
+			return nil, false
+		}
+		ids = append(ids, types.StringValue(id))
 	}
-
-	resp.Diagnostics.Append(
-		resp.Plan.SetAttribute(ctx, path.Root("visibility"), types.StringValue(visibility))...,
-	)
+	return ids, true
 }
 
 func validateConfiguredChanges(
