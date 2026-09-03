@@ -3,7 +3,7 @@
 
 package sdk
 
-// Generated from OpenAPI doc version 1.0 and generator version 2.933.0
+// Generated from OpenAPI doc version 1.0 and generator version 2.934.1
 
 import (
 	"context"
@@ -89,7 +89,8 @@ type OpalAPI struct {
 	// Operations related to Paladin
 	Paladin *Paladin
 	// Operations related to OpalQuery
-	OpalQueries *OpalQueries
+	OpalQueries      *OpalQueries
+	RequestTemplates *RequestTemplates
 	// Operations related to requests
 	Requests *Requests
 	// Operations related to resources
@@ -180,9 +181,9 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *OpalAPI {
 	sdk := &OpalAPI{
-		SDKVersion: "3.6.4",
+		SDKVersion: "3.6.5",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:  "speakeasy-sdk/terraform 3.6.4 2.933.0 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
+			UserAgent:  "speakeasy-sdk/terraform 3.6.5 2.934.1 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
 			ServerList: ServerList,
 		},
 		hooks: hooks.New(),
@@ -220,6 +221,7 @@ func New(opts ...SDKOption) *OpalAPI {
 	sdk.Owners = newOwners(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Paladin = newPaladin(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.OpalQueries = newOpalQueries(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.RequestTemplates = newRequestTemplates(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Requests = newRequests(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Resources = newResources(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Sessions = newSessions(sdk, sdk.sdkConfiguration, sdk.hooks)

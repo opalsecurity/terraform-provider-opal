@@ -593,6 +593,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for GCP BigQuery Table.`,
 					},
+					"gcp_billing_account": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"billing_account_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The resource name of the billing account.`,
+							},
+						},
+						Description: `Remote info for a GCP billing account.`,
+					},
 					"gcp_bucket": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
