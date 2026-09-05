@@ -102,6 +102,7 @@ Read-Only:
 - `docusign_permission_profile` (Attributes) Remote info for Docusign permission profile. (see [below for nested schema](#nestedatt--remote_info--docusign_permission_profile))
 - `gcp_big_query_dataset` (Attributes) Remote info for GCP BigQuery Dataset. (see [below for nested schema](#nestedatt--remote_info--gcp_big_query_dataset))
 - `gcp_big_query_table` (Attributes) Remote info for GCP BigQuery Table. (see [below for nested schema](#nestedatt--remote_info--gcp_big_query_table))
+- `gcp_billing_account` (Attributes) Remote info for a GCP billing account. (see [below for nested schema](#nestedatt--remote_info--gcp_billing_account))
 - `gcp_bucket` (Attributes) Remote info for GCP bucket. (see [below for nested schema](#nestedatt--remote_info--gcp_bucket))
 - `gcp_compute_instance` (Attributes) Remote info for GCP compute instance. (see [below for nested schema](#nestedatt--remote_info--gcp_compute_instance))
 - `gcp_folder` (Attributes) Remote info for GCP folder. (see [below for nested schema](#nestedatt--remote_info--gcp_folder))
@@ -460,6 +461,14 @@ Read-Only:
 - `table_id` (String) The id of the table.
 
 
+<a id="nestedatt--remote_info--gcp_billing_account"></a>
+### Nested Schema for `remote_info.gcp_billing_account`
+
+Read-Only:
+
+- `billing_account_id` (String) The resource name of the billing account.
+
+
 <a id="nestedatt--remote_info--gcp_bucket"></a>
 ### Nested Schema for `remote_info.gcp_bucket`
 
@@ -802,7 +811,7 @@ Read-Only:
 - `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource.
 - `condition` (Attributes) The condition for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--condition))
 - `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
-- `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
+- `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.
 - `priority` (Number) The priority of the request configuration.
 - `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
 - `request_template_id` (String) The ID of the associated request template.
