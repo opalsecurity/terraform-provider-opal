@@ -79,7 +79,7 @@ func (r *GroupContainingGroupResource) Schema(ctx context.Context, req resource.
 				},
 				Description: `The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite. Requires replacement if changed.`,
 				Validators: []validator.Int64{
-					int64validator.AtMost(525960),
+					int64validator.AtMost(153722867),
 				},
 			},
 			"group_id": schema.StringAttribute{

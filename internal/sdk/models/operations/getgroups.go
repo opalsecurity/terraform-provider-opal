@@ -17,6 +17,8 @@ type GetGroupsRequest struct {
 	GroupTypeFilter *shared.GroupTypeEnum `queryParam:"style=form,explode=true,name=group_type_filter"`
 	// Number of results to return per page. Default is 200.
 	PageSize *int64 `queryParam:"style=form,explode=true,name=page_size"`
+	// If true, only return groups that allow access requests. Does not check whether the caller is permitted to request the group.
+	Requestable *bool `queryParam:"style=form,explode=true,name=requestable"`
 }
 
 func (g *GetGroupsRequest) GetGroupIds() []string {
@@ -45,6 +47,13 @@ func (g *GetGroupsRequest) GetPageSize() *int64 {
 		return nil
 	}
 	return g.PageSize
+}
+
+func (g *GetGroupsRequest) GetRequestable() *bool {
+	if g == nil {
+		return nil
+	}
+	return g.Requestable
 }
 
 type GetGroupsResponse struct {
