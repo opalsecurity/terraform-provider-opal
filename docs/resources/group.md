@@ -554,7 +554,7 @@ Optional:
 - `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource. Not Null
 - `condition` (Attributes) The condition for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--condition))
 - `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
-- `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
+- `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.
 - `priority` (Number) The priority of the request configuration. Not Null
 - `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
 - `request_template_id` (String) The ID of the associated request template.

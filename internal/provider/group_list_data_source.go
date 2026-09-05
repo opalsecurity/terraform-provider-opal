@@ -37,6 +37,7 @@ type GroupListDataSourceModel struct {
 	GroupName       types.String    `queryParam:"style=form,explode=true,name=group_name" tfsdk:"group_name"`
 	GroupTypeFilter types.String    `queryParam:"style=form,explode=true,name=group_type_filter" tfsdk:"group_type_filter"`
 	PageSize        types.Int64     `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
+	Requestable     types.Bool      `queryParam:"style=form,explode=true,name=requestable" tfsdk:"requestable"`
 	Results         []tfTypes.Group `tfsdk:"results"`
 }
 
@@ -111,6 +112,10 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Validators: []validator.Int64{
 					int64validator.AtMost(1000),
 				},
+			},
+			"requestable": schema.BoolAttribute{
+				Optional:    true,
+				Description: `If true, only return groups that allow access requests. Does not check whether the caller is permitted to request the group.`,
 			},
 			"results": schema.ListNestedAttribute{
 				Computed: true,
@@ -582,7 +587,7 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 									},
 									"max_duration": schema.Int64Attribute{
 										Computed:    true,
-										Description: `The maximum duration for which the resource can be requested (in minutes).`,
+										Description: `The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.`,
 									},
 									"priority": schema.Int64Attribute{
 										Computed:    true,

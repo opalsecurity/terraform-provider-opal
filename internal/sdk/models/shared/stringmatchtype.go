@@ -8,7 +8,7 @@ import (
 	"fmt"
 )
 
-// StringMatchType - How to match a string value against entity names.
+// StringMatchType - How to match a string value against entity names. REGEX matches the value as a case-insensitive regular expression.
 type StringMatchType string
 
 const (
@@ -16,6 +16,7 @@ const (
 	StringMatchTypeEquals     StringMatchType = "EQUALS"
 	StringMatchTypeStartsWith StringMatchType = "STARTS_WITH"
 	StringMatchTypeEndsWith   StringMatchType = "ENDS_WITH"
+	StringMatchTypeRegex      StringMatchType = "REGEX"
 )
 
 func (e StringMatchType) ToPointer() *StringMatchType {
@@ -34,6 +35,8 @@ func (e *StringMatchType) UnmarshalJSON(data []byte) error {
 	case "STARTS_WITH":
 		fallthrough
 	case "ENDS_WITH":
+		fallthrough
+	case "REGEX":
 		*e = StringMatchType(v)
 		return nil
 	default:

@@ -55,7 +55,7 @@ type RequestConfiguration struct {
 	Condition *Condition `json:"condition,omitempty"`
 	// The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 	ExtensionsDurationInMinutes *int64 `json:"extensions_duration_in_minutes,omitempty"`
-	// The maximum duration for which the resource can be requested (in minutes).
+	// The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.
 	MaxDuration *int64 `json:"max_duration_minutes,omitempty"`
 	// The priority of the request configuration.
 	Priority int64 `json:"priority"`
