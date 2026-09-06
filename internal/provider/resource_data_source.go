@@ -593,6 +593,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for GCP BigQuery Table.`,
 					},
+					"gcp_billing_account": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"billing_account_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The resource name of the billing account.`,
+							},
+						},
+						Description: `Remote info for a GCP billing account.`,
+					},
 					"gcp_bucket": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -1078,7 +1088,7 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						"max_duration": schema.Int64Attribute{
 							Computed:    true,
-							Description: `The maximum duration for which the resource can be requested (in minutes).`,
+							Description: `The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.`,
 						},
 						"priority": schema.Int64Attribute{
 							Computed:    true,

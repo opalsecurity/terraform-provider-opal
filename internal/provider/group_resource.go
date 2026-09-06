@@ -1316,7 +1316,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							PlanModifiers: []planmodifier.Int64{
 								speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
 							},
-							Description: `The maximum duration for which the resource can be requested (in minutes).`,
+							Description: `The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.`,
 						},
 						"priority": schema.Int64Attribute{
 							Computed: true,
