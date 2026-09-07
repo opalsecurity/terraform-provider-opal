@@ -49,7 +49,14 @@ func CreateRunOpalQueryRequestNode(node OpalNodeQuery) RunOpalQueryRequest {
 	}
 }
 
-func (u *RunOpalQueryRequest) UnmarshalJSON(data []byte) error {
+func (u *RunOpalQueryRequest) UnmarshalJSON(data []byte) (err error) {
+	previous := *u
+	*u = RunOpalQueryRequest{}
+	defer func() {
+		if err != nil {
+			*u = previous
+		}
+	}()
 
 	type discriminator struct {
 		Type string `json:"type"`
