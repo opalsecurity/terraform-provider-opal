@@ -49,6 +49,7 @@ const (
 	ResourceTypeEnumGcpBigQueryDataset                ResourceTypeEnum = "GCP_BIG_QUERY_DATASET"
 	ResourceTypeEnumGcpBigQueryTable                  ResourceTypeEnum = "GCP_BIG_QUERY_TABLE"
 	ResourceTypeEnumGcpServiceAccount                 ResourceTypeEnum = "GCP_SERVICE_ACCOUNT"
+	ResourceTypeEnumGcpBillingAccount                 ResourceTypeEnum = "GCP_BILLING_ACCOUNT"
 	ResourceTypeEnumGitHubRepo                        ResourceTypeEnum = "GIT_HUB_REPO"
 	ResourceTypeEnumGitHubOrgRole                     ResourceTypeEnum = "GIT_HUB_ORG_ROLE"
 	ResourceTypeEnumGitLabProject                     ResourceTypeEnum = "GIT_LAB_PROJECT"
@@ -103,6 +104,8 @@ const (
 	ResourceTypeEnumDocusignPermissionProfile         ResourceTypeEnum = "DOCUSIGN_PERMISSION_PROFILE"
 	ResourceTypeEnumZoomRole                          ResourceTypeEnum = "ZOOM_ROLE"
 	ResourceTypeEnumZoomLicense                       ResourceTypeEnum = "ZOOM_LICENSE"
+	ResourceTypeEnumLinearOrganization                ResourceTypeEnum = "LINEAR_ORGANIZATION"
+	ResourceTypeEnumLinearProject                     ResourceTypeEnum = "LINEAR_PROJECT"
 )
 
 func (e ResourceTypeEnum) ToPointer() *ResourceTypeEnum {
@@ -187,6 +190,8 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "GCP_BIG_QUERY_TABLE":
 		fallthrough
 	case "GCP_SERVICE_ACCOUNT":
+		fallthrough
+	case "GCP_BILLING_ACCOUNT":
 		fallthrough
 	case "GIT_HUB_REPO":
 		fallthrough
@@ -295,6 +300,10 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "ZOOM_ROLE":
 		fallthrough
 	case "ZOOM_LICENSE":
+		fallthrough
+	case "LINEAR_ORGANIZATION":
+		fallthrough
+	case "LINEAR_PROJECT":
 		*e = ResourceTypeEnum(v)
 		return nil
 	default:

@@ -8,7 +8,11 @@ resource "opal_group" "my_group" {
   group_leader_user_ids = [
     "23ac9822-9f43-4e31-a31d-6a6109f207ae"
   ]
-  group_type               = "OPAL_GROUP"
+  group_type = "OPAL_GROUP"
+  handle     = "eng-oncall"
+  initial_user_ids = [
+    "28515a50-20b7-42a7-8085-0024077aef15"
+  ]
   match_remote_description = false
   match_remote_name        = false
   message_channel_ids = [
@@ -82,6 +86,9 @@ resource "opal_group" "my_group" {
     }
     ldap_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    linear_team = {
+      team_id = "8caed98e-1234-5678-9abc-def012345678"
     }
     okta_group = {
       group_id = "00gjs33pe8rtmRrp3rd6"
@@ -162,6 +169,7 @@ resource "opal_group" "my_group" {
   ]
   require_mfa_to_approve    = false
   risk_sensitivity_override = "CRITICAL"
+  team_id                   = "T01234567"
   visibility                = "GLOBAL"
   visibility_group_ids = [
     "ea22f6cf-8fd4-44e9-b53d-66a5731ab7da"

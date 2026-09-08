@@ -70,6 +70,7 @@ const (
 	EntityItemTypeEnumGcpCloudSQLPostgresInstance       EntityItemTypeEnum = "GCP_CLOUD_SQL_POSTGRES_INSTANCE"
 	EntityItemTypeEnumGcpCloudSQLMysqlInstance          EntityItemTypeEnum = "GCP_CLOUD_SQL_MYSQL_INSTANCE"
 	EntityItemTypeEnumGcpServiceAccount                 EntityItemTypeEnum = "GCP_SERVICE_ACCOUNT"
+	EntityItemTypeEnumGcpBillingAccount                 EntityItemTypeEnum = "GCP_BILLING_ACCOUNT"
 	EntityItemTypeEnumGitHubRepo                        EntityItemTypeEnum = "GIT_HUB_REPO"
 	EntityItemTypeEnumGitHubOrgRole                     EntityItemTypeEnum = "GIT_HUB_ORG_ROLE"
 	EntityItemTypeEnumGitLabProject                     EntityItemTypeEnum = "GIT_LAB_PROJECT"
@@ -222,6 +223,8 @@ func (e *EntityItemTypeEnum) UnmarshalJSON(data []byte) error {
 	case "GCP_CLOUD_SQL_MYSQL_INSTANCE":
 		fallthrough
 	case "GCP_SERVICE_ACCOUNT":
+		fallthrough
+	case "GCP_BILLING_ACCOUNT":
 		fallthrough
 	case "GIT_HUB_REPO":
 		fallthrough
