@@ -657,7 +657,7 @@ actions:
   - target: $["paths"]["/resources/{resource_id}/message-channels"]["get"]
     update:
       x-speakeasy-entity-operation:
-        - Resource#read#2
+        - Resource#get#3
         - ResourceMessageChannelList#get
   - target: $["paths"]["/resources/{resource_id}/message-channels"]["put"]["operationId"]
     update: updateResourceMessageChannels
@@ -675,7 +675,7 @@ actions:
   - target: $["paths"]["/resources/{resource_id}/message-channels"]["put"]
     update:
       x-speakeasy-entity-operation:
-        - Resource#create#4
+        - Resource#create#5
         - Resource#update#3
   - target: $["paths"]["/resources/{resource_id}/visibility"]["get"]["operationId"]
     update: getResourceVisibility
