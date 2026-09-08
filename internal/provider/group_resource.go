@@ -6,8 +6,6 @@ package provider
 import (
 	"context"
 	"fmt"
-
-	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -37,6 +35,7 @@ import (
 	custom_listvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/listvalidators"
 	speakeasy_objectvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/objectvalidators"
 	speakeasy_setvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/setvalidators"
+	custom_stringvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/stringvalidators"
 	speakeasy_stringvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/stringvalidators"
 )
 
@@ -58,6 +57,7 @@ type GroupResource struct {
 type GroupResourceModel struct {
 	AdminOwnerID                types.String                                 `tfsdk:"admin_owner_id"`
 	AppID                       types.String                                 `tfsdk:"app_id"`
+	ConfigurationTemplateID     types.String                                 `tfsdk:"configuration_template_id"`
 	CustomRequestNotification   types.String                                 `tfsdk:"custom_request_notification"`
 	Description                 types.String                                 `tfsdk:"description"`
 	ExtensionsDurationInMinutes types.Int64                                  `tfsdk:"extensions_duration_in_minutes"`
@@ -118,6 +118,14 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 				Description: `The ID of the app for the group. Requires replacement if changed.`,
+			},
+			"configuration_template_id": schema.StringAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
+				Validators: []validator.String{
+					custom_stringvalidators.GroupConfigurationTemplateID(),
+				},
 			},
 			"custom_request_notification": schema.StringAttribute{
 				Computed: true,
@@ -243,13 +251,19 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Description: `Information about the last successful sync of this group.`,
 			},
 			"match_remote_description": schema.BoolAttribute{
-				Computed:    true,
-				Optional:    true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+				},
 				Description: `A bool representing whether or not the group's description should be synced from the end system. When true, the description is overwritten with the remote description on each sync, so a ` + "`" + `description` + "`" + ` provided together with this field set to true will be replaced at the next sync. If not provided, the current value is left unchanged.`,
 			},
 			"match_remote_name": schema.BoolAttribute{
-				Computed:    true,
-				Optional:    true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.Bool{
+					speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+				},
 				Description: `A bool representing whether or not the group's name should be synced from the end system. When true, the name is overwritten with the remote name on each sync, so a ` + "`" + `name` + "`" + ` provided together with this field set to true will be replaced at the next sync. If not provided, the current value is left unchanged.`,
 			},
 			"message_channel_ids": schema.SetAttribute{
@@ -1226,23 +1240,36 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Description: `The name of the remote.`,
 			},
 			"request_configurations": schema.ListNestedAttribute{
-				Required: true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.List{
+					speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
+				},
 				NestedObject: schema.NestedAttributeObject{
 					Validators: []validator.Object{
 						speakeasy_objectvalidators.NotNull(),
 					},
+					PlanModifiers: []planmodifier.Object{
+						speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+					},
 					Attributes: map[string]schema.Attribute{
 						"allow_requests": schema.BoolAttribute{
-							Computed:    true,
-							Optional:    true,
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Bool{
+								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+							},
 							Description: `A bool representing whether or not to allow requests for this resource. Not Null`,
 							Validators: []validator.Bool{
 								speakeasy_boolvalidators.NotNull(),
 							},
 						},
 						"auto_approval": schema.BoolAttribute{
-							Computed:    true,
-							Optional:    true,
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Bool{
+								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+							},
 							Description: `A bool representing whether or not to automatically approve requests for this resource. Not Null`,
 							Validators: []validator.Bool{
 								speakeasy_boolvalidators.NotNull(),
@@ -1303,8 +1330,11 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							Description: `The maximum duration for which the resource can be requested (in minutes).`,
 						},
 						"priority": schema.Int64Attribute{
-							Computed:    true,
-							Optional:    true,
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Int64{
+								speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
+							},
 							Description: `The priority of the request configuration. Not Null`,
 							Validators: []validator.Int64{
 								speakeasy_int64validators.NotNull(),
@@ -1327,16 +1357,22 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							Description: `The ID of the associated request template.`,
 						},
 						"require_mfa_to_request": schema.BoolAttribute{
-							Computed:    true,
-							Optional:    true,
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Bool{
+								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+							},
 							Description: `A bool representing whether or not to require MFA for requesting access to this resource. Not Null`,
 							Validators: []validator.Bool{
 								speakeasy_boolvalidators.NotNull(),
 							},
 						},
 						"require_support_ticket": schema.BoolAttribute{
-							Computed:    true,
-							Optional:    true,
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Bool{
+								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+							},
 							Description: `A bool representing whether or not access requests to the resource require an access ticket. Not Null`,
 							Validators: []validator.Bool{
 								speakeasy_boolvalidators.NotNull(),
@@ -1418,7 +1454,6 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 				Description: `The request configuration list of the configuration template. If not provided, the default request configuration will be used.`,
 				Validators: []validator.List{
-					listvalidator.SizeAtLeast(1),
 					custom_listvalidators.RequestConfigurations(),
 				},
 			},
@@ -1454,7 +1489,8 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 			},
 			"visibility": schema.StringAttribute{
-				Required:    true,
+				Computed:    true,
+				Optional:    true,
 				Description: `The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(

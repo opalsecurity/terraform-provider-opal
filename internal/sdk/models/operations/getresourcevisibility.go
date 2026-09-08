@@ -4,6 +4,7 @@
 package operations
 
 import (
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
 	"net/http"
 )
@@ -20,6 +21,38 @@ func (g *GetResourceVisibilityRequest) GetID() string {
 	return g.ID
 }
 
+// GetResourceVisibilityResponseBody - Visibility infomation of an entity.
+type GetResourceVisibilityResponseBody struct {
+	// The visibility level of the entity.
+	Visibility         shared.VisibilityTypeEnum `json:"visibility"`
+	VisibilityGroupIds []string                  `json:"visibility_group_ids"`
+}
+
+func (g GetResourceVisibilityResponseBody) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(g, "", false)
+}
+
+func (g *GetResourceVisibilityResponseBody) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &g, "", false, nil); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (g *GetResourceVisibilityResponseBody) GetVisibility() shared.VisibilityTypeEnum {
+	if g == nil {
+		return shared.VisibilityTypeEnum("")
+	}
+	return g.Visibility
+}
+
+func (g *GetResourceVisibilityResponseBody) GetVisibilityGroupIds() []string {
+	if g == nil {
+		return nil
+	}
+	return g.VisibilityGroupIds
+}
+
 type GetResourceVisibilityResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
@@ -28,7 +61,7 @@ type GetResourceVisibilityResponse struct {
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
 	// The visibility info of this resource.
-	VisibilityInfo *shared.VisibilityInfo
+	Object *GetResourceVisibilityResponseBody
 }
 
 func (g *GetResourceVisibilityResponse) GetContentType() string {
@@ -52,9 +85,9 @@ func (g *GetResourceVisibilityResponse) GetRawResponse() *http.Response {
 	return g.RawResponse
 }
 
-func (g *GetResourceVisibilityResponse) GetVisibilityInfo() *shared.VisibilityInfo {
+func (g *GetResourceVisibilityResponse) GetObject() *GetResourceVisibilityResponseBody {
 	if g == nil {
 		return nil
 	}
-	return g.VisibilityInfo
+	return g.Object
 }

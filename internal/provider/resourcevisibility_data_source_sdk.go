@@ -8,10 +8,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/operations"
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
 )
 
-func (r *ResourceVisibilityDataSourceModel) RefreshFromSharedVisibilityInfo(ctx context.Context, resp *shared.VisibilityInfo) diag.Diagnostics {
+func (r *ResourceVisibilityDataSourceModel) RefreshFromOperationsGetResourceVisibilityResponseBody(ctx context.Context, resp *operations.GetResourceVisibilityResponseBody) diag.Diagnostics {
 	var diags diag.Diagnostics
 
 	if resp != nil {

@@ -151,6 +151,7 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"risk_sensitivity_override": tftypes.String,
 			"extensions_duration_in_minutes": tftypes.Number,
 			"last_successful_sync": lastSuccessfulSyncType,
+			"configuration_template_id": tftypes.String,
 		},
 	}
 	
@@ -313,6 +314,7 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"risk_sensitivity_override": tftypes.NewValue(tftypes.String, nil),
 			"extensions_duration_in_minutes": tftypes.NewValue(tftypes.Number, nil),
 			"last_successful_sync": tftypes.NewValue(lastSuccessfulSyncType, nil), // read only field to be filled in by refresh
+			"configuration_template_id": tftypes.NewValue(tftypes.String, nil), // added after v0; unset until refresh
 		}),
 	)
 	if err != nil {

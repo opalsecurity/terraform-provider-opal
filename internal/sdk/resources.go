@@ -3201,12 +3201,12 @@ func (s *Resources) GetVisibility(ctx context.Context, request operations.GetRes
 				return nil, err
 			}
 
-			var out shared.VisibilityInfo
+			var out operations.GetResourceVisibilityResponseBody
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.VisibilityInfo = &out
+			res.Object = &out
 		default:
 			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {
@@ -4082,7 +4082,7 @@ func (s *Resources) UpdateVisibility(ctx context.Context, request operations.Upd
 		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "VisibilityInfo", "json", `request:"mediaType=application/json"`)
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "UpdateVisibilityInfo", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, err
 	}

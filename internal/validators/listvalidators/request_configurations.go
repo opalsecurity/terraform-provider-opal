@@ -4,11 +4,12 @@ package listvalidators
 
 import (
 	"context"
+	"fmt"
 	"sort"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/helpers/validatordiag"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
-	"github.com/hashicorp/terraform-plugin-framework-validators/helpers/validatordiag"
 )
 
 var _ validator.List = ListRequestConfigurationsValidator{}
@@ -27,6 +28,21 @@ func (v ListRequestConfigurationsValidator) MarkdownDescription(ctx context.Cont
 
 // Validate performs the validation.
 func (v ListRequestConfigurationsValidator) ValidateList(ctx context.Context, req validator.ListRequest, resp *validator.ListResponse) {
+	if req.ConfigValue.IsNull() || req.ConfigValue.IsUnknown() {
+		return
+	}
+
+	// Omitting the attribute is allowed so a configuration template can supply the
+	// request configurations, but an explicit list must not be empty.
+	if elems := req.ConfigValue.Elements(); len(elems) < 1 {
+		resp.Diagnostics.Append(validatordiag.InvalidAttributeValueDiagnostic(
+			req.Path,
+			"list must contain at least 1 elements",
+			fmt.Sprintf("%d", len(elems)),
+		))
+		return
+	}
+
 	requestConfigurations := []types.RequestConfiguration{}
 
 	req.ConfigValue.ElementsAs(ctx, &requestConfigurations, true)
@@ -43,7 +59,7 @@ func (v ListRequestConfigurationsValidator) ValidateList(ctx context.Context, re
 				req.Path.String()+": "+v.Description(ctx),
 			))
 		}
-		
+
 		if requestConfiguration.Priority.ValueInt64() != 0 && requestConfiguration.Condition == nil {
 			resp.Diagnostics.Append(validatordiag.InvalidAttributeTypeDiagnostic(
 				req.Path,

@@ -32,6 +32,7 @@ type GroupDataSource struct {
 type GroupDataSourceModel struct {
 	AdminOwnerID                types.String                                 `tfsdk:"admin_owner_id"`
 	AppID                       types.String                                 `tfsdk:"app_id"`
+	ConfigurationTemplateID     types.String                                 `tfsdk:"configuration_template_id"`
 	CustomRequestNotification   types.String                                 `tfsdk:"custom_request_notification"`
 	Description                 types.String                                 `tfsdk:"description"`
 	ExtensionsDurationInMinutes types.Int64                                  `tfsdk:"extensions_duration_in_minutes"`
@@ -73,6 +74,10 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			"app_id": schema.StringAttribute{
 				Computed:    true,
 				Description: `The ID of the group's app.`,
+			},
+			"configuration_template_id": schema.StringAttribute{
+				Computed:    true,
+				Description: `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
 			},
 			"custom_request_notification": schema.StringAttribute{
 				Computed:    true,

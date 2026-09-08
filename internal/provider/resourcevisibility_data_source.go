@@ -121,11 +121,11 @@ func (r *ResourceVisibilityDataSource) Read(ctx context.Context, req datasource.
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.VisibilityInfo != nil) {
+	if !(res.Object != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromSharedVisibilityInfo(ctx, res.VisibilityInfo)...)
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetResourceVisibilityResponseBody(ctx, res.Object)...)
 
 	if resp.Diagnostics.HasError() {
 		return

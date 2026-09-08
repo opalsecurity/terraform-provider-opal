@@ -9,16 +9,16 @@ import (
 )
 
 type UpdateGroupVisibilityRequest struct {
-	VisibilityInfo shared.VisibilityInfo `request:"mediaType=application/json"`
+	UpdateVisibilityInfo shared.UpdateVisibilityInfo `request:"mediaType=application/json"`
 	// The ID of the group.
 	ID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (u *UpdateGroupVisibilityRequest) GetVisibilityInfo() shared.VisibilityInfo {
+func (u *UpdateGroupVisibilityRequest) GetUpdateVisibilityInfo() shared.UpdateVisibilityInfo {
 	if u == nil {
-		return shared.VisibilityInfo{}
+		return shared.UpdateVisibilityInfo{}
 	}
-	return u.VisibilityInfo
+	return u.UpdateVisibilityInfo
 }
 
 func (u *UpdateGroupVisibilityRequest) GetID() string {

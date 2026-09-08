@@ -30,6 +30,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				results.AncestorResourceIds = append(results.AncestorResourceIds, types.StringValue(v))
 			}
 			results.AppID = types.StringPointerValue(resultsItem.AppID)
+			results.ConfigurationTemplateID = types.StringPointerValue(resultsItem.ConfigurationTemplateID)
 			results.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
 			results.DescendantResourceIds = make([]types.String, 0, len(resultsItem.DescendantResourceIds))
 			for _, v := range resultsItem.DescendantResourceIds {
