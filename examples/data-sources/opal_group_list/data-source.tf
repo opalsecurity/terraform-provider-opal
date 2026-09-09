@@ -6,4 +6,5 @@ data "opal_group_list" "my_group_list" {
   group_name        = "example-name"
   group_type_filter = "OPAL_GROUP"
   page_size         = 200
+  requestable       = true
 }

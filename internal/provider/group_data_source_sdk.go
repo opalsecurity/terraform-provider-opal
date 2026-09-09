@@ -254,6 +254,12 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.LdapGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.LdapGroup.GroupID = types.StringValue(resp.RemoteInfo.LdapGroup.GroupID)
 			}
+			if resp.RemoteInfo.LinearTeam == nil {
+				r.RemoteInfo.LinearTeam = nil
+			} else {
+				r.RemoteInfo.LinearTeam = &tfTypes.GrafanaTeam{}
+				r.RemoteInfo.LinearTeam.TeamID = types.StringValue(resp.RemoteInfo.LinearTeam.TeamID)
+			}
 			if resp.RemoteInfo.OktaGroup == nil {
 				r.RemoteInfo.OktaGroup = nil
 			} else {

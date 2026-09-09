@@ -142,6 +142,9 @@ resource "opal_resource" "my_resource" {
       project_id = "example-project-898931321"
       table_id   = "example-table-898931321"
     }
+    gcp_billing_account = {
+      billing_account_id = "billingAccounts/012345-567890-ABCDEF"
+    }
     gcp_bucket = {
       bucket_id = "example-bucket-898931321"
     }
@@ -205,6 +208,12 @@ resource "opal_resource" "my_resource" {
     }
     ilevel_advanced_role = {
       role_name = "IT User"
+    }
+    linear_organization = {
+      org_id = "df85baa9-0af5-4f28-a5b5-64e4b2ddeedc"
+    }
+    linear_project = {
+      project_id = "58ed91a7-1234-5678-9abc-def012345678"
     }
     netsuite_role = {
       role_id = "123e4567-e89b-12d3-a456-426614174000"

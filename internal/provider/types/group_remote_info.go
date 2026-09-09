@@ -25,6 +25,7 @@ type GroupRemoteInfo struct {
 	IncidentioOnCallSchedule *IncidentioOnCallSchedule `tfsdk:"incidentio_on_call_schedule"`
 	JiraGroup                *ActiveDirectoryGroup     `tfsdk:"jira_group"`
 	LdapGroup                *ActiveDirectoryGroup     `tfsdk:"ldap_group"`
+	LinearTeam               *GrafanaTeam              `tfsdk:"linear_team"`
 	OktaGroup                *ActiveDirectoryGroup     `tfsdk:"okta_group"`
 	OktaGroupRule            *OktaGroupRule            `tfsdk:"okta_group_rule"`
 	PagerdutyOnCallSchedule  *IncidentioOnCallSchedule `tfsdk:"pagerduty_on_call_schedule"`

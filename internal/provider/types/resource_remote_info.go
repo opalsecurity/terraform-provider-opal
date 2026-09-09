@@ -41,6 +41,7 @@ type ResourceRemoteInfo struct {
 	DocusignPermissionProfile         *DocusignPermissionProfile         `tfsdk:"docusign_permission_profile"`
 	GcpBigQueryDataset                *GcpBigQueryDataset                `tfsdk:"gcp_big_query_dataset"`
 	GcpBigQueryTable                  *GcpBigQueryTable                  `tfsdk:"gcp_big_query_table"`
+	GcpBillingAccount                 *GcpBillingAccount                 `tfsdk:"gcp_billing_account"`
 	GcpBucket                         *GcpBucket                         `tfsdk:"gcp_bucket"`
 	GcpComputeInstance                *GcpComputeInstance                `tfsdk:"gcp_compute_instance"`
 	GcpFolder                         *GcpFolder                         `tfsdk:"gcp_folder"`
@@ -60,6 +61,8 @@ type ResourceRemoteInfo struct {
 	GrafanaRole                       *GrafanaRole                       `tfsdk:"grafana_role"`
 	HubspotRole                       *ClickhouseRole                    `tfsdk:"hubspot_role"`
 	IlevelAdvancedRole                *IlevelAdvancedRole                `tfsdk:"ilevel_advanced_role"`
+	LinearOrganization                *CursorOrganization                `tfsdk:"linear_organization"`
+	LinearProject                     *GcpProject                        `tfsdk:"linear_project"`
 	NetsuiteRole                      *ClickhouseRole                    `tfsdk:"netsuite_role"`
 	OktaApp                           *OktaApp                           `tfsdk:"okta_app"`
 	OktaCustomRole                    *ClickhouseRole                    `tfsdk:"okta_custom_role"`
