@@ -43,7 +43,14 @@ func CreateReviewerStagesStr(str string) ReviewerStages {
 	}
 }
 
-func (u *ReviewerStages) UnmarshalJSON(data []byte) error {
+func (u *ReviewerStages) UnmarshalJSON(data []byte) (err error) {
+	previous := *u
+	*u = ReviewerStages{}
+	defer func() {
+		if err != nil {
+			*u = previous
+		}
+	}()
 
 	var candidates []utils.UnionCandidate
 

@@ -12,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/listplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/objectplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -64,7 +65,9 @@ type GroupResourceModel struct {
 	GroupBindingID              types.String                                 `tfsdk:"group_binding_id"`
 	GroupLeaderUserIds          []types.String                               `tfsdk:"group_leader_user_ids"`
 	GroupType                   types.String                                 `tfsdk:"group_type"`
+	Handle                      types.String                                 `tfsdk:"handle"`
 	ID                          types.String                                 `tfsdk:"id"`
+	InitialUserIds              []types.String                               `tfsdk:"initial_user_ids"`
 	LastSuccessfulSync          *tfTypes.LastSuccessfulSync                  `tfsdk:"last_successful_sync"`
 	MatchRemoteDescription      types.Bool                                   `tfsdk:"match_remote_description"`
 	MatchRemoteName             types.Bool                                   `tfsdk:"match_remote_name"`
@@ -79,6 +82,7 @@ type GroupResourceModel struct {
 	RequireMfaToApprove         types.Bool                                   `tfsdk:"require_mfa_to_approve"`
 	RiskSensitivity             types.String                                 `tfsdk:"risk_sensitivity"`
 	RiskSensitivityOverride     types.String                                 `tfsdk:"risk_sensitivity_override"`
+	TeamID                      types.String                                 `tfsdk:"team_id"`
 	Visibility                  types.String                                 `tfsdk:"visibility"`
 	VisibilityGroupIds          []types.String                               `tfsdk:"visibility_group_ids"`
 }
@@ -177,7 +181,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP"]; Requires replacement if changed.`,
+				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"ACTIVE_DIRECTORY_GROUP",
@@ -217,8 +221,16 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						"JIRA_GROUP",
 						"DOCUSIGN_GROUP",
 						"ZOOM_GROUP",
+						"LINEAR_TEAM",
 					),
 				},
+			},
+			"handle": schema.StringAttribute{
+				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplaceIfConfigured(),
+				},
+				Description: `Slack user group mention name, without the @. Optional; Slack assigns one if omitted. Requires replacement if changed.`,
 			},
 			"id": schema.StringAttribute{
 				Computed: true,
@@ -226,6 +238,14 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 				Description: `The ID of the group.`,
+			},
+			"initial_user_ids": schema.ListAttribute{
+				Optional: true,
+				PlanModifiers: []planmodifier.List{
+					listplanmodifier.RequiresReplaceIfConfigured(),
+				},
+				ElementType: types.StringType,
+				Description: `Opal user IDs to add as the group's initial members. Required when creating a Slack user group. Requires replacement if changed.`,
 			},
 			"last_successful_sync": schema.SingleNestedAttribute{
 				Computed: true,
@@ -907,6 +927,29 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						},
 						Description: `Remote info for LDAP group. Requires replacement if changed.`,
 					},
+					"linear_team": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"team_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Linear team. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Linear team. Requires replacement if changed.`,
+					},
 					"okta_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -1327,7 +1370,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							PlanModifiers: []planmodifier.Int64{
 								speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
 							},
-							Description: `The maximum duration for which the resource can be requested (in minutes).`,
+							Description: `The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.`,
 						},
 						"priority": schema.Int64Attribute{
 							Computed: true,
@@ -1487,6 +1530,13 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						"NONE",
 					),
 				},
+			},
+			"team_id": schema.StringAttribute{
+				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplaceIfConfigured(),
+				},
+				Description: `Slack workspace ID. Required when the Slack connection spans multiple workspaces. Requires replacement if changed.`,
 			},
 			"visibility": schema.StringAttribute{
 				Computed:    true,

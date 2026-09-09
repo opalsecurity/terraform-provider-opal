@@ -3,11 +3,6 @@
 
 package shared
 
-import (
-	"encoding/json"
-	"fmt"
-)
-
 // AppType - The type of an app.
 type AppType string
 
@@ -17,115 +12,69 @@ const (
 	AppTypeAzureAd         AppType = "AZURE_AD"
 	AppTypeAws             AppType = "AWS"
 	AppTypeAwsSso          AppType = "AWS_SSO"
+	AppTypeClickhouse      AppType = "CLICKHOUSE"
 	AppTypeCoupa           AppType = "COUPA"
 	AppTypeCursor          AppType = "CURSOR"
 	AppTypeCustom          AppType = "CUSTOM"
+	AppTypeConfluence      AppType = "CONFLUENCE"
+	AppTypeCustomConnector AppType = "CUSTOM_CONNECTOR"
 	AppTypeDatabricks      AppType = "DATABRICKS"
 	AppTypeDatastaxAstra   AppType = "DATASTAX_ASTRA"
+	AppTypeAlicloud        AppType = "ALICLOUD"
+	AppTypeDevin           AppType = "DEVIN"
+	AppTypeDocusign        AppType = "DOCUSIGN"
 	AppTypeDuo             AppType = "DUO"
 	AppTypeGcp             AppType = "GCP"
 	AppTypeGitHub          AppType = "GIT_HUB"
 	AppTypeGitLab          AppType = "GIT_LAB"
 	AppTypeGoogleGroups    AppType = "GOOGLE_GROUPS"
 	AppTypeGoogleWorkspace AppType = "GOOGLE_WORKSPACE"
+	AppTypeGrafana         AppType = "GRAFANA"
+	AppTypeHubspot         AppType = "HUBSPOT"
 	AppTypeIlevel          AppType = "ILEVEL"
 	AppTypeIncidentio      AppType = "INCIDENTIO"
+	AppTypeJira            AppType = "JIRA"
 	AppTypeLdap            AppType = "LDAP"
 	AppTypeMariadb         AppType = "MARIADB"
 	AppTypeMongo           AppType = "MONGO"
 	AppTypeMongoAtlas      AppType = "MONGO_ATLAS"
 	AppTypeMysql           AppType = "MYSQL"
 	AppTypeNetsuite        AppType = "NETSUITE"
+	AppTypeDatadog         AppType = "DATADOG"
+	AppTypeOktaCiam        AppType = "OKTA_CIAM"
 	AppTypeOktaDirectory   AppType = "OKTA_DIRECTORY"
 	AppTypeOpenaiPlatform  AppType = "OPENAI_PLATFORM"
 	AppTypeOpal            AppType = "OPAL"
+	AppTypeOracleFusion    AppType = "ORACLE_FUSION"
 	AppTypePagerduty       AppType = "PAGERDUTY"
+	AppTypePostgres        AppType = "POSTGRES"
+	AppTypeRootly          AppType = "ROOTLY"
 	AppTypeSalesforce      AppType = "SALESFORCE"
 	AppTypeSnowflake       AppType = "SNOWFLAKE"
+	AppTypeSlack           AppType = "SLACK"
+	AppTypeTableau         AppType = "TABLEAU"
 	AppTypeTailscale       AppType = "TAILSCALE"
 	AppTypeTeleport        AppType = "TELEPORT"
+	AppTypeTwingate        AppType = "TWINGATE"
+	AppTypeVault           AppType = "VAULT"
 	AppTypeWorkday         AppType = "WORKDAY"
+	AppTypeZendesk         AppType = "ZENDESK"
+	AppTypeZoom            AppType = "ZOOM"
 )
 
 func (e AppType) ToPointer() *AppType {
 	return &e
 }
-func (e *AppType) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
+
+// IsExact returns true if the value matches a known enum value, false otherwise.
+func (e *AppType) IsExact() bool {
+	if e != nil {
+		switch *e {
+		case "ACTIVE_DIRECTORY", "ANTHROPIC", "AZURE_AD", "AWS", "AWS_SSO", "CLICKHOUSE", "COUPA", "CURSOR", "CUSTOM", "CONFLUENCE", "CUSTOM_CONNECTOR", "DATABRICKS", "DATASTAX_ASTRA", "ALICLOUD", "DEVIN", "DOCUSIGN", "DUO", "GCP", "GIT_HUB", "GIT_LAB", "GOOGLE_GROUPS", "GOOGLE_WORKSPACE", "GRAFANA", "HUBSPOT", "ILEVEL", "INCIDENTIO", "JIRA", "LDAP", "MARIADB", "MONGO", "MONGO_ATLAS", "MYSQL", "NETSUITE", "DATADOG", "OKTA_CIAM", "OKTA_DIRECTORY", "OPENAI_PLATFORM", "OPAL", "ORACLE_FUSION", "PAGERDUTY", "POSTGRES", "ROOTLY", "SALESFORCE", "SNOWFLAKE", "SLACK", "TABLEAU", "TAILSCALE", "TELEPORT", "TWINGATE", "VAULT", "WORKDAY", "ZENDESK", "ZOOM":
+			return true
+		}
 	}
-	switch v {
-	case "ACTIVE_DIRECTORY":
-		fallthrough
-	case "ANTHROPIC":
-		fallthrough
-	case "AZURE_AD":
-		fallthrough
-	case "AWS":
-		fallthrough
-	case "AWS_SSO":
-		fallthrough
-	case "COUPA":
-		fallthrough
-	case "CURSOR":
-		fallthrough
-	case "CUSTOM":
-		fallthrough
-	case "DATABRICKS":
-		fallthrough
-	case "DATASTAX_ASTRA":
-		fallthrough
-	case "DUO":
-		fallthrough
-	case "GCP":
-		fallthrough
-	case "GIT_HUB":
-		fallthrough
-	case "GIT_LAB":
-		fallthrough
-	case "GOOGLE_GROUPS":
-		fallthrough
-	case "GOOGLE_WORKSPACE":
-		fallthrough
-	case "ILEVEL":
-		fallthrough
-	case "INCIDENTIO":
-		fallthrough
-	case "LDAP":
-		fallthrough
-	case "MARIADB":
-		fallthrough
-	case "MONGO":
-		fallthrough
-	case "MONGO_ATLAS":
-		fallthrough
-	case "MYSQL":
-		fallthrough
-	case "NETSUITE":
-		fallthrough
-	case "OKTA_DIRECTORY":
-		fallthrough
-	case "OPENAI_PLATFORM":
-		fallthrough
-	case "OPAL":
-		fallthrough
-	case "PAGERDUTY":
-		fallthrough
-	case "SALESFORCE":
-		fallthrough
-	case "SNOWFLAKE":
-		fallthrough
-	case "TAILSCALE":
-		fallthrough
-	case "TELEPORT":
-		fallthrough
-	case "WORKDAY":
-		*e = AppType(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for AppType: %v", v)
-	}
+	return false
 }
 
 // # App Object

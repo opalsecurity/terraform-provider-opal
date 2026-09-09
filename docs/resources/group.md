@@ -23,7 +23,11 @@ resource "opal_group" "my_group" {
   group_leader_user_ids = [
     "23ac9822-9f43-4e31-a31d-6a6109f207ae"
   ]
-  group_type               = "OPAL_GROUP"
+  group_type = "OPAL_GROUP"
+  handle     = "eng-oncall"
+  initial_user_ids = [
+    "28515a50-20b7-42a7-8085-0024077aef15"
+  ]
   match_remote_description = false
   match_remote_name        = false
   message_channel_ids = [
@@ -97,6 +101,9 @@ resource "opal_group" "my_group" {
     }
     ldap_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    linear_team = {
+      team_id = "8caed98e-1234-5678-9abc-def012345678"
     }
     okta_group = {
       group_id = "00gjs33pe8rtmRrp3rd6"
@@ -177,6 +184,7 @@ resource "opal_group" "my_group" {
   ]
   require_mfa_to_approve    = false
   risk_sensitivity_override = "CRITICAL"
+  team_id                   = "T01234567"
   visibility                = "GLOBAL"
   visibility_group_ids = [
     "ea22f6cf-8fd4-44e9-b53d-66a5731ab7da"
@@ -190,7 +198,7 @@ resource "opal_group" "my_group" {
 ### Required
 
 - `app_id` (String) The ID of the app for the group. Requires replacement if changed.
-- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP"]; Requires replacement if changed.
+- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM"]; Requires replacement if changed.
 - `name` (String) The name of the group.
 
 ### Optional
@@ -201,6 +209,8 @@ resource "opal_group" "my_group" {
 - `description` (String) A description of the group.
 - `extensions_duration_in_minutes` (Number, Deprecated) The duration for which access can be extended (in minutes). Deprecated, set the extension duration in the request_configuration you want it to apply to.
 - `group_leader_user_ids` (Set of String) A list of User IDs for the group leaders of the group
+- `handle` (String) Slack user group mention name, without the @. Optional; Slack assigns one if omitted. Requires replacement if changed.
+- `initial_user_ids` (List of String) Opal user IDs to add as the group's initial members. Required when creating a Slack user group. Requires replacement if changed.
 - `match_remote_description` (Boolean) A bool representing whether or not the group's description should be synced from the end system. When true, the description is overwritten with the remote description on each sync, so a `description` provided together with this field set to true will be replaced at the next sync. If not provided, the current value is left unchanged.
 - `match_remote_name` (Boolean) A bool representing whether or not the group's name should be synced from the end system. When true, the name is overwritten with the remote name on each sync, so a `name` provided together with this field set to true will be replaced at the next sync. If not provided, the current value is left unchanged.
 - `message_channel_ids` (Set of String) Default: []
@@ -209,6 +219,7 @@ resource "opal_group" "my_group" {
 - `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this group. Default: false
 - `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
+- `team_id` (String) Slack workspace ID. Required when the Slack connection spans multiple workspaces. Requires replacement if changed.
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 - `visibility_group_ids` (Set of String) Default: []
 
@@ -248,6 +259,7 @@ Optional:
 - `incidentio_on_call_schedule` (Attributes) Remote info for Incident.io on-call schedule group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--incidentio_on_call_schedule))
 - `jira_group` (Attributes) Remote info for Jira group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--jira_group))
 - `ldap_group` (Attributes) Remote info for LDAP group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--ldap_group))
+- `linear_team` (Attributes) Remote info for Linear team. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--linear_team))
 - `okta_group` (Attributes) Remote info for Okta Directory group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_group))
 - `okta_group_rule` (Attributes) Remote info for Okta Directory group rule. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_group_rule))
 - `pagerduty_on_call_schedule` (Attributes) Remote info for PagerDuty on-call schedule group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--pagerduty_on_call_schedule))
@@ -432,6 +444,14 @@ Optional:
 - `group_id` (String) The id of the LDAP group. Not Null; Requires replacement if changed.
 
 
+<a id="nestedatt--remote_info--linear_team"></a>
+### Nested Schema for `remote_info.linear_team`
+
+Optional:
+
+- `team_id` (String) The ID of the Linear team. Not Null; Requires replacement if changed.
+
+
 <a id="nestedatt--remote_info--okta_group"></a>
 ### Nested Schema for `remote_info.okta_group`
 
@@ -554,7 +574,7 @@ Optional:
 - `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource. Not Null
 - `condition` (Attributes) The condition for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--condition))
 - `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
-- `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
+- `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.
 - `priority` (Number) The priority of the request configuration. Not Null
 - `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
 - `request_template_id` (String) The ID of the associated request template.

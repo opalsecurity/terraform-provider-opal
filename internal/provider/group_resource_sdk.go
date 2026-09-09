@@ -254,6 +254,12 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 				r.RemoteInfo.LdapGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.LdapGroup.GroupID = types.StringValue(resp.RemoteInfo.LdapGroup.GroupID)
 			}
+			if resp.RemoteInfo.LinearTeam == nil {
+				r.RemoteInfo.LinearTeam = nil
+			} else {
+				r.RemoteInfo.LinearTeam = &tfTypes.GrafanaTeam{}
+				r.RemoteInfo.LinearTeam.TeamID = types.StringValue(resp.RemoteInfo.LinearTeam.TeamID)
+			}
 			if resp.RemoteInfo.OktaGroup == nil {
 				r.RemoteInfo.OktaGroup = nil
 			} else {
@@ -655,6 +661,16 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		description = nil
 	}
 	groupType := shared.GroupTypeEnum(r.GroupType.ValueString())
+	handle := new(string)
+	if !r.Handle.IsUnknown() && !r.Handle.IsNull() {
+		*handle = r.Handle.ValueString()
+	} else {
+		handle = nil
+	}
+	initialUserIds := make([]string, 0, len(r.InitialUserIds))
+	for initialUserIdsIndex := range r.InitialUserIds {
+		initialUserIds = append(initialUserIds, r.InitialUserIds[initialUserIdsIndex].ValueString())
+	}
 	matchRemoteDescription := new(bool)
 	if !r.MatchRemoteDescription.IsUnknown() && !r.MatchRemoteDescription.IsNull() {
 		*matchRemoteDescription = r.MatchRemoteDescription.ValueBool()
@@ -868,6 +884,15 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 				GroupID: groupId12,
 			}
 		}
+		var linearTeam *shared.LinearTeam
+		if r.RemoteInfo.LinearTeam != nil {
+			var teamId2 string
+			teamId2 = r.RemoteInfo.LinearTeam.TeamID.ValueString()
+
+			linearTeam = &shared.LinearTeam{
+				TeamID: teamId2,
+			}
+		}
 		var oktaGroup *shared.OktaGroup
 		if r.RemoteInfo.OktaGroup != nil {
 			var groupId13 string
@@ -1016,6 +1041,7 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 			IncidentioOnCallSchedule: incidentioOnCallSchedule,
 			JiraGroup:                jiraGroup,
 			LdapGroup:                ldapGroup,
+			LinearTeam:               linearTeam,
 			OktaGroup:                oktaGroup,
 			OktaGroupRule:            oktaGroupRule,
 			PagerdutyOnCallSchedule:  pagerdutyOnCallSchedule,
@@ -1038,16 +1064,25 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 	} else {
 		riskSensitivityOverride = nil
 	}
+	teamId3 := new(string)
+	if !r.TeamID.IsUnknown() && !r.TeamID.IsNull() {
+		*teamId3 = r.TeamID.ValueString()
+	} else {
+		teamId3 = nil
+	}
 	out := shared.CreateGroupInfo{
 		AppID:                     appID,
 		CustomRequestNotification: customRequestNotification,
 		Description:               description,
 		GroupType:                 groupType,
+		Handle:                    handle,
+		InitialUserIds:            initialUserIds,
 		MatchRemoteDescription:    matchRemoteDescription,
 		MatchRemoteName:           matchRemoteName,
 		Name:                      name,
 		RemoteInfo:                remoteInfo,
 		RiskSensitivityOverride:   riskSensitivityOverride,
+		TeamID:                    teamId3,
 	}
 
 	return &out, diags
