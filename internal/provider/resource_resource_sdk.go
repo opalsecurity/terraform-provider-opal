@@ -304,6 +304,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.GcpBigQueryTable.ProjectID = types.StringValue(resp.RemoteInfo.GcpBigQueryTable.ProjectID)
 				r.RemoteInfo.GcpBigQueryTable.TableID = types.StringValue(resp.RemoteInfo.GcpBigQueryTable.TableID)
 			}
+			if resp.RemoteInfo.GcpBillingAccount == nil {
+				r.RemoteInfo.GcpBillingAccount = nil
+			} else {
+				r.RemoteInfo.GcpBillingAccount = &tfTypes.GcpBillingAccount{}
+				r.RemoteInfo.GcpBillingAccount.BillingAccountID = types.StringValue(resp.RemoteInfo.GcpBillingAccount.BillingAccountID)
+			}
 			if resp.RemoteInfo.GcpBucket == nil {
 				r.RemoteInfo.GcpBucket = nil
 			} else {
@@ -424,6 +430,18 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			} else {
 				r.RemoteInfo.IlevelAdvancedRole = &tfTypes.IlevelAdvancedRole{}
 				r.RemoteInfo.IlevelAdvancedRole.RoleName = types.StringValue(resp.RemoteInfo.IlevelAdvancedRole.RoleName)
+			}
+			if resp.RemoteInfo.LinearOrganization == nil {
+				r.RemoteInfo.LinearOrganization = nil
+			} else {
+				r.RemoteInfo.LinearOrganization = &tfTypes.CursorOrganization{}
+				r.RemoteInfo.LinearOrganization.OrgID = types.StringValue(resp.RemoteInfo.LinearOrganization.OrgID)
+			}
+			if resp.RemoteInfo.LinearProject == nil {
+				r.RemoteInfo.LinearProject = nil
+			} else {
+				r.RemoteInfo.LinearProject = &tfTypes.GcpProject{}
+				r.RemoteInfo.LinearProject.ProjectID = types.StringValue(resp.RemoteInfo.LinearProject.ProjectID)
 			}
 			if resp.RemoteInfo.NetsuiteRole == nil {
 				r.RemoteInfo.NetsuiteRole = nil
@@ -1283,6 +1301,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				TableID:   tableID,
 			}
 		}
+		var gcpBillingAccount *shared.GcpBillingAccount
+		if r.RemoteInfo.GcpBillingAccount != nil {
+			var billingAccountID string
+			billingAccountID = r.RemoteInfo.GcpBillingAccount.BillingAccountID.ValueString()
+
+			gcpBillingAccount = &shared.GcpBillingAccount{
+				BillingAccountID: billingAccountID,
+			}
+		}
 		var gcpBucket *shared.GcpBucket
 		if r.RemoteInfo.GcpBucket != nil {
 			var bucketID string
@@ -1488,6 +1515,24 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				RoleName: roleName,
 			}
 		}
+		var linearOrganization *shared.LinearOrganization
+		if r.RemoteInfo.LinearOrganization != nil {
+			var orgId2 string
+			orgId2 = r.RemoteInfo.LinearOrganization.OrgID.ValueString()
+
+			linearOrganization = &shared.LinearOrganization{
+				OrgID: orgId2,
+			}
+		}
+		var linearProject *shared.LinearProject
+		if r.RemoteInfo.LinearProject != nil {
+			var projectId7 string
+			projectId7 = r.RemoteInfo.LinearProject.ProjectID.ValueString()
+
+			linearProject = &shared.LinearProject{
+				ProjectID: projectId7,
+			}
+		}
 		var netsuiteRole *shared.NetsuiteRole
 		if r.RemoteInfo.NetsuiteRole != nil {
 			var roleId8 string
@@ -1526,23 +1571,23 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var openaiPlatformProject *shared.OpenaiPlatformProject
 		if r.RemoteInfo.OpenaiPlatformProject != nil {
-			var projectId7 string
-			projectId7 = r.RemoteInfo.OpenaiPlatformProject.ProjectID.ValueString()
+			var projectId8 string
+			projectId8 = r.RemoteInfo.OpenaiPlatformProject.ProjectID.ValueString()
 
 			openaiPlatformProject = &shared.OpenaiPlatformProject{
-				ProjectID: projectId7,
+				ProjectID: projectId8,
 			}
 		}
 		var openaiPlatformServiceAccount *shared.OpenaiPlatformServiceAccount
 		if r.RemoteInfo.OpenaiPlatformServiceAccount != nil {
-			var projectId8 string
-			projectId8 = r.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID.ValueString()
+			var projectId9 string
+			projectId9 = r.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID.ValueString()
 
 			var serviceAccountId1 string
 			serviceAccountId1 = r.RemoteInfo.OpenaiPlatformServiceAccount.ServiceAccountID.ValueString()
 
 			openaiPlatformServiceAccount = &shared.OpenaiPlatformServiceAccount{
-				ProjectID:        projectId8,
+				ProjectID:        projectId9,
 				ServiceAccountID: serviceAccountId1,
 			}
 		}
@@ -1735,6 +1780,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			DocusignPermissionProfile:         docusignPermissionProfile,
 			GcpBigQueryDataset:                gcpBigQueryDataset,
 			GcpBigQueryTable:                  gcpBigQueryTable,
+			GcpBillingAccount:                 gcpBillingAccount,
 			GcpBucket:                         gcpBucket,
 			GcpComputeInstance:                gcpComputeInstance,
 			GcpFolder:                         gcpFolder,
@@ -1754,6 +1800,8 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			GrafanaRole:                       grafanaRole,
 			HubspotRole:                       hubspotRole,
 			IlevelAdvancedRole:                ilevelAdvancedRole,
+			LinearOrganization:                linearOrganization,
+			LinearProject:                     linearProject,
 			NetsuiteRole:                      netsuiteRole,
 			OktaApp:                           oktaApp,
 			OktaCustomRole:                    oktaCustomRole,

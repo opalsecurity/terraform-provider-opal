@@ -424,6 +424,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for LDAP group.`,
 					},
+					"linear_team": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"team_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Linear team.`,
+							},
+						},
+						Description: `Remote info for Linear team.`,
+					},
 					"okta_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -605,7 +615,7 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						"max_duration": schema.Int64Attribute{
 							Computed:    true,
-							Description: `The maximum duration for which the resource can be requested (in minutes).`,
+							Description: `The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.`,
 						},
 						"priority": schema.Int64Attribute{
 							Computed:    true,

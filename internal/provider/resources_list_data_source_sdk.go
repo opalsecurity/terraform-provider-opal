@@ -297,6 +297,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.GcpBigQueryTable.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpBigQueryTable.ProjectID)
 					results.RemoteInfo.GcpBigQueryTable.TableID = types.StringValue(resultsItem.RemoteInfo.GcpBigQueryTable.TableID)
 				}
+				if resultsItem.RemoteInfo.GcpBillingAccount == nil {
+					results.RemoteInfo.GcpBillingAccount = nil
+				} else {
+					results.RemoteInfo.GcpBillingAccount = &tfTypes.GcpBillingAccount{}
+					results.RemoteInfo.GcpBillingAccount.BillingAccountID = types.StringValue(resultsItem.RemoteInfo.GcpBillingAccount.BillingAccountID)
+				}
 				if resultsItem.RemoteInfo.GcpBucket == nil {
 					results.RemoteInfo.GcpBucket = nil
 				} else {
@@ -417,6 +423,18 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				} else {
 					results.RemoteInfo.IlevelAdvancedRole = &tfTypes.IlevelAdvancedRole{}
 					results.RemoteInfo.IlevelAdvancedRole.RoleName = types.StringValue(resultsItem.RemoteInfo.IlevelAdvancedRole.RoleName)
+				}
+				if resultsItem.RemoteInfo.LinearOrganization == nil {
+					results.RemoteInfo.LinearOrganization = nil
+				} else {
+					results.RemoteInfo.LinearOrganization = &tfTypes.CursorOrganization{}
+					results.RemoteInfo.LinearOrganization.OrgID = types.StringValue(resultsItem.RemoteInfo.LinearOrganization.OrgID)
+				}
+				if resultsItem.RemoteInfo.LinearProject == nil {
+					results.RemoteInfo.LinearProject = nil
+				} else {
+					results.RemoteInfo.LinearProject = &tfTypes.GcpProject{}
+					results.RemoteInfo.LinearProject.ProjectID = types.StringValue(resultsItem.RemoteInfo.LinearProject.ProjectID)
 				}
 				if resultsItem.RemoteInfo.NetsuiteRole == nil {
 					results.RemoteInfo.NetsuiteRole = nil

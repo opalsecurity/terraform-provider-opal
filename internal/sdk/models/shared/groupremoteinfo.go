@@ -288,6 +288,19 @@ func (l *LdapGroup) GetGroupID() string {
 	return l.GroupID
 }
 
+// LinearTeam - Remote info for Linear team.
+type LinearTeam struct {
+	// The ID of the Linear team.
+	TeamID string `json:"team_id"`
+}
+
+func (l *LinearTeam) GetTeamID() string {
+	if l == nil {
+		return ""
+	}
+	return l.TeamID
+}
+
 // OktaGroup - Remote info for Okta Directory group.
 type OktaGroup struct {
 	// The id of the Okta Directory group.
@@ -514,6 +527,8 @@ type GroupRemoteInfo struct {
 	JiraGroup *JiraGroup `json:"jira_group,omitempty"`
 	// Remote info for LDAP group.
 	LdapGroup *LdapGroup `json:"ldap_group,omitempty"`
+	// Remote info for Linear team.
+	LinearTeam *LinearTeam `json:"linear_team,omitempty"`
 	// Remote info for Okta Directory group.
 	OktaGroup *OktaGroup `json:"okta_group,omitempty"`
 	// Remote info for Okta Directory group rule.
@@ -689,6 +704,13 @@ func (g *GroupRemoteInfo) GetLdapGroup() *LdapGroup {
 		return nil
 	}
 	return g.LdapGroup
+}
+
+func (g *GroupRemoteInfo) GetLinearTeam() *LinearTeam {
+	if g == nil {
+		return nil
+	}
+	return g.LinearTeam
 }
 
 func (g *GroupRemoteInfo) GetOktaGroup() *OktaGroup {
