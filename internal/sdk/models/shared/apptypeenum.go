@@ -40,6 +40,7 @@ const (
 	AppTypeEnumIncidentio      AppTypeEnum = "INCIDENTIO"
 	AppTypeEnumJira            AppTypeEnum = "JIRA"
 	AppTypeEnumLdap            AppTypeEnum = "LDAP"
+	AppTypeEnumLinear          AppTypeEnum = "LINEAR"
 	AppTypeEnumMariadb         AppTypeEnum = "MARIADB"
 	AppTypeEnumMongo           AppTypeEnum = "MONGO"
 	AppTypeEnumMongoAtlas      AppTypeEnum = "MONGO_ATLAS"
@@ -131,6 +132,8 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 	case "JIRA":
 		fallthrough
 	case "LDAP":
+		fallthrough
+	case "LINEAR":
 		fallthrough
 	case "MARIADB":
 		fallthrough

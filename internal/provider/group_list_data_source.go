@@ -37,6 +37,7 @@ type GroupListDataSourceModel struct {
 	GroupName       types.String    `queryParam:"style=form,explode=true,name=group_name" tfsdk:"group_name"`
 	GroupTypeFilter types.String    `queryParam:"style=form,explode=true,name=group_type_filter" tfsdk:"group_type_filter"`
 	PageSize        types.Int64     `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
+	Requestable     types.Bool      `queryParam:"style=form,explode=true,name=requestable" tfsdk:"requestable"`
 	Results         []tfTypes.Group `tfsdk:"results"`
 }
 
@@ -62,7 +63,7 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 			},
 			"group_type_filter": schema.StringAttribute{
 				Optional:    true,
-				Description: `The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP"]`,
+				Description: `The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"ACTIVE_DIRECTORY_GROUP",
@@ -102,6 +103,7 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 						"JIRA_GROUP",
 						"DOCUSIGN_GROUP",
 						"ZOOM_GROUP",
+						"LINEAR_TEAM",
 					),
 				},
 			},
@@ -111,6 +113,10 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Validators: []validator.Int64{
 					int64validator.AtMost(1000),
 				},
+			},
+			"requestable": schema.BoolAttribute{
+				Optional:    true,
+				Description: `If true, only return groups that allow access requests. Does not check whether the caller is permitted to request the group.`,
 			},
 			"results": schema.ListNestedAttribute{
 				Computed: true,
@@ -401,6 +407,16 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 									},
 									Description: `Remote info for LDAP group.`,
 								},
+								"linear_team": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"team_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The ID of the Linear team.`,
+										},
+									},
+									Description: `Remote info for Linear team.`,
+								},
 								"okta_group": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
@@ -582,7 +598,7 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 									},
 									"max_duration": schema.Int64Attribute{
 										Computed:    true,
-										Description: `The maximum duration for which the resource can be requested (in minutes).`,
+										Description: `The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.`,
 									},
 									"priority": schema.Int64Attribute{
 										Computed:    true,

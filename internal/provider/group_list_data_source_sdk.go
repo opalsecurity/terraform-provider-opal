@@ -180,6 +180,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.LdapGroup = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.LdapGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.LdapGroup.GroupID)
 				}
+				if resultsItem.RemoteInfo.LinearTeam == nil {
+					results.RemoteInfo.LinearTeam = nil
+				} else {
+					results.RemoteInfo.LinearTeam = &tfTypes.GrafanaTeam{}
+					results.RemoteInfo.LinearTeam.TeamID = types.StringValue(resultsItem.RemoteInfo.LinearTeam.TeamID)
+				}
 				if resultsItem.RemoteInfo.OktaGroup == nil {
 					results.RemoteInfo.OktaGroup = nil
 				} else {
@@ -363,11 +369,18 @@ func (r *GroupListDataSourceModel) ToOperationsGetGroupsRequest(ctx context.Cont
 	} else {
 		pageSize = nil
 	}
+	requestable := new(bool)
+	if !r.Requestable.IsUnknown() && !r.Requestable.IsNull() {
+		*requestable = r.Requestable.ValueBool()
+	} else {
+		requestable = nil
+	}
 	out := operations.GetGroupsRequest{
 		GroupIds:        groupIds,
 		GroupName:       groupName,
 		GroupTypeFilter: groupTypeFilter,
 		PageSize:        pageSize,
+		Requestable:     requestable,
 	}
 
 	return &out, diags

@@ -104,7 +104,7 @@ func (r *ScopedRolePermissionListResource) Schema(ctx context.Context, req resou
 						"target_type": schema.StringAttribute{
 							Computed:    true,
 							Optional:    true,
-							Description: `The type of the target for the role permission. Not Null; must be one of ["RESOURCE", "CONNECTION", "GROUP", "BUNDLE", "USER", "ACCESS_REVIEW", "OWNER"]`,
+							Description: `The type of the target for the role permission. Not Null; must be one of ["RESOURCE", "CONNECTION", "GROUP", "BUNDLE", "USER", "ACCESS_REVIEW", "OWNER", "EVENT"]`,
 							Validators: []validator.String{
 								speakeasy_stringvalidators.NotNull(),
 								stringvalidator.OneOf(
@@ -115,6 +115,7 @@ func (r *ScopedRolePermissionListResource) Schema(ctx context.Context, req resou
 									"USER",
 									"ACCESS_REVIEW",
 									"OWNER",
+									"EVENT",
 								),
 							},
 						},

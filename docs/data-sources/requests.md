@@ -75,7 +75,7 @@ Returned from the `GET Requests` endpoint.
 Read-Only:
 
 - `field_name` (String)
-- `field_type` (String) The type of the custom request field.
+- `field_type` (String) The type of the custom request field. `CALLOUT` fields are display-only -- they show a message to the requester and collect no answer, so they never appear in a request's `custom_fields`.
 - `field_value` (Attributes) (see [below for nested schema](#nestedatt--requests--custom_fields_responses--field_value))
 
 <a id="nestedatt--requests--custom_fields_responses--field_value"></a>

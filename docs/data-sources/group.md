@@ -127,6 +127,7 @@ Read-Only:
 - `incidentio_on_call_schedule` (Attributes) Remote info for Incident.io on-call schedule group. (see [below for nested schema](#nestedatt--remote_info--incidentio_on_call_schedule))
 - `jira_group` (Attributes) Remote info for Jira group. (see [below for nested schema](#nestedatt--remote_info--jira_group))
 - `ldap_group` (Attributes) Remote info for LDAP group. (see [below for nested schema](#nestedatt--remote_info--ldap_group))
+- `linear_team` (Attributes) Remote info for Linear team. (see [below for nested schema](#nestedatt--remote_info--linear_team))
 - `okta_group` (Attributes) Remote info for Okta Directory group. (see [below for nested schema](#nestedatt--remote_info--okta_group))
 - `okta_group_rule` (Attributes) Remote info for Okta Directory group rule. (see [below for nested schema](#nestedatt--remote_info--okta_group_rule))
 - `pagerduty_on_call_schedule` (Attributes) Remote info for PagerDuty on-call schedule group. (see [below for nested schema](#nestedatt--remote_info--pagerduty_on_call_schedule))
@@ -311,6 +312,14 @@ Read-Only:
 - `group_id` (String) The id of the LDAP group.
 
 
+<a id="nestedatt--remote_info--linear_team"></a>
+### Nested Schema for `remote_info.linear_team`
+
+Read-Only:
+
+- `team_id` (String) The ID of the Linear team.
+
+
 <a id="nestedatt--remote_info--okta_group"></a>
 ### Nested Schema for `remote_info.okta_group`
 
@@ -433,7 +442,7 @@ Read-Only:
 - `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource.
 - `condition` (Attributes) The condition for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--condition))
 - `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
-- `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes).
+- `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.
 - `priority` (Number) The priority of the request configuration.
 - `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
 - `request_template_id` (String) The ID of the associated request template.

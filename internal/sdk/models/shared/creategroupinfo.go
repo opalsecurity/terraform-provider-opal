@@ -18,6 +18,10 @@ type CreateGroupInfo struct {
 	Description *string `json:"description,omitempty"`
 	// The type of the group.
 	GroupType GroupTypeEnum `json:"group_type"`
+	// Slack user group mention name, without the @. Optional; Slack assigns one if omitted.
+	Handle *string `json:"handle,omitempty"`
+	// Opal user IDs to add as the group's initial members. Required when creating a Slack user group.
+	InitialUserIds []string `json:"initial_user_ids,omitempty"`
 	// A bool representing whether or not the group's description should be synced from the end system. When true, the description is overwritten with the remote description on each sync, so a `description` provided together with this field set to true will be replaced at the next sync. Defaults to false.
 	MatchRemoteDescription *bool `json:"match_remote_description,omitempty"`
 	// A bool representing whether or not the group's name should be synced from the end system. When true, the name is overwritten with the remote name on each sync, so a `name` provided together with this field set to true will be replaced at the next sync. Defaults to false.
@@ -27,6 +31,8 @@ type CreateGroupInfo struct {
 	// Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided.
 	RemoteInfo              *GroupRemoteInfo     `json:"remote_info,omitempty"`
 	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
+	// Slack workspace ID. Required when the Slack connection spans multiple workspaces.
+	TeamID *string `json:"team_id,omitempty"`
 }
 
 func (c *CreateGroupInfo) GetAppID() string {
@@ -55,6 +61,20 @@ func (c *CreateGroupInfo) GetGroupType() GroupTypeEnum {
 		return GroupTypeEnum("")
 	}
 	return c.GroupType
+}
+
+func (c *CreateGroupInfo) GetHandle() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Handle
+}
+
+func (c *CreateGroupInfo) GetInitialUserIds() []string {
+	if c == nil {
+		return nil
+	}
+	return c.InitialUserIds
 }
 
 func (c *CreateGroupInfo) GetMatchRemoteDescription() *bool {
@@ -90,4 +110,11 @@ func (c *CreateGroupInfo) GetRiskSensitivityOverride() *RiskSensitivityEnum {
 		return nil
 	}
 	return c.RiskSensitivityOverride
+}
+
+func (c *CreateGroupInfo) GetTeamID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.TeamID
 }

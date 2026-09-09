@@ -675,6 +675,19 @@ func (g *GcpBigQueryTable) GetTableID() string {
 	return g.TableID
 }
 
+// GcpBillingAccount - Remote info for a GCP billing account.
+type GcpBillingAccount struct {
+	// The resource name of the billing account.
+	BillingAccountID string `json:"billing_account_id"`
+}
+
+func (g *GcpBillingAccount) GetBillingAccountID() string {
+	if g == nil {
+		return ""
+	}
+	return g.BillingAccountID
+}
+
 // GcpBucket - Remote info for GCP bucket.
 type GcpBucket struct {
 	// The id of the bucket.
@@ -983,6 +996,32 @@ func (i *IlevelAdvancedRole) GetRoleName() string {
 		return ""
 	}
 	return i.RoleName
+}
+
+// LinearOrganization - Remote info for Linear organization.
+type LinearOrganization struct {
+	// The ID of the Linear organization.
+	OrgID string `json:"org_id"`
+}
+
+func (l *LinearOrganization) GetOrgID() string {
+	if l == nil {
+		return ""
+	}
+	return l.OrgID
+}
+
+// LinearProject - Remote info for Linear project.
+type LinearProject struct {
+	// The ID of the Linear project.
+	ProjectID string `json:"project_id"`
+}
+
+func (l *LinearProject) GetProjectID() string {
+	if l == nil {
+		return ""
+	}
+	return l.ProjectID
 }
 
 // NetsuiteRole - Remote info for NetSuite role.
@@ -1379,6 +1418,8 @@ type ResourceRemoteInfo struct {
 	GcpBigQueryDataset *GcpBigQueryDataset `json:"gcp_big_query_dataset,omitempty"`
 	// Remote info for GCP BigQuery Table.
 	GcpBigQueryTable *GcpBigQueryTable `json:"gcp_big_query_table,omitempty"`
+	// Remote info for a GCP billing account.
+	GcpBillingAccount *GcpBillingAccount `json:"gcp_billing_account,omitempty"`
 	// Remote info for GCP bucket.
 	GcpBucket *GcpBucket `json:"gcp_bucket,omitempty"`
 	// Remote info for GCP compute instance.
@@ -1417,6 +1458,10 @@ type ResourceRemoteInfo struct {
 	HubspotRole *HubspotRole `json:"hubspot_role,omitempty"`
 	// Remote info for iLevel Advanced role.
 	IlevelAdvancedRole *IlevelAdvancedRole `json:"ilevel_advanced_role,omitempty"`
+	// Remote info for Linear organization.
+	LinearOrganization *LinearOrganization `json:"linear_organization,omitempty"`
+	// Remote info for Linear project.
+	LinearProject *LinearProject `json:"linear_project,omitempty"`
 	// Remote info for NetSuite role.
 	NetsuiteRole *NetsuiteRole `json:"netsuite_role,omitempty"`
 	// Remote info for Okta directory app.
@@ -1720,6 +1765,13 @@ func (r *ResourceRemoteInfo) GetGcpBigQueryTable() *GcpBigQueryTable {
 	return r.GcpBigQueryTable
 }
 
+func (r *ResourceRemoteInfo) GetGcpBillingAccount() *GcpBillingAccount {
+	if r == nil {
+		return nil
+	}
+	return r.GcpBillingAccount
+}
+
 func (r *ResourceRemoteInfo) GetGcpBucket() *GcpBucket {
 	if r == nil {
 		return nil
@@ -1851,6 +1903,20 @@ func (r *ResourceRemoteInfo) GetIlevelAdvancedRole() *IlevelAdvancedRole {
 		return nil
 	}
 	return r.IlevelAdvancedRole
+}
+
+func (r *ResourceRemoteInfo) GetLinearOrganization() *LinearOrganization {
+	if r == nil {
+		return nil
+	}
+	return r.LinearOrganization
+}
+
+func (r *ResourceRemoteInfo) GetLinearProject() *LinearProject {
+	if r == nil {
+		return nil
+	}
+	return r.LinearProject
 }
 
 func (r *ResourceRemoteInfo) GetNetsuiteRole() *NetsuiteRole {
