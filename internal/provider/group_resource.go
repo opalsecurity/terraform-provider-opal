@@ -5,6 +5,7 @@ package provider
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -30,6 +31,7 @@ import (
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
+	sdkerrors "github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/errors"
 	stateupgraders "github.com/opalsecurity/terraform-provider-opal/v3/internal/stateupgraders"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/boolvalidators"
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/int64validators"
@@ -1977,33 +1979,60 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		return
 	}
 	res1, err := r.client.Groups.GetMessageChannels(ctx, *request1)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
-		if res1 != nil && res1.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+	// TODO(EPRD-3572): Hand-edit to a Speakeasy-generated file (persistentEdits is
+	// enabled for this repo per .speakeasy/gen.lock, but enableCustomCodeRegions is
+	// not, so this diff is not guaranteed to survive the next full regen -- verify
+	// it's still present after the next Speakeasy "Generate" PR and re-add if lost).
+	//
+	// opalsecurity/opal#29350 changed the backend to return 403 (not 404) when the
+	// caller is forbidden from reading this group's message channels, reserving
+	// 404 for the group actually being gone. Because 403 is not a status code this
+	// operation declares in its OpenAPI spec, the generated SDK method surfaces it
+	// as an *errors.SDKError (via `err`), not as res1.StatusCode -- so the 403
+	// check has to live here, not alongside the res1.StatusCode == 404 branch
+	// below. A 403 must not be treated the same as "gone" -- e.g. a caller that
+	// lost ReadSettings via the ownership-swap-through-shared-Configuration
+	// mechanism (EPRD-3916/EPRD-3572) would otherwise have every plan/apply
+	// hard-fail for a group it can still read fine otherwise. Keep the group in
+	// state, keep message_channels' last-known value, and just warn.
+	var sdkErr1 *sdkerrors.SDKError
+	if err != nil && errors.As(err, &sdkErr1) && sdkErr1.StatusCode == 403 {
+		resp.Diagnostics.AddWarning(
+			"Unable to read group message channels",
+			fmt.Sprintf("The Opal API returned 403 Forbidden when fetching message channels for group %q. "+
+				"This is usually caused by the Terraform provider's credentials losing permission to view this "+
+				"group's message channels. The \"message_channels\" attribute will keep its last-known value in "+
+				"state until access is restored.", data.ID.ValueString()),
+		)
+	} else {
+		if err != nil {
+			resp.Diagnostics.AddError("failure to invoke API", err.Error())
+			if res1 != nil && res1.RawResponse != nil {
+				resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+			}
+			return
 		}
-		return
-	}
-	if res1 == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
-		return
-	}
-	if res1.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
-	if res1.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
-		return
-	}
-	if !(res1.Object != nil) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupMessageChannelsResponseBody(ctx, res1.Object)...)
+		if res1 == nil {
+			resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
+			return
+		}
+		if res1.StatusCode == 404 {
+			resp.State.RemoveResource(ctx)
+			return
+		}
+		if res1.StatusCode != 200 {
+			resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
+			return
+		}
+		if !(res1.Object != nil) {
+			resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
+			return
+		}
+		resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupMessageChannelsResponseBody(ctx, res1.Object)...)
 
-	if resp.Diagnostics.HasError() {
-		return
+		if resp.Diagnostics.HasError() {
+			return
+		}
 	}
 	request2, request2Diags := data.ToOperationsGetGroupOnCallSchedulesRequest(ctx)
 	resp.Diagnostics.Append(request2Diags...)
@@ -2012,33 +2041,60 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		return
 	}
 	res2, err := r.client.Groups.GetOnCallSchedules(ctx, *request2)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
-		if res2 != nil && res2.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res2.RawResponse))
+	// TODO(EPRD-3572): Hand-edit to a Speakeasy-generated file (persistentEdits is
+	// enabled for this repo per .speakeasy/gen.lock, but enableCustomCodeRegions is
+	// not, so this diff is not guaranteed to survive the next full regen -- verify
+	// it's still present after the next Speakeasy "Generate" PR and re-add if lost).
+	//
+	// opalsecurity/opal#29350 changed the backend to return 403 (not 404) when the
+	// caller is forbidden from reading this group's on-call schedules, reserving
+	// 404 for the group actually being gone. Because 403 is not a status code this
+	// operation declares in its OpenAPI spec, the generated SDK method surfaces it
+	// as an *errors.SDKError (via `err`), not as res2.StatusCode -- so the 403
+	// check has to live here, not alongside the res2.StatusCode == 404 branch
+	// below. A 403 must not be treated the same as "gone" -- e.g. a caller that
+	// lost ReadSettings via the ownership-swap-through-shared-Configuration
+	// mechanism (EPRD-3916/EPRD-3572) would otherwise have every plan/apply
+	// hard-fail for a group it can still read fine otherwise. Keep the group in
+	// state, keep on_call_schedules' last-known value, and just warn.
+	var sdkErr2 *sdkerrors.SDKError
+	if err != nil && errors.As(err, &sdkErr2) && sdkErr2.StatusCode == 403 {
+		resp.Diagnostics.AddWarning(
+			"Unable to read group on-call schedules",
+			fmt.Sprintf("The Opal API returned 403 Forbidden when fetching on-call schedules for group %q. "+
+				"This is usually caused by the Terraform provider's credentials losing permission to view this "+
+				"group's on-call schedules. The \"on_call_schedules\" attribute will keep its last-known value "+
+				"in state until access is restored.", data.ID.ValueString()),
+		)
+	} else {
+		if err != nil {
+			resp.Diagnostics.AddError("failure to invoke API", err.Error())
+			if res2 != nil && res2.RawResponse != nil {
+				resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res2.RawResponse))
+			}
+			return
 		}
-		return
-	}
-	if res2 == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res2))
-		return
-	}
-	if res2.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
-	if res2.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
-		return
-	}
-	if !(res2.Object != nil) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res2.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupOnCallSchedulesResponseBody(ctx, res2.Object)...)
+		if res2 == nil {
+			resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res2))
+			return
+		}
+		if res2.StatusCode == 404 {
+			resp.State.RemoveResource(ctx)
+			return
+		}
+		if res2.StatusCode != 200 {
+			resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
+			return
+		}
+		if !(res2.Object != nil) {
+			resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res2.RawResponse))
+			return
+		}
+		resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupOnCallSchedulesResponseBody(ctx, res2.Object)...)
 
-	if resp.Diagnostics.HasError() {
-		return
+		if resp.Diagnostics.HasError() {
+			return
+		}
 	}
 	request3, request3Diags := data.ToOperationsGetGroupVisibilityRequest(ctx)
 	resp.Diagnostics.Append(request3Diags...)
@@ -2047,33 +2103,60 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		return
 	}
 	res3, err := r.client.Groups.GetVisibility(ctx, *request3)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
-		if res3 != nil && res3.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res3.RawResponse))
+	// TODO(EPRD-3572): Hand-edit to a Speakeasy-generated file (persistentEdits is
+	// enabled for this repo per .speakeasy/gen.lock, but enableCustomCodeRegions is
+	// not, so this diff is not guaranteed to survive the next full regen -- verify
+	// it's still present after the next Speakeasy "Generate" PR and re-add if lost).
+	//
+	// opalsecurity/opal#29350 changed the backend to return 403 (not 404) when the
+	// caller is forbidden from reading this group's visibility, reserving 404 for
+	// the group actually being gone. Because 403 is not a status code this
+	// operation declares in its OpenAPI spec, the generated SDK method surfaces it
+	// as an *errors.SDKError (via `err`), not as res3.StatusCode -- so the 403
+	// check has to live here, not alongside the res3.StatusCode == 404 branch
+	// below. A 403 must not be treated the same as "gone" -- e.g. a caller that
+	// lost ReadSettings via the ownership-swap-through-shared-Configuration
+	// mechanism (EPRD-3916/EPRD-3572) would otherwise have every plan/apply
+	// hard-fail for a group it can still read fine otherwise. Keep the group in
+	// state, keep visibility's last-known value, and just warn.
+	var sdkErr3 *sdkerrors.SDKError
+	if err != nil && errors.As(err, &sdkErr3) && sdkErr3.StatusCode == 403 {
+		resp.Diagnostics.AddWarning(
+			"Unable to read group visibility",
+			fmt.Sprintf("The Opal API returned 403 Forbidden when fetching visibility for group %q. "+
+				"This is usually caused by the Terraform provider's credentials losing permission to view this "+
+				"group's visibility settings. The \"visibility\" and \"visibility_group_ids\" attributes will "+
+				"keep their last-known values in state until access is restored.", data.ID.ValueString()),
+		)
+	} else {
+		if err != nil {
+			resp.Diagnostics.AddError("failure to invoke API", err.Error())
+			if res3 != nil && res3.RawResponse != nil {
+				resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res3.RawResponse))
+			}
+			return
 		}
-		return
-	}
-	if res3 == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res3))
-		return
-	}
-	if res3.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
-	if res3.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res3.StatusCode), debugResponse(res3.RawResponse))
-		return
-	}
-	if !(res3.Object != nil) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res3.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupVisibilityResponseBody(ctx, res3.Object)...)
+		if res3 == nil {
+			resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res3))
+			return
+		}
+		if res3.StatusCode == 404 {
+			resp.State.RemoveResource(ctx)
+			return
+		}
+		if res3.StatusCode != 200 {
+			resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res3.StatusCode), debugResponse(res3.RawResponse))
+			return
+		}
+		if !(res3.Object != nil) {
+			resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res3.RawResponse))
+			return
+		}
+		resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupVisibilityResponseBody(ctx, res3.Object)...)
 
-	if resp.Diagnostics.HasError() {
-		return
+		if resp.Diagnostics.HasError() {
+			return
+		}
 	}
 
 	// Save updated data into Terraform state

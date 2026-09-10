@@ -5,6 +5,7 @@ package provider
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -30,6 +31,7 @@ import (
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
+	sdkerrors "github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/errors"
 	stateupgraders "github.com/opalsecurity/terraform-provider-opal/v3/internal/stateupgraders"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/boolvalidators"
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/int64validators"
@@ -3128,33 +3130,60 @@ func (r *ResourceResource) Read(ctx context.Context, req resource.ReadRequest, r
 		return
 	}
 	res1, err := r.client.Resources.GetVisibility(ctx, *request1)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
-		if res1 != nil && res1.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+	// TODO(EPRD-3572): Hand-edit to a Speakeasy-generated file (persistentEdits is
+	// enabled for this repo per .speakeasy/gen.lock, but enableCustomCodeRegions is
+	// not, so this diff is not guaranteed to survive the next full regen -- verify
+	// it's still present after the next Speakeasy "Generate" PR and re-add if lost).
+	//
+	// opalsecurity/opal#29350 changed the backend to return 403 (not 404) when the
+	// caller is forbidden from reading this resource's visibility, reserving 404
+	// for the resource actually being gone. Because 403 is not a status code this
+	// operation declares in its OpenAPI spec, the generated SDK method surfaces it
+	// as an *errors.SDKError (via `err`), not as res1.StatusCode -- so the 403
+	// check has to live here, not alongside the res1.StatusCode == 404 branch
+	// below. A 403 must not be treated the same as "gone" -- e.g. a caller that
+	// lost ReadSettings via the ownership-swap-through-shared-Configuration
+	// mechanism (EPRD-3916/EPRD-3572) would otherwise have every plan/apply
+	// hard-fail for a resource it can still read fine otherwise. Keep the resource
+	// in state, keep visibility's last-known value, and just warn.
+	var sdkErr1 *sdkerrors.SDKError
+	if err != nil && errors.As(err, &sdkErr1) && sdkErr1.StatusCode == 403 {
+		resp.Diagnostics.AddWarning(
+			"Unable to read resource visibility",
+			fmt.Sprintf("The Opal API returned 403 Forbidden when fetching visibility for resource %q. "+
+				"This is usually caused by the Terraform provider's credentials losing permission to view this "+
+				"resource's visibility settings. The \"visibility\" and \"visibility_group_ids\" attributes will "+
+				"keep their last-known values in state until access is restored.", data.ID.ValueString()),
+		)
+	} else {
+		if err != nil {
+			resp.Diagnostics.AddError("failure to invoke API", err.Error())
+			if res1 != nil && res1.RawResponse != nil {
+				resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+			}
+			return
 		}
-		return
-	}
-	if res1 == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
-		return
-	}
-	if res1.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
-	if res1.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
-		return
-	}
-	if !(res1.Object != nil) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromOperationsGetResourceVisibilityResponseBody(ctx, res1.Object)...)
+		if res1 == nil {
+			resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
+			return
+		}
+		if res1.StatusCode == 404 {
+			resp.State.RemoveResource(ctx)
+			return
+		}
+		if res1.StatusCode != 200 {
+			resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
+			return
+		}
+		if !(res1.Object != nil) {
+			resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
+			return
+		}
+		resp.Diagnostics.Append(data.RefreshFromOperationsGetResourceVisibilityResponseBody(ctx, res1.Object)...)
 
-	if resp.Diagnostics.HasError() {
-		return
+		if resp.Diagnostics.HasError() {
+			return
+		}
 	}
 
 	// Save updated data into Terraform state
