@@ -32,7 +32,7 @@ func (e *Type) UnmarshalJSON(data []byte) error {
 	}
 }
 
-// OpalAccessPathQuery - Request body for an ACCESS_PATH-type OpalQuery. Returns principal-to- entitlement access paths matching the given edge filters.
+// OpalAccessPathQuery - Use an Access Path query to retrieve the access edges between principals (users or groups) and their entitlements (resources or groups). You can filter by principal type, entitlement type, access level, and edge characteristics such as depth or expiration. Results are paginated and returned as a list of access path edges.
 type OpalAccessPathQuery struct {
 	// Opaque cursor from a previous ACCESS_PATH response to fetch the next page of results.
 	After *string `json:"after,omitempty"`
