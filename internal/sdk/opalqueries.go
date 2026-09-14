@@ -34,7 +34,9 @@ func newOpalQueries(rootSDK *OpalAPI, sdkConfig config.SDKConfiguration, hooks *
 }
 
 // RunOpalQuery - Run an ad-hoc OpalQuery
-// Runs an ad-hoc OpalQuery and returns the results. Supports NODE queries (users, resources, groups) and ACCESS_PATH queries (principal-to-entitlement access edges). This endpoint is only available to our OpalQuery beta group. Please contact Opal support if you'd like to be added to the beta.
+// Executes an ad-hoc OpalQuery and returns paginated results. Two query types are supported: a **Node** query filters and returns entities (users, resources, or groups); an **Access Path** query returns the access edges between principals and their entitlements. Set `type` to `NODE` or `ACCESS_PATH` in the request body to select the query type.
+//
+// This endpoint is available to OpalQuery beta participants. To request access, contact Opal support.
 func (s *OpalQueries) RunOpalQuery(ctx context.Context, request shared.RunOpalQueryRequest, opts ...operations.Option) (*operations.RunOpalQueryResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
