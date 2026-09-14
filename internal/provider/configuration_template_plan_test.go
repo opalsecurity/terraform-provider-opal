@@ -81,3 +81,37 @@ func TestStateHasLinkedTemplate(t *testing.T) {
 		t.Fatal("non-empty configuration_template_id should count as linked")
 	}
 }
+
+func TestConfigurationTemplateConfigured(t *testing.T) {
+	empty := map[string]tftypes.Value{}
+	if configurationTemplateConfigured(empty, empty) {
+		t.Fatal("empty config/plan should not count as configured")
+	}
+
+	unknownConfig := map[string]tftypes.Value{
+		"configuration_template_id": tftypes.NewValue(tftypes.String, tftypes.UnknownValue),
+	}
+	if !configurationTemplateConfigured(unknownConfig, empty) {
+		t.Fatal("unknown config reference should count as configured (same-apply create)")
+	}
+
+	knownConfig := map[string]tftypes.Value{
+		"configuration_template_id": tftypes.NewValue(
+			tftypes.String,
+			"274e3220-c3a9-40ba-bc1a-a0d0abc08d6b",
+		),
+	}
+	if !configurationTemplateConfigured(knownConfig, empty) {
+		t.Fatal("known non-empty config should count as configured")
+	}
+
+	knownPlan := map[string]tftypes.Value{
+		"configuration_template_id": tftypes.NewValue(
+			tftypes.String,
+			"274e3220-c3a9-40ba-bc1a-a0d0abc08d6b",
+		),
+	}
+	if !configurationTemplateConfigured(empty, knownPlan) {
+		t.Fatal("known non-empty plan should count as configured")
+	}
+}

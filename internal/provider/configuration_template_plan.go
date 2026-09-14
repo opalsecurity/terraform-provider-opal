@@ -63,19 +63,15 @@ func validateConfigurationTemplatePlan(
 		return
 	}
 
-	templateID, ok := plan["configuration_template_id"]
-	if !ok || !templateID.IsKnown() || templateID.IsNull() {
-		return
-	}
-	var templateIDString string
-	if err := templateID.As(&templateIDString); err != nil || templateIDString == "" {
+	// Template may be unknown at first plan when created in the same apply
+	// (configuration_template_id = opal_configuration_template.x.id). Detect from
+	// config so Default [] cannot win before the template ID is known.
+	if !configurationTemplateConfigured(config, plan) {
 		return
 	}
 
-	// Create, or first attach on update: no prior linked template. Mark omitted
-	// visibility fields unknown so schema Default [] cannot win. Speakeasy's
-	// refreshPlan fork leaves unknown plan attrs alone, so GetVisibility values
-	// survive into state (EPRD-3919).
+	// Create or first attach: mark omitted visibility unknown so GetVisibility
+	// can populate state (EPRD-3919). Speakeasy refreshPlan leaves unknowns alone.
 	if req.State.Raw.IsNull() {
 		markTemplateGovernedVisibilityUnknown(ctx, config, resp)
 		return
@@ -89,12 +85,36 @@ func validateConfigurationTemplatePlan(
 
 	if stateHasLinkedTemplate(state) {
 		validateConfiguredChanges(config, state, linkedOnlyUpdates, resp)
+		// Already linked: keep prior visibility in the plan (UseStateForUnknown
+		// semantics). Always-unknown here causes a perpetual no-op update.
 		preserveTemplateGovernedVisibility(ctx, config, state, resp)
 		return
 	}
 
-	// First attach on update (template only settable once via TF/REST).
 	markTemplateGovernedVisibilityUnknown(ctx, config, resp)
+}
+
+// configurationTemplateConfigured reports whether HCL/plan attaches a template.
+// Config may hold an unknown reference when the template is created in-plan.
+func configurationTemplateConfigured(config, plan map[string]tftypes.Value) bool {
+	if configured, ok := config["configuration_template_id"]; ok && !configured.IsNull() {
+		if !configured.IsKnown() {
+			return true
+		}
+		var id string
+		if err := configured.As(&id); err == nil && id != "" {
+			return true
+		}
+	}
+
+	if planVal, ok := plan["configuration_template_id"]; ok && planVal.IsKnown() &&
+		!planVal.IsNull() {
+		var id string
+		if err := planVal.As(&id); err == nil && id != "" {
+			return true
+		}
+	}
+	return false
 }
 
 // markTemplateGovernedVisibilityUnknown sets omitted visibility fields to
@@ -125,8 +145,6 @@ func markTemplateGovernedVisibilityUnknown(
 // preserveTemplateGovernedVisibility keeps prior visibility fields in the plan
 // when the template already governs them. Refresh populates those attributes
 // from GET /visibility, but they are omitted in HCL (ConflictsWith / ExactlyOneOf).
-// visibility would otherwise plan as unknown; visibility_group_ids has Default
-// [] so it would plan an empty set and drift against a LIMITED template.
 func preserveTemplateGovernedVisibility(
 	ctx context.Context,
 	config map[string]tftypes.Value,
