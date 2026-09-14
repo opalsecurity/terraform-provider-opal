@@ -115,7 +115,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 			"configuration_template_id": schema.StringAttribute{
 				Computed:    true,
 				Optional:    true,
-				Description: `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
+				Description: `The ID of the associated configuration template. Set to a UUID to attach or re-point. Set to null to unlink by forking the template into a private configuration that keeps current settings. Omit to leave linkage unchanged.`,
 				Validators: []validator.String{
 					custom_stringvalidators.GroupConfigurationTemplateID(),
 				},
@@ -1370,6 +1370,17 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							Description: `The priority of the request configuration. Not Null`,
 							Validators: []validator.Int64{
 								speakeasy_int64validators.NotNull(),
+							},
+						},
+						"reason_optional": schema.BoolAttribute{
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Bool{
+								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+							},
+							Description: `A bool representing whether the reason field is optional for requests. Not Null`,
+							Validators: []validator.Bool{
+								speakeasy_boolvalidators.NotNull(),
 							},
 						},
 						"recommended_duration": schema.Int64Attribute{

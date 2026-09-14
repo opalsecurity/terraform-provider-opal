@@ -13,7 +13,7 @@ import (
 type UpdateResourceInfo struct {
 	// The ID of the owner of the resource.
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
-	// The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+	// The ID of the associated configuration template. Set to a UUID to attach or re-point. Set to null to unlink by forking the template into a private configuration that keeps current settings. Omit to leave linkage unchanged.
 	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
 	// Custom request notification sent upon request approval.
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
