@@ -14,6 +14,7 @@ type RequestConfiguration struct {
 	ExtensionsDurationInMinutes types.Int64     `tfsdk:"extensions_duration_in_minutes"`
 	MaxDuration                 types.Int64     `tfsdk:"max_duration"`
 	Priority                    types.Int64     `tfsdk:"priority"`
+	ReasonOptional              types.Bool      `tfsdk:"reason_optional"`
 	RecommendedDuration         types.Int64     `tfsdk:"recommended_duration"`
 	RequestTemplateID           types.String    `tfsdk:"request_template_id"`
 	RequireMfaToRequest         types.Bool      `tfsdk:"require_mfa_to_request"`

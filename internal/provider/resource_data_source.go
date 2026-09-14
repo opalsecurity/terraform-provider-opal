@@ -82,7 +82,7 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			},
 			"configuration_template_id": schema.StringAttribute{
 				Computed:    true,
-				Description: `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
+				Description: `The ID of the associated configuration template. Set to a UUID to attach or re-point. Set to null (remove the attribute in Terraform, with visibility and request_configurations) to unlink by forking into a private configuration that keeps current settings.`,
 			},
 			"custom_request_notification": schema.StringAttribute{
 				Computed:    true,
@@ -1113,6 +1113,10 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						"priority": schema.Int64Attribute{
 							Computed:    true,
 							Description: `The priority of the request configuration.`,
+						},
+						"reason_optional": schema.BoolAttribute{
+							Computed:    true,
+							Description: `A bool representing whether the reason field is optional for requests.`,
 						},
 						"recommended_duration": schema.Int64Attribute{
 							Computed:    true,

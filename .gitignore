@@ -16,3 +16,6 @@ dev/
 .vscode/launch.json
 .speakeasy/temp
 demo/*
+
+# Local OpenAPI sync input (copy from opal backend; do not commit)
+openapi_original.yaml
