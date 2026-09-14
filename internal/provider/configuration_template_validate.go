@@ -41,28 +41,12 @@ var resourceConfigurationTemplateConflictAttributes = []string{
 	"request_configurations",
 }
 
-func (r *GroupResource) ValidateConfig(
-	ctx context.Context,
-	req resource.ValidateConfigRequest,
-	resp *resource.ValidateConfigResponse,
-) {
-	validateConfigurationTemplateConflicts(
-		req.Config.Raw,
-		groupConfigurationTemplateConflictAttributes,
-		&resp.Diagnostics,
-	)
+func (r *GroupResource) ValidateConfig(_ context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	validateConfigurationTemplateConflicts(req.Config.Raw, groupConfigurationTemplateConflictAttributes, &resp.Diagnostics)
 }
 
-func (r *ResourceResource) ValidateConfig(
-	ctx context.Context,
-	req resource.ValidateConfigRequest,
-	resp *resource.ValidateConfigResponse,
-) {
-	validateConfigurationTemplateConflicts(
-		req.Config.Raw,
-		resourceConfigurationTemplateConflictAttributes,
-		&resp.Diagnostics,
-	)
+func (r *ResourceResource) ValidateConfig(_ context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	validateConfigurationTemplateConflicts(req.Config.Raw, resourceConfigurationTemplateConflictAttributes, &resp.Diagnostics)
 }
 
 // validateConfigurationTemplateConflicts rejects HCL that sets
