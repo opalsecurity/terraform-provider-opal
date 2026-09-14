@@ -44,6 +44,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
       extensions_duration_in_minutes = 120
       max_duration                   = 120
       priority                       = 1
+      reason_optional                = false
       recommended_duration           = 120
       request_template_id            = "06851574-e50d-40ca-8c78-f72ae6ab4304"
       require_mfa_to_request         = false
@@ -125,6 +126,7 @@ Required:
 - `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource.
 - `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource.
 - `priority` (Number) The priority of the request configuration.
+- `reason_optional` (Boolean) A bool representing whether the reason field is optional for requests.
 - `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this resource.
 - `require_support_ticket` (Boolean) A bool representing whether or not access requests to the resource require an access ticket.
 

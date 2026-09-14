@@ -66,7 +66,11 @@ func TestConfigurationTemplateUpdateHook(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			t.Parallel()
 
-			req, err := http.NewRequest(http.MethodPut, "https://example.com", strings.NewReader(test.body))
+			req, err := http.NewRequest(
+				http.MethodPut,
+				"https://example.com",
+				strings.NewReader(test.body),
+			)
 			require.NoError(t, err)
 
 			hook := &configurationTemplateUpdateHook{}
@@ -103,7 +107,9 @@ func TestConfigurationTemplateUpdateHookSkipsFollowUpsAfterSuccessfulAttach(t *t
 	attach, err := http.NewRequest(
 		http.MethodPut,
 		"https://example.com/v1/groups",
-		strings.NewReader(`{"groups":[{"group_id":"group-id","configuration_template_id":"template-id","admin_owner_id":"owner-id"}]}`),
+		strings.NewReader(
+			`{"groups":[{"group_id":"group-id","configuration_template_id":"template-id","admin_owner_id":"owner-id"}]}`,
+		),
 	)
 	require.NoError(t, err)
 	attach, err = hook.BeforeRequest(BeforeRequestContext{
@@ -138,4 +144,57 @@ func TestConfigurationTemplateUpdateHookSkipsFollowUpsAfterSuccessfulAttach(t *t
 	_, err = wrapped.Do(unrelated)
 	require.NoError(t, err)
 	require.Equal(t, 2, requests)
+}
+
+func TestConfigurationTemplateUpdateHookClearsTrackingOnUnlink(t *testing.T) {
+	t.Parallel()
+
+	requests := 0
+	client := roundTripFunc(func(req *http.Request) (*http.Response, error) {
+		requests++
+		return &http.Response{
+			StatusCode: http.StatusOK,
+			Status:     "200 OK",
+			Header:     make(http.Header),
+			Body:       http.NoBody,
+			Request:    req,
+		}, nil
+	})
+
+	hook := &configurationTemplateUpdateHook{}
+	_, wrapped := hook.SDKInit("https://example.com/v1", client)
+
+	attach, err := http.NewRequest(
+		http.MethodPut,
+		"https://example.com/v1/groups",
+		strings.NewReader(
+			`{"groups":[{"group_id":"group-id","configuration_template_id":"template-id"}]}`,
+		),
+	)
+	require.NoError(t, err)
+	_, err = wrapped.Do(attach)
+	require.NoError(t, err)
+	require.Equal(t, 1, requests)
+
+	unlink, err := http.NewRequest(
+		http.MethodPut,
+		"https://example.com/v1/groups",
+		strings.NewReader(
+			`{"groups":[{"group_id":"group-id","configuration_template_id":null,"name":"Engineering"}]}`,
+		),
+	)
+	require.NoError(t, err)
+	_, err = wrapped.Do(unlink)
+	require.NoError(t, err)
+	require.Equal(t, 2, requests)
+
+	followUp, err := http.NewRequest(
+		http.MethodPut,
+		"https://example.com/v1/groups/group-id/visibility",
+		http.NoBody,
+	)
+	require.NoError(t, err)
+	_, err = wrapped.Do(followUp)
+	require.NoError(t, err)
+	require.Equal(t, 3, requests, "visibility follow-up should reach the API after unlink")
 }

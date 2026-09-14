@@ -5,6 +5,7 @@ package shared
 
 import (
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/optionalnullable"
 )
 
 // # UpdateGroupInfo Object
@@ -13,8 +14,9 @@ import (
 type UpdateGroupInfo struct {
 	// The ID of the owner of the group.
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
-	// The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
-	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
+	// The ID of the associated configuration template. Set to a UUID to attach or re-point. Set to null to unlink by forking the template into a private configuration that keeps current settings. Omit to leave linkage unchanged.
+	// Hand-edited: Speakeasy terraform gen still emits *string; OptionalNullable is required so TF null marshals as explicit JSON null (omit vs unlink).
+	ConfigurationTemplateID optionalnullable.OptionalNullable[string] `json:"configuration_template_id,omitempty"`
 	// Custom request notification sent to the requester when the request is approved.
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the group.
@@ -58,7 +60,7 @@ func (u *UpdateGroupInfo) GetAdminOwnerID() *string {
 	return u.AdminOwnerID
 }
 
-func (u *UpdateGroupInfo) GetConfigurationTemplateID() *string {
+func (u *UpdateGroupInfo) GetConfigurationTemplateID() optionalnullable.OptionalNullable[string] {
 	if u == nil {
 		return nil
 	}

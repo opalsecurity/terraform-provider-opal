@@ -27,8 +27,11 @@ generation:
     generateNewTests: false
     skipResponseBodyAssertions: false
   flattenGlobalSecurity: true
+go:
+  version: ""
+  nullableOptionalWrapper: true
 terraform:
-  version: 3.7.0
+  version: 3.7.1
   additionalActions: []
   additionalDataSources: []
   additionalDependencies:

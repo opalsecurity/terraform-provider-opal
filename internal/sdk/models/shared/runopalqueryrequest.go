@@ -17,7 +17,7 @@ const (
 	RunOpalQueryRequestTypeNode       RunOpalQueryRequestType = "NODE"
 )
 
-// RunOpalQueryRequest - Request body for running an ad-hoc OpalQuery. The `type` field determines which query schema applies.
+// RunOpalQueryRequest - Request body for an ad-hoc OpalQuery. Set `type` to `NODE` to query entities, or `ACCESS_PATH` to query access edges. The fields available in `query` differ by type — refer to each tab for the full schema.
 type RunOpalQueryRequest struct {
 	OpalNodeQuery       *OpalNodeQuery       `queryParam:"inline" union:"member"`
 	OpalAccessPathQuery *OpalAccessPathQuery `queryParam:"inline" union:"member"`

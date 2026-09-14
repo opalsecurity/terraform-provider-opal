@@ -25,11 +25,19 @@ var groupConfigurationTemplateLinkedOnlyUpdates = []string{
 	"on_call_schedule_ids",
 }
 
-func (r *GroupResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
+func (r *GroupResource) ModifyPlan(
+	ctx context.Context,
+	req resource.ModifyPlanRequest,
+	resp *resource.ModifyPlanResponse,
+) {
 	validateConfigurationTemplatePlan(ctx, req, resp, groupConfigurationTemplateLinkedOnlyUpdates)
 }
 
-func (r *ResourceResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
+func (r *ResourceResource) ModifyPlan(
+	ctx context.Context,
+	req resource.ModifyPlanRequest,
+	resp *resource.ModifyPlanResponse,
+) {
 	validateConfigurationTemplatePlan(ctx, req, resp, nil)
 }
 
@@ -94,7 +102,11 @@ func preserveTemplateGovernedVisibility(
 			var visibility string
 			if err := stateValue.As(&visibility); err == nil {
 				resp.Diagnostics.Append(
-					resp.Plan.SetAttribute(ctx, path.Root("visibility"), types.StringValue(visibility))...,
+					resp.Plan.SetAttribute(
+						ctx,
+						path.Root("visibility"),
+						types.StringValue(visibility),
+					)...,
 				)
 			}
 		}
@@ -174,7 +186,7 @@ func validateConfiguredChanges(
 			fmt.Sprintf(
 				"%q cannot be changed while configuration_template_id is set. "+
 					"The public REST API only accepts the entity ID and configuration_template_id when attaching or changing a configuration template. "+
-					"Unlink the template in the Opal UI before changing this attribute.",
+					"Remove configuration_template_id and set visibility and request_configurations in the same change to unlink before updating this attribute.",
 				attribute,
 			),
 		)
