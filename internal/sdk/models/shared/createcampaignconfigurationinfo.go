@@ -30,7 +30,7 @@ type CreateCampaignConfigurationInfo struct {
 	IsTemplate *bool `json:"is_template,omitempty"`
 	// Access-path query defining the scope of access to review. Required.
 	// Uses the same principalFilter / entitlementFilter shape as
-	// ACCESS_PATH OpalQuery. Must include at least one of
+	// ACCESS OpalQuery. Must include at least one of
 	// principalFilter or entitlementFilter.
 	//
 	// Campaign scope only supports direct access edges:

@@ -9,19 +9,19 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
 )
 
-// EntityType - The top-level entity type.
-type EntityType string
+// OpalQueryResultNodeEntityType - The top-level entity type.
+type OpalQueryResultNodeEntityType string
 
 const (
-	EntityTypeUser     EntityType = "USER"
-	EntityTypeGroup    EntityType = "GROUP"
-	EntityTypeResource EntityType = "RESOURCE"
+	OpalQueryResultNodeEntityTypeUser     OpalQueryResultNodeEntityType = "USER"
+	OpalQueryResultNodeEntityTypeGroup    OpalQueryResultNodeEntityType = "GROUP"
+	OpalQueryResultNodeEntityTypeResource OpalQueryResultNodeEntityType = "RESOURCE"
 )
 
-func (e EntityType) ToPointer() *EntityType {
+func (e OpalQueryResultNodeEntityType) ToPointer() *OpalQueryResultNodeEntityType {
 	return &e
 }
-func (e *EntityType) UnmarshalJSON(data []byte) error {
+func (e *OpalQueryResultNodeEntityType) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -32,10 +32,10 @@ func (e *EntityType) UnmarshalJSON(data []byte) error {
 	case "GROUP":
 		fallthrough
 	case "RESOURCE":
-		*e = EntityType(v)
+		*e = OpalQueryResultNodeEntityType(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for EntityType: %v", v)
+		return fmt.Errorf("invalid value for OpalQueryResultNodeEntityType: %v", v)
 	}
 }
 
@@ -44,7 +44,7 @@ type OpalQueryResultNode struct {
 	// Granular subtype of an entity.
 	EntityItemType EntityItemTypeEnum `json:"entityItemType"`
 	// The top-level entity type.
-	EntityType EntityType `json:"entityType"`
+	EntityType OpalQueryResultNodeEntityType `json:"entityType"`
 	// The entity's unique identifier.
 	ID string `json:"id"`
 	// The display name of the entity.
@@ -69,9 +69,9 @@ func (o *OpalQueryResultNode) GetEntityItemType() EntityItemTypeEnum {
 	return o.EntityItemType
 }
 
-func (o *OpalQueryResultNode) GetEntityType() EntityType {
+func (o *OpalQueryResultNode) GetEntityType() OpalQueryResultNodeEntityType {
 	if o == nil {
-		return EntityType("")
+		return OpalQueryResultNodeEntityType("")
 	}
 	return o.EntityType
 }
