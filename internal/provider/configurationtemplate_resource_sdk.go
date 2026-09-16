@@ -139,9 +139,12 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 		var priority int64
 		priority = r.RequestConfigurations[requestConfigurationsIndex].Priority.ValueInt64()
 
-		var reasonOptional bool
-		reasonOptional = r.RequestConfigurations[requestConfigurationsIndex].ReasonOptional.ValueBool()
-
+		reasonOptional := new(bool)
+		if !r.RequestConfigurations[requestConfigurationsIndex].ReasonOptional.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReasonOptional.IsNull() {
+			*reasonOptional = r.RequestConfigurations[requestConfigurationsIndex].ReasonOptional.ValueBool()
+		} else {
+			reasonOptional = nil
+		}
 		recommendedDuration := new(int64)
 		if !r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.IsNull() {
 			*recommendedDuration = r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.ValueInt64()
@@ -347,9 +350,12 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 		var priority int64
 		priority = r.RequestConfigurations[requestConfigurationsIndex].Priority.ValueInt64()
 
-		var reasonOptional bool
-		reasonOptional = r.RequestConfigurations[requestConfigurationsIndex].ReasonOptional.ValueBool()
-
+		reasonOptional := new(bool)
+		if !r.RequestConfigurations[requestConfigurationsIndex].ReasonOptional.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReasonOptional.IsNull() {
+			*reasonOptional = r.RequestConfigurations[requestConfigurationsIndex].ReasonOptional.ValueBool()
+		} else {
+			reasonOptional = nil
+		}
 		recommendedDuration := new(int64)
 		if !r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.IsNull() {
 			*recommendedDuration = r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.ValueInt64()

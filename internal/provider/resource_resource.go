@@ -2602,10 +2602,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 							PlanModifiers: []planmodifier.Bool{
 								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
 							},
-							Description: `A bool representing whether the reason field is optional for requests. Not Null`,
-							Validators: []validator.Bool{
-								speakeasy_boolvalidators.NotNull(),
-							},
+							Description: `A bool representing whether the reason field is optional for requests.`,
 						},
 						"recommended_duration": schema.Int64Attribute{
 							Computed: true,
