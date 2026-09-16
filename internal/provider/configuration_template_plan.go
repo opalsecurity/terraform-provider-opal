@@ -25,11 +25,19 @@ var groupConfigurationTemplateLinkedOnlyUpdates = []string{
 	"on_call_schedule_ids",
 }
 
-func (r *GroupResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
+func (r *GroupResource) ModifyPlan(
+	ctx context.Context,
+	req resource.ModifyPlanRequest,
+	resp *resource.ModifyPlanResponse,
+) {
 	validateConfigurationTemplatePlan(ctx, req, resp, groupConfigurationTemplateLinkedOnlyUpdates)
 }
 
-func (r *ResourceResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
+func (r *ResourceResource) ModifyPlan(
+	ctx context.Context,
+	req resource.ModifyPlanRequest,
+	resp *resource.ModifyPlanResponse,
+) {
 	validateConfigurationTemplatePlan(ctx, req, resp, nil)
 }
 
@@ -39,9 +47,8 @@ func validateConfigurationTemplatePlan(
 	resp *resource.ModifyPlanResponse,
 	linkedOnlyUpdates []string,
 ) {
-	// Creation is supported as two REST calls: create the entity, then attach
-	// the template with a minimal update. A null plan represents destruction.
-	if req.State.Raw.IsNull() || req.Plan.Raw.IsNull() {
+	// A null plan represents destruction.
+	if req.Plan.Raw.IsNull() {
 		return
 	}
 
@@ -55,34 +62,89 @@ func validateConfigurationTemplatePlan(
 		resp.Diagnostics.AddError("Unable to inspect planned state", err.Error())
 		return
 	}
+
+	// Template may be unknown at first plan when created in the same apply
+	// (configuration_template_id = opal_configuration_template.x.id). Detect from
+	// config so Default [] cannot win before the template ID is known.
+	if !configurationTemplateConfigured(config, plan) {
+		return
+	}
+
+	// Create or first attach: mark omitted visibility unknown so GetVisibility
+	// can populate state (EPRD-3919). Speakeasy refreshPlan leaves unknowns alone.
+	if req.State.Raw.IsNull() {
+		markTemplateGovernedVisibilityUnknown(ctx, config, resp)
+		return
+	}
+
 	state, err := terraformObjectValues(req.State.Raw)
 	if err != nil {
 		resp.Diagnostics.AddError("Unable to inspect prior state", err.Error())
 		return
 	}
 
-	templateID, ok := plan["configuration_template_id"]
-	if !ok || !templateID.IsKnown() || templateID.IsNull() {
-		return
-	}
-	var templateIDString string
-	if err := templateID.As(&templateIDString); err != nil || templateIDString == "" {
-		return
-	}
-
-	stateTemplateID, stateHasTemplate := state["configuration_template_id"]
-	if stateHasTemplate && stateTemplateID.IsKnown() && !stateTemplateID.IsNull() {
+	if stateHasLinkedTemplate(state) {
 		validateConfiguredChanges(config, state, linkedOnlyUpdates, resp)
+		// Already linked: keep prior visibility in the plan (UseStateForUnknown
+		// semantics). Always-unknown here causes a perpetual no-op update.
+		preserveTemplateGovernedVisibility(ctx, config, state, resp)
+		return
 	}
 
-	preserveTemplateGovernedVisibility(ctx, config, state, resp)
+	markTemplateGovernedVisibilityUnknown(ctx, config, resp)
+}
+
+// configurationTemplateConfigured reports whether HCL/plan attaches a template.
+// Config may hold an unknown reference when the template is created in-plan.
+func configurationTemplateConfigured(config, plan map[string]tftypes.Value) bool {
+	if configured, ok := config["configuration_template_id"]; ok && !configured.IsNull() {
+		if !configured.IsKnown() {
+			return true
+		}
+		var id string
+		if err := configured.As(&id); err == nil && id != "" {
+			return true
+		}
+	}
+
+	if planVal, ok := plan["configuration_template_id"]; ok && planVal.IsKnown() &&
+		!planVal.IsNull() {
+		var id string
+		if err := planVal.As(&id); err == nil && id != "" {
+			return true
+		}
+	}
+	return false
+}
+
+// markTemplateGovernedVisibilityUnknown sets omitted visibility fields to
+// unknown when a configuration template is being linked. visibility_group_ids
+// has Default [] which would otherwise plan as a known empty set and get
+// written back over GetVisibility by refreshPlan.
+func markTemplateGovernedVisibilityUnknown(
+	ctx context.Context,
+	config map[string]tftypes.Value,
+	resp *resource.ModifyPlanResponse,
+) {
+	if attributeOmitted(config, "visibility") {
+		resp.Diagnostics.Append(
+			resp.Plan.SetAttribute(ctx, path.Root("visibility"), types.StringUnknown())...,
+		)
+	}
+	if attributeOmitted(config, "visibility_group_ids") {
+		resp.Diagnostics.Append(
+			resp.Plan.SetAttribute(
+				ctx,
+				path.Root("visibility_group_ids"),
+				types.SetUnknown(types.StringType),
+			)...,
+		)
+	}
 }
 
 // preserveTemplateGovernedVisibility keeps prior visibility fields in the plan
-// when the template governs them. Refresh populates those attributes from GET
-// /visibility, but they are omitted in HCL (ConflictsWith / ExactlyOneOf).
-// visibility would otherwise plan as unknown; visibility_group_ids has Default
-// [] so it would plan an empty set and drift against a LIMITED template.
+// when the template already governs them. Refresh populates those attributes
+// from GET /visibility, but they are omitted in HCL (ConflictsWith / ExactlyOneOf).
 func preserveTemplateGovernedVisibility(
 	ctx context.Context,
 	config map[string]tftypes.Value,
@@ -94,7 +156,11 @@ func preserveTemplateGovernedVisibility(
 			var visibility string
 			if err := stateValue.As(&visibility); err == nil {
 				resp.Diagnostics.Append(
-					resp.Plan.SetAttribute(ctx, path.Root("visibility"), types.StringValue(visibility))...,
+					resp.Plan.SetAttribute(
+						ctx,
+						path.Root("visibility"),
+						types.StringValue(visibility),
+					)...,
 				)
 			}
 		}
@@ -121,6 +187,18 @@ func preserveTemplateGovernedVisibility(
 func attributeOmitted(config map[string]tftypes.Value, name string) bool {
 	configured, ok := config[name]
 	return !ok || configured.IsNull()
+}
+
+func stateHasLinkedTemplate(state map[string]tftypes.Value) bool {
+	value, ok := state["configuration_template_id"]
+	if !ok || !value.IsKnown() || value.IsNull() {
+		return false
+	}
+	var id string
+	if err := value.As(&id); err != nil || id == "" {
+		return false
+	}
+	return true
 }
 
 func knownStateValue(state map[string]tftypes.Value, name string) (tftypes.Value, bool) {

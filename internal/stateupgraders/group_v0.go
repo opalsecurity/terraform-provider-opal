@@ -152,6 +152,10 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"extensions_duration_in_minutes": tftypes.Number,
 			"last_successful_sync": lastSuccessfulSyncType,
 			"configuration_template_id": tftypes.String,
+			// Slack user-group fields added after v0 (SDK gen); unset until refresh/create.
+			"handle":           tftypes.String,
+			"initial_user_ids": tftypes.List{ElementType: tftypes.String},
+			"team_id":          tftypes.String,
 		},
 	}
 	
@@ -315,6 +319,9 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"extensions_duration_in_minutes": tftypes.NewValue(tftypes.Number, nil),
 			"last_successful_sync": tftypes.NewValue(lastSuccessfulSyncType, nil), // read only field to be filled in by refresh
 			"configuration_template_id": tftypes.NewValue(tftypes.String, nil), // added after v0; unset until refresh
+			"handle":           tftypes.NewValue(tftypes.String, nil),                                            // added after v0; unset until refresh
+			"initial_user_ids": tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, nil),                 // added after v0; unset until refresh
+			"team_id":          tftypes.NewValue(tftypes.String, nil),                                            // added after v0; unset until refresh
 		}),
 	)
 	if err != nil {
