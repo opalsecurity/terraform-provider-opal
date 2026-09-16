@@ -33,9 +33,9 @@ func (r *RunOpalQueryResponse) GetOpalQueryResults() *shared.OpalQueryResults {
 	return r.OpalQueryResults
 }
 
-func (r *RunOpalQueryResponse) GetOpalQueryResultsAccessPath() *shared.OpalAccessPathQueryResults {
+func (r *RunOpalQueryResponse) GetOpalQueryResultsAccess() *shared.OpalAccessQueryResults {
 	if v := r.GetOpalQueryResults(); v != nil {
-		return v.OpalAccessPathQueryResults
+		return v.OpalAccessQueryResults
 	}
 	return nil
 }

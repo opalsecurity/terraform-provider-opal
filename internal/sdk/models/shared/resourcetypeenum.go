@@ -106,6 +106,8 @@ const (
 	ResourceTypeEnumZoomLicense                       ResourceTypeEnum = "ZOOM_LICENSE"
 	ResourceTypeEnumLinearOrganization                ResourceTypeEnum = "LINEAR_ORGANIZATION"
 	ResourceTypeEnumLinearProject                     ResourceTypeEnum = "LINEAR_PROJECT"
+	ResourceTypeEnumRampFund                          ResourceTypeEnum = "RAMP_FUND"
+	ResourceTypeEnumRampRole                          ResourceTypeEnum = "RAMP_ROLE"
 )
 
 func (e ResourceTypeEnum) ToPointer() *ResourceTypeEnum {
@@ -304,6 +306,10 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "LINEAR_ORGANIZATION":
 		fallthrough
 	case "LINEAR_PROJECT":
+		fallthrough
+	case "RAMP_FUND":
+		fallthrough
+	case "RAMP_ROLE":
 		*e = ResourceTypeEnum(v)
 		return nil
 	default:

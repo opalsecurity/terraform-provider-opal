@@ -13,27 +13,27 @@ import (
 type OpalQueryResultsType string
 
 const (
-	OpalQueryResultsTypeAccessPath OpalQueryResultsType = "ACCESS_PATH"
-	OpalQueryResultsTypeNode       OpalQueryResultsType = "NODE"
+	OpalQueryResultsTypeAccess OpalQueryResultsType = "ACCESS"
+	OpalQueryResultsTypeNode   OpalQueryResultsType = "NODE"
 )
 
 // OpalQueryResults - Paginated results of an OpalQuery. The `type` field discriminates which result schema applies and mirrors the `type` field on the request.
 type OpalQueryResults struct {
-	OpalNodeQueryResults       *OpalNodeQueryResults       `queryParam:"inline" union:"member"`
-	OpalAccessPathQueryResults *OpalAccessPathQueryResults `queryParam:"inline" union:"member"`
+	OpalNodeQueryResults   *OpalNodeQueryResults   `queryParam:"inline" union:"member"`
+	OpalAccessQueryResults *OpalAccessQueryResults `queryParam:"inline" union:"member"`
 
 	Type OpalQueryResultsType
 }
 
-func CreateOpalQueryResultsAccessPath(accessPath OpalAccessPathQueryResults) OpalQueryResults {
-	typ := OpalQueryResultsTypeAccessPath
+func CreateOpalQueryResultsAccess(access OpalAccessQueryResults) OpalQueryResults {
+	typ := OpalQueryResultsTypeAccess
 
-	typStr := OpalAccessPathQueryResultsType(typ)
-	accessPath.Type = typStr
+	typStr := OpalAccessQueryResultsType(typ)
+	access.Type = typStr
 
 	return OpalQueryResults{
-		OpalAccessPathQueryResults: &accessPath,
-		Type:                       typ,
+		OpalAccessQueryResults: &access,
+		Type:                   typ,
 	}
 }
 
@@ -68,14 +68,14 @@ func (u *OpalQueryResults) UnmarshalJSON(data []byte) (err error) {
 	}
 
 	switch dis.Type {
-	case "ACCESS_PATH":
-		opalAccessPathQueryResults := new(OpalAccessPathQueryResults)
-		if err := utils.UnmarshalJSON(data, &opalAccessPathQueryResults, "", true, nil); err != nil {
-			return fmt.Errorf("could not unmarshal `%s` into expected (Type == ACCESS_PATH) type OpalAccessPathQueryResults within OpalQueryResults: %w", string(data), err)
+	case "ACCESS":
+		opalAccessQueryResults := new(OpalAccessQueryResults)
+		if err := utils.UnmarshalJSON(data, &opalAccessQueryResults, "", true, nil); err != nil {
+			return fmt.Errorf("could not unmarshal `%s` into expected (Type == ACCESS) type OpalAccessQueryResults within OpalQueryResults: %w", string(data), err)
 		}
 
-		u.OpalAccessPathQueryResults = opalAccessPathQueryResults
-		u.Type = OpalQueryResultsTypeAccessPath
+		u.OpalAccessQueryResults = opalAccessQueryResults
+		u.Type = OpalQueryResultsTypeAccess
 		return nil
 	case "NODE":
 		opalNodeQueryResults := new(OpalNodeQueryResults)
@@ -96,8 +96,8 @@ func (u OpalQueryResults) MarshalJSON() ([]byte, error) {
 		return utils.MarshalJSON(u.OpalNodeQueryResults, "", true)
 	}
 
-	if u.OpalAccessPathQueryResults != nil {
-		return utils.MarshalJSON(u.OpalAccessPathQueryResults, "", true)
+	if u.OpalAccessQueryResults != nil {
+		return utils.MarshalJSON(u.OpalAccessQueryResults, "", true)
 	}
 
 	return nil, errors.New("could not marshal union type OpalQueryResults: all fields are null")
