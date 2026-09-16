@@ -307,7 +307,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 				requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 				requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
-				requestConfigurations.ReasonOptional = types.BoolPointerValue(requestConfigurationsItem.ReasonOptional)
+				requestConfigurations.ReasonOptional = types.BoolValue(requestConfigurationsItem.ReasonOptional)
 				requestConfigurations.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)
 				requestConfigurations.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
 				requestConfigurations.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)

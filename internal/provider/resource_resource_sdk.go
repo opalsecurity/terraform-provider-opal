@@ -610,7 +610,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 			requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 			requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
-			requestConfigurations.ReasonOptional = types.BoolPointerValue(requestConfigurationsItem.ReasonOptional)
+			requestConfigurations.ReasonOptional = types.BoolValue(requestConfigurationsItem.ReasonOptional)
 			requestConfigurations.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)
 			requestConfigurations.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
 			requestConfigurations.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
@@ -712,7 +712,7 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.
 		requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 		requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 		requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
-		requestConfigurations.ReasonOptional = types.BoolPointerValue(requestConfigurationsItem.ReasonOptional)
+		requestConfigurations.ReasonOptional = types.BoolValue(requestConfigurationsItem.ReasonOptional)
 		requestConfigurations.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)
 		requestConfigurations.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
 		requestConfigurations.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
@@ -1979,12 +1979,9 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 		var priority int64
 		priority = r.RequestConfigurations[requestConfigurationsIndex].Priority.ValueInt64()
 
-		reasonOptional := new(bool)
-		if !r.RequestConfigurations[requestConfigurationsIndex].ReasonOptional.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReasonOptional.IsNull() {
-			*reasonOptional = r.RequestConfigurations[requestConfigurationsIndex].ReasonOptional.ValueBool()
-		} else {
-			reasonOptional = nil
-		}
+		var reasonOptional bool
+		reasonOptional = r.RequestConfigurations[requestConfigurationsIndex].ReasonOptional.ValueBool()
+
 		recommendedDuration := new(int64)
 		if !r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.IsNull() {
 			*recommendedDuration = r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.ValueInt64()

@@ -60,7 +60,7 @@ type RequestConfiguration struct {
 	// The priority of the request configuration.
 	Priority int64 `json:"priority"`
 	// A bool representing whether the reason field is optional for requests.
-	ReasonOptional *bool `default:"false" json:"reason_optional"`
+	ReasonOptional bool `json:"reason_optional"`
 	// The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
 	RecommendedDuration *int64 `json:"recommended_duration_minutes,omitempty"`
 	// The ID of the associated request template.
@@ -71,17 +71,6 @@ type RequestConfiguration struct {
 	RequireSupportTicket bool `json:"require_support_ticket"`
 	// The list of reviewer stages for the request configuration.
 	ReviewerStages []ReviewerStage `json:"reviewer_stages,omitempty"`
-}
-
-func (r RequestConfiguration) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(r, "", false)
-}
-
-func (r *RequestConfiguration) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &r, "", false, nil); err != nil {
-		return err
-	}
-	return nil
 }
 
 func (r *RequestConfiguration) GetAllowRequests() bool {
@@ -126,9 +115,9 @@ func (r *RequestConfiguration) GetPriority() int64 {
 	return r.Priority
 }
 
-func (r *RequestConfiguration) GetReasonOptional() *bool {
+func (r *RequestConfiguration) GetReasonOptional() bool {
 	if r == nil {
-		return nil
+		return false
 	}
 	return r.ReasonOptional
 }
