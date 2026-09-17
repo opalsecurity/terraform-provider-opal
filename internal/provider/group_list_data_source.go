@@ -59,7 +59,7 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 			},
 			"group_name": schema.StringAttribute{
 				Optional:    true,
-				Description: `Group name.`,
+				Description: `Case-insensitive substring match against each group's name and remote_name. Not an exact or prefix-only match.`,
 			},
 			"group_type_filter": schema.StringAttribute{
 				Optional:    true,
