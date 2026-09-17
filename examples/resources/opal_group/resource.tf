@@ -99,6 +99,12 @@ resource "opal_group" "my_group" {
     pagerduty_on_call_schedule = {
       schedule_id = "PNZNINN"
     }
+    ramp_department = {
+      department_id = "2d68eb67-f6eb-4284-8683-7d530c77a5a6"
+    }
+    ramp_location = {
+      location_id = "f4efe11c-221f-4b49-a1e4-33eaf96a49ee"
+    }
     rootly_on_call_schedule = {
       schedule_id = "01HZ8XQM9ZQX8RKMZQ8ZQX8RK"
     }
@@ -148,6 +154,7 @@ resource "opal_group" "my_group" {
       extensions_duration_in_minutes = 120
       max_duration                   = 120
       priority                       = 1
+      reason_optional                = false
       recommended_duration           = 120
       request_template_id            = "06851574-e50d-40ca-8c78-f72ae6ab4304"
       require_mfa_to_request         = false

@@ -66,6 +66,7 @@ const (
 	AppTypeEnumWorkday         AppTypeEnum = "WORKDAY"
 	AppTypeEnumZendesk         AppTypeEnum = "ZENDESK"
 	AppTypeEnumZoom            AppTypeEnum = "ZOOM"
+	AppTypeEnumRamp            AppTypeEnum = "RAMP"
 )
 
 func (e AppTypeEnum) ToPointer() *AppTypeEnum {
@@ -184,6 +185,8 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 	case "ZENDESK":
 		fallthrough
 	case "ZOOM":
+		fallthrough
+	case "RAMP":
 		*e = AppTypeEnum(v)
 		return nil
 	default:
