@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// Query - Access-path query defining the scope of access to review. Uses the same principalFilter / entitlementFilter shape as ACCESS_PATH OpalQuery.
+// Query - Access-path query defining the scope of access to review. Uses the same principalFilter / entitlementFilter shape as ACCESS OpalQuery.
 type Query struct {
 	// Filter by access-level display names on the terminal edge.
 	AccessLevelNames []string `json:"accessLevelNames,omitempty"`
@@ -103,7 +103,7 @@ type Configuration struct {
 	LastScheduledRun *time.Time `json:"last_scheduled_run,omitempty"`
 	// Next time a draft will be generated from this template.
 	NextScheduledRun *time.Time `json:"next_scheduled_run,omitempty"`
-	// Access-path query defining the scope of access to review. Uses the same principalFilter / entitlementFilter shape as ACCESS_PATH OpalQuery.
+	// Access-path query defining the scope of access to review. Uses the same principalFilter / entitlementFilter shape as ACCESS OpalQuery.
 	Query *Query `json:"query,omitempty"`
 	// Deadline window in days applied to each draft generated from this template.
 	RecurringDurationDays *int64 `json:"recurring_duration_days,omitempty"`

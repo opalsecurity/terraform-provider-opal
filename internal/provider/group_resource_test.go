@@ -82,10 +82,14 @@ func TestAccGroup_Import(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"visibility", "on_call_schedule_ids", "message_channel_ids"},
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"visibility",
+					"on_call_schedule_ids",
+					"message_channel_ids",
+				},
 			},
 		},
 	})
@@ -116,30 +120,91 @@ func TestAccGroup_CRUD(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "app_id", config.AppID),
 					resource.TestCheckResourceAttr(resourceName, "description", OLD_DESCRIPTION),
 					resource.TestCheckResourceAttr(resourceName, "group_type", "OPAL_GROUP"),
-					resource.TestCheckResourceAttr(resourceName, "admin_owner_id", knownOpalAppAdminOwnerID),
+					resource.TestCheckResourceAttr(
+						resourceName,
+						"admin_owner_id",
+						knownOpalAppAdminOwnerID,
+					),
 					resource.TestCheckResourceAttr(resourceName, "visibility", "GLOBAL"),
 					resource.TestCheckResourceAttr(resourceName, "on_call_schedule_ids.#", "0"),
 					resource.TestCheckResourceAttr(resourceName, "message_channel_ids.#", "0"),
 					resource.TestCheckResourceAttr(resourceName, "request_configurations.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "request_configurations.0.allow_requests", "true"),
-					resource.TestCheckResourceAttr(resourceName, "request_configurations.0.auto_approval", "false"),
-					resource.TestCheckResourceAttr(resourceName, "request_configurations.0.max_duration", "120"),
-					resource.TestCheckResourceAttr(resourceName, "request_configurations.0.priority", "0"),
-					resource.TestCheckResourceAttr(resourceName, "request_configurations.0.recommended_duration", "120"),
-					resource.TestCheckResourceAttr(resourceName, "request_configurations.0.require_mfa_to_request", "false"),
-					resource.TestCheckResourceAttr(resourceName, "request_configurations.0.require_support_ticket", "false"),
-					resource.TestCheckResourceAttr(resourceName, "request_configurations.0.reviewer_stages.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "request_configurations.0.reviewer_stages.0.operator", "AND"),
-					resource.TestCheckResourceAttr(resourceName, "request_configurations.0.reviewer_stages.0.owner_ids.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "request_configurations.0.reviewer_stages.0.owner_ids.0", knownOpalAppAdminOwnerID),
-					resource.TestCheckResourceAttr(resourceName, "request_configurations.0.reviewer_stages.0.require_manager_approval", "false"),
+					resource.TestCheckResourceAttr(
+						resourceName,
+						"request_configurations.0.allow_requests",
+						"true",
+					),
+					resource.TestCheckResourceAttr(
+						resourceName,
+						"request_configurations.0.auto_approval",
+						"false",
+					),
+					resource.TestCheckResourceAttr(
+						resourceName,
+						"request_configurations.0.max_duration",
+						"120",
+					),
+					resource.TestCheckResourceAttr(
+						resourceName,
+						"request_configurations.0.priority",
+						"0",
+					),
+					resource.TestCheckResourceAttr(
+						resourceName,
+						"request_configurations.0.recommended_duration",
+						"120",
+					),
+					resource.TestCheckResourceAttr(
+						resourceName,
+						"request_configurations.0.require_mfa_to_request",
+						"false",
+					),
+					resource.TestCheckResourceAttr(
+						resourceName,
+						"request_configurations.0.require_support_ticket",
+						"false",
+					),
+					resource.TestCheckResourceAttr(
+						resourceName,
+						"request_configurations.0.reason_optional",
+						"false",
+					),
+					resource.TestCheckResourceAttr(
+						resourceName,
+						"request_configurations.0.reviewer_stages.#",
+						"1",
+					),
+					resource.TestCheckResourceAttr(
+						resourceName,
+						"request_configurations.0.reviewer_stages.0.operator",
+						"AND",
+					),
+					resource.TestCheckResourceAttr(
+						resourceName,
+						"request_configurations.0.reviewer_stages.0.owner_ids.#",
+						"1",
+					),
+					resource.TestCheckResourceAttr(
+						resourceName,
+						"request_configurations.0.reviewer_stages.0.owner_ids.0",
+						knownOpalAppAdminOwnerID,
+					),
+					resource.TestCheckResourceAttr(
+						resourceName,
+						"request_configurations.0.reviewer_stages.0.require_manager_approval",
+						"false",
+					),
 				),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"visibility", "on_call_schedule_ids", "message_channel_ids"},
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"visibility",
+					"on_call_schedule_ids",
+					"message_channel_ids",
+				},
 			},
 			{
 				Config: updatedConfigString,
@@ -148,7 +213,11 @@ func TestAccGroup_CRUD(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "app_id", config.AppID),
 					resource.TestCheckResourceAttr(resourceName, "description", NEW_DESCRIPTION),
 					resource.TestCheckResourceAttr(resourceName, "group_type", "OPAL_GROUP"),
-					resource.TestCheckResourceAttr(resourceName, "admin_owner_id", knownOpalAppAdminOwnerID),
+					resource.TestCheckResourceAttr(
+						resourceName,
+						"admin_owner_id",
+						knownOpalAppAdminOwnerID,
+					),
 					resource.TestCheckResourceAttr(resourceName, "visibility", "GLOBAL"),
 					resource.TestCheckResourceAttr(resourceName, "on_call_schedule_ids.#", "0"),
 					resource.TestCheckResourceAttr(resourceName, "message_channel_ids.#", "0"),
@@ -188,10 +257,14 @@ func TestAccGroup_Visibility(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"visibility", "on_call_schedule_ids", "message_channel_ids"},
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"visibility",
+					"on_call_schedule_ids",
+					"message_channel_ids",
+				},
 			},
 			{
 				Config:      invalidVisibilityTypeConfigString,
@@ -205,7 +278,11 @@ func TestAccGroup_Visibility(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "app_id", config.AppID),
 					resource.TestCheckResourceAttr(resourceName, "visibility", "LIMITED"),
 					resource.TestCheckResourceAttr(resourceName, "visibility_group_ids.#", "1"),
-					resource.TestCheckResourceAttr(resourceName, "visibility_group_ids.0", knownOpalGroupID),
+					resource.TestCheckResourceAttr(
+						resourceName,
+						"visibility_group_ids.0",
+						knownOpalGroupID,
+					),
 				),
 			},
 		},
@@ -240,8 +317,16 @@ func TestAccGroup_OnCallSchedules(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(resourceName, "name", config.Name),
 					resource.TestCheckResourceAttr(resourceName, "app_id", config.AppID),
-					resource.TestCheckResourceAttr(dataResourceName, "on_call_schedules.on_call_schedules.#", "1"),
-					resource.TestCheckResourceAttr(dataResourceName, "on_call_schedules.on_call_schedules.0.id", knownOnCallScheduleID),
+					resource.TestCheckResourceAttr(
+						dataResourceName,
+						"on_call_schedules.on_call_schedules.#",
+						"1",
+					),
+					resource.TestCheckResourceAttr(
+						dataResourceName,
+						"on_call_schedules.on_call_schedules.0.id",
+						knownOnCallScheduleID,
+					),
 				),
 			},
 		},
@@ -358,10 +443,14 @@ func TestAccGroup_RequestConfigurations(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"visibility", "on_call_schedule_ids", "message_channel_ids"},
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"visibility",
+					"on_call_schedule_ids",
+					"message_channel_ids",
+				},
 			},
 			{
 				Config:      invalidDefaultConditionConfigString,
@@ -425,10 +514,14 @@ func TestAccGroup_RemoteInfo(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            resourceName,
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"visibility", "on_call_schedule_ids", "message_channel_ids"},
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"visibility",
+					"on_call_schedule_ids",
+					"message_channel_ids",
+				},
 			},
 		},
 	})
@@ -456,11 +549,18 @@ func testAccCheckGroupDestroy(s *terraform.State) error {
 			},
 		)
 		if err != nil {
-			return errors.Wrapf(err, "unexpected error while checking status of Terraform resource %v.", rs.Primary.ID)
+			return errors.Wrapf(
+				err,
+				"unexpected error while checking status of Terraform resource %v.",
+				rs.Primary.ID,
+			)
 		}
 
 		if group.StatusCode != 404 {
-			return fmt.Errorf("Expected 404 after destorying the group but got %d", group.StatusCode)
+			return fmt.Errorf(
+				"Expected 404 after destorying the group but got %d",
+				group.StatusCode,
+			)
 		}
 	}
 

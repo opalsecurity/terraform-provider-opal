@@ -132,6 +132,8 @@ Read-Only:
 - `openai_platform_service_account` (Attributes) Remote info for OpenAI Platform service account. (see [below for nested schema](#nestedatt--remote_info--openai_platform_service_account))
 - `oracle_fusion_role` (Attributes) Remote info for Oracle Fusion role. (see [below for nested schema](#nestedatt--remote_info--oracle_fusion_role))
 - `pagerduty_role` (Attributes) Remote info for Pagerduty role. (see [below for nested schema](#nestedatt--remote_info--pagerduty_role))
+- `ramp_fund` (Attributes) Remote info for Ramp fund. (see [below for nested schema](#nestedatt--remote_info--ramp_fund))
+- `ramp_role` (Attributes) Remote info for Ramp built-in role. (see [below for nested schema](#nestedatt--remote_info--ramp_role))
 - `salesforce_permission_set` (Attributes) Remote info for Salesforce permission set. (see [below for nested schema](#nestedatt--remote_info--salesforce_permission_set))
 - `salesforce_profile` (Attributes) Remote info for Salesforce profile. (see [below for nested schema](#nestedatt--remote_info--salesforce_profile))
 - `salesforce_role` (Attributes) Remote info for Salesforce role. (see [below for nested schema](#nestedatt--remote_info--salesforce_role))
@@ -711,6 +713,22 @@ Read-Only:
 - `role_name` (String) The name of the role.
 
 
+<a id="nestedatt--remote_info--ramp_fund"></a>
+### Nested Schema for `remote_info.ramp_fund`
+
+Read-Only:
+
+- `fund_id` (String) The ID of the Ramp fund.
+
+
+<a id="nestedatt--remote_info--ramp_role"></a>
+### Nested Schema for `remote_info.ramp_role`
+
+Read-Only:
+
+- `role` (String) The Ramp built-in role enum (e.g. BUSINESS_USER).
+
+
 <a id="nestedatt--remote_info--salesforce_permission_set"></a>
 ### Nested Schema for `remote_info.salesforce_permission_set`
 
@@ -831,6 +849,7 @@ Read-Only:
 - `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.
 - `priority` (Number) The priority of the request configuration.
+- `reason_optional` (Boolean) A bool representing whether the reason field is optional for requests.
 - `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
 - `request_template_id` (String) The ID of the associated request template.
 - `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this resource.

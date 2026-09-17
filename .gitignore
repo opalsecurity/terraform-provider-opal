@@ -16,3 +16,4 @@ dev/
 .vscode/launch.json
 .speakeasy/temp
 demo/*
+openapi_original.yaml

@@ -7,7 +7,7 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
 )
 
-// OpalAccessPathQueryBody - Edge-query filters for an ACCESS_PATH OpalQuery. At least one of principalFilter or entitlementFilter is required.
+// OpalAccessPathQueryBody - Edge-query filters for an ACCESS OpalQuery. At least one of principalFilter or entitlementFilter is required.
 type OpalAccessPathQueryBody struct {
 	// Filter by access-level display names on the terminal edge.
 	AccessLevelNames []string `json:"accessLevelNames,omitempty"`

@@ -278,6 +278,18 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 				r.RemoteInfo.PagerdutyOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
 				r.RemoteInfo.PagerdutyOnCallSchedule.ScheduleID = types.StringValue(resp.RemoteInfo.PagerdutyOnCallSchedule.ScheduleID)
 			}
+			if resp.RemoteInfo.RampDepartment == nil {
+				r.RemoteInfo.RampDepartment = nil
+			} else {
+				r.RemoteInfo.RampDepartment = &tfTypes.RampDepartment{}
+				r.RemoteInfo.RampDepartment.DepartmentID = types.StringValue(resp.RemoteInfo.RampDepartment.DepartmentID)
+			}
+			if resp.RemoteInfo.RampLocation == nil {
+				r.RemoteInfo.RampLocation = nil
+			} else {
+				r.RemoteInfo.RampLocation = &tfTypes.RampLocation{}
+				r.RemoteInfo.RampLocation.LocationID = types.StringValue(resp.RemoteInfo.RampLocation.LocationID)
+			}
 			if resp.RemoteInfo.RootlyOnCallSchedule == nil {
 				r.RemoteInfo.RootlyOnCallSchedule = nil
 			} else {
@@ -369,6 +381,7 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 			requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 			requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 			requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
+			requestConfigurations.ReasonOptional = types.BoolPointerValue(requestConfigurationsItem.ReasonOptional)
 			requestConfigurations.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)
 			requestConfigurations.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
 			requestConfigurations.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
@@ -454,6 +467,7 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(ctx context.Contex
 		requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 		requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 		requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
+		requestConfigurations.ReasonOptional = types.BoolPointerValue(requestConfigurationsItem.ReasonOptional)
 		requestConfigurations.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)
 		requestConfigurations.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
 		requestConfigurations.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
@@ -920,6 +934,24 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 				ScheduleID: scheduleId1,
 			}
 		}
+		var rampDepartment *shared.RampDepartment
+		if r.RemoteInfo.RampDepartment != nil {
+			var departmentID string
+			departmentID = r.RemoteInfo.RampDepartment.DepartmentID.ValueString()
+
+			rampDepartment = &shared.RampDepartment{
+				DepartmentID: departmentID,
+			}
+		}
+		var rampLocation *shared.RampLocation
+		if r.RemoteInfo.RampLocation != nil {
+			var locationID string
+			locationID = r.RemoteInfo.RampLocation.LocationID.ValueString()
+
+			rampLocation = &shared.RampLocation{
+				LocationID: locationID,
+			}
+		}
 		var rootlyOnCallSchedule *shared.RootlyOnCallSchedule
 		if r.RemoteInfo.RootlyOnCallSchedule != nil {
 			var scheduleId2 string
@@ -1045,6 +1077,8 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 			OktaGroup:                oktaGroup,
 			OktaGroupRule:            oktaGroupRule,
 			PagerdutyOnCallSchedule:  pagerdutyOnCallSchedule,
+			RampDepartment:           rampDepartment,
+			RampLocation:             rampLocation,
 			RootlyOnCallSchedule:     rootlyOnCallSchedule,
 			SlackUserGroup:           slackUserGroup,
 			SnowflakeRole:            snowflakeRole,
@@ -1212,6 +1246,12 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 		var priority int64
 		priority = r.RequestConfigurations[requestConfigurationsIndex].Priority.ValueInt64()
 
+		reasonOptional := new(bool)
+		if !r.RequestConfigurations[requestConfigurationsIndex].ReasonOptional.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReasonOptional.IsNull() {
+			*reasonOptional = r.RequestConfigurations[requestConfigurationsIndex].ReasonOptional.ValueBool()
+		} else {
+			reasonOptional = nil
+		}
 		recommendedDuration := new(int64)
 		if !r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.IsNull() {
 			*recommendedDuration = r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.ValueInt64()
@@ -1273,6 +1313,7 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 			ExtensionsDurationInMinutes: extensionsDurationInMinutes1,
 			MaxDuration:                 maxDuration,
 			Priority:                    priority,
+			ReasonOptional:              reasonOptional,
 			RecommendedDuration:         recommendedDuration,
 			RequestTemplateID:           requestTemplateID,
 			RequireMfaToRequest:         requireMfaToRequest,

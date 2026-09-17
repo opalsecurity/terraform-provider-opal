@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.7.2
+ - Adds `reason_optional` to `request_configurations` on `opal_group`, `opal_resource`, and `opal_configuration_template` (and related data sources), matching the public API so Terraform can manage whether a request reason is required
+ - Regenerates the provider SDK from the current OpenAPI (includes other API additions such as Ramp remote-info types)
+
 ## v3.6.0
  - Adds support for managing Paladin, Opal's AI access-request reviewer:
    - `opal_paladin` resource and `opal_paladin` / `opal_paladin_from_name` data sources to create, read, update, and delete a Paladin agent (its owner, monitor mode, instructions, and enabled connectors) and look one up by id or name

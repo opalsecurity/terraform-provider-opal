@@ -163,6 +163,10 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 							Required:    true,
 							Description: `The priority of the request configuration.`,
 						},
+						"reason_optional": schema.BoolAttribute{
+							Optional:    true,
+							Description: `A bool representing whether the reason field is optional for requests.`,
+						},
 						"recommended_duration": schema.Int64Attribute{
 							Optional:    true,
 							Description: `The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.`,

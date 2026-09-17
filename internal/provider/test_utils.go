@@ -26,6 +26,7 @@ type RequestConfigurationConfig struct {
 	IsRequestable  bool
 	ReviewerStages []ReviewerStageConfig
 	AutoApproval   bool
+	ReasonOptional bool
 	Priority       int
 }
 
@@ -86,7 +87,10 @@ func GenerateCondition(condition *ConditionConfig) string {
 			group_ids = %s
 			remote_role_ids = %s
 		}`,
-		generateQuotedArrayString(condition.GroupIDs), generateQuotedArrayString(condition.RemoteRoleIds),
+		generateQuotedArrayString(
+			condition.GroupIDs,
+		),
+		generateQuotedArrayString(condition.RemoteRoleIds),
 	)
 }
 
@@ -103,12 +107,20 @@ func GenerateRequestConfigurations(requestConfigurations []RequestConfigurationC
 				recommended_duration = %d
 				require_mfa_to_request = %t
 				require_support_ticket = %t
+				reason_optional = %t
 				%s
 				%s
 			}`,
-			requestConfiguration.IsRequestable, requestConfiguration.AutoApproval, 120,
-			requestConfiguration.Priority, 120, false,
-			false, GenerateCondition(requestConfiguration.Condition), GenerateReviewerStages(requestConfiguration.ReviewerStages),
+			requestConfiguration.IsRequestable,
+			requestConfiguration.AutoApproval,
+			120,
+			requestConfiguration.Priority,
+			120,
+			false,
+			false,
+			requestConfiguration.ReasonOptional,
+			GenerateCondition(requestConfiguration.Condition),
+			GenerateReviewerStages(requestConfiguration.ReviewerStages),
 		)
 		configurations = append(configurations, configuration)
 	}
@@ -139,8 +151,20 @@ func GenerateGroupResource(ogc *OpalGroupConfig) string {
 			%s
 		}
 		`,
-		opalBaseURL, opalToken, ogc.ResourceName, ogc.Name, ogc.Description, ogc.AppID, ogc.GroupType,
-		ogc.AdminOwnerID, ogc.Visibility, generateQuotedArrayString(ogc.VisibilityGroupIDs), generateQuotedArrayString(ogc.MessageChannelIDs), generateQuotedArrayString(ogc.OnCallScheduleIDs), requestConfigStr, ogc.Additional,
+		opalBaseURL,
+		opalToken,
+		ogc.ResourceName,
+		ogc.Name,
+		ogc.Description,
+		ogc.AppID,
+		ogc.GroupType,
+		ogc.AdminOwnerID,
+		ogc.Visibility,
+		generateQuotedArrayString(ogc.VisibilityGroupIDs),
+		generateQuotedArrayString(ogc.MessageChannelIDs),
+		generateQuotedArrayString(ogc.OnCallScheduleIDs),
+		requestConfigStr,
+		ogc.Additional,
 	)
 	return resourceStr
 }
