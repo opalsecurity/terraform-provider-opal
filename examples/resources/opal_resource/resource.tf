@@ -240,6 +240,12 @@ resource "opal_resource" "my_resource" {
     pagerduty_role = {
       role_name = "owner"
     }
+    ramp_fund = {
+      fund_id = "9abffcf0-dd7d-42f0-b806-ce0502ab6496"
+    }
+    ramp_role = {
+      role = "BUSINESS_USER"
+    }
     salesforce_permission_set = {
       permission_set_id = "0PS5Y090202wOV7WAM"
     }
@@ -299,6 +305,7 @@ resource "opal_resource" "my_resource" {
       extensions_duration_in_minutes = 120
       max_duration                   = 120
       priority                       = 1
+      reason_optional                = false
       recommended_duration           = 120
       request_template_id            = "06851574-e50d-40ca-8c78-f72ae6ab4304"
       require_mfa_to_request         = false

@@ -340,6 +340,32 @@ func (p *PagerdutyOnCallSchedule) GetScheduleID() string {
 	return p.ScheduleID
 }
 
+// RampDepartment - Remote info for Ramp department.
+type RampDepartment struct {
+	// The ID of the Ramp department.
+	DepartmentID string `json:"department_id"`
+}
+
+func (r *RampDepartment) GetDepartmentID() string {
+	if r == nil {
+		return ""
+	}
+	return r.DepartmentID
+}
+
+// RampLocation - Remote info for Ramp location.
+type RampLocation struct {
+	// The ID of the Ramp location.
+	LocationID string `json:"location_id"`
+}
+
+func (r *RampLocation) GetLocationID() string {
+	if r == nil {
+		return ""
+	}
+	return r.LocationID
+}
+
 // RootlyOnCallSchedule - Remote info for Rootly on-call schedule group.
 type RootlyOnCallSchedule struct {
 	// The id of the Rootly on-call schedule.
@@ -535,6 +561,10 @@ type GroupRemoteInfo struct {
 	OktaGroupRule *OktaGroupRule `json:"okta_group_rule,omitempty"`
 	// Remote info for PagerDuty on-call schedule group.
 	PagerdutyOnCallSchedule *PagerdutyOnCallSchedule `json:"pagerduty_on_call_schedule,omitempty"`
+	// Remote info for Ramp department.
+	RampDepartment *RampDepartment `json:"ramp_department,omitempty"`
+	// Remote info for Ramp location.
+	RampLocation *RampLocation `json:"ramp_location,omitempty"`
 	// Remote info for Rootly on-call schedule group.
 	RootlyOnCallSchedule *RootlyOnCallSchedule `json:"rootly_on_call_schedule,omitempty"`
 	// Remote info for Slack user group.
@@ -732,6 +762,20 @@ func (g *GroupRemoteInfo) GetPagerdutyOnCallSchedule() *PagerdutyOnCallSchedule 
 		return nil
 	}
 	return g.PagerdutyOnCallSchedule
+}
+
+func (g *GroupRemoteInfo) GetRampDepartment() *RampDepartment {
+	if g == nil {
+		return nil
+	}
+	return g.RampDepartment
+}
+
+func (g *GroupRemoteInfo) GetRampLocation() *RampLocation {
+	if g == nil {
+		return nil
+	}
+	return g.RampLocation
 }
 
 func (g *GroupRemoteInfo) GetRootlyOnCallSchedule() *RootlyOnCallSchedule {

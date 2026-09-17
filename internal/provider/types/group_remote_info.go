@@ -29,6 +29,8 @@ type GroupRemoteInfo struct {
 	OktaGroup                *ActiveDirectoryGroup     `tfsdk:"okta_group"`
 	OktaGroupRule            *OktaGroupRule            `tfsdk:"okta_group_rule"`
 	PagerdutyOnCallSchedule  *IncidentioOnCallSchedule `tfsdk:"pagerduty_on_call_schedule"`
+	RampDepartment           *RampDepartment           `tfsdk:"ramp_department"`
+	RampLocation             *RampLocation             `tfsdk:"ramp_location"`
 	RootlyOnCallSchedule     *IncidentioOnCallSchedule `tfsdk:"rootly_on_call_schedule"`
 	SlackUserGroup           *ActiveDirectoryGroup     `tfsdk:"slack_user_group"`
 	SnowflakeRole            *ClickhouseRole           `tfsdk:"snowflake_role"`

@@ -71,6 +71,8 @@ type ResourceRemoteInfo struct {
 	OpenaiPlatformServiceAccount      *OpenaiPlatformServiceAccount      `tfsdk:"openai_platform_service_account"`
 	OracleFusionRole                  *ClickhouseRole                    `tfsdk:"oracle_fusion_role"`
 	PagerdutyRole                     *IlevelAdvancedRole                `tfsdk:"pagerduty_role"`
+	RampFund                          *RampFund                          `tfsdk:"ramp_fund"`
+	RampRole                          *RampRole                          `tfsdk:"ramp_role"`
 	SalesforcePermissionSet           *SalesforcePermissionSet           `tfsdk:"salesforce_permission_set"`
 	SalesforceProfile                 *SalesforceProfile                 `tfsdk:"salesforce_profile"`
 	SalesforceRole                    *ClickhouseRole                    `tfsdk:"salesforce_role"`

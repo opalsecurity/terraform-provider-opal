@@ -139,6 +139,9 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 		var priority int64
 		priority = r.RequestConfigurations[requestConfigurationsIndex].Priority.ValueInt64()
 
+		var reasonOptional bool
+		reasonOptional = r.RequestConfigurations[requestConfigurationsIndex].ReasonOptional.ValueBool()
+
 		recommendedDuration := new(int64)
 		if !r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.IsNull() {
 			*recommendedDuration = r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.ValueInt64()
@@ -200,6 +203,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 			ExtensionsDurationInMinutes: extensionsDurationInMinutes,
 			MaxDuration:                 maxDuration,
 			Priority:                    priority,
+			ReasonOptional:              reasonOptional,
 			RecommendedDuration:         recommendedDuration,
 			RequestTemplateID:           requestTemplateID,
 			RequireMfaToRequest:         requireMfaToRequest,
@@ -343,6 +347,9 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 		var priority int64
 		priority = r.RequestConfigurations[requestConfigurationsIndex].Priority.ValueInt64()
 
+		var reasonOptional bool
+		reasonOptional = r.RequestConfigurations[requestConfigurationsIndex].ReasonOptional.ValueBool()
+
 		recommendedDuration := new(int64)
 		if !r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.IsNull() {
 			*recommendedDuration = r.RequestConfigurations[requestConfigurationsIndex].RecommendedDuration.ValueInt64()
@@ -404,6 +411,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 			ExtensionsDurationInMinutes: extensionsDurationInMinutes,
 			MaxDuration:                 maxDuration,
 			Priority:                    priority,
+			ReasonOptional:              reasonOptional,
 			RecommendedDuration:         recommendedDuration,
 			RequestTemplateID:           requestTemplateID,
 			RequireMfaToRequest:         requireMfaToRequest,
