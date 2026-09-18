@@ -925,6 +925,26 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Pagerduty role.`,
 					},
+					"ramp_fund": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"fund_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Ramp fund.`,
+							},
+						},
+						Description: `Remote info for Ramp fund.`,
+					},
+					"ramp_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"role": schema.StringAttribute{
+								Computed:    true,
+								Description: `The Ramp built-in role enum (e.g. BUSINESS_USER).`,
+							},
+						},
+						Description: `Remote info for Ramp built-in role.`,
+					},
 					"salesforce_permission_set": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -1113,6 +1133,10 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						"priority": schema.Int64Attribute{
 							Computed:    true,
 							Description: `The priority of the request configuration.`,
+						},
+						"reason_optional": schema.BoolAttribute{
+							Computed:    true,
+							Description: `A bool representing whether the reason field is optional for requests.`,
 						},
 						"recommended_duration": schema.Int64Attribute{
 							Computed:    true,

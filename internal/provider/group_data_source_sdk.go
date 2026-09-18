@@ -278,6 +278,18 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.PagerdutyOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
 				r.RemoteInfo.PagerdutyOnCallSchedule.ScheduleID = types.StringValue(resp.RemoteInfo.PagerdutyOnCallSchedule.ScheduleID)
 			}
+			if resp.RemoteInfo.RampDepartment == nil {
+				r.RemoteInfo.RampDepartment = nil
+			} else {
+				r.RemoteInfo.RampDepartment = &tfTypes.RampDepartment{}
+				r.RemoteInfo.RampDepartment.DepartmentID = types.StringValue(resp.RemoteInfo.RampDepartment.DepartmentID)
+			}
+			if resp.RemoteInfo.RampLocation == nil {
+				r.RemoteInfo.RampLocation = nil
+			} else {
+				r.RemoteInfo.RampLocation = &tfTypes.RampLocation{}
+				r.RemoteInfo.RampLocation.LocationID = types.StringValue(resp.RemoteInfo.RampLocation.LocationID)
+			}
 			if resp.RemoteInfo.RootlyOnCallSchedule == nil {
 				r.RemoteInfo.RootlyOnCallSchedule = nil
 			} else {
@@ -369,6 +381,7 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 			requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 			requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
+			requestConfigurations.ReasonOptional = types.BoolPointerValue(requestConfigurationsItem.ReasonOptional)
 			requestConfigurations.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)
 			requestConfigurations.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
 			requestConfigurations.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)

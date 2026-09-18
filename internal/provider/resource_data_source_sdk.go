@@ -492,6 +492,18 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.PagerdutyRole = &tfTypes.IlevelAdvancedRole{}
 				r.RemoteInfo.PagerdutyRole.RoleName = types.StringValue(resp.RemoteInfo.PagerdutyRole.RoleName)
 			}
+			if resp.RemoteInfo.RampFund == nil {
+				r.RemoteInfo.RampFund = nil
+			} else {
+				r.RemoteInfo.RampFund = &tfTypes.RampFund{}
+				r.RemoteInfo.RampFund.FundID = types.StringValue(resp.RemoteInfo.RampFund.FundID)
+			}
+			if resp.RemoteInfo.RampRole == nil {
+				r.RemoteInfo.RampRole = nil
+			} else {
+				r.RemoteInfo.RampRole = &tfTypes.RampRole{}
+				r.RemoteInfo.RampRole.Role = types.StringValue(resp.RemoteInfo.RampRole.Role)
+			}
 			if resp.RemoteInfo.SalesforcePermissionSet == nil {
 				r.RemoteInfo.SalesforcePermissionSet = nil
 			} else {
@@ -598,6 +610,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 			requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 			requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
+			requestConfigurations.ReasonOptional = types.BoolPointerValue(requestConfigurationsItem.ReasonOptional)
 			requestConfigurations.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)
 			requestConfigurations.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
 			requestConfigurations.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)

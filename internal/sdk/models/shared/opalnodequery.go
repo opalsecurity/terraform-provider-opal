@@ -32,7 +32,7 @@ func (e *OpalNodeQueryType) UnmarshalJSON(data []byte) error {
 	}
 }
 
-// OpalNodeQuery - Request body for a NODE-type OpalQuery. Returns entities (users, resources, groups) matching the given filters.
+// OpalNodeQuery - Use a Node query to retrieve entities — users, resources, or groups — that match a set of filters. You can filter by entity type, tags, and access relationships. Results are paginated and returned as a list of entity edges.
 type OpalNodeQuery struct {
 	// Cursor from a previous response to fetch the next page of results.
 	After *string `json:"after,omitempty"`
