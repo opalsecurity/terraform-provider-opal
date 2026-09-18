@@ -921,6 +921,283 @@ paths:
         - BearerAuth: []
       tags:
         - campaigns
+  /campaigns/{campaign_id}/items:
+    get:
+      summary: List campaign items
+      description: |
+        Returns a paginated list of review items for a campaign — the same rows
+        shown on the admin Reviews tab. Status is derived using the same rules
+        as the UI Status column. Soft-deleted role assignments are still
+        returned with `is_target_deleted: true`.
+      operationId: getCampaignItems
+      parameters:
+        - description: The ID of the campaign.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          explode: true
+          in: path
+          name: campaign_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The pagination cursor value.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          explode: true
+          in: query
+          name: cursor
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: |
+            Number of results to return per page. Default is 200; maximum is
+            500 (the campaign-items list cap).
+          example: 200
+          explode: true
+          in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+            maximum: 500
+          style: form
+        - description: |
+            Filter by derived item status. When multiple values are provided,
+            items matching any status are returned (OR).
+          explode: true
+          in: query
+          name: statuses
+          required: false
+          schema:
+            items:
+              $ref: "#/components/schemas/CampaignItemStatusEnum"
+            type: array
+          style: form
+        - description: Restrict to items assigned to this reviewer user ID.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: true
+          in: query
+          name: reviewer_user_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
+        - description: When true, restrict to items with no reviewer assigned.
+          explode: true
+          in: query
+          name: unassigned
+          required: false
+          schema:
+            type: boolean
+          style: form
+        - description: |
+            Case-insensitive search over principal name, asset name, and
+            reviewer name.
+          explode: true
+          in: query
+          name: search
+          required: false
+          schema:
+            type: string
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedCampaignItemsList"
+          description: A page of campaign items.
+        "404":
+          description: Campaign not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - campaigns
+  /campaigns/{campaign_id}/item-reviewers:
+    post:
+      summary: Update campaign item reviewers
+      description: |
+        Atomically assigns and unassigns reviewers on campaign items in one
+        request. All `campaign_item_id`s must belong to `{campaign_id}`.
+        Existing assign pairs are ignored; missing unassign pairs are skipped.
+        Completed reviews (`decided_at` set) are never removed.
+        Requires settings-edit permission. Returns 400 if the campaign has ended.
+      operationId: updateCampaignItemReviewers
+      parameters:
+        - description: The ID of the campaign.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          explode: true
+          in: path
+          name: campaign_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCampaignItemReviewersInfo"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateCampaignItemReviewersResult"
+          description: Reviews for all referenced items after the update.
+        "400":
+          description: |
+            Invalid input, items not in this campaign, campaign ended,
+            or self-review violation.
+        "403":
+          description: Missing settings-edit permission.
+        "404":
+          description: Campaign or one or more campaign items not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - campaigns
+  /campaigns/{campaign_id}/viewer-items:
+    get:
+      summary: List viewer campaign items
+      description: |
+        Returns a paginated list of campaign review items assigned to the
+        current authenticated viewer. Matches GraphQL `Campaign.viewerItems`.
+
+        Campaign access matches `GET /campaigns/{campaign_id}` and GraphQL
+        `campaign(id)`: the caller must have access-review read permission or
+        be a reviewer on the campaign. Otherwise the request fails with 403
+        (same as get-by-id). Item rows are still scoped to the caller's own
+        reviews (empty page when the caller is an admin but not a reviewer).
+      operationId: getCampaignViewerItems
+      parameters:
+        - description: The ID of the campaign.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          explode: true
+          in: path
+          name: campaign_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The pagination cursor value.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          explode: true
+          in: query
+          name: cursor
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: |
+            Number of results to return per page. Default is 200; maximum is
+            500.
+          example: 200
+          explode: true
+          in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+            maximum: 500
+          style: form
+        - description: |
+            Sort by. Omit to sort by created_at.
+          explode: true
+          in: query
+          name: sort_field
+          required: false
+          schema:
+            $ref: "#/components/schemas/ViewerCampaignItemSortFieldEnum"
+          style: form
+        - description: Sort direction.
+          explode: true
+          in: query
+          name: sort_direction
+          required: false
+          schema:
+            $ref: "#/components/schemas/SortDirectionEnum"
+          style: form
+        - description: |
+            Filter by review status. When multiple values are provided,
+            items matching any status are returned (OR).
+          explode: true
+          in: query
+          name: statuses
+          required: false
+          schema:
+            items:
+              $ref: "#/components/schemas/ViewerCampaignItemStatusEnum"
+            type: array
+          style: form
+        - description: Filter by access level name.
+          explode: true
+          in: query
+          name: access_level_names
+          required: false
+          schema:
+            items:
+              type: string
+            type: array
+          style: form
+        - description: Filter by principal ID.
+          explode: true
+          in: query
+          name: principal_ids
+          required: false
+          schema:
+            items:
+              format: uuid
+              type: string
+            type: array
+          style: form
+        - description: Filter by entity ID.
+          explode: true
+          in: query
+          name: entity_ids
+          required: false
+          schema:
+            items:
+              format: uuid
+              type: string
+            type: array
+          style: form
+        - description: Filter to specific campaign item review IDs.
+          explode: true
+          in: query
+          name: item_ids
+          required: false
+          schema:
+            items:
+              format: uuid
+              type: string
+            type: array
+          style: form
+        - description: Restrict to items in this AI-suggestion bucket.
+          explode: true
+          in: query
+          name: ai_bucket_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedViewerCampaignItemsList"
+          description: A page of viewer campaign items.
+      security:
+        - BearerAuth: []
+      tags:
+        - campaigns
   /configuration-templates:
     get:
       description: Returns a list of `ConfigurationTemplate` objects.
@@ -1866,6 +2143,8 @@ paths:
                 allOf:
                   - $ref: "#/components/schemas/VisibilityInfo"
           description: The visibility info of this group.
+        "403":
+          description: The caller is not authorized to view this group's visibility.
         "404":
           description: Not Found
       security:
@@ -3788,6 +4067,8 @@ paths:
                 allOf:
                   - $ref: "#/components/schemas/VisibilityInfo"
           description: The visibility info of this resource.
+        "403":
+          description: The caller is not authorized to view this resource's visibility.
         "404":
           description: Not Found
       security:
@@ -5755,7 +6036,12 @@ paths:
   /queries/run:
     post:
       summary: Run an ad-hoc OpalQuery
-      description: Runs an ad-hoc OpalQuery and returns the results. Supports NODE queries (users, resources, groups) and ACCESS_PATH queries (principal-to-entitlement access edges). This endpoint is only available to our OpalQuery beta group. Please contact Opal support if you'd like to be added to the beta.
+      description: >
+        Executes an ad-hoc OpalQuery and returns paginated results. Two query types are supported: a **Node** query filters and returns entities (users, resources, or groups); an **Access** query returns the access grants between principals and their entitlements, one per (principal, entitlement, access level). Set `type` to `NODE` or `ACCESS` in the request body to select the query type.
+
+
+        This endpoint is available to OpalQuery beta participants. To request access, contact Opal support.
+
       operationId: runOpalQuery
       requestBody:
         required: true
@@ -6203,15 +6489,17 @@ components:
           type: object
           x-go-type: AccessEntityFilters
     RunOpalQueryRequest:
-      description: Request body for running an ad-hoc OpalQuery. The `type` field determines which query schema applies.
+      description: >
+        Request body for an ad-hoc OpalQuery. Set `type` to `NODE` to query entities, or `ACCESS` to query access grants. The fields available in `query` differ by type — refer to each tab for the full schema.
+
       oneOf:
         - $ref: "#/components/schemas/OpalNodeQuery"
-        - $ref: "#/components/schemas/OpalAccessPathQuery"
+        - $ref: "#/components/schemas/OpalAccessQuery"
       discriminator:
         propertyName: type
         mapping:
           NODE: "#/components/schemas/OpalNodeQuery"
-          ACCESS_PATH: "#/components/schemas/OpalAccessPathQuery"
+          ACCESS: "#/components/schemas/OpalAccessQuery"
       # example:
       #   type: NODE
       #   query:
@@ -6233,10 +6521,13 @@ components:
       #           key: contractor
       #   first: 50
     OpalNodeQuery:
+      title: Node
       type: object
       required:
         - type
-      description: Request body for a NODE-type OpalQuery. Returns entities (users, resources, groups) matching the given filters.
+      description: >
+        Use a Node query to retrieve entities — users, resources, or groups — that match a set of filters. You can filter by entity type, tags, and access relationships. Results are paginated and returned as a list of entity edges.
+
       example:
         type: NODE
         query:
@@ -6315,12 +6606,12 @@ components:
       description: Paginated results of an OpalQuery. The `type` field discriminates which result schema applies and mirrors the `type` field on the request.
       oneOf:
         - $ref: "#/components/schemas/OpalNodeQueryResults"
-        - $ref: "#/components/schemas/OpalAccessPathQueryResults"
+        - $ref: "#/components/schemas/OpalAccessQueryResults"
       discriminator:
         propertyName: type
         mapping:
           NODE: "#/components/schemas/OpalNodeQueryResults"
-          ACCESS_PATH: "#/components/schemas/OpalAccessPathQueryResults"
+          ACCESS: "#/components/schemas/OpalAccessQueryResults"
     OpalNodeQueryResults:
       type: object
       required:
@@ -6340,26 +6631,27 @@ components:
             $ref: "#/components/schemas/OpalQueryResultEdge"
         pageInfo:
           $ref: "#/components/schemas/PageInfo"
-    OpalAccessPathQuery:
+    OpalAccessQuery:
+      title: Access
       type: object
       required:
         - type
-      description: Request body for an ACCESS_PATH-type OpalQuery. Returns principal-to- entitlement access paths matching the given edge filters.
+      description: >
+        Use an Access query to retrieve access grants between principals (users or groups) and their entitlements (resources or groups), with one result per (principal, entitlement, access level). Every access path reaching that grant is returned as metadata on the result. Uses the same filters as an Access Path query; results are paginated.
+
       example:
-        type: ACCESS_PATH
+        type: ACCESS
         query:
           principalFilter:
             entityTypes: [USER]
           entitlementFilter:
             entityItemTypes: [AWS_IAM_ROLE]
-          edgeFilter:
-            directOnly: true
         first: 50
       properties:
         type:
           type: string
           enum:
-            - ACCESS_PATH
+            - ACCESS
         query:
           $ref: "#/components/schemas/OpalAccessPathQueryBody"
         first:
@@ -6368,14 +6660,10 @@ components:
           example: 200
         after:
           type: string
-          description: Opaque cursor from a previous ACCESS_PATH response to fetch the next page of results.
-        includeCount:
-          type: boolean
-          description: When true, populate totalCount in the response. Defaults to false.
-          example: false
+          description: Opaque cursor from a previous ACCESS response to fetch the next page of results.
     OpalAccessPathQueryBody:
       type: object
-      description: Edge-query filters for an ACCESS_PATH OpalQuery. At least one of principalFilter or entitlementFilter is required.
+      description: Edge-query filters for an ACCESS OpalQuery. At least one of principalFilter or entitlementFilter is required.
       properties:
         principalFilter:
           $ref: "#/components/schemas/AccessEntityFilters"
@@ -6418,14 +6706,31 @@ components:
             - EXPIRING_ONLY
             - PERMANENT_ONLY
           example: EXPIRING_ONLY
-    OpalAccessPathResultNode:
+    OpalAccessPathDetail:
+      type: object
+      required:
+        - path
+      description: A single access path within an ACCESS result.
+      properties:
+        path:
+          type: array
+          description: Entity IDs along the path from principal to entitlement.
+          items:
+            type: string
+            format: uuid
+        expiration:
+          type: string
+          format: date-time
+          nullable: true
+          description: This path's expiration, if any.
+    OpalAccessResultNode:
       type: object
       required:
         - principalId
         - entitlementId
-        - depth
-        - path
-      description: A matched access path from an ACCESS_PATH OpalQuery.
+        - isDirect
+        - paths
+      description: A matched access grant from an ACCESS OpalQuery — one per (principal, entitlement, access level), with every access path as metadata.
       properties:
         principalId:
           type: string
@@ -6438,60 +6743,55 @@ components:
         accessLevelRemoteId:
           type: string
           nullable: true
-          description: Remote ID of the terminal access level.
+          description: Remote ID of the access level.
         accessLevelName:
           type: string
           nullable: true
-          description: Display name of the terminal access level.
-        expiration:
+          description: Display name of the access level.
+        effectiveExpiration:
           type: string
           format: date-time
           nullable: true
-          description: Expiration of the terminal access, if any.
-        depth:
-          type: integer
-          description: Number of hops from principal to entitlement (path length - 1).
-        path:
+          description: The expiration in effect across all paths (the latest-expiring; a permanent path wins). Null means access never expires.
+        isDirect:
+          type: boolean
+          description: True when any path is a direct grant.
+        paths:
           type: array
-          description: Entity IDs along the path from principal to entitlement.
+          description: Every access path reaching this grant.
           items:
-            type: string
-            format: uuid
-    OpalAccessPathResultEdge:
+            $ref: "#/components/schemas/OpalAccessPathDetail"
+    OpalAccessResultEdge:
       type: object
       required:
         - node
         - cursor
-      description: A single ACCESS_PATH result edge containing the matched path and its pagination cursor.
+      description: A single ACCESS result edge containing the matched access grant and its pagination cursor.
       properties:
         node:
-          $ref: "#/components/schemas/OpalAccessPathResultNode"
+          $ref: "#/components/schemas/OpalAccessResultNode"
         cursor:
           type: string
-          description: Opaque cursor for this path, used for pagination.
-    OpalAccessPathQueryResults:
+          description: Opaque cursor for this grant, used for pagination.
+    OpalAccessQueryResults:
       type: object
       required:
         - type
         - edges
         - pageInfo
-      description: Paginated results of an ACCESS_PATH-type OpalQuery — one edge per matched principal-to-entitlement access path.
+      description: Paginated results of an ACCESS-type OpalQuery — one edge per matched (principal, entitlement, access level) grant.
       properties:
         type:
           type: string
           enum:
-            - ACCESS_PATH
+            - ACCESS
         edges:
           type: array
-          description: List of matched access paths.
+          description: List of matched access grants.
           items:
-            $ref: "#/components/schemas/OpalAccessPathResultEdge"
+            $ref: "#/components/schemas/OpalAccessResultEdge"
         pageInfo:
           $ref: "#/components/schemas/PageInfo"
-        totalCount:
-          type: integer
-          nullable: true
-          description: Exact total number of matching paths when includeCount was true on the request; otherwise null.
     AccessRelationshipFilters:
       type: object
       description: >
@@ -6793,7 +7093,7 @@ components:
           format: date-time
           type: string
         query:
-          description: Access-path query defining the scope of access to review. Uses the same principalFilter / entitlementFilter shape as ACCESS_PATH OpalQuery.
+          description: Access-path query defining the scope of access to review. Uses the same principalFilter / entitlementFilter shape as ACCESS OpalQuery.
           allOf:
             - $ref: "#/components/schemas/OpalAccessPathQueryBody"
           nullable: true
@@ -6910,7 +7210,7 @@ components:
           description: |
             Access-path query defining the scope of access to review. Required.
             Uses the same principalFilter / entitlementFilter shape as
-            ACCESS_PATH OpalQuery. Must include at least one of
+            ACCESS OpalQuery. Must include at least one of
             principalFilter or entitlementFilter.
 
             Campaign scope only supports direct access edges:
@@ -7264,6 +7564,219 @@ components:
           type: array
       required:
         - results
+      type: object
+    CampaignItemStatusEnum:
+      description: |
+        Derived aggregate status for a campaign item. Matches the admin Reviews
+        tab Status column labels (undecided items on a stopped campaign are
+        PENDING, not a separate stopped status).
+      enum:
+        - PENDING
+        - COMPLETED
+        - APPROVED
+        - REVOKED
+        - NO_ACTION
+        - CHANGED_ROLE
+        - ADMIN_REVOKED
+      example: PENDING
+      type: string
+    CampaignItemReviewDecisionEnum:
+      description: Decision recorded on a campaign item review row.
+      enum:
+        - APPROVED
+        - REVOKED
+        - CHANGE_ROLE
+        - ADMIN_REVOKED
+        - NO_ACTION
+        - REASSIGNED
+        - ADMIN_OVERRIDE_APPROVED
+        - ADMIN_OVERRIDE_REVOKED
+      example: APPROVED
+      type: string
+    CampaignItemReviewerAssignmentSourceEnum:
+      description: How a reviewer was assigned to a campaign item.
+      enum:
+        - MANUAL
+        - PRINCIPAL_MANAGER
+        - ASSET_ADMIN_OWNER
+      example: MANUAL
+      type: string
+    CampaignItemTargetTypeEnum:
+      description: Type of access edge the campaign item reviews.
+      enum:
+        - ROLE_ASSIGNMENT
+      example: ROLE_ASSIGNMENT
+      type: string
+    CampaignItemReview:
+      description: A single reviewer's assignment and decision for a campaign item.
+      properties:
+        campaign_item_review_id:
+          description: The ID of the campaign item review.
+          format: uuid
+          type: string
+        campaign_item_id:
+          description: The ID of the campaign item.
+          format: uuid
+          type: string
+        reviewer_user_id:
+          description: The ID of the assigned reviewer.
+          format: uuid
+          type: string
+        assignment_source:
+          $ref: "#/components/schemas/CampaignItemReviewerAssignmentSourceEnum"
+        decision:
+          description: |
+            The reviewer's decision. Null when the reviewer has not yet
+            submitted.
+          allOf:
+            - $ref: "#/components/schemas/CampaignItemReviewDecisionEnum"
+          nullable: true
+        note:
+          description: Optional note from the reviewer.
+          nullable: true
+          type: string
+        updated_access_level_remote_id:
+          description: Target access level remote ID when decision is CHANGE_ROLE.
+          nullable: true
+          type: string
+        decided_at:
+          description: When the decision was finalized.
+          format: date-time
+          nullable: true
+          type: string
+        resolution_message:
+          description: |
+            Preset assignment summary when a manager/owner chain was resolved
+            or substituted.
+          nullable: true
+          type: string
+      required:
+        - campaign_item_review_id
+        - campaign_item_id
+        - reviewer_user_id
+        - assignment_source
+      type: object
+    CampaignItemAdminOverride:
+      description: |
+        Admin override applied to a campaign item. When set, it takes precedence
+        over reviewer decisions for status and end-campaign remediations.
+      properties:
+        actor_user_id:
+          description: The admin who applied the override.
+          format: uuid
+          type: string
+        decision:
+          $ref: "#/components/schemas/CampaignItemReviewDecisionEnum"
+        decided_at:
+          description: When the override was applied.
+          format: date-time
+          type: string
+      required:
+        - actor_user_id
+        - decision
+        - decided_at
+      type: object
+    CampaignItem:
+      description: |
+        A campaign review item — one direct access edge under review, matching
+        a row on the admin Reviews tab.
+      properties:
+        campaign_item_id:
+          description: The ID of the campaign item.
+          format: uuid
+          type: string
+        campaign_id:
+          description: The ID of the parent campaign.
+          format: uuid
+          type: string
+        target_type:
+          $ref: "#/components/schemas/CampaignItemTargetTypeEnum"
+        role_assignment_id:
+          description: |
+            The role assignment ID this item reviews (`target_id` when
+            `target_type` is ROLE_ASSIGNMENT).
+          format: uuid
+          type: string
+        status:
+          $ref: "#/components/schemas/CampaignItemStatusEnum"
+        created_at:
+          description: When the item was created (snapshotted into the campaign).
+          format: date-time
+          type: string
+        is_target_deleted:
+          description: True when the underlying role assignment is soft-deleted.
+          type: boolean
+        principal_id:
+          description: Principal ID from the role assignment. Null if the RA is missing.
+          format: uuid
+          nullable: true
+          type: string
+        principal_type:
+          description: Principal entity type. Null if the RA is missing.
+          allOf:
+            - $ref: "#/components/schemas/EntityTypeEnum"
+          nullable: true
+        entity_id:
+          description: Entitlement entity ID. Null if the RA is missing.
+          format: uuid
+          nullable: true
+          type: string
+        entity_type:
+          description: Entitlement entity type. Null if the RA is missing.
+          allOf:
+            - $ref: "#/components/schemas/EntityTypeEnum"
+          nullable: true
+        access_level:
+          description: Access level on the role assignment, if any.
+          allOf:
+            - $ref: "#/components/schemas/ResourceAccessLevel"
+          nullable: true
+        access_level_name:
+          description: Denormalized access level name stored on the campaign item.
+          nullable: true
+          type: string
+        reviews:
+          description: Reviewer assignments and decisions for this item.
+          items:
+            $ref: "#/components/schemas/CampaignItemReview"
+          type: array
+        admin_override:
+          description: Admin override, if any.
+          allOf:
+            - $ref: "#/components/schemas/CampaignItemAdminOverride"
+          nullable: true
+      required:
+        - campaign_item_id
+        - campaign_id
+        - target_type
+        - role_assignment_id
+        - status
+        - created_at
+        - is_target_deleted
+        - reviews
+      type: object
+    PaginatedCampaignItemsList:
+      description: A paginated list of campaign items.
+      properties:
+        next:
+          description: The cursor with which to continue pagination if additional result pages exist.
+          nullable: true
+          type: string
+        previous:
+          description: The cursor used to obtain the current result page.
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: "#/components/schemas/CampaignItem"
+          type: array
+        total_count:
+          description: Total number of items matching the filter (across all pages).
+          type: integer
+          format: int64
+      required:
+        - results
+        - total_count
       type: object
     PaginatedUARsList:
       description: A list of UARs.
@@ -7671,6 +8184,7 @@ components:
         - WORKDAY
         - ZENDESK
         - ZOOM
+        - RAMP
       example: OKTA_DIRECTORY
       type: string
     EntityTypeEnum:
@@ -7681,6 +8195,157 @@ components:
         - USER
       example: GROUP
       type: string
+    ViewerCampaignItemSortFieldEnum:
+      description: Sort field for viewer campaign items.
+      enum:
+        - PRINCIPAL_NAME
+        - ENTITY_NAME
+        - EXPIRATION
+        - LAST_USED
+      example: PRINCIPAL_NAME
+      type: string
+    SortDirectionEnum:
+      description: Sort direction for viewer campaign items.
+      enum:
+        - ASC
+        - DESC
+      example: ASC
+      type: string
+    ViewerCampaignItemStatusEnum:
+      description: Decision status for a viewer campaign item.
+      enum:
+        - APPROVED
+        - REVOKED
+        - CHANGE_ROLE
+        - NO_ACTION
+        - PENDING
+        - REASSIGNED
+      example: PENDING
+      type: string
+    ViewerCampaignItemReviewDecisionEnum:
+      description: Decision recorded on a campaign item review row.
+      enum:
+        - APPROVED
+        - REVOKED
+        - CHANGE_ROLE
+        - ADMIN_REVOKED
+        - NO_ACTION
+        - REASSIGNED
+      example: APPROVED
+      type: string
+    ViewerCampaignItem:
+      description: |
+        A campaign review item assigned to the current viewer, matching
+        GraphQL `ViewerCampaignItem`.
+      properties:
+        campaign_item_review_id:
+          description: The ID of the campaign item review.
+          format: uuid
+          type: string
+        decision:
+          description: The reviewer's decision. Null when undecided.
+          allOf:
+            - $ref: "#/components/schemas/ViewerCampaignItemReviewDecisionEnum"
+          nullable: true
+        note:
+          description: Optional note from the reviewer.
+          nullable: true
+          type: string
+        decided_at:
+          description: When the decision was finalized.
+          format: date-time
+          nullable: true
+          type: string
+        pending_decision:
+          description: Pending decision staged by the viewer, if any.
+          allOf:
+            - $ref: "#/components/schemas/ViewerCampaignItemReviewDecisionEnum"
+          nullable: true
+        pending_note:
+          description: Pending note attached to the reviewer's pending decision.
+          nullable: true
+          type: string
+        updated_access_level_remote_id:
+          description: Target access level remote ID when decision is CHANGE_ROLE.
+          nullable: true
+          type: string
+        pending_updated_access_level_remote_id:
+          description: Pending target access level remote ID when decision is CHANGE_ROLE.
+          nullable: true
+          type: string
+        reassigned_to_reviewer_ids:
+          description: User IDs this review was reassigned to.
+          items:
+            format: uuid
+            type: string
+          type: array
+        principal_id:
+          description: Principal ID from the role assignment.
+          format: uuid
+          type: string
+        principal_type:
+          $ref: "#/components/schemas/EntityTypeEnum"
+        entity_id:
+          description: Entity ID from the role assignment.
+          format: uuid
+          type: string
+        entity_type:
+          $ref: "#/components/schemas/EntityTypeEnum"
+        access_level_name:
+          description: Denormalized access level name.
+          nullable: true
+          type: string
+        access_level_remote_id:
+          description: Access level remote ID from the role assignment.
+          nullable: true
+          type: string
+        granted_at:
+          description: When the access was originally granted.
+          format: date-time
+          type: string
+        expires_at:
+          description: When the access expires, if set.
+          format: date-time
+          nullable: true
+          type: string
+        role_assignment_id:
+          description: ID of the underlying role assignment.
+          format: uuid
+          type: string
+      required:
+        - campaign_item_review_id
+        - principal_id
+        - principal_type
+        - entity_id
+        - entity_type
+        - granted_at
+        - role_assignment_id
+      type: object
+    PaginatedViewerCampaignItemsList:
+      description: A paginated list of viewer campaign items.
+      properties:
+        next:
+          description: |
+            The cursor with which to continue pagination if additional result
+            pages exist.
+          nullable: true
+          type: string
+        previous:
+          description: The cursor used to obtain the current result page.
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: "#/components/schemas/ViewerCampaignItem"
+          type: array
+        total_count:
+          description: Total number of items matching the filter (across all pages).
+          type: integer
+          format: int64
+      required:
+        - results
+        - total_count
+      type: object
     Event:
       description: |-
         # Event Object
@@ -9364,6 +10029,7 @@ components:
         - ERR_HR_IDP_PROVIDER_NOT_LINKED
         - ERR_REMOTE_UNRECOVERABLE_ERROR
         - ERR_REMOTE_TICKET_NOT_FOUND
+        - ERR_CONNECTION_VALIDATION_FAILED
       example:
         - SUCCESS
       type: string
@@ -9615,6 +10281,8 @@ components:
         - DOCUSIGN_GROUP
         - ZOOM_GROUP
         - LINEAR_TEAM
+        - RAMP_DEPARTMENT
+        - RAMP_LOCATION
       example: OPAL_GROUP
       type: string
     ResourceTypeEnum:
@@ -9714,6 +10382,8 @@ components:
         - ZOOM_LICENSE
         - LINEAR_ORGANIZATION
         - LINEAR_PROJECT
+        - RAMP_FUND
+        - RAMP_ROLE
       example: AWS_IAM_ROLE
       type: string
     EntityItemTypeEnum:
@@ -10666,6 +11336,26 @@ components:
           type: object
           required:
             - group_id
+        ramp_department:
+          description: Remote info for Ramp department.
+          properties:
+            department_id:
+              description: The ID of the Ramp department.
+              example: "2d68eb67-f6eb-4284-8683-7d530c77a5a6"
+              type: string
+          type: object
+          required:
+            - department_id
+        ramp_location:
+          description: Remote info for Ramp location.
+          properties:
+            location_id:
+              description: The ID of the Ramp location.
+              example: "f4efe11c-221f-4b49-a1e4-33eaf96a49ee"
+              type: string
+          type: object
+          required:
+            - location_id
         docusign_signing_group:
           description: Remote info for Docusign signing group.
           properties:
@@ -11692,6 +12382,26 @@ components:
           type: object
           required:
             - project_id
+        ramp_fund:
+          description: Remote info for Ramp fund.
+          properties:
+            fund_id:
+              description: The ID of the Ramp fund.
+              example: "9abffcf0-dd7d-42f0-b806-ce0502ab6496"
+              type: string
+          type: object
+          required:
+            - fund_id
+        ramp_role:
+          description: Remote info for Ramp built-in role.
+          properties:
+            role:
+              description: The Ramp built-in role enum (e.g. BUSINESS_USER).
+              example: BUSINESS_USER
+              type: string
+          type: object
+          required:
+            - role
       type: object
     RiskSensitivityEnum:
       type: string
@@ -13991,6 +14701,7 @@ components:
         max_duration_minutes: 120
         recommended_duration_minutes: 120
         require_support_ticket: False
+        reason_optional: False
         reviewer_stages:
           - reviewer_stage_id: 7c86c85d-0651-43e2-a748-d69d658418e8
             owner_ids:
@@ -14035,6 +14746,11 @@ components:
           description: A bool representing whether or not access requests to the resource require an access ticket.
           example: False
           type: boolean
+        reason_optional:
+          description: A bool representing whether the reason field is optional for requests.
+          example: False
+          type: boolean
+          nullable: true
         extensions_duration_in_minutes:
           description: The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
           type: integer
@@ -15343,6 +16059,103 @@ components:
           default: false
           description: Revoke all unreviewed access grants. Access grants with no reviewer decision will be immediately revoked.
           type: boolean
+      type: object
+    CampaignItemReviewerAssignment:
+      description: Pair of campaign item and reviewer to assign or unassign.
+      properties:
+        campaign_item_id:
+          description: The ID of the campaign item.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          format: uuid
+          type: string
+        reviewer_id:
+          description: |
+            The ID of the reviewer. Required when `assignment_source` is `MANUAL`
+            (or omitted), and required for every unassign entry.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          format: uuid
+          nullable: true
+          type: string
+        assignment_source:
+          description: |
+            Defaults to `MANUAL`. When `PRINCIPAL_MANAGER` or `ASSET_ADMIN_OWNER`,
+            the backend resolves reviewer ID(s) and `reviewer_id` may be omitted.
+          allOf:
+            - $ref: "#/components/schemas/CampaignItemReviewerAssignmentSourceEnum"
+      required:
+        - campaign_item_id
+      type: object
+    CampaignItemReviewerSourceRemoval:
+      description: |
+        Remove all pending reviewer rows for a given assignment source on a
+        campaign item. Completed reviews are preserved.
+      properties:
+        campaign_item_id:
+          description: The ID of the campaign item.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          format: uuid
+          type: string
+        assignment_source:
+          $ref: "#/components/schemas/CampaignItemReviewerAssignmentSourceEnum"
+      required:
+        - campaign_item_id
+        - assignment_source
+      type: object
+    UpdateCampaignItemReviewersInfo:
+      description: Input for updating campaign item reviewers.
+      properties:
+        to_assign:
+          description: Pairs to assign. Existing pairs are ignored.
+          items:
+            $ref: "#/components/schemas/CampaignItemReviewerAssignment"
+          type: array
+        to_unassign:
+          description: |
+            Pairs to unassign. Only pending `MANUAL` pairs are removed; missing
+            pairs are skipped. `reviewer_id` is required on each entry.
+          items:
+            $ref: "#/components/schemas/CampaignItemReviewerAssignment"
+          type: array
+        to_remove_sources:
+          description: Remove all pending rows for the given assignment sources.
+          items:
+            $ref: "#/components/schemas/CampaignItemReviewerSourceRemoval"
+          type: array
+      type: object
+    CampaignItemUnassignedPresetMessage:
+      description: Preset assignment feedback when no review row was created.
+      properties:
+        campaign_item_id:
+          description: The ID of the campaign item.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          format: uuid
+          type: string
+        assignment_source:
+          $ref: "#/components/schemas/CampaignItemReviewerAssignmentSourceEnum"
+        message:
+          description: Human-readable explanation of why no reviewer was assigned.
+          type: string
+      required:
+        - campaign_item_id
+        - assignment_source
+        - message
+      type: object
+    UpdateCampaignItemReviewersResult:
+      description: Result of updating campaign item reviewers.
+      properties:
+        reviews:
+          description: Full review set for every referenced item after the update.
+          items:
+            $ref: "#/components/schemas/CampaignItemReview"
+          type: array
+        unassigned_preset_messages:
+          description: Preset assignment messages for items that did not produce a review row.
+          items:
+            $ref: "#/components/schemas/CampaignItemUnassignedPresetMessage"
+          type: array
+      required:
+        - reviews
+        - unassigned_preset_messages
       type: object
     UpdateVisibilityInfo:
       description: Visibility information to set on a group or resource. Unlike VisibilityInfo, `visibility` is not required here so a Terraform configuration can omit it when attaching a configuration template. Untemplated groups and resources still require `visibility`. When `configuration_template_id` is set, the template governs visibility; omit `visibility` and `visibility_group_ids` rather than setting them alongside the template.

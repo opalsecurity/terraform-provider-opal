@@ -3420,6 +3420,8 @@ func (s *Groups) GetVisibility(ctx context.Context, request operations.GetGroupV
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 403:
+		fallthrough
 	case httpRes.StatusCode == 404:
 		utils.DrainBody(httpRes)
 	default:

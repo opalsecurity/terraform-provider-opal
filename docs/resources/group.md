@@ -114,6 +114,12 @@ resource "opal_group" "my_group" {
     pagerduty_on_call_schedule = {
       schedule_id = "PNZNINN"
     }
+    ramp_department = {
+      department_id = "2d68eb67-f6eb-4284-8683-7d530c77a5a6"
+    }
+    ramp_location = {
+      location_id = "f4efe11c-221f-4b49-a1e4-33eaf96a49ee"
+    }
     rootly_on_call_schedule = {
       schedule_id = "01HZ8XQM9ZQX8RKMZQ8ZQX8RK"
     }
@@ -163,6 +169,7 @@ resource "opal_group" "my_group" {
       extensions_duration_in_minutes = 120
       max_duration                   = 120
       priority                       = 1
+      reason_optional                = false
       recommended_duration           = 120
       request_template_id            = "06851574-e50d-40ca-8c78-f72ae6ab4304"
       require_mfa_to_request         = false
@@ -198,7 +205,7 @@ resource "opal_group" "my_group" {
 ### Required
 
 - `app_id` (String) The ID of the app for the group. Requires replacement if changed.
-- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM"]; Requires replacement if changed.
+- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION"]; Requires replacement if changed.
 - `name` (String) The name of the group.
 
 ### Optional
@@ -263,6 +270,8 @@ Optional:
 - `okta_group` (Attributes) Remote info for Okta Directory group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_group))
 - `okta_group_rule` (Attributes) Remote info for Okta Directory group rule. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--okta_group_rule))
 - `pagerduty_on_call_schedule` (Attributes) Remote info for PagerDuty on-call schedule group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--pagerduty_on_call_schedule))
+- `ramp_department` (Attributes) Remote info for Ramp department. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--ramp_department))
+- `ramp_location` (Attributes) Remote info for Ramp location. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--ramp_location))
 - `rootly_on_call_schedule` (Attributes) Remote info for Rootly on-call schedule group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--rootly_on_call_schedule))
 - `slack_user_group` (Attributes) Remote info for Slack user group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--slack_user_group))
 - `snowflake_role` (Attributes) Remote info for Snowflake role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--snowflake_role))
@@ -476,6 +485,22 @@ Optional:
 - `schedule_id` (String) The id of the PagerDuty on-call schedule. Not Null; Requires replacement if changed.
 
 
+<a id="nestedatt--remote_info--ramp_department"></a>
+### Nested Schema for `remote_info.ramp_department`
+
+Optional:
+
+- `department_id` (String) The ID of the Ramp department. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--ramp_location"></a>
+### Nested Schema for `remote_info.ramp_location`
+
+Optional:
+
+- `location_id` (String) The ID of the Ramp location. Not Null; Requires replacement if changed.
+
+
 <a id="nestedatt--remote_info--rootly_on_call_schedule"></a>
 ### Nested Schema for `remote_info.rootly_on_call_schedule`
 
@@ -576,6 +601,7 @@ Optional:
 - `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.
 - `priority` (Number) The priority of the request configuration. Not Null
+- `reason_optional` (Boolean) A bool representing whether the reason field is optional for requests.
 - `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
 - `request_template_id` (String) The ID of the associated request template.
 - `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this resource. Not Null

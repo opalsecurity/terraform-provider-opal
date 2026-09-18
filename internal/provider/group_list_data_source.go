@@ -63,7 +63,7 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 			},
 			"group_type_filter": schema.StringAttribute{
 				Optional:    true,
-				Description: `The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM"]`,
+				Description: `The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"ACTIVE_DIRECTORY_GROUP",
@@ -104,6 +104,8 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 						"DOCUSIGN_GROUP",
 						"ZOOM_GROUP",
 						"LINEAR_TEAM",
+						"RAMP_DEPARTMENT",
+						"RAMP_LOCATION",
 					),
 				},
 			},
@@ -447,6 +449,26 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 									},
 									Description: `Remote info for PagerDuty on-call schedule group.`,
 								},
+								"ramp_department": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"department_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The ID of the Ramp department.`,
+										},
+									},
+									Description: `Remote info for Ramp department.`,
+								},
+								"ramp_location": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"location_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The ID of the Ramp location.`,
+										},
+									},
+									Description: `Remote info for Ramp location.`,
+								},
 								"rootly_on_call_schedule": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
@@ -603,6 +625,10 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 									"priority": schema.Int64Attribute{
 										Computed:    true,
 										Description: `The priority of the request configuration.`,
+									},
+									"reason_optional": schema.BoolAttribute{
+										Computed:    true,
+										Description: `A bool representing whether the reason field is optional for requests.`,
 									},
 									"recommended_duration": schema.Int64Attribute{
 										Computed:    true,

@@ -44,6 +44,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
       extensions_duration_in_minutes = 120
       max_duration                   = 120
       priority                       = 1
+      reason_optional                = false
       recommended_duration           = 120
       request_template_id            = "06851574-e50d-40ca-8c78-f72ae6ab4304"
       require_mfa_to_request         = false
@@ -133,6 +134,7 @@ Optional:
 - `condition` (Attributes) The condition for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--condition))
 - `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.
+- `reason_optional` (Boolean) A bool representing whether the reason field is optional for requests.
 - `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
 - `request_template_id` (String) The ID of the associated request template.
 - `reviewer_stages` (Attributes List) The list of reviewer stages for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages))

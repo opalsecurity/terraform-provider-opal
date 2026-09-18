@@ -131,6 +131,8 @@ Read-Only:
 - `okta_group` (Attributes) Remote info for Okta Directory group. (see [below for nested schema](#nestedatt--remote_info--okta_group))
 - `okta_group_rule` (Attributes) Remote info for Okta Directory group rule. (see [below for nested schema](#nestedatt--remote_info--okta_group_rule))
 - `pagerduty_on_call_schedule` (Attributes) Remote info for PagerDuty on-call schedule group. (see [below for nested schema](#nestedatt--remote_info--pagerduty_on_call_schedule))
+- `ramp_department` (Attributes) Remote info for Ramp department. (see [below for nested schema](#nestedatt--remote_info--ramp_department))
+- `ramp_location` (Attributes) Remote info for Ramp location. (see [below for nested schema](#nestedatt--remote_info--ramp_location))
 - `rootly_on_call_schedule` (Attributes) Remote info for Rootly on-call schedule group. (see [below for nested schema](#nestedatt--remote_info--rootly_on_call_schedule))
 - `slack_user_group` (Attributes) Remote info for Slack user group. (see [below for nested schema](#nestedatt--remote_info--slack_user_group))
 - `snowflake_role` (Attributes) Remote info for Snowflake role. (see [below for nested schema](#nestedatt--remote_info--snowflake_role))
@@ -344,6 +346,22 @@ Read-Only:
 - `schedule_id` (String) The id of the PagerDuty on-call schedule.
 
 
+<a id="nestedatt--remote_info--ramp_department"></a>
+### Nested Schema for `remote_info.ramp_department`
+
+Read-Only:
+
+- `department_id` (String) The ID of the Ramp department.
+
+
+<a id="nestedatt--remote_info--ramp_location"></a>
+### Nested Schema for `remote_info.ramp_location`
+
+Read-Only:
+
+- `location_id` (String) The ID of the Ramp location.
+
+
 <a id="nestedatt--remote_info--rootly_on_call_schedule"></a>
 ### Nested Schema for `remote_info.rootly_on_call_schedule`
 
@@ -444,6 +462,7 @@ Read-Only:
 - `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.
 - `priority` (Number) The priority of the request configuration.
+- `reason_optional` (Boolean) A bool representing whether the reason field is optional for requests.
 - `recommended_duration` (Number) The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
 - `request_template_id` (String) The ID of the associated request template.
 - `require_mfa_to_request` (Boolean) A bool representing whether or not to require MFA for requesting access to this resource.
