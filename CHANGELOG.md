@@ -1,5 +1,8 @@
 # Changelog
 
+## v3.7.3
+ - Adds redaction to Cloudflare Access headers `Cf-Access-Client-Id` and `Cf-Access-Client-Secret`
+
 ## v3.7.2
  - Adds `reason_optional` to `request_configurations` on `opal_group`, `opal_resource`, and `opal_configuration_template` (and related data sources), matching the public API so Terraform can manage whether a request reason is required
  - Regenerates the provider SDK from the current OpenAPI (includes other API additions such as Ramp remote-info types)

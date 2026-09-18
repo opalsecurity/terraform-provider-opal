@@ -25,9 +25,20 @@ import (
 	tfReflect "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/reflect"
 )
 
+// sensitiveHeaders are HTTP header names (in their canonical form, see
+// http.CanonicalHeaderKey) whose values must never be emitted in Terraform
+// debug/error output.
+var sensitiveHeaders = []string{
+	"Authorization",
+	"Cf-Access-Client-Id",
+	"Cf-Access-Client-Secret",
+}
+
 func debugResponse(response *http.Response) string {
-	if v := response.Request.Header.Get("Authorization"); v != "" {
-		response.Request.Header.Set("Authorization", "(sensitive)")
+	for _, h := range sensitiveHeaders {
+		if v := response.Request.Header.Get(h); v != "" {
+			response.Request.Header.Set(h, "(sensitive)")
+		}
 	}
 	dumpReq, err := httputil.DumpRequest(response.Request, true)
 	if err != nil {
@@ -240,8 +251,10 @@ func fieldHeadersFromRequestReader(reader *textproto.Reader, fields map[string]i
 			fields[k] = v
 		}
 	}
-	if _, ok := fields["Authorization"]; ok {
-		fields["Authorization"] = "(sensitive)"
+	for _, h := range sensitiveHeaders {
+		if _, ok := fields[h]; ok {
+			fields[h] = "(sensitive)"
+		}
 	}
 
 	return nil
