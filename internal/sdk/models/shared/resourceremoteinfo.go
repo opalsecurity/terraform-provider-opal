@@ -1137,6 +1137,32 @@ func (p *PagerdutyRole) GetRoleName() string {
 	return p.RoleName
 }
 
+// RampFund - Remote info for Ramp fund.
+type RampFund struct {
+	// The ID of the Ramp fund.
+	FundID string `json:"fund_id"`
+}
+
+func (r *RampFund) GetFundID() string {
+	if r == nil {
+		return ""
+	}
+	return r.FundID
+}
+
+// RampRole - Remote info for Ramp built-in role.
+type RampRole struct {
+	// The Ramp built-in role enum (e.g. BUSINESS_USER).
+	Role string `json:"role"`
+}
+
+func (r *RampRole) GetRole() string {
+	if r == nil {
+		return ""
+	}
+	return r.Role
+}
+
 // SalesforcePermissionSet - Remote info for Salesforce permission set.
 type SalesforcePermissionSet struct {
 	// The id of the permission set.
@@ -1478,6 +1504,10 @@ type ResourceRemoteInfo struct {
 	OracleFusionRole *OracleFusionRole `json:"oracle_fusion_role,omitempty"`
 	// Remote info for Pagerduty role.
 	PagerdutyRole *PagerdutyRole `json:"pagerduty_role,omitempty"`
+	// Remote info for Ramp fund.
+	RampFund *RampFund `json:"ramp_fund,omitempty"`
+	// Remote info for Ramp built-in role.
+	RampRole *RampRole `json:"ramp_role,omitempty"`
 	// Remote info for Salesforce permission set.
 	SalesforcePermissionSet *SalesforcePermissionSet `json:"salesforce_permission_set,omitempty"`
 	// Remote info for Salesforce profile.
@@ -1973,6 +2003,20 @@ func (r *ResourceRemoteInfo) GetPagerdutyRole() *PagerdutyRole {
 		return nil
 	}
 	return r.PagerdutyRole
+}
+
+func (r *ResourceRemoteInfo) GetRampFund() *RampFund {
+	if r == nil {
+		return nil
+	}
+	return r.RampFund
+}
+
+func (r *ResourceRemoteInfo) GetRampRole() *RampRole {
+	if r == nil {
+		return nil
+	}
+	return r.RampRole
 }
 
 func (r *ResourceRemoteInfo) GetSalesforcePermissionSet() *SalesforcePermissionSet {

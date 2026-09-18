@@ -485,6 +485,18 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.PagerdutyRole = &tfTypes.IlevelAdvancedRole{}
 					results.RemoteInfo.PagerdutyRole.RoleName = types.StringValue(resultsItem.RemoteInfo.PagerdutyRole.RoleName)
 				}
+				if resultsItem.RemoteInfo.RampFund == nil {
+					results.RemoteInfo.RampFund = nil
+				} else {
+					results.RemoteInfo.RampFund = &tfTypes.RampFund{}
+					results.RemoteInfo.RampFund.FundID = types.StringValue(resultsItem.RemoteInfo.RampFund.FundID)
+				}
+				if resultsItem.RemoteInfo.RampRole == nil {
+					results.RemoteInfo.RampRole = nil
+				} else {
+					results.RemoteInfo.RampRole = &tfTypes.RampRole{}
+					results.RemoteInfo.RampRole.Role = types.StringValue(resultsItem.RemoteInfo.RampRole.Role)
+				}
 				if resultsItem.RemoteInfo.SalesforcePermissionSet == nil {
 					results.RemoteInfo.SalesforcePermissionSet = nil
 				} else {
@@ -591,6 +603,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 				requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 				requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
+				requestConfigurations.ReasonOptional = types.BoolPointerValue(requestConfigurationsItem.ReasonOptional)
 				requestConfigurations.RecommendedDuration = types.Int64PointerValue(requestConfigurationsItem.RecommendedDuration)
 				requestConfigurations.RequestTemplateID = types.StringPointerValue(requestConfigurationsItem.RequestTemplateID)
 				requestConfigurations.RequireMfaToRequest = types.BoolValue(requestConfigurationsItem.RequireMfaToRequest)
