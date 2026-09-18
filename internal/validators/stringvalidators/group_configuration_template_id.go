@@ -13,6 +13,8 @@ import (
 // it required). ExactlyOneOf with visibility restores that without forcing a
 // value that the template would ignore.
 func GroupConfigurationTemplateID() validator.String {
+	// ConflictsWith is enforced in ValidateConfig (configuration_template_validate.go)
+	// so unknown values (same-apply template refs) still conflict at plan time.
 	return stringvalidator.All(
 		stringvalidator.ExactlyOneOf(
 			path.MatchRoot("configuration_template_id"),
@@ -21,13 +23,6 @@ func GroupConfigurationTemplateID() validator.String {
 		stringvalidator.ExactlyOneOf(
 			path.MatchRoot("configuration_template_id"),
 			path.MatchRoot("visibility"),
-		),
-		stringvalidator.ConflictsWith(
-			path.MatchRoot("admin_owner_id"),
-			path.MatchRoot("require_mfa_to_approve"),
-			path.MatchRoot("custom_request_notification"),
-			path.MatchRoot("extensions_duration_in_minutes"),
-			path.MatchRoot("visibility_group_ids"),
 		),
 	)
 }
