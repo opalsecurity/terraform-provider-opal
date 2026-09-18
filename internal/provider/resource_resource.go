@@ -23,6 +23,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	speakeasy_boolplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/boolplanmodifier"
+	custom_int64planmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/int64planmodifier"
 	speakeasy_int64planmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/int64planmodifier"
 	speakeasy_listplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/listplanmodifier"
 	speakeasy_objectplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/objectplanmodifier"
@@ -116,8 +117,11 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Description: `The ID of the app for the resource. Requires replacement if changed.`,
 			},
 			"configuration_template_id": schema.StringAttribute{
-				Computed:    true,
-				Optional:    true,
+				Computed: true,
+				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
 				Description: `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
 				Validators: []validator.String{
 					custom_stringvalidators.ResourceConfigurationTemplateID(),
@@ -2576,6 +2580,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 							Computed: true,
 							Optional: true,
 							PlanModifiers: []planmodifier.Int64{
+								custom_int64planmodifier.IndefiniteDuration(),
 								speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
 							},
 							Description: `The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.`,

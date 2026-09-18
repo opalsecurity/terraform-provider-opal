@@ -19,6 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	speakeasy_boolplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/boolplanmodifier"
+	custom_int64planmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/int64planmodifier"
 	speakeasy_objectplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/objectplanmodifier"
 	speakeasy_setplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/setplanmodifier"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
@@ -156,7 +157,10 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 							Description: `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
 						},
 						"max_duration": schema.Int64Attribute{
-							Optional:    true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Int64{
+								custom_int64planmodifier.IndefiniteDuration(),
+							},
 							Description: `The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.`,
 						},
 						"priority": schema.Int64Attribute{
