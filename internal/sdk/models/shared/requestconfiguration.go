@@ -60,7 +60,7 @@ type RequestConfiguration struct {
 	// The priority of the request configuration.
 	Priority int64 `json:"priority"`
 	// A bool representing whether the reason field is optional for requests.
-	ReasonOptional bool `json:"reason_optional"`
+	ReasonOptional *bool `json:"reason_optional,omitempty"`
 	// The recommended duration for which the resource should be requested (in minutes). -1 represents an indefinite duration.
 	RecommendedDuration *int64 `json:"recommended_duration_minutes,omitempty"`
 	// The ID of the associated request template.
@@ -115,9 +115,9 @@ func (r *RequestConfiguration) GetPriority() int64 {
 	return r.Priority
 }
 
-func (r *RequestConfiguration) GetReasonOptional() bool {
+func (r *RequestConfiguration) GetReasonOptional() *bool {
 	if r == nil {
-		return false
+		return nil
 	}
 	return r.ReasonOptional
 }
