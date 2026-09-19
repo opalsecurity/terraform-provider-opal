@@ -13,6 +13,8 @@ func initHooks(h *Hooks) {
 	h.registerSDKInitHook(configurationTemplateHook)
 	h.registerBeforeRequestHook(configurationTemplateHook)
 
+	h.registerAfterSuccessHook(&maxDurationIndefiniteHook{})
+
 	// exampleHook := &ExampleHook{}
 	// h.registerBeforeRequestHook(exampleHook)
 	// h.registerAfterErrorHook(exampleHook)

@@ -28,6 +28,17 @@ type RequestConfigurationConfig struct {
 	AutoApproval   bool
 	ReasonOptional bool
 	Priority       int
+	// MaxDuration overrides the default max_duration; nil keeps
+	// defaultMaxDuration so existing tests are unaffected.
+	MaxDuration *int64
+}
+
+// defaultMaxDuration is the finite duration used by tests that do not care
+// about max_duration.
+const defaultMaxDuration int64 = 120
+
+func Int64Ptr(value int64) *int64 {
+	return &value
 }
 
 type OpalGroupConfig struct {
@@ -98,6 +109,10 @@ func GenerateRequestConfigurations(requestConfigurations []RequestConfigurationC
 	var configurations []string
 
 	for _, requestConfiguration := range requestConfigurations {
+		maxDuration := defaultMaxDuration
+		if requestConfiguration.MaxDuration != nil {
+			maxDuration = *requestConfiguration.MaxDuration
+		}
 		configuration := fmt.Sprintf(
 			`{
 				allow_requests = %t
@@ -113,7 +128,7 @@ func GenerateRequestConfigurations(requestConfigurations []RequestConfigurationC
 			}`,
 			requestConfiguration.IsRequestable,
 			requestConfiguration.AutoApproval,
-			120,
+			maxDuration,
 			requestConfiguration.Priority,
 			120,
 			false,
