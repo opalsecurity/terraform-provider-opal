@@ -566,3 +566,77 @@ func testAccCheckGroupDestroy(s *terraform.State) error {
 
 	return nil
 }
+
+// TestAccGroup_MaxDurationIndefinite guards PLAT-654. The API accepts
+// max_duration = -1 to mean "no maximum" but strips the sentinel on write and
+// returns no value on read, so config -1 never matched refreshed state and the
+// group showed a diff on every plan. The SDK response hook restores -1, so
+// state matches config again.
+//
+// Each Config step implicitly asserts that the follow-up refresh-and-plan is
+// empty, which is the drift check; the explicit PlanOnly steps re-plan the same
+// config through a second refresh cycle.
+func TestAccGroup_MaxDurationIndefinite(t *testing.T) {
+	t.Parallel()
+	baseName, resourceName := generateBaseNameAndResourceName()
+	config := generateSimpleOpalGroupConfig(baseName, baseName)
+	const maxDurationAttr = "request_configurations.0.max_duration"
+
+	config.RequestConfigurations[0].MaxDuration = Int64Ptr(-1)
+	indefiniteConfig := GenerateGroupResource(&config)
+
+	config.RequestConfigurations[0].MaxDuration = Int64Ptr(120)
+	finiteConfig := GenerateGroupResource(&config)
+
+	resource.Test(t, resource.TestCase{
+		TerraformVersionChecks: []tfversion.TerraformVersionCheck{
+			tfversion.SkipBelow(tfversion.Version1_0_0),
+		},
+		ProtoV6ProviderFactories: testAccProviderFactories,
+		PreCheck:                 func() { testAccPreCheck(t) },
+		CheckDestroy:             testAccCheckGroupDestroy,
+		Steps: []resource.TestStep{
+			{
+				// Create straight into the indefinite duration. Before the fix
+				// this produced a plan that never converged.
+				Config: indefiniteConfig,
+				Check:  resource.TestCheckResourceAttr(resourceName, maxDurationAttr, "-1"),
+			},
+			{
+				Config:   indefiniteConfig,
+				PlanOnly: true,
+			},
+			{
+				// Indefinite -> finite.
+				Config: finiteConfig,
+				Check:  resource.TestCheckResourceAttr(resourceName, maxDurationAttr, "120"),
+			},
+			{
+				Config:   finiteConfig,
+				PlanOnly: true,
+			},
+			{
+				// Finite -> indefinite, the transition most likely to regress:
+				// state holds a known 120 and the API reports nothing back.
+				Config: indefiniteConfig,
+				Check:  resource.TestCheckResourceAttr(resourceName, maxDurationAttr, "-1"),
+			},
+			{
+				Config:   indefiniteConfig,
+				PlanOnly: true,
+			},
+			{
+				// An indefinite duration must survive a round trip through
+				// import, which reads state purely from the API.
+				ResourceName:      resourceName,
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"visibility",
+					"on_call_schedule_ids",
+					"message_channel_ids",
+				},
+			},
+		},
+	})
+}
