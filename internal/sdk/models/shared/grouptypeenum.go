@@ -52,6 +52,7 @@ const (
 	GroupTypeEnumLinearTeam               GroupTypeEnum = "LINEAR_TEAM"
 	GroupTypeEnumRampDepartment           GroupTypeEnum = "RAMP_DEPARTMENT"
 	GroupTypeEnumRampLocation             GroupTypeEnum = "RAMP_LOCATION"
+	GroupTypeEnumWrikeGroup               GroupTypeEnum = "WRIKE_GROUP"
 )
 
 func (e GroupTypeEnum) ToPointer() *GroupTypeEnum {
@@ -142,6 +143,8 @@ func (e *GroupTypeEnum) UnmarshalJSON(data []byte) error {
 	case "RAMP_DEPARTMENT":
 		fallthrough
 	case "RAMP_LOCATION":
+		fallthrough
+	case "WRIKE_GROUP":
 		*e = GroupTypeEnum(v)
 		return nil
 	default:

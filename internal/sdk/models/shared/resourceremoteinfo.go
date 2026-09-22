@@ -452,6 +452,19 @@ func (a *AzureVirtualMachine) GetResourceID() string {
 	return a.ResourceID
 }
 
+// ClickhouseConsoleRole - Remote info for ClickHouse Cloud console role.
+type ClickhouseConsoleRole struct {
+	// The UUID of the ClickHouse Cloud console role.
+	RoleID string `json:"role_id"`
+}
+
+func (c *ClickhouseConsoleRole) GetRoleID() string {
+	if c == nil {
+		return ""
+	}
+	return c.RoleID
+}
+
 // ClickhouseDatabase - Remote info for ClickHouse database.
 type ClickhouseDatabase struct {
 	// The name of the ClickHouse database.
@@ -555,6 +568,138 @@ func (d *DatabricksAccountServicePrincipal) GetResourceID() string {
 		return ""
 	}
 	return d.ResourceID
+}
+
+// DatabricksCatalog - Remote info for Databricks Unity Catalog catalog.
+type DatabricksCatalog struct {
+	// The dot-qualified full name of the catalog (e.g. "catalog").
+	FullName string `json:"full_name"`
+	// The ID of the Unity Catalog metastore the catalog belongs to.
+	MetastoreID string `json:"metastore_id"`
+}
+
+func (d *DatabricksCatalog) GetFullName() string {
+	if d == nil {
+		return ""
+	}
+	return d.FullName
+}
+
+func (d *DatabricksCatalog) GetMetastoreID() string {
+	if d == nil {
+		return ""
+	}
+	return d.MetastoreID
+}
+
+// DatabricksFunction - Remote info for Databricks Unity Catalog function.
+type DatabricksFunction struct {
+	// The dot-qualified full name of the function (e.g. "catalog.schema.function").
+	FullName string `json:"full_name"`
+	// The ID of the Unity Catalog metastore the function belongs to.
+	MetastoreID string `json:"metastore_id"`
+}
+
+func (d *DatabricksFunction) GetFullName() string {
+	if d == nil {
+		return ""
+	}
+	return d.FullName
+}
+
+func (d *DatabricksFunction) GetMetastoreID() string {
+	if d == nil {
+		return ""
+	}
+	return d.MetastoreID
+}
+
+// DatabricksModel - Remote info for Databricks Unity Catalog registered model.
+type DatabricksModel struct {
+	// The dot-qualified full name of the model (e.g. "catalog.schema.model").
+	FullName string `json:"full_name"`
+	// The ID of the Unity Catalog metastore the model belongs to.
+	MetastoreID string `json:"metastore_id"`
+}
+
+func (d *DatabricksModel) GetFullName() string {
+	if d == nil {
+		return ""
+	}
+	return d.FullName
+}
+
+func (d *DatabricksModel) GetMetastoreID() string {
+	if d == nil {
+		return ""
+	}
+	return d.MetastoreID
+}
+
+// DatabricksSchema - Remote info for Databricks Unity Catalog schema.
+type DatabricksSchema struct {
+	// The dot-qualified full name of the schema (e.g. "catalog.schema").
+	FullName string `json:"full_name"`
+	// The ID of the Unity Catalog metastore the schema belongs to.
+	MetastoreID string `json:"metastore_id"`
+}
+
+func (d *DatabricksSchema) GetFullName() string {
+	if d == nil {
+		return ""
+	}
+	return d.FullName
+}
+
+func (d *DatabricksSchema) GetMetastoreID() string {
+	if d == nil {
+		return ""
+	}
+	return d.MetastoreID
+}
+
+// DatabricksService - Remote info for Databricks AI Gateway service.
+type DatabricksService struct {
+	// The dot-qualified full name of the service (e.g. "catalog.schema.service").
+	FullName string `json:"full_name"`
+	// The ID of the Unity Catalog metastore the service belongs to.
+	MetastoreID string `json:"metastore_id"`
+}
+
+func (d *DatabricksService) GetFullName() string {
+	if d == nil {
+		return ""
+	}
+	return d.FullName
+}
+
+func (d *DatabricksService) GetMetastoreID() string {
+	if d == nil {
+		return ""
+	}
+	return d.MetastoreID
+}
+
+// DatabricksVolume - Remote info for Databricks Unity Catalog volume.
+type DatabricksVolume struct {
+	// The dot-qualified full name of the volume (e.g. "catalog.schema.volume").
+	FullName string `json:"full_name"`
+	// The ID of the Unity Catalog metastore the volume belongs to.
+	MetastoreID string `json:"metastore_id"`
+}
+
+func (d *DatabricksVolume) GetFullName() string {
+	if d == nil {
+		return ""
+	}
+	return d.FullName
+}
+
+func (d *DatabricksVolume) GetMetastoreID() string {
+	if d == nil {
+		return ""
+	}
+	return d.MetastoreID
 }
 
 // DatadogRole - Remote info for Datadog role.
@@ -1316,6 +1461,32 @@ func (t *TwingateResource) GetResourceID() string {
 	return t.ResourceID
 }
 
+// VercelProject - Remote info for Vercel project.
+type VercelProject struct {
+	// The Vercel project id.
+	ProjectID string `json:"project_id"`
+}
+
+func (v *VercelProject) GetProjectID() string {
+	if v == nil {
+		return ""
+	}
+	return v.ProjectID
+}
+
+// VercelRole - Remote info for Vercel team role.
+type VercelRole struct {
+	// The Vercel team role identifier (e.g. OWNER, MEMBER, CONTRIBUTOR).
+	RoleID string `json:"role_id"`
+}
+
+func (v *VercelRole) GetRoleID() string {
+	if v == nil {
+		return ""
+	}
+	return v.RoleID
+}
+
 // WorkdayRole - Remote info for Workday role.
 type WorkdayRole struct {
 	// The id of the role.
@@ -1327,6 +1498,19 @@ func (w *WorkdayRole) GetRoleID() string {
 		return ""
 	}
 	return w.RoleID
+}
+
+// WrikeUserType - Remote info for Wrike user type (license type).
+type WrikeUserType struct {
+	// The Wrike user type ID (16-char UID from GET /user_types).
+	UserTypeID string `json:"user_type_id"`
+}
+
+func (w *WrikeUserType) GetUserTypeID() string {
+	if w == nil {
+		return ""
+	}
+	return w.UserTypeID
 }
 
 // ZendeskRole - Remote info for Zendesk custom role.
@@ -1418,6 +1602,8 @@ type ResourceRemoteInfo struct {
 	AzureUserAssignedManagedIdentity *AzureUserAssignedManagedIdentity `json:"azure_user_assigned_managed_identity,omitempty"`
 	// Remote info for Azure virtual machine.
 	AzureVirtualMachine *AzureVirtualMachine `json:"azure_virtual_machine,omitempty"`
+	// Remote info for ClickHouse Cloud console role.
+	ClickhouseConsoleRole *ClickhouseConsoleRole `json:"clickhouse_console_role,omitempty"`
 	// Remote info for ClickHouse database.
 	ClickhouseDatabase *ClickhouseDatabase `json:"clickhouse_database,omitempty"`
 	// Remote info for ClickHouse table.
@@ -1430,6 +1616,18 @@ type ResourceRemoteInfo struct {
 	CustomConnector *CustomConnector `json:"custom_connector,omitempty"`
 	// Remote info for Databricks account service principal.
 	DatabricksAccountServicePrincipal *DatabricksAccountServicePrincipal `json:"databricks_account_service_principal,omitempty"`
+	// Remote info for Databricks Unity Catalog catalog.
+	DatabricksCatalog *DatabricksCatalog `json:"databricks_catalog,omitempty"`
+	// Remote info for Databricks Unity Catalog function.
+	DatabricksFunction *DatabricksFunction `json:"databricks_function,omitempty"`
+	// Remote info for Databricks Unity Catalog registered model.
+	DatabricksModel *DatabricksModel `json:"databricks_model,omitempty"`
+	// Remote info for Databricks Unity Catalog schema.
+	DatabricksSchema *DatabricksSchema `json:"databricks_schema,omitempty"`
+	// Remote info for Databricks AI Gateway service.
+	DatabricksService *DatabricksService `json:"databricks_service,omitempty"`
+	// Remote info for Databricks Unity Catalog volume.
+	DatabricksVolume *DatabricksVolume `json:"databricks_volume,omitempty"`
 	// Remote info for Datadog role.
 	DatadogRole *DatadogRole `json:"datadog_role,omitempty"`
 	// Remote info for an Astra role.
@@ -1526,8 +1724,14 @@ type ResourceRemoteInfo struct {
 	TeleportRole *TeleportRole `json:"teleport_role,omitempty"`
 	// Remote info for Twingate resource.
 	TwingateResource *TwingateResource `json:"twingate_resource,omitempty"`
+	// Remote info for Vercel project.
+	VercelProject *VercelProject `json:"vercel_project,omitempty"`
+	// Remote info for Vercel team role.
+	VercelRole *VercelRole `json:"vercel_role,omitempty"`
 	// Remote info for Workday role.
 	WorkdayRole *WorkdayRole `json:"workday_role,omitempty"`
+	// Remote info for Wrike user type (license type).
+	WrikeUserType *WrikeUserType `json:"wrike_user_type,omitempty"`
 	// Remote info for Zendesk custom role.
 	ZendeskRole *ZendeskRole `json:"zendesk_role,omitempty"`
 	// Remote info for Zoom license (user type).
@@ -1704,6 +1908,13 @@ func (r *ResourceRemoteInfo) GetAzureVirtualMachine() *AzureVirtualMachine {
 	return r.AzureVirtualMachine
 }
 
+func (r *ResourceRemoteInfo) GetClickhouseConsoleRole() *ClickhouseConsoleRole {
+	if r == nil {
+		return nil
+	}
+	return r.ClickhouseConsoleRole
+}
+
 func (r *ResourceRemoteInfo) GetClickhouseDatabase() *ClickhouseDatabase {
 	if r == nil {
 		return nil
@@ -1744,6 +1955,48 @@ func (r *ResourceRemoteInfo) GetDatabricksAccountServicePrincipal() *DatabricksA
 		return nil
 	}
 	return r.DatabricksAccountServicePrincipal
+}
+
+func (r *ResourceRemoteInfo) GetDatabricksCatalog() *DatabricksCatalog {
+	if r == nil {
+		return nil
+	}
+	return r.DatabricksCatalog
+}
+
+func (r *ResourceRemoteInfo) GetDatabricksFunction() *DatabricksFunction {
+	if r == nil {
+		return nil
+	}
+	return r.DatabricksFunction
+}
+
+func (r *ResourceRemoteInfo) GetDatabricksModel() *DatabricksModel {
+	if r == nil {
+		return nil
+	}
+	return r.DatabricksModel
+}
+
+func (r *ResourceRemoteInfo) GetDatabricksSchema() *DatabricksSchema {
+	if r == nil {
+		return nil
+	}
+	return r.DatabricksSchema
+}
+
+func (r *ResourceRemoteInfo) GetDatabricksService() *DatabricksService {
+	if r == nil {
+		return nil
+	}
+	return r.DatabricksService
+}
+
+func (r *ResourceRemoteInfo) GetDatabricksVolume() *DatabricksVolume {
+	if r == nil {
+		return nil
+	}
+	return r.DatabricksVolume
 }
 
 func (r *ResourceRemoteInfo) GetDatadogRole() *DatadogRole {
@@ -2082,11 +2335,32 @@ func (r *ResourceRemoteInfo) GetTwingateResource() *TwingateResource {
 	return r.TwingateResource
 }
 
+func (r *ResourceRemoteInfo) GetVercelProject() *VercelProject {
+	if r == nil {
+		return nil
+	}
+	return r.VercelProject
+}
+
+func (r *ResourceRemoteInfo) GetVercelRole() *VercelRole {
+	if r == nil {
+		return nil
+	}
+	return r.VercelRole
+}
+
 func (r *ResourceRemoteInfo) GetWorkdayRole() *WorkdayRole {
 	if r == nil {
 		return nil
 	}
 	return r.WorkdayRole
+}
+
+func (r *ResourceRemoteInfo) GetWrikeUserType() *WrikeUserType {
+	if r == nil {
+		return nil
+	}
+	return r.WrikeUserType
 }
 
 func (r *ResourceRemoteInfo) GetZendeskRole() *ZendeskRole {
