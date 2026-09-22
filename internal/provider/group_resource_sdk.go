@@ -338,6 +338,12 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 				r.RemoteInfo.WorkdayUserSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.WorkdayUserSecurityGroup.GroupID = types.StringValue(resp.RemoteInfo.WorkdayUserSecurityGroup.GroupID)
 			}
+			if resp.RemoteInfo.WrikeGroup == nil {
+				r.RemoteInfo.WrikeGroup = nil
+			} else {
+				r.RemoteInfo.WrikeGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.WrikeGroup.GroupID = types.StringValue(resp.RemoteInfo.WrikeGroup.GroupID)
+			}
 			if resp.RemoteInfo.ZendeskGroup == nil {
 				r.RemoteInfo.ZendeskGroup = nil
 			} else {
@@ -391,6 +397,20 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 			for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 				var reviewerStages tfTypes.ReviewerStage
 
+				if reviewerStagesItem.Escalation == nil {
+					reviewerStages.Escalation = nil
+				} else {
+					reviewerStages.Escalation = &tfTypes.ReviewerStageEscalation{}
+					reviewerStages.Escalation.DelayMinutes = types.Int64Value(reviewerStagesItem.Escalation.DelayMinutes)
+					reviewerStages.Escalation.OwnerIds = make([]types.String, 0, len(reviewerStagesItem.Escalation.OwnerIds))
+					for _, v := range reviewerStagesItem.Escalation.OwnerIds {
+						reviewerStages.Escalation.OwnerIds = append(reviewerStages.Escalation.OwnerIds, types.StringValue(v))
+					}
+					reviewerStages.Escalation.UserIds = make([]types.String, 0, len(reviewerStagesItem.Escalation.UserIds))
+					for _, v := range reviewerStagesItem.Escalation.UserIds {
+						reviewerStages.Escalation.UserIds = append(reviewerStages.Escalation.UserIds, types.StringValue(v))
+					}
+				}
 				if reviewerStagesItem.Operator != nil {
 					reviewerStages.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
 				} else {
@@ -477,6 +497,20 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(ctx context.Contex
 		for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 			var reviewerStages tfTypes.ReviewerStage
 
+			if reviewerStagesItem.Escalation == nil {
+				reviewerStages.Escalation = nil
+			} else {
+				reviewerStages.Escalation = &tfTypes.ReviewerStageEscalation{}
+				reviewerStages.Escalation.DelayMinutes = types.Int64Value(reviewerStagesItem.Escalation.DelayMinutes)
+				reviewerStages.Escalation.OwnerIds = make([]types.String, 0, len(reviewerStagesItem.Escalation.OwnerIds))
+				for _, v := range reviewerStagesItem.Escalation.OwnerIds {
+					reviewerStages.Escalation.OwnerIds = append(reviewerStages.Escalation.OwnerIds, types.StringValue(v))
+				}
+				reviewerStages.Escalation.UserIds = make([]types.String, 0, len(reviewerStagesItem.Escalation.UserIds))
+				for _, v := range reviewerStagesItem.Escalation.UserIds {
+					reviewerStages.Escalation.UserIds = append(reviewerStages.Escalation.UserIds, types.StringValue(v))
+				}
+			}
 			if reviewerStagesItem.Operator != nil {
 				reviewerStages.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
 			} else {
@@ -1024,13 +1058,22 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 				GroupID: groupId19,
 			}
 		}
+		var wrikeGroup *shared.WrikeGroup
+		if r.RemoteInfo.WrikeGroup != nil {
+			var groupId20 string
+			groupId20 = r.RemoteInfo.WrikeGroup.GroupID.ValueString()
+
+			wrikeGroup = &shared.WrikeGroup{
+				GroupID: groupId20,
+			}
+		}
 		var zendeskGroup *shared.ZendeskGroup
 		if r.RemoteInfo.ZendeskGroup != nil {
-			var groupId20 string
-			groupId20 = r.RemoteInfo.ZendeskGroup.GroupID.ValueString()
+			var groupId21 string
+			groupId21 = r.RemoteInfo.ZendeskGroup.GroupID.ValueString()
 
 			zendeskGroup = &shared.ZendeskGroup{
-				GroupID: groupId20,
+				GroupID: groupId21,
 			}
 		}
 		var zendeskOrganization *shared.ZendeskOrganization
@@ -1044,11 +1087,11 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		}
 		var zoomGroup *shared.ZoomGroup
 		if r.RemoteInfo.ZoomGroup != nil {
-			var groupId21 string
-			groupId21 = r.RemoteInfo.ZoomGroup.GroupID.ValueString()
+			var groupId22 string
+			groupId22 = r.RemoteInfo.ZoomGroup.GroupID.ValueString()
 
 			zoomGroup = &shared.ZoomGroup{
-				GroupID: groupId21,
+				GroupID: groupId22,
 			}
 		}
 		remoteInfo = &shared.GroupRemoteInfo{
@@ -1087,6 +1130,7 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 			TwingateGroup:            twingateGroup,
 			TwingateGroupSynced:      twingateGroupSynced,
 			WorkdayUserSecurityGroup: workdayUserSecurityGroup,
+			WrikeGroup:               wrikeGroup,
 			ZendeskGroup:             zendeskGroup,
 			ZendeskOrganization:      zendeskOrganization,
 			ZoomGroup:                zoomGroup,
@@ -1272,15 +1316,34 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 
 		reviewerStages := make([]shared.ReviewerStage, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages))
 		for reviewerStagesIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages {
+			var escalation *shared.ReviewerStageEscalation
+			if r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation != nil {
+				var delayMinutes int64
+				delayMinutes = r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.DelayMinutes.ValueInt64()
+
+				ownerIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.OwnerIds))
+				for ownerIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.OwnerIds {
+					ownerIds = append(ownerIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.OwnerIds[ownerIdsIndex].ValueString())
+				}
+				userIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.UserIds))
+				for userIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.UserIds {
+					userIds = append(userIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.UserIds[userIdsIndex].ValueString())
+				}
+				escalation = &shared.ReviewerStageEscalation{
+					DelayMinutes: delayMinutes,
+					OwnerIds:     ownerIds,
+					UserIds:      userIds,
+				}
+			}
 			operator := new(shared.Operator)
 			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsNull() {
 				*operator = shared.Operator(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.ValueString())
 			} else {
 				operator = nil
 			}
-			ownerIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds))
-			for ownerIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds {
-				ownerIds = append(ownerIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds[ownerIdsIndex].ValueString())
+			ownerIds1 := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds))
+			for ownerIdsIndex1 := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds {
+				ownerIds1 = append(ownerIds1, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds[ownerIdsIndex1].ValueString())
 			}
 			requireAdminApproval := new(bool)
 			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireAdminApproval.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireAdminApproval.IsNull() {
@@ -1299,8 +1362,9 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 				serviceUserIds = append(serviceUserIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].ServiceUserIds[serviceUserIdsIndex].ValueString())
 			}
 			reviewerStages = append(reviewerStages, shared.ReviewerStage{
+				Escalation:             escalation,
 				Operator:               operator,
-				OwnerIds:               ownerIds,
+				OwnerIds:               ownerIds1,
 				RequireAdminApproval:   requireAdminApproval,
 				RequireManagerApproval: requireManagerApproval,
 				ServiceUserIds:         serviceUserIds,

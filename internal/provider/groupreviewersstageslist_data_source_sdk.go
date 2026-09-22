@@ -20,6 +20,20 @@ func (r *GroupReviewersStagesListDataSourceModel) RefreshFromSharedReviewerStage
 	for _, dataItem := range resp {
 		var data tfTypes.ReviewerStage
 
+		if dataItem.Escalation == nil {
+			data.Escalation = nil
+		} else {
+			data.Escalation = &tfTypes.ReviewerStageEscalation{}
+			data.Escalation.DelayMinutes = types.Int64Value(dataItem.Escalation.DelayMinutes)
+			data.Escalation.OwnerIds = make([]types.String, 0, len(dataItem.Escalation.OwnerIds))
+			for _, v := range dataItem.Escalation.OwnerIds {
+				data.Escalation.OwnerIds = append(data.Escalation.OwnerIds, types.StringValue(v))
+			}
+			data.Escalation.UserIds = make([]types.String, 0, len(dataItem.Escalation.UserIds))
+			for _, v := range dataItem.Escalation.UserIds {
+				data.Escalation.UserIds = append(data.Escalation.UserIds, types.StringValue(v))
+			}
+		}
 		if dataItem.Operator != nil {
 			data.Operator = types.StringValue(string(*dataItem.Operator))
 		} else {

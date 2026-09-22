@@ -338,6 +338,12 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.WorkdayUserSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.WorkdayUserSecurityGroup.GroupID = types.StringValue(resp.RemoteInfo.WorkdayUserSecurityGroup.GroupID)
 			}
+			if resp.RemoteInfo.WrikeGroup == nil {
+				r.RemoteInfo.WrikeGroup = nil
+			} else {
+				r.RemoteInfo.WrikeGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.WrikeGroup.GroupID = types.StringValue(resp.RemoteInfo.WrikeGroup.GroupID)
+			}
 			if resp.RemoteInfo.ZendeskGroup == nil {
 				r.RemoteInfo.ZendeskGroup = nil
 			} else {
@@ -391,6 +397,20 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 				var reviewerStages tfTypes.ReviewerStage
 
+				if reviewerStagesItem.Escalation == nil {
+					reviewerStages.Escalation = nil
+				} else {
+					reviewerStages.Escalation = &tfTypes.ReviewerStageEscalation{}
+					reviewerStages.Escalation.DelayMinutes = types.Int64Value(reviewerStagesItem.Escalation.DelayMinutes)
+					reviewerStages.Escalation.OwnerIds = make([]types.String, 0, len(reviewerStagesItem.Escalation.OwnerIds))
+					for _, v := range reviewerStagesItem.Escalation.OwnerIds {
+						reviewerStages.Escalation.OwnerIds = append(reviewerStages.Escalation.OwnerIds, types.StringValue(v))
+					}
+					reviewerStages.Escalation.UserIds = make([]types.String, 0, len(reviewerStagesItem.Escalation.UserIds))
+					for _, v := range reviewerStagesItem.Escalation.UserIds {
+						reviewerStages.Escalation.UserIds = append(reviewerStages.Escalation.UserIds, types.StringValue(v))
+					}
+				}
 				if reviewerStagesItem.Operator != nil {
 					reviewerStages.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
 				} else {

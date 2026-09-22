@@ -13,6 +13,7 @@ type User struct {
 	HrIdpStatus types.String `tfsdk:"hr_idp_status"`
 	ID          types.String `tfsdk:"id"`
 	LastName    types.String `tfsdk:"last_name"`
+	ManagerID   types.String `tfsdk:"manager_id"`
 	Name        types.String `tfsdk:"name"`
 	Position    types.String `tfsdk:"position"`
 }
