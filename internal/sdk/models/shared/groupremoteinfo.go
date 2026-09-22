@@ -470,6 +470,19 @@ func (w *WorkdayUserSecurityGroup) GetGroupID() string {
 	return w.GroupID
 }
 
+// WrikeGroup - Remote info for Wrike group.
+type WrikeGroup struct {
+	// The ID of the Wrike group.
+	GroupID string `json:"group_id"`
+}
+
+func (w *WrikeGroup) GetGroupID() string {
+	if w == nil {
+		return ""
+	}
+	return w.GroupID
+}
+
 // ZendeskGroup - Remote info for Zendesk group.
 type ZendeskGroup struct {
 	// The ID of the Zendesk group.
@@ -581,6 +594,8 @@ type GroupRemoteInfo struct {
 	TwingateGroupSynced *TwingateGroupSynced `json:"twingate_group_synced,omitempty"`
 	// Remote info for Workday User Security group.
 	WorkdayUserSecurityGroup *WorkdayUserSecurityGroup `json:"workday_user_security_group,omitempty"`
+	// Remote info for Wrike group.
+	WrikeGroup *WrikeGroup `json:"wrike_group,omitempty"`
 	// Remote info for Zendesk group.
 	ZendeskGroup *ZendeskGroup `json:"zendesk_group,omitempty"`
 	// Remote info for Zendesk organization.
@@ -832,6 +847,13 @@ func (g *GroupRemoteInfo) GetWorkdayUserSecurityGroup() *WorkdayUserSecurityGrou
 		return nil
 	}
 	return g.WorkdayUserSecurityGroup
+}
+
+func (g *GroupRemoteInfo) GetWrikeGroup() *WrikeGroup {
+	if g == nil {
+		return nil
+	}
+	return g.WrikeGroup
 }
 
 func (g *GroupRemoteInfo) GetZendeskGroup() *ZendeskGroup {

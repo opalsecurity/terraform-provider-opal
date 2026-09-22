@@ -439,6 +439,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Azure virtual machine.`,
 					},
+					"clickhouse_console_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"role_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The UUID of the ClickHouse Cloud console role.`,
+							},
+						},
+						Description: `Remote info for ClickHouse Cloud console role.`,
+					},
 					"clickhouse_database": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -510,6 +520,90 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for Databricks account service principal.`,
+					},
+					"databricks_catalog": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"full_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The dot-qualified full name of the catalog (e.g. "catalog").`,
+							},
+							"metastore_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Unity Catalog metastore the catalog belongs to.`,
+							},
+						},
+						Description: `Remote info for Databricks Unity Catalog catalog.`,
+					},
+					"databricks_function": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"full_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The dot-qualified full name of the function (e.g. "catalog.schema.function").`,
+							},
+							"metastore_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Unity Catalog metastore the function belongs to.`,
+							},
+						},
+						Description: `Remote info for Databricks Unity Catalog function.`,
+					},
+					"databricks_model": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"full_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The dot-qualified full name of the model (e.g. "catalog.schema.model").`,
+							},
+							"metastore_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Unity Catalog metastore the model belongs to.`,
+							},
+						},
+						Description: `Remote info for Databricks Unity Catalog registered model.`,
+					},
+					"databricks_schema": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"full_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The dot-qualified full name of the schema (e.g. "catalog.schema").`,
+							},
+							"metastore_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Unity Catalog metastore the schema belongs to.`,
+							},
+						},
+						Description: `Remote info for Databricks Unity Catalog schema.`,
+					},
+					"databricks_service": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"full_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The dot-qualified full name of the service (e.g. "catalog.schema.service").`,
+							},
+							"metastore_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Unity Catalog metastore the service belongs to.`,
+							},
+						},
+						Description: `Remote info for Databricks AI Gateway service.`,
+					},
+					"databricks_volume": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"full_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The dot-qualified full name of the volume (e.g. "catalog.schema.volume").`,
+							},
+							"metastore_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Unity Catalog metastore the volume belongs to.`,
+							},
+						},
+						Description: `Remote info for Databricks Unity Catalog volume.`,
 					},
 					"datadog_role": schema.SingleNestedAttribute{
 						Computed: true,
@@ -1051,6 +1145,26 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Twingate resource.`,
 					},
+					"vercel_project": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"project_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The Vercel project id.`,
+							},
+						},
+						Description: `Remote info for Vercel project.`,
+					},
+					"vercel_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"role_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The Vercel team role identifier (e.g. OWNER, MEMBER, CONTRIBUTOR).`,
+							},
+						},
+						Description: `Remote info for Vercel team role.`,
+					},
 					"workday_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -1060,6 +1174,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for Workday role.`,
+					},
+					"wrike_user_type": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"user_type_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The Wrike user type ID (16-char UID from GET /user_types).`,
+							},
+						},
+						Description: `Remote info for Wrike user type (license type).`,
 					},
 					"zendesk_role": schema.SingleNestedAttribute{
 						Computed: true,
@@ -1158,9 +1282,42 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							Computed: true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
+									"escalation": schema.SingleNestedAttribute{
+										Computed: true,
+										Attributes: map[string]schema.Attribute{
+											"delay_minutes": schema.Int64Attribute{
+												Computed:    true,
+												Description: `How long to wait for a response before escalating, in minutes. Between 1 and 1440 (24 hours).`,
+											},
+											"owner_ids": schema.SetAttribute{
+												Computed:    true,
+												ElementType: types.StringType,
+												Description: `The owners to escalate to. The stage's own owner_ids are added automatically and must not be repeated here.`,
+											},
+											"user_ids": schema.SetAttribute{
+												Computed:    true,
+												ElementType: types.StringType,
+												Description: `The users to escalate to. The stage's own service_user_ids are added automatically and must not be repeated here.`,
+											},
+										},
+										MarkdownDescription: `Escalation for a reviewer stage. When set, the request advances to the` + "\n" +
+											`reviewers named here if nobody responds within delay_minutes. Timely` + "\n" +
+											`approval by any of the stage's own reviewers resolves the stage without` + "\n" +
+											`escalating.` + "\n" +
+											`` + "\n" +
+											`owner_ids and user_ids name only who to escalate to; the stage's own` + "\n" +
+											`reviewers are added automatically and must not be repeated here. A` + "\n" +
+											`stage with owner_ids [X] escalating to Y sets escalation.owner_ids to` + "\n" +
+											`[Y], and reviewing after escalation is then open to both X and Y.` + "\n" +
+											`` + "\n" +
+											`Because the stage's reviewers are unioned in rather than copied,` + "\n" +
+											`removing someone from the stage also removes them from the escalation.` + "\n" +
+											`At least one owner or user named here must not already be a reviewer` + "\n" +
+											`of the stage.`,
+									},
 									"operator": schema.StringAttribute{
 										Computed:    true,
-										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers.`,
+										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. A stage that sets ` + "`" + `escalation` + "`" + ` must use ` + "`" + `OR` + "`" + `; ` + "`" + `AND` + "`" + ` is rejected there, because the escalation timer joins the stage as an additional reviewer and would otherwise become a required approver that stalls every request until the timeout.`,
 									},
 									"owner_ids": schema.SetAttribute{
 										Computed:    true,

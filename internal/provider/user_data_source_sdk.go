@@ -24,6 +24,7 @@ func (r *UserDataSourceModel) RefreshFromSharedUser(ctx context.Context, resp *s
 		}
 		r.ID = types.StringValue(resp.ID)
 		r.LastName = types.StringValue(resp.LastName)
+		r.ManagerID = types.StringPointerValue(resp.ManagerID)
 		r.Name = types.StringValue(resp.Name)
 		r.Position = types.StringValue(resp.Position)
 	}

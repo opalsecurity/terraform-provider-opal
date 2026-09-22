@@ -39,6 +39,7 @@ type GroupRemoteInfo struct {
 	TwingateGroup            *ActiveDirectoryGroup     `tfsdk:"twingate_group"`
 	TwingateGroupSynced      *ActiveDirectoryGroup     `tfsdk:"twingate_group_synced"`
 	WorkdayUserSecurityGroup *ActiveDirectoryGroup     `tfsdk:"workday_user_security_group"`
+	WrikeGroup               *ActiveDirectoryGroup     `tfsdk:"wrike_group"`
 	ZendeskGroup             *ActiveDirectoryGroup     `tfsdk:"zendesk_group"`
 	ZendeskOrganization      *ZendeskOrganization      `tfsdk:"zendesk_organization"`
 	ZoomGroup                *ActiveDirectoryGroup     `tfsdk:"zoom_group"`

@@ -97,6 +97,13 @@ const (
 	EntityItemTypeEnumTeleportRole                      EntityItemTypeEnum = "TELEPORT_ROLE"
 	EntityItemTypeEnumDatabricksAccountServicePrincipal EntityItemTypeEnum = "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL"
 	EntityItemTypeEnumIlevelAdvancedRole                EntityItemTypeEnum = "ILEVEL_ADVANCED_ROLE"
+	EntityItemTypeEnumDatabricksCatalog                 EntityItemTypeEnum = "DATABRICKS_CATALOG"
+	EntityItemTypeEnumDatabricksSchema                  EntityItemTypeEnum = "DATABRICKS_SCHEMA"
+	EntityItemTypeEnumDatabricksVolume                  EntityItemTypeEnum = "DATABRICKS_VOLUME"
+	EntityItemTypeEnumDatabricksFunction                EntityItemTypeEnum = "DATABRICKS_FUNCTION"
+	EntityItemTypeEnumDatabricksModel                   EntityItemTypeEnum = "DATABRICKS_MODEL"
+	EntityItemTypeEnumDatabricksService                 EntityItemTypeEnum = "DATABRICKS_SERVICE"
+	EntityItemTypeEnumDatabricksMcpServer               EntityItemTypeEnum = "DATABRICKS_MCP_SERVER"
 )
 
 func (e EntityItemTypeEnum) ToPointer() *EntityItemTypeEnum {
@@ -277,6 +284,20 @@ func (e *EntityItemTypeEnum) UnmarshalJSON(data []byte) error {
 	case "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL":
 		fallthrough
 	case "ILEVEL_ADVANCED_ROLE":
+		fallthrough
+	case "DATABRICKS_CATALOG":
+		fallthrough
+	case "DATABRICKS_SCHEMA":
+		fallthrough
+	case "DATABRICKS_VOLUME":
+		fallthrough
+	case "DATABRICKS_FUNCTION":
+		fallthrough
+	case "DATABRICKS_MODEL":
+		fallthrough
+	case "DATABRICKS_SERVICE":
+		fallthrough
+	case "DATABRICKS_MCP_SERVER":
 		*e = EntityItemTypeEnum(v)
 		return nil
 	default:

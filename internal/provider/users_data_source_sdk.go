@@ -32,6 +32,7 @@ func (r *UsersDataSourceModel) RefreshFromSharedPaginatedUsersList(ctx context.C
 			}
 			results.ID = types.StringValue(resultsItem.ID)
 			results.LastName = types.StringValue(resultsItem.LastName)
+			results.ManagerID = types.StringPointerValue(resultsItem.ManagerID)
 			results.Name = types.StringValue(resultsItem.Name)
 			results.Position = types.StringValue(resultsItem.Position)
 
