@@ -1289,12 +1289,12 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 												Computed:    true,
 												Description: `How long to wait for a response before escalating, in minutes. Between 1 and 1440 (24 hours).`,
 											},
-											"owner_ids": schema.SetAttribute{
+											"owner_ids": schema.ListAttribute{
 												Computed:    true,
 												ElementType: types.StringType,
 												Description: `The owners to escalate to. The stage's own owner_ids are added automatically and must not be repeated here.`,
 											},
-											"user_ids": schema.SetAttribute{
+											"user_ids": schema.ListAttribute{
 												Computed:    true,
 												ElementType: types.StringType,
 												Description: `The users to escalate to. The stage's own service_user_ids are added automatically and must not be repeated here.`,

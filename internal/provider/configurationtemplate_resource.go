@@ -198,12 +198,12 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 													int64validator.Between(1, 1440),
 												},
 											},
-											"owner_ids": schema.SetAttribute{
+											"owner_ids": schema.ListAttribute{
 												Optional:    true,
 												ElementType: types.StringType,
 												Description: `The owners to escalate to. The stage's own owner_ids are added automatically and must not be repeated here.`,
 											},
-											"user_ids": schema.SetAttribute{
+											"user_ids": schema.ListAttribute{
 												Optional:    true,
 												ElementType: types.StringType,
 												Description: `The users to escalate to. The stage's own service_user_ids are added automatically and must not be repeated here.`,
