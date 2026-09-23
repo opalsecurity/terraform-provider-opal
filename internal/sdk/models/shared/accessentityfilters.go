@@ -70,6 +70,9 @@ type AccessEntityFilters struct {
 	// Filters GROUP and RESOURCE entities by their admin owner. USER entities never match, in either polarity. `not` inverts the match within the resource/group domain (self-negating, like IdpStatusFilter): omit it (or false) to include entities owned by the given owners, set it true to exclude them.
 	//
 	EntityAdminOwner *EntityAdminFilter `json:"entityAdminOwner,omitempty"`
+	// Filters GROUP and RESOURCE entities by a case-insensitive substring of their description ("contains"). USER entities have no description and never match, in either polarity. `not` inverts the match within the resource/group domain ("does NOT contain"), so it still returns only resources/groups rather than sweeping in users.
+	//
+	EntityDescription *EntityDescriptionFilter `json:"entityDescription,omitempty"`
 	// Filter by specific entity UUIDs.
 	EntityIDs []string `json:"entityIDs,omitempty"`
 	// Filter by entity item types.
@@ -124,6 +127,13 @@ func (a *AccessEntityFilters) GetEntityAdminOwner() *EntityAdminFilter {
 		return nil
 	}
 	return a.EntityAdminOwner
+}
+
+func (a *AccessEntityFilters) GetEntityDescription() *EntityDescriptionFilter {
+	if a == nil {
+		return nil
+	}
+	return a.EntityDescription
 }
 
 func (a *AccessEntityFilters) GetEntityIDs() []string {

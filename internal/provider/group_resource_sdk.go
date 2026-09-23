@@ -139,6 +139,12 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 				r.RemoteInfo.AwsSsoGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.AwsSsoGroup.GroupID = types.StringValue(resp.RemoteInfo.AwsSsoGroup.GroupID)
 			}
+			if resp.RemoteInfo.AxiomGroup == nil {
+				r.RemoteInfo.AxiomGroup = nil
+			} else {
+				r.RemoteInfo.AxiomGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.AxiomGroup.GroupID = types.StringValue(resp.RemoteInfo.AxiomGroup.GroupID)
+			}
 			if resp.RemoteInfo.AzureAdMicrosoft365Group == nil {
 				r.RemoteInfo.AzureAdMicrosoft365Group = nil
 			} else {
@@ -338,6 +344,12 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 				r.RemoteInfo.WorkdayUserSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.WorkdayUserSecurityGroup.GroupID = types.StringValue(resp.RemoteInfo.WorkdayUserSecurityGroup.GroupID)
 			}
+			if resp.RemoteInfo.WrikeGroup == nil {
+				r.RemoteInfo.WrikeGroup = nil
+			} else {
+				r.RemoteInfo.WrikeGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.WrikeGroup.GroupID = types.StringValue(resp.RemoteInfo.WrikeGroup.GroupID)
+			}
 			if resp.RemoteInfo.ZendeskGroup == nil {
 				r.RemoteInfo.ZendeskGroup = nil
 			} else {
@@ -391,6 +403,20 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 			for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 				var reviewerStages tfTypes.ReviewerStage
 
+				if reviewerStagesItem.Escalation == nil {
+					reviewerStages.Escalation = nil
+				} else {
+					reviewerStages.Escalation = &tfTypes.ReviewerStageEscalation{}
+					reviewerStages.Escalation.DelayMinutes = types.Int64Value(reviewerStagesItem.Escalation.DelayMinutes)
+					reviewerStages.Escalation.OwnerIds = make([]types.String, 0, len(reviewerStagesItem.Escalation.OwnerIds))
+					for _, v := range reviewerStagesItem.Escalation.OwnerIds {
+						reviewerStages.Escalation.OwnerIds = append(reviewerStages.Escalation.OwnerIds, types.StringValue(v))
+					}
+					reviewerStages.Escalation.UserIds = make([]types.String, 0, len(reviewerStagesItem.Escalation.UserIds))
+					for _, v := range reviewerStagesItem.Escalation.UserIds {
+						reviewerStages.Escalation.UserIds = append(reviewerStages.Escalation.UserIds, types.StringValue(v))
+					}
+				}
 				if reviewerStagesItem.Operator != nil {
 					reviewerStages.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
 				} else {
@@ -477,6 +503,20 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(ctx context.Contex
 		for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 			var reviewerStages tfTypes.ReviewerStage
 
+			if reviewerStagesItem.Escalation == nil {
+				reviewerStages.Escalation = nil
+			} else {
+				reviewerStages.Escalation = &tfTypes.ReviewerStageEscalation{}
+				reviewerStages.Escalation.DelayMinutes = types.Int64Value(reviewerStagesItem.Escalation.DelayMinutes)
+				reviewerStages.Escalation.OwnerIds = make([]types.String, 0, len(reviewerStagesItem.Escalation.OwnerIds))
+				for _, v := range reviewerStagesItem.Escalation.OwnerIds {
+					reviewerStages.Escalation.OwnerIds = append(reviewerStages.Escalation.OwnerIds, types.StringValue(v))
+				}
+				reviewerStages.Escalation.UserIds = make([]types.String, 0, len(reviewerStagesItem.Escalation.UserIds))
+				for _, v := range reviewerStagesItem.Escalation.UserIds {
+					reviewerStages.Escalation.UserIds = append(reviewerStages.Escalation.UserIds, types.StringValue(v))
+				}
+			}
 			if reviewerStagesItem.Operator != nil {
 				reviewerStages.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
 			} else {
@@ -720,22 +760,31 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 				GroupID: groupId1,
 			}
 		}
+		var axiomGroup *shared.AxiomGroup
+		if r.RemoteInfo.AxiomGroup != nil {
+			var groupId2 string
+			groupId2 = r.RemoteInfo.AxiomGroup.GroupID.ValueString()
+
+			axiomGroup = &shared.AxiomGroup{
+				GroupID: groupId2,
+			}
+		}
 		var azureAdMicrosoft365Group *shared.AzureAdMicrosoft365Group
 		if r.RemoteInfo.AzureAdMicrosoft365Group != nil {
-			var groupId2 string
-			groupId2 = r.RemoteInfo.AzureAdMicrosoft365Group.GroupID.ValueString()
+			var groupId3 string
+			groupId3 = r.RemoteInfo.AzureAdMicrosoft365Group.GroupID.ValueString()
 
 			azureAdMicrosoft365Group = &shared.AzureAdMicrosoft365Group{
-				GroupID: groupId2,
+				GroupID: groupId3,
 			}
 		}
 		var azureAdSecurityGroup *shared.AzureAdSecurityGroup
 		if r.RemoteInfo.AzureAdSecurityGroup != nil {
-			var groupId3 string
-			groupId3 = r.RemoteInfo.AzureAdSecurityGroup.GroupID.ValueString()
+			var groupId4 string
+			groupId4 = r.RemoteInfo.AzureAdSecurityGroup.GroupID.ValueString()
 
 			azureAdSecurityGroup = &shared.AzureAdSecurityGroup{
-				GroupID: groupId3,
+				GroupID: groupId4,
 			}
 		}
 		var clickhouseRole *shared.ClickhouseRole
@@ -749,29 +798,29 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		}
 		var confluenceGroup *shared.ConfluenceGroup
 		if r.RemoteInfo.ConfluenceGroup != nil {
-			var groupId4 string
-			groupId4 = r.RemoteInfo.ConfluenceGroup.GroupID.ValueString()
+			var groupId5 string
+			groupId5 = r.RemoteInfo.ConfluenceGroup.GroupID.ValueString()
 
 			confluenceGroup = &shared.ConfluenceGroup{
-				GroupID: groupId4,
+				GroupID: groupId5,
 			}
 		}
 		var connectorGroup *shared.ConnectorGroup
 		if r.RemoteInfo.ConnectorGroup != nil {
-			var groupId5 string
-			groupId5 = r.RemoteInfo.ConnectorGroup.GroupID.ValueString()
+			var groupId6 string
+			groupId6 = r.RemoteInfo.ConnectorGroup.GroupID.ValueString()
 
 			connectorGroup = &shared.ConnectorGroup{
-				GroupID: groupId5,
+				GroupID: groupId6,
 			}
 		}
 		var databricksAccountGroup *shared.DatabricksAccountGroup
 		if r.RemoteInfo.DatabricksAccountGroup != nil {
-			var groupId6 string
-			groupId6 = r.RemoteInfo.DatabricksAccountGroup.GroupID.ValueString()
+			var groupId7 string
+			groupId7 = r.RemoteInfo.DatabricksAccountGroup.GroupID.ValueString()
 
 			databricksAccountGroup = &shared.DatabricksAccountGroup{
-				GroupID: groupId6,
+				GroupID: groupId7,
 			}
 		}
 		var devinGroup *shared.DevinGroup
@@ -785,11 +834,11 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		}
 		var docusignGroup *shared.DocusignGroup
 		if r.RemoteInfo.DocusignGroup != nil {
-			var groupId7 string
-			groupId7 = r.RemoteInfo.DocusignGroup.GroupID.ValueString()
+			var groupId8 string
+			groupId8 = r.RemoteInfo.DocusignGroup.GroupID.ValueString()
 
 			docusignGroup = &shared.DocusignGroup{
-				GroupID: groupId7,
+				GroupID: groupId8,
 			}
 		}
 		var docusignSigningGroup *shared.DocusignSigningGroup
@@ -803,11 +852,11 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		}
 		var duoGroup *shared.DuoGroup
 		if r.RemoteInfo.DuoGroup != nil {
-			var groupId8 string
-			groupId8 = r.RemoteInfo.DuoGroup.GroupID.ValueString()
+			var groupId9 string
+			groupId9 = r.RemoteInfo.DuoGroup.GroupID.ValueString()
 
 			duoGroup = &shared.DuoGroup{
-				GroupID: groupId8,
+				GroupID: groupId9,
 			}
 		}
 		var githubEnterpriseTeam *shared.GithubEnterpriseTeam
@@ -837,20 +886,20 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		}
 		var gitlabGroup *shared.GitlabGroup
 		if r.RemoteInfo.GitlabGroup != nil {
-			var groupId9 string
-			groupId9 = r.RemoteInfo.GitlabGroup.GroupID.ValueString()
+			var groupId10 string
+			groupId10 = r.RemoteInfo.GitlabGroup.GroupID.ValueString()
 
 			gitlabGroup = &shared.GitlabGroup{
-				GroupID: groupId9,
+				GroupID: groupId10,
 			}
 		}
 		var googleGroup *shared.GoogleGroup
 		if r.RemoteInfo.GoogleGroup != nil {
-			var groupId10 string
-			groupId10 = r.RemoteInfo.GoogleGroup.GroupID.ValueString()
+			var groupId11 string
+			groupId11 = r.RemoteInfo.GoogleGroup.GroupID.ValueString()
 
 			googleGroup = &shared.GoogleGroup{
-				GroupID: groupId10,
+				GroupID: groupId11,
 			}
 		}
 		var grafanaTeam *shared.GrafanaTeam
@@ -882,20 +931,20 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		}
 		var jiraGroup *shared.JiraGroup
 		if r.RemoteInfo.JiraGroup != nil {
-			var groupId11 string
-			groupId11 = r.RemoteInfo.JiraGroup.GroupID.ValueString()
+			var groupId12 string
+			groupId12 = r.RemoteInfo.JiraGroup.GroupID.ValueString()
 
 			jiraGroup = &shared.JiraGroup{
-				GroupID: groupId11,
+				GroupID: groupId12,
 			}
 		}
 		var ldapGroup *shared.LdapGroup
 		if r.RemoteInfo.LdapGroup != nil {
-			var groupId12 string
-			groupId12 = r.RemoteInfo.LdapGroup.GroupID.ValueString()
+			var groupId13 string
+			groupId13 = r.RemoteInfo.LdapGroup.GroupID.ValueString()
 
 			ldapGroup = &shared.LdapGroup{
-				GroupID: groupId12,
+				GroupID: groupId13,
 			}
 		}
 		var linearTeam *shared.LinearTeam
@@ -909,11 +958,11 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		}
 		var oktaGroup *shared.OktaGroup
 		if r.RemoteInfo.OktaGroup != nil {
-			var groupId13 string
-			groupId13 = r.RemoteInfo.OktaGroup.GroupID.ValueString()
+			var groupId14 string
+			groupId14 = r.RemoteInfo.OktaGroup.GroupID.ValueString()
 
 			oktaGroup = &shared.OktaGroup{
-				GroupID: groupId13,
+				GroupID: groupId14,
 			}
 		}
 		var oktaGroupRule *shared.OktaGroupRule
@@ -963,11 +1012,11 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		}
 		var slackUserGroup *shared.SlackUserGroup
 		if r.RemoteInfo.SlackUserGroup != nil {
-			var groupId14 string
-			groupId14 = r.RemoteInfo.SlackUserGroup.GroupID.ValueString()
+			var groupId15 string
+			groupId15 = r.RemoteInfo.SlackUserGroup.GroupID.ValueString()
 
 			slackUserGroup = &shared.SlackUserGroup{
-				GroupID: groupId14,
+				GroupID: groupId15,
 			}
 		}
 		var snowflakeRole *shared.SnowflakeRole
@@ -981,56 +1030,65 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		}
 		var tableauGroup *shared.TableauGroup
 		if r.RemoteInfo.TableauGroup != nil {
-			var groupId15 string
-			groupId15 = r.RemoteInfo.TableauGroup.GroupID.ValueString()
+			var groupId16 string
+			groupId16 = r.RemoteInfo.TableauGroup.GroupID.ValueString()
 
 			tableauGroup = &shared.TableauGroup{
-				GroupID: groupId15,
+				GroupID: groupId16,
 			}
 		}
 		var tailscaleGroup *shared.TailscaleGroup
 		if r.RemoteInfo.TailscaleGroup != nil {
-			var groupId16 string
-			groupId16 = r.RemoteInfo.TailscaleGroup.GroupID.ValueString()
+			var groupId17 string
+			groupId17 = r.RemoteInfo.TailscaleGroup.GroupID.ValueString()
 
 			tailscaleGroup = &shared.TailscaleGroup{
-				GroupID: groupId16,
+				GroupID: groupId17,
 			}
 		}
 		var twingateGroup *shared.TwingateGroup
 		if r.RemoteInfo.TwingateGroup != nil {
-			var groupId17 string
-			groupId17 = r.RemoteInfo.TwingateGroup.GroupID.ValueString()
+			var groupId18 string
+			groupId18 = r.RemoteInfo.TwingateGroup.GroupID.ValueString()
 
 			twingateGroup = &shared.TwingateGroup{
-				GroupID: groupId17,
+				GroupID: groupId18,
 			}
 		}
 		var twingateGroupSynced *shared.TwingateGroupSynced
 		if r.RemoteInfo.TwingateGroupSynced != nil {
-			var groupId18 string
-			groupId18 = r.RemoteInfo.TwingateGroupSynced.GroupID.ValueString()
+			var groupId19 string
+			groupId19 = r.RemoteInfo.TwingateGroupSynced.GroupID.ValueString()
 
 			twingateGroupSynced = &shared.TwingateGroupSynced{
-				GroupID: groupId18,
+				GroupID: groupId19,
 			}
 		}
 		var workdayUserSecurityGroup *shared.WorkdayUserSecurityGroup
 		if r.RemoteInfo.WorkdayUserSecurityGroup != nil {
-			var groupId19 string
-			groupId19 = r.RemoteInfo.WorkdayUserSecurityGroup.GroupID.ValueString()
+			var groupId20 string
+			groupId20 = r.RemoteInfo.WorkdayUserSecurityGroup.GroupID.ValueString()
 
 			workdayUserSecurityGroup = &shared.WorkdayUserSecurityGroup{
-				GroupID: groupId19,
+				GroupID: groupId20,
+			}
+		}
+		var wrikeGroup *shared.WrikeGroup
+		if r.RemoteInfo.WrikeGroup != nil {
+			var groupId21 string
+			groupId21 = r.RemoteInfo.WrikeGroup.GroupID.ValueString()
+
+			wrikeGroup = &shared.WrikeGroup{
+				GroupID: groupId21,
 			}
 		}
 		var zendeskGroup *shared.ZendeskGroup
 		if r.RemoteInfo.ZendeskGroup != nil {
-			var groupId20 string
-			groupId20 = r.RemoteInfo.ZendeskGroup.GroupID.ValueString()
+			var groupId22 string
+			groupId22 = r.RemoteInfo.ZendeskGroup.GroupID.ValueString()
 
 			zendeskGroup = &shared.ZendeskGroup{
-				GroupID: groupId20,
+				GroupID: groupId22,
 			}
 		}
 		var zendeskOrganization *shared.ZendeskOrganization
@@ -1044,16 +1102,17 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		}
 		var zoomGroup *shared.ZoomGroup
 		if r.RemoteInfo.ZoomGroup != nil {
-			var groupId21 string
-			groupId21 = r.RemoteInfo.ZoomGroup.GroupID.ValueString()
+			var groupId23 string
+			groupId23 = r.RemoteInfo.ZoomGroup.GroupID.ValueString()
 
 			zoomGroup = &shared.ZoomGroup{
-				GroupID: groupId21,
+				GroupID: groupId23,
 			}
 		}
 		remoteInfo = &shared.GroupRemoteInfo{
 			ActiveDirectoryGroup:     activeDirectoryGroup,
 			AwsSsoGroup:              awsSsoGroup,
+			AxiomGroup:               axiomGroup,
 			AzureAdMicrosoft365Group: azureAdMicrosoft365Group,
 			AzureAdSecurityGroup:     azureAdSecurityGroup,
 			ClickhouseRole:           clickhouseRole,
@@ -1087,6 +1146,7 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 			TwingateGroup:            twingateGroup,
 			TwingateGroupSynced:      twingateGroupSynced,
 			WorkdayUserSecurityGroup: workdayUserSecurityGroup,
+			WrikeGroup:               wrikeGroup,
 			ZendeskGroup:             zendeskGroup,
 			ZendeskOrganization:      zendeskOrganization,
 			ZoomGroup:                zoomGroup,
@@ -1272,15 +1332,34 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 
 		reviewerStages := make([]shared.ReviewerStage, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages))
 		for reviewerStagesIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages {
+			var escalation *shared.ReviewerStageEscalation
+			if r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation != nil {
+				var delayMinutes int64
+				delayMinutes = r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.DelayMinutes.ValueInt64()
+
+				ownerIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.OwnerIds))
+				for ownerIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.OwnerIds {
+					ownerIds = append(ownerIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.OwnerIds[ownerIdsIndex].ValueString())
+				}
+				userIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.UserIds))
+				for userIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.UserIds {
+					userIds = append(userIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.UserIds[userIdsIndex].ValueString())
+				}
+				escalation = &shared.ReviewerStageEscalation{
+					DelayMinutes: delayMinutes,
+					OwnerIds:     ownerIds,
+					UserIds:      userIds,
+				}
+			}
 			operator := new(shared.Operator)
 			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsNull() {
 				*operator = shared.Operator(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.ValueString())
 			} else {
 				operator = nil
 			}
-			ownerIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds))
-			for ownerIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds {
-				ownerIds = append(ownerIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds[ownerIdsIndex].ValueString())
+			ownerIds1 := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds))
+			for ownerIdsIndex1 := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds {
+				ownerIds1 = append(ownerIds1, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds[ownerIdsIndex1].ValueString())
 			}
 			requireAdminApproval := new(bool)
 			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireAdminApproval.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireAdminApproval.IsNull() {
@@ -1299,8 +1378,9 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 				serviceUserIds = append(serviceUserIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].ServiceUserIds[serviceUserIdsIndex].ValueString())
 			}
 			reviewerStages = append(reviewerStages, shared.ReviewerStage{
+				Escalation:             escalation,
 				Operator:               operator,
-				OwnerIds:               ownerIds,
+				OwnerIds:               ownerIds1,
 				RequireAdminApproval:   requireAdminApproval,
 				RequireManagerApproval: requireManagerApproval,
 				ServiceUserIds:         serviceUserIds,

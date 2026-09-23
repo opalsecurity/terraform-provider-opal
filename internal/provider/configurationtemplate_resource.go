@@ -6,6 +6,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -187,11 +188,47 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 							Optional: true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
+									"escalation": schema.SingleNestedAttribute{
+										Optional: true,
+										Attributes: map[string]schema.Attribute{
+											"delay_minutes": schema.Int64Attribute{
+												Required:    true,
+												Description: `How long to wait for a response before escalating, in minutes. Between 1 and 1440 (24 hours).`,
+												Validators: []validator.Int64{
+													int64validator.Between(1, 1440),
+												},
+											},
+											"owner_ids": schema.SetAttribute{
+												Optional:    true,
+												ElementType: types.StringType,
+												Description: `The owners to escalate to. The stage's own owner_ids are added automatically and must not be repeated here.`,
+											},
+											"user_ids": schema.SetAttribute{
+												Optional:    true,
+												ElementType: types.StringType,
+												Description: `The users to escalate to. The stage's own service_user_ids are added automatically and must not be repeated here.`,
+											},
+										},
+										MarkdownDescription: `Escalation for a reviewer stage. When set, the request advances to the` + "\n" +
+											`reviewers named here if nobody responds within delay_minutes. Timely` + "\n" +
+											`approval by any of the stage's own reviewers resolves the stage without` + "\n" +
+											`escalating.` + "\n" +
+											`` + "\n" +
+											`owner_ids and user_ids name only who to escalate to; the stage's own` + "\n" +
+											`reviewers are added automatically and must not be repeated here. A` + "\n" +
+											`stage with owner_ids [X] escalating to Y sets escalation.owner_ids to` + "\n" +
+											`[Y], and reviewing after escalation is then open to both X and Y.` + "\n" +
+											`` + "\n" +
+											`Because the stage's reviewers are unioned in rather than copied,` + "\n" +
+											`removing someone from the stage also removes them from the escalation.` + "\n" +
+											`At least one owner or user named here must not already be a reviewer` + "\n" +
+											`of the stage.`,
+									},
 									"operator": schema.StringAttribute{
 										Computed:    true,
 										Optional:    true,
 										Default:     stringdefault.StaticString(`AND`),
-										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. Default: "AND"; must be one of ["AND", "OR"]`,
+										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. A stage that sets ` + "`" + `escalation` + "`" + ` must use ` + "`" + `OR` + "`" + `; ` + "`" + `AND` + "`" + ` is rejected there, because the escalation timer joins the stage as an additional reviewer and would otherwise become a required approver that stalls every request until the timeout. Default: "AND"; must be one of ["AND", "OR"]`,
 										Validators: []validator.String{
 											stringvalidator.OneOf(
 												"AND",

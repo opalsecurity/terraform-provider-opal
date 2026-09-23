@@ -15,6 +15,8 @@ type ResourceRemoteInfo struct {
 	AwsPermissionSet                  *AwsPermissionSet                  `tfsdk:"aws_permission_set"`
 	AwsRdsCluster                     *AwsRdsCluster                     `tfsdk:"aws_rds_cluster"`
 	AwsRdsInstance                    *AwsRdsInstance                    `tfsdk:"aws_rds_instance"`
+	AxiomCustomRole                   *ClickhouseRole                    `tfsdk:"axiom_custom_role"`
+	AxiomRole                         *ClickhouseRole                    `tfsdk:"axiom_role"`
 	AzureEnterpriseApp                *AzureEnterpriseApp                `tfsdk:"azure_enterprise_app"`
 	AzureEntraIDRole                  *AzureEnterpriseApp                `tfsdk:"azure_entra_id_role"`
 	AzureManagementGroup              *AzureEnterpriseApp                `tfsdk:"azure_management_group"`
@@ -28,12 +30,19 @@ type ResourceRemoteInfo struct {
 	AzureSubscription                 *AzureEnterpriseApp                `tfsdk:"azure_subscription"`
 	AzureUserAssignedManagedIdentity  *AzureEnterpriseApp                `tfsdk:"azure_user_assigned_managed_identity"`
 	AzureVirtualMachine               *AzureEnterpriseApp                `tfsdk:"azure_virtual_machine"`
+	ClickhouseConsoleRole             *ClickhouseRole                    `tfsdk:"clickhouse_console_role"`
 	ClickhouseDatabase                *ClickhouseDatabase                `tfsdk:"clickhouse_database"`
 	ClickhouseTable                   *ClickhouseTable                   `tfsdk:"clickhouse_table"`
 	CoupaRole                         *ClickhouseRole                    `tfsdk:"coupa_role"`
 	CursorOrganization                *CursorOrganization                `tfsdk:"cursor_organization"`
 	CustomConnector                   *CustomConnector                   `tfsdk:"custom_connector"`
 	DatabricksAccountServicePrincipal *DatabricksAccountServicePrincipal `tfsdk:"databricks_account_service_principal"`
+	DatabricksCatalog                 *DatabricksCatalog                 `tfsdk:"databricks_catalog"`
+	DatabricksFunction                *DatabricksCatalog                 `tfsdk:"databricks_function"`
+	DatabricksModel                   *DatabricksCatalog                 `tfsdk:"databricks_model"`
+	DatabricksSchema                  *DatabricksCatalog                 `tfsdk:"databricks_schema"`
+	DatabricksService                 *DatabricksCatalog                 `tfsdk:"databricks_service"`
+	DatabricksVolume                  *DatabricksCatalog                 `tfsdk:"databricks_volume"`
 	DatadogRole                       *ClickhouseRole                    `tfsdk:"datadog_role"`
 	DatastaxAstraRole                 *ClickhouseRole                    `tfsdk:"datastax_astra_role"`
 	DevinOrganization                 *CursorOrganization                `tfsdk:"devin_organization"`
@@ -82,7 +91,10 @@ type ResourceRemoteInfo struct {
 	TailscaleSSH                      *TailscaleSSH                      `tfsdk:"tailscale_ssh"`
 	TeleportRole                      *IlevelAdvancedRole                `tfsdk:"teleport_role"`
 	TwingateResource                  *AzureEnterpriseApp                `tfsdk:"twingate_resource"`
+	VercelProject                     *GcpProject                        `tfsdk:"vercel_project"`
+	VercelRole                        *ClickhouseRole                    `tfsdk:"vercel_role"`
 	WorkdayRole                       *ClickhouseRole                    `tfsdk:"workday_role"`
+	WrikeUserType                     *WrikeUserType                     `tfsdk:"wrike_user_type"`
 	ZendeskRole                       *ClickhouseRole                    `tfsdk:"zendesk_role"`
 	ZoomLicense                       *ZoomLicense                       `tfsdk:"zoom_license"`
 	ZoomRole                          *ClickhouseRole                    `tfsdk:"zoom_role"`

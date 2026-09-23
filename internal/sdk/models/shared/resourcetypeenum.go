@@ -96,6 +96,7 @@ const (
 	ResourceTypeEnumGrafanaRole                       ResourceTypeEnum = "GRAFANA_ROLE"
 	ResourceTypeEnumClickhouseDatabase                ResourceTypeEnum = "CLICKHOUSE_DATABASE"
 	ResourceTypeEnumClickhouseTable                   ResourceTypeEnum = "CLICKHOUSE_TABLE"
+	ResourceTypeEnumClickhouseConsoleRole             ResourceTypeEnum = "CLICKHOUSE_CONSOLE_ROLE"
 	ResourceTypeEnumTwingateResource                  ResourceTypeEnum = "TWINGATE_RESOURCE"
 	ResourceTypeEnumZendeskRole                       ResourceTypeEnum = "ZENDESK_ROLE"
 	ResourceTypeEnumHubspotRole                       ResourceTypeEnum = "HUBSPOT_ROLE"
@@ -108,6 +109,18 @@ const (
 	ResourceTypeEnumLinearProject                     ResourceTypeEnum = "LINEAR_PROJECT"
 	ResourceTypeEnumRampFund                          ResourceTypeEnum = "RAMP_FUND"
 	ResourceTypeEnumRampRole                          ResourceTypeEnum = "RAMP_ROLE"
+	ResourceTypeEnumWrikeUserType                     ResourceTypeEnum = "WRIKE_USER_TYPE"
+	ResourceTypeEnumDatabricksCatalog                 ResourceTypeEnum = "DATABRICKS_CATALOG"
+	ResourceTypeEnumDatabricksSchema                  ResourceTypeEnum = "DATABRICKS_SCHEMA"
+	ResourceTypeEnumDatabricksVolume                  ResourceTypeEnum = "DATABRICKS_VOLUME"
+	ResourceTypeEnumDatabricksFunction                ResourceTypeEnum = "DATABRICKS_FUNCTION"
+	ResourceTypeEnumDatabricksModel                   ResourceTypeEnum = "DATABRICKS_MODEL"
+	ResourceTypeEnumDatabricksService                 ResourceTypeEnum = "DATABRICKS_SERVICE"
+	ResourceTypeEnumDatabricksMcpServer               ResourceTypeEnum = "DATABRICKS_MCP_SERVER"
+	ResourceTypeEnumVercelRole                        ResourceTypeEnum = "VERCEL_ROLE"
+	ResourceTypeEnumVercelProject                     ResourceTypeEnum = "VERCEL_PROJECT"
+	ResourceTypeEnumAxiomRole                         ResourceTypeEnum = "AXIOM_ROLE"
+	ResourceTypeEnumAxiomCustomRole                   ResourceTypeEnum = "AXIOM_CUSTOM_ROLE"
 )
 
 func (e ResourceTypeEnum) ToPointer() *ResourceTypeEnum {
@@ -287,6 +300,8 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "CLICKHOUSE_TABLE":
 		fallthrough
+	case "CLICKHOUSE_CONSOLE_ROLE":
+		fallthrough
 	case "TWINGATE_RESOURCE":
 		fallthrough
 	case "ZENDESK_ROLE":
@@ -310,6 +325,30 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "RAMP_FUND":
 		fallthrough
 	case "RAMP_ROLE":
+		fallthrough
+	case "WRIKE_USER_TYPE":
+		fallthrough
+	case "DATABRICKS_CATALOG":
+		fallthrough
+	case "DATABRICKS_SCHEMA":
+		fallthrough
+	case "DATABRICKS_VOLUME":
+		fallthrough
+	case "DATABRICKS_FUNCTION":
+		fallthrough
+	case "DATABRICKS_MODEL":
+		fallthrough
+	case "DATABRICKS_SERVICE":
+		fallthrough
+	case "DATABRICKS_MCP_SERVER":
+		fallthrough
+	case "VERCEL_ROLE":
+		fallthrough
+	case "VERCEL_PROJECT":
+		fallthrough
+	case "AXIOM_ROLE":
+		fallthrough
+	case "AXIOM_CUSTOM_ROLE":
 		*e = ResourceTypeEnum(v)
 		return nil
 	default:

@@ -93,6 +93,10 @@ func (r *UsersDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							Computed:    true,
 							Description: `The last name of the user.`,
 						},
+						"manager_id": schema.StringAttribute{
+							Computed:    true,
+							Description: `The ID of the user's manager. Null if the user has no manager.`,
+						},
 						"name": schema.StringAttribute{
 							Computed:    true,
 							Description: `The full name of the user.`,
