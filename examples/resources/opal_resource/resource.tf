@@ -58,6 +58,12 @@ resource "opal_resource" "my_resource" {
       region      = "us-east-2"
       resource_id = "db-AOO8V0XUCNU13XLZXQDQRSN0NQ"
     }
+    axiom_custom_role = {
+      role_id = "role_0123456789abcdef"
+    }
+    axiom_role = {
+      role_id = "role_member"
+    }
     azure_enterprise_app = {
       resource_id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
     }
@@ -97,6 +103,9 @@ resource "opal_resource" "my_resource" {
     azure_virtual_machine = {
       resource_id = "/subscriptions/0000/resourceGroups/rg/providers/Microsoft.Compute/virtualMachines/vm01"
     }
+    clickhouse_console_role = {
+      role_id = "123e4567-e89b-12d3-a456-426614174000"
+    }
     clickhouse_database = {
       database_name = "my_database"
     }
@@ -117,6 +126,30 @@ resource "opal_resource" "my_resource" {
     databricks_account_service_principal = {
       application_id = "00000000-0000-0000-0000-000000000000"
       resource_id    = "00000000-0000-0000-0000-000000000000"
+    }
+    databricks_catalog = {
+      full_name    = "my_catalog"
+      metastore_id = "12345678-1234-1234-1234-123456789012"
+    }
+    databricks_function = {
+      full_name    = "my_catalog.my_schema.my_function"
+      metastore_id = "12345678-1234-1234-1234-123456789012"
+    }
+    databricks_model = {
+      full_name    = "my_catalog.my_schema.my_model"
+      metastore_id = "12345678-1234-1234-1234-123456789012"
+    }
+    databricks_schema = {
+      full_name    = "my_catalog.my_schema"
+      metastore_id = "12345678-1234-1234-1234-123456789012"
+    }
+    databricks_service = {
+      full_name    = "my_catalog.my_schema.my_service"
+      metastore_id = "12345678-1234-1234-1234-123456789012"
+    }
+    databricks_volume = {
+      full_name    = "my_catalog.my_schema.my_volume"
+      metastore_id = "12345678-1234-1234-1234-123456789012"
     }
     datadog_role = {
       role_id = "123e4567-e89b-12d3-a456-426614174000"
@@ -277,8 +310,17 @@ resource "opal_resource" "my_resource" {
     twingate_resource = {
       resource_id = "UmVzb3VyY2U6MTIzNA=="
     }
+    vercel_project = {
+      project_id = "prj_xxxxxxxx"
+    }
+    vercel_role = {
+      role_id = "CONTRIBUTOR"
+    }
     workday_role = {
       role_id = "123abc456def"
+    }
+    wrike_user_type = {
+      user_type_id = "KX7ZHLVGABCDEFGH"
     }
     zendesk_role = {
       role_id = "12345"
@@ -312,6 +354,15 @@ resource "opal_resource" "my_resource" {
       require_support_ticket         = false
       reviewer_stages = [
         {
+          escalation = {
+            delay_minutes = 60
+            owner_ids = [
+              "83ecd8c7-c886-4021-b56d-7e7a3db24f25"
+            ]
+            user_ids = [
+              "e358667e-12e4-4f71-924f-4ddf9ff454f9"
+            ]
+          }
           operator = "AND"
           owner_ids = [
             "c1fddd27-1944-4f29-a2c5-cd206276bb44"

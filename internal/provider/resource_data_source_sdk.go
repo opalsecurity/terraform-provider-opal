@@ -142,6 +142,18 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.AwsRdsInstance.Region = types.StringValue(resp.RemoteInfo.AwsRdsInstance.Region)
 				r.RemoteInfo.AwsRdsInstance.ResourceID = types.StringValue(resp.RemoteInfo.AwsRdsInstance.ResourceID)
 			}
+			if resp.RemoteInfo.AxiomCustomRole == nil {
+				r.RemoteInfo.AxiomCustomRole = nil
+			} else {
+				r.RemoteInfo.AxiomCustomRole = &tfTypes.ClickhouseRole{}
+				r.RemoteInfo.AxiomCustomRole.RoleID = types.StringValue(resp.RemoteInfo.AxiomCustomRole.RoleID)
+			}
+			if resp.RemoteInfo.AxiomRole == nil {
+				r.RemoteInfo.AxiomRole = nil
+			} else {
+				r.RemoteInfo.AxiomRole = &tfTypes.ClickhouseRole{}
+				r.RemoteInfo.AxiomRole.RoleID = types.StringValue(resp.RemoteInfo.AxiomRole.RoleID)
+			}
 			if resp.RemoteInfo.AzureEnterpriseApp == nil {
 				r.RemoteInfo.AzureEnterpriseApp = nil
 			} else {
@@ -220,6 +232,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.AzureVirtualMachine = &tfTypes.AzureEnterpriseApp{}
 				r.RemoteInfo.AzureVirtualMachine.ResourceID = types.StringValue(resp.RemoteInfo.AzureVirtualMachine.ResourceID)
 			}
+			if resp.RemoteInfo.ClickhouseConsoleRole == nil {
+				r.RemoteInfo.ClickhouseConsoleRole = nil
+			} else {
+				r.RemoteInfo.ClickhouseConsoleRole = &tfTypes.ClickhouseRole{}
+				r.RemoteInfo.ClickhouseConsoleRole.RoleID = types.StringValue(resp.RemoteInfo.ClickhouseConsoleRole.RoleID)
+			}
 			if resp.RemoteInfo.ClickhouseDatabase == nil {
 				r.RemoteInfo.ClickhouseDatabase = nil
 			} else {
@@ -258,6 +276,48 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.DatabricksAccountServicePrincipal = &tfTypes.DatabricksAccountServicePrincipal{}
 				r.RemoteInfo.DatabricksAccountServicePrincipal.ApplicationID = types.StringValue(resp.RemoteInfo.DatabricksAccountServicePrincipal.ApplicationID)
 				r.RemoteInfo.DatabricksAccountServicePrincipal.ResourceID = types.StringValue(resp.RemoteInfo.DatabricksAccountServicePrincipal.ResourceID)
+			}
+			if resp.RemoteInfo.DatabricksCatalog == nil {
+				r.RemoteInfo.DatabricksCatalog = nil
+			} else {
+				r.RemoteInfo.DatabricksCatalog = &tfTypes.DatabricksCatalog{}
+				r.RemoteInfo.DatabricksCatalog.FullName = types.StringValue(resp.RemoteInfo.DatabricksCatalog.FullName)
+				r.RemoteInfo.DatabricksCatalog.MetastoreID = types.StringValue(resp.RemoteInfo.DatabricksCatalog.MetastoreID)
+			}
+			if resp.RemoteInfo.DatabricksFunction == nil {
+				r.RemoteInfo.DatabricksFunction = nil
+			} else {
+				r.RemoteInfo.DatabricksFunction = &tfTypes.DatabricksCatalog{}
+				r.RemoteInfo.DatabricksFunction.FullName = types.StringValue(resp.RemoteInfo.DatabricksFunction.FullName)
+				r.RemoteInfo.DatabricksFunction.MetastoreID = types.StringValue(resp.RemoteInfo.DatabricksFunction.MetastoreID)
+			}
+			if resp.RemoteInfo.DatabricksModel == nil {
+				r.RemoteInfo.DatabricksModel = nil
+			} else {
+				r.RemoteInfo.DatabricksModel = &tfTypes.DatabricksCatalog{}
+				r.RemoteInfo.DatabricksModel.FullName = types.StringValue(resp.RemoteInfo.DatabricksModel.FullName)
+				r.RemoteInfo.DatabricksModel.MetastoreID = types.StringValue(resp.RemoteInfo.DatabricksModel.MetastoreID)
+			}
+			if resp.RemoteInfo.DatabricksSchema == nil {
+				r.RemoteInfo.DatabricksSchema = nil
+			} else {
+				r.RemoteInfo.DatabricksSchema = &tfTypes.DatabricksCatalog{}
+				r.RemoteInfo.DatabricksSchema.FullName = types.StringValue(resp.RemoteInfo.DatabricksSchema.FullName)
+				r.RemoteInfo.DatabricksSchema.MetastoreID = types.StringValue(resp.RemoteInfo.DatabricksSchema.MetastoreID)
+			}
+			if resp.RemoteInfo.DatabricksService == nil {
+				r.RemoteInfo.DatabricksService = nil
+			} else {
+				r.RemoteInfo.DatabricksService = &tfTypes.DatabricksCatalog{}
+				r.RemoteInfo.DatabricksService.FullName = types.StringValue(resp.RemoteInfo.DatabricksService.FullName)
+				r.RemoteInfo.DatabricksService.MetastoreID = types.StringValue(resp.RemoteInfo.DatabricksService.MetastoreID)
+			}
+			if resp.RemoteInfo.DatabricksVolume == nil {
+				r.RemoteInfo.DatabricksVolume = nil
+			} else {
+				r.RemoteInfo.DatabricksVolume = &tfTypes.DatabricksCatalog{}
+				r.RemoteInfo.DatabricksVolume.FullName = types.StringValue(resp.RemoteInfo.DatabricksVolume.FullName)
+				r.RemoteInfo.DatabricksVolume.MetastoreID = types.StringValue(resp.RemoteInfo.DatabricksVolume.MetastoreID)
 			}
 			if resp.RemoteInfo.DatadogRole == nil {
 				r.RemoteInfo.DatadogRole = nil
@@ -562,11 +622,29 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.TwingateResource = &tfTypes.AzureEnterpriseApp{}
 				r.RemoteInfo.TwingateResource.ResourceID = types.StringValue(resp.RemoteInfo.TwingateResource.ResourceID)
 			}
+			if resp.RemoteInfo.VercelProject == nil {
+				r.RemoteInfo.VercelProject = nil
+			} else {
+				r.RemoteInfo.VercelProject = &tfTypes.GcpProject{}
+				r.RemoteInfo.VercelProject.ProjectID = types.StringValue(resp.RemoteInfo.VercelProject.ProjectID)
+			}
+			if resp.RemoteInfo.VercelRole == nil {
+				r.RemoteInfo.VercelRole = nil
+			} else {
+				r.RemoteInfo.VercelRole = &tfTypes.ClickhouseRole{}
+				r.RemoteInfo.VercelRole.RoleID = types.StringValue(resp.RemoteInfo.VercelRole.RoleID)
+			}
 			if resp.RemoteInfo.WorkdayRole == nil {
 				r.RemoteInfo.WorkdayRole = nil
 			} else {
 				r.RemoteInfo.WorkdayRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.WorkdayRole.RoleID = types.StringValue(resp.RemoteInfo.WorkdayRole.RoleID)
+			}
+			if resp.RemoteInfo.WrikeUserType == nil {
+				r.RemoteInfo.WrikeUserType = nil
+			} else {
+				r.RemoteInfo.WrikeUserType = &tfTypes.WrikeUserType{}
+				r.RemoteInfo.WrikeUserType.UserTypeID = types.StringValue(resp.RemoteInfo.WrikeUserType.UserTypeID)
 			}
 			if resp.RemoteInfo.ZendeskRole == nil {
 				r.RemoteInfo.ZendeskRole = nil
@@ -620,6 +698,20 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 				var reviewerStages tfTypes.ReviewerStage
 
+				if reviewerStagesItem.Escalation == nil {
+					reviewerStages.Escalation = nil
+				} else {
+					reviewerStages.Escalation = &tfTypes.ReviewerStageEscalation{}
+					reviewerStages.Escalation.DelayMinutes = types.Int64Value(reviewerStagesItem.Escalation.DelayMinutes)
+					reviewerStages.Escalation.OwnerIds = make([]types.String, 0, len(reviewerStagesItem.Escalation.OwnerIds))
+					for _, v := range reviewerStagesItem.Escalation.OwnerIds {
+						reviewerStages.Escalation.OwnerIds = append(reviewerStages.Escalation.OwnerIds, types.StringValue(v))
+					}
+					reviewerStages.Escalation.UserIds = make([]types.String, 0, len(reviewerStagesItem.Escalation.UserIds))
+					for _, v := range reviewerStagesItem.Escalation.UserIds {
+						reviewerStages.Escalation.UserIds = append(reviewerStages.Escalation.UserIds, types.StringValue(v))
+					}
+				}
 				if reviewerStagesItem.Operator != nil {
 					reviewerStages.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
 				} else {
