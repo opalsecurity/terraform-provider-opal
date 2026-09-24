@@ -3622,6 +3622,48 @@ paths:
         - BearerAuth: []
       tags:
         - requests
+  /requests/{id}/escalate:
+    post:
+      summary: Escalate request to skip-manager
+      description: |
+        Escalates a pending access request to the target user's skip-level manager.
+        Only the request's requester may call this endpoint.
+      operationId: escalateRequest
+      parameters:
+        - description: The ID of the request to escalate.
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: The request was escalated, or was already approved or denied.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                required:
+                  - success
+        "400":
+          description: |
+            Unknown JSON fields in the request body, the request does not require
+            manager approval, or the target user has no manager / skip-manager set.
+        "403":
+          description: The authenticated user cannot escalate this request.
+        "404":
+          description: The request was not found.
+        "409":
+          description: |
+            The request has already been escalated, or the manager has already approved.
+      security:
+        - BearerAuth: []
+      tags:
+        - requests
   /requests/{id}/remind:
     post:
       summary: Send request reminder
@@ -5269,6 +5311,34 @@ paths:
       tags:
         - users
   /users/{user_id}:
+    get:
+      summary: Get user by ID
+      description: Returns a `User` object.
+      operationId: getUserByID
+      parameters:
+        - description: The ID of the user.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: true
+          in: path
+          name: user_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+          description: The requested `User`.
+        "404":
+          description: The user was not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - users
     delete:
       description: Deletes a user from your organization.
       operationId: deleteUser
@@ -6436,6 +6506,8 @@ components:
             $ref: "#/components/schemas/EntityItemTypeEnum"
         entityName:
           $ref: "#/components/schemas/EntityNameFilter"
+        entityDescription:
+          $ref: "#/components/schemas/EntityDescriptionFilter"
         entityTag:
           $ref: "#/components/schemas/EntityTagFilter"
         hrIdpStatus:
@@ -6817,6 +6889,21 @@ components:
           type: string
           description: The string value to match against the entity name.
           example: engineering
+    EntityDescriptionFilter:
+      type: object
+      required:
+        - string
+      description: >
+        Filters GROUP and RESOURCE entities by a case-insensitive substring of their description ("contains"). USER entities have no description and never match, in either polarity. `not` inverts the match within the resource/group domain ("does NOT contain"), so it still returns only resources/groups rather than sweeping in users.
+
+      properties:
+        string:
+          type: string
+          description: The substring to match against the entity description.
+          example: production
+        not:
+          type: boolean
+          description: Invert the match — return resources/groups whose description does NOT contain the substring.
     EntityTagFilter:
       type: object
       required:
@@ -7599,6 +7686,7 @@ components:
         - MANUAL
         - PRINCIPAL_MANAGER
         - ASSET_ADMIN_OWNER
+        - PRINCIPAL_SELF
       example: MANUAL
       type: string
     CampaignItemTargetTypeEnum:
@@ -7967,7 +8055,7 @@ components:
         - self_review_allowed
       type: object
     UARReviewerAssignmentPolicyEnum:
-      description: A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually. BY_OWNING_TEAM_ADMIN assigns reviews to resource admins in round-robin fashion. BY_OWNING_TEAM_ADMIN_ALL assigns reviews to all resource admins. BY_APPROVERS assigns reviews to resource approvers in round-robin fashion. BY_APPROVERS_ALL assigns reviews to all resource approvers.
+      description: A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually. BY_OWNING_TEAM_ADMIN assigns reviews to resource admins in round-robin fashion. BY_OWNING_TEAM_ADMIN_ALL assigns reviews to all resource admins. BY_APPROVERS assigns reviews to resource approvers in round-robin fashion. BY_APPROVERS_ALL assigns reviews to all resource approvers. BY_SELF assigns each item to the reviewed principal themselves.
       enum:
         - MANUALLY
         - BY_OWNING_TEAM_ADMIN
@@ -7975,6 +8063,7 @@ components:
         - BY_MANAGER
         - BY_APPROVERS
         - BY_APPROVERS_ALL
+        - BY_SELF
       example: MANUALLY
       type: string
     TagFilter:
@@ -8185,6 +8274,9 @@ components:
         - ZENDESK
         - ZOOM
         - RAMP
+        - WRIKE
+        - VERCEL
+        - AXIOM
       example: OKTA_DIRECTORY
       type: string
     EntityTypeEnum:
@@ -9454,6 +9546,12 @@ components:
           description: The user's position.
           example: Senior Engineer
           type: string
+        manager_id:
+          description: The ID of the user's manager. Null if the user has no manager.
+          example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+          format: uuid
+          nullable: true
+          type: string
         hr_idp_status:
           $ref: "#/components/schemas/UserHrIdpStatusEnum"
       required:
@@ -10283,6 +10381,8 @@ components:
         - LINEAR_TEAM
         - RAMP_DEPARTMENT
         - RAMP_LOCATION
+        - WRIKE_GROUP
+        - AXIOM_GROUP
       example: OPAL_GROUP
       type: string
     ResourceTypeEnum:
@@ -10372,6 +10472,7 @@ components:
         - GRAFANA_ROLE
         - CLICKHOUSE_DATABASE
         - CLICKHOUSE_TABLE
+        - CLICKHOUSE_CONSOLE_ROLE
         - TWINGATE_RESOURCE
         - ZENDESK_ROLE
         - HUBSPOT_ROLE
@@ -10384,6 +10485,18 @@ components:
         - LINEAR_PROJECT
         - RAMP_FUND
         - RAMP_ROLE
+        - WRIKE_USER_TYPE
+        - DATABRICKS_CATALOG
+        - DATABRICKS_SCHEMA
+        - DATABRICKS_VOLUME
+        - DATABRICKS_FUNCTION
+        - DATABRICKS_MODEL
+        - DATABRICKS_SERVICE
+        - DATABRICKS_MCP_SERVER
+        - VERCEL_ROLE
+        - VERCEL_PROJECT
+        - AXIOM_ROLE
+        - AXIOM_CUSTOM_ROLE
       example: AWS_IAM_ROLE
       type: string
     EntityItemTypeEnum:
@@ -10474,6 +10587,13 @@ components:
         - TELEPORT_ROLE
         - DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL
         - ILEVEL_ADVANCED_ROLE
+        - DATABRICKS_CATALOG
+        - DATABRICKS_SCHEMA
+        - DATABRICKS_VOLUME
+        - DATABRICKS_FUNCTION
+        - DATABRICKS_MODEL
+        - DATABRICKS_SERVICE
+        - DATABRICKS_MCP_SERVER
       example: OPAL_ROLE
       type: string
     VisibilityTypeEnum:
@@ -10803,7 +10923,7 @@ components:
           type: boolean
           default: False
         operator:
-          description: The operator of the reviewer stage. Admin and manager approval are also treated as reviewers.
+          description: The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. A stage that sets `escalation` must use `OR`; `AND` is rejected there, because the escalation timer joins the stage as an additional reviewer and would otherwise become a required approver that stalls every request until the timeout.
           enum:
             - AND
             - OR
@@ -10823,11 +10943,57 @@ components:
             type: string
             format: uuid
           type: array
+        escalation:
+          $ref: "#/components/schemas/ReviewerStageEscalation"
       type: object
       required:
         - operator
         - owner_ids
         - stage
+    ReviewerStageEscalation:
+      description: |-
+        Escalation for a reviewer stage. When set, the request advances to the
+        reviewers named here if nobody responds within delay_minutes. Timely
+        approval by any of the stage's own reviewers resolves the stage without
+        escalating.
+
+        owner_ids and user_ids name only who to escalate to; the stage's own
+        reviewers are added automatically and must not be repeated here. A
+        stage with owner_ids [X] escalating to Y sets escalation.owner_ids to
+        [Y], and reviewing after escalation is then open to both X and Y.
+
+        Because the stage's reviewers are unioned in rather than copied,
+        removing someone from the stage also removes them from the escalation.
+        At least one owner or user named here must not already be a reviewer
+        of the stage.
+      example:
+        delay_minutes: 60
+        owner_ids:
+          - 7870617d-e72a-47f5-a84c-693817ab4569
+      properties:
+        delay_minutes:
+          description: How long to wait for a response before escalating, in minutes. Between 1 and 1440 (24 hours).
+          example: 60
+          minimum: 1
+          maximum: 1440
+          type: integer
+        owner_ids:
+          description: The owners to escalate to. The stage's own owner_ids are added automatically and must not be repeated here.
+          items:
+            type: string
+            format: uuid
+          type: array
+          format: set
+        user_ids:
+          description: The users to escalate to. The stage's own service_user_ids are added automatically and must not be repeated here.
+          items:
+            type: string
+            format: uuid
+          type: array
+          format: set
+      type: object
+      required:
+        - delay_minutes
     MessageChannel:
       description: |-
         # MessageChannel Object
@@ -11356,6 +11522,26 @@ components:
           type: object
           required:
             - location_id
+        wrike_group:
+          description: Remote info for Wrike group.
+          properties:
+            group_id:
+              description: The ID of the Wrike group.
+              example: "KX7ZHLVG"
+              type: string
+          type: object
+          required:
+            - group_id
+        axiom_group:
+          description: Remote info for Axiom RBAC group.
+          properties:
+            group_id:
+              description: The ID of the Axiom group.
+              example: "grp_0123456789abcdef"
+              type: string
+          type: object
+          required:
+            - group_id
         docusign_signing_group:
           description: Remote info for Docusign signing group.
           properties:
@@ -12257,6 +12443,16 @@ components:
           type: object
           required:
             - database_name
+        clickhouse_console_role:
+          description: Remote info for ClickHouse Cloud console role.
+          properties:
+            role_id:
+              description: The UUID of the ClickHouse Cloud console role.
+              example: 123e4567-e89b-12d3-a456-426614174000
+              type: string
+          type: object
+          required:
+            - role_id
         clickhouse_table:
           description: Remote info for ClickHouse table.
           properties:
@@ -12402,6 +12598,146 @@ components:
           type: object
           required:
             - role
+        wrike_user_type:
+          description: Remote info for Wrike user type (license type).
+          properties:
+            user_type_id:
+              description: The Wrike user type ID (16-char UID from GET /user_types).
+              example: "KX7ZHLVGABCDEFGH"
+              type: string
+          type: object
+          required:
+            - user_type_id
+        databricks_catalog:
+          description: Remote info for Databricks Unity Catalog catalog.
+          properties:
+            metastore_id:
+              description: The ID of the Unity Catalog metastore the catalog belongs to.
+              example: 12345678-1234-1234-1234-123456789012
+              type: string
+            full_name:
+              description: The dot-qualified full name of the catalog (e.g. "catalog").
+              example: my_catalog
+              type: string
+          type: object
+          required:
+            - metastore_id
+            - full_name
+        databricks_schema:
+          description: Remote info for Databricks Unity Catalog schema.
+          properties:
+            metastore_id:
+              description: The ID of the Unity Catalog metastore the schema belongs to.
+              example: 12345678-1234-1234-1234-123456789012
+              type: string
+            full_name:
+              description: The dot-qualified full name of the schema (e.g. "catalog.schema").
+              example: my_catalog.my_schema
+              type: string
+          type: object
+          required:
+            - metastore_id
+            - full_name
+        databricks_volume:
+          description: Remote info for Databricks Unity Catalog volume.
+          properties:
+            metastore_id:
+              description: The ID of the Unity Catalog metastore the volume belongs to.
+              example: 12345678-1234-1234-1234-123456789012
+              type: string
+            full_name:
+              description: The dot-qualified full name of the volume (e.g. "catalog.schema.volume").
+              example: my_catalog.my_schema.my_volume
+              type: string
+          type: object
+          required:
+            - metastore_id
+            - full_name
+        databricks_function:
+          description: Remote info for Databricks Unity Catalog function.
+          properties:
+            metastore_id:
+              description: The ID of the Unity Catalog metastore the function belongs to.
+              example: 12345678-1234-1234-1234-123456789012
+              type: string
+            full_name:
+              description: The dot-qualified full name of the function (e.g. "catalog.schema.function").
+              example: my_catalog.my_schema.my_function
+              type: string
+          type: object
+          required:
+            - metastore_id
+            - full_name
+        databricks_model:
+          description: Remote info for Databricks Unity Catalog registered model.
+          properties:
+            metastore_id:
+              description: The ID of the Unity Catalog metastore the model belongs to.
+              example: 12345678-1234-1234-1234-123456789012
+              type: string
+            full_name:
+              description: The dot-qualified full name of the model (e.g. "catalog.schema.model").
+              example: my_catalog.my_schema.my_model
+              type: string
+          type: object
+          required:
+            - metastore_id
+            - full_name
+        databricks_service:
+          description: Remote info for Databricks AI Gateway service.
+          properties:
+            metastore_id:
+              description: The ID of the Unity Catalog metastore the service belongs to.
+              example: 12345678-1234-1234-1234-123456789012
+              type: string
+            full_name:
+              description: The dot-qualified full name of the service (e.g. "catalog.schema.service").
+              example: my_catalog.my_schema.my_service
+              type: string
+          type: object
+          required:
+            - metastore_id
+            - full_name
+        vercel_role:
+          description: Remote info for Vercel team role.
+          properties:
+            role_id:
+              description: The Vercel team role identifier (e.g. OWNER, MEMBER, CONTRIBUTOR).
+              example: CONTRIBUTOR
+              type: string
+          type: object
+          required:
+            - role_id
+        vercel_project:
+          description: Remote info for Vercel project.
+          properties:
+            project_id:
+              description: The Vercel project id.
+              example: prj_xxxxxxxx
+              type: string
+          type: object
+          required:
+            - project_id
+        axiom_role:
+          description: Remote info for Axiom base role.
+          properties:
+            role_id:
+              description: The ID of the Axiom base role.
+              example: "role_member"
+              type: string
+          type: object
+          required:
+            - role_id
+        axiom_custom_role:
+          description: Remote info for Axiom custom RBAC role.
+          properties:
+            role_id:
+              description: The ID of the Axiom custom role.
+              example: "role_0123456789abcdef"
+              type: string
+          type: object
+          required:
+            - role_id
       type: object
     RiskSensitivityEnum:
       type: string

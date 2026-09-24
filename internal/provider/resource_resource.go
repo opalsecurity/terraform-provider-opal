@@ -6,6 +6,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -644,6 +645,52 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						},
 						Description: `Remote info for AWS RDS instance. Requires replacement if changed.`,
 					},
+					"axiom_custom_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"role_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Axiom custom role. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Axiom custom RBAC role. Requires replacement if changed.`,
+					},
+					"axiom_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"role_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Axiom base role. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Axiom base role. Requires replacement if changed.`,
+					},
 					"azure_enterprise_app": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -943,6 +990,29 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						},
 						Description: `Remote info for Azure virtual machine. Requires replacement if changed.`,
 					},
+					"clickhouse_console_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"role_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The UUID of the ClickHouse Cloud console role. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for ClickHouse Cloud console role. Requires replacement if changed.`,
+					},
 					"clickhouse_database": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -1116,6 +1186,216 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 							},
 						},
 						Description: `Remote info for Databricks account service principal. Requires replacement if changed.`,
+					},
+					"databricks_catalog": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"full_name": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The dot-qualified full name of the catalog (e.g. "catalog"). Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+							"metastore_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Unity Catalog metastore the catalog belongs to. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Databricks Unity Catalog catalog. Requires replacement if changed.`,
+					},
+					"databricks_function": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"full_name": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The dot-qualified full name of the function (e.g. "catalog.schema.function"). Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+							"metastore_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Unity Catalog metastore the function belongs to. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Databricks Unity Catalog function. Requires replacement if changed.`,
+					},
+					"databricks_model": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"full_name": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The dot-qualified full name of the model (e.g. "catalog.schema.model"). Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+							"metastore_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Unity Catalog metastore the model belongs to. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Databricks Unity Catalog registered model. Requires replacement if changed.`,
+					},
+					"databricks_schema": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"full_name": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The dot-qualified full name of the schema (e.g. "catalog.schema"). Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+							"metastore_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Unity Catalog metastore the schema belongs to. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Databricks Unity Catalog schema. Requires replacement if changed.`,
+					},
+					"databricks_service": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"full_name": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The dot-qualified full name of the service (e.g. "catalog.schema.service"). Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+							"metastore_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Unity Catalog metastore the service belongs to. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Databricks AI Gateway service. Requires replacement if changed.`,
+					},
+					"databricks_volume": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"full_name": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The dot-qualified full name of the volume (e.g. "catalog.schema.volume"). Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+							"metastore_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Unity Catalog metastore the volume belongs to. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Databricks Unity Catalog volume. Requires replacement if changed.`,
 					},
 					"datadog_role": schema.SingleNestedAttribute{
 						Computed: true,
@@ -2395,6 +2675,52 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						},
 						Description: `Remote info for Twingate resource. Requires replacement if changed.`,
 					},
+					"vercel_project": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"project_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The Vercel project id. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Vercel project. Requires replacement if changed.`,
+					},
+					"vercel_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"role_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The Vercel team role identifier (e.g. OWNER, MEMBER, CONTRIBUTOR). Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Vercel team role. Requires replacement if changed.`,
+					},
 					"workday_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -2417,6 +2743,29 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 							},
 						},
 						Description: `Remote info for Workday role. Requires replacement if changed.`,
+					},
+					"wrike_user_type": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"user_type_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The Wrike user type ID (16-char UID from GET /user_types). Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Wrike user type (license type). Requires replacement if changed.`,
 					},
 					"zendesk_role": schema.SingleNestedAttribute{
 						Computed: true,
@@ -2651,6 +3000,59 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 									speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 								},
 								Attributes: map[string]schema.Attribute{
+									"escalation": schema.SingleNestedAttribute{
+										Computed: true,
+										Optional: true,
+										PlanModifiers: []planmodifier.Object{
+											speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+										},
+										Attributes: map[string]schema.Attribute{
+											"delay_minutes": schema.Int64Attribute{
+												Computed: true,
+												Optional: true,
+												PlanModifiers: []planmodifier.Int64{
+													speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
+												},
+												Description: `How long to wait for a response before escalating, in minutes. Between 1 and 1440 (24 hours). Not Null`,
+												Validators: []validator.Int64{
+													speakeasy_int64validators.NotNull(),
+													int64validator.Between(1, 1440),
+												},
+											},
+											"owner_ids": schema.SetAttribute{
+												Computed: true,
+												Optional: true,
+												PlanModifiers: []planmodifier.Set{
+													speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
+												},
+												ElementType: types.StringType,
+												Description: `The owners to escalate to. The stage's own owner_ids are added automatically and must not be repeated here.`,
+											},
+											"user_ids": schema.SetAttribute{
+												Computed: true,
+												Optional: true,
+												PlanModifiers: []planmodifier.Set{
+													speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
+												},
+												ElementType: types.StringType,
+												Description: `The users to escalate to. The stage's own service_user_ids are added automatically and must not be repeated here.`,
+											},
+										},
+										MarkdownDescription: `Escalation for a reviewer stage. When set, the request advances to the` + "\n" +
+											`reviewers named here if nobody responds within delay_minutes. Timely` + "\n" +
+											`approval by any of the stage's own reviewers resolves the stage without` + "\n" +
+											`escalating.` + "\n" +
+											`` + "\n" +
+											`owner_ids and user_ids name only who to escalate to; the stage's own` + "\n" +
+											`reviewers are added automatically and must not be repeated here. A` + "\n" +
+											`stage with owner_ids [X] escalating to Y sets escalation.owner_ids to` + "\n" +
+											`[Y], and reviewing after escalation is then open to both X and Y.` + "\n" +
+											`` + "\n" +
+											`Because the stage's reviewers are unioned in rather than copied,` + "\n" +
+											`removing someone from the stage also removes them from the escalation.` + "\n" +
+											`At least one owner or user named here must not already be a reviewer` + "\n" +
+											`of the stage.`,
+									},
 									"operator": schema.StringAttribute{
 										Computed: true,
 										Optional: true,
@@ -2658,7 +3060,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 										PlanModifiers: []planmodifier.String{
 											speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 										},
-										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. Default: "AND"; must be one of ["AND", "OR"]`,
+										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. A stage that sets ` + "`" + `escalation` + "`" + ` must use ` + "`" + `OR` + "`" + `; ` + "`" + `AND` + "`" + ` is rejected there, because the escalation timer joins the stage as an additional reviewer and would otherwise become a required approver that stalls every request until the timeout. Default: "AND"; must be one of ["AND", "OR"]`,
 										Validators: []validator.String{
 											stringvalidator.OneOf(
 												"AND",
@@ -2736,7 +3138,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GCP_BILLING_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE", "LINEAR_ORGANIZATION", "LINEAR_PROJECT", "RAMP_FUND", "RAMP_ROLE"]; Requires replacement if changed.`,
+				Description: `The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GCP_BILLING_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "CLICKHOUSE_CONSOLE_ROLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE", "LINEAR_ORGANIZATION", "LINEAR_PROJECT", "RAMP_FUND", "RAMP_ROLE", "WRIKE_USER_TYPE", "DATABRICKS_CATALOG", "DATABRICKS_SCHEMA", "DATABRICKS_VOLUME", "DATABRICKS_FUNCTION", "DATABRICKS_MODEL", "DATABRICKS_SERVICE", "DATABRICKS_MCP_SERVER", "VERCEL_ROLE", "VERCEL_PROJECT", "AXIOM_ROLE", "AXIOM_CUSTOM_ROLE"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"AWS_IAM_ROLE",
@@ -2823,6 +3225,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						"GRAFANA_ROLE",
 						"CLICKHOUSE_DATABASE",
 						"CLICKHOUSE_TABLE",
+						"CLICKHOUSE_CONSOLE_ROLE",
 						"TWINGATE_RESOURCE",
 						"ZENDESK_ROLE",
 						"HUBSPOT_ROLE",
@@ -2835,6 +3238,18 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						"LINEAR_PROJECT",
 						"RAMP_FUND",
 						"RAMP_ROLE",
+						"WRIKE_USER_TYPE",
+						"DATABRICKS_CATALOG",
+						"DATABRICKS_SCHEMA",
+						"DATABRICKS_VOLUME",
+						"DATABRICKS_FUNCTION",
+						"DATABRICKS_MODEL",
+						"DATABRICKS_SERVICE",
+						"DATABRICKS_MCP_SERVER",
+						"VERCEL_ROLE",
+						"VERCEL_PROJECT",
+						"AXIOM_ROLE",
+						"AXIOM_CUSTOM_ROLE",
 					),
 				},
 			},

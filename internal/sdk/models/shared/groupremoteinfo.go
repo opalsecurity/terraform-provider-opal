@@ -29,6 +29,19 @@ func (a *AwsSsoGroup) GetGroupID() string {
 	return a.GroupID
 }
 
+// AxiomGroup - Remote info for Axiom RBAC group.
+type AxiomGroup struct {
+	// The ID of the Axiom group.
+	GroupID string `json:"group_id"`
+}
+
+func (a *AxiomGroup) GetGroupID() string {
+	if a == nil {
+		return ""
+	}
+	return a.GroupID
+}
+
 // AzureAdMicrosoft365Group - Remote info for Microsoft Entra ID Microsoft 365 group.
 type AzureAdMicrosoft365Group struct {
 	// The id of the Microsoft Entra ID Microsoft 365 group.
@@ -470,6 +483,19 @@ func (w *WorkdayUserSecurityGroup) GetGroupID() string {
 	return w.GroupID
 }
 
+// WrikeGroup - Remote info for Wrike group.
+type WrikeGroup struct {
+	// The ID of the Wrike group.
+	GroupID string `json:"group_id"`
+}
+
+func (w *WrikeGroup) GetGroupID() string {
+	if w == nil {
+		return ""
+	}
+	return w.GroupID
+}
+
 // ZendeskGroup - Remote info for Zendesk group.
 type ZendeskGroup struct {
 	// The ID of the Zendesk group.
@@ -515,6 +541,8 @@ type GroupRemoteInfo struct {
 	ActiveDirectoryGroup *ActiveDirectoryGroup `json:"active_directory_group,omitempty"`
 	// Remote info for AWS SSO group.
 	AwsSsoGroup *AwsSsoGroup `json:"aws_sso_group,omitempty"`
+	// Remote info for Axiom RBAC group.
+	AxiomGroup *AxiomGroup `json:"axiom_group,omitempty"`
 	// Remote info for Microsoft Entra ID Microsoft 365 group.
 	AzureAdMicrosoft365Group *AzureAdMicrosoft365Group `json:"azure_ad_microsoft_365_group,omitempty"`
 	// Remote info for Microsoft Entra ID Security group.
@@ -581,6 +609,8 @@ type GroupRemoteInfo struct {
 	TwingateGroupSynced *TwingateGroupSynced `json:"twingate_group_synced,omitempty"`
 	// Remote info for Workday User Security group.
 	WorkdayUserSecurityGroup *WorkdayUserSecurityGroup `json:"workday_user_security_group,omitempty"`
+	// Remote info for Wrike group.
+	WrikeGroup *WrikeGroup `json:"wrike_group,omitempty"`
 	// Remote info for Zendesk group.
 	ZendeskGroup *ZendeskGroup `json:"zendesk_group,omitempty"`
 	// Remote info for Zendesk organization.
@@ -601,6 +631,13 @@ func (g *GroupRemoteInfo) GetAwsSsoGroup() *AwsSsoGroup {
 		return nil
 	}
 	return g.AwsSsoGroup
+}
+
+func (g *GroupRemoteInfo) GetAxiomGroup() *AxiomGroup {
+	if g == nil {
+		return nil
+	}
+	return g.AxiomGroup
 }
 
 func (g *GroupRemoteInfo) GetAzureAdMicrosoft365Group() *AzureAdMicrosoft365Group {
@@ -832,6 +869,13 @@ func (g *GroupRemoteInfo) GetWorkdayUserSecurityGroup() *WorkdayUserSecurityGrou
 		return nil
 	}
 	return g.WorkdayUserSecurityGroup
+}
+
+func (g *GroupRemoteInfo) GetWrikeGroup() *WrikeGroup {
+	if g == nil {
+		return nil
+	}
+	return g.WrikeGroup
 }
 
 func (g *GroupRemoteInfo) GetZendeskGroup() *ZendeskGroup {

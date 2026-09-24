@@ -32,5 +32,6 @@ data "opal_user" "my_user" {
 - `first_name` (String) The first name of the user.
 - `hr_idp_status` (String) User status pulled from an HR/IDP provider.
 - `last_name` (String) The last name of the user.
+- `manager_id` (String) The ID of the user's manager. Null if the user has no manager.
 - `name` (String) The full name of the user.
 - `position` (String) The user's position.

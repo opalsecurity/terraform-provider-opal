@@ -44,6 +44,9 @@ resource "opal_group" "my_group" {
     aws_sso_group = {
       group_id = 898931321
     }
+    axiom_group = {
+      group_id = "grp_0123456789abcdef"
+    }
     azure_ad_microsoft_365_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
@@ -144,6 +147,9 @@ resource "opal_group" "my_group" {
     workday_user_security_group = {
       group_id = "123abc456def"
     }
+    wrike_group = {
+      group_id = "KX7ZHLVG"
+    }
     zendesk_group = {
       group_id = "12345"
     }
@@ -176,6 +182,15 @@ resource "opal_group" "my_group" {
       require_support_ticket         = false
       reviewer_stages = [
         {
+          escalation = {
+            delay_minutes = 60
+            owner_ids = [
+              "b5a8a5e8-066f-4232-964d-91a0265aca0e"
+            ]
+            user_ids = [
+              "060cafc9-9b67-49ba-89b2-adc4d636bfb4"
+            ]
+          }
           operator = "AND"
           owner_ids = [
             "f653097c-5b74-48b8-a26c-33571f9211ff"
@@ -205,7 +220,7 @@ resource "opal_group" "my_group" {
 ### Required
 
 - `app_id` (String) The ID of the app for the group. Requires replacement if changed.
-- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION"]; Requires replacement if changed.
+- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP"]; Requires replacement if changed.
 - `name` (String) The name of the group.
 
 ### Optional
@@ -247,6 +262,7 @@ Optional:
 
 - `active_directory_group` (Attributes) Remote info for Active Directory group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--active_directory_group))
 - `aws_sso_group` (Attributes) Remote info for AWS SSO group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_sso_group))
+- `axiom_group` (Attributes) Remote info for Axiom RBAC group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--axiom_group))
 - `azure_ad_microsoft_365_group` (Attributes) Remote info for Microsoft Entra ID Microsoft 365 group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_ad_microsoft_365_group))
 - `azure_ad_security_group` (Attributes) Remote info for Microsoft Entra ID Security group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_ad_security_group))
 - `clickhouse_role` (Attributes) Remote info for ClickHouse role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--clickhouse_role))
@@ -280,6 +296,7 @@ Optional:
 - `twingate_group` (Attributes) Remote info for Twingate group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--twingate_group))
 - `twingate_group_synced` (Attributes) Remote info for Twingate synced group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--twingate_group_synced))
 - `workday_user_security_group` (Attributes) Remote info for Workday User Security group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--workday_user_security_group))
+- `wrike_group` (Attributes) Remote info for Wrike group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--wrike_group))
 - `zendesk_group` (Attributes) Remote info for Zendesk group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--zendesk_group))
 - `zendesk_organization` (Attributes) Remote info for Zendesk organization. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--zendesk_organization))
 - `zoom_group` (Attributes) Remote info for Zoom group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--zoom_group))
@@ -298,6 +315,14 @@ Optional:
 Optional:
 
 - `group_id` (String) The id of the AWS SSO group. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--axiom_group"></a>
+### Nested Schema for `remote_info.axiom_group`
+
+Optional:
+
+- `group_id` (String) The ID of the Axiom group. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--azure_ad_microsoft_365_group"></a>
@@ -565,6 +590,14 @@ Optional:
 - `group_id` (String) The id of the Workday User Security group. Not Null; Requires replacement if changed.
 
 
+<a id="nestedatt--remote_info--wrike_group"></a>
+### Nested Schema for `remote_info.wrike_group`
+
+Optional:
+
+- `group_id` (String) The ID of the Wrike group. Not Null; Requires replacement if changed.
+
+
 <a id="nestedatt--remote_info--zendesk_group"></a>
 ### Nested Schema for `remote_info.zendesk_group`
 
@@ -622,11 +655,35 @@ Optional:
 
 Optional:
 
-- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. Default: "AND"; must be one of ["AND", "OR"]
+- `escalation` (Attributes) Escalation for a reviewer stage. When set, the request advances to the
+reviewers named here if nobody responds within delay_minutes. Timely
+approval by any of the stage's own reviewers resolves the stage without
+escalating.
+
+owner_ids and user_ids name only who to escalate to; the stage's own
+reviewers are added automatically and must not be repeated here. A
+stage with owner_ids [X] escalating to Y sets escalation.owner_ids to
+[Y], and reviewing after escalation is then open to both X and Y.
+
+Because the stage's reviewers are unioned in rather than copied,
+removing someone from the stage also removes them from the escalation.
+At least one owner or user named here must not already be a reviewer
+of the stage. (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages--escalation))
+- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. A stage that sets `escalation` must use `OR`; `AND` is rejected there, because the escalation timer joins the stage as an additional reviewer and would otherwise become a required approver that stalls every request until the timeout. Default: "AND"; must be one of ["AND", "OR"]
 - `owner_ids` (Set of String) The IDs of owners assigned as reviewers for this stage. Not Null
 - `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval. Default: false
 - `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval. Default: false
 - `service_user_ids` (List of String) The IDs of service users assigned as reviewers for this stage.
+
+<a id="nestedatt--request_configurations--reviewer_stages--escalation"></a>
+### Nested Schema for `request_configurations.reviewer_stages.escalation`
+
+Optional:
+
+- `delay_minutes` (Number) How long to wait for a response before escalating, in minutes. Between 1 and 1440 (24 hours). Not Null
+- `owner_ids` (Set of String) The owners to escalate to. The stage's own owner_ids are added automatically and must not be repeated here.
+- `user_ids` (Set of String) The users to escalate to. The stage's own service_user_ids are added automatically and must not be repeated here.
+
 
 
 

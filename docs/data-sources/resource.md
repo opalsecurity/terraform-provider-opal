@@ -76,6 +76,8 @@ Read-Only:
 - `aws_permission_set` (Attributes) Remote info for AWS Identity Center permission set. (see [below for nested schema](#nestedatt--remote_info--aws_permission_set))
 - `aws_rds_cluster` (Attributes) Remote info for AWS RDS cluster. (see [below for nested schema](#nestedatt--remote_info--aws_rds_cluster))
 - `aws_rds_instance` (Attributes) Remote info for AWS RDS instance. (see [below for nested schema](#nestedatt--remote_info--aws_rds_instance))
+- `axiom_custom_role` (Attributes) Remote info for Axiom custom RBAC role. (see [below for nested schema](#nestedatt--remote_info--axiom_custom_role))
+- `axiom_role` (Attributes) Remote info for Axiom base role. (see [below for nested schema](#nestedatt--remote_info--axiom_role))
 - `azure_enterprise_app` (Attributes) Remote info for Azure Enterprise App. (see [below for nested schema](#nestedatt--remote_info--azure_enterprise_app))
 - `azure_entra_id_role` (Attributes) Remote info for Azure Entra ID role. (see [below for nested schema](#nestedatt--remote_info--azure_entra_id_role))
 - `azure_management_group` (Attributes) Remote info for Azure management group. (see [below for nested schema](#nestedatt--remote_info--azure_management_group))
@@ -89,12 +91,19 @@ Read-Only:
 - `azure_subscription` (Attributes) Remote info for Azure subscription. (see [below for nested schema](#nestedatt--remote_info--azure_subscription))
 - `azure_user_assigned_managed_identity` (Attributes) Remote info for Azure user assigned managed identity. (see [below for nested schema](#nestedatt--remote_info--azure_user_assigned_managed_identity))
 - `azure_virtual_machine` (Attributes) Remote info for Azure virtual machine. (see [below for nested schema](#nestedatt--remote_info--azure_virtual_machine))
+- `clickhouse_console_role` (Attributes) Remote info for ClickHouse Cloud console role. (see [below for nested schema](#nestedatt--remote_info--clickhouse_console_role))
 - `clickhouse_database` (Attributes) Remote info for ClickHouse database. (see [below for nested schema](#nestedatt--remote_info--clickhouse_database))
 - `clickhouse_table` (Attributes) Remote info for ClickHouse table. (see [below for nested schema](#nestedatt--remote_info--clickhouse_table))
 - `coupa_role` (Attributes) Remote info for Coupa role. (see [below for nested schema](#nestedatt--remote_info--coupa_role))
 - `cursor_organization` (Attributes) Remote info for a Cursor organization. (see [below for nested schema](#nestedatt--remote_info--cursor_organization))
 - `custom_connector` (Attributes) Remote info for a custom connector resource. (see [below for nested schema](#nestedatt--remote_info--custom_connector))
 - `databricks_account_service_principal` (Attributes) Remote info for Databricks account service principal. (see [below for nested schema](#nestedatt--remote_info--databricks_account_service_principal))
+- `databricks_catalog` (Attributes) Remote info for Databricks Unity Catalog catalog. (see [below for nested schema](#nestedatt--remote_info--databricks_catalog))
+- `databricks_function` (Attributes) Remote info for Databricks Unity Catalog function. (see [below for nested schema](#nestedatt--remote_info--databricks_function))
+- `databricks_model` (Attributes) Remote info for Databricks Unity Catalog registered model. (see [below for nested schema](#nestedatt--remote_info--databricks_model))
+- `databricks_schema` (Attributes) Remote info for Databricks Unity Catalog schema. (see [below for nested schema](#nestedatt--remote_info--databricks_schema))
+- `databricks_service` (Attributes) Remote info for Databricks AI Gateway service. (see [below for nested schema](#nestedatt--remote_info--databricks_service))
+- `databricks_volume` (Attributes) Remote info for Databricks Unity Catalog volume. (see [below for nested schema](#nestedatt--remote_info--databricks_volume))
 - `datadog_role` (Attributes) Remote info for Datadog role. (see [below for nested schema](#nestedatt--remote_info--datadog_role))
 - `datastax_astra_role` (Attributes) Remote info for an Astra role. (see [below for nested schema](#nestedatt--remote_info--datastax_astra_role))
 - `devin_organization` (Attributes) Remote info for Devin organization. (see [below for nested schema](#nestedatt--remote_info--devin_organization))
@@ -143,7 +152,10 @@ Read-Only:
 - `tailscale_ssh` (Attributes) Remote info for Tailscale SSH tag. (see [below for nested schema](#nestedatt--remote_info--tailscale_ssh))
 - `teleport_role` (Attributes) Remote info for Teleport role. (see [below for nested schema](#nestedatt--remote_info--teleport_role))
 - `twingate_resource` (Attributes) Remote info for Twingate resource. (see [below for nested schema](#nestedatt--remote_info--twingate_resource))
+- `vercel_project` (Attributes) Remote info for Vercel project. (see [below for nested schema](#nestedatt--remote_info--vercel_project))
+- `vercel_role` (Attributes) Remote info for Vercel team role. (see [below for nested schema](#nestedatt--remote_info--vercel_role))
 - `workday_role` (Attributes) Remote info for Workday role. (see [below for nested schema](#nestedatt--remote_info--workday_role))
+- `wrike_user_type` (Attributes) Remote info for Wrike user type (license type). (see [below for nested schema](#nestedatt--remote_info--wrike_user_type))
 - `zendesk_role` (Attributes) Remote info for Zendesk custom role. (see [below for nested schema](#nestedatt--remote_info--zendesk_role))
 - `zoom_license` (Attributes) Remote info for Zoom license (user type). (see [below for nested schema](#nestedatt--remote_info--zoom_license))
 - `zoom_role` (Attributes) Remote info for Zoom role. (see [below for nested schema](#nestedatt--remote_info--zoom_role))
@@ -251,6 +263,22 @@ Read-Only:
 - `resource_id` (String) The resourceId of the RDS instance.
 
 
+<a id="nestedatt--remote_info--axiom_custom_role"></a>
+### Nested Schema for `remote_info.axiom_custom_role`
+
+Read-Only:
+
+- `role_id` (String) The ID of the Axiom custom role.
+
+
+<a id="nestedatt--remote_info--axiom_role"></a>
+### Nested Schema for `remote_info.axiom_role`
+
+Read-Only:
+
+- `role_id` (String) The ID of the Axiom base role.
+
+
 <a id="nestedatt--remote_info--azure_enterprise_app"></a>
 ### Nested Schema for `remote_info.azure_enterprise_app`
 
@@ -355,6 +383,14 @@ Read-Only:
 - `resource_id` (String) The ARM resource ID of the virtual machine.
 
 
+<a id="nestedatt--remote_info--clickhouse_console_role"></a>
+### Nested Schema for `remote_info.clickhouse_console_role`
+
+Read-Only:
+
+- `role_id` (String) The UUID of the ClickHouse Cloud console role.
+
+
 <a id="nestedatt--remote_info--clickhouse_database"></a>
 ### Nested Schema for `remote_info.clickhouse_database`
 
@@ -404,6 +440,60 @@ Read-Only:
 
 - `application_id` (String) The application ID of the service principal.
 - `resource_id` (String) The resource ID of the service principal.
+
+
+<a id="nestedatt--remote_info--databricks_catalog"></a>
+### Nested Schema for `remote_info.databricks_catalog`
+
+Read-Only:
+
+- `full_name` (String) The dot-qualified full name of the catalog (e.g. "catalog").
+- `metastore_id` (String) The ID of the Unity Catalog metastore the catalog belongs to.
+
+
+<a id="nestedatt--remote_info--databricks_function"></a>
+### Nested Schema for `remote_info.databricks_function`
+
+Read-Only:
+
+- `full_name` (String) The dot-qualified full name of the function (e.g. "catalog.schema.function").
+- `metastore_id` (String) The ID of the Unity Catalog metastore the function belongs to.
+
+
+<a id="nestedatt--remote_info--databricks_model"></a>
+### Nested Schema for `remote_info.databricks_model`
+
+Read-Only:
+
+- `full_name` (String) The dot-qualified full name of the model (e.g. "catalog.schema.model").
+- `metastore_id` (String) The ID of the Unity Catalog metastore the model belongs to.
+
+
+<a id="nestedatt--remote_info--databricks_schema"></a>
+### Nested Schema for `remote_info.databricks_schema`
+
+Read-Only:
+
+- `full_name` (String) The dot-qualified full name of the schema (e.g. "catalog.schema").
+- `metastore_id` (String) The ID of the Unity Catalog metastore the schema belongs to.
+
+
+<a id="nestedatt--remote_info--databricks_service"></a>
+### Nested Schema for `remote_info.databricks_service`
+
+Read-Only:
+
+- `full_name` (String) The dot-qualified full name of the service (e.g. "catalog.schema.service").
+- `metastore_id` (String) The ID of the Unity Catalog metastore the service belongs to.
+
+
+<a id="nestedatt--remote_info--databricks_volume"></a>
+### Nested Schema for `remote_info.databricks_volume`
+
+Read-Only:
+
+- `full_name` (String) The dot-qualified full name of the volume (e.g. "catalog.schema.volume").
+- `metastore_id` (String) The ID of the Unity Catalog metastore the volume belongs to.
 
 
 <a id="nestedatt--remote_info--datadog_role"></a>
@@ -805,12 +895,36 @@ Read-Only:
 - `resource_id` (String) The id of the Twingate resource.
 
 
+<a id="nestedatt--remote_info--vercel_project"></a>
+### Nested Schema for `remote_info.vercel_project`
+
+Read-Only:
+
+- `project_id` (String) The Vercel project id.
+
+
+<a id="nestedatt--remote_info--vercel_role"></a>
+### Nested Schema for `remote_info.vercel_role`
+
+Read-Only:
+
+- `role_id` (String) The Vercel team role identifier (e.g. OWNER, MEMBER, CONTRIBUTOR).
+
+
 <a id="nestedatt--remote_info--workday_role"></a>
 ### Nested Schema for `remote_info.workday_role`
 
 Read-Only:
 
 - `role_id` (String) The id of the role.
+
+
+<a id="nestedatt--remote_info--wrike_user_type"></a>
+### Nested Schema for `remote_info.wrike_user_type`
+
+Read-Only:
+
+- `user_type_id` (String) The Wrike user type ID (16-char UID from GET /user_types).
 
 
 <a id="nestedatt--remote_info--zendesk_role"></a>
@@ -870,11 +984,35 @@ Read-Only:
 
 Read-Only:
 
-- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers.
+- `escalation` (Attributes) Escalation for a reviewer stage. When set, the request advances to the
+reviewers named here if nobody responds within delay_minutes. Timely
+approval by any of the stage's own reviewers resolves the stage without
+escalating.
+
+owner_ids and user_ids name only who to escalate to; the stage's own
+reviewers are added automatically and must not be repeated here. A
+stage with owner_ids [X] escalating to Y sets escalation.owner_ids to
+[Y], and reviewing after escalation is then open to both X and Y.
+
+Because the stage's reviewers are unioned in rather than copied,
+removing someone from the stage also removes them from the escalation.
+At least one owner or user named here must not already be a reviewer
+of the stage. (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages--escalation))
+- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. A stage that sets `escalation` must use `OR`; `AND` is rejected there, because the escalation timer joins the stage as an additional reviewer and would otherwise become a required approver that stalls every request until the timeout.
 - `owner_ids` (Set of String) The IDs of owners assigned as reviewers for this stage.
 - `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval.
 - `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval.
 - `service_user_ids` (List of String) The IDs of service users assigned as reviewers for this stage.
+
+<a id="nestedatt--request_configurations--reviewer_stages--escalation"></a>
+### Nested Schema for `request_configurations.reviewer_stages.escalation`
+
+Read-Only:
+
+- `delay_minutes` (Number) How long to wait for a response before escalating, in minutes. Between 1 and 1440 (24 hours).
+- `owner_ids` (Set of String) The owners to escalate to. The stage's own owner_ids are added automatically and must not be repeated here.
+- `user_ids` (Set of String) The users to escalate to. The stage's own service_user_ids are added automatically and must not be repeated here.
+
 
 
 
