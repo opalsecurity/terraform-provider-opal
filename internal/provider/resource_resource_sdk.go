@@ -11,6 +11,7 @@ import (
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/operations"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/optionalnullable"
 )
 
 func (r *ResourceResourceModel) RefreshFromOperationsGetResourceVisibilityResponseBody(ctx context.Context, resp *operations.GetResourceVisibilityResponseBody) diag.Diagnostics {
@@ -772,7 +773,11 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.
 	var diags diag.Diagnostics
 
 	r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
-	r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
+	if val, ok := resp.ConfigurationTemplateID.Get(); ok {
+		r.ConfigurationTemplateID = types.StringPointerValue(val)
+	} else {
+		r.ConfigurationTemplateID = types.StringNull()
+	}
 	r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 	r.Description = types.StringPointerValue(resp.Description)
 	r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)
@@ -2140,11 +2145,14 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 	} else {
 		adminOwnerID = nil
 	}
-	configurationTemplateID := new(string)
-	if !r.ConfigurationTemplateID.IsUnknown() && !r.ConfigurationTemplateID.IsNull() {
-		*configurationTemplateID = r.ConfigurationTemplateID.ValueString()
-	} else {
-		configurationTemplateID = nil
+	// Hand-edited for EPRD-3921: unknown → omit; null → explicit JSON null (unlink); value → UUID.
+	var configurationTemplateID optionalnullable.OptionalNullable[string]
+	if !r.ConfigurationTemplateID.IsUnknown() {
+		if r.ConfigurationTemplateID.IsNull() {
+			configurationTemplateID = optionalnullable.From[string](nil)
+		} else {
+			configurationTemplateID = optionalnullable.From(r.ConfigurationTemplateID.ValueStringPointer())
+		}
 	}
 	customRequestNotification := new(string)
 	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
