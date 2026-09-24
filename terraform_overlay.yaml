@@ -1551,6 +1551,12 @@ actions:
   - target: $["components"]["schemas"]["ReviewerStage"]["properties"]["owner_ids"]
     update:
       format: set
+  - target: $["components"]["schemas"]["ReviewerStageEscalation"]["properties"]["owner_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["ReviewerStageEscalation"]["properties"]["user_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["ReviewerStage"]["required"][*]
     remove: true
   - target: $["components"]["schemas"]["ReviewerStage"]["required"]
