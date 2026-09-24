@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+ - Supports unlinking `configuration_template_id` on `opal_group` and `opal_resource` by sending JSON null (forks the template into a private configuration). Clearing the attribute in Terraform, together with `visibility` and `request_configurations`, unlinks; omit the attribute to leave linkage unchanged.
+
 ## v3.7.4
  - Adds `escalation` to `reviewer_stages` on `opal_resource`, `opal_group`, and `opal_configuration_template` (and related data sources), so Terraform can manage reviewer-stage escalation: a `delay_minutes` timeout plus the owners and service users the request escalates to. `owner_ids` and `user_ids` are sets, so the order they are written in does not produce a diff.
  - Regenerates the provider SDK from the current OpenAPI, picking up additions accumulated since v3.7.2: Wrike group and user-type remote info, Vercel project and role remote info, Unity Catalog and ClickHouse and Axiom resource types, and `reviewer_assignment_policy` on access review campaigns.
