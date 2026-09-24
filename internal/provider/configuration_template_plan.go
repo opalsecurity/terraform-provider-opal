@@ -63,23 +63,43 @@ func validateConfigurationTemplatePlan(
 		return
 	}
 
-	// Template may be unknown at first plan when created in the same apply
-	// (configuration_template_id = opal_configuration_template.x.id). Detect from
-	// config so Default [] cannot win before the template ID is known.
-	if !configurationTemplateConfigured(config, plan) {
-		return
-	}
-
-	// Create or first attach: mark omitted visibility unknown so GetVisibility
-	// can populate state (EPRD-3919). Speakeasy refreshPlan leaves unknowns alone.
+	// Create or first attach without a template: nothing template-specific to do.
 	if req.State.Raw.IsNull() {
-		markTemplateGovernedVisibilityUnknown(ctx, config, resp)
+		if configurationTemplateConfigured(config, plan) {
+			// First attach: mark omitted visibility unknown so GetVisibility
+			// can populate state (EPRD-3919). Speakeasy refreshPlan leaves unknowns alone.
+			markTemplateGovernedVisibilityUnknown(ctx, config, resp)
+		}
 		return
 	}
 
 	state, err := terraformObjectValues(req.State.Raw)
 	if err != nil {
 		resp.Diagnostics.AddError("Unable to inspect prior state", err.Error())
+		return
+	}
+
+	// Optional+Computed copies prior state into the plan when config is
+	// null/omitted, so configurationTemplateConfigured(config, plan) stays
+	// true from the plan value alone. Unlink intent is config-only: no
+	// template ID in HCL, plus visibility and request_configurations.
+	// Force plan null so ToShared marshals JSON null instead of omitting.
+	if stateHasLinkedTemplate(state) && !configurationTemplateIDConfiguredInConfig(config) {
+		if configurationTemplateUnlinkConfigured(config) {
+			resp.Diagnostics.Append(
+				resp.Plan.SetAttribute(
+					ctx,
+					path.Root("configuration_template_id"),
+					types.StringNull(),
+				)...,
+			)
+			return
+		}
+		// Omit template ID without unlink companions → leave linkage unchanged.
+		return
+	}
+
+	if !configurationTemplateConfigured(config, plan) {
 		return
 	}
 
@@ -92,6 +112,13 @@ func validateConfigurationTemplatePlan(
 	}
 
 	markTemplateGovernedVisibilityUnknown(ctx, config, resp)
+}
+
+// configurationTemplateUnlinkConfigured is true when HCL supplies the fields
+// required after forking off a template (visibility + request configurations).
+func configurationTemplateUnlinkConfigured(config map[string]tftypes.Value) bool {
+	return !attributeOmitted(config, "visibility") &&
+		!attributeOmitted(config, "request_configurations")
 }
 
 // configurationTemplateConfigured reports whether HCL/plan attaches a template.

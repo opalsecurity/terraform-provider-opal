@@ -233,7 +233,7 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 						},
 						"configuration_template_id": schema.StringAttribute{
 							Computed:    true,
-							Description: `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
+							Description: `The ID of the associated configuration template. Set to a UUID to attach or re-point. Set to null (remove the attribute in Terraform, with visibility and request_configurations) to unlink by forking into a private configuration that keeps current settings.`,
 						},
 						"custom_request_notification": schema.StringAttribute{
 							Computed:    true,
