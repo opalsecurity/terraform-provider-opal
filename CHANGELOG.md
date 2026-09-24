@@ -1,5 +1,8 @@
 # Changelog
 
+## v3.7.4
+ - Fixes `max_duration = -1` on `request_configurations` showing as permanent drift
+
 ## v3.7.3
  - Adds redaction to Cloudflare Access headers `Cf-Access-Client-Id` and `Cf-Access-Client-Secret`
 
