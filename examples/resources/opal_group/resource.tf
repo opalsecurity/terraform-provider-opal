@@ -29,6 +29,9 @@ resource "opal_group" "my_group" {
     aws_sso_group = {
       group_id = 898931321
     }
+    axiom_group = {
+      group_id = "grp_0123456789abcdef"
+    }
     azure_ad_microsoft_365_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
@@ -129,6 +132,9 @@ resource "opal_group" "my_group" {
     workday_user_security_group = {
       group_id = "123abc456def"
     }
+    wrike_group = {
+      group_id = "KX7ZHLVG"
+    }
     zendesk_group = {
       group_id = "12345"
     }
@@ -161,6 +167,15 @@ resource "opal_group" "my_group" {
       require_support_ticket         = false
       reviewer_stages = [
         {
+          escalation = {
+            delay_minutes = 60
+            owner_ids = [
+              "b5a8a5e8-066f-4232-964d-91a0265aca0e"
+            ]
+            user_ids = [
+              "060cafc9-9b67-49ba-89b2-adc4d636bfb4"
+            ]
+          }
           operator = "AND"
           owner_ids = [
             "f653097c-5b74-48b8-a26c-33571f9211ff"

@@ -15,6 +15,7 @@ const (
 	CampaignItemReviewerAssignmentSourceEnumManual           CampaignItemReviewerAssignmentSourceEnum = "MANUAL"
 	CampaignItemReviewerAssignmentSourceEnumPrincipalManager CampaignItemReviewerAssignmentSourceEnum = "PRINCIPAL_MANAGER"
 	CampaignItemReviewerAssignmentSourceEnumAssetAdminOwner  CampaignItemReviewerAssignmentSourceEnum = "ASSET_ADMIN_OWNER"
+	CampaignItemReviewerAssignmentSourceEnumPrincipalSelf    CampaignItemReviewerAssignmentSourceEnum = "PRINCIPAL_SELF"
 )
 
 func (e CampaignItemReviewerAssignmentSourceEnum) ToPointer() *CampaignItemReviewerAssignmentSourceEnum {
@@ -31,6 +32,8 @@ func (e *CampaignItemReviewerAssignmentSourceEnum) UnmarshalJSON(data []byte) er
 	case "PRINCIPAL_MANAGER":
 		fallthrough
 	case "ASSET_ADMIN_OWNER":
+		fallthrough
+	case "PRINCIPAL_SELF":
 		*e = CampaignItemReviewerAssignmentSourceEnum(v)
 		return nil
 	default:

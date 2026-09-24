@@ -6,6 +6,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -170,7 +171,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION"]; Requires replacement if changed.`,
+				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"ACTIVE_DIRECTORY_GROUP",
@@ -213,6 +214,8 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						"LINEAR_TEAM",
 						"RAMP_DEPARTMENT",
 						"RAMP_LOCATION",
+						"WRIKE_GROUP",
+						"AXIOM_GROUP",
 					),
 				},
 			},
@@ -471,6 +474,29 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							},
 						},
 						Description: `Remote info for AWS SSO group. Requires replacement if changed.`,
+					},
+					"axiom_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Axiom group. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Axiom RBAC group. Requires replacement if changed.`,
 					},
 					"azure_ad_microsoft_365_group": schema.SingleNestedAttribute{
 						Computed: true,
@@ -1240,6 +1266,29 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						},
 						Description: `Remote info for Workday User Security group. Requires replacement if changed.`,
 					},
+					"wrike_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Wrike group. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Wrike group. Requires replacement if changed.`,
+					},
 					"zendesk_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -1480,6 +1529,59 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 									speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
 								},
 								Attributes: map[string]schema.Attribute{
+									"escalation": schema.SingleNestedAttribute{
+										Computed: true,
+										Optional: true,
+										PlanModifiers: []planmodifier.Object{
+											speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+										},
+										Attributes: map[string]schema.Attribute{
+											"delay_minutes": schema.Int64Attribute{
+												Computed: true,
+												Optional: true,
+												PlanModifiers: []planmodifier.Int64{
+													speakeasy_int64planmodifier.SuppressDiff(speakeasy_int64planmodifier.ExplicitSuppress),
+												},
+												Description: `How long to wait for a response before escalating, in minutes. Between 1 and 1440 (24 hours). Not Null`,
+												Validators: []validator.Int64{
+													speakeasy_int64validators.NotNull(),
+													int64validator.Between(1, 1440),
+												},
+											},
+											"owner_ids": schema.ListAttribute{
+												Computed: true,
+												Optional: true,
+												PlanModifiers: []planmodifier.List{
+													speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
+												},
+												ElementType: types.StringType,
+												Description: `The owners to escalate to. The stage's own owner_ids are added automatically and must not be repeated here.`,
+											},
+											"user_ids": schema.ListAttribute{
+												Computed: true,
+												Optional: true,
+												PlanModifiers: []planmodifier.List{
+													speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
+												},
+												ElementType: types.StringType,
+												Description: `The users to escalate to. The stage's own service_user_ids are added automatically and must not be repeated here.`,
+											},
+										},
+										MarkdownDescription: `Escalation for a reviewer stage. When set, the request advances to the` + "\n" +
+											`reviewers named here if nobody responds within delay_minutes. Timely` + "\n" +
+											`approval by any of the stage's own reviewers resolves the stage without` + "\n" +
+											`escalating.` + "\n" +
+											`` + "\n" +
+											`owner_ids and user_ids name only who to escalate to; the stage's own` + "\n" +
+											`reviewers are added automatically and must not be repeated here. A` + "\n" +
+											`stage with owner_ids [X] escalating to Y sets escalation.owner_ids to` + "\n" +
+											`[Y], and reviewing after escalation is then open to both X and Y.` + "\n" +
+											`` + "\n" +
+											`Because the stage's reviewers are unioned in rather than copied,` + "\n" +
+											`removing someone from the stage also removes them from the escalation.` + "\n" +
+											`At least one owner or user named here must not already be a reviewer` + "\n" +
+											`of the stage.`,
+									},
 									"operator": schema.StringAttribute{
 										Computed: true,
 										Optional: true,
@@ -1487,7 +1589,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 										PlanModifiers: []planmodifier.String{
 											speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 										},
-										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. Default: "AND"; must be one of ["AND", "OR"]`,
+										Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. A stage that sets ` + "`" + `escalation` + "`" + ` must use ` + "`" + `OR` + "`" + `; ` + "`" + `AND` + "`" + ` is rejected there, because the escalation timer joins the stage as an additional reviewer and would otherwise become a required approver that stalls every request until the timeout. Default: "AND"; must be one of ["AND", "OR"]`,
 										Validators: []validator.String{
 											stringvalidator.OneOf(
 												"AND",

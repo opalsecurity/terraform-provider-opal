@@ -8,7 +8,7 @@ import (
 	"fmt"
 )
 
-// UARReviewerAssignmentPolicyEnum - A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually. BY_OWNING_TEAM_ADMIN assigns reviews to resource admins in round-robin fashion. BY_OWNING_TEAM_ADMIN_ALL assigns reviews to all resource admins. BY_APPROVERS assigns reviews to resource approvers in round-robin fashion. BY_APPROVERS_ALL assigns reviews to all resource approvers.
+// UARReviewerAssignmentPolicyEnum - A policy for auto-assigning reviewers. If auto-assignment is on, specific assignments can still be manually adjusted after the access review is started. Default is Manually. BY_OWNING_TEAM_ADMIN assigns reviews to resource admins in round-robin fashion. BY_OWNING_TEAM_ADMIN_ALL assigns reviews to all resource admins. BY_APPROVERS assigns reviews to resource approvers in round-robin fashion. BY_APPROVERS_ALL assigns reviews to all resource approvers. BY_SELF assigns each item to the reviewed principal themselves.
 type UARReviewerAssignmentPolicyEnum string
 
 const (
@@ -18,6 +18,7 @@ const (
 	UARReviewerAssignmentPolicyEnumByManager            UARReviewerAssignmentPolicyEnum = "BY_MANAGER"
 	UARReviewerAssignmentPolicyEnumByApprovers          UARReviewerAssignmentPolicyEnum = "BY_APPROVERS"
 	UARReviewerAssignmentPolicyEnumByApproversAll       UARReviewerAssignmentPolicyEnum = "BY_APPROVERS_ALL"
+	UARReviewerAssignmentPolicyEnumBySelf               UARReviewerAssignmentPolicyEnum = "BY_SELF"
 )
 
 func (e UARReviewerAssignmentPolicyEnum) ToPointer() *UARReviewerAssignmentPolicyEnum {
@@ -40,6 +41,8 @@ func (e *UARReviewerAssignmentPolicyEnum) UnmarshalJSON(data []byte) error {
 	case "BY_APPROVERS":
 		fallthrough
 	case "BY_APPROVERS_ALL":
+		fallthrough
+	case "BY_SELF":
 		*e = UARReviewerAssignmentPolicyEnum(v)
 		return nil
 	default:

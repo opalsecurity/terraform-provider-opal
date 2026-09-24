@@ -142,6 +142,18 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.AwsRdsInstance.Region = types.StringValue(resp.RemoteInfo.AwsRdsInstance.Region)
 				r.RemoteInfo.AwsRdsInstance.ResourceID = types.StringValue(resp.RemoteInfo.AwsRdsInstance.ResourceID)
 			}
+			if resp.RemoteInfo.AxiomCustomRole == nil {
+				r.RemoteInfo.AxiomCustomRole = nil
+			} else {
+				r.RemoteInfo.AxiomCustomRole = &tfTypes.ClickhouseRole{}
+				r.RemoteInfo.AxiomCustomRole.RoleID = types.StringValue(resp.RemoteInfo.AxiomCustomRole.RoleID)
+			}
+			if resp.RemoteInfo.AxiomRole == nil {
+				r.RemoteInfo.AxiomRole = nil
+			} else {
+				r.RemoteInfo.AxiomRole = &tfTypes.ClickhouseRole{}
+				r.RemoteInfo.AxiomRole.RoleID = types.StringValue(resp.RemoteInfo.AxiomRole.RoleID)
+			}
 			if resp.RemoteInfo.AzureEnterpriseApp == nil {
 				r.RemoteInfo.AzureEnterpriseApp = nil
 			} else {
@@ -220,6 +232,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.AzureVirtualMachine = &tfTypes.AzureEnterpriseApp{}
 				r.RemoteInfo.AzureVirtualMachine.ResourceID = types.StringValue(resp.RemoteInfo.AzureVirtualMachine.ResourceID)
 			}
+			if resp.RemoteInfo.ClickhouseConsoleRole == nil {
+				r.RemoteInfo.ClickhouseConsoleRole = nil
+			} else {
+				r.RemoteInfo.ClickhouseConsoleRole = &tfTypes.ClickhouseRole{}
+				r.RemoteInfo.ClickhouseConsoleRole.RoleID = types.StringValue(resp.RemoteInfo.ClickhouseConsoleRole.RoleID)
+			}
 			if resp.RemoteInfo.ClickhouseDatabase == nil {
 				r.RemoteInfo.ClickhouseDatabase = nil
 			} else {
@@ -258,6 +276,48 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.DatabricksAccountServicePrincipal = &tfTypes.DatabricksAccountServicePrincipal{}
 				r.RemoteInfo.DatabricksAccountServicePrincipal.ApplicationID = types.StringValue(resp.RemoteInfo.DatabricksAccountServicePrincipal.ApplicationID)
 				r.RemoteInfo.DatabricksAccountServicePrincipal.ResourceID = types.StringValue(resp.RemoteInfo.DatabricksAccountServicePrincipal.ResourceID)
+			}
+			if resp.RemoteInfo.DatabricksCatalog == nil {
+				r.RemoteInfo.DatabricksCatalog = nil
+			} else {
+				r.RemoteInfo.DatabricksCatalog = &tfTypes.DatabricksCatalog{}
+				r.RemoteInfo.DatabricksCatalog.FullName = types.StringValue(resp.RemoteInfo.DatabricksCatalog.FullName)
+				r.RemoteInfo.DatabricksCatalog.MetastoreID = types.StringValue(resp.RemoteInfo.DatabricksCatalog.MetastoreID)
+			}
+			if resp.RemoteInfo.DatabricksFunction == nil {
+				r.RemoteInfo.DatabricksFunction = nil
+			} else {
+				r.RemoteInfo.DatabricksFunction = &tfTypes.DatabricksCatalog{}
+				r.RemoteInfo.DatabricksFunction.FullName = types.StringValue(resp.RemoteInfo.DatabricksFunction.FullName)
+				r.RemoteInfo.DatabricksFunction.MetastoreID = types.StringValue(resp.RemoteInfo.DatabricksFunction.MetastoreID)
+			}
+			if resp.RemoteInfo.DatabricksModel == nil {
+				r.RemoteInfo.DatabricksModel = nil
+			} else {
+				r.RemoteInfo.DatabricksModel = &tfTypes.DatabricksCatalog{}
+				r.RemoteInfo.DatabricksModel.FullName = types.StringValue(resp.RemoteInfo.DatabricksModel.FullName)
+				r.RemoteInfo.DatabricksModel.MetastoreID = types.StringValue(resp.RemoteInfo.DatabricksModel.MetastoreID)
+			}
+			if resp.RemoteInfo.DatabricksSchema == nil {
+				r.RemoteInfo.DatabricksSchema = nil
+			} else {
+				r.RemoteInfo.DatabricksSchema = &tfTypes.DatabricksCatalog{}
+				r.RemoteInfo.DatabricksSchema.FullName = types.StringValue(resp.RemoteInfo.DatabricksSchema.FullName)
+				r.RemoteInfo.DatabricksSchema.MetastoreID = types.StringValue(resp.RemoteInfo.DatabricksSchema.MetastoreID)
+			}
+			if resp.RemoteInfo.DatabricksService == nil {
+				r.RemoteInfo.DatabricksService = nil
+			} else {
+				r.RemoteInfo.DatabricksService = &tfTypes.DatabricksCatalog{}
+				r.RemoteInfo.DatabricksService.FullName = types.StringValue(resp.RemoteInfo.DatabricksService.FullName)
+				r.RemoteInfo.DatabricksService.MetastoreID = types.StringValue(resp.RemoteInfo.DatabricksService.MetastoreID)
+			}
+			if resp.RemoteInfo.DatabricksVolume == nil {
+				r.RemoteInfo.DatabricksVolume = nil
+			} else {
+				r.RemoteInfo.DatabricksVolume = &tfTypes.DatabricksCatalog{}
+				r.RemoteInfo.DatabricksVolume.FullName = types.StringValue(resp.RemoteInfo.DatabricksVolume.FullName)
+				r.RemoteInfo.DatabricksVolume.MetastoreID = types.StringValue(resp.RemoteInfo.DatabricksVolume.MetastoreID)
 			}
 			if resp.RemoteInfo.DatadogRole == nil {
 				r.RemoteInfo.DatadogRole = nil
@@ -562,11 +622,29 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.TwingateResource = &tfTypes.AzureEnterpriseApp{}
 				r.RemoteInfo.TwingateResource.ResourceID = types.StringValue(resp.RemoteInfo.TwingateResource.ResourceID)
 			}
+			if resp.RemoteInfo.VercelProject == nil {
+				r.RemoteInfo.VercelProject = nil
+			} else {
+				r.RemoteInfo.VercelProject = &tfTypes.GcpProject{}
+				r.RemoteInfo.VercelProject.ProjectID = types.StringValue(resp.RemoteInfo.VercelProject.ProjectID)
+			}
+			if resp.RemoteInfo.VercelRole == nil {
+				r.RemoteInfo.VercelRole = nil
+			} else {
+				r.RemoteInfo.VercelRole = &tfTypes.ClickhouseRole{}
+				r.RemoteInfo.VercelRole.RoleID = types.StringValue(resp.RemoteInfo.VercelRole.RoleID)
+			}
 			if resp.RemoteInfo.WorkdayRole == nil {
 				r.RemoteInfo.WorkdayRole = nil
 			} else {
 				r.RemoteInfo.WorkdayRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.WorkdayRole.RoleID = types.StringValue(resp.RemoteInfo.WorkdayRole.RoleID)
+			}
+			if resp.RemoteInfo.WrikeUserType == nil {
+				r.RemoteInfo.WrikeUserType = nil
+			} else {
+				r.RemoteInfo.WrikeUserType = &tfTypes.WrikeUserType{}
+				r.RemoteInfo.WrikeUserType.UserTypeID = types.StringValue(resp.RemoteInfo.WrikeUserType.UserTypeID)
 			}
 			if resp.RemoteInfo.ZendeskRole == nil {
 				r.RemoteInfo.ZendeskRole = nil
@@ -620,6 +698,20 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 				var reviewerStages tfTypes.ReviewerStage
 
+				if reviewerStagesItem.Escalation == nil {
+					reviewerStages.Escalation = nil
+				} else {
+					reviewerStages.Escalation = &tfTypes.ReviewerStageEscalation{}
+					reviewerStages.Escalation.DelayMinutes = types.Int64Value(reviewerStagesItem.Escalation.DelayMinutes)
+					reviewerStages.Escalation.OwnerIds = make([]types.String, 0, len(reviewerStagesItem.Escalation.OwnerIds))
+					for _, v := range reviewerStagesItem.Escalation.OwnerIds {
+						reviewerStages.Escalation.OwnerIds = append(reviewerStages.Escalation.OwnerIds, types.StringValue(v))
+					}
+					reviewerStages.Escalation.UserIds = make([]types.String, 0, len(reviewerStagesItem.Escalation.UserIds))
+					for _, v := range reviewerStagesItem.Escalation.UserIds {
+						reviewerStages.Escalation.UserIds = append(reviewerStages.Escalation.UserIds, types.StringValue(v))
+					}
+				}
 				if reviewerStagesItem.Operator != nil {
 					reviewerStages.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
 				} else {
@@ -722,6 +814,20 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.
 		for _, reviewerStagesItem := range requestConfigurationsItem.ReviewerStages {
 			var reviewerStages tfTypes.ReviewerStage
 
+			if reviewerStagesItem.Escalation == nil {
+				reviewerStages.Escalation = nil
+			} else {
+				reviewerStages.Escalation = &tfTypes.ReviewerStageEscalation{}
+				reviewerStages.Escalation.DelayMinutes = types.Int64Value(reviewerStagesItem.Escalation.DelayMinutes)
+				reviewerStages.Escalation.OwnerIds = make([]types.String, 0, len(reviewerStagesItem.Escalation.OwnerIds))
+				for _, v := range reviewerStagesItem.Escalation.OwnerIds {
+					reviewerStages.Escalation.OwnerIds = append(reviewerStages.Escalation.OwnerIds, types.StringValue(v))
+				}
+				reviewerStages.Escalation.UserIds = make([]types.String, 0, len(reviewerStagesItem.Escalation.UserIds))
+				for _, v := range reviewerStagesItem.Escalation.UserIds {
+					reviewerStages.Escalation.UserIds = append(reviewerStages.Escalation.UserIds, types.StringValue(v))
+				}
+			}
 			if reviewerStagesItem.Operator != nil {
 				reviewerStages.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
 			} else {
@@ -1057,6 +1163,24 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				ResourceID: resourceId1,
 			}
 		}
+		var axiomCustomRole *shared.AxiomCustomRole
+		if r.RemoteInfo.AxiomCustomRole != nil {
+			var roleID string
+			roleID = r.RemoteInfo.AxiomCustomRole.RoleID.ValueString()
+
+			axiomCustomRole = &shared.AxiomCustomRole{
+				RoleID: roleID,
+			}
+		}
+		var axiomRole *shared.AxiomRole
+		if r.RemoteInfo.AxiomRole != nil {
+			var roleId1 string
+			roleId1 = r.RemoteInfo.AxiomRole.RoleID.ValueString()
+
+			axiomRole = &shared.AxiomRole{
+				RoleID: roleId1,
+			}
+		}
 		var azureEnterpriseApp *shared.AzureEnterpriseApp
 		if r.RemoteInfo.AzureEnterpriseApp != nil {
 			var resourceId2 string
@@ -1174,6 +1298,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				ResourceID: resourceId14,
 			}
 		}
+		var clickhouseConsoleRole *shared.ClickhouseConsoleRole
+		if r.RemoteInfo.ClickhouseConsoleRole != nil {
+			var roleId2 string
+			roleId2 = r.RemoteInfo.ClickhouseConsoleRole.RoleID.ValueString()
+
+			clickhouseConsoleRole = &shared.ClickhouseConsoleRole{
+				RoleID: roleId2,
+			}
+		}
 		var clickhouseDatabase *shared.ClickhouseDatabase
 		if r.RemoteInfo.ClickhouseDatabase != nil {
 			var databaseName1 string
@@ -1198,11 +1331,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var coupaRole *shared.CoupaRole
 		if r.RemoteInfo.CoupaRole != nil {
-			var roleID string
-			roleID = r.RemoteInfo.CoupaRole.RoleID.ValueString()
+			var roleId3 string
+			roleId3 = r.RemoteInfo.CoupaRole.RoleID.ValueString()
 
 			coupaRole = &shared.CoupaRole{
-				RoleID: roleID,
+				RoleID: roleId3,
 			}
 		}
 		var cursorOrganization *shared.CursorOrganization
@@ -1240,22 +1373,100 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				ResourceID:    resourceId15,
 			}
 		}
+		var databricksCatalog *shared.DatabricksCatalog
+		if r.RemoteInfo.DatabricksCatalog != nil {
+			var fullName string
+			fullName = r.RemoteInfo.DatabricksCatalog.FullName.ValueString()
+
+			var metastoreID string
+			metastoreID = r.RemoteInfo.DatabricksCatalog.MetastoreID.ValueString()
+
+			databricksCatalog = &shared.DatabricksCatalog{
+				FullName:    fullName,
+				MetastoreID: metastoreID,
+			}
+		}
+		var databricksFunction *shared.DatabricksFunction
+		if r.RemoteInfo.DatabricksFunction != nil {
+			var fullName1 string
+			fullName1 = r.RemoteInfo.DatabricksFunction.FullName.ValueString()
+
+			var metastoreId1 string
+			metastoreId1 = r.RemoteInfo.DatabricksFunction.MetastoreID.ValueString()
+
+			databricksFunction = &shared.DatabricksFunction{
+				FullName:    fullName1,
+				MetastoreID: metastoreId1,
+			}
+		}
+		var databricksModel *shared.DatabricksModel
+		if r.RemoteInfo.DatabricksModel != nil {
+			var fullName2 string
+			fullName2 = r.RemoteInfo.DatabricksModel.FullName.ValueString()
+
+			var metastoreId2 string
+			metastoreId2 = r.RemoteInfo.DatabricksModel.MetastoreID.ValueString()
+
+			databricksModel = &shared.DatabricksModel{
+				FullName:    fullName2,
+				MetastoreID: metastoreId2,
+			}
+		}
+		var databricksSchema *shared.DatabricksSchema
+		if r.RemoteInfo.DatabricksSchema != nil {
+			var fullName3 string
+			fullName3 = r.RemoteInfo.DatabricksSchema.FullName.ValueString()
+
+			var metastoreId3 string
+			metastoreId3 = r.RemoteInfo.DatabricksSchema.MetastoreID.ValueString()
+
+			databricksSchema = &shared.DatabricksSchema{
+				FullName:    fullName3,
+				MetastoreID: metastoreId3,
+			}
+		}
+		var databricksService *shared.DatabricksService
+		if r.RemoteInfo.DatabricksService != nil {
+			var fullName4 string
+			fullName4 = r.RemoteInfo.DatabricksService.FullName.ValueString()
+
+			var metastoreId4 string
+			metastoreId4 = r.RemoteInfo.DatabricksService.MetastoreID.ValueString()
+
+			databricksService = &shared.DatabricksService{
+				FullName:    fullName4,
+				MetastoreID: metastoreId4,
+			}
+		}
+		var databricksVolume *shared.DatabricksVolume
+		if r.RemoteInfo.DatabricksVolume != nil {
+			var fullName5 string
+			fullName5 = r.RemoteInfo.DatabricksVolume.FullName.ValueString()
+
+			var metastoreId5 string
+			metastoreId5 = r.RemoteInfo.DatabricksVolume.MetastoreID.ValueString()
+
+			databricksVolume = &shared.DatabricksVolume{
+				FullName:    fullName5,
+				MetastoreID: metastoreId5,
+			}
+		}
 		var datadogRole *shared.DatadogRole
 		if r.RemoteInfo.DatadogRole != nil {
-			var roleId1 string
-			roleId1 = r.RemoteInfo.DatadogRole.RoleID.ValueString()
+			var roleId4 string
+			roleId4 = r.RemoteInfo.DatadogRole.RoleID.ValueString()
 
 			datadogRole = &shared.DatadogRole{
-				RoleID: roleId1,
+				RoleID: roleId4,
 			}
 		}
 		var datastaxAstraRole *shared.DatastaxAstraRole
 		if r.RemoteInfo.DatastaxAstraRole != nil {
-			var roleId2 string
-			roleId2 = r.RemoteInfo.DatastaxAstraRole.RoleID.ValueString()
+			var roleId5 string
+			roleId5 = r.RemoteInfo.DatastaxAstraRole.RoleID.ValueString()
 
 			datastaxAstraRole = &shared.DatastaxAstraRole{
-				RoleID: roleId2,
+				RoleID: roleId5,
 			}
 		}
 		var devinOrganization *shared.DevinOrganization
@@ -1269,11 +1480,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var devinRole *shared.DevinRole
 		if r.RemoteInfo.DevinRole != nil {
-			var roleId3 string
-			roleId3 = r.RemoteInfo.DevinRole.RoleID.ValueString()
+			var roleId6 string
+			roleId6 = r.RemoteInfo.DevinRole.RoleID.ValueString()
 
 			devinRole = &shared.DevinRole{
-				RoleID: roleId3,
+				RoleID: roleId6,
 			}
 		}
 		var docusignPermissionProfile *shared.DocusignPermissionProfile
@@ -1418,11 +1629,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var githubEnterpriseRole *shared.GithubEnterpriseRole
 		if r.RemoteInfo.GithubEnterpriseRole != nil {
-			var roleId4 string
-			roleId4 = r.RemoteInfo.GithubEnterpriseRole.RoleID.ValueString()
+			var roleId7 string
+			roleId7 = r.RemoteInfo.GithubEnterpriseRole.RoleID.ValueString()
 
 			githubEnterpriseRole = &shared.GithubEnterpriseRole{
-				RoleID: roleId4,
+				RoleID: roleId7,
 			}
 		}
 		var githubOrg *shared.GithubOrg
@@ -1442,12 +1653,12 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			} else {
 				orgName1 = nil
 			}
-			var roleId5 string
-			roleId5 = r.RemoteInfo.GithubOrgRole.RoleID.ValueString()
+			var roleId8 string
+			roleId8 = r.RemoteInfo.GithubOrgRole.RoleID.ValueString()
 
 			githubOrgRole = &shared.GithubOrgRole{
 				OrgName: orgName1,
-				RoleID:  roleId5,
+				RoleID:  roleId8,
 			}
 		}
 		var githubRepo *shared.GithubRepo
@@ -1477,11 +1688,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var googleWorkspaceRole *shared.GoogleWorkspaceRole
 		if r.RemoteInfo.GoogleWorkspaceRole != nil {
-			var roleId6 string
-			roleId6 = r.RemoteInfo.GoogleWorkspaceRole.RoleID.ValueString()
+			var roleId9 string
+			roleId9 = r.RemoteInfo.GoogleWorkspaceRole.RoleID.ValueString()
 
 			googleWorkspaceRole = &shared.GoogleWorkspaceRole{
-				RoleID: roleId6,
+				RoleID: roleId9,
 			}
 		}
 		var grafanaDashboard *shared.GrafanaDashboard
@@ -1513,11 +1724,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var hubspotRole *shared.HubspotRole
 		if r.RemoteInfo.HubspotRole != nil {
-			var roleId7 string
-			roleId7 = r.RemoteInfo.HubspotRole.RoleID.ValueString()
+			var roleId10 string
+			roleId10 = r.RemoteInfo.HubspotRole.RoleID.ValueString()
 
 			hubspotRole = &shared.HubspotRole{
-				RoleID: roleId7,
+				RoleID: roleId10,
 			}
 		}
 		var ilevelAdvancedRole *shared.IlevelAdvancedRole
@@ -1549,11 +1760,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var netsuiteRole *shared.NetsuiteRole
 		if r.RemoteInfo.NetsuiteRole != nil {
-			var roleId8 string
-			roleId8 = r.RemoteInfo.NetsuiteRole.RoleID.ValueString()
+			var roleId11 string
+			roleId11 = r.RemoteInfo.NetsuiteRole.RoleID.ValueString()
 
 			netsuiteRole = &shared.NetsuiteRole{
-				RoleID: roleId8,
+				RoleID: roleId11,
 			}
 		}
 		var oktaApp *shared.OktaApp
@@ -1567,11 +1778,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var oktaCustomRole *shared.OktaCustomRole
 		if r.RemoteInfo.OktaCustomRole != nil {
-			var roleId9 string
-			roleId9 = r.RemoteInfo.OktaCustomRole.RoleID.ValueString()
+			var roleId12 string
+			roleId12 = r.RemoteInfo.OktaCustomRole.RoleID.ValueString()
 
 			oktaCustomRole = &shared.OktaCustomRole{
-				RoleID: roleId9,
+				RoleID: roleId12,
 			}
 		}
 		var oktaStandardRole *shared.OktaStandardRole
@@ -1607,11 +1818,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var oracleFusionRole *shared.OracleFusionRole
 		if r.RemoteInfo.OracleFusionRole != nil {
-			var roleId10 string
-			roleId10 = r.RemoteInfo.OracleFusionRole.RoleID.ValueString()
+			var roleId13 string
+			roleId13 = r.RemoteInfo.OracleFusionRole.RoleID.ValueString()
 
 			oracleFusionRole = &shared.OracleFusionRole{
-				RoleID: roleId10,
+				RoleID: roleId13,
 			}
 		}
 		var pagerdutyRole *shared.PagerdutyRole
@@ -1665,11 +1876,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var salesforceRole *shared.SalesforceRole
 		if r.RemoteInfo.SalesforceRole != nil {
-			var roleId11 string
-			roleId11 = r.RemoteInfo.SalesforceRole.RoleID.ValueString()
+			var roleId14 string
+			roleId14 = r.RemoteInfo.SalesforceRole.RoleID.ValueString()
 
 			salesforceRole = &shared.SalesforceRole{
-				RoleID: roleId11,
+				RoleID: roleId14,
 			}
 		}
 		var snowflakeDatabase *shared.SnowflakeDatabase
@@ -1738,22 +1949,49 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				ResourceID: resourceId16,
 			}
 		}
+		var vercelProject *shared.VercelProject
+		if r.RemoteInfo.VercelProject != nil {
+			var projectId10 string
+			projectId10 = r.RemoteInfo.VercelProject.ProjectID.ValueString()
+
+			vercelProject = &shared.VercelProject{
+				ProjectID: projectId10,
+			}
+		}
+		var vercelRole *shared.VercelRole
+		if r.RemoteInfo.VercelRole != nil {
+			var roleId15 string
+			roleId15 = r.RemoteInfo.VercelRole.RoleID.ValueString()
+
+			vercelRole = &shared.VercelRole{
+				RoleID: roleId15,
+			}
+		}
 		var workdayRole *shared.WorkdayRole
 		if r.RemoteInfo.WorkdayRole != nil {
-			var roleId12 string
-			roleId12 = r.RemoteInfo.WorkdayRole.RoleID.ValueString()
+			var roleId16 string
+			roleId16 = r.RemoteInfo.WorkdayRole.RoleID.ValueString()
 
 			workdayRole = &shared.WorkdayRole{
-				RoleID: roleId12,
+				RoleID: roleId16,
+			}
+		}
+		var wrikeUserType *shared.WrikeUserType
+		if r.RemoteInfo.WrikeUserType != nil {
+			var userTypeID string
+			userTypeID = r.RemoteInfo.WrikeUserType.UserTypeID.ValueString()
+
+			wrikeUserType = &shared.WrikeUserType{
+				UserTypeID: userTypeID,
 			}
 		}
 		var zendeskRole *shared.ZendeskRole
 		if r.RemoteInfo.ZendeskRole != nil {
-			var roleId13 string
-			roleId13 = r.RemoteInfo.ZendeskRole.RoleID.ValueString()
+			var roleId17 string
+			roleId17 = r.RemoteInfo.ZendeskRole.RoleID.ValueString()
 
 			zendeskRole = &shared.ZendeskRole{
-				RoleID: roleId13,
+				RoleID: roleId17,
 			}
 		}
 		var zoomLicense *shared.ZoomLicense
@@ -1767,11 +2005,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var zoomRole *shared.ZoomRole
 		if r.RemoteInfo.ZoomRole != nil {
-			var roleId14 string
-			roleId14 = r.RemoteInfo.ZoomRole.RoleID.ValueString()
+			var roleId18 string
+			roleId18 = r.RemoteInfo.ZoomRole.RoleID.ValueString()
 
 			zoomRole = &shared.ZoomRole{
-				RoleID: roleId14,
+				RoleID: roleId18,
 			}
 		}
 		remoteInfo = &shared.ResourceRemoteInfo{
@@ -1786,6 +2024,8 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			AwsPermissionSet:                  awsPermissionSet,
 			AwsRdsCluster:                     awsRdsCluster,
 			AwsRdsInstance:                    awsRdsInstance,
+			AxiomCustomRole:                   axiomCustomRole,
+			AxiomRole:                         axiomRole,
 			AzureEnterpriseApp:                azureEnterpriseApp,
 			AzureEntraIDRole:                  azureEntraIDRole,
 			AzureManagementGroup:              azureManagementGroup,
@@ -1799,12 +2039,19 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			AzureSubscription:                 azureSubscription,
 			AzureUserAssignedManagedIdentity:  azureUserAssignedManagedIdentity,
 			AzureVirtualMachine:               azureVirtualMachine,
+			ClickhouseConsoleRole:             clickhouseConsoleRole,
 			ClickhouseDatabase:                clickhouseDatabase,
 			ClickhouseTable:                   clickhouseTable,
 			CoupaRole:                         coupaRole,
 			CursorOrganization:                cursorOrganization,
 			CustomConnector:                   customConnector,
 			DatabricksAccountServicePrincipal: databricksAccountServicePrincipal,
+			DatabricksCatalog:                 databricksCatalog,
+			DatabricksFunction:                databricksFunction,
+			DatabricksModel:                   databricksModel,
+			DatabricksSchema:                  databricksSchema,
+			DatabricksService:                 databricksService,
+			DatabricksVolume:                  databricksVolume,
 			DatadogRole:                       datadogRole,
 			DatastaxAstraRole:                 datastaxAstraRole,
 			DevinOrganization:                 devinOrganization,
@@ -1853,7 +2100,10 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			TailscaleSSH:                      tailscaleSSH,
 			TeleportRole:                      teleportRole,
 			TwingateResource:                  twingateResource,
+			VercelProject:                     vercelProject,
+			VercelRole:                        vercelRole,
 			WorkdayRole:                       workdayRole,
+			WrikeUserType:                     wrikeUserType,
 			ZendeskRole:                       zendeskRole,
 			ZoomLicense:                       zoomLicense,
 			ZoomRole:                          zoomRole,
@@ -2005,15 +2255,34 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 
 		reviewerStages := make([]shared.ReviewerStage, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages))
 		for reviewerStagesIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages {
+			var escalation *shared.ReviewerStageEscalation
+			if r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation != nil {
+				var delayMinutes int64
+				delayMinutes = r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.DelayMinutes.ValueInt64()
+
+				ownerIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.OwnerIds))
+				for ownerIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.OwnerIds {
+					ownerIds = append(ownerIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.OwnerIds[ownerIdsIndex].ValueString())
+				}
+				userIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.UserIds))
+				for userIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.UserIds {
+					userIds = append(userIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.UserIds[userIdsIndex].ValueString())
+				}
+				escalation = &shared.ReviewerStageEscalation{
+					DelayMinutes: delayMinutes,
+					OwnerIds:     ownerIds,
+					UserIds:      userIds,
+				}
+			}
 			operator := new(shared.Operator)
 			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsNull() {
 				*operator = shared.Operator(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.ValueString())
 			} else {
 				operator = nil
 			}
-			ownerIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds))
-			for ownerIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds {
-				ownerIds = append(ownerIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds[ownerIdsIndex].ValueString())
+			ownerIds1 := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds))
+			for ownerIdsIndex1 := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds {
+				ownerIds1 = append(ownerIds1, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds[ownerIdsIndex1].ValueString())
 			}
 			requireAdminApproval := new(bool)
 			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireAdminApproval.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireAdminApproval.IsNull() {
@@ -2032,8 +2301,9 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 				serviceUserIds = append(serviceUserIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].ServiceUserIds[serviceUserIdsIndex].ValueString())
 			}
 			reviewerStages = append(reviewerStages, shared.ReviewerStage{
+				Escalation:             escalation,
 				Operator:               operator,
-				OwnerIds:               ownerIds,
+				OwnerIds:               ownerIds1,
 				RequireAdminApproval:   requireAdminApproval,
 				RequireManagerApproval: requireManagerApproval,
 				ServiceUserIds:         serviceUserIds,

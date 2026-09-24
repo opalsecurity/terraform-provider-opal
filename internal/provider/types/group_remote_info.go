@@ -6,6 +6,7 @@ package types
 type GroupRemoteInfo struct {
 	ActiveDirectoryGroup     *ActiveDirectoryGroup     `tfsdk:"active_directory_group"`
 	AwsSsoGroup              *ActiveDirectoryGroup     `tfsdk:"aws_sso_group"`
+	AxiomGroup               *ActiveDirectoryGroup     `tfsdk:"axiom_group"`
 	AzureAdMicrosoft365Group *ActiveDirectoryGroup     `tfsdk:"azure_ad_microsoft_365_group"`
 	AzureAdSecurityGroup     *ActiveDirectoryGroup     `tfsdk:"azure_ad_security_group"`
 	ClickhouseRole           *ClickhouseRole           `tfsdk:"clickhouse_role"`
@@ -39,6 +40,7 @@ type GroupRemoteInfo struct {
 	TwingateGroup            *ActiveDirectoryGroup     `tfsdk:"twingate_group"`
 	TwingateGroupSynced      *ActiveDirectoryGroup     `tfsdk:"twingate_group_synced"`
 	WorkdayUserSecurityGroup *ActiveDirectoryGroup     `tfsdk:"workday_user_security_group"`
+	WrikeGroup               *ActiveDirectoryGroup     `tfsdk:"wrike_group"`
 	ZendeskGroup             *ActiveDirectoryGroup     `tfsdk:"zendesk_group"`
 	ZendeskOrganization      *ZendeskOrganization      `tfsdk:"zendesk_organization"`
 	ZoomGroup                *ActiveDirectoryGroup     `tfsdk:"zoom_group"`
