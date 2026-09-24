@@ -82,6 +82,26 @@ func TestStateHasLinkedTemplate(t *testing.T) {
 	}
 }
 
+func TestConfigurationTemplateUnlinkConfigured(t *testing.T) {
+	if configurationTemplateUnlinkConfigured(map[string]tftypes.Value{}) {
+		t.Fatal("empty config is not unlink intent")
+	}
+	if configurationTemplateUnlinkConfigured(map[string]tftypes.Value{
+		"visibility": tftypes.NewValue(tftypes.String, "GLOBAL"),
+	}) {
+		t.Fatal("visibility alone is not unlink intent")
+	}
+	if !configurationTemplateUnlinkConfigured(map[string]tftypes.Value{
+		"visibility": tftypes.NewValue(tftypes.String, "GLOBAL"),
+		"request_configurations": tftypes.NewValue(
+			tftypes.List{ElementType: tftypes.DynamicPseudoType},
+			[]tftypes.Value{},
+		),
+	}) {
+		t.Fatal("visibility + request_configurations should count as unlink intent")
+	}
+}
+
 func TestConfigurationTemplateConfigured(t *testing.T) {
 	empty := map[string]tftypes.Value{}
 	if configurationTemplateConfigured(empty, empty) {
