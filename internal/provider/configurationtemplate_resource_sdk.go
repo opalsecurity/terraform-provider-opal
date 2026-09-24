@@ -165,15 +165,34 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 
 		reviewerStages := make([]shared.ReviewerStage, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages))
 		for reviewerStagesIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages {
+			var escalation *shared.ReviewerStageEscalation
+			if r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation != nil {
+				var delayMinutes int64
+				delayMinutes = r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.DelayMinutes.ValueInt64()
+
+				ownerIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.OwnerIds))
+				for ownerIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.OwnerIds {
+					ownerIds = append(ownerIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.OwnerIds[ownerIdsIndex].ValueString())
+				}
+				userIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.UserIds))
+				for userIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.UserIds {
+					userIds = append(userIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.UserIds[userIdsIndex].ValueString())
+				}
+				escalation = &shared.ReviewerStageEscalation{
+					DelayMinutes: delayMinutes,
+					OwnerIds:     ownerIds,
+					UserIds:      userIds,
+				}
+			}
 			operator := new(shared.Operator)
 			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsNull() {
 				*operator = shared.Operator(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.ValueString())
 			} else {
 				operator = nil
 			}
-			ownerIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds))
-			for ownerIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds {
-				ownerIds = append(ownerIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds[ownerIdsIndex].ValueString())
+			ownerIds1 := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds))
+			for ownerIdsIndex1 := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds {
+				ownerIds1 = append(ownerIds1, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds[ownerIdsIndex1].ValueString())
 			}
 			requireAdminApproval := new(bool)
 			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireAdminApproval.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireAdminApproval.IsNull() {
@@ -192,8 +211,9 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 				serviceUserIds = append(serviceUserIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].ServiceUserIds[serviceUserIdsIndex].ValueString())
 			}
 			reviewerStages = append(reviewerStages, shared.ReviewerStage{
+				Escalation:             escalation,
 				Operator:               operator,
-				OwnerIds:               ownerIds,
+				OwnerIds:               ownerIds1,
 				RequireAdminApproval:   requireAdminApproval,
 				RequireManagerApproval: requireManagerApproval,
 				ServiceUserIds:         serviceUserIds,
@@ -376,15 +396,34 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 
 		reviewerStages := make([]shared.ReviewerStage, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages))
 		for reviewerStagesIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages {
+			var escalation *shared.ReviewerStageEscalation
+			if r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation != nil {
+				var delayMinutes int64
+				delayMinutes = r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.DelayMinutes.ValueInt64()
+
+				ownerIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.OwnerIds))
+				for ownerIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.OwnerIds {
+					ownerIds = append(ownerIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.OwnerIds[ownerIdsIndex].ValueString())
+				}
+				userIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.UserIds))
+				for userIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.UserIds {
+					userIds = append(userIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Escalation.UserIds[userIdsIndex].ValueString())
+				}
+				escalation = &shared.ReviewerStageEscalation{
+					DelayMinutes: delayMinutes,
+					OwnerIds:     ownerIds,
+					UserIds:      userIds,
+				}
+			}
 			operator := new(shared.Operator)
 			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsNull() {
 				*operator = shared.Operator(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.ValueString())
 			} else {
 				operator = nil
 			}
-			ownerIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds))
-			for ownerIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds {
-				ownerIds = append(ownerIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds[ownerIdsIndex].ValueString())
+			ownerIds1 := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds))
+			for ownerIdsIndex1 := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds {
+				ownerIds1 = append(ownerIds1, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OwnerIds[ownerIdsIndex1].ValueString())
 			}
 			requireAdminApproval := new(bool)
 			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireAdminApproval.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].RequireAdminApproval.IsNull() {
@@ -403,8 +442,9 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 				serviceUserIds = append(serviceUserIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].ServiceUserIds[serviceUserIdsIndex].ValueString())
 			}
 			reviewerStages = append(reviewerStages, shared.ReviewerStage{
+				Escalation:             escalation,
 				Operator:               operator,
-				OwnerIds:               ownerIds,
+				OwnerIds:               ownerIds1,
 				RequireAdminApproval:   requireAdminApproval,
 				RequireManagerApproval: requireManagerApproval,
 				ServiceUserIds:         serviceUserIds,

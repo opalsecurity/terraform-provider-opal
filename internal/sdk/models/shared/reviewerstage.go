@@ -9,7 +9,7 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
 )
 
-// Operator - The operator of the reviewer stage. Admin and manager approval are also treated as reviewers.
+// Operator - The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. A stage that sets `escalation` must use `OR`; `AND` is rejected there, because the escalation timer joins the stage as an additional reviewer and would otherwise become a required approver that stalls every request until the timeout.
 type Operator string
 
 const (
@@ -38,7 +38,22 @@ func (e *Operator) UnmarshalJSON(data []byte) error {
 
 // ReviewerStage - A reviewer stage.
 type ReviewerStage struct {
-	// The operator of the reviewer stage. Admin and manager approval are also treated as reviewers.
+	// Escalation for a reviewer stage. When set, the request advances to the
+	// reviewers named here if nobody responds within delay_minutes. Timely
+	// approval by any of the stage's own reviewers resolves the stage without
+	// escalating.
+	//
+	// owner_ids and user_ids name only who to escalate to; the stage's own
+	// reviewers are added automatically and must not be repeated here. A
+	// stage with owner_ids [X] escalating to Y sets escalation.owner_ids to
+	// [Y], and reviewing after escalation is then open to both X and Y.
+	//
+	// Because the stage's reviewers are unioned in rather than copied,
+	// removing someone from the stage also removes them from the escalation.
+	// At least one owner or user named here must not already be a reviewer
+	// of the stage.
+	Escalation *ReviewerStageEscalation `json:"escalation,omitempty"`
+	// The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. A stage that sets `escalation` must use `OR`; `AND` is rejected there, because the escalation timer joins the stage as an additional reviewer and would otherwise become a required approver that stalls every request until the timeout.
 	Operator *Operator `default:"AND" json:"operator"`
 	// The IDs of owners assigned as reviewers for this stage.
 	OwnerIds []string `json:"owner_ids"`
@@ -59,6 +74,13 @@ func (r *ReviewerStage) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	return nil
+}
+
+func (r *ReviewerStage) GetEscalation() *ReviewerStageEscalation {
+	if r == nil {
+		return nil
+	}
+	return r.Escalation
 }
 
 func (r *ReviewerStage) GetOperator() *Operator {

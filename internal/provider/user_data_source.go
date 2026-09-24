@@ -34,6 +34,7 @@ type UserDataSourceModel struct {
 	HrIdpStatus types.String `tfsdk:"hr_idp_status"`
 	ID          types.String `queryParam:"style=form,explode=true,name=user_id" tfsdk:"id"`
 	LastName    types.String `tfsdk:"last_name"`
+	ManagerID   types.String `tfsdk:"manager_id"`
 	Name        types.String `tfsdk:"name"`
 	Position    types.String `tfsdk:"position"`
 }
@@ -70,6 +71,10 @@ func (r *UserDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 			"last_name": schema.StringAttribute{
 				Computed:    true,
 				Description: `The last name of the user.`,
+			},
+			"manager_id": schema.StringAttribute{
+				Computed:    true,
+				Description: `The ID of the user's manager. Null if the user has no manager.`,
 			},
 			"name": schema.StringAttribute{
 				Computed:    true,

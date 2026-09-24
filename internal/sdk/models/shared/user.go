@@ -20,6 +20,8 @@ type User struct {
 	ID string `json:"user_id"`
 	// The last name of the user.
 	LastName string `json:"last_name"`
+	// The ID of the user's manager. Null if the user has no manager.
+	ManagerID *string `json:"manager_id,omitempty"`
 	// The full name of the user.
 	Name string `json:"full_name"`
 	// The user's position.
@@ -59,6 +61,13 @@ func (u *User) GetLastName() string {
 		return ""
 	}
 	return u.LastName
+}
+
+func (u *User) GetManagerID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.ManagerID
 }
 
 func (u *User) GetName() string {

@@ -51,6 +51,15 @@ resource "opal_configuration_template" "my_configurationtemplate" {
       require_support_ticket         = false
       reviewer_stages = [
         {
+          escalation = {
+            delay_minutes = 60
+            owner_ids = [
+              "5abab647-63e1-4cfa-84bb-235ae50bc5b1"
+            ]
+            user_ids = [
+              "7552a605-a334-4cfc-86fe-6f003cb0055a"
+            ]
+          }
           operator = "AND"
           owner_ids = [
             "b36e5198-3e15-4769-a321-00db76ac9873"
@@ -157,10 +166,37 @@ Required:
 
 Optional:
 
-- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. Default: "AND"; must be one of ["AND", "OR"]
+- `escalation` (Attributes) Escalation for a reviewer stage. When set, the request advances to the
+reviewers named here if nobody responds within delay_minutes. Timely
+approval by any of the stage's own reviewers resolves the stage without
+escalating.
+
+owner_ids and user_ids name only who to escalate to; the stage's own
+reviewers are added automatically and must not be repeated here. A
+stage with owner_ids [X] escalating to Y sets escalation.owner_ids to
+[Y], and reviewing after escalation is then open to both X and Y.
+
+Because the stage's reviewers are unioned in rather than copied,
+removing someone from the stage also removes them from the escalation.
+At least one owner or user named here must not already be a reviewer
+of the stage. (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages--escalation))
+- `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. A stage that sets `escalation` must use `OR`; `AND` is rejected there, because the escalation timer joins the stage as an additional reviewer and would otherwise become a required approver that stalls every request until the timeout. Default: "AND"; must be one of ["AND", "OR"]
 - `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval. Default: false
 - `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval. Default: false
 - `service_user_ids` (List of String) The IDs of service users assigned as reviewers for this stage.
+
+<a id="nestedatt--request_configurations--reviewer_stages--escalation"></a>
+### Nested Schema for `request_configurations.reviewer_stages.escalation`
+
+Required:
+
+- `delay_minutes` (Number) How long to wait for a response before escalating, in minutes. Between 1 and 1440 (24 hours).
+
+Optional:
+
+- `owner_ids` (Set of String) The owners to escalate to. The stage's own owner_ids are added automatically and must not be repeated here.
+- `user_ids` (Set of String) The users to escalate to. The stage's own service_user_ids are added automatically and must not be repeated here.
+
 
 
 

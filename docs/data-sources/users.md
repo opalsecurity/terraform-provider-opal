@@ -43,5 +43,6 @@ Read-Only:
 - `hr_idp_status` (String) User status pulled from an HR/IDP provider.
 - `id` (String) The ID of the user.
 - `last_name` (String) The last name of the user.
+- `manager_id` (String) The ID of the user's manager. Null if the user has no manager.
 - `name` (String) The full name of the user.
 - `position` (String) The user's position.
