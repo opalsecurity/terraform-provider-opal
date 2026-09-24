@@ -36,6 +36,15 @@ resource "opal_configuration_template" "my_configurationtemplate" {
       require_support_ticket         = false
       reviewer_stages = [
         {
+          escalation = {
+            delay_minutes = 60
+            owner_ids = [
+              "5abab647-63e1-4cfa-84bb-235ae50bc5b1"
+            ]
+            user_ids = [
+              "7552a605-a334-4cfc-86fe-6f003cb0055a"
+            ]
+          }
           operator = "AND"
           owner_ids = [
             "b36e5198-3e15-4769-a321-00db76ac9873"
