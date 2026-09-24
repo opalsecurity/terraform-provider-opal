@@ -1,5 +1,10 @@
 # Changelog
 
+## v3.7.4
+ - Adds `escalation` to `reviewer_stages` on `opal_resource`, `opal_group`, and `opal_configuration_template` (and related data sources), so Terraform can manage reviewer-stage escalation: a `delay_minutes` timeout plus the owners and service users the request escalates to. `owner_ids` and `user_ids` are sets, so the order they are written in does not produce a diff.
+ - Regenerates the provider SDK from the current OpenAPI, picking up additions accumulated since v3.7.2: Wrike group and user-type remote info, Vercel project and role remote info, Unity Catalog and ClickHouse and Axiom resource types, and `reviewer_assignment_policy` on access review campaigns.
+ - Bumps `gen.yaml` to 3.7.4. It still pinned 3.7.2 after v3.7.3 shipped, which made the release job try to re-tag an existing version.
+
 ## v3.7.3
  - Adds redaction to Cloudflare Access headers `Cf-Access-Client-Id` and `Cf-Access-Client-Secret`
 
