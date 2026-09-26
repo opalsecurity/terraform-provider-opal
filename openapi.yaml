@@ -5236,7 +5236,7 @@ paths:
       x-speakeasy-entity-operation: User#get
   /users:
     get:
-      description: Returns a list of users for your organization.
+      description: Returns a list of users for your organization. Includes agent-labeled identities that appear on the Users page. Classic service accounts are not included.
       operationId: getUsers
       parameters:
         - description: The pagination cursor value.
@@ -10242,7 +10242,12 @@ components:
           description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
+          nullable: true
           type: string
+          # Keep omitempty so Go clients/tests that leave the pointer nil omit
+          # the field (no change) instead of marshaling JSON null (unlink).
+          x-oapi-codegen-extra-tags:
+            json: configuration_template_id,omitempty
           x-speakeasy-plan-validators: GroupConfigurationTemplateID
         request_template_id:
           description: The ID of the associated request template. Deprecated in favor of `request_configurations`.
@@ -14218,7 +14223,12 @@ components:
           description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
+          nullable: true
           type: string
+          # Keep omitempty so Go clients/tests that leave the pointer nil omit
+          # the field (no change) instead of marshaling JSON null (unlink).
+          x-oapi-codegen-extra-tags:
+            json: configuration_template_id,omitempty
           x-speakeasy-plan-validators: ResourceConfigurationTemplateID
         request_template_id:
           description: The ID of the associated request template. Deprecated in favor of `request_configurations`.
