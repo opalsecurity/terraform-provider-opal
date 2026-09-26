@@ -28,7 +28,7 @@ generation:
     skipResponseBodyAssertions: false
   flattenGlobalSecurity: true
 terraform:
-  version: 3.7.4
+  version: 3.8.0
   additionalActions: []
   additionalDataSources: []
   additionalDependencies:
@@ -53,6 +53,8 @@ terraform:
     - env: OPAL_AUTH_TOKEN
       providerAttribute: bearer_auth
   excludeEmptyObjectSchemas: false
+  fixFlags:
+    encodePathParams: false
   forwardCompatibleEnumsByDefault: false
   imports:
     option: openapi
