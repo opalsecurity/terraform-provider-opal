@@ -77,7 +77,7 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			},
 			"configuration_template_id": schema.StringAttribute{
 				Computed:    true,
-				Description: `The ID of the associated configuration template. Set to a UUID to attach or re-point. Set to null (remove the attribute in Terraform, with visibility and request_configurations) to unlink by forking into a private configuration that keeps current settings.`,
+				Description: `The ID of the associated configuration template.`,
 			},
 			"custom_request_notification": schema.StringAttribute{
 				Computed:    true,

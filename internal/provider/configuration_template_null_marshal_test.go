@@ -103,3 +103,50 @@ func TestToSharedUpdateResourceInfoConfigurationTemplateIDNullOnWire(t *testing.
 	require.NoError(t, json.Unmarshal(body, &payload))
 	require.JSONEq(t, `null`, string(payload["configuration_template_id"]))
 }
+
+func TestToSharedUpdateResourceInfoConfigurationTemplateIDOmittedWhenUnknown(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+	model := &ResourceResourceModel{
+		ID:                      types.StringValue("resource-id"),
+		ConfigurationTemplateID: types.StringUnknown(),
+		Name:                    types.StringValue("Production"),
+		RequireMfaToApprove:     types.BoolValue(false),
+	}
+
+	info, diags := model.ToSharedUpdateResourceInfo(ctx)
+	require.False(t, diags.HasError(), diags.Errors())
+	require.False(t, info.ConfigurationTemplateID.IsSet())
+
+	body, err := json.Marshal(info)
+	require.NoError(t, err)
+
+	var payload map[string]json.RawMessage
+	require.NoError(t, json.Unmarshal(body, &payload))
+	_, present := payload["configuration_template_id"]
+	require.False(t, present)
+}
+
+func TestToSharedUpdateResourceInfoConfigurationTemplateIDUUIDOnWire(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+	templateID := "06851574-e50d-40ca-8c78-f72ae6ab4304"
+	model := &ResourceResourceModel{
+		ID:                      types.StringValue("resource-id"),
+		ConfigurationTemplateID: types.StringValue(templateID),
+		Name:                    types.StringValue("Production"),
+		RequireMfaToApprove:     types.BoolValue(false),
+	}
+
+	info, diags := model.ToSharedUpdateResourceInfo(ctx)
+	require.False(t, diags.HasError(), diags.Errors())
+
+	body, err := json.Marshal(info)
+	require.NoError(t, err)
+
+	var payload map[string]json.RawMessage
+	require.NoError(t, json.Unmarshal(body, &payload))
+	require.JSONEq(t, `"`+templateID+`"`, string(payload["configuration_template_id"]))
+}
