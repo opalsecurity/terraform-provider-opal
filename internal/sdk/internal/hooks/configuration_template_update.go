@@ -68,7 +68,10 @@ type configurationTemplateEntity struct {
 	id   string
 }
 
-func (h *configurationTemplateUpdateHook) SDKInit(baseURL string, client HTTPClient) (string, HTTPClient) {
+func (h *configurationTemplateUpdateHook) SDKInit(
+	baseURL string,
+	client HTTPClient,
+) (string, HTTPClient) {
 	h.linkedGroupIDs = make(map[string]struct{})
 	h.linkedResourceIDs = make(map[string]struct{})
 	return baseURL, &configurationTemplateTransport{next: client, hook: h}
@@ -86,22 +89,25 @@ func (t *configurationTemplateTransport) Do(req *http.Request) (*http.Response, 
 		}, nil
 	}
 
-	entities := configurationTemplateEntities(req)
+	linked, unlinked := configurationTemplateLinkChanges(req)
 	res, err := t.next.Do(req)
 	if err == nil && res != nil && res.StatusCode >= 200 && res.StatusCode < 300 {
-		t.hook.recordLinkedEntities(entities)
+		t.hook.recordLinkedEntities(linked)
+		t.hook.clearUnlinkedEntities(unlinked)
 	}
 	return res, err
 }
 
-func configurationTemplateEntities(req *http.Request) []configurationTemplateEntity {
+func configurationTemplateLinkChanges(
+	req *http.Request,
+) (linked, unlinked []configurationTemplateEntity) {
 	if req.Method != http.MethodPut || req.Body == nil {
-		return nil
+		return nil, nil
 	}
 
 	segments := pathSegments(req.URL.Path)
 	if len(segments) == 0 {
-		return nil
+		return nil, nil
 	}
 
 	operation, ok := map[string]configurationTemplateUpdateOperation{
@@ -109,34 +115,49 @@ func configurationTemplateEntities(req *http.Request) []configurationTemplateEnt
 		"resources": configurationTemplateUpdateOperations["updateResources"],
 	}[segments[len(segments)-1]]
 	if !ok {
-		return nil
+		return nil, nil
 	}
 
 	body, err := io.ReadAll(req.Body)
 	if err != nil {
-		return nil
+		return nil, nil
 	}
 	req.Body = io.NopCloser(bytes.NewReader(body))
 
 	var payload map[string][]map[string]json.RawMessage
 	if json.Unmarshal(body, &payload) != nil {
-		return nil
+		return nil, nil
 	}
 
 	idKey := strings.TrimSuffix(operation.itemsKey, "s") + "_id"
-	entities := make([]configurationTemplateEntity, 0, len(payload[operation.itemsKey]))
 	for _, item := range payload[operation.itemsKey] {
-		var templateID, entityID string
-		if json.Unmarshal(item["configuration_template_id"], &templateID) != nil || templateID == "" ||
-			json.Unmarshal(item[idKey], &entityID) != nil || entityID == "" {
+		var entityID string
+		if json.Unmarshal(item[idKey], &entityID) != nil || entityID == "" {
 			continue
 		}
-		entities = append(entities, configurationTemplateEntity{kind: operation.itemsKey, id: entityID})
+		raw, present := item["configuration_template_id"]
+		if !present {
+			continue
+		}
+		if bytes.Equal(raw, []byte("null")) || bytes.Equal(raw, []byte(`""`)) {
+			unlinked = append(
+				unlinked,
+				configurationTemplateEntity{kind: operation.itemsKey, id: entityID},
+			)
+			continue
+		}
+		var templateID string
+		if json.Unmarshal(raw, &templateID) != nil || templateID == "" {
+			continue
+		}
+		linked = append(linked, configurationTemplateEntity{kind: operation.itemsKey, id: entityID})
 	}
-	return entities
+	return linked, unlinked
 }
 
-func (h *configurationTemplateUpdateHook) recordLinkedEntities(entities []configurationTemplateEntity) {
+func (h *configurationTemplateUpdateHook) recordLinkedEntities(
+	entities []configurationTemplateEntity,
+) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
 	for _, entity := range entities {
@@ -144,6 +165,20 @@ func (h *configurationTemplateUpdateHook) recordLinkedEntities(entities []config
 			h.linkedGroupIDs[entity.id] = struct{}{}
 		} else {
 			h.linkedResourceIDs[entity.id] = struct{}{}
+		}
+	}
+}
+
+func (h *configurationTemplateUpdateHook) clearUnlinkedEntities(
+	entities []configurationTemplateEntity,
+) {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	for _, entity := range entities {
+		if entity.kind == "groups" {
+			delete(h.linkedGroupIDs, entity.id)
+		} else {
+			delete(h.linkedResourceIDs, entity.id)
 		}
 	}
 }
@@ -162,7 +197,8 @@ func (h *configurationTemplateUpdateHook) shouldSkipFollowUp(req *http.Request) 
 	defer h.mu.RUnlock()
 	switch entityKind {
 	case "groups":
-		if operation != "message-channels" && operation != "on-call-schedules" && operation != "visibility" {
+		if operation != "message-channels" && operation != "on-call-schedules" &&
+			operation != "visibility" {
 			return false
 		}
 		_, linked := h.linkedGroupIDs[entityID]
@@ -182,7 +218,10 @@ func pathSegments(path string) []string {
 	return strings.Split(strings.Trim(path, "/"), "/")
 }
 
-func (h *configurationTemplateUpdateHook) BeforeRequest(hookCtx BeforeRequestContext, req *http.Request) (*http.Request, error) {
+func (h *configurationTemplateUpdateHook) BeforeRequest(
+	hookCtx BeforeRequestContext,
+	req *http.Request,
+) (*http.Request, error) {
 	operation, ok := configurationTemplateUpdateOperations[hookCtx.OperationID]
 	if !ok || req.Body == nil {
 		return req, nil
@@ -204,7 +243,8 @@ func (h *configurationTemplateUpdateHook) BeforeRequest(hookCtx BeforeRequestCon
 	changed := false
 	for _, item := range payload[operation.itemsKey] {
 		templateID, present := item["configuration_template_id"]
-		if !present || bytes.Equal(templateID, []byte("null")) || bytes.Equal(templateID, []byte(`""`)) {
+		if !present || bytes.Equal(templateID, []byte("null")) ||
+			bytes.Equal(templateID, []byte(`""`)) {
 			continue
 		}
 
