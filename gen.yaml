@@ -53,6 +53,8 @@ terraform:
     - env: OPAL_AUTH_TOKEN
       providerAttribute: bearer_auth
   excludeEmptyObjectSchemas: false
+  fixFlags:
+    encodePathParams: false
   forwardCompatibleEnumsByDefault: false
   imports:
     option: openapi
