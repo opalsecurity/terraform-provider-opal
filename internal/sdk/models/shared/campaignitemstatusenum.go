@@ -14,13 +14,14 @@ import (
 type CampaignItemStatusEnum string
 
 const (
-	CampaignItemStatusEnumPending      CampaignItemStatusEnum = "PENDING"
-	CampaignItemStatusEnumCompleted    CampaignItemStatusEnum = "COMPLETED"
-	CampaignItemStatusEnumApproved     CampaignItemStatusEnum = "APPROVED"
-	CampaignItemStatusEnumRevoked      CampaignItemStatusEnum = "REVOKED"
-	CampaignItemStatusEnumNoAction     CampaignItemStatusEnum = "NO_ACTION"
-	CampaignItemStatusEnumChangedRole  CampaignItemStatusEnum = "CHANGED_ROLE"
-	CampaignItemStatusEnumAdminRevoked CampaignItemStatusEnum = "ADMIN_REVOKED"
+	CampaignItemStatusEnumPending           CampaignItemStatusEnum = "PENDING"
+	CampaignItemStatusEnumCompleted         CampaignItemStatusEnum = "COMPLETED"
+	CampaignItemStatusEnumApproved          CampaignItemStatusEnum = "APPROVED"
+	CampaignItemStatusEnumRevoked           CampaignItemStatusEnum = "REVOKED"
+	CampaignItemStatusEnumNoAction          CampaignItemStatusEnum = "NO_ACTION"
+	CampaignItemStatusEnumChangedRole       CampaignItemStatusEnum = "CHANGED_ROLE"
+	CampaignItemStatusEnumExpirationReduced CampaignItemStatusEnum = "EXPIRATION_REDUCED"
+	CampaignItemStatusEnumAdminRevoked      CampaignItemStatusEnum = "ADMIN_REVOKED"
 )
 
 func (e CampaignItemStatusEnum) ToPointer() *CampaignItemStatusEnum {
@@ -43,6 +44,8 @@ func (e *CampaignItemStatusEnum) UnmarshalJSON(data []byte) error {
 	case "NO_ACTION":
 		fallthrough
 	case "CHANGED_ROLE":
+		fallthrough
+	case "EXPIRATION_REDUCED":
 		fallthrough
 	case "ADMIN_REVOKED":
 		*e = CampaignItemStatusEnum(v)
