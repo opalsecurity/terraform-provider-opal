@@ -25,6 +25,19 @@ func (r *AppsDataSourceModel) RefreshFromSharedAppsList(ctx context.Context, res
 			var apps tfTypes.App
 
 			apps.AdminOwnerID = types.StringValue(appsItem.AdminOwnerID)
+			if appsItem.CustomConnector == nil {
+				apps.CustomConnector = nil
+			} else {
+				apps.CustomConnector = &tfTypes.CustomConnectorAppConfig{}
+				apps.CustomConnector.BaseURL = types.StringValue(appsItem.CustomConnector.BaseURL)
+				apps.CustomConnector.Identifier = types.StringValue(appsItem.CustomConnector.Identifier)
+				apps.CustomConnector.SupportsEventIngestion = types.BoolValue(appsItem.CustomConnector.SupportsEventIngestion)
+				apps.CustomConnector.SupportsGroups = types.BoolValue(appsItem.CustomConnector.SupportsGroups)
+				apps.CustomConnector.SupportsNestedGroups = types.BoolValue(appsItem.CustomConnector.SupportsNestedGroups)
+				apps.CustomConnector.SupportsNestedResources = types.BoolValue(appsItem.CustomConnector.SupportsNestedResources)
+				apps.CustomConnector.TLSCaCertContent = types.StringPointerValue(appsItem.CustomConnector.TLSCaCertContent)
+				apps.CustomConnector.TLSMode = types.BoolValue(appsItem.CustomConnector.TLSMode)
+			}
 			apps.Description = types.StringValue(appsItem.Description)
 			apps.ID = types.StringValue(appsItem.ID)
 			apps.Name = types.StringValue(appsItem.Name)
@@ -44,6 +57,11 @@ func (r *AppsDataSourceModel) RefreshFromSharedAppsList(ctx context.Context, res
 				validations.UsageReason = types.StringPointerValue(validationsItem.UsageReason)
 
 				apps.Validations = append(apps.Validations, validations)
+			}
+			if appsItem.Visibility != nil {
+				apps.Visibility = types.StringValue(string(*appsItem.Visibility))
+			} else {
+				apps.Visibility = types.StringNull()
 			}
 
 			r.Apps = append(r.Apps, apps)

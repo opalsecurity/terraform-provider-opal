@@ -31,12 +31,14 @@ type AppDataSource struct {
 
 // AppDataSourceModel describes the data model.
 type AppDataSourceModel struct {
-	AdminOwnerID types.String            `tfsdk:"admin_owner_id"`
-	Description  types.String            `tfsdk:"description"`
-	ID           types.String            `tfsdk:"id"`
-	Name         types.String            `tfsdk:"name"`
-	Type         types.String            `tfsdk:"type"`
-	Validations  []tfTypes.AppValidation `tfsdk:"validations"`
+	AdminOwnerID    types.String                      `tfsdk:"admin_owner_id"`
+	CustomConnector *tfTypes.CustomConnectorAppConfig `tfsdk:"custom_connector"`
+	Description     types.String                      `tfsdk:"description"`
+	ID              types.String                      `tfsdk:"id"`
+	Name            types.String                      `tfsdk:"name"`
+	Type            types.String                      `tfsdk:"type"`
+	Validations     []tfTypes.AppValidation           `tfsdk:"validations"`
+	Visibility      types.String                      `tfsdk:"visibility"`
 }
 
 // Metadata returns the data source type name.
@@ -53,6 +55,45 @@ func (r *AppDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 			"admin_owner_id": schema.StringAttribute{
 				Computed:    true,
 				Description: `The ID of the owner of the app.`,
+			},
+			"custom_connector": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"base_url": schema.StringAttribute{
+						Computed:    true,
+						Description: `The base URL of the Custom Connector.`,
+					},
+					"identifier": schema.StringAttribute{
+						Computed:    true,
+						Description: `The identifier of the Custom Connector.`,
+					},
+					"supports_event_ingestion": schema.BoolAttribute{
+						Computed:    true,
+						Description: `Whether the Custom Connector supports event ingestion.`,
+					},
+					"supports_groups": schema.BoolAttribute{
+						Computed:    true,
+						Description: `Whether the Custom Connector supports groups.`,
+					},
+					"supports_nested_groups": schema.BoolAttribute{
+						Computed:    true,
+						Description: `Whether the Custom Connector supports nested groups.`,
+					},
+					"supports_nested_resources": schema.BoolAttribute{
+						Computed:    true,
+						Description: `Whether the Custom Connector supports nested resources.`,
+					},
+					"tls_ca_cert_content": schema.StringAttribute{
+						Computed:    true,
+						Description: `Optional PEM-encoded CA certificate content for TLS.`,
+					},
+					"tls_mode": schema.BoolAttribute{
+						Computed:    true,
+						Description: `Whether TLS verification is enabled for the Custom Connector.`,
+					},
+				},
+				MarkdownDescription: `Configuration for a Custom Connector app. Does not include the signing` + "\n" +
+					`secret; secrets are write-only and never returned by the API.`,
 			},
 			"description": schema.StringAttribute{
 				Computed:    true,
@@ -106,6 +147,10 @@ func (r *AppDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 					},
 				},
 				Description: `Validation checks of an apps' configuration and permissions.`,
+			},
+			"visibility": schema.StringAttribute{
+				Computed:    true,
+				Description: `The visibility level of the entity.`,
 			},
 		},
 	}
