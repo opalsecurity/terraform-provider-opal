@@ -122,6 +122,8 @@ func (r *BundleResourceResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
+
 	request, requestDiags := data.ToOperationsAddBundleResourceRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -130,7 +132,7 @@ func (r *BundleResourceResource) Create(ctx context.Context, req resource.Create
 	}
 	res, err := r.client.Bundles.AddBundleResource(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -226,6 +228,8 @@ func (r *BundleResourceResource) Delete(ctx context.Context, req resource.Delete
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.State)
+
 	request, requestDiags := data.ToOperationsRemoveBundleResourceRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -234,7 +238,7 @@ func (r *BundleResourceResource) Delete(ctx context.Context, req resource.Delete
 	}
 	res, err := r.client.Bundles.RemoveBundleResource(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
