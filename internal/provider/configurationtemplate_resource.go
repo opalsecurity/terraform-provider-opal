@@ -401,6 +401,8 @@ func (r *ConfigurationTemplateResource) Create(ctx context.Context, req resource
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
+
 	request, requestDiags := data.ToSharedCreateConfigurationTemplateInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -409,7 +411,7 @@ func (r *ConfigurationTemplateResource) Create(ctx context.Context, req resource
 	}
 	res, err := r.client.ConfigurationTemplates.Create(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -481,6 +483,8 @@ func (r *ConfigurationTemplateResource) Update(ctx context.Context, req resource
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
+
 	request, requestDiags := data.ToSharedUpdateConfigurationTemplateInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -489,7 +493,7 @@ func (r *ConfigurationTemplateResource) Update(ctx context.Context, req resource
 	}
 	res, err := r.client.ConfigurationTemplates.Update(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -541,6 +545,8 @@ func (r *ConfigurationTemplateResource) Delete(ctx context.Context, req resource
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.State)
+
 	request, requestDiags := data.ToOperationsDeleteConfigurationTemplateRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -549,7 +555,7 @@ func (r *ConfigurationTemplateResource) Delete(ctx context.Context, req resource
 	}
 	res, err := r.client.ConfigurationTemplates.Delete(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
