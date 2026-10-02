@@ -19,6 +19,9 @@ func (r *AppResourceModel) RefreshFromSharedApp(ctx context.Context, resp *share
 	var diags diag.Diagnostics
 
 	if resp != nil {
+		// import_visibility is accepted on create/update but not returned on App GET —
+		// preserve the planned/prior value (or null) so apply does not leave Unknown.
+		importVisibilityPrior := r.ImportVisibility
 		r.AdminOwnerID = types.StringValue(resp.AdminOwnerID)
 		if resp.CustomConnector == nil {
 			r.CustomConnector = nil
@@ -39,6 +42,11 @@ func (r *AppResourceModel) RefreshFromSharedApp(ctx context.Context, resp *share
 		}
 		r.Description = types.StringValue(resp.Description)
 		r.ID = types.StringValue(resp.ID)
+		if importVisibilityPrior.IsUnknown() {
+			r.ImportVisibility = types.StringNull()
+		} else {
+			r.ImportVisibility = importVisibilityPrior
+		}
 		r.Name = types.StringValue(resp.Name)
 		r.Type = types.StringValue(string(resp.Type))
 		r.Validations = []tfTypes.AppValidation{}
