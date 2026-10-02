@@ -106,6 +106,31 @@ paths:
         - apps
       x-speakeasy-name-override: get
       x-speakeasy-entity-operation: Apps#get
+    post:
+      summary: Create app
+      description: |-
+        Creates an `App` in Opal. Currently supports only Push-only apps (`CUSTOM`)
+        and Custom Connector apps (`CUSTOM_CONNECTOR`).
+      operationId: createApp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAppInfo"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App"
+          description: The app that was created.
+      security:
+        - BearerAuth: []
+      tags:
+        - apps
+      x-speakeasy-name-override: create
+      x-speakeasy-entity-operation: App#create
   /apps/{app_id}:
     get:
       summary: Get app by ID
@@ -138,6 +163,71 @@ paths:
         - apps
       x-speakeasy-name-override: get_id
       x-speakeasy-entity-operation: App#get
+    put:
+      summary: Update app
+      description: |-
+        Updates an `App`. Currently supports only Push-only apps (`CUSTOM`) and
+        Custom Connector apps (`CUSTOM_CONNECTOR`).
+      operationId: updateApp
+      parameters:
+        - description: The ID of the app.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: true
+          in: path
+          name: app_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+          x-speakeasy-name-override: id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAppInfo"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/App"
+          description: The updated app.
+      security:
+        - BearerAuth: []
+      tags:
+        - apps
+      x-speakeasy-name-override: update
+      x-speakeasy-entity-operation: App#update
+    delete:
+      summary: Delete app
+      description: |-
+        Deletes an `App`. Currently supports only Push-only apps (`CUSTOM`) and
+        Custom Connector apps (`CUSTOM_CONNECTOR`). Matches the UI: soft-deletes
+        the app and cleans up its resources, groups, and users.
+      operationId: deleteApp
+      parameters:
+        - description: The ID of the app.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: true
+          in: path
+          name: app_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+          x-speakeasy-name-override: id
+      responses:
+        "200":
+          description: The app was successfully deleted.
+      security:
+        - BearerAuth: []
+      tags:
+        - apps
+      x-speakeasy-name-override: delete
+      x-speakeasy-entity-operation: App#delete
   /bundles:
     get:
       summary: Get bundles
@@ -1057,6 +1147,55 @@ paths:
           description: Missing settings-edit permission.
         "404":
           description: Campaign or one or more campaign items not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - campaigns
+  /campaigns/{campaign_id}/reviews:
+    post:
+      summary: Submit campaign item review decisions
+      description: |
+        Submits one or more review decisions for campaign item reviews assigned
+        to the authenticated user. Mirrors the GraphQL `reviewCampaignItems`
+        mutation.
+
+        Each decision targets a `campaign_item_review_id` that must belong to
+        this campaign and be assigned to the caller. Supported decisions are
+        `APPROVED`, `REVOKED`, `CHANGE_ROLE`, and `REASSIGNED`.
+
+        For `CHANGE_ROLE`, `access_level_remote_id` is required. For
+        `REASSIGNED`, either supply `new_reviewer_user_ids` (manual) or an
+        `assignment_source` preset (`PRINCIPAL_MANAGER` / `ASSET_ADMIN_OWNER`).
+        Reassignment also requires the campaign configuration flag
+        `allow_reviewer_reassignment` to be enabled.
+
+        When the campaign uses `revoke_on: ACTION`, `REVOKED` decisions revoke
+        access immediately.
+      operationId: reviewCampaignItems
+      parameters:
+        - description: The ID of the campaign.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          explode: true
+          in: path
+          name: campaign_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewCampaignItemsInfo"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReviewCampaignItemsResponse"
+          description: The updated campaign item reviews.
       security:
         - BearerAuth: []
       tags:
@@ -5236,7 +5375,7 @@ paths:
       x-speakeasy-entity-operation: User#get
   /users:
     get:
-      description: Returns a list of users for your organization.
+      description: Returns a list of users for your organization. Includes agent-labeled identities that appear on the Users page. Classic service accounts are not included.
       operationId: getUsers
       parameters:
         - description: The pagination cursor value.
@@ -7198,6 +7337,10 @@ components:
           description: Whether reviewers may reassign their reviews to another user.
           example: false
           type: boolean
+        allow_reviewers_to_reduce_expiration:
+          description: Whether reviewers can shorten an item's access expiration. They cannot extend it.
+          example: false
+          type: boolean
         start_date:
           description: Scheduled start date of the campaign.
           example: 2026-07-02T00:00:00Z
@@ -7275,6 +7418,7 @@ components:
         - allow_self_review
         - send_reviewer_assignment_notification
         - allow_reviewer_reassignment
+        - allow_reviewers_to_reduce_expiration
         - timezone
         - revoke_on
         - reminder_include_manager
@@ -7317,6 +7461,10 @@ components:
           type: boolean
         allow_reviewer_reassignment:
           description: Whether reviewers may reassign their reviews to another user.
+          example: false
+          type: boolean
+        allow_reviewers_to_reduce_expiration:
+          description: Whether reviewers can shorten an item's access expiration. They cannot extend it.
           example: false
           type: boolean
         start_date:
@@ -7438,6 +7586,10 @@ components:
           type: boolean
         allow_reviewer_reassignment:
           description: Whether reviewers may reassign their reviews to another user.
+          example: false
+          type: boolean
+        allow_reviewers_to_reduce_expiration:
+          description: Whether reviewers can shorten an item's access expiration. They cannot extend it.
           example: false
           type: boolean
         start_date:
@@ -7664,6 +7816,7 @@ components:
         - REVOKED
         - NO_ACTION
         - CHANGED_ROLE
+        - EXPIRATION_REDUCED
         - ADMIN_REVOKED
       example: PENDING
       type: string
@@ -7673,6 +7826,7 @@ components:
         - APPROVED
         - REVOKED
         - CHANGE_ROLE
+        - REDUCE_EXPIRATION
         - ADMIN_REVOKED
         - NO_ACTION
         - REASSIGNED
@@ -7727,6 +7881,10 @@ components:
           description: Target access level remote ID when decision is CHANGE_ROLE.
           nullable: true
           type: string
+        updated_duration_in_minutes:
+          description: Built-in duration in minutes when decision is REDUCE_EXPIRATION.
+          nullable: true
+          type: integer
         decided_at:
           description: When the decision was finalized.
           format: date-time
@@ -8203,11 +8361,16 @@ components:
           x-speakeasy-unknown-values: allow
           example: OKTA_DIRECTORY
           type: string
+        visibility:
+          $ref: "#/components/schemas/VisibilityTypeEnum"
         validations:
           description: Validation checks of an apps' configuration and permissions.
           items:
             $ref: "#/components/schemas/AppValidation"
           type: array
+          x-speakeasy-param-readonly: true
+        custom_connector:
+          $ref: "#/components/schemas/CustomConnectorAppConfig"
       required:
         - app_id
         - name
@@ -8216,6 +8379,215 @@ components:
         - app_type
       type: object
       x-speakeasy-entity: App
+    CustomConnectorAppConfig:
+      description: |-
+        Configuration for a Custom Connector app. Does not include the signing
+        secret; secrets are write-only and never returned by the API.
+      properties:
+        identifier:
+          description: The identifier of the Custom Connector.
+          example: my-connector
+          type: string
+        base_url:
+          description: The base URL of the Custom Connector.
+          example: https://my-connector.example.com
+          type: string
+        tls_mode:
+          description: Whether TLS verification is enabled for the Custom Connector.
+          type: boolean
+        tls_ca_cert_content:
+          description: Optional PEM-encoded CA certificate content for TLS.
+          type: string
+          nullable: true
+        supports_groups:
+          description: Whether the Custom Connector supports groups.
+          type: boolean
+        supports_nested_resources:
+          description: Whether the Custom Connector supports nested resources.
+          type: boolean
+        supports_nested_groups:
+          description: Whether the Custom Connector supports nested groups.
+          type: boolean
+        supports_event_ingestion:
+          description: Whether the Custom Connector supports event ingestion.
+          type: boolean
+      required:
+        - identifier
+        - base_url
+        - tls_mode
+        - supports_groups
+        - supports_nested_resources
+        - supports_nested_groups
+        - supports_event_ingestion
+      type: object
+    CreateAppInfo:
+      description: |-
+        Information needed to create an app. Currently supports only Push-only
+        apps (`CUSTOM`) and Custom Connector apps (`CUSTOM_CONNECTOR`).
+      properties:
+        name:
+          description: The name of the app.
+          example: My Push-only App
+          type: string
+        description:
+          description: A description of the app.
+          example: Bookkeeping app for internal tools.
+          type: string
+        admin_owner_id:
+          description: The ID of the owner of the app.
+          example: 7c86c85d-0651-43e2-a748-d69d658418e8
+          format: uuid
+          type: string
+        app_type:
+          description: |-
+            The type of the app. Must be `CUSTOM` (Push-only App) or
+            `CUSTOM_CONNECTOR`.
+          $ref: "#/components/schemas/AppTypeEnum"
+          x-speakeasy-param-force-new: true
+        visibility:
+          description: |-
+            The visibility of the app. Defaults to `GLOBAL` when omitted.
+          $ref: "#/components/schemas/VisibilityTypeEnum"
+        visibility_group_ids:
+          description: |-
+            The IDs of groups that can see this app when visibility is `LIMITED`.
+          items:
+            format: uuid
+            type: string
+          type: array
+        import_visibility:
+          description: |-
+            The visibility of imported items. Defaults to `GLOBAL` when omitted.
+          $ref: "#/components/schemas/VisibilityTypeEnum"
+        custom_connector:
+          description: |-
+            Required when `app_type` is `CUSTOM_CONNECTOR`. Must not be set when
+            `app_type` is `CUSTOM`.
+          $ref: "#/components/schemas/CreateCustomConnectorInfo"
+      required:
+        - name
+        - description
+        - admin_owner_id
+        - app_type
+      type: object
+    CreateCustomConnectorInfo:
+      description: Information needed to create a Custom Connector app.
+      properties:
+        identifier:
+          description: The identifier of the Custom Connector.
+          example: my-connector
+          type: string
+          x-speakeasy-param-force-new: true
+        base_url:
+          description: The base URL of the Custom Connector.
+          example: https://my-connector.example.com
+          type: string
+        signing_secret:
+          description: |-
+            The signing secret used to authenticate requests to the Custom
+            Connector. Write-only; never returned by the API.
+          type: string
+          format: password
+        tls_mode:
+          description: |-
+            Whether TLS verification is enabled. Defaults to `true` when omitted.
+          type: boolean
+        tls_ca_cert_content:
+          description: Optional PEM-encoded CA certificate content for TLS.
+          type: string
+          nullable: true
+        supports_groups:
+          description: Whether the Custom Connector supports groups. Defaults to `false`.
+          type: boolean
+        supports_nested_resources:
+          description: |-
+            Whether the Custom Connector supports nested resources. Defaults to
+            `false`.
+          type: boolean
+        supports_nested_groups:
+          description: |-
+            Whether the Custom Connector supports nested groups. Defaults to
+            `false`.
+          type: boolean
+        supports_event_ingestion:
+          description: |-
+            Whether the Custom Connector supports event ingestion. Defaults to
+            `false`.
+          type: boolean
+      required:
+        - identifier
+        - base_url
+        - signing_secret
+      type: object
+    UpdateAppInfo:
+      description: |-
+        Information needed to update an app. Currently supports only Push-only
+        apps (`CUSTOM`) and Custom Connector apps (`CUSTOM_CONNECTOR`).
+      properties:
+        name:
+          description: The updated name of the app.
+          type: string
+        description:
+          description: The updated description of the app.
+          type: string
+        admin_owner_id:
+          description: The updated ID of the owner of the app.
+          format: uuid
+          type: string
+        visibility:
+          $ref: "#/components/schemas/VisibilityTypeEnum"
+        visibility_group_ids:
+          description: |-
+            The IDs of groups that can see this app when visibility is `LIMITED`.
+          items:
+            format: uuid
+            type: string
+          type: array
+        import_visibility:
+          $ref: "#/components/schemas/VisibilityTypeEnum"
+        custom_connector:
+          description: |-
+            Updates Custom Connector configuration. Only valid for
+            `CUSTOM_CONNECTOR` apps.
+          $ref: "#/components/schemas/UpdateCustomConnectorInfo"
+      type: object
+    UpdateCustomConnectorInfo:
+      description: |-
+        Information needed to update a Custom Connector app. Omitted fields are
+        left unchanged. Provide `signing_secret` only when rotating the secret.
+      properties:
+        identifier:
+          description: The identifier of the Custom Connector.
+          type: string
+        base_url:
+          description: The base URL of the Custom Connector.
+          type: string
+        signing_secret:
+          description: |-
+            New signing secret. Write-only; never returned by the API. Omit to
+            leave the existing secret unchanged.
+          type: string
+          format: password
+        tls_mode:
+          description: Whether TLS verification is enabled for the Custom Connector.
+          type: boolean
+        tls_ca_cert_content:
+          description: Optional PEM-encoded CA certificate content for TLS.
+          type: string
+          nullable: true
+        supports_groups:
+          description: Whether the Custom Connector supports groups.
+          type: boolean
+        supports_nested_resources:
+          description: Whether the Custom Connector supports nested resources.
+          type: boolean
+        supports_nested_groups:
+          description: Whether the Custom Connector supports nested groups.
+          type: boolean
+        supports_event_ingestion:
+          description: Whether the Custom Connector supports event ingestion.
+          type: boolean
+      type: object
     AppTypeEnum:
       description: The type of an app.
       enum:
@@ -8309,6 +8681,7 @@ components:
         - APPROVED
         - REVOKED
         - CHANGE_ROLE
+        - REDUCE_EXPIRATION
         - NO_ACTION
         - PENDING
         - REASSIGNED
@@ -8320,6 +8693,7 @@ components:
         - APPROVED
         - REVOKED
         - CHANGE_ROLE
+        - REDUCE_EXPIRATION
         - ADMIN_REVOKED
         - NO_ACTION
         - REASSIGNED
@@ -8365,6 +8739,14 @@ components:
           description: Pending target access level remote ID when decision is CHANGE_ROLE.
           nullable: true
           type: string
+        updated_duration_in_minutes:
+          description: Built-in duration in minutes when decision is REDUCE_EXPIRATION.
+          nullable: true
+          type: integer
+        pending_updated_duration_in_minutes:
+          description: Staged built-in duration in minutes when the pending decision is REDUCE_EXPIRATION.
+          nullable: true
+          type: integer
         reassigned_to_reviewer_ids:
           description: User IDs this review was reassigned to.
           items:
@@ -10242,7 +10624,12 @@ components:
           description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
+          nullable: true
           type: string
+          # Keep omitempty so Go clients/tests that leave the pointer nil omit
+          # the field (no change) instead of marshaling JSON null (unlink).
+          x-oapi-codegen-extra-tags:
+            json: configuration_template_id,omitempty
           x-speakeasy-plan-validators: GroupConfigurationTemplateID
         request_template_id:
           description: The ID of the associated request template. Deprecated in favor of `request_configurations`.
@@ -14218,7 +14605,12 @@ components:
           description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
+          nullable: true
           type: string
+          # Keep omitempty so Go clients/tests that leave the pointer nil omit
+          # the field (no change) instead of marshaling JSON null (unlink).
+          x-oapi-codegen-extra-tags:
+            json: configuration_template_id,omitempty
           x-speakeasy-plan-validators: ResourceConfigurationTemplateID
         request_template_id:
           description: The ID of the associated request template. Deprecated in favor of `request_configurations`.
@@ -16493,6 +16885,110 @@ components:
         - reviews
         - unassigned_preset_messages
       type: object
+    ReviewCampaignItemDecisionInfo:
+      description: |
+        A single reviewer decision to submit for a campaign item review.
+        Mirrors GraphQL `CampaignItemReviewDecisionInput`.
+      type: object
+      required:
+        - campaign_item_review_id
+        - decision
+      properties:
+        campaign_item_review_id:
+          description: The ID of the campaign item review to update.
+          example: 4b8f2c1a-9d3e-4f6a-8b1c-2e5d7a9f0c3b
+          format: uuid
+          type: string
+        decision:
+          $ref: "#/components/schemas/CampaignItemReviewDecisionEnum"
+        note:
+          description: Optional note from the reviewer for this decision.
+          example: Access is still required for on-call.
+          nullable: true
+          type: string
+        access_level_remote_id:
+          description: |
+            Required when `decision` is `CHANGE_ROLE`. The remote ID of the
+            access level to change to. Ignored for other decisions.
+          example: arn:aws:iam::123456789012:role/ReadOnly
+          nullable: true
+          type: string
+        new_reviewer_user_ids:
+          description: |
+            When `decision` is `REASSIGNED` and `assignment_source` is `MANUAL`
+            or omitted, the user IDs to reassign this review to.
+          items:
+            format: uuid
+            type: string
+          nullable: true
+          type: array
+        assignment_source:
+          allOf:
+            - $ref: "#/components/schemas/CampaignItemReviewerAssignmentSourceEnum"
+          nullable: true
+    ReviewCampaignItemsInfo:
+      description: |
+        Input for submitting review decisions on one or more campaign item reviews.
+      type: object
+      required:
+        - decisions
+      properties:
+        decisions:
+          description: The decisions to record. Each targets a single campaign item review.
+          items:
+            $ref: "#/components/schemas/ReviewCampaignItemDecisionInfo"
+          type: array
+    CampaignItemReviewResult:
+      description: |
+        A campaign item review after a successful submit. Flat fields only —
+        does not expand principal/entity relationships.
+      type: object
+      required:
+        - campaign_item_review_id
+      properties:
+        campaign_item_review_id:
+          description: The ID of the campaign item review.
+          example: 4b8f2c1a-9d3e-4f6a-8b1c-2e5d7a9f0c3b
+          format: uuid
+          type: string
+        decision:
+          allOf:
+            - $ref: "#/components/schemas/CampaignItemReviewDecisionEnum"
+          nullable: true
+        note:
+          description: Note recorded with the decision, if any.
+          nullable: true
+          type: string
+        decided_at:
+          description: When the decision was submitted.
+          format: date-time
+          nullable: true
+          type: string
+        updated_access_level_remote_id:
+          description: |
+            When `decision` is `CHANGE_ROLE`, the remote ID of the access level
+            the reviewer selected.
+          nullable: true
+          type: string
+        reassigned_to_reviewer_ids:
+          description: |
+            When `decision` is `REASSIGNED`, the user IDs the review was
+            reassigned to.
+          items:
+            format: uuid
+            type: string
+          type: array
+    ReviewCampaignItemsResponse:
+      description: Result of submitting campaign item review decisions.
+      type: object
+      required:
+        - reviews
+      properties:
+        reviews:
+          description: Updated reviews in the same order as the request decisions.
+          items:
+            $ref: "#/components/schemas/CampaignItemReviewResult"
+          type: array
     UpdateVisibilityInfo:
       description: Visibility information to set on a group or resource. Unlike VisibilityInfo, `visibility` is not required here so a Terraform configuration can omit it when attaching a configuration template. Untemplated groups and resources still require `visibility`. When `configuration_template_id` is set, the template governs visibility; omit `visibility` and `visibility_group_ids` rather than setting them alongside the template.
       example:

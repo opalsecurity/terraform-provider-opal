@@ -32,6 +32,50 @@ actions:
   - target: $["paths"]["/apps/{app_id}"]["get"]
     update:
       x-speakeasy-entity-operation: App#get
+  # PROD-1493: writable App resource (CUSTOM + CUSTOM_CONNECTOR only; API enforces)
+  - target: $["paths"]["/apps"]["post"]
+    update:
+      x-speakeasy-name-override: create
+  - target: $["paths"]["/apps"]["post"]
+    update:
+      x-speakeasy-entity-operation: App#create
+  - target: $["paths"]["/apps/{app_id}"]["put"]["operationId"]
+    update: updateApp
+  - target: $["paths"]["/apps/{app_id}"]["put"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/apps/{app_id}"]["put"]
+    update:
+      x-speakeasy-name-override: update
+  - target: $["paths"]["/apps/{app_id}"]["put"]
+    update:
+      x-speakeasy-entity-operation: App#update
+  - target: $["paths"]["/apps/{app_id}"]["delete"]["operationId"]
+    update: deleteApp
+  - target: $["paths"]["/apps/{app_id}"]["delete"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/apps/{app_id}"]["delete"]
+    update:
+      x-speakeasy-name-override: delete
+  - target: $["paths"]["/apps/{app_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: App#delete
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["app_type"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["CreateCustomConnectorInfo"]["properties"]["identifier"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["CreateCustomConnectorInfo"]["properties"]["signing_secret"]
+    update:
+      format: password
+  - target: $["components"]["schemas"]["UpdateCustomConnectorInfo"]["properties"]["signing_secret"]
+    update:
+      format: password
+  - target: $["components"]["schemas"]["App"]["properties"]["validations"]
+    update:
+      x-speakeasy-param-readonly: true
   - target: $["paths"]["/bundles"]["get"]
     update:
       x-speakeasy-entity-operation: PaginatedBundleList#read
