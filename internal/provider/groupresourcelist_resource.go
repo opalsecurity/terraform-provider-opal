@@ -186,8 +186,6 @@ func (r *GroupResourceListResource) Create(ctx context.Context, req resource.Cre
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToOperationsUpdateGroupResourcesRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -196,7 +194,7 @@ func (r *GroupResourceListResource) Create(ctx context.Context, req resource.Cre
 	}
 	res, err := r.client.Groups.UpdateResources(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -224,7 +222,7 @@ func (r *GroupResourceListResource) Create(ctx context.Context, req resource.Cre
 	}
 	res1, err := r.client.Groups.GetResources(ctx, *request1)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
 		}
@@ -276,8 +274,6 @@ func (r *GroupResourceListResource) Read(ctx context.Context, req resource.ReadR
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.State)
-
 	request, requestDiags := data.ToOperationsGetGroupResourcesRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -286,7 +282,7 @@ func (r *GroupResourceListResource) Read(ctx context.Context, req resource.ReadR
 	}
 	res, err := r.client.Groups.GetResources(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -332,8 +328,6 @@ func (r *GroupResourceListResource) Update(ctx context.Context, req resource.Upd
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
-
 	request, requestDiags := data.ToOperationsUpdateGroupResourcesRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -342,7 +336,7 @@ func (r *GroupResourceListResource) Update(ctx context.Context, req resource.Upd
 	}
 	res, err := r.client.Groups.UpdateResources(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -370,7 +364,7 @@ func (r *GroupResourceListResource) Update(ctx context.Context, req resource.Upd
 	}
 	res1, err := r.client.Groups.GetResources(ctx, *request1)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
 		}
