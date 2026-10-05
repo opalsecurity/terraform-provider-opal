@@ -135,8 +135,6 @@ func (r *PaladinResource) Create(ctx context.Context, req resource.CreateRequest
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToSharedCreatePaladinInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -145,7 +143,7 @@ func (r *PaladinResource) Create(ctx context.Context, req resource.CreateRequest
 	}
 	res, err := r.client.Paladin.Create(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -197,8 +195,6 @@ func (r *PaladinResource) Read(ctx context.Context, req resource.ReadRequest, re
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.State)
-
 	request, requestDiags := data.ToOperationsGetPaladinRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -207,7 +203,7 @@ func (r *PaladinResource) Read(ctx context.Context, req resource.ReadRequest, re
 	}
 	res, err := r.client.Paladin.Get(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -253,8 +249,6 @@ func (r *PaladinResource) Update(ctx context.Context, req resource.UpdateRequest
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
-
 	request, requestDiags := data.ToOperationsUpdatePaladinRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -263,7 +257,7 @@ func (r *PaladinResource) Update(ctx context.Context, req resource.UpdateRequest
 	}
 	res, err := r.client.Paladin.Update(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -315,8 +309,6 @@ func (r *PaladinResource) Delete(ctx context.Context, req resource.DeleteRequest
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.State)
-
 	request, requestDiags := data.ToOperationsDeletePaladinRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -325,7 +317,7 @@ func (r *PaladinResource) Delete(ctx context.Context, req resource.DeleteRequest
 	}
 	res, err := r.client.Paladin.Delete(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}

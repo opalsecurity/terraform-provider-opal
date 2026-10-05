@@ -124,8 +124,6 @@ func (r *OnCallScheduleResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToSharedCreateOnCallScheduleInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -134,7 +132,7 @@ func (r *OnCallScheduleResource) Create(ctx context.Context, req resource.Create
 	}
 	res, err := r.client.OnCallSchedules.Create(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -186,8 +184,6 @@ func (r *OnCallScheduleResource) Read(ctx context.Context, req resource.ReadRequ
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.State)
-
 	request, requestDiags := data.ToOperationsGetOnCallScheduleIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -196,7 +192,7 @@ func (r *OnCallScheduleResource) Read(ctx context.Context, req resource.ReadRequ
 	}
 	res, err := r.client.OnCallSchedules.GetID(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
