@@ -1454,8 +1454,6 @@ func (r *ResourceDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetResourceIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -1464,7 +1462,7 @@ func (r *ResourceDataSource) Read(ctx context.Context, req datasource.ReadReques
 	}
 	res, err := r.client.Resources.GetID(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -1495,7 +1493,7 @@ func (r *ResourceDataSource) Read(ctx context.Context, req datasource.ReadReques
 	}
 	res1, err := r.client.Resources.GetVisibility(ctx, *request1)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res1 != nil && res1.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
 		}
