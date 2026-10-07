@@ -43,7 +43,7 @@ func debugResponse(response *http.Response) string {
 			return err.Error()
 		}
 	}
-	return redactSensitiveValues(response.Request.Context(), fmt.Sprintf("**Request**:\n%s\n**Response**:\n%s", string(dumpReq), string(dumpRes)))
+	return fmt.Sprintf("**Request**:\n%s\n**Response**:\n%s", string(dumpReq), string(dumpRes))
 }
 
 func merge(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse, target interface{}) {
@@ -213,7 +213,6 @@ func decomposeRequestForLogging(req *http.Request) (map[string]interface{}, erro
 
 	// Read the rest of the body content
 	fields[FieldHttpRequestBody] = bodyFromRestOfRequestReader(reqReader)
-	redactSensitiveFields(req, fields)
 	return fields, nil
 }
 
@@ -290,7 +289,6 @@ func decomposeResponseForLogging(res *http.Response) (map[string]interface{}, er
 	res.Body = io.NopCloser(bytes.NewBuffer(resBody))
 
 	fields[FieldHttpResponseBody] = string(resBody)
-	redactSensitiveFields(res.Request, fields)
 
 	return fields, nil
 }
