@@ -36,7 +36,7 @@ secret; secrets are write-only and never returned by the API. (see [below for ne
 - `type` (String) The type of an app.
 - `validations` (Attributes List) Validation checks of an apps' configuration and permissions. (see [below for nested schema](#nestedatt--validations))
 - `visibility` (String) The visibility level of the entity.
-- `visibility_group_ids` (List of String) The IDs of groups that can see this app when visibility is `LIMITED`.
+- `visibility_group_ids` (Set of String) The IDs of groups that can see this app when visibility is `LIMITED`.
 
 <a id="nestedatt--custom_connector"></a>
 ### Nested Schema for `custom_connector`

@@ -1207,6 +1207,36 @@ actions:
   - target: $["components"]["schemas"]["App"]
     update:
       x-speakeasy-entity: App
+  # Treat visibility_group_ids as an unordered set — the backend returns IDs
+  # alphabetically sorted, so a plain list causes permanent drift when a user
+  # writes them in a different order. Matches VisibilityInfo above.
+  - target: $["components"]["schemas"]["App"]["properties"]["visibility_group_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["App"]["properties"]["visibility_group_ids"]
+    update:
+      default: []
+  - target: $["components"]["schemas"]["App"]["properties"]["visibility_group_ids"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["visibility_group_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["visibility_group_ids"]
+    update:
+      default: []
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["visibility_group_ids"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["UpdateAppInfo"]["properties"]["visibility_group_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["UpdateAppInfo"]["properties"]["visibility_group_ids"]
+    update:
+      default: []
+  - target: $["components"]["schemas"]["UpdateAppInfo"]["properties"]["visibility_group_ids"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["Event"]
     update:
       x-speakeasy-entity: Events

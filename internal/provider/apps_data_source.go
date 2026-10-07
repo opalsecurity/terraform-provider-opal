@@ -160,7 +160,7 @@ func (r *AppsDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 							Computed:    true,
 							Description: `The visibility level of the entity.`,
 						},
-						"visibility_group_ids": schema.ListAttribute{
+						"visibility_group_ids": schema.SetAttribute{
 							Computed:    true,
 							ElementType: types.StringType,
 							Description: `The IDs of groups that can see this app when visibility is ` + "`" + `LIMITED` + "`" + `.`,
