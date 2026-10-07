@@ -22,6 +22,9 @@ const (
 	ResourceTypeEnumAwsAccount                        ResourceTypeEnum = "AWS_ACCOUNT"
 	ResourceTypeEnumAwsSsoPermissionSet               ResourceTypeEnum = "AWS_SSO_PERMISSION_SET"
 	ResourceTypeEnumAwsOrganizationalUnit             ResourceTypeEnum = "AWS_ORGANIZATIONAL_UNIT"
+	ResourceTypeEnumAwsAgentcoreGateway               ResourceTypeEnum = "AWS_AGENTCORE_GATEWAY"
+	ResourceTypeEnumAwsAgentcoreGatewayTarget         ResourceTypeEnum = "AWS_AGENTCORE_GATEWAY_TARGET"
+	ResourceTypeEnumAwsAgentcoreGatewayTool           ResourceTypeEnum = "AWS_AGENTCORE_GATEWAY_TOOL"
 	ResourceTypeEnumAzureManagementGroup              ResourceTypeEnum = "AZURE_MANAGEMENT_GROUP"
 	ResourceTypeEnumAzureResourceGroup                ResourceTypeEnum = "AZURE_RESOURCE_GROUP"
 	ResourceTypeEnumAzureSubscription                 ResourceTypeEnum = "AZURE_SUBSCRIPTION"
@@ -151,6 +154,12 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "AWS_SSO_PERMISSION_SET":
 		fallthrough
 	case "AWS_ORGANIZATIONAL_UNIT":
+		fallthrough
+	case "AWS_AGENTCORE_GATEWAY":
+		fallthrough
+	case "AWS_AGENTCORE_GATEWAY_TARGET":
+		fallthrough
+	case "AWS_AGENTCORE_GATEWAY_TOOL":
 		fallthrough
 	case "AZURE_MANAGEMENT_GROUP":
 		fallthrough

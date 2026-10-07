@@ -12,10 +12,12 @@ type Request struct {
 	CustomFieldsResponses []RequestCustomFieldResponse `tfsdk:"custom_fields_responses"`
 	DurationMinutes       types.Int64                  `tfsdk:"duration_minutes"`
 	ID                    types.String                 `tfsdk:"id"`
+	InitiatedByUserID     types.String                 `tfsdk:"initiated_by_user_id"`
 	Reason                types.String                 `tfsdk:"reason"`
 	RequestedItemsList    []RequestedItem              `tfsdk:"requested_items_list"`
 	RequesterID           types.String                 `tfsdk:"requester_id"`
 	ReviewerStages        *ReviewerStages              `tfsdk:"reviewer_stages"`
+	Source                types.String                 `tfsdk:"source"`
 	Stages                *RequestItemStages           `tfsdk:"stages"`
 	Status                types.String                 `tfsdk:"status"`
 	TargetGroupID         types.String                 `tfsdk:"target_group_id"`
