@@ -3,7 +3,7 @@
 
 package sdk
 
-// Generated from OpenAPI doc version 1.0 and generator version 2.943.0
+// Generated from OpenAPI doc version 1.0 and generator version 2.938.0
 
 import (
 	"context"
@@ -185,9 +185,9 @@ func New(opts ...SDKOption) *OpalAPI {
 	sdk := &OpalAPI{
 		SDKVersion: "3.7.5",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:         "speakeasy-sdk/terraform 3.7.5 2.943.0 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
+			UserAgent:         "speakeasy-sdk/terraform 3.7.5 2.938.0 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
 			SDKVersion:        "3.7.5",
-			GenVersion:        "2.943.0",
+			GenVersion:        "2.938.0",
 			OpenAPIDocVersion: "1.0",
 			ServerList:        ServerList,
 		},
