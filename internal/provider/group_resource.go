@@ -1582,6 +1582,15 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 											`At least one owner or user named here must not already be a reviewer` + "\n" +
 											`of the stage.`,
 									},
+									"opal_script_ids": schema.SetAttribute{
+										Computed: true,
+										Optional: true,
+										PlanModifiers: []planmodifier.Set{
+											speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
+										},
+										ElementType: types.StringType,
+										Description: `The IDs of OpalScripts assigned as reviewers for this stage. Only ` + "`" + `REQUEST_REVIEW` + "`" + ` scripts can review; any other script type is rejected.`,
+									},
 									"operator": schema.StringAttribute{
 										Computed: true,
 										Optional: true,

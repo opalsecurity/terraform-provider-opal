@@ -82,6 +82,11 @@ func (r *GroupReviewersStagesListDataSource) Schema(ctx context.Context, req dat
 								`At least one owner or user named here must not already be a reviewer` + "\n" +
 								`of the stage.`,
 						},
+						"opal_script_ids": schema.SetAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
+							Description: `The IDs of OpalScripts assigned as reviewers for this stage. Only ` + "`" + `REQUEST_REVIEW` + "`" + ` scripts can review; any other script type is rejected.`,
+						},
 						"operator": schema.StringAttribute{
 							Computed:    true,
 							Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. A stage that sets ` + "`" + `escalation` + "`" + ` must use ` + "`" + `OR` + "`" + `; ` + "`" + `AND` + "`" + ` is rejected there, because the escalation timer joins the stage as an additional reviewer and would otherwise become a required approver that stalls every request until the timeout.`,

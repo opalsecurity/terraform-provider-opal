@@ -156,6 +156,7 @@ func (p *OpalProvider) Resources(ctx context.Context) []func() resource.Resource
 		NewResourceResource,
 		NewResourceTagResource,
 		NewScopedRolePermissionListResource,
+		NewScriptResource,
 		NewTagResource,
 		NewTagUserResource,
 	}
@@ -204,6 +205,8 @@ func (p *OpalProvider) DataSources(ctx context.Context) []func() datasource.Data
 		NewResourcesUsersListDataSource,
 		NewResourcesListDataSource,
 		NewScopedRolePermissionListDataSource,
+		NewScriptDataSource,
+		NewScriptFromNameDataSource,
 		NewSessionsDataSource,
 		NewTagDataSource,
 		NewTagsListDataSource,

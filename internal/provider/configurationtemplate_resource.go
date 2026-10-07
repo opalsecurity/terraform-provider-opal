@@ -224,6 +224,11 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 											`At least one owner or user named here must not already be a reviewer` + "\n" +
 											`of the stage.`,
 									},
+									"opal_script_ids": schema.SetAttribute{
+										Optional:    true,
+										ElementType: types.StringType,
+										Description: `The IDs of OpalScripts assigned as reviewers for this stage. Only ` + "`" + `REQUEST_REVIEW` + "`" + ` scripts can review; any other script type is rejected.`,
+									},
 									"operator": schema.StringAttribute{
 										Computed:    true,
 										Optional:    true,
