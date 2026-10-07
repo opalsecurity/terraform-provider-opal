@@ -109,8 +109,6 @@ func (r *MessageChannelDataSource) Read(ctx context.Context, req datasource.Read
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetMessageChannelIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -119,7 +117,7 @@ func (r *MessageChannelDataSource) Read(ctx context.Context, req datasource.Read
 	}
 	res, err := r.client.MessageChannels.GetID(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
