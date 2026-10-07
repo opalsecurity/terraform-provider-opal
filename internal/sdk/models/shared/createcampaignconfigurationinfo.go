@@ -12,6 +12,8 @@ import (
 type CreateCampaignConfigurationInfo struct {
 	// Whether reviewers may reassign their reviews to another user.
 	AllowReviewerReassignment *bool `json:"allow_reviewer_reassignment,omitempty"`
+	// Whether reviewers can shorten an item's access expiration. They cannot extend it.
+	AllowReviewersToReduceExpiration *bool `json:"allow_reviewers_to_reduce_expiration,omitempty"`
 	// Whether reviewers can review their own access.
 	AllowSelfReview *bool `json:"allow_self_review,omitempty"`
 	// Cron expression driving the recurring schedule. Null for one-off campaigns.
@@ -74,6 +76,13 @@ func (c *CreateCampaignConfigurationInfo) GetAllowReviewerReassignment() *bool {
 		return nil
 	}
 	return c.AllowReviewerReassignment
+}
+
+func (c *CreateCampaignConfigurationInfo) GetAllowReviewersToReduceExpiration() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.AllowReviewersToReduceExpiration
 }
 
 func (c *CreateCampaignConfigurationInfo) GetAllowSelfReview() *bool {

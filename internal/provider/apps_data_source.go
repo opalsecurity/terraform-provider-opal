@@ -60,6 +60,45 @@ func (r *AppsDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 							Computed:    true,
 							Description: `The ID of the owner of the app.`,
 						},
+						"custom_connector": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"base_url": schema.StringAttribute{
+									Computed:    true,
+									Description: `The base URL of the Custom Connector.`,
+								},
+								"identifier": schema.StringAttribute{
+									Computed:    true,
+									Description: `The identifier of the Custom Connector.`,
+								},
+								"supports_event_ingestion": schema.BoolAttribute{
+									Computed:    true,
+									Description: `Whether the Custom Connector supports event ingestion.`,
+								},
+								"supports_groups": schema.BoolAttribute{
+									Computed:    true,
+									Description: `Whether the Custom Connector supports groups.`,
+								},
+								"supports_nested_groups": schema.BoolAttribute{
+									Computed:    true,
+									Description: `Whether the Custom Connector supports nested groups.`,
+								},
+								"supports_nested_resources": schema.BoolAttribute{
+									Computed:    true,
+									Description: `Whether the Custom Connector supports nested resources.`,
+								},
+								"tls_ca_cert_content": schema.StringAttribute{
+									Computed:    true,
+									Description: `Optional PEM-encoded CA certificate content for TLS.`,
+								},
+								"tls_mode": schema.BoolAttribute{
+									Computed:    true,
+									Description: `Whether TLS verification is enabled for the Custom Connector.`,
+								},
+							},
+							MarkdownDescription: `Configuration for a Custom Connector app. Does not include the signing` + "\n" +
+								`secret; secrets are write-only and never returned by the API.`,
+						},
 						"description": schema.StringAttribute{
 							Computed:    true,
 							Description: `A description of the app.`,
@@ -67,6 +106,10 @@ func (r *AppsDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 						"id": schema.StringAttribute{
 							Computed:    true,
 							Description: `The ID of the app.`,
+						},
+						"import_visibility": schema.StringAttribute{
+							Computed:    true,
+							Description: `The visibility level of the entity.`,
 						},
 						"name": schema.StringAttribute{
 							Computed:    true,
@@ -112,6 +155,15 @@ func (r *AppsDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 								},
 							},
 							Description: `Validation checks of an apps' configuration and permissions.`,
+						},
+						"visibility": schema.StringAttribute{
+							Computed:    true,
+							Description: `The visibility level of the entity.`,
+						},
+						"visibility_group_ids": schema.ListAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
+							Description: `The IDs of groups that can see this app when visibility is ` + "`" + `LIMITED` + "`" + `.`,
 						},
 					},
 				},

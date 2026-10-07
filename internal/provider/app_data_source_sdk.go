@@ -20,8 +20,26 @@ func (r *AppDataSourceModel) RefreshFromSharedApp(ctx context.Context, resp *sha
 
 	if resp != nil {
 		r.AdminOwnerID = types.StringValue(resp.AdminOwnerID)
+		if resp.CustomConnector == nil {
+			r.CustomConnector = nil
+		} else {
+			r.CustomConnector = &tfTypes.CustomConnectorAppConfig{}
+			r.CustomConnector.BaseURL = types.StringValue(resp.CustomConnector.BaseURL)
+			r.CustomConnector.Identifier = types.StringValue(resp.CustomConnector.Identifier)
+			r.CustomConnector.SupportsEventIngestion = types.BoolValue(resp.CustomConnector.SupportsEventIngestion)
+			r.CustomConnector.SupportsGroups = types.BoolValue(resp.CustomConnector.SupportsGroups)
+			r.CustomConnector.SupportsNestedGroups = types.BoolValue(resp.CustomConnector.SupportsNestedGroups)
+			r.CustomConnector.SupportsNestedResources = types.BoolValue(resp.CustomConnector.SupportsNestedResources)
+			r.CustomConnector.TLSCaCertContent = types.StringPointerValue(resp.CustomConnector.TLSCaCertContent)
+			r.CustomConnector.TLSMode = types.BoolValue(resp.CustomConnector.TLSMode)
+		}
 		r.Description = types.StringValue(resp.Description)
 		r.ID = types.StringValue(resp.ID)
+		if resp.ImportVisibility != nil {
+			r.ImportVisibility = types.StringValue(string(*resp.ImportVisibility))
+		} else {
+			r.ImportVisibility = types.StringNull()
+		}
 		r.Name = types.StringValue(resp.Name)
 		r.Type = types.StringValue(string(resp.Type))
 		r.Validations = []tfTypes.AppValidation{}
@@ -39,6 +57,15 @@ func (r *AppDataSourceModel) RefreshFromSharedApp(ctx context.Context, resp *sha
 			validations.UsageReason = types.StringPointerValue(validationsItem.UsageReason)
 
 			r.Validations = append(r.Validations, validations)
+		}
+		if resp.Visibility != nil {
+			r.Visibility = types.StringValue(string(*resp.Visibility))
+		} else {
+			r.Visibility = types.StringNull()
+		}
+		r.VisibilityGroupIds = make([]types.String, 0, len(resp.VisibilityGroupIds))
+		for _, v := range resp.VisibilityGroupIds {
+			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
 		}
 	}
 
