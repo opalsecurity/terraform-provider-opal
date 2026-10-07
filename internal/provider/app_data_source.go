@@ -31,14 +31,16 @@ type AppDataSource struct {
 
 // AppDataSourceModel describes the data model.
 type AppDataSourceModel struct {
-	AdminOwnerID    types.String                      `tfsdk:"admin_owner_id"`
-	CustomConnector *tfTypes.CustomConnectorAppConfig `tfsdk:"custom_connector"`
-	Description     types.String                      `tfsdk:"description"`
-	ID              types.String                      `tfsdk:"id"`
-	Name            types.String                      `tfsdk:"name"`
-	Type            types.String                      `tfsdk:"type"`
-	Validations     []tfTypes.AppValidation           `tfsdk:"validations"`
-	Visibility      types.String                      `tfsdk:"visibility"`
+	AdminOwnerID       types.String                      `tfsdk:"admin_owner_id"`
+	CustomConnector    *tfTypes.CustomConnectorAppConfig `tfsdk:"custom_connector"`
+	Description        types.String                      `tfsdk:"description"`
+	ID                 types.String                      `tfsdk:"id"`
+	ImportVisibility   types.String                      `tfsdk:"import_visibility"`
+	Name               types.String                      `tfsdk:"name"`
+	Type               types.String                      `tfsdk:"type"`
+	Validations        []tfTypes.AppValidation           `tfsdk:"validations"`
+	Visibility         types.String                      `tfsdk:"visibility"`
+	VisibilityGroupIds []types.String                    `tfsdk:"visibility_group_ids"`
 }
 
 // Metadata returns the data source type name.
@@ -103,6 +105,10 @@ func (r *AppDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 				Required:    true,
 				Description: `The ID of the app.`,
 			},
+			"import_visibility": schema.StringAttribute{
+				Computed:    true,
+				Description: `The visibility level of the entity.`,
+			},
 			"name": schema.StringAttribute{
 				Computed:    true,
 				Description: `The name of the app.`,
@@ -152,6 +158,11 @@ func (r *AppDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 				Computed:    true,
 				Description: `The visibility level of the entity.`,
 			},
+			"visibility_group_ids": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
+				Description: `The IDs of groups that can see this app when visibility is ` + "`" + `LIMITED` + "`" + `.`,
+			},
 		},
 	}
 }
@@ -194,6 +205,8 @@ func (r *AppDataSource) Read(ctx context.Context, req datasource.ReadRequest, re
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.Config)
+
 	request, requestDiags := data.ToOperationsGetAppIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -202,7 +215,7 @@ func (r *AppDataSource) Read(ctx context.Context, req datasource.ReadRequest, re
 	}
 	res, err := r.client.Apps.GetID(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}

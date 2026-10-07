@@ -53,6 +53,8 @@ type ReviewerStage struct {
 	// At least one owner or user named here must not already be a reviewer
 	// of the stage.
 	Escalation *ReviewerStageEscalation `json:"escalation,omitempty"`
+	// The IDs of OpalScripts assigned as reviewers for this stage. Only `REQUEST_REVIEW` scripts can review; any other script type is rejected.
+	OpalScriptIds []string `json:"opal_script_ids,omitempty"`
 	// The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. A stage that sets `escalation` must use `OR`; `AND` is rejected there, because the escalation timer joins the stage as an additional reviewer and would otherwise become a required approver that stalls every request until the timeout.
 	Operator *Operator `default:"AND" json:"operator"`
 	// The IDs of owners assigned as reviewers for this stage.
@@ -81,6 +83,13 @@ func (r *ReviewerStage) GetEscalation() *ReviewerStageEscalation {
 		return nil
 	}
 	return r.Escalation
+}
+
+func (r *ReviewerStage) GetOpalScriptIds() []string {
+	if r == nil {
+		return nil
+	}
+	return r.OpalScriptIds
 }
 
 func (r *ReviewerStage) GetOperator() *Operator {

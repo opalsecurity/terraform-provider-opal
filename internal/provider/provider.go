@@ -97,6 +97,7 @@ func (p *OpalProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 			"Either the environment variable OPAL_AUTH_TOKEN or provider configuration bearer_auth attribute must be configured.",
 		)
 	}
+	registerSensitiveValues(security.BearerAuth)
 
 	providerHTTPTransportOpts := ProviderHTTPTransportOpts{
 		SetHeaders: make(map[string]string),
