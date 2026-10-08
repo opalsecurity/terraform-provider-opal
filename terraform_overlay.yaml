@@ -2340,6 +2340,104 @@ actions:
   - target: $["paths"]["/paladin/{paladin_id}"]["delete"]
     update:
       x-speakeasy-entity-operation: Paladin#delete
+  # ---------------------------------------------------------------- OpalScript
+  # Modelled on the Paladin block above. An OpalScript is addressed by its own
+  # StarlarkScriptID, not by the service user that backs it, so opal_script_id
+  # is the resource id.
+  - target: $["components"]["schemas"]["OpalScript"]
+    update:
+      x-speakeasy-entity: Script
+  - target: $["components"]["schemas"]["OpalScript"]["properties"]["opal_script_id"]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["components"]["schemas"]["OpalScript"]["properties"]["opal_script_id"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  # script_type is fixed at creation — POST dispatches on it and there is no
+  # endpoint that changes it, so a change must replace the resource.
+  - target: $["components"]["schemas"]["OpalScript"]["properties"]["script_type"]
+    update:
+      x-speakeasy-param-force-new: true
+  # version is assigned by the server on every save; a practitioner never sets it.
+  - target: $["components"]["schemas"]["OpalScript"]["properties"]["version"]
+    update:
+      x-speakeasy-param-readonly: true
+  - target: $["components"]["schemas"]["OpalScript"]["properties"]["updated_at"]
+    update:
+      x-speakeasy-param-readonly: true
+
+  # owner_id lives only on the create body: it provisions the backing service
+  # user for a REQUEST_REVIEW script and there is no endpoint that moves it.
+  - target: $["components"]["schemas"]["CreateOpalScriptInfo"]["properties"]["owner_id"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["CreateOpalScriptInfo"]["properties"]["script_type"]
+    update:
+      x-speakeasy-param-force-new: true
+
+  # Data source: look a script up by name. Names are not unique, so the API
+  # answers 422 on more than one match rather than picking one.
+  - target: $["components"]["schemas"]["OpalScriptList"]
+    update:
+      x-speakeasy-entity: ScriptFromName
+
+  - target: $["paths"]["/opal-scripts/{opal_script_id}"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/opal-scripts/{opal_script_id}"]["get"]["responses"]
+    update:
+      "404":
+        description: Not Found
+  - target: $["paths"]["/opal-scripts/{opal_script_id}"]["get"]
+    update:
+      x-speakeasy-name-override: get
+  - target: $["paths"]["/opal-scripts/{opal_script_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: Script#get
+
+  - target: $["paths"]["/opal-scripts/name/{opal_script_name}"]["get"]
+    update:
+      x-speakeasy-name-override: get_from_name
+  - target: $["paths"]["/opal-scripts/name/{opal_script_name}"]["get"]
+    update:
+      x-speakeasy-entity-operation: ScriptFromName#get
+
+  - target: $["paths"]["/opal-scripts"]["post"]
+    update:
+      x-speakeasy-name-override: create
+  - target: $["paths"]["/opal-scripts"]["post"]
+    update:
+      x-speakeasy-entity-operation: Script#create
+
+  - target: $["paths"]["/opal-scripts/{opal_script_id}"]["put"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/opal-scripts/{opal_script_id}"]["put"]
+    update:
+      x-speakeasy-name-override: update
+  - target: $["paths"]["/opal-scripts/{opal_script_id}"]["put"]
+    update:
+      x-speakeasy-entity-operation: Script#update
+
+  - target: $["paths"]["/opal-scripts/{opal_script_id}"]["delete"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/opal-scripts/{opal_script_id}"]["delete"]
+    update:
+      x-speakeasy-name-override: delete
+  - target: $["paths"]["/opal-scripts/{opal_script_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: Script#delete
+
+  # ------------------------------------------- opal_script_ids on ReviewerStage
+  # MUST NOT be omitted. Generated as an ordered List, two scripts on one stage
+  # reorder between plans and produce a diff that apply can never close — the
+  # same permanent-diff failure the read path in the backend exists to prevent.
+  # ReviewerStage.owner_ids already carries this a few lines above.
+  - target: $["components"]["schemas"]["ReviewerStage"]["properties"]["opal_script_ids"]
+    update:
+      format: set
+
   - target: $["components"]["schemas"]["PaladinContextSource"]
     update:
       x-speakeasy-entity: PaladinContextSource
