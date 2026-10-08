@@ -99,6 +99,8 @@ func (r *GroupTagResource) Create(ctx context.Context, req resource.CreateReques
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
+
 	request, requestDiags := data.ToOperationsCreateGroupTagRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -107,7 +109,7 @@ func (r *GroupTagResource) Create(ctx context.Context, req resource.CreateReques
 	}
 	res, err := r.client.Tags.CreateGroup(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -194,6 +196,8 @@ func (r *GroupTagResource) Delete(ctx context.Context, req resource.DeleteReques
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.State)
+
 	request, requestDiags := data.ToOperationsDeleteGroupTagRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -202,7 +206,7 @@ func (r *GroupTagResource) Delete(ctx context.Context, req resource.DeleteReques
 	}
 	res, err := r.client.Tags.DeleteGroup(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}

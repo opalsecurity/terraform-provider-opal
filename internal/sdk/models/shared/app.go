@@ -86,16 +86,25 @@ func (e *AppType) IsExact() bool {
 type App struct {
 	// The ID of the owner of the app.
 	AdminOwnerID string `json:"admin_owner_id"`
+	// Configuration for a Custom Connector app. Does not include the signing
+	// secret; secrets are write-only and never returned by the API.
+	CustomConnector *CustomConnectorAppConfig `json:"custom_connector,omitempty"`
 	// A description of the app.
 	Description string `json:"description"`
 	// The ID of the app.
 	ID string `json:"app_id"`
+	// The visibility level of the entity.
+	ImportVisibility *VisibilityTypeEnum `json:"import_visibility,omitempty"`
 	// The name of the app.
 	Name string `json:"name"`
 	// The type of an app.
 	Type AppType `json:"app_type"`
 	// Validation checks of an apps' configuration and permissions.
 	Validations []AppValidation `json:"validations,omitempty"`
+	// The visibility level of the entity.
+	Visibility *VisibilityTypeEnum `json:"visibility,omitempty"`
+	// The IDs of groups that can see this app when visibility is `LIMITED`.
+	VisibilityGroupIds []string `json:"visibility_group_ids,omitempty"`
 }
 
 func (a *App) GetAdminOwnerID() string {
@@ -103,6 +112,13 @@ func (a *App) GetAdminOwnerID() string {
 		return ""
 	}
 	return a.AdminOwnerID
+}
+
+func (a *App) GetCustomConnector() *CustomConnectorAppConfig {
+	if a == nil {
+		return nil
+	}
+	return a.CustomConnector
 }
 
 func (a *App) GetDescription() string {
@@ -117,6 +133,13 @@ func (a *App) GetID() string {
 		return ""
 	}
 	return a.ID
+}
+
+func (a *App) GetImportVisibility() *VisibilityTypeEnum {
+	if a == nil {
+		return nil
+	}
+	return a.ImportVisibility
 }
 
 func (a *App) GetName() string {
@@ -138,4 +161,18 @@ func (a *App) GetValidations() []AppValidation {
 		return nil
 	}
 	return a.Validations
+}
+
+func (a *App) GetVisibility() *VisibilityTypeEnum {
+	if a == nil {
+		return nil
+	}
+	return a.Visibility
+}
+
+func (a *App) GetVisibilityGroupIds() []string {
+	if a == nil {
+		return nil
+	}
+	return a.VisibilityGroupIds
 }

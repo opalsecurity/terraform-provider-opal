@@ -12,12 +12,13 @@ import (
 type ViewerCampaignItemStatusEnum string
 
 const (
-	ViewerCampaignItemStatusEnumApproved   ViewerCampaignItemStatusEnum = "APPROVED"
-	ViewerCampaignItemStatusEnumRevoked    ViewerCampaignItemStatusEnum = "REVOKED"
-	ViewerCampaignItemStatusEnumChangeRole ViewerCampaignItemStatusEnum = "CHANGE_ROLE"
-	ViewerCampaignItemStatusEnumNoAction   ViewerCampaignItemStatusEnum = "NO_ACTION"
-	ViewerCampaignItemStatusEnumPending    ViewerCampaignItemStatusEnum = "PENDING"
-	ViewerCampaignItemStatusEnumReassigned ViewerCampaignItemStatusEnum = "REASSIGNED"
+	ViewerCampaignItemStatusEnumApproved         ViewerCampaignItemStatusEnum = "APPROVED"
+	ViewerCampaignItemStatusEnumRevoked          ViewerCampaignItemStatusEnum = "REVOKED"
+	ViewerCampaignItemStatusEnumChangeRole       ViewerCampaignItemStatusEnum = "CHANGE_ROLE"
+	ViewerCampaignItemStatusEnumReduceExpiration ViewerCampaignItemStatusEnum = "REDUCE_EXPIRATION"
+	ViewerCampaignItemStatusEnumNoAction         ViewerCampaignItemStatusEnum = "NO_ACTION"
+	ViewerCampaignItemStatusEnumPending          ViewerCampaignItemStatusEnum = "PENDING"
+	ViewerCampaignItemStatusEnumReassigned       ViewerCampaignItemStatusEnum = "REASSIGNED"
 )
 
 func (e ViewerCampaignItemStatusEnum) ToPointer() *ViewerCampaignItemStatusEnum {
@@ -34,6 +35,8 @@ func (e *ViewerCampaignItemStatusEnum) UnmarshalJSON(data []byte) error {
 	case "REVOKED":
 		fallthrough
 	case "CHANGE_ROLE":
+		fallthrough
+	case "REDUCE_EXPIRATION":
 		fallthrough
 	case "NO_ACTION":
 		fallthrough
