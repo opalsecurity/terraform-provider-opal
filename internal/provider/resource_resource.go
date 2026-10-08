@@ -3407,6 +3407,8 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
+
 	request, requestDiags := data.ToSharedCreateResourceInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -3415,7 +3417,7 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 	}
 	res, err := r.client.Resources.Create(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -3452,7 +3454,7 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 	}
 	res1, err := r.client.Resources.Update(ctx, *request1)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res1 != nil && res1.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
 		}
@@ -3489,7 +3491,7 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 	}
 	res2, err := r.client.Resources.UpdateVisibility(ctx, *request2)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res2 != nil && res2.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res2.RawResponse))
 		}
@@ -3517,7 +3519,7 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 	}
 	res3, err := r.client.Resources.GetVisibility(ctx, *request3)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res3 != nil && res3.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res3.RawResponse))
 		}
@@ -3569,6 +3571,8 @@ func (r *ResourceResource) Read(ctx context.Context, req resource.ReadRequest, r
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.State)
+
 	request, requestDiags := data.ToOperationsGetResourceIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -3577,7 +3581,7 @@ func (r *ResourceResource) Read(ctx context.Context, req resource.ReadRequest, r
 	}
 	res, err := r.client.Resources.GetID(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -3612,7 +3616,7 @@ func (r *ResourceResource) Read(ctx context.Context, req resource.ReadRequest, r
 	}
 	res1, err := r.client.Resources.GetVisibility(ctx, *request1)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res1 != nil && res1.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
 		}
@@ -3658,6 +3662,8 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
+
 	request, requestDiags := data.ToSharedUpdateResourceInfoList(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -3666,7 +3672,7 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 	}
 	res, err := r.client.Resources.Update(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -3703,7 +3709,7 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 	}
 	res1, err := r.client.Resources.UpdateVisibility(ctx, *request1)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res1 != nil && res1.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
 		}
@@ -3731,7 +3737,7 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 	}
 	res2, err := r.client.Resources.GetID(ctx, *request2)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res2 != nil && res2.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res2.RawResponse))
 		}
@@ -3768,7 +3774,7 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 	}
 	res3, err := r.client.Resources.GetVisibility(ctx, *request3)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res3 != nil && res3.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res3.RawResponse))
 		}
@@ -3820,6 +3826,8 @@ func (r *ResourceResource) Delete(ctx context.Context, req resource.DeleteReques
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.State)
+
 	request, requestDiags := data.ToOperationsDeleteResourceRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -3828,7 +3836,7 @@ func (r *ResourceResource) Delete(ctx context.Context, req resource.DeleteReques
 	}
 	res, err := r.client.Resources.Delete(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
