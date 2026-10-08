@@ -44,6 +44,9 @@ const (
 	EntityItemTypeEnumAwsRdsMysqlCluster                EntityItemTypeEnum = "AWS_RDS_MYSQL_CLUSTER"
 	EntityItemTypeEnumAwsAccount                        EntityItemTypeEnum = "AWS_ACCOUNT"
 	EntityItemTypeEnumAwsSsoPermissionSet               EntityItemTypeEnum = "AWS_SSO_PERMISSION_SET"
+	EntityItemTypeEnumAwsAgentcoreGateway               EntityItemTypeEnum = "AWS_AGENTCORE_GATEWAY"
+	EntityItemTypeEnumAwsAgentcoreGatewayTarget         EntityItemTypeEnum = "AWS_AGENTCORE_GATEWAY_TARGET"
+	EntityItemTypeEnumAwsAgentcoreGatewayTool           EntityItemTypeEnum = "AWS_AGENTCORE_GATEWAY_TOOL"
 	EntityItemTypeEnumAzureManagementGroup              EntityItemTypeEnum = "AZURE_MANAGEMENT_GROUP"
 	EntityItemTypeEnumAzureResourceGroup                EntityItemTypeEnum = "AZURE_RESOURCE_GROUP"
 	EntityItemTypeEnumAzureSubscription                 EntityItemTypeEnum = "AZURE_SUBSCRIPTION"
@@ -178,6 +181,12 @@ func (e *EntityItemTypeEnum) UnmarshalJSON(data []byte) error {
 	case "AWS_ACCOUNT":
 		fallthrough
 	case "AWS_SSO_PERMISSION_SET":
+		fallthrough
+	case "AWS_AGENTCORE_GATEWAY":
+		fallthrough
+	case "AWS_AGENTCORE_GATEWAY_TARGET":
+		fallthrough
+	case "AWS_AGENTCORE_GATEWAY_TOOL":
 		fallthrough
 	case "AZURE_MANAGEMENT_GROUP":
 		fallthrough

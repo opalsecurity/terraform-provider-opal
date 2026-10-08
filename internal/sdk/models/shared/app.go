@@ -86,6 +86,9 @@ func (e *AppType) IsExact() bool {
 type App struct {
 	// The ID of the owner of the app.
 	AdminOwnerID string `json:"admin_owner_id"`
+	// Configuration for a Custom Connector app. Does not include the signing
+	// secret; secrets are write-only and never returned by the API.
+	CustomConnector *CustomConnectorAppConfig `json:"custom_connector,omitempty"`
 	// A description of the app.
 	Description string `json:"description"`
 	// The ID of the app.
@@ -96,6 +99,8 @@ type App struct {
 	Type AppType `json:"app_type"`
 	// Validation checks of an apps' configuration and permissions.
 	Validations []AppValidation `json:"validations,omitempty"`
+	// The visibility level of the entity.
+	Visibility *VisibilityTypeEnum `json:"visibility,omitempty"`
 }
 
 func (a *App) GetAdminOwnerID() string {
@@ -103,6 +108,13 @@ func (a *App) GetAdminOwnerID() string {
 		return ""
 	}
 	return a.AdminOwnerID
+}
+
+func (a *App) GetCustomConnector() *CustomConnectorAppConfig {
+	if a == nil {
+		return nil
+	}
+	return a.CustomConnector
 }
 
 func (a *App) GetDescription() string {
@@ -138,4 +150,11 @@ func (a *App) GetValidations() []AppValidation {
 		return nil
 	}
 	return a.Validations
+}
+
+func (a *App) GetVisibility() *VisibilityTypeEnum {
+	if a == nil {
+		return nil
+	}
+	return a.Visibility
 }

@@ -18,6 +18,7 @@ const (
 	DecisionApproved              Decision = "APPROVED"
 	DecisionRevoked               Decision = "REVOKED"
 	DecisionChangeRole            Decision = "CHANGE_ROLE"
+	DecisionReduceExpiration      Decision = "REDUCE_EXPIRATION"
 	DecisionAdminRevoked          Decision = "ADMIN_REVOKED"
 	DecisionNoAction              Decision = "NO_ACTION"
 	DecisionReassigned            Decision = "REASSIGNED"
@@ -39,6 +40,8 @@ func (e *Decision) UnmarshalJSON(data []byte) error {
 	case "REVOKED":
 		fallthrough
 	case "CHANGE_ROLE":
+		fallthrough
+	case "REDUCE_EXPIRATION":
 		fallthrough
 	case "ADMIN_REVOKED":
 		fallthrough
@@ -80,6 +83,8 @@ type CampaignItemReview struct {
 	ReviewerUserID string `json:"reviewer_user_id"`
 	// Target access level remote ID when decision is CHANGE_ROLE.
 	UpdatedAccessLevelRemoteID *string `json:"updated_access_level_remote_id,omitempty"`
+	// Built-in duration in minutes when decision is REDUCE_EXPIRATION.
+	UpdatedDurationInMinutes *int64 `json:"updated_duration_in_minutes,omitempty"`
 }
 
 func (c CampaignItemReview) MarshalJSON() ([]byte, error) {
@@ -154,4 +159,11 @@ func (c *CampaignItemReview) GetUpdatedAccessLevelRemoteID() *string {
 		return nil
 	}
 	return c.UpdatedAccessLevelRemoteID
+}
+
+func (c *CampaignItemReview) GetUpdatedDurationInMinutes() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.UpdatedDurationInMinutes
 }
