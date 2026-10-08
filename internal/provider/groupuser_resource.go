@@ -185,8 +185,6 @@ func (r *GroupUserResource) Create(ctx context.Context, req resource.CreateReque
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToOperationsCreateGroupUserRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -195,7 +193,7 @@ func (r *GroupUserResource) Create(ctx context.Context, req resource.CreateReque
 	}
 	res, err := r.client.Groups.CreateUser(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -291,8 +289,6 @@ func (r *GroupUserResource) Delete(ctx context.Context, req resource.DeleteReque
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.State)
-
 	request, requestDiags := data.ToOperationsDeleteGroupUserRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -301,7 +297,7 @@ func (r *GroupUserResource) Delete(ctx context.Context, req resource.DeleteReque
 	}
 	res, err := r.client.Groups.DeleteUser(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
