@@ -11,8 +11,6 @@ import (
 	"net/http"
 	"net/url"
 	"reflect"
-	"sort"
-	"strings"
 	"time"
 
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/optionalnullable"
@@ -26,58 +24,25 @@ func PopulateQueryParams(_ context.Context, req *http.Request, queryParams inter
 	}
 
 	values := url.Values{}
-	allowReserved := map[string][]bool{}
 
-	globalsAlreadyPopulated, err := populateQueryParams(queryParams, globals, values, []string{}, allowEmptyValue, allowReserved)
+	globalsAlreadyPopulated, err := populateQueryParams(queryParams, globals, values, []string{}, allowEmptyValue)
 	if err != nil {
 		return err
 	}
 
 	if globals != nil {
-		_, err = populateQueryParams(globals, nil, values, globalsAlreadyPopulated, allowEmptyValue, allowReserved)
+		_, err = populateQueryParams(globals, nil, values, globalsAlreadyPopulated, allowEmptyValue)
 		if err != nil {
 			return err
 		}
 	}
 
-	req.URL.RawQuery = encodeQueryValues(values, allowReserved)
+	req.URL.RawQuery = values.Encode()
 
 	return nil
 }
 
-func encodeQueryValues(values url.Values, allowReserved map[string][]bool) string {
-	keys := make([]string, 0, len(values))
-	for k := range values {
-		keys = append(keys, k)
-	}
-	sort.Strings(keys)
-
-	var buf strings.Builder
-	for _, k := range keys {
-		keyEscaped := url.QueryEscape(k)
-		for i, v := range values[k] {
-			if buf.Len() > 0 {
-				buf.WriteByte('&')
-			}
-			buf.WriteString(keyEscaped)
-			buf.WriteByte('=')
-			reserved := i < len(allowReserved[k]) && allowReserved[k][i]
-			if reserved {
-				buf.WriteString(escapeExceptReserved(v))
-			} else {
-				buf.WriteString(url.QueryEscape(v))
-			}
-		}
-	}
-	return buf.String()
-}
-
-func addQueryValue(values url.Values, allowReserved map[string][]bool, key, value string, reserved bool) {
-	values.Add(key, value)
-	allowReserved[key] = append(allowReserved[key], reserved)
-}
-
-func populateQueryParams(queryParams interface{}, globals interface{}, values url.Values, skipFields []string, allowEmptyValue map[string]struct{}, allowReserved map[string][]bool) ([]string, error) {
+func populateQueryParams(queryParams interface{}, globals interface{}, values url.Values, skipFields []string, allowEmptyValue map[string]struct{}) ([]string, error) {
 	queryParamsVal := reflect.ValueOf(queryParams)
 	if queryParamsVal.Kind() == reflect.Pointer && queryParamsVal.IsNil() {
 		return nil, nil
@@ -105,7 +70,7 @@ func populateQueryParams(queryParams interface{}, globals interface{}, values ur
 
 		constValue := parseConstTag(fieldType)
 		if constValue != nil {
-			addQueryValue(values, allowReserved, qpTag.ParamName, *constValue, qpTag.AllowReserved)
+			values.Add(qpTag.ParamName, *constValue)
 			continue
 		}
 
@@ -125,7 +90,7 @@ func populateQueryParams(queryParams interface{}, globals interface{}, values ur
 				return nil, err
 			}
 			for k, v := range vals {
-				addQueryValue(values, allowReserved, k, v, qpTag.AllowReserved)
+				values.Add(k, v)
 			}
 		} else {
 			switch qpTag.Style {
@@ -133,21 +98,21 @@ func populateQueryParams(queryParams interface{}, globals interface{}, values ur
 				vals := populateDeepObjectParams(qpTag, fieldType.Type, valType)
 				for k, v := range vals {
 					for _, vv := range v {
-						addQueryValue(values, allowReserved, k, vv, qpTag.AllowReserved)
+						values.Add(k, vv)
 					}
 				}
 			case "form":
 				vals := populateFormParams(qpTag, fieldType.Type, valType, ",", defaultValue, allowEmptyValue)
 				for k, v := range vals {
 					for _, vv := range v {
-						addQueryValue(values, allowReserved, k, vv, qpTag.AllowReserved)
+						values.Add(k, vv)
 					}
 				}
 			case "pipeDelimited":
 				vals := populateFormParams(qpTag, fieldType.Type, valType, "|", defaultValue, allowEmptyValue)
 				for k, v := range vals {
 					for _, vv := range v {
-						addQueryValue(values, allowReserved, k, vv, qpTag.AllowReserved)
+						values.Add(k, vv)
 					}
 				}
 			default:
@@ -331,7 +296,6 @@ type paramTag struct {
 	Explode       bool
 	ParamName     string
 	Serialization string
-	AllowReserved bool
 
 	// Inline is a special case for union/oneOf. When a wrapper struct type is
 	// used, each union/oneOf value field should be inlined (e.g. not appended
