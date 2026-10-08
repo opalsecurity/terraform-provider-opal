@@ -5,6 +5,7 @@ package provider
 
 import (
 	"context"
+	"github.com/hashicorp/go-cleanhttp"
 	"github.com/hashicorp/terraform-plugin-framework/action"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/ephemeral"
@@ -97,10 +98,11 @@ func (p *OpalProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 			"Either the environment variable OPAL_AUTH_TOKEN or provider configuration bearer_auth attribute must be configured.",
 		)
 	}
+	registerSensitiveValues(security.BearerAuth)
 
 	providerHTTPTransportOpts := ProviderHTTPTransportOpts{
 		SetHeaders: make(map[string]string),
-		Transport:  http.DefaultTransport,
+		Transport:  cleanhttp.DefaultPooledTransport(),
 	}
 
 	resp.Diagnostics.Append(data.HTTPHeaders.ElementsAs(ctx, &providerHTTPTransportOpts.SetHeaders, false)...)
@@ -108,8 +110,7 @@ func (p *OpalProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 		return
 	}
 
-	httpClient := http.DefaultClient
-	httpClient.Transport = NewProviderHTTPTransport(providerHTTPTransportOpts)
+	httpClient := &http.Client{Transport: NewProviderHTTPTransport(providerHTTPTransportOpts)}
 
 	opts := []sdk.SDKOption{
 		sdk.WithServerURL(serverUrl),
@@ -156,6 +157,7 @@ func (p *OpalProvider) Resources(ctx context.Context) []func() resource.Resource
 		NewResourceResource,
 		NewResourceTagResource,
 		NewScopedRolePermissionListResource,
+		NewScriptResource,
 		NewTagResource,
 		NewTagUserResource,
 	}
@@ -204,6 +206,8 @@ func (p *OpalProvider) DataSources(ctx context.Context) []func() datasource.Data
 		NewResourcesUsersListDataSource,
 		NewResourcesListDataSource,
 		NewScopedRolePermissionListDataSource,
+		NewScriptDataSource,
+		NewScriptFromNameDataSource,
 		NewSessionsDataSource,
 		NewTagDataSource,
 		NewTagsListDataSource,
