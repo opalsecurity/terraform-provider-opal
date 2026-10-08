@@ -45,6 +45,7 @@ func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(ctx context.Conte
 			}
 			requests.DurationMinutes = types.Int64PointerValue(requestsItem.DurationMinutes)
 			requests.ID = types.StringValue(requestsItem.ID)
+			requests.InitiatedByUserID = types.StringPointerValue(requestsItem.InitiatedByUserID)
 			requests.Reason = types.StringValue(requestsItem.Reason)
 			requests.RequestedItemsList = []tfTypes.RequestedItem{}
 
@@ -102,6 +103,11 @@ func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(ctx context.Conte
 				if requestsItem.ReviewerStages.Str != nil {
 					requests.ReviewerStages.Str = types.StringPointerValue(requestsItem.ReviewerStages.Str)
 				}
+			}
+			if requestsItem.Source != nil {
+				requests.Source = types.StringValue(string(*requestsItem.Source))
+			} else {
+				requests.Source = types.StringNull()
 			}
 			if requestsItem.Stages == nil {
 				requests.Stages = nil

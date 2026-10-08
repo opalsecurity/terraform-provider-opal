@@ -81,6 +81,8 @@ func (q *Query) GetPrincipalFilter() *AccessEntityFilters {
 type Configuration struct {
 	// Whether reviewers may reassign their reviews to another user.
 	AllowReviewerReassignment bool `json:"allow_reviewer_reassignment"`
+	// Whether reviewers can shorten an item's access expiration. They cannot extend it.
+	AllowReviewersToReduceExpiration bool `json:"allow_reviewers_to_reduce_expiration"`
 	// Whether reviewers can review their own access.
 	AllowSelfReview bool `json:"allow_self_review"`
 	// The ID of the campaign configuration.
@@ -143,6 +145,13 @@ func (c *Configuration) GetAllowReviewerReassignment() bool {
 		return false
 	}
 	return c.AllowReviewerReassignment
+}
+
+func (c *Configuration) GetAllowReviewersToReduceExpiration() bool {
+	if c == nil {
+		return false
+	}
+	return c.AllowReviewersToReduceExpiration
 }
 
 func (c *Configuration) GetAllowSelfReview() bool {
