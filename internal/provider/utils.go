@@ -25,20 +25,9 @@ import (
 	tfReflect "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/reflect"
 )
 
-// sensitiveHeaders are HTTP header names (in their canonical form, see
-// http.CanonicalHeaderKey) whose values must never be emitted in Terraform
-// debug/error output.
-var sensitiveHeaders = []string{
-	"Authorization",
-	"Cf-Access-Client-Id",
-	"Cf-Access-Client-Secret",
-}
-
 func debugResponse(response *http.Response) string {
-	for _, h := range sensitiveHeaders {
-		if v := response.Request.Header.Get(h); v != "" {
-			response.Request.Header.Set(h, "(sensitive)")
-		}
+	if v := response.Request.Header.Get("Authorization"); v != "" {
+		response.Request.Header.Set("Authorization", "(sensitive)")
 	}
 	dumpReq, err := httputil.DumpRequest(response.Request, true)
 	if err != nil {
@@ -54,7 +43,7 @@ func debugResponse(response *http.Response) string {
 			return err.Error()
 		}
 	}
-	return fmt.Sprintf("**Request**:\n%s\n**Response**:\n%s", string(dumpReq), string(dumpRes))
+	return redactSensitiveValues(response.Request.Context(), fmt.Sprintf("**Request**:\n%s\n**Response**:\n%s", string(dumpReq), string(dumpRes)))
 }
 
 func merge(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse, target interface{}) {
@@ -224,6 +213,7 @@ func decomposeRequestForLogging(req *http.Request) (map[string]interface{}, erro
 
 	// Read the rest of the body content
 	fields[FieldHttpRequestBody] = bodyFromRestOfRequestReader(reqReader)
+	redactSensitiveFields(req, fields)
 	return fields, nil
 }
 
@@ -251,10 +241,8 @@ func fieldHeadersFromRequestReader(reader *textproto.Reader, fields map[string]i
 			fields[k] = v
 		}
 	}
-	for _, h := range sensitiveHeaders {
-		if _, ok := fields[h]; ok {
-			fields[h] = "(sensitive)"
-		}
+	if _, ok := fields["Authorization"]; ok {
+		fields["Authorization"] = "(sensitive)"
 	}
 
 	return nil
@@ -302,6 +290,7 @@ func decomposeResponseForLogging(res *http.Response) (map[string]interface{}, er
 	res.Body = io.NopCloser(bytes.NewBuffer(resBody))
 
 	fields[FieldHttpResponseBody] = string(resBody)
+	redactSensitiveFields(res.Request, fields)
 
 	return fields, nil
 }

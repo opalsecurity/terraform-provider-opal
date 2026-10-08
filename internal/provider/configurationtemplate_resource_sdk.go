@@ -184,6 +184,10 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 					UserIds:      userIds,
 				}
 			}
+			opalScriptIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OpalScriptIds))
+			for opalScriptIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OpalScriptIds {
+				opalScriptIds = append(opalScriptIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OpalScriptIds[opalScriptIdsIndex].ValueString())
+			}
 			operator := new(shared.Operator)
 			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsNull() {
 				*operator = shared.Operator(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.ValueString())
@@ -212,6 +216,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 			}
 			reviewerStages = append(reviewerStages, shared.ReviewerStage{
 				Escalation:             escalation,
+				OpalScriptIds:          opalScriptIds,
 				Operator:               operator,
 				OwnerIds:               ownerIds1,
 				RequireAdminApproval:   requireAdminApproval,
@@ -415,6 +420,10 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 					UserIds:      userIds,
 				}
 			}
+			opalScriptIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OpalScriptIds))
+			for opalScriptIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OpalScriptIds {
+				opalScriptIds = append(opalScriptIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OpalScriptIds[opalScriptIdsIndex].ValueString())
+			}
 			operator := new(shared.Operator)
 			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsNull() {
 				*operator = shared.Operator(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.ValueString())
@@ -443,6 +452,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 			}
 			reviewerStages = append(reviewerStages, shared.ReviewerStage{
 				Escalation:             escalation,
+				OpalScriptIds:          opalScriptIds,
 				Operator:               operator,
 				OwnerIds:               ownerIds1,
 				RequireAdminApproval:   requireAdminApproval,
