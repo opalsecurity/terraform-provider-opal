@@ -54,10 +54,14 @@ Read-Only:
 - `custom_fields_responses` (Attributes List) The responses given to the custom fields associated to the request (see [below for nested schema](#nestedatt--requests--custom_fields_responses))
 - `duration_minutes` (Number) The duration of the request in minutes.
 - `id` (String) The unique identifier of the request.
+- `initiated_by_user_id` (String) The unique identifier of the user the caller asserted asked for this access. Unverified - Opal records the claim as given. Absent unless the caller supplied it.
 - `reason` (String) The reason for the request.
 - `requested_items_list` (Attributes List) The list of targets for the request. (see [below for nested schema](#nestedatt--requests--requested_items_list))
 - `requester_id` (String) The unique identifier of the user who created the request.
 - `reviewer_stages` (Attributes) The configured reviewer stages for every item in this request, or an error message if reviewers could not be loaded (see [below for nested schema](#nestedatt--requests--reviewer_stages))
+- `source` (String) The channel that created the request. Omitted when the source was not recorded.
+MCP counts only OAuth sessions. An agent using an API token or a person's
+credentials is counted as API, CLI, or WEB.
 - `stages` (Attributes, Deprecated) The stages configuration for a request item (see [below for nested schema](#nestedatt--requests--stages))
 - `status` (String) # Request Status
 ### Description

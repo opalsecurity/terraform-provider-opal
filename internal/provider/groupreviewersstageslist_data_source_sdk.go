@@ -34,6 +34,10 @@ func (r *GroupReviewersStagesListDataSourceModel) RefreshFromSharedReviewerStage
 				data.Escalation.UserIds = append(data.Escalation.UserIds, types.StringValue(v))
 			}
 		}
+		data.OpalScriptIds = make([]types.String, 0, len(dataItem.OpalScriptIds))
+		for _, v := range dataItem.OpalScriptIds {
+			data.OpalScriptIds = append(data.OpalScriptIds, types.StringValue(v))
+		}
 		if dataItem.Operator != nil {
 			data.Operator = types.StringValue(string(*dataItem.Operator))
 		} else {
