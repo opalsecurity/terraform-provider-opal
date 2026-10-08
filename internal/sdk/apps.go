@@ -33,10 +33,10 @@ func newApps(rootSDK *OpalAPI, sdkConfig config.SDKConfiguration, hooks *hooks.H
 	}
 }
 
-// CreateApp - Create app
+// Create app
 // Creates an `App` in Opal. Currently supports only Push-only apps (`CUSTOM`)
 // and Custom Connector apps (`CUSTOM_CONNECTOR`).
-func (s *Apps) CreateApp(ctx context.Context, request shared.CreateAppInfo, opts ...operations.Option) (*operations.CreateAppResponse, error) {
+func (s *Apps) Create(ctx context.Context, request shared.CreateAppInfo, opts ...operations.Option) (*operations.CreateAppResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -240,11 +240,11 @@ func (s *Apps) CreateApp(ctx context.Context, request shared.CreateAppInfo, opts
 
 }
 
-// DeleteApp - Delete app
+// Delete app
 // Deletes an `App`. Currently supports only Push-only apps (`CUSTOM`) and
 // Custom Connector apps (`CUSTOM_CONNECTOR`). Matches the UI: soft-deletes
 // the app and cleans up its resources, groups, and users.
-func (s *Apps) DeleteApp(ctx context.Context, request operations.DeleteAppRequest, opts ...operations.Option) (*operations.DeleteAppResponse, error) {
+func (s *Apps) Delete(ctx context.Context, request operations.DeleteAppRequest, opts ...operations.Option) (*operations.DeleteAppResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
@@ -409,6 +409,8 @@ func (s *Apps) DeleteApp(ctx context.Context, request operations.DeleteAppReques
 
 	switch {
 	case httpRes.StatusCode == 200:
+		utils.DrainBody(httpRes)
+	case httpRes.StatusCode == 404:
 		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
@@ -1030,10 +1032,10 @@ func (s *Apps) GetID(ctx context.Context, request operations.GetAppIDRequest, op
 
 }
 
-// UpdateApp - Update app
+// Update app
 // Updates an `App`. Currently supports only Push-only apps (`CUSTOM`) and
 // Custom Connector apps (`CUSTOM_CONNECTOR`).
-func (s *Apps) UpdateApp(ctx context.Context, request operations.UpdateAppRequest, opts ...operations.Option) (*operations.UpdateAppResponse, error) {
+func (s *Apps) Update(ctx context.Context, request operations.UpdateAppRequest, opts ...operations.Option) (*operations.UpdateAppResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
 		operations.SupportedOptionRetries,
