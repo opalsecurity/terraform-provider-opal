@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+ - Supports unlinking `configuration_template_id` on `opal_group` and `opal_resource` by sending JSON null (forks the template into a private configuration). Clearing the attribute in Terraform, together with `visibility` and `request_configurations`, unlinks; omit the attribute to leave linkage unchanged.
+
 ## v3.7.5
  - Fixes `max_duration = -1` on `request_configurations` showing as permanent drift
 
