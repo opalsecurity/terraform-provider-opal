@@ -127,8 +127,6 @@ func (r *TagResource) Create(ctx context.Context, req resource.CreateRequest, re
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToSharedCreateTagInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -137,7 +135,7 @@ func (r *TagResource) Create(ctx context.Context, req resource.CreateRequest, re
 	}
 	res, err := r.client.Tags.CreateTag(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -189,8 +187,6 @@ func (r *TagResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.State)
-
 	request, requestDiags := data.ToOperationsGetTagByIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -199,7 +195,7 @@ func (r *TagResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 	}
 	res, err := r.client.Tags.GetTagByID(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -269,8 +265,6 @@ func (r *TagResource) Delete(ctx context.Context, req resource.DeleteRequest, re
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.State)
-
 	request, requestDiags := data.ToOperationsDeleteTagByIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -279,7 +273,7 @@ func (r *TagResource) Delete(ctx context.Context, req resource.DeleteRequest, re
 	}
 	res, err := r.client.Tags.DeleteTagByID(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}

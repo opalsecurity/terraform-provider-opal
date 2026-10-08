@@ -115,11 +115,9 @@ func (r *OnCallScheduleListDataSource) Read(ctx context.Context, req datasource.
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	res, err := r.client.OnCallSchedules.Get(ctx)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
