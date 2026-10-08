@@ -82,6 +82,11 @@ func (r *GroupReviewersStagesListDataSource) Schema(ctx context.Context, req dat
 								`At least one owner or user named here must not already be a reviewer` + "\n" +
 								`of the stage.`,
 						},
+						"opal_script_ids": schema.ListAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
+							Description: `The IDs of OpalScripts assigned as reviewers for this stage. Only ` + "`" + `REQUEST_REVIEW` + "`" + ` scripts can review; any other script type is rejected.`,
+						},
 						"operator": schema.StringAttribute{
 							Computed:    true,
 							Description: `The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. A stage that sets ` + "`" + `escalation` + "`" + ` must use ` + "`" + `OR` + "`" + `; ` + "`" + `AND` + "`" + ` is rejected there, because the escalation timer joins the stage as an additional reviewer and would otherwise become a required approver that stalls every request until the timeout.`,
@@ -154,6 +159,8 @@ func (r *GroupReviewersStagesListDataSource) Read(ctx context.Context, req datas
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.Config)
+
 	request, requestDiags := data.ToOperationsGetGroupReviewersStagesRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -162,7 +169,7 @@ func (r *GroupReviewersStagesListDataSource) Read(ctx context.Context, req datas
 	}
 	res, err := r.client.Groups.GetReviewersStages(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}

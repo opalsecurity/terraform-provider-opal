@@ -8,12 +8,14 @@ import (
 )
 
 type App struct {
-	AdminOwnerID    types.String              `tfsdk:"admin_owner_id"`
-	CustomConnector *CustomConnectorAppConfig `tfsdk:"custom_connector"`
-	Description     types.String              `tfsdk:"description"`
-	ID              types.String              `tfsdk:"id"`
-	Name            types.String              `tfsdk:"name"`
-	Type            types.String              `tfsdk:"type"`
-	Validations     []AppValidation           `tfsdk:"validations"`
-	Visibility      types.String              `tfsdk:"visibility"`
+	AdminOwnerID       types.String              `tfsdk:"admin_owner_id"`
+	CustomConnector    *CustomConnectorAppConfig `tfsdk:"custom_connector"`
+	Description        types.String              `tfsdk:"description"`
+	ID                 types.String              `tfsdk:"id"`
+	ImportVisibility   types.String              `tfsdk:"import_visibility"`
+	Name               types.String              `tfsdk:"name"`
+	Type               types.String              `tfsdk:"type"`
+	Validations        []AppValidation           `tfsdk:"validations"`
+	Visibility         types.String              `tfsdk:"visibility"`
+	VisibilityGroupIds []types.String            `tfsdk:"visibility_group_ids"`
 }

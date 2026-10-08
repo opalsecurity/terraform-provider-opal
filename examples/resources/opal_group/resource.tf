@@ -176,6 +176,9 @@ resource "opal_group" "my_group" {
               "060cafc9-9b67-49ba-89b2-adc4d636bfb4"
             ]
           }
+          opal_script_ids = [
+            "b8da7ba4-fe8d-4c8a-90dc-3c4efaa6a296"
+          ]
           operator = "AND"
           owner_ids = [
             "f653097c-5b74-48b8-a26c-33571f9211ff"

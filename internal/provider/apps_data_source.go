@@ -107,6 +107,10 @@ func (r *AppsDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 							Computed:    true,
 							Description: `The ID of the app.`,
 						},
+						"import_visibility": schema.StringAttribute{
+							Computed:    true,
+							Description: `The visibility level of the entity.`,
+						},
 						"name": schema.StringAttribute{
 							Computed:    true,
 							Description: `The name of the app.`,
@@ -155,6 +159,11 @@ func (r *AppsDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 						"visibility": schema.StringAttribute{
 							Computed:    true,
 							Description: `The visibility level of the entity.`,
+						},
+						"visibility_group_ids": schema.SetAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
+							Description: `The IDs of groups that can see this app when visibility is ` + "`" + `LIMITED` + "`" + `.`,
 						},
 					},
 				},
@@ -205,6 +214,8 @@ func (r *AppsDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.Config)
+
 	request, requestDiags := data.ToOperationsGetAppsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -213,7 +224,7 @@ func (r *AppsDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 	}
 	res, err := r.client.Apps.Get(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
