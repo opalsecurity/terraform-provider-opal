@@ -8,14 +8,17 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	speakeasy_setplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/setplanmodifier"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
@@ -280,10 +283,15 @@ func (r *AppResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 					),
 				},
 			},
-			"visibility_group_ids": schema.ListAttribute{
-				Optional:    true,
+			"visibility_group_ids": schema.SetAttribute{
+				Computed: true,
+				Optional: true,
+				Default:  setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
+				PlanModifiers: []planmodifier.Set{
+					speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
+				},
 				ElementType: types.StringType,
-				Description: `The IDs of groups that can see this app when visibility is ` + "`" + `LIMITED` + "`" + `.`,
+				Description: `The IDs of groups that can see this app when visibility is ` + "`" + `LIMITED` + "`" + `. Default: []`,
 			},
 		},
 	}
@@ -327,6 +335,8 @@ func (r *AppResource) Create(ctx context.Context, req resource.CreateRequest, re
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
+
 	request, requestDiags := data.ToSharedCreateAppInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -335,7 +345,7 @@ func (r *AppResource) Create(ctx context.Context, req resource.CreateRequest, re
 	}
 	res, err := r.client.Apps.Create(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -387,6 +397,8 @@ func (r *AppResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.State)
+
 	request, requestDiags := data.ToOperationsGetAppIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -395,7 +407,7 @@ func (r *AppResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 	}
 	res, err := r.client.Apps.GetID(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -441,6 +453,8 @@ func (r *AppResource) Update(ctx context.Context, req resource.UpdateRequest, re
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
+
 	request, requestDiags := data.ToOperationsUpdateAppRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -449,7 +463,7 @@ func (r *AppResource) Update(ctx context.Context, req resource.UpdateRequest, re
 	}
 	res, err := r.client.Apps.Update(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -501,6 +515,8 @@ func (r *AppResource) Delete(ctx context.Context, req resource.DeleteRequest, re
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.State)
+
 	request, requestDiags := data.ToOperationsDeleteAppRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -509,7 +525,7 @@ func (r *AppResource) Delete(ctx context.Context, req resource.DeleteRequest, re
 	}
 	res, err := r.client.Apps.Delete(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}

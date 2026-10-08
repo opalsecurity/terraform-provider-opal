@@ -39,6 +39,11 @@ func (r *AppResourceModel) RefreshFromSharedApp(ctx context.Context, resp *share
 		}
 		r.Description = types.StringValue(resp.Description)
 		r.ID = types.StringValue(resp.ID)
+		if resp.ImportVisibility != nil {
+			r.ImportVisibility = types.StringValue(string(*resp.ImportVisibility))
+		} else {
+			r.ImportVisibility = types.StringNull()
+		}
 		r.Name = types.StringValue(resp.Name)
 		r.Type = types.StringValue(string(resp.Type))
 		r.Validations = []tfTypes.AppValidation{}
@@ -61,6 +66,10 @@ func (r *AppResourceModel) RefreshFromSharedApp(ctx context.Context, resp *share
 			r.Visibility = types.StringValue(string(*resp.Visibility))
 		} else {
 			r.Visibility = types.StringNull()
+		}
+		r.VisibilityGroupIds = make([]types.String, 0, len(resp.VisibilityGroupIds))
+		for _, v := range resp.VisibilityGroupIds {
+			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
 		}
 	}
 
