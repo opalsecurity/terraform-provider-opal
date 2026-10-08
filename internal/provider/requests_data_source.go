@@ -121,6 +121,10 @@ func (r *RequestsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							Computed:    true,
 							Description: `The unique identifier of the request.`,
 						},
+						"initiated_by_user_id": schema.StringAttribute{
+							Computed:    true,
+							Description: `The unique identifier of the user the caller asserted asked for this access. Unverified - Opal records the claim as given. Absent unless the caller supplied it.`,
+						},
 						"reason": schema.StringAttribute{
 							Computed:    true,
 							Description: `The reason for the request.`,
@@ -232,6 +236,12 @@ func (r *RequestsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 								},
 							},
 							Description: `The configured reviewer stages for every item in this request, or an error message if reviewers could not be loaded`,
+						},
+						"source": schema.StringAttribute{
+							Computed: true,
+							MarkdownDescription: `The channel that created the request. Omitted when the source was not recorded.` + "\n" +
+								`MCP counts only OAuth sessions. An agent using an API token or a person's` + "\n" +
+								`credentials is counted as API, CLI, or WEB.`,
 						},
 						"stages": schema.SingleNestedAttribute{
 							Computed: true,
@@ -367,6 +377,8 @@ func (r *RequestsDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.Config)
+
 	request, requestDiags := data.ToOperationsGetRequestsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -375,7 +387,7 @@ func (r *RequestsDataSource) Read(ctx context.Context, req datasource.ReadReques
 	}
 	res, err := r.client.Requests.Get(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
