@@ -5,16 +5,16 @@ management:
   docVersion: "1.0"
   speakeasyVersion: 1.801.0
   generationVersion: 2.946.0
-  releaseVersion: 3.10.0
-  configChecksum: a686fc320a3353ccabd183168b8486d1
+  releaseVersion: 3.10.1
+  configChecksum: 4da8fe93c89f7999c19223da78767d46
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   installationURL: https://github.com/opalsecurity/terraform-provider-opal
   published: true
 persistentEdits:
-  generation_id: 71ec7139-3435-4459-8ae5-ac7c8de109fd
-  pristine_commit_hash: 3c9386695d1b355b3024fbe1391932b352e4e9cf
-  pristine_tree_hash: e4cd9c85822d9159e63c4cde617a6359498342f3
+  generation_id: 395b90a8-05bf-4f15-915d-7c0e3e37bef7
+  pristine_commit_hash: 5229a861a8e594ac907f8b324163bb8de7abc29f
+  pristine_tree_hash: fe77476fbb61e52e05dace975a430f3e60035e5e
 features:
   terraform:
     additionalDependencies: 0.1.0
@@ -248,8 +248,8 @@ trackedFiles:
     pristine_git_object: eb8eb0132c74305a9a4c668c0f802c6ea4c5da8a
   examples/provider/provider.tf:
     id: 954e955c0240
-    last_write_checksum: sha1:84a91991658a95257a0b9023164491eb231b4a69
-    pristine_git_object: 0fdc5598935a5ffe88201420ea7787ee8cea9a5d
+    last_write_checksum: sha1:fb84fca1a1ca21900f0860cb3b4556d0eeaa4784
+    pristine_git_object: ebf676752f4aa9291b49e660123cdad61821811f
   examples/resources/opal_access_rule/import-by-string-id.tf:
     id: 5d07a05dc439
     last_write_checksum: sha1:9978da2497ab3366e081ddfd1f5bcf2237e3d024
@@ -756,7 +756,7 @@ trackedFiles:
     pristine_git_object: 2a9d049520312c9c13c74eacd41cc0f3c0be11d2
   internal/provider/group_resource.go:
     id: 77b83309e259
-    last_write_checksum: sha1:83ad81dbe3cc4437a58625b11d8135d4eb75c963
+    last_write_checksum: sha1:f424b61776989bbc672b5d7a44afa73e80c5b83a
     pristine_git_object: 13de84b280bd7489c767913afa7d9606fa8d86ff
   internal/provider/group_resource_sdk.go:
     id: 318ed979ef04
@@ -3648,8 +3648,8 @@ trackedFiles:
     pristine_git_object: 84445f102b7610634d28b20e4872db65b059dc8a
   internal/sdk/opalapi.go:
     id: 115b79f30ba9
-    last_write_checksum: sha1:1d0983c04d6b6dfb1680d54fd635cb7785b327bc
-    pristine_git_object: d9fb8c55fd053cc42e9674d305814c76a08dcbb8
+    last_write_checksum: sha1:51741b9090caf253e104aee401e94d2d05abe9a9
+    pristine_git_object: 4c58e87cdac471b3f63fce4e2ddb738d9ac4e62d
   internal/sdk/opalqueries.go:
     id: 42aa5bddbe00
     last_write_checksum: sha1:605682180a75baa96ca43faf8587c032f57a4ae1
