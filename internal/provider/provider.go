@@ -5,7 +5,6 @@ package provider
 
 import (
 	"context"
-	"github.com/hashicorp/go-cleanhttp"
 	"github.com/hashicorp/terraform-plugin-framework/action"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/ephemeral"
@@ -98,11 +97,10 @@ func (p *OpalProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 			"Either the environment variable OPAL_AUTH_TOKEN or provider configuration bearer_auth attribute must be configured.",
 		)
 	}
-	registerSensitiveValues(security.BearerAuth)
 
 	providerHTTPTransportOpts := ProviderHTTPTransportOpts{
 		SetHeaders: make(map[string]string),
-		Transport:  cleanhttp.DefaultPooledTransport(),
+		Transport:  http.DefaultTransport,
 	}
 
 	resp.Diagnostics.Append(data.HTTPHeaders.ElementsAs(ctx, &providerHTTPTransportOpts.SetHeaders, false)...)
@@ -110,7 +108,8 @@ func (p *OpalProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 		return
 	}
 
-	httpClient := &http.Client{Transport: NewProviderHTTPTransport(providerHTTPTransportOpts)}
+	httpClient := http.DefaultClient
+	httpClient.Transport = NewProviderHTTPTransport(providerHTTPTransportOpts)
 
 	opts := []sdk.SDKOption{
 		sdk.WithServerURL(serverUrl),
