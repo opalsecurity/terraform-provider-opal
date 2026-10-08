@@ -3,7 +3,7 @@
 
 package sdk
 
-// Generated from OpenAPI doc version 1.0 and generator version 2.938.0
+// Generated from OpenAPI doc version 1.0 and generator version 2.946.0
 
 import (
 	"context"
@@ -84,6 +84,8 @@ type OpalAPI struct {
 	NonHumanIdentities *NonHumanIdentities
 	// Operations related to on-call schedules
 	OnCallSchedules *OnCallSchedules
+	// Operations related to OpalScripts
+	OpalScripts *OpalScripts
 	// Operations related to owners
 	Owners *Owners
 	// Operations related to Paladin
@@ -181,11 +183,11 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *OpalAPI {
 	sdk := &OpalAPI{
-		SDKVersion: "3.7.2",
+		SDKVersion: "3.7.4",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:         "speakeasy-sdk/terraform 3.7.2 2.938.0 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
-			SDKVersion:        "3.7.2",
-			GenVersion:        "2.938.0",
+			UserAgent:         "speakeasy-sdk/terraform 3.7.4 2.946.0 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
+			SDKVersion:        "3.7.4",
+			GenVersion:        "2.946.0",
 			OpenAPIDocVersion: "1.0",
 			ServerList:        ServerList,
 		},
@@ -221,6 +223,7 @@ func New(opts ...SDKOption) *OpalAPI {
 	sdk.MessageChannels = newMessageChannels(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.NonHumanIdentities = newNonHumanIdentities(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.OnCallSchedules = newOnCallSchedules(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.OpalScripts = newOpalScripts(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Owners = newOwners(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Paladin = newPaladin(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.OpalQueries = newOpalQueries(sdk, sdk.sdkConfiguration, sdk.hooks)
