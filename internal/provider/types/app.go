@@ -12,6 +12,7 @@ type App struct {
 	CustomConnector    *CustomConnectorAppConfig `tfsdk:"custom_connector"`
 	Description        types.String              `tfsdk:"description"`
 	ID                 types.String              `tfsdk:"id"`
+	ImportVisibility   types.String              `tfsdk:"import_visibility"`
 	Name               types.String              `tfsdk:"name"`
 	Type               types.String              `tfsdk:"type"`
 	Validations        []AppValidation           `tfsdk:"validations"`

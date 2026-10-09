@@ -35,6 +35,7 @@ type AppDataSourceModel struct {
 	CustomConnector    *tfTypes.CustomConnectorAppConfig `tfsdk:"custom_connector"`
 	Description        types.String                      `tfsdk:"description"`
 	ID                 types.String                      `tfsdk:"id"`
+	ImportVisibility   types.String                      `tfsdk:"import_visibility"`
 	Name               types.String                      `tfsdk:"name"`
 	Type               types.String                      `tfsdk:"type"`
 	Validations        []tfTypes.AppValidation           `tfsdk:"validations"`
@@ -103,6 +104,10 @@ func (r *AppDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 			"id": schema.StringAttribute{
 				Required:    true,
 				Description: `The ID of the app.`,
+			},
+			"import_visibility": schema.StringAttribute{
+				Computed:    true,
+				Description: `The visibility level of the entity.`,
 			},
 			"name": schema.StringAttribute{
 				Computed:    true,

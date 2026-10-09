@@ -97,6 +97,8 @@ type App struct {
 	Description string `json:"description"`
 	// The ID of the app.
 	ID string `json:"app_id"`
+	// The visibility level of the entity.
+	ImportVisibility *VisibilityTypeEnum `json:"import_visibility,omitempty"`
 	// The name of the app.
 	Name string `json:"name"`
 	// The type of an app.
@@ -146,6 +148,13 @@ func (a *App) GetID() string {
 		return ""
 	}
 	return a.ID
+}
+
+func (a *App) GetImportVisibility() *VisibilityTypeEnum {
+	if a == nil {
+		return nil
+	}
+	return a.ImportVisibility
 }
 
 func (a *App) GetName() string {
