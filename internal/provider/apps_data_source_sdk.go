@@ -40,11 +40,6 @@ func (r *AppsDataSourceModel) RefreshFromSharedAppsList(ctx context.Context, res
 			}
 			apps.Description = types.StringValue(appsItem.Description)
 			apps.ID = types.StringValue(appsItem.ID)
-			if appsItem.ImportVisibility != nil {
-				apps.ImportVisibility = types.StringValue(string(*appsItem.ImportVisibility))
-			} else {
-				apps.ImportVisibility = types.StringNull()
-			}
 			apps.Name = types.StringValue(appsItem.Name)
 			apps.Type = types.StringValue(string(appsItem.Type))
 			apps.Validations = []tfTypes.AppValidation{}

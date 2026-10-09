@@ -107,10 +107,6 @@ func (r *AppsDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 							Computed:    true,
 							Description: `The ID of the app.`,
 						},
-						"import_visibility": schema.StringAttribute{
-							Computed:    true,
-							Description: `The visibility level of the entity.`,
-						},
 						"name": schema.StringAttribute{
 							Computed:    true,
 							Description: `The name of the app.`,
