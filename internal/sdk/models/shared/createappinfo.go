@@ -4,24 +4,82 @@
 package shared
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
 )
+
+// ImportVisibility - The visibility of imported items. Defaults to `GLOBAL` when omitted.
+type ImportVisibility string
+
+const (
+	ImportVisibilityGlobal  ImportVisibility = "GLOBAL"
+	ImportVisibilityLimited ImportVisibility = "LIMITED"
+)
+
+func (e ImportVisibility) ToPointer() *ImportVisibility {
+	return &e
+}
+func (e *ImportVisibility) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "GLOBAL":
+		fallthrough
+	case "LIMITED":
+		*e = ImportVisibility(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for ImportVisibility: %v", v)
+	}
+}
+
+// CreateAppInfoType - The type of the app. Must be `CUSTOM` (Push-only App) or
+// `CUSTOM_CONNECTOR`.
+type CreateAppInfoType string
+
+const (
+	CreateAppInfoTypeCustom          CreateAppInfoType = "CUSTOM"
+	CreateAppInfoTypeCustomConnector CreateAppInfoType = "CUSTOM_CONNECTOR"
+)
+
+func (e CreateAppInfoType) ToPointer() *CreateAppInfoType {
+	return &e
+}
+func (e *CreateAppInfoType) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "CUSTOM":
+		fallthrough
+	case "CUSTOM_CONNECTOR":
+		*e = CreateAppInfoType(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for CreateAppInfoType: %v", v)
+	}
+}
 
 // CreateAppInfo - Information needed to create an app. Currently supports only Push-only
 // apps (`CUSTOM`) and Custom Connector apps (`CUSTOM_CONNECTOR`).
 type CreateAppInfo struct {
 	// The ID of the owner of the app.
 	AdminOwnerID string `json:"admin_owner_id"`
-	// The type of an app.
-	AppType AppTypeEnum `json:"app_type"`
 	// Information needed to create a Custom Connector app.
 	CustomConnector *CreateCustomConnectorInfo `json:"custom_connector,omitempty"`
 	// A description of the app.
 	Description string `json:"description"`
-	// The visibility level of the entity.
-	ImportVisibility *VisibilityTypeEnum `json:"import_visibility,omitempty"`
+	// The visibility of imported items. Defaults to `GLOBAL` when omitted.
+	ImportVisibility *ImportVisibility `json:"import_visibility,omitempty"`
 	// The name of the app.
 	Name string `json:"name"`
+	// The type of the app. Must be `CUSTOM` (Push-only App) or
+	// `CUSTOM_CONNECTOR`.
+	Type CreateAppInfoType `json:"app_type"`
 	// The visibility level of the entity.
 	Visibility *VisibilityTypeEnum `json:"visibility,omitempty"`
 	// The IDs of groups that can see this app when visibility is `LIMITED`.
@@ -46,13 +104,6 @@ func (c *CreateAppInfo) GetAdminOwnerID() string {
 	return c.AdminOwnerID
 }
 
-func (c *CreateAppInfo) GetAppType() AppTypeEnum {
-	if c == nil {
-		return AppTypeEnum("")
-	}
-	return c.AppType
-}
-
 func (c *CreateAppInfo) GetCustomConnector() *CreateCustomConnectorInfo {
 	if c == nil {
 		return nil
@@ -67,7 +118,7 @@ func (c *CreateAppInfo) GetDescription() string {
 	return c.Description
 }
 
-func (c *CreateAppInfo) GetImportVisibility() *VisibilityTypeEnum {
+func (c *CreateAppInfo) GetImportVisibility() *ImportVisibility {
 	if c == nil {
 		return nil
 	}
@@ -79,6 +130,13 @@ func (c *CreateAppInfo) GetName() string {
 		return ""
 	}
 	return c.Name
+}
+
+func (c *CreateAppInfo) GetType() CreateAppInfoType {
+	if c == nil {
+		return CreateAppInfoType("")
+	}
+	return c.Type
 }
 
 func (c *CreateAppInfo) GetVisibility() *VisibilityTypeEnum {
