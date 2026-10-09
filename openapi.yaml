@@ -8653,9 +8653,12 @@ components:
           description: |-
             The type of the app. Must be `CUSTOM` (Push-only App) or
             `CUSTOM_CONNECTOR`.
-          $ref: "#/components/schemas/AppTypeEnum"
           x-speakeasy-param-force-new: true
           x-speakeasy-name-override: type
+          type: string
+          enum:
+            - CUSTOM
+            - CUSTOM_CONNECTOR
         visibility:
           description: |-
             The visibility of the app. Defaults to `GLOBAL` when omitted.

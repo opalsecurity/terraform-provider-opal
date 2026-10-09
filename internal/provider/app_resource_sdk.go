@@ -191,7 +191,7 @@ func (r *AppResourceModel) ToSharedCreateAppInfo(ctx context.Context) (*shared.C
 	var name string
 	name = r.Name.ValueString()
 
-	typeVar := shared.AppTypeEnum(r.Type.ValueString())
+	typeVar := shared.CreateAppInfoType(r.Type.ValueString())
 	visibility := new(shared.VisibilityTypeEnum)
 	if !r.Visibility.IsUnknown() && !r.Visibility.IsNull() {
 		*visibility = shared.VisibilityTypeEnum(r.Visibility.ValueString())

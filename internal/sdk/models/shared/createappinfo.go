@@ -36,6 +36,34 @@ func (e *ImportVisibility) UnmarshalJSON(data []byte) error {
 	}
 }
 
+// CreateAppInfoType - The type of the app. Must be `CUSTOM` (Push-only App) or
+// `CUSTOM_CONNECTOR`.
+type CreateAppInfoType string
+
+const (
+	CreateAppInfoTypeCustom          CreateAppInfoType = "CUSTOM"
+	CreateAppInfoTypeCustomConnector CreateAppInfoType = "CUSTOM_CONNECTOR"
+)
+
+func (e CreateAppInfoType) ToPointer() *CreateAppInfoType {
+	return &e
+}
+func (e *CreateAppInfoType) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "CUSTOM":
+		fallthrough
+	case "CUSTOM_CONNECTOR":
+		*e = CreateAppInfoType(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for CreateAppInfoType: %v", v)
+	}
+}
+
 // CreateAppInfo - Information needed to create an app. Currently supports only Push-only
 // apps (`CUSTOM`) and Custom Connector apps (`CUSTOM_CONNECTOR`).
 type CreateAppInfo struct {
@@ -49,8 +77,9 @@ type CreateAppInfo struct {
 	ImportVisibility *ImportVisibility `json:"import_visibility,omitempty"`
 	// The name of the app.
 	Name string `json:"name"`
-	// The type of an app.
-	Type AppTypeEnum `json:"app_type"`
+	// The type of the app. Must be `CUSTOM` (Push-only App) or
+	// `CUSTOM_CONNECTOR`.
+	Type CreateAppInfoType `json:"app_type"`
 	// The visibility level of the entity.
 	Visibility *VisibilityTypeEnum `json:"visibility,omitempty"`
 	// The IDs of groups that can see this app when visibility is `LIMITED`.
@@ -103,9 +132,9 @@ func (c *CreateAppInfo) GetName() string {
 	return c.Name
 }
 
-func (c *CreateAppInfo) GetType() AppTypeEnum {
+func (c *CreateAppInfo) GetType() CreateAppInfoType {
 	if c == nil {
-		return AppTypeEnum("")
+		return CreateAppInfoType("")
 	}
 	return c.Type
 }

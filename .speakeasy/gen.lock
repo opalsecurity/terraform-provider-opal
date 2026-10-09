@@ -1,20 +1,20 @@
 lockVersion: 2.0.0
 id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
-  docChecksum: 853b7f9de38787359c064b4da9476c84
+  docChecksum: 1c709eb35ea199c20194d4ca9d89bfdd
   docVersion: "1.0"
   speakeasyVersion: 1.801.0
   generationVersion: 2.946.0
-  releaseVersion: 3.10.1
-  configChecksum: 4da8fe93c89f7999c19223da78767d46
+  releaseVersion: 3.10.4
+  configChecksum: 4a104c52eb031015b597e20375c9d3d7
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   installationURL: https://github.com/opalsecurity/terraform-provider-opal
   published: true
 persistentEdits:
-  generation_id: 8e9195ee-0fe0-44b4-baed-c5309c8a4e57
-  pristine_commit_hash: 4fbf8719975c45d3cea471b3e68535b09f087f9c
-  pristine_tree_hash: 6dc66f8f45e9d99ebd61d1903f38b9576159d4a7
+  generation_id: 33803c1b-4480-4458-b29c-8f6ec21b0529
+  pristine_commit_hash: 802fea480ed977a4442e6c8a90f2a4fbe3b5ae4c
+  pristine_tree_hash: ec3ced8002043ec5f43ac58fe1df9c8491269309
 features:
   terraform:
     additionalDependencies: 0.1.0
@@ -248,8 +248,8 @@ trackedFiles:
     pristine_git_object: eb8eb0132c74305a9a4c668c0f802c6ea4c5da8a
   examples/provider/provider.tf:
     id: 954e955c0240
-    last_write_checksum: sha1:fb84fca1a1ca21900f0860cb3b4556d0eeaa4784
-    pristine_git_object: ebf676752f4aa9291b49e660123cdad61821811f
+    last_write_checksum: sha1:48e2bc6691ffb7bf83eda2b8f86360170c453b44
+    pristine_git_object: ba32a3ed0d51f401bf388591c1bd33a5d0a21171
   examples/resources/opal_access_rule/import-by-string-id.tf:
     id: 5d07a05dc439
     last_write_checksum: sha1:9978da2497ab3366e081ddfd1f5bcf2237e3d024
@@ -272,8 +272,8 @@ trackedFiles:
     pristine_git_object: ca0ba34f7633e5d80c2a194545e08b6ab1cb79e2
   examples/resources/opal_app/resource.tf:
     id: b69bae025ad1
-    last_write_checksum: sha1:10f6001fc1b254378eaa14c27578381dc5e627de
-    pristine_git_object: e5e830a6c0695df5531e51ed54b70ff2a3a18533
+    last_write_checksum: sha1:b15308e375429df6728dd038a0a40a552a7af4e6
+    pristine_git_object: 4010c4dafec2fb8efc3aca7a0cc3d496e4d211ac
   examples/resources/opal_bundle/import-by-string-id.tf:
     id: ba64dc6fcb28
     last_write_checksum: sha1:3e400bef4b1b71b245896e5c2dd6e705f8f37de7
@@ -656,12 +656,12 @@ trackedFiles:
     pristine_git_object: 10dcb8afc44f1ce199ea92618b9208bea309d465
   internal/provider/app_resource.go:
     id: fe737c3962ce
-    last_write_checksum: sha1:f0e999a9a8752b8ba1a99b64d9cb727d8b4b3750
-    pristine_git_object: e4c9e3503011c3feece3987257646f8496e2c84d
+    last_write_checksum: sha1:8246706f5557eab7919a2f8dae2d36ea5b3d2fdb
+    pristine_git_object: 9646afa5cb5e8e0e2d12967bfa895d5127ac9ac8
   internal/provider/app_resource_sdk.go:
     id: 8ae9bedb585c
-    last_write_checksum: sha1:67342f02a63b41b7b233e750fc285bb38eeb16b6
-    pristine_git_object: f7213e0c140b4388c4c97c57f6c0f7a927467a7f
+    last_write_checksum: sha1:0ae67e361394d6f30d73a97f1fdf921d63428c90
+    pristine_git_object: b3b68206d5b5a43b68a1d87b9f2b48f22536c8ab
   internal/provider/apps_data_source.go:
     id: 4e833a50901e
     last_write_checksum: sha1:22639ebb296dbe61b84bd5ed394930da639dbb77
@@ -2776,8 +2776,8 @@ trackedFiles:
     pristine_git_object: 865383b39a2011820eed744e68d797e7b040f47d
   internal/sdk/models/shared/createappinfo.go:
     id: e369b6a0b21a
-    last_write_checksum: sha1:8e347ef465588571d86cad02a6df4ecefed93b97
-    pristine_git_object: 42bbee636d064e95070144c318da96179ec1964e
+    last_write_checksum: sha1:868d14ca51b922c3da7baba7026cd1f6ac3a8f95
+    pristine_git_object: 6bb7465a30bb1c98da47fcd641fcf52f34ff566d
   internal/sdk/models/shared/createbundleinfo.go:
     id: c4778fa2c49c
     last_write_checksum: sha1:c11a25ff7bb4c965ed80acf1415cf85e639088ba
@@ -3672,8 +3672,8 @@ trackedFiles:
     pristine_git_object: 84445f102b7610634d28b20e4872db65b059dc8a
   internal/sdk/opalapi.go:
     id: 115b79f30ba9
-    last_write_checksum: sha1:51741b9090caf253e104aee401e94d2d05abe9a9
-    pristine_git_object: 4c58e87cdac471b3f63fce4e2ddb738d9ac4e62d
+    last_write_checksum: sha1:71a81b8e5bd3e24938af03edf5b9fca048a8b060
+    pristine_git_object: 8587ca2cbfd4680384c7f7e3e2382956e364a19a
   internal/sdk/opalqueries.go:
     id: 42aa5bddbe00
     last_write_checksum: sha1:605682180a75baa96ca43faf8587c032f57a4ae1
@@ -5299,7 +5299,7 @@ examples:
   createApp:
     speakeasy-default-create-app:
       requestBody:
-        application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "app_type": "OKTA_DIRECTORY", "custom_connector": {"base_url": "https://my-connector.example.com", "identifier": "my-connector", "signing_secret": "<value>"}, "description": "Bookkeeping app for internal tools.", "import_visibility": "GLOBAL", "name": "My Push-only App", "visibility": "GLOBAL", "visibility_group_ids": []}
+        application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "custom_connector": {"base_url": "https://my-connector.example.com", "identifier": "my-connector", "signing_secret": "<value>"}, "description": "Bookkeeping app for internal tools.", "import_visibility": "GLOBAL", "name": "My Push-only App", "app_type": "CUSTOM_CONNECTOR", "visibility": "GLOBAL", "visibility_group_ids": []}
       responses:
         "200":
           application/json: {"admin_owner_id": "7c86c85d-0651-43e2-a748-d69d658418e8", "description": "Okta directory for the engineering team.", "app_id": "f454d283-ca87-4a8a-bdbb-df212eca5353", "name": "Okta Org", "app_type": "OKTA_DIRECTORY", "visibility_group_ids": []}

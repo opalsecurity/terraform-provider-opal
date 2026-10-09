@@ -73,6 +73,28 @@ actions:
   - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["app_type"]
     update:
       x-speakeasy-name-override: type
+  # PROD-1493: narrow the create-side `app_type` enum to only the values the
+  # REST API actually accepts for POST /v1/apps. The shared `AppTypeEnum`
+  # lists every connector Opal supports, which — once merged into the TF
+  # `type` attribute via the name-override above — lets a user write
+  # `type = "OKTA_DIRECTORY"` and plan successfully, only to hit API 400 at
+  # apply time ("only CUSTOM and CUSTOM_CONNECTOR are supported"). Inlining
+  # the writable subset makes Terraform catch the mistake at plan time with
+  # the standard "must be one of" validator error, matching the actual API
+  # contract. Mechanical pattern mirrors the existing App.app_type override
+  # (inline enum + remove $ref) and is bounded to the request schema — the
+  # response-side App.app_type schema keeps its full enum so the data source
+  # and refresh paths still accept any value from the DB.
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["app_type"]
+    update:
+      type: string
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["app_type"]
+    update:
+      enum:
+        - CUSTOM
+        - CUSTOM_CONNECTOR
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["app_type"]["$ref"]
+    remove: true
   # PROD-1493: hide the Custom Connector signing secret from `terraform plan`
   # output. The field is already written to state (unavoidable — Terraform
   # needs it for the next apply), but marking it `Sensitive: true` keeps it
