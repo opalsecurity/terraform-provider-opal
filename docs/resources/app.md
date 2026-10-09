@@ -51,7 +51,16 @@ must be one of ["CUSTOM", "CUSTOM_CONNECTOR"]; Requires replacement if changed.
 
 ### Optional
 
-- `custom_connector` (Attributes) Information needed to create a Custom Connector app. (see [below for nested schema](#nestedatt--custom_connector))
+- `custom_connector` (Attributes) Information needed to create a Custom Connector app.
+
+**Known limitation (Terraform):** every `terraform apply` on a
+`CUSTOM_CONNECTOR` app re-validates the connector by issuing an
+HTTP request to its `/status` endpoint, even when no
+`custom_connector` field changed. Ensure the connector is
+reachable at apply time, or the apply will fail with an HTTP 400
+error from the Opal API. Tracked for a server-side fix that will
+only re-validate when the connector configuration actually
+changes. (see [below for nested schema](#nestedatt--custom_connector))
 - `import_visibility` (String) The visibility of imported items. Defaults to `GLOBAL` when omitted. must be one of ["GLOBAL", "LIMITED"]
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 - `visibility_group_ids` (Set of String) The IDs of groups that can see this app when visibility is `LIMITED`. Default: []

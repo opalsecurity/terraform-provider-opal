@@ -29,7 +29,13 @@ data "opal_app" "my_app" {
 
 - `admin_owner_id` (String) The ID of the owner of the app.
 - `custom_connector` (Attributes) Configuration for a Custom Connector app. Does not include the signing
-secret; secrets are write-only and never returned by the API. (see [below for nested schema](#nestedatt--custom_connector))
+secret; secrets are write-only and never returned by the API.
+
+**Known limitation (Terraform):** every `terraform apply` on a
+`CUSTOM_CONNECTOR` app re-validates the connector by issuing an
+HTTP request to its `/status` endpoint, even when no
+`custom_connector` field changed. Ensure the connector is
+reachable at apply time. (see [below for nested schema](#nestedatt--custom_connector))
 - `description` (String) A description of the app.
 - `import_visibility` (String) The visibility level of the entity.
 - `name` (String) The name of the app.

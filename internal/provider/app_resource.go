@@ -135,7 +135,16 @@ func (r *AppResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 						Description: `Whether TLS verification is enabled. Defaults to ` + "`" + `true` + "`" + ` when omitted.`,
 					},
 				},
-				Description: `Information needed to create a Custom Connector app.`,
+				MarkdownDescription: `Information needed to create a Custom Connector app.` + "\n" +
+					`` + "\n" +
+					`**Known limitation (Terraform):** every ` + "`" + `terraform apply` + "`" + ` on a` + "\n" +
+					`` + "`" + `CUSTOM_CONNECTOR` + "`" + ` app re-validates the connector by issuing an` + "\n" +
+					`HTTP request to its ` + "`" + `/status` + "`" + ` endpoint, even when no` + "\n" +
+					`` + "`" + `custom_connector` + "`" + ` field changed. Ensure the connector is` + "\n" +
+					`reachable at apply time, or the apply will fail with an HTTP 400` + "\n" +
+					`error from the Opal API. Tracked for a server-side fix that will` + "\n" +
+					`only re-validate when the connector configuration actually` + "\n" +
+					`changes.`,
 			},
 			"description": schema.StringAttribute{
 				Required:    true,
