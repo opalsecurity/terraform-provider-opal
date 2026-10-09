@@ -4,8 +4,37 @@
 package shared
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
 )
+
+// ImportVisibility - The visibility of imported items. Defaults to `GLOBAL` when omitted.
+type ImportVisibility string
+
+const (
+	ImportVisibilityGlobal  ImportVisibility = "GLOBAL"
+	ImportVisibilityLimited ImportVisibility = "LIMITED"
+)
+
+func (e ImportVisibility) ToPointer() *ImportVisibility {
+	return &e
+}
+func (e *ImportVisibility) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "GLOBAL":
+		fallthrough
+	case "LIMITED":
+		*e = ImportVisibility(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for ImportVisibility: %v", v)
+	}
+}
 
 // CreateAppInfo - Information needed to create an app. Currently supports only Push-only
 // apps (`CUSTOM`) and Custom Connector apps (`CUSTOM_CONNECTOR`).
@@ -16,8 +45,8 @@ type CreateAppInfo struct {
 	CustomConnector *CreateCustomConnectorInfo `json:"custom_connector,omitempty"`
 	// A description of the app.
 	Description string `json:"description"`
-	// The visibility level of the entity.
-	ImportVisibility *VisibilityTypeEnum `json:"import_visibility,omitempty"`
+	// The visibility of imported items. Defaults to `GLOBAL` when omitted.
+	ImportVisibility *ImportVisibility `json:"import_visibility,omitempty"`
 	// The name of the app.
 	Name string `json:"name"`
 	// The type of an app.
@@ -60,7 +89,7 @@ func (c *CreateAppInfo) GetDescription() string {
 	return c.Description
 }
 
-func (c *CreateAppInfo) GetImportVisibility() *VisibilityTypeEnum {
+func (c *CreateAppInfo) GetImportVisibility() *ImportVisibility {
 	if c == nil {
 		return nil
 	}

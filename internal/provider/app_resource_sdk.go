@@ -191,9 +191,9 @@ func (r *AppResourceModel) ToSharedCreateAppInfo(ctx context.Context) (*shared.C
 	var description string
 	description = r.Description.ValueString()
 
-	importVisibility := new(shared.VisibilityTypeEnum)
+	importVisibility := new(shared.ImportVisibility)
 	if !r.ImportVisibility.IsUnknown() && !r.ImportVisibility.IsNull() {
-		*importVisibility = shared.VisibilityTypeEnum(r.ImportVisibility.ValueString())
+		*importVisibility = shared.ImportVisibility(r.ImportVisibility.ValueString())
 	} else {
 		importVisibility = nil
 	}
