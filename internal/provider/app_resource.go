@@ -18,6 +18,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/customdefaults"
 	speakeasy_setplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/setplanmodifier"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
@@ -42,7 +43,6 @@ type AppResource struct {
 // AppResourceModel describes the resource data model.
 type AppResourceModel struct {
 	AdminOwnerID       types.String                       `tfsdk:"admin_owner_id"`
-	AppType            types.String                       `tfsdk:"app_type"`
 	CustomConnector    *tfTypes.CreateCustomConnectorInfo `tfsdk:"custom_connector"`
 	Description        types.String                       `tfsdk:"description"`
 	ID                 types.String                       `tfsdk:"id"`
@@ -66,10 +66,109 @@ func (r *AppResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 				Required:    true,
 				Description: `The ID of the owner of the app.`,
 			},
-			"app_type": schema.StringAttribute{
+			"custom_connector": schema.SingleNestedAttribute{
+				Computed: true,
+				Optional: true,
+				Attributes: map[string]schema.Attribute{
+					"base_url": schema.StringAttribute{
+						Computed:    true,
+						Optional:    true,
+						Description: `The base URL of the Custom Connector. Not Null`,
+						Validators: []validator.String{
+							speakeasy_stringvalidators.NotNull(),
+						},
+					},
+					"identifier": schema.StringAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.String{
+							stringplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+						},
+						Description: `The identifier of the Custom Connector. Not Null; Requires replacement if changed.`,
+						Validators: []validator.String{
+							speakeasy_stringvalidators.NotNull(),
+						},
+					},
+					"signing_secret": schema.StringAttribute{
+						Computed:  true,
+						Optional:  true,
+						Sensitive: true,
+						MarkdownDescription: `The signing secret used to authenticate requests to the Custom` + "\n" +
+							`Connector. Write-only; never returned by the API.` + "\n" +
+							`Not Null`,
+						Validators: []validator.String{
+							speakeasy_stringvalidators.NotNull(),
+						},
+					},
+					"supports_event_ingestion": schema.BoolAttribute{
+						Computed: true,
+						Optional: true,
+						MarkdownDescription: `Whether the Custom Connector supports event ingestion. Defaults to` + "\n" +
+							`` + "`" + `false` + "`" + `.`,
+					},
+					"supports_groups": schema.BoolAttribute{
+						Computed:    true,
+						Optional:    true,
+						Description: `Whether the Custom Connector supports groups. Defaults to ` + "`" + `false` + "`" + `.`,
+					},
+					"supports_nested_groups": schema.BoolAttribute{
+						Computed: true,
+						Optional: true,
+						MarkdownDescription: `Whether the Custom Connector supports nested groups. Defaults to` + "\n" +
+							`` + "`" + `false` + "`" + `.`,
+					},
+					"supports_nested_resources": schema.BoolAttribute{
+						Computed: true,
+						Optional: true,
+						MarkdownDescription: `Whether the Custom Connector supports nested resources. Defaults to` + "\n" +
+							`` + "`" + `false` + "`" + `.`,
+					},
+					"tls_ca_cert_content": schema.StringAttribute{
+						Computed:    true,
+						Optional:    true,
+						Description: `Optional PEM-encoded CA certificate content for TLS.`,
+					},
+					"tls_mode": schema.BoolAttribute{
+						Computed:    true,
+						Optional:    true,
+						Description: `Whether TLS verification is enabled. Defaults to ` + "`" + `true` + "`" + ` when omitted.`,
+					},
+				},
+				Description: `Information needed to create a Custom Connector app.`,
+			},
+			"description": schema.StringAttribute{
+				Required:    true,
+				Description: `A description of the app.`,
+			},
+			"id": schema.StringAttribute{
+				Computed: true,
+				PlanModifiers: []planmodifier.String{
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+				},
+				Description: `The ID of the app.`,
+			},
+			"import_visibility": schema.StringAttribute{
+				Computed:    true,
+				Optional:    true,
+				Default:     customdefaults.ImportVisibilityGlobal(),
+				Description: `The visibility of imported items. Defaults to ` + "`" + `GLOBAL` + "`" + ` when omitted. must be one of ["GLOBAL", "LIMITED"]`,
+				Validators: []validator.String{
+					stringvalidator.OneOf(
+						"GLOBAL",
+						"LIMITED",
+					),
+				},
+			},
+			"name": schema.StringAttribute{
+				Required:    true,
+				Description: `The name of the app.`,
+			},
+			"type": schema.StringAttribute{
 				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
+					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
 				Description: `The type of an app. must be one of ["ACTIVE_DIRECTORY", "ANTHROPIC", "AZURE_AD", "AWS", "AWS_SSO", "CLICKHOUSE", "COUPA", "CURSOR", "CUSTOM", "CONFLUENCE", "CUSTOM_CONNECTOR", "DATABRICKS", "DATASTAX_ASTRA", "ALICLOUD", "DEVIN", "DOCUSIGN", "DUO", "GCP", "GIT_HUB", "GIT_LAB", "GOOGLE_GROUPS", "GOOGLE_WORKSPACE", "GRAFANA", "HUBSPOT", "ILEVEL", "INCIDENTIO", "JIRA", "LDAP", "LINEAR", "MARIADB", "MONGO", "MONGO_ATLAS", "MYSQL", "NETSUITE", "DATADOG", "OKTA_CIAM", "OKTA_DIRECTORY", "OPENAI_PLATFORM", "OPAL", "ORACLE_FUSION", "PAGERDUTY", "POSTGRES", "ROOTLY", "SALESFORCE", "SNOWFLAKE", "SLACK", "TABLEAU", "TAILSCALE", "TELEPORT", "TWINGATE", "VAULT", "WORKDAY", "ZENDESK", "ZOOM", "RAMP", "WRIKE", "VERCEL", "AXIOM"]; Requires replacement if changed.`,
 				Validators: []validator.String{
@@ -134,106 +233,6 @@ func (r *AppResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 						"AXIOM",
 					),
 				},
-			},
-			"custom_connector": schema.SingleNestedAttribute{
-				Computed: true,
-				Optional: true,
-				Attributes: map[string]schema.Attribute{
-					"base_url": schema.StringAttribute{
-						Computed:    true,
-						Optional:    true,
-						Description: `The base URL of the Custom Connector. Not Null`,
-						Validators: []validator.String{
-							speakeasy_stringvalidators.NotNull(),
-						},
-					},
-					"identifier": schema.StringAttribute{
-						Computed: true,
-						Optional: true,
-						PlanModifiers: []planmodifier.String{
-							stringplanmodifier.RequiresReplaceIfConfigured(),
-							speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-						},
-						Description: `The identifier of the Custom Connector. Not Null; Requires replacement if changed.`,
-						Validators: []validator.String{
-							speakeasy_stringvalidators.NotNull(),
-						},
-					},
-					"signing_secret": schema.StringAttribute{
-						Computed: true,
-						Optional: true,
-						MarkdownDescription: `The signing secret used to authenticate requests to the Custom` + "\n" +
-							`Connector. Write-only; never returned by the API.` + "\n" +
-							`Not Null`,
-						Validators: []validator.String{
-							speakeasy_stringvalidators.NotNull(),
-						},
-					},
-					"supports_event_ingestion": schema.BoolAttribute{
-						Computed: true,
-						Optional: true,
-						MarkdownDescription: `Whether the Custom Connector supports event ingestion. Defaults to` + "\n" +
-							`` + "`" + `false` + "`" + `.`,
-					},
-					"supports_groups": schema.BoolAttribute{
-						Computed:    true,
-						Optional:    true,
-						Description: `Whether the Custom Connector supports groups. Defaults to ` + "`" + `false` + "`" + `.`,
-					},
-					"supports_nested_groups": schema.BoolAttribute{
-						Computed: true,
-						Optional: true,
-						MarkdownDescription: `Whether the Custom Connector supports nested groups. Defaults to` + "\n" +
-							`` + "`" + `false` + "`" + `.`,
-					},
-					"supports_nested_resources": schema.BoolAttribute{
-						Computed: true,
-						Optional: true,
-						MarkdownDescription: `Whether the Custom Connector supports nested resources. Defaults to` + "\n" +
-							`` + "`" + `false` + "`" + `.`,
-					},
-					"tls_ca_cert_content": schema.StringAttribute{
-						Computed:    true,
-						Optional:    true,
-						Description: `Optional PEM-encoded CA certificate content for TLS.`,
-					},
-					"tls_mode": schema.BoolAttribute{
-						Computed:    true,
-						Optional:    true,
-						Description: `Whether TLS verification is enabled. Defaults to ` + "`" + `true` + "`" + ` when omitted.`,
-					},
-				},
-				Description: `Information needed to create a Custom Connector app.`,
-			},
-			"description": schema.StringAttribute{
-				Required:    true,
-				Description: `A description of the app.`,
-			},
-			"id": schema.StringAttribute{
-				Computed: true,
-				PlanModifiers: []planmodifier.String{
-					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-				},
-				Description: `The ID of the app.`,
-			},
-			"import_visibility": schema.StringAttribute{
-				Computed:    true,
-				Optional:    true,
-				Description: `The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]`,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"GLOBAL",
-						"LIMITED",
-					),
-				},
-			},
-			"name": schema.StringAttribute{
-				Required:    true,
-				Description: `The name of the app.`,
-			},
-			"type": schema.StringAttribute{
-				Computed:    true,
-				Description: `The type of an app.`,
 			},
 			"validations": schema.ListNestedAttribute{
 				Computed: true,
