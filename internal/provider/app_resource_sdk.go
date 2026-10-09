@@ -129,7 +129,6 @@ func (r *AppResourceModel) ToSharedCreateAppInfo(ctx context.Context) (*shared.C
 	var adminOwnerID string
 	adminOwnerID = r.AdminOwnerID.ValueString()
 
-	appType := shared.AppTypeEnum(r.AppType.ValueString())
 	var customConnector *shared.CreateCustomConnectorInfo
 	if r.CustomConnector != nil {
 		var baseURL string
@@ -201,6 +200,7 @@ func (r *AppResourceModel) ToSharedCreateAppInfo(ctx context.Context) (*shared.C
 	var name string
 	name = r.Name.ValueString()
 
+	typeVar := shared.AppTypeEnum(r.Type.ValueString())
 	visibility := new(shared.VisibilityTypeEnum)
 	if !r.Visibility.IsUnknown() && !r.Visibility.IsNull() {
 		*visibility = shared.VisibilityTypeEnum(r.Visibility.ValueString())
@@ -213,11 +213,11 @@ func (r *AppResourceModel) ToSharedCreateAppInfo(ctx context.Context) (*shared.C
 	}
 	out := shared.CreateAppInfo{
 		AdminOwnerID:       adminOwnerID,
-		AppType:            appType,
 		CustomConnector:    customConnector,
 		Description:        description,
 		ImportVisibility:   importVisibility,
 		Name:               name,
+		Type:               typeVar,
 		Visibility:         visibility,
 		VisibilityGroupIds: visibilityGroupIds,
 	}

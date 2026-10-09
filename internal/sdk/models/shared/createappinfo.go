@@ -12,8 +12,6 @@ import (
 type CreateAppInfo struct {
 	// The ID of the owner of the app.
 	AdminOwnerID string `json:"admin_owner_id"`
-	// The type of an app.
-	AppType AppTypeEnum `json:"app_type"`
 	// Information needed to create a Custom Connector app.
 	CustomConnector *CreateCustomConnectorInfo `json:"custom_connector,omitempty"`
 	// A description of the app.
@@ -22,6 +20,8 @@ type CreateAppInfo struct {
 	ImportVisibility *VisibilityTypeEnum `json:"import_visibility,omitempty"`
 	// The name of the app.
 	Name string `json:"name"`
+	// The type of an app.
+	Type AppTypeEnum `json:"app_type"`
 	// The visibility level of the entity.
 	Visibility *VisibilityTypeEnum `json:"visibility,omitempty"`
 	// The IDs of groups that can see this app when visibility is `LIMITED`.
@@ -44,13 +44,6 @@ func (c *CreateAppInfo) GetAdminOwnerID() string {
 		return ""
 	}
 	return c.AdminOwnerID
-}
-
-func (c *CreateAppInfo) GetAppType() AppTypeEnum {
-	if c == nil {
-		return AppTypeEnum("")
-	}
-	return c.AppType
 }
 
 func (c *CreateAppInfo) GetCustomConnector() *CreateCustomConnectorInfo {
@@ -79,6 +72,13 @@ func (c *CreateAppInfo) GetName() string {
 		return ""
 	}
 	return c.Name
+}
+
+func (c *CreateAppInfo) GetType() AppTypeEnum {
+	if c == nil {
+		return AppTypeEnum("")
+	}
+	return c.Type
 }
 
 func (c *CreateAppInfo) GetVisibility() *VisibilityTypeEnum {
