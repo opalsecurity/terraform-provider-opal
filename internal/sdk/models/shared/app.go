@@ -92,6 +92,12 @@ type App struct {
 	AdminOwnerID string `json:"admin_owner_id"`
 	// Configuration for a Custom Connector app. Does not include the signing
 	// secret; secrets are write-only and never returned by the API.
+	//
+	// **Known limitation (Terraform):** every `terraform apply` on a
+	// `CUSTOM_CONNECTOR` app re-validates the connector by issuing an
+	// HTTP request to its `/status` endpoint, even when no
+	// `custom_connector` field changed. Ensure the connector is
+	// reachable at apply time.
 	CustomConnector *CustomConnectorAppConfig `json:"custom_connector,omitempty"`
 	// A description of the app.
 	Description string `json:"description"`

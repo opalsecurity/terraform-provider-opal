@@ -70,6 +70,15 @@ type CreateAppInfo struct {
 	// The ID of the owner of the app.
 	AdminOwnerID string `json:"admin_owner_id"`
 	// Information needed to create a Custom Connector app.
+	//
+	// **Known limitation (Terraform):** every `terraform apply` on a
+	// `CUSTOM_CONNECTOR` app re-validates the connector by issuing an
+	// HTTP request to its `/status` endpoint, even when no
+	// `custom_connector` field changed. Ensure the connector is
+	// reachable at apply time, or the apply will fail with an HTTP 400
+	// error from the Opal API. Tracked for a server-side fix that will
+	// only re-validate when the connector configuration actually
+	// changes.
 	CustomConnector *CreateCustomConnectorInfo `json:"custom_connector,omitempty"`
 	// A description of the app.
 	Description string `json:"description"`
