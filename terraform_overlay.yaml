@@ -73,6 +73,18 @@ actions:
   - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["app_type"]
     update:
       x-speakeasy-name-override: type
+  # PROD-1493: hide the Custom Connector signing secret from `terraform plan`
+  # output. The field is already written to state (unavoidable — Terraform
+  # needs it for the next apply), but marking it `Sensitive: true` keeps it
+  # out of plan diffs, CI logs, screenshots, etc. The OpenAPI
+  # `format: password` only affects wire-level docs; Speakeasy needs its own
+  # extension to translate that into TF's `Sensitive` flag.
+  - target: $["components"]["schemas"]["CreateCustomConnectorInfo"]["properties"]["signing_secret"]
+    update:
+      x-speakeasy-param-sensitive: true
+  - target: $["components"]["schemas"]["UpdateCustomConnectorInfo"]["properties"]["signing_secret"]
+    update:
+      x-speakeasy-param-sensitive: true
   - target: $["components"]["schemas"]["CreateCustomConnectorInfo"]["properties"]["identifier"]
     update:
       x-speakeasy-param-force-new: true

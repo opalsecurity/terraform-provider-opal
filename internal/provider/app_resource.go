@@ -91,8 +91,9 @@ func (r *AppResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 						},
 					},
 					"signing_secret": schema.StringAttribute{
-						Computed: true,
-						Optional: true,
+						Computed:  true,
+						Optional:  true,
+						Sensitive: true,
 						MarkdownDescription: `The signing secret used to authenticate requests to the Custom` + "\n" +
 							`Connector. Write-only; never returned by the API.` + "\n" +
 							`Not Null`,

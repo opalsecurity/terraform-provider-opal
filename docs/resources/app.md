@@ -66,7 +66,7 @@ Optional:
 
 - `base_url` (String) The base URL of the Custom Connector. Not Null
 - `identifier` (String) The identifier of the Custom Connector. Not Null; Requires replacement if changed.
-- `signing_secret` (String) The signing secret used to authenticate requests to the Custom
+- `signing_secret` (String, Sensitive) The signing secret used to authenticate requests to the Custom
 Connector. Write-only; never returned by the API.
 Not Null
 - `supports_event_ingestion` (Boolean) Whether the Custom Connector supports event ingestion. Defaults to
