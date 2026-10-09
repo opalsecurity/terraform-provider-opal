@@ -1,6 +1,5 @@
 resource "opal_app" "my_app" {
   admin_owner_id = "7c86c85d-0651-43e2-a748-d69d658418e8"
-  app_type       = "OKTA_DIRECTORY"
   custom_connector = {
     base_url                  = "https://my-connector.example.com"
     identifier                = "my-connector"
@@ -15,6 +14,7 @@ resource "opal_app" "my_app" {
   description       = "Bookkeeping app for internal tools."
   import_visibility = "GLOBAL"
   name              = "My Push-only App"
+  type              = "OKTA_DIRECTORY"
   visibility        = "GLOBAL"
   visibility_group_ids = [
     "0ac67328-c5ec-4f7b-a4c6-2ce408cea5ee"

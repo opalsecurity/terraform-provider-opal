@@ -15,7 +15,6 @@ App Resource
 ```terraform
 resource "opal_app" "my_app" {
   admin_owner_id = "7c86c85d-0651-43e2-a748-d69d658418e8"
-  app_type       = "OKTA_DIRECTORY"
   custom_connector = {
     base_url                  = "https://my-connector.example.com"
     identifier                = "my-connector"
@@ -30,6 +29,7 @@ resource "opal_app" "my_app" {
   description       = "Bookkeeping app for internal tools."
   import_visibility = "GLOBAL"
   name              = "My Push-only App"
+  type              = "OKTA_DIRECTORY"
   visibility        = "GLOBAL"
   visibility_group_ids = [
     "0ac67328-c5ec-4f7b-a4c6-2ce408cea5ee"
@@ -43,21 +43,20 @@ resource "opal_app" "my_app" {
 ### Required
 
 - `admin_owner_id` (String) The ID of the owner of the app.
-- `app_type` (String) The type of an app. must be one of ["ACTIVE_DIRECTORY", "ANTHROPIC", "AZURE_AD", "AWS", "AWS_SSO", "CLICKHOUSE", "COUPA", "CURSOR", "CUSTOM", "CONFLUENCE", "CUSTOM_CONNECTOR", "DATABRICKS", "DATASTAX_ASTRA", "ALICLOUD", "DEVIN", "DOCUSIGN", "DUO", "GCP", "GIT_HUB", "GIT_LAB", "GOOGLE_GROUPS", "GOOGLE_WORKSPACE", "GRAFANA", "HUBSPOT", "ILEVEL", "INCIDENTIO", "JIRA", "LDAP", "LINEAR", "MARIADB", "MONGO", "MONGO_ATLAS", "MYSQL", "NETSUITE", "DATADOG", "OKTA_CIAM", "OKTA_DIRECTORY", "OPENAI_PLATFORM", "OPAL", "ORACLE_FUSION", "PAGERDUTY", "POSTGRES", "ROOTLY", "SALESFORCE", "SNOWFLAKE", "SLACK", "TABLEAU", "TAILSCALE", "TELEPORT", "TWINGATE", "VAULT", "WORKDAY", "ZENDESK", "ZOOM", "RAMP", "WRIKE", "VERCEL", "AXIOM"]; Requires replacement if changed.
 - `description` (String) A description of the app.
 - `name` (String) The name of the app.
+- `type` (String) The type of an app. must be one of ["ACTIVE_DIRECTORY", "ANTHROPIC", "AZURE_AD", "AWS", "AWS_SSO", "CLICKHOUSE", "COUPA", "CURSOR", "CUSTOM", "CONFLUENCE", "CUSTOM_CONNECTOR", "DATABRICKS", "DATASTAX_ASTRA", "ALICLOUD", "DEVIN", "DOCUSIGN", "DUO", "GCP", "GIT_HUB", "GIT_LAB", "GOOGLE_GROUPS", "GOOGLE_WORKSPACE", "GRAFANA", "HUBSPOT", "ILEVEL", "INCIDENTIO", "JIRA", "LDAP", "LINEAR", "MARIADB", "MONGO", "MONGO_ATLAS", "MYSQL", "NETSUITE", "DATADOG", "OKTA_CIAM", "OKTA_DIRECTORY", "OPENAI_PLATFORM", "OPAL", "ORACLE_FUSION", "PAGERDUTY", "POSTGRES", "ROOTLY", "SALESFORCE", "SNOWFLAKE", "SLACK", "TABLEAU", "TAILSCALE", "TELEPORT", "TWINGATE", "VAULT", "WORKDAY", "ZENDESK", "ZOOM", "RAMP", "WRIKE", "VERCEL", "AXIOM"]; Requires replacement if changed.
 
 ### Optional
 
 - `custom_connector` (Attributes) Information needed to create a Custom Connector app. (see [below for nested schema](#nestedatt--custom_connector))
-- `import_visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
+- `import_visibility` (String) The visibility of imported items. Defaults to `GLOBAL` when omitted. must be one of ["GLOBAL", "LIMITED"]
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
 - `visibility_group_ids` (Set of String) The IDs of groups that can see this app when visibility is `LIMITED`. Default: []
 
 ### Read-Only
 
 - `id` (String) The ID of the app.
-- `type` (String) The type of an app.
 - `validations` (Attributes List) Validation checks of an apps' configuration and permissions. (see [below for nested schema](#nestedatt--validations))
 
 <a id="nestedatt--custom_connector"></a>

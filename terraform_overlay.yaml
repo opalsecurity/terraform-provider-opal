@@ -64,6 +64,15 @@ actions:
   - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["app_type"]
     update:
       x-speakeasy-param-force-new: true
+  # PROD-1493: rename `app_type` → `type` in the create request to match the
+  # existing override on `App.app_type` (used by the data source since April
+  # 2024 — see commit c906d463). Without this, the resource ends up with two
+  # separate attributes (`app_type` from the write side, `type` from refresh),
+  # which breaks `terraform import` because refresh populates `type` but leaves
+  # `app_type` null, triggering a RequiresReplace plan on the next apply.
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["app_type"]
+    update:
+      x-speakeasy-name-override: type
   - target: $["components"]["schemas"]["CreateCustomConnectorInfo"]["properties"]["identifier"]
     update:
       x-speakeasy-param-force-new: true
@@ -1237,6 +1246,31 @@ actions:
   - target: $["components"]["schemas"]["UpdateAppInfo"]["properties"]["visibility_group_ids"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
+  # PROD-1493: default `import_visibility` to GLOBAL on the TF resource,
+  # mirroring the backend default at `handlers_apps.go:123`
+  # (`importVisibility := model.VisibilityGlobal`) and matching the OpenAPI
+  # docstring on `CreateAppInfo.import_visibility`. Without this, the Speakeasy
+  # resource generator does not emit a response→state setter for this field
+  # (the data source does — the quirk is specific to resource gen), so when a
+  # user omits it the plan stays Unknown through apply and Terraform errors
+  # with `Provider returned invalid result object after apply`. Resolving the
+  # default at plan time avoids that path entirely.
+  #
+  # The directive is applied on `CreateAppInfo.import_visibility` (the request
+  # body side where the default is user-facing) rather than on the App response
+  # schema, because OpenAPI 3.0 ignores siblings to `$ref` and the response
+  # property is a bare `$ref`. We also wrap the ref in `allOf` here so the
+  # Speakeasy generator picks up the sibling directive.
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["import_visibility"]
+    update:
+      allOf:
+        - $ref: "#/components/schemas/VisibilityTypeEnum"
+      x-speakeasy-terraform-custom-default:
+        imports:
+          - github.com/opalsecurity/terraform-provider-opal/v3/internal/customdefaults
+        schemaDefinition: customdefaults.ImportVisibilityGlobal()
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["import_visibility"]["$ref"]
+    remove: true
   - target: $["components"]["schemas"]["Event"]
     update:
       x-speakeasy-entity: Events

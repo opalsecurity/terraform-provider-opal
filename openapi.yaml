@@ -8655,6 +8655,7 @@ components:
             `CUSTOM_CONNECTOR`.
           $ref: "#/components/schemas/AppTypeEnum"
           x-speakeasy-param-force-new: true
+          x-speakeasy-name-override: type
         visibility:
           description: |-
             The visibility of the app. Defaults to `GLOBAL` when omitted.
@@ -8672,7 +8673,12 @@ components:
         import_visibility:
           description: |-
             The visibility of imported items. Defaults to `GLOBAL` when omitted.
-          $ref: "#/components/schemas/VisibilityTypeEnum"
+          allOf:
+            - $ref: "#/components/schemas/VisibilityTypeEnum"
+          x-speakeasy-terraform-custom-default:
+            imports:
+              - github.com/opalsecurity/terraform-provider-opal/v3/internal/customdefaults
+            schemaDefinition: customdefaults.ImportVisibilityGlobal()
         custom_connector:
           description: |-
             Required when `app_type` is `CUSTOM_CONNECTOR`. Must not be set when
