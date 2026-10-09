@@ -1,0 +1,202 @@
+resource "opal_group" "my_group" {
+  admin_owner_id                 = "7c86c85d-0651-43e2-a748-d69d658418e8"
+  app_id                         = "f454d283-ca87-4a8a-bdbb-df212eca5353"
+  configuration_template_id      = "06851574-e50d-40ca-8c78-f72ae6ab4304"
+  custom_request_notification    = "Check your email to register your account."
+  description                    = "Engineering team Okta group."
+  extensions_duration_in_minutes = 120
+  group_leader_user_ids = [
+    "23ac9822-9f43-4e31-a31d-6a6109f207ae"
+  ]
+  group_type = "OPAL_GROUP"
+  handle     = "eng-oncall"
+  initial_user_ids = [
+    "28515a50-20b7-42a7-8085-0024077aef15"
+  ]
+  match_remote_description = false
+  match_remote_name        = false
+  message_channel_ids = [
+    "01f0dea1-52d3-4b76-b362-1ee677e90fd2"
+  ]
+  name = "mongo-db-prod"
+  on_call_schedule_ids = [
+    "6cc05350-3da1-4a2e-bbeb-bd4bc4f9b06b"
+  ]
+  remote_info = {
+    active_directory_group = {
+      group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    aws_sso_group = {
+      group_id = 898931321
+    }
+    axiom_group = {
+      group_id = "grp_0123456789abcdef"
+    }
+    azure_ad_microsoft_365_group = {
+      group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    azure_ad_security_group = {
+      group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    clickhouse_role = {
+      role_id = "my_clickhouse_role"
+    }
+    confluence_group = {
+      group_id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+    }
+    connector_group = {
+      group_id = 898931321
+    }
+    databricks_account_group = {
+      group_id = 898931321
+    }
+    devin_group = {
+      group_name = "devin-group-01"
+    }
+    docusign_group = {
+      group_id = "12345"
+    }
+    docusign_signing_group = {
+      signing_group_id = "12345"
+    }
+    duo_group = {
+      group_id = "DSRD8W89B9DNDBY4RHAC"
+    }
+    github_enterprise_team = {
+      team_slug = "opal-security"
+    }
+    github_team = {
+      org_name  = "...my_org_name..."
+      team_slug = "opal-security"
+    }
+    gitlab_group = {
+      group_id = 898931321
+    }
+    google_group = {
+      group_id = "1y6w882181n7sg"
+    }
+    grafana_team = {
+      team_id = 2323
+    }
+    hubspot_team = {
+      team_id = "12345"
+    }
+    incidentio_on_call_schedule = {
+      schedule_id = "01HZ8XQM9ZQX8RKMZQ8ZQX8RK"
+    }
+    jira_group = {
+      group_id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+    }
+    ldap_group = {
+      group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    linear_team = {
+      team_id = "8caed98e-1234-5678-9abc-def012345678"
+    }
+    okta_group = {
+      group_id = "00gjs33pe8rtmRrp3rd6"
+    }
+    okta_group_rule = {
+      rule_id = "0pr3f7zMZZHPgUoWO0g4"
+    }
+    pagerduty_on_call_schedule = {
+      schedule_id = "PNZNINN"
+    }
+    ramp_department = {
+      department_id = "2d68eb67-f6eb-4284-8683-7d530c77a5a6"
+    }
+    ramp_location = {
+      location_id = "f4efe11c-221f-4b49-a1e4-33eaf96a49ee"
+    }
+    rootly_on_call_schedule = {
+      schedule_id = "01HZ8XQM9ZQX8RKMZQ8ZQX8RK"
+    }
+    slack_user_group = {
+      group_id = "S0614TZR7"
+    }
+    snowflake_role = {
+      role_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    tableau_group = {
+      group_id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+    }
+    tailscale_group = {
+      group_id = 898931321
+    }
+    twingate_group = {
+      group_id = "R3JvdXA6MTIzNA=="
+    }
+    twingate_group_synced = {
+      group_id = "R3JvdXA6MTIzNA=="
+    }
+    workday_user_security_group = {
+      group_id = "123abc456def"
+    }
+    wrike_group = {
+      group_id = "KX7ZHLVG"
+    }
+    zendesk_group = {
+      group_id = "12345"
+    }
+    zendesk_organization = {
+      organization_id = "67890"
+    }
+    zoom_group = {
+      group_id = "SoBVexyrQjqCkcxjpBWi6w"
+    }
+  }
+  request_configurations = [
+    {
+      allow_requests = true
+      auto_approval  = false
+      condition = {
+        group_ids = [
+          "1b978423-db0a-4037-a4cf-f79c60cb67b3",
+        ]
+        role_remote_ids = [
+          "arn:aws:iam::590304332660:role/AdministratorAccess",
+        ]
+      }
+      extensions_duration_in_minutes = 120
+      max_duration                   = 120
+      priority                       = 1
+      reason_optional                = false
+      recommended_duration           = 120
+      request_template_id            = "06851574-e50d-40ca-8c78-f72ae6ab4304"
+      require_mfa_to_request         = false
+      require_support_ticket         = false
+      reviewer_stages = [
+        {
+          escalation = {
+            delay_minutes = 60
+            owner_ids = [
+              "b5a8a5e8-066f-4232-964d-91a0265aca0e"
+            ]
+            user_ids = [
+              "060cafc9-9b67-49ba-89b2-adc4d636bfb4"
+            ]
+          }
+          opal_script_ids = [
+            "b8da7ba4-fe8d-4c8a-90dc-3c4efaa6a296"
+          ]
+          operator = "AND"
+          owner_ids = [
+            "f653097c-5b74-48b8-a26c-33571f9211ff"
+          ]
+          require_admin_approval   = false
+          require_manager_approval = false
+          service_user_ids = [
+            "2397768f-f9b2-4d15-ae5b-40e60f38060e"
+          ]
+        }
+      ]
+    }
+  ]
+  require_mfa_to_approve    = false
+  risk_sensitivity_override = "CRITICAL"
+  team_id                   = "T01234567"
+  visibility                = "GLOBAL"
+  visibility_group_ids = [
+    "ea22f6cf-8fd4-44e9-b53d-66a5731ab7da"
+  ]
+}
