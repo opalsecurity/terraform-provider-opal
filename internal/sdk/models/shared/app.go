@@ -3,6 +3,10 @@
 
 package shared
 
+import (
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
+)
+
 // AppType - The type of an app.
 type AppType string
 
@@ -88,6 +92,12 @@ type App struct {
 	AdminOwnerID string `json:"admin_owner_id"`
 	// Configuration for a Custom Connector app. Does not include the signing
 	// secret; secrets are write-only and never returned by the API.
+	//
+	// **Known limitation (Terraform):** every `terraform apply` on a
+	// `CUSTOM_CONNECTOR` app re-validates the connector by issuing an
+	// HTTP request to its `/status` endpoint, even when no
+	// `custom_connector` field changed. Ensure the connector is
+	// reachable at apply time.
 	CustomConnector *CustomConnectorAppConfig `json:"custom_connector,omitempty"`
 	// A description of the app.
 	Description string `json:"description"`
@@ -104,7 +114,18 @@ type App struct {
 	// The visibility level of the entity.
 	Visibility *VisibilityTypeEnum `json:"visibility,omitempty"`
 	// The IDs of groups that can see this app when visibility is `LIMITED`.
-	VisibilityGroupIds []string `json:"visibility_group_ids,omitempty"`
+	VisibilityGroupIds []string `json:"visibility_group_ids"`
+}
+
+func (a App) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(a, "", false)
+}
+
+func (a *App) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &a, "", false, nil); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (a *App) GetAdminOwnerID() string {

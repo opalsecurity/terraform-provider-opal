@@ -31,7 +31,7 @@ terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "3.9.2"
+      version = "3.10.2"
     }
   }
 }
@@ -66,6 +66,7 @@ Available configuration:
 ### Managed Resources
 
 * [opal_access_rule](docs/resources/access_rule.md)
+* [opal_app](docs/resources/app.md)
 * [opal_bundle](docs/resources/bundle.md)
 * [opal_bundle_group](docs/resources/bundle_group.md)
 * [opal_bundle_resource](docs/resources/bundle_resource.md)

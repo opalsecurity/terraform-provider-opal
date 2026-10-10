@@ -131,6 +131,8 @@ paths:
         - BearerAuth: []
       tags:
         - apps
+      x-speakeasy-name-override: create
+      x-speakeasy-entity-operation: App#create
   /apps/{app_id}:
     get:
       summary: Get app by ID
@@ -180,6 +182,7 @@ paths:
             format: uuid
             type: string
           style: simple
+          x-speakeasy-name-override: id
       requestBody:
         required: true
         content:
@@ -197,6 +200,8 @@ paths:
         - BearerAuth: []
       tags:
         - apps
+      x-speakeasy-name-override: update
+      x-speakeasy-entity-operation: App#update
     delete:
       summary: Delete app
       description: |-
@@ -215,6 +220,7 @@ paths:
             format: uuid
             type: string
           style: simple
+          x-speakeasy-name-override: id
       responses:
         "200":
           description: The app was successfully deleted.
@@ -222,6 +228,8 @@ paths:
         - BearerAuth: []
       tags:
         - apps
+      x-speakeasy-name-override: delete
+      x-speakeasy-entity-operation: App#delete
   /bundles:
     get:
       summary: Get bundles
@@ -8559,6 +8567,9 @@ components:
             format: uuid
             type: string
           type: array
+          format: set
+          default: []
+          x-speakeasy-param-suppress-computed-diff: true
         import_visibility:
           description: |-
             The visibility level of items imported from this app.
@@ -8568,6 +8579,7 @@ components:
           items:
             $ref: "#/components/schemas/AppValidation"
           type: array
+          x-speakeasy-param-readonly: true
         custom_connector:
           $ref: "#/components/schemas/CustomConnectorAppConfig"
       required:
@@ -8582,6 +8594,12 @@ components:
       description: |-
         Configuration for a Custom Connector app. Does not include the signing
         secret; secrets are write-only and never returned by the API.
+
+        **Known limitation (Terraform):** every `terraform apply` on a
+        `CUSTOM_CONNECTOR` app re-validates the connector by issuing an
+        HTTP request to its `/status` endpoint, even when no
+        `custom_connector` field changed. Ensure the connector is
+        reachable at apply time.
       properties:
         identifier:
           description: The identifier of the Custom Connector.
@@ -8626,11 +8644,11 @@ components:
       properties:
         name:
           description: The name of the app.
-          example: My Push-only App
+          example: My Custom Connector App
           type: string
         description:
           description: A description of the app.
-          example: Bookkeeping app for internal tools.
+          example: In-house billing connector for the finance team.
           type: string
         admin_owner_id:
           description: The ID of the owner of the app.
@@ -8641,11 +8659,19 @@ components:
           description: |-
             The type of the app. Must be `CUSTOM` (Push-only App) or
             `CUSTOM_CONNECTOR`.
-          $ref: "#/components/schemas/AppTypeEnum"
+          x-speakeasy-param-force-new: true
+          x-speakeasy-name-override: type
+          type: string
+          enum:
+            - CUSTOM
+            - CUSTOM_CONNECTOR
+          example: CUSTOM_CONNECTOR
         visibility:
           description: |-
             The visibility of the app. Defaults to `GLOBAL` when omitted.
-          $ref: "#/components/schemas/VisibilityTypeEnum"
+          allOf:
+            - $ref: "#/components/schemas/VisibilityTypeEnum"
+          example: LIMITED
         visibility_group_ids:
           description: |-
             The IDs of groups that can see this app when visibility is `LIMITED`.
@@ -8653,10 +8679,18 @@ components:
             format: uuid
             type: string
           type: array
+          format: set
+          default: []
+          x-speakeasy-param-suppress-computed-diff: true
         import_visibility:
           description: |-
             The visibility of imported items. Defaults to `GLOBAL` when omitted.
-          $ref: "#/components/schemas/VisibilityTypeEnum"
+          allOf:
+            - $ref: "#/components/schemas/VisibilityTypeEnum"
+          x-speakeasy-terraform-custom-default:
+            imports:
+              - github.com/opalsecurity/terraform-provider-opal/v3/internal/customdefaults
+            schemaDefinition: customdefaults.ImportVisibilityGlobal()
         custom_connector:
           description: |-
             Required when `app_type` is `CUSTOM_CONNECTOR`. Must not be set when
@@ -8669,12 +8703,23 @@ components:
         - app_type
       type: object
     CreateCustomConnectorInfo:
-      description: Information needed to create a Custom Connector app.
+      description: |-
+        Information needed to create a Custom Connector app.
+
+        **Known limitation (Terraform):** every `terraform apply` on a
+        `CUSTOM_CONNECTOR` app re-validates the connector by issuing an
+        HTTP request to its `/status` endpoint, even when no
+        `custom_connector` field changed. Ensure the connector is
+        reachable at apply time, or the apply will fail with an HTTP 400
+        error from the Opal API. Tracked for a server-side fix that will
+        only re-validate when the connector configuration actually
+        changes.
       properties:
         identifier:
           description: The identifier of the Custom Connector.
           example: my-connector
           type: string
+          x-speakeasy-param-force-new: true
         base_url:
           description: The base URL of the Custom Connector.
           example: https://my-connector.example.com
@@ -8684,6 +8729,8 @@ components:
             The signing secret used to authenticate requests to the Custom
             Connector. Write-only; never returned by the API.
           type: string
+          x-speakeasy-param-sensitive: true
+          format: password
         tls_mode:
           description: |-
             Whether TLS verification is enabled. Defaults to `true` when omitted.
@@ -8739,6 +8786,9 @@ components:
             format: uuid
             type: string
           type: array
+          format: set
+          default: []
+          x-speakeasy-param-suppress-computed-diff: true
         import_visibility:
           $ref: "#/components/schemas/VisibilityTypeEnum"
         custom_connector:
@@ -8751,6 +8801,14 @@ components:
       description: |-
         Information needed to update a Custom Connector app. Omitted fields are
         left unchanged. Provide `signing_secret` only when rotating the secret.
+
+        **Known limitation (Terraform):** every `terraform apply` on a
+        `CUSTOM_CONNECTOR` app re-validates the connector by issuing an
+        HTTP request to its `/status` endpoint, even when no
+        `custom_connector` field changed (e.g. a description-only edit).
+        Ensure the connector is reachable at apply time, or the apply
+        will fail with an HTTP 400 error from the Opal API. Tracked for
+        a server-side fix.
       properties:
         identifier:
           description: The identifier of the Custom Connector.
@@ -8763,6 +8821,8 @@ components:
             New signing secret. Write-only; never returned by the API. Omit to
             leave the existing secret unchanged.
           type: string
+          x-speakeasy-param-sensitive: true
+          format: password
         tls_mode:
           description: Whether TLS verification is enabled for the Custom Connector.
           type: boolean
