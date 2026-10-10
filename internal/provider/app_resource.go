@@ -229,7 +229,7 @@ func (r *AppResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 			"visibility": schema.StringAttribute{
 				Computed:    true,
 				Optional:    true,
-				Description: `The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]`,
+				Description: `The visibility of the app. Defaults to ` + "`" + `GLOBAL` + "`" + ` when omitted. must be one of ["GLOBAL", "LIMITED"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"GLOBAL",

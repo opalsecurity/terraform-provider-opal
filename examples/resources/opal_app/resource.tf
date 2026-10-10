@@ -11,11 +11,11 @@ resource "opal_app" "my_app" {
     tls_ca_cert_content       = "...my_tls_ca_cert_content..."
     tls_mode                  = false
   }
-  description       = "Bookkeeping app for internal tools."
+  description       = "In-house billing connector for the finance team."
   import_visibility = "GLOBAL"
-  name              = "My Push-only App"
-  type              = "OKTA_DIRECTORY"
-  visibility        = "GLOBAL"
+  name              = "My Custom Connector App"
+  type              = "CUSTOM_CONNECTOR"
+  visibility        = "LIMITED"
   visibility_group_ids = [
     "0ac67328-c5ec-4f7b-a4c6-2ce408cea5ee"
   ]

@@ -95,6 +95,33 @@ actions:
         - CUSTOM_CONNECTOR
   - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["app_type"]["$ref"]
     remove: true
+  # PROD-1493: make the Speakeasy-generated example in
+  # `examples/resources/opal_app/resource.tf` internally consistent and valid
+  # under both plan-time validators and the backend's accept-rules. Without
+  # these overrides the example falls back to:
+  #   - `type = "OKTA_DIRECTORY"` (from App.app_type's existing example) which
+  #     fails the narrowed CreateAppInfo.app_type OneOf validator at plan time
+  #   - `visibility = "GLOBAL"` paired with a non-empty `visibility_group_ids`
+  #     list, which PROD-1554's backend validator rejects with HTTP 400
+  # Pinning the create-side example to CUSTOM_CONNECTOR + LIMITED produces a
+  # resource.tf a user could literally copy-paste (modulo substituting their
+  # own IDs) and have it both validate and apply.
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["app_type"]
+    update:
+      example: CUSTOM_CONNECTOR
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["name"]
+    update:
+      example: My Custom Connector App
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["description"]
+    update:
+      example: In-house billing connector for the finance team.
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["visibility"]
+    update:
+      allOf:
+        - $ref: "#/components/schemas/VisibilityTypeEnum"
+      example: LIMITED
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["visibility"]["$ref"]
+    remove: true
   # PROD-1493: hide the Custom Connector signing secret from `terraform plan`
   # output. The field is already written to state (unavoidable — Terraform
   # needs it for the next apply), but marking it `Sensitive: true` keeps it

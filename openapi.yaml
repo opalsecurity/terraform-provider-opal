@@ -8644,11 +8644,11 @@ components:
       properties:
         name:
           description: The name of the app.
-          example: My Push-only App
+          example: My Custom Connector App
           type: string
         description:
           description: A description of the app.
-          example: Bookkeeping app for internal tools.
+          example: In-house billing connector for the finance team.
           type: string
         admin_owner_id:
           description: The ID of the owner of the app.
@@ -8665,10 +8665,13 @@ components:
           enum:
             - CUSTOM
             - CUSTOM_CONNECTOR
+          example: CUSTOM_CONNECTOR
         visibility:
           description: |-
             The visibility of the app. Defaults to `GLOBAL` when omitted.
-          $ref: "#/components/schemas/VisibilityTypeEnum"
+          allOf:
+            - $ref: "#/components/schemas/VisibilityTypeEnum"
+          example: LIMITED
         visibility_group_ids:
           description: |-
             The IDs of groups that can see this app when visibility is `LIMITED`.

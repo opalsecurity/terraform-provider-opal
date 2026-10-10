@@ -26,11 +26,11 @@ resource "opal_app" "my_app" {
     tls_ca_cert_content       = "...my_tls_ca_cert_content..."
     tls_mode                  = false
   }
-  description       = "Bookkeeping app for internal tools."
+  description       = "In-house billing connector for the finance team."
   import_visibility = "GLOBAL"
-  name              = "My Push-only App"
-  type              = "OKTA_DIRECTORY"
-  visibility        = "GLOBAL"
+  name              = "My Custom Connector App"
+  type              = "CUSTOM_CONNECTOR"
+  visibility        = "LIMITED"
   visibility_group_ids = [
     "0ac67328-c5ec-4f7b-a4c6-2ce408cea5ee"
   ]
@@ -62,7 +62,7 @@ error from the Opal API. Tracked for a server-side fix that will
 only re-validate when the connector configuration actually
 changes. (see [below for nested schema](#nestedatt--custom_connector))
 - `import_visibility` (String) The visibility of imported items. Defaults to `GLOBAL` when omitted. must be one of ["GLOBAL", "LIMITED"]
-- `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
+- `visibility` (String) The visibility of the app. Defaults to `GLOBAL` when omitted. must be one of ["GLOBAL", "LIMITED"]
 - `visibility_group_ids` (Set of String) The IDs of groups that can see this app when visibility is `LIMITED`. Default: []
 
 ### Read-Only
