@@ -14,8 +14,8 @@ resource "opal_app" "my_app" {
   description       = "Bookkeeping app for internal tools."
   import_visibility = "GLOBAL"
   name              = "My Push-only App"
-  type              = "OKTA_DIRECTORY"
-  visibility        = "GLOBAL"
+  type              = "CUSTOM_CONNECTOR"
+  visibility        = "LIMITED"
   visibility_group_ids = [
     "0ac67328-c5ec-4f7b-a4c6-2ce408cea5ee"
   ]

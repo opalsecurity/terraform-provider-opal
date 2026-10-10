@@ -64,6 +64,33 @@ func (e *CreateAppInfoType) UnmarshalJSON(data []byte) error {
 	}
 }
 
+// Visibility - The visibility of the app. Defaults to `GLOBAL` when omitted.
+type Visibility string
+
+const (
+	VisibilityGlobal  Visibility = "GLOBAL"
+	VisibilityLimited Visibility = "LIMITED"
+)
+
+func (e Visibility) ToPointer() *Visibility {
+	return &e
+}
+func (e *Visibility) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "GLOBAL":
+		fallthrough
+	case "LIMITED":
+		*e = Visibility(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for Visibility: %v", v)
+	}
+}
+
 // CreateAppInfo - Information needed to create an app. Currently supports only Push-only
 // apps (`CUSTOM`) and Custom Connector apps (`CUSTOM_CONNECTOR`).
 type CreateAppInfo struct {
@@ -89,8 +116,8 @@ type CreateAppInfo struct {
 	// The type of the app. Must be `CUSTOM` (Push-only App) or
 	// `CUSTOM_CONNECTOR`.
 	Type CreateAppInfoType `json:"app_type"`
-	// The visibility level of the entity.
-	Visibility *VisibilityTypeEnum `json:"visibility,omitempty"`
+	// The visibility of the app. Defaults to `GLOBAL` when omitted.
+	Visibility *Visibility `json:"visibility,omitempty"`
 	// The IDs of groups that can see this app when visibility is `LIMITED`.
 	VisibilityGroupIds []string `json:"visibility_group_ids"`
 }
@@ -148,7 +175,7 @@ func (c *CreateAppInfo) GetType() CreateAppInfoType {
 	return c.Type
 }
 
-func (c *CreateAppInfo) GetVisibility() *VisibilityTypeEnum {
+func (c *CreateAppInfo) GetVisibility() *Visibility {
 	if c == nil {
 		return nil
 	}
