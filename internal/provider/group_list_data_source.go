@@ -797,8 +797,6 @@ func (r *GroupListDataSource) Read(ctx context.Context, req datasource.ReadReque
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetGroupsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
