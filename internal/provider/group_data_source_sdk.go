@@ -157,6 +157,12 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.AzureAdSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.AzureAdSecurityGroup.GroupID = types.StringValue(resp.RemoteInfo.AzureAdSecurityGroup.GroupID)
 			}
+			if resp.RemoteInfo.BitwardenGroup == nil {
+				r.RemoteInfo.BitwardenGroup = nil
+			} else {
+				r.RemoteInfo.BitwardenGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.BitwardenGroup.GroupID = types.StringValue(resp.RemoteInfo.BitwardenGroup.GroupID)
+			}
 			if resp.RemoteInfo.ClickhouseRole == nil {
 				r.RemoteInfo.ClickhouseRole = nil
 			} else {
@@ -295,6 +301,18 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			} else {
 				r.RemoteInfo.RampLocation = &tfTypes.RampLocation{}
 				r.RemoteInfo.RampLocation.LocationID = types.StringValue(resp.RemoteInfo.RampLocation.LocationID)
+			}
+			if resp.RemoteInfo.RipplingSupergroup == nil {
+				r.RemoteInfo.RipplingSupergroup = nil
+			} else {
+				r.RemoteInfo.RipplingSupergroup = &tfTypes.RipplingSupergroup{}
+				r.RemoteInfo.RipplingSupergroup.SupergroupID = types.StringValue(resp.RemoteInfo.RipplingSupergroup.SupergroupID)
+			}
+			if resp.RemoteInfo.RipplingTeam == nil {
+				r.RemoteInfo.RipplingTeam = nil
+			} else {
+				r.RemoteInfo.RipplingTeam = &tfTypes.GrafanaTeam{}
+				r.RemoteInfo.RipplingTeam.TeamID = types.StringValue(resp.RemoteInfo.RipplingTeam.TeamID)
 			}
 			if resp.RemoteInfo.RootlyOnCallSchedule == nil {
 				r.RemoteInfo.RootlyOnCallSchedule = nil

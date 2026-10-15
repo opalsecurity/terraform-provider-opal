@@ -38,6 +38,9 @@ resource "opal_group" "my_group" {
     azure_ad_security_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
+    bitwarden_group = {
+      group_id = "...my_group_id..."
+    }
     clickhouse_role = {
       role_id = "my_clickhouse_role"
     }
@@ -107,6 +110,12 @@ resource "opal_group" "my_group" {
     }
     ramp_location = {
       location_id = "f4efe11c-221f-4b49-a1e4-33eaf96a49ee"
+    }
+    rippling_supergroup = {
+      supergroup_id = "8caed98e-1234-5678-9abc-def012345678"
+    }
+    rippling_team = {
+      team_id = "8caed98e-1234-5678-9abc-def012345678"
     }
     rootly_on_call_schedule = {
       schedule_id = "01HZ8XQM9ZQX8RKMZQ8ZQX8RK"
