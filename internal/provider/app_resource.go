@@ -18,7 +18,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/customdefaults"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
@@ -159,7 +158,6 @@ func (r *AppResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 			"import_visibility": schema.StringAttribute{
 				Computed:    true,
 				Optional:    true,
-				Default:     customdefaults.ImportVisibilityGlobal(),
 				Description: `The visibility of imported items. Defaults to ` + "`" + `GLOBAL` + "`" + ` when omitted. must be one of ["GLOBAL", "LIMITED"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
