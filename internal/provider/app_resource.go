@@ -19,7 +19,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/customdefaults"
-	speakeasy_setplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/setplanmodifier"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
@@ -238,12 +237,9 @@ func (r *AppResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 				},
 			},
 			"visibility_group_ids": schema.SetAttribute{
-				Computed: true,
-				Optional: true,
-				Default:  setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
-				PlanModifiers: []planmodifier.Set{
-					speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
-				},
+				Computed:    true,
+				Optional:    true,
+				Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 				ElementType: types.StringType,
 				Description: `The IDs of groups that can see this app when visibility is ` + "`" + `LIMITED` + "`" + `. Default: []`,
 			},
