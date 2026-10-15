@@ -260,6 +260,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Microsoft Entra ID Security group.`,
 					},
+					"bitwarden_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The group id of the Bitwarden Group.`,
+							},
+						},
+						Description: `Remote info for Bitwarden Group.`,
+					},
 					"clickhouse_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -493,6 +503,26 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							},
 						},
 						Description: `Remote info for Ramp location.`,
+					},
+					"rippling_supergroup": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"supergroup_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Rippling supergroup.`,
+							},
+						},
+						Description: `Remote info for Rippling supergroup.`,
+					},
+					"rippling_team": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"team_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Rippling team.`,
+							},
+						},
+						Description: `Remote info for Rippling team.`,
 					},
 					"rootly_on_call_schedule": schema.SingleNestedAttribute{
 						Computed: true,
@@ -814,8 +844,6 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config)
 
 	request, requestDiags := data.ToOperationsGetGroupRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)

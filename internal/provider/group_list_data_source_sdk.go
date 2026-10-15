@@ -83,6 +83,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.AzureAdSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.AzureAdSecurityGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.AzureAdSecurityGroup.GroupID)
 				}
+				if resultsItem.RemoteInfo.BitwardenGroup == nil {
+					results.RemoteInfo.BitwardenGroup = nil
+				} else {
+					results.RemoteInfo.BitwardenGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.BitwardenGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.BitwardenGroup.GroupID)
+				}
 				if resultsItem.RemoteInfo.ClickhouseRole == nil {
 					results.RemoteInfo.ClickhouseRole = nil
 				} else {
@@ -221,6 +227,18 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				} else {
 					results.RemoteInfo.RampLocation = &tfTypes.RampLocation{}
 					results.RemoteInfo.RampLocation.LocationID = types.StringValue(resultsItem.RemoteInfo.RampLocation.LocationID)
+				}
+				if resultsItem.RemoteInfo.RipplingSupergroup == nil {
+					results.RemoteInfo.RipplingSupergroup = nil
+				} else {
+					results.RemoteInfo.RipplingSupergroup = &tfTypes.RipplingSupergroup{}
+					results.RemoteInfo.RipplingSupergroup.SupergroupID = types.StringValue(resultsItem.RemoteInfo.RipplingSupergroup.SupergroupID)
+				}
+				if resultsItem.RemoteInfo.RipplingTeam == nil {
+					results.RemoteInfo.RipplingTeam = nil
+				} else {
+					results.RemoteInfo.RipplingTeam = &tfTypes.GrafanaTeam{}
+					results.RemoteInfo.RipplingTeam.TeamID = types.StringValue(resultsItem.RemoteInfo.RipplingTeam.TeamID)
 				}
 				if resultsItem.RemoteInfo.RootlyOnCallSchedule == nil {
 					results.RemoteInfo.RootlyOnCallSchedule = nil

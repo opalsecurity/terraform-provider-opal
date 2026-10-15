@@ -71,6 +71,19 @@ func (a *AzureAdSecurityGroup) GetGroupID() string {
 	return a.GroupID
 }
 
+// BitwardenGroup - Remote info for Bitwarden Group.
+type BitwardenGroup struct {
+	// The group id of the Bitwarden Group.
+	GroupID string `json:"group_id"`
+}
+
+func (b *BitwardenGroup) GetGroupID() string {
+	if b == nil {
+		return ""
+	}
+	return b.GroupID
+}
+
 // ClickhouseRole - Remote info for ClickHouse role.
 type ClickhouseRole struct {
 	// The name of the ClickHouse role.
@@ -379,6 +392,32 @@ func (r *RampLocation) GetLocationID() string {
 	return r.LocationID
 }
 
+// RipplingSupergroup - Remote info for Rippling supergroup.
+type RipplingSupergroup struct {
+	// The ID of the Rippling supergroup.
+	SupergroupID string `json:"supergroup_id"`
+}
+
+func (r *RipplingSupergroup) GetSupergroupID() string {
+	if r == nil {
+		return ""
+	}
+	return r.SupergroupID
+}
+
+// RipplingTeam - Remote info for Rippling team.
+type RipplingTeam struct {
+	// The ID of the Rippling team.
+	TeamID string `json:"team_id"`
+}
+
+func (r *RipplingTeam) GetTeamID() string {
+	if r == nil {
+		return ""
+	}
+	return r.TeamID
+}
+
 // RootlyOnCallSchedule - Remote info for Rootly on-call schedule group.
 type RootlyOnCallSchedule struct {
 	// The id of the Rootly on-call schedule.
@@ -547,6 +586,8 @@ type GroupRemoteInfo struct {
 	AzureAdMicrosoft365Group *AzureAdMicrosoft365Group `json:"azure_ad_microsoft_365_group,omitempty"`
 	// Remote info for Microsoft Entra ID Security group.
 	AzureAdSecurityGroup *AzureAdSecurityGroup `json:"azure_ad_security_group,omitempty"`
+	// Remote info for Bitwarden Group.
+	BitwardenGroup *BitwardenGroup `json:"bitwarden_group,omitempty"`
 	// Remote info for ClickHouse role.
 	ClickhouseRole *ClickhouseRole `json:"clickhouse_role,omitempty"`
 	// Remote info for Confluence group.
@@ -593,6 +634,10 @@ type GroupRemoteInfo struct {
 	RampDepartment *RampDepartment `json:"ramp_department,omitempty"`
 	// Remote info for Ramp location.
 	RampLocation *RampLocation `json:"ramp_location,omitempty"`
+	// Remote info for Rippling supergroup.
+	RipplingSupergroup *RipplingSupergroup `json:"rippling_supergroup,omitempty"`
+	// Remote info for Rippling team.
+	RipplingTeam *RipplingTeam `json:"rippling_team,omitempty"`
 	// Remote info for Rootly on-call schedule group.
 	RootlyOnCallSchedule *RootlyOnCallSchedule `json:"rootly_on_call_schedule,omitempty"`
 	// Remote info for Slack user group.
@@ -652,6 +697,13 @@ func (g *GroupRemoteInfo) GetAzureAdSecurityGroup() *AzureAdSecurityGroup {
 		return nil
 	}
 	return g.AzureAdSecurityGroup
+}
+
+func (g *GroupRemoteInfo) GetBitwardenGroup() *BitwardenGroup {
+	if g == nil {
+		return nil
+	}
+	return g.BitwardenGroup
 }
 
 func (g *GroupRemoteInfo) GetClickhouseRole() *ClickhouseRole {
@@ -813,6 +865,20 @@ func (g *GroupRemoteInfo) GetRampLocation() *RampLocation {
 		return nil
 	}
 	return g.RampLocation
+}
+
+func (g *GroupRemoteInfo) GetRipplingSupergroup() *RipplingSupergroup {
+	if g == nil {
+		return nil
+	}
+	return g.RipplingSupergroup
+}
+
+func (g *GroupRemoteInfo) GetRipplingTeam() *RipplingTeam {
+	if g == nil {
+		return nil
+	}
+	return g.RipplingTeam
 }
 
 func (g *GroupRemoteInfo) GetRootlyOnCallSchedule() *RootlyOnCallSchedule {

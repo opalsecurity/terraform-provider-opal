@@ -120,8 +120,6 @@ func (r *PaladinDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetPaladinRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

@@ -85,6 +85,7 @@ func (s *Apps) Create(ctx context.Context, request shared.CreateAppInfo, opts ..
 		defer cancel()
 	}
 
+	ctx = utils.WithOperation(ctx, "createApp")
 	req, err := http.NewRequestWithContext(ctx, "POST", opURL, bodyReader)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
@@ -1084,6 +1085,7 @@ func (s *Apps) Update(ctx context.Context, request operations.UpdateAppRequest, 
 		defer cancel()
 	}
 
+	ctx = utils.WithOperation(ctx, "updateApp")
 	req, err := http.NewRequestWithContext(ctx, "PUT", opURL, bodyReader)
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %w", err)
