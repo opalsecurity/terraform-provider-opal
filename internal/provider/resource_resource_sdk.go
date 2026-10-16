@@ -232,6 +232,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.AzureVirtualMachine = &tfTypes.AzureEnterpriseApp{}
 				r.RemoteInfo.AzureVirtualMachine.ResourceID = types.StringValue(resp.RemoteInfo.AzureVirtualMachine.ResourceID)
 			}
+			if resp.RemoteInfo.BitwardenOrganization == nil {
+				r.RemoteInfo.BitwardenOrganization = nil
+			} else {
+				r.RemoteInfo.BitwardenOrganization = &tfTypes.ZendeskOrganization{}
+				r.RemoteInfo.BitwardenOrganization.OrganizationID = types.StringValue(resp.RemoteInfo.BitwardenOrganization.OrganizationID)
+			}
 			if resp.RemoteInfo.ClickhouseConsoleRole == nil {
 				r.RemoteInfo.ClickhouseConsoleRole = nil
 			} else {
@@ -563,6 +569,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			} else {
 				r.RemoteInfo.RampRole = &tfTypes.RampRole{}
 				r.RemoteInfo.RampRole.Role = types.StringValue(resp.RemoteInfo.RampRole.Role)
+			}
+			if resp.RemoteInfo.RipplingDepartment == nil {
+				r.RemoteInfo.RipplingDepartment = nil
+			} else {
+				r.RemoteInfo.RipplingDepartment = &tfTypes.RampDepartment{}
+				r.RemoteInfo.RipplingDepartment.DepartmentID = types.StringValue(resp.RemoteInfo.RipplingDepartment.DepartmentID)
 			}
 			if resp.RemoteInfo.SalesforcePermissionSet == nil {
 				r.RemoteInfo.SalesforcePermissionSet = nil
@@ -1306,6 +1318,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				ResourceID: resourceId14,
 			}
 		}
+		var bitwardenOrganization *shared.BitwardenOrganization
+		if r.RemoteInfo.BitwardenOrganization != nil {
+			var organizationID string
+			organizationID = r.RemoteInfo.BitwardenOrganization.OrganizationID.ValueString()
+
+			bitwardenOrganization = &shared.BitwardenOrganization{
+				OrganizationID: organizationID,
+			}
+		}
 		var clickhouseConsoleRole *shared.ClickhouseConsoleRole
 		if r.RemoteInfo.ClickhouseConsoleRole != nil {
 			var roleId2 string
@@ -1589,11 +1610,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var gcpOrganization *shared.GcpOrganization
 		if r.RemoteInfo.GcpOrganization != nil {
-			var organizationID string
-			organizationID = r.RemoteInfo.GcpOrganization.OrganizationID.ValueString()
+			var organizationId1 string
+			organizationId1 = r.RemoteInfo.GcpOrganization.OrganizationID.ValueString()
 
 			gcpOrganization = &shared.GcpOrganization{
-				OrganizationID: organizationID,
+				OrganizationID: organizationId1,
 			}
 		}
 		var gcpProject *shared.GcpProject
@@ -1860,6 +1881,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				Role: role,
 			}
 		}
+		var ripplingDepartment *shared.RipplingDepartment
+		if r.RemoteInfo.RipplingDepartment != nil {
+			var departmentID string
+			departmentID = r.RemoteInfo.RipplingDepartment.DepartmentID.ValueString()
+
+			ripplingDepartment = &shared.RipplingDepartment{
+				DepartmentID: departmentID,
+			}
+		}
 		var salesforcePermissionSet *shared.SalesforcePermissionSet
 		if r.RemoteInfo.SalesforcePermissionSet != nil {
 			var permissionSetID string
@@ -2047,6 +2077,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			AzureSubscription:                 azureSubscription,
 			AzureUserAssignedManagedIdentity:  azureUserAssignedManagedIdentity,
 			AzureVirtualMachine:               azureVirtualMachine,
+			BitwardenOrganization:             bitwardenOrganization,
 			ClickhouseConsoleRole:             clickhouseConsoleRole,
 			ClickhouseDatabase:                clickhouseDatabase,
 			ClickhouseTable:                   clickhouseTable,
@@ -2099,6 +2130,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			PagerdutyRole:                     pagerdutyRole,
 			RampFund:                          rampFund,
 			RampRole:                          rampRole,
+			RipplingDepartment:                ripplingDepartment,
 			SalesforcePermissionSet:           salesforcePermissionSet,
 			SalesforceProfile:                 salesforceProfile,
 			SalesforceRole:                    salesforceRole,

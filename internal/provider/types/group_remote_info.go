@@ -9,6 +9,7 @@ type GroupRemoteInfo struct {
 	AxiomGroup               *ActiveDirectoryGroup     `tfsdk:"axiom_group"`
 	AzureAdMicrosoft365Group *ActiveDirectoryGroup     `tfsdk:"azure_ad_microsoft_365_group"`
 	AzureAdSecurityGroup     *ActiveDirectoryGroup     `tfsdk:"azure_ad_security_group"`
+	BitwardenGroup           *ActiveDirectoryGroup     `tfsdk:"bitwarden_group"`
 	ClickhouseRole           *ClickhouseRole           `tfsdk:"clickhouse_role"`
 	ConfluenceGroup          *ActiveDirectoryGroup     `tfsdk:"confluence_group"`
 	ConnectorGroup           *ActiveDirectoryGroup     `tfsdk:"connector_group"`
@@ -32,6 +33,8 @@ type GroupRemoteInfo struct {
 	PagerdutyOnCallSchedule  *IncidentioOnCallSchedule `tfsdk:"pagerduty_on_call_schedule"`
 	RampDepartment           *RampDepartment           `tfsdk:"ramp_department"`
 	RampLocation             *RampLocation             `tfsdk:"ramp_location"`
+	RipplingSupergroup       *RipplingSupergroup       `tfsdk:"rippling_supergroup"`
+	RipplingTeam             *GrafanaTeam              `tfsdk:"rippling_team"`
 	RootlyOnCallSchedule     *IncidentioOnCallSchedule `tfsdk:"rootly_on_call_schedule"`
 	SlackUserGroup           *ActiveDirectoryGroup     `tfsdk:"slack_user_group"`
 	SnowflakeRole            *ClickhouseRole           `tfsdk:"snowflake_role"`

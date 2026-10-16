@@ -478,6 +478,19 @@ func (a *AzureVirtualMachine) GetResourceID() string {
 	return a.ResourceID
 }
 
+// BitwardenOrganization - Remote info for Bitwarden Organization.
+type BitwardenOrganization struct {
+	// The organization id of the Bitwarden Organization.
+	OrganizationID string `json:"organization_id"`
+}
+
+func (b *BitwardenOrganization) GetOrganizationID() string {
+	if b == nil {
+		return ""
+	}
+	return b.OrganizationID
+}
+
 // ClickhouseConsoleRole - Remote info for ClickHouse Cloud console role.
 type ClickhouseConsoleRole struct {
 	// The UUID of the ClickHouse Cloud console role.
@@ -1334,6 +1347,19 @@ func (r *RampRole) GetRole() string {
 	return r.Role
 }
 
+// RipplingDepartment - Remote info for Rippling department.
+type RipplingDepartment struct {
+	// The ID of the Rippling department.
+	DepartmentID string `json:"department_id"`
+}
+
+func (r *RipplingDepartment) GetDepartmentID() string {
+	if r == nil {
+		return ""
+	}
+	return r.DepartmentID
+}
+
 // SalesforcePermissionSet - Remote info for Salesforce permission set.
 type SalesforcePermissionSet struct {
 	// The id of the permission set.
@@ -1632,6 +1658,8 @@ type ResourceRemoteInfo struct {
 	AzureUserAssignedManagedIdentity *AzureUserAssignedManagedIdentity `json:"azure_user_assigned_managed_identity,omitempty"`
 	// Remote info for Azure virtual machine.
 	AzureVirtualMachine *AzureVirtualMachine `json:"azure_virtual_machine,omitempty"`
+	// Remote info for Bitwarden Organization.
+	BitwardenOrganization *BitwardenOrganization `json:"bitwarden_organization,omitempty"`
 	// Remote info for ClickHouse Cloud console role.
 	ClickhouseConsoleRole *ClickhouseConsoleRole `json:"clickhouse_console_role,omitempty"`
 	// Remote info for ClickHouse database.
@@ -1736,6 +1764,8 @@ type ResourceRemoteInfo struct {
 	RampFund *RampFund `json:"ramp_fund,omitempty"`
 	// Remote info for Ramp built-in role.
 	RampRole *RampRole `json:"ramp_role,omitempty"`
+	// Remote info for Rippling department.
+	RipplingDepartment *RipplingDepartment `json:"rippling_department,omitempty"`
 	// Remote info for Salesforce permission set.
 	SalesforcePermissionSet *SalesforcePermissionSet `json:"salesforce_permission_set,omitempty"`
 	// Remote info for Salesforce profile.
@@ -1950,6 +1980,13 @@ func (r *ResourceRemoteInfo) GetAzureVirtualMachine() *AzureVirtualMachine {
 		return nil
 	}
 	return r.AzureVirtualMachine
+}
+
+func (r *ResourceRemoteInfo) GetBitwardenOrganization() *BitwardenOrganization {
+	if r == nil {
+		return nil
+	}
+	return r.BitwardenOrganization
 }
 
 func (r *ResourceRemoteInfo) GetClickhouseConsoleRole() *ClickhouseConsoleRole {
@@ -2314,6 +2351,13 @@ func (r *ResourceRemoteInfo) GetRampRole() *RampRole {
 		return nil
 	}
 	return r.RampRole
+}
+
+func (r *ResourceRemoteInfo) GetRipplingDepartment() *RipplingDepartment {
+	if r == nil {
+		return nil
+	}
+	return r.RipplingDepartment
 }
 
 func (r *ResourceRemoteInfo) GetSalesforcePermissionSet() *SalesforcePermissionSet {

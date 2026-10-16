@@ -232,6 +232,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.AzureVirtualMachine = &tfTypes.AzureEnterpriseApp{}
 				r.RemoteInfo.AzureVirtualMachine.ResourceID = types.StringValue(resp.RemoteInfo.AzureVirtualMachine.ResourceID)
 			}
+			if resp.RemoteInfo.BitwardenOrganization == nil {
+				r.RemoteInfo.BitwardenOrganization = nil
+			} else {
+				r.RemoteInfo.BitwardenOrganization = &tfTypes.ZendeskOrganization{}
+				r.RemoteInfo.BitwardenOrganization.OrganizationID = types.StringValue(resp.RemoteInfo.BitwardenOrganization.OrganizationID)
+			}
 			if resp.RemoteInfo.ClickhouseConsoleRole == nil {
 				r.RemoteInfo.ClickhouseConsoleRole = nil
 			} else {
@@ -563,6 +569,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			} else {
 				r.RemoteInfo.RampRole = &tfTypes.RampRole{}
 				r.RemoteInfo.RampRole.Role = types.StringValue(resp.RemoteInfo.RampRole.Role)
+			}
+			if resp.RemoteInfo.RipplingDepartment == nil {
+				r.RemoteInfo.RipplingDepartment = nil
+			} else {
+				r.RemoteInfo.RipplingDepartment = &tfTypes.RampDepartment{}
+				r.RemoteInfo.RipplingDepartment.DepartmentID = types.StringValue(resp.RemoteInfo.RipplingDepartment.DepartmentID)
 			}
 			if resp.RemoteInfo.SalesforcePermissionSet == nil {
 				r.RemoteInfo.SalesforcePermissionSet = nil
