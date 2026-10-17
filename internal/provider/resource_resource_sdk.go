@@ -79,6 +79,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.AnthropicWorkspace = &tfTypes.AnthropicWorkspace{}
 				r.RemoteInfo.AnthropicWorkspace.WorkspaceID = types.StringValue(resp.RemoteInfo.AnthropicWorkspace.WorkspaceID)
 			}
+			if resp.RemoteInfo.AsanaWorkspace == nil {
+				r.RemoteInfo.AsanaWorkspace = nil
+			} else {
+				r.RemoteInfo.AsanaWorkspace = &tfTypes.AsanaWorkspace{}
+				r.RemoteInfo.AsanaWorkspace.WorkspaceGid = types.StringValue(resp.RemoteInfo.AsanaWorkspace.WorkspaceGid)
+			}
 			if resp.RemoteInfo.AwsAccount == nil {
 				r.RemoteInfo.AwsAccount = nil
 			} else {
@@ -231,6 +237,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			} else {
 				r.RemoteInfo.AzureVirtualMachine = &tfTypes.AzureEnterpriseApp{}
 				r.RemoteInfo.AzureVirtualMachine.ResourceID = types.StringValue(resp.RemoteInfo.AzureVirtualMachine.ResourceID)
+			}
+			if resp.RemoteInfo.BitwardenOrganization == nil {
+				r.RemoteInfo.BitwardenOrganization = nil
+			} else {
+				r.RemoteInfo.BitwardenOrganization = &tfTypes.ZendeskOrganization{}
+				r.RemoteInfo.BitwardenOrganization.OrganizationID = types.StringValue(resp.RemoteInfo.BitwardenOrganization.OrganizationID)
 			}
 			if resp.RemoteInfo.ClickhouseConsoleRole == nil {
 				r.RemoteInfo.ClickhouseConsoleRole = nil
@@ -563,6 +575,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			} else {
 				r.RemoteInfo.RampRole = &tfTypes.RampRole{}
 				r.RemoteInfo.RampRole.Role = types.StringValue(resp.RemoteInfo.RampRole.Role)
+			}
+			if resp.RemoteInfo.RipplingDepartment == nil {
+				r.RemoteInfo.RipplingDepartment = nil
+			} else {
+				r.RemoteInfo.RipplingDepartment = &tfTypes.RampDepartment{}
+				r.RemoteInfo.RipplingDepartment.DepartmentID = types.StringValue(resp.RemoteInfo.RipplingDepartment.DepartmentID)
 			}
 			if resp.RemoteInfo.SalesforcePermissionSet == nil {
 				r.RemoteInfo.SalesforcePermissionSet = nil
@@ -1023,6 +1041,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				WorkspaceID: workspaceID,
 			}
 		}
+		var asanaWorkspace *shared.AsanaWorkspace
+		if r.RemoteInfo.AsanaWorkspace != nil {
+			var workspaceGid string
+			workspaceGid = r.RemoteInfo.AsanaWorkspace.WorkspaceGid.ValueString()
+
+			asanaWorkspace = &shared.AsanaWorkspace{
+				WorkspaceGid: workspaceGid,
+			}
+		}
 		var awsAccount *shared.AwsAccount
 		if r.RemoteInfo.AwsAccount != nil {
 			var accountID string
@@ -1304,6 +1331,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 
 			azureVirtualMachine = &shared.AzureVirtualMachine{
 				ResourceID: resourceId14,
+			}
+		}
+		var bitwardenOrganization *shared.BitwardenOrganization
+		if r.RemoteInfo.BitwardenOrganization != nil {
+			var organizationID string
+			organizationID = r.RemoteInfo.BitwardenOrganization.OrganizationID.ValueString()
+
+			bitwardenOrganization = &shared.BitwardenOrganization{
+				OrganizationID: organizationID,
 			}
 		}
 		var clickhouseConsoleRole *shared.ClickhouseConsoleRole
@@ -1589,11 +1625,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var gcpOrganization *shared.GcpOrganization
 		if r.RemoteInfo.GcpOrganization != nil {
-			var organizationID string
-			organizationID = r.RemoteInfo.GcpOrganization.OrganizationID.ValueString()
+			var organizationId1 string
+			organizationId1 = r.RemoteInfo.GcpOrganization.OrganizationID.ValueString()
 
 			gcpOrganization = &shared.GcpOrganization{
-				OrganizationID: organizationID,
+				OrganizationID: organizationId1,
 			}
 		}
 		var gcpProject *shared.GcpProject
@@ -1860,6 +1896,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				Role: role,
 			}
 		}
+		var ripplingDepartment *shared.RipplingDepartment
+		if r.RemoteInfo.RipplingDepartment != nil {
+			var departmentID string
+			departmentID = r.RemoteInfo.RipplingDepartment.DepartmentID.ValueString()
+
+			ripplingDepartment = &shared.RipplingDepartment{
+				DepartmentID: departmentID,
+			}
+		}
 		var salesforcePermissionSet *shared.SalesforcePermissionSet
 		if r.RemoteInfo.SalesforcePermissionSet != nil {
 			var permissionSetID string
@@ -2024,6 +2069,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			AlicloudEcsInstance:               alicloudEcsInstance,
 			AlicloudRAMRole:                   alicloudRAMRole,
 			AnthropicWorkspace:                anthropicWorkspace,
+			AsanaWorkspace:                    asanaWorkspace,
 			AwsAccount:                        awsAccount,
 			AwsEc2Instance:                    awsEc2Instance,
 			AwsEksCluster:                     awsEksCluster,
@@ -2047,6 +2093,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			AzureSubscription:                 azureSubscription,
 			AzureUserAssignedManagedIdentity:  azureUserAssignedManagedIdentity,
 			AzureVirtualMachine:               azureVirtualMachine,
+			BitwardenOrganization:             bitwardenOrganization,
 			ClickhouseConsoleRole:             clickhouseConsoleRole,
 			ClickhouseDatabase:                clickhouseDatabase,
 			ClickhouseTable:                   clickhouseTable,
@@ -2099,6 +2146,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			PagerdutyRole:                     pagerdutyRole,
 			RampFund:                          rampFund,
 			RampRole:                          rampRole,
+			RipplingDepartment:                ripplingDepartment,
 			SalesforcePermissionSet:           salesforcePermissionSet,
 			SalesforceProfile:                 salesforceProfile,
 			SalesforceRole:                    salesforceRole,
