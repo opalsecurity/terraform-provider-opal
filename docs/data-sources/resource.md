@@ -68,6 +68,7 @@ Read-Only:
 - `alicloud_ecs_instance` (Attributes) Remote info for AliCloud ECS instance. (see [below for nested schema](#nestedatt--remote_info--alicloud_ecs_instance))
 - `alicloud_ram_role` (Attributes) Remote info for AliCloud RAM role. (see [below for nested schema](#nestedatt--remote_info--alicloud_ram_role))
 - `anthropic_workspace` (Attributes) Remote info for Anthropic workspace. (see [below for nested schema](#nestedatt--remote_info--anthropic_workspace))
+- `asana_workspace` (Attributes) Remote info for Asana Workspace. (see [below for nested schema](#nestedatt--remote_info--asana_workspace))
 - `aws_account` (Attributes) Remote info for AWS account. (see [below for nested schema](#nestedatt--remote_info--aws_account))
 - `aws_ec2_instance` (Attributes) Remote info for AWS EC2 instance. (see [below for nested schema](#nestedatt--remote_info--aws_ec2_instance))
 - `aws_eks_cluster` (Attributes) Remote info for AWS EKS cluster. (see [below for nested schema](#nestedatt--remote_info--aws_eks_cluster))
@@ -91,6 +92,7 @@ Read-Only:
 - `azure_subscription` (Attributes) Remote info for Azure subscription. (see [below for nested schema](#nestedatt--remote_info--azure_subscription))
 - `azure_user_assigned_managed_identity` (Attributes) Remote info for Azure user assigned managed identity. (see [below for nested schema](#nestedatt--remote_info--azure_user_assigned_managed_identity))
 - `azure_virtual_machine` (Attributes) Remote info for Azure virtual machine. (see [below for nested schema](#nestedatt--remote_info--azure_virtual_machine))
+- `bitwarden_organization` (Attributes) Remote info for Bitwarden Organization. (see [below for nested schema](#nestedatt--remote_info--bitwarden_organization))
 - `clickhouse_console_role` (Attributes) Remote info for ClickHouse Cloud console role. (see [below for nested schema](#nestedatt--remote_info--clickhouse_console_role))
 - `clickhouse_database` (Attributes) Remote info for ClickHouse database. (see [below for nested schema](#nestedatt--remote_info--clickhouse_database))
 - `clickhouse_table` (Attributes) Remote info for ClickHouse table. (see [below for nested schema](#nestedatt--remote_info--clickhouse_table))
@@ -143,6 +145,7 @@ Read-Only:
 - `pagerduty_role` (Attributes) Remote info for Pagerduty role. (see [below for nested schema](#nestedatt--remote_info--pagerduty_role))
 - `ramp_fund` (Attributes) Remote info for Ramp fund. (see [below for nested schema](#nestedatt--remote_info--ramp_fund))
 - `ramp_role` (Attributes) Remote info for Ramp built-in role. (see [below for nested schema](#nestedatt--remote_info--ramp_role))
+- `rippling_department` (Attributes) Remote info for Rippling department. (see [below for nested schema](#nestedatt--remote_info--rippling_department))
 - `salesforce_permission_set` (Attributes) Remote info for Salesforce permission set. (see [below for nested schema](#nestedatt--remote_info--salesforce_permission_set))
 - `salesforce_profile` (Attributes) Remote info for Salesforce profile. (see [below for nested schema](#nestedatt--remote_info--salesforce_profile))
 - `salesforce_role` (Attributes) Remote info for Salesforce role. (see [below for nested schema](#nestedatt--remote_info--salesforce_role))
@@ -182,6 +185,14 @@ Read-Only:
 Read-Only:
 
 - `workspace_id` (String) The id of the workspace.
+
+
+<a id="nestedatt--remote_info--asana_workspace"></a>
+### Nested Schema for `remote_info.asana_workspace`
+
+Read-Only:
+
+- `workspace_gid` (String) The workspace gid of the Asana Workspace.
 
 
 <a id="nestedatt--remote_info--aws_account"></a>
@@ -381,6 +392,14 @@ Read-Only:
 Read-Only:
 
 - `resource_id` (String) The ARM resource ID of the virtual machine.
+
+
+<a id="nestedatt--remote_info--bitwarden_organization"></a>
+### Nested Schema for `remote_info.bitwarden_organization`
+
+Read-Only:
+
+- `organization_id` (String) The organization id of the Bitwarden Organization.
 
 
 <a id="nestedatt--remote_info--clickhouse_console_role"></a>
@@ -817,6 +836,14 @@ Read-Only:
 Read-Only:
 
 - `role` (String) The Ramp built-in role enum (e.g. BUSINESS_USER).
+
+
+<a id="nestedatt--remote_info--rippling_department"></a>
+### Nested Schema for `remote_info.rippling_department`
+
+Read-Only:
+
+- `department_id` (String) The ID of the Rippling department.
 
 
 <a id="nestedatt--remote_info--salesforce_permission_set"></a>
