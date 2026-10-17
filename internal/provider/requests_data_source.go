@@ -377,8 +377,6 @@ func (r *RequestsDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetRequestsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

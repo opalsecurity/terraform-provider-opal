@@ -7,6 +7,7 @@ type ResourceRemoteInfo struct {
 	AlicloudEcsInstance               *AlicloudEcsInstance               `tfsdk:"alicloud_ecs_instance"`
 	AlicloudRAMRole                   *AlicloudRAMRole                   `tfsdk:"alicloud_ram_role"`
 	AnthropicWorkspace                *AnthropicWorkspace                `tfsdk:"anthropic_workspace"`
+	AsanaWorkspace                    *AsanaWorkspace                    `tfsdk:"asana_workspace"`
 	AwsAccount                        *AwsAccount                        `tfsdk:"aws_account"`
 	AwsEc2Instance                    *AwsEc2Instance                    `tfsdk:"aws_ec2_instance"`
 	AwsEksCluster                     *AwsEksCluster                     `tfsdk:"aws_eks_cluster"`
@@ -30,6 +31,7 @@ type ResourceRemoteInfo struct {
 	AzureSubscription                 *AzureEnterpriseApp                `tfsdk:"azure_subscription"`
 	AzureUserAssignedManagedIdentity  *AzureEnterpriseApp                `tfsdk:"azure_user_assigned_managed_identity"`
 	AzureVirtualMachine               *AzureEnterpriseApp                `tfsdk:"azure_virtual_machine"`
+	BitwardenOrganization             *ZendeskOrganization               `tfsdk:"bitwarden_organization"`
 	ClickhouseConsoleRole             *ClickhouseRole                    `tfsdk:"clickhouse_console_role"`
 	ClickhouseDatabase                *ClickhouseDatabase                `tfsdk:"clickhouse_database"`
 	ClickhouseTable                   *ClickhouseTable                   `tfsdk:"clickhouse_table"`
@@ -82,6 +84,7 @@ type ResourceRemoteInfo struct {
 	PagerdutyRole                     *IlevelAdvancedRole                `tfsdk:"pagerduty_role"`
 	RampFund                          *RampFund                          `tfsdk:"ramp_fund"`
 	RampRole                          *RampRole                          `tfsdk:"ramp_role"`
+	RipplingDepartment                *RampDepartment                    `tfsdk:"rippling_department"`
 	SalesforcePermissionSet           *SalesforcePermissionSet           `tfsdk:"salesforce_permission_set"`
 	SalesforceProfile                 *SalesforceProfile                 `tfsdk:"salesforce_profile"`
 	SalesforceRole                    *ClickhouseRole                    `tfsdk:"salesforce_role"`
