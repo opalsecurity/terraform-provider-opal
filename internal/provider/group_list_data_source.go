@@ -63,7 +63,7 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 			},
 			"group_type_filter": schema.StringAttribute{
 				Optional:    true,
-				Description: `The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP"]`,
+				Description: `The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP", "ASANA_TEAM", "BITWARDEN_GROUP", "RIPPLING_TEAM", "RIPPLING_SUPERGROUP"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"ACTIVE_DIRECTORY_GROUP",
@@ -108,6 +108,10 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 						"RAMP_LOCATION",
 						"WRIKE_GROUP",
 						"AXIOM_GROUP",
+						"ASANA_TEAM",
+						"BITWARDEN_GROUP",
+						"RIPPLING_TEAM",
+						"RIPPLING_SUPERGROUP",
 					),
 				},
 			},
@@ -207,6 +211,20 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 									},
 									Description: `Remote info for Active Directory group.`,
 								},
+								"asana_team": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"team_gid": schema.StringAttribute{
+											Computed:    true,
+											Description: `The team gid of the Asana Team.`,
+										},
+										"workspace_gid": schema.StringAttribute{
+											Computed:    true,
+											Description: `The workspace gid of the Asana Team.`,
+										},
+									},
+									Description: `Remote info for Asana Team.`,
+								},
 								"aws_sso_group": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
@@ -246,6 +264,16 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 										},
 									},
 									Description: `Remote info for Microsoft Entra ID Security group.`,
+								},
+								"bitwarden_group": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"group_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The group id of the Bitwarden Group.`,
+										},
+									},
+									Description: `Remote info for Bitwarden Group.`,
 								},
 								"clickhouse_role": schema.SingleNestedAttribute{
 									Computed: true,
@@ -480,6 +508,26 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 										},
 									},
 									Description: `Remote info for Ramp location.`,
+								},
+								"rippling_supergroup": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"supergroup_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The ID of the Rippling supergroup.`,
+										},
+									},
+									Description: `Remote info for Rippling supergroup.`,
+								},
+								"rippling_team": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"team_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The ID of the Rippling team.`,
+										},
+									},
+									Description: `Remote info for Rippling team.`,
 								},
 								"rootly_on_call_schedule": schema.SingleNestedAttribute{
 									Computed: true,
@@ -796,8 +844,6 @@ func (r *GroupListDataSource) Read(ctx context.Context, req datasource.ReadReque
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config)
 
 	request, requestDiags := data.ToOperationsGetGroupsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)

@@ -79,6 +79,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.AnthropicWorkspace = &tfTypes.AnthropicWorkspace{}
 				r.RemoteInfo.AnthropicWorkspace.WorkspaceID = types.StringValue(resp.RemoteInfo.AnthropicWorkspace.WorkspaceID)
 			}
+			if resp.RemoteInfo.AsanaWorkspace == nil {
+				r.RemoteInfo.AsanaWorkspace = nil
+			} else {
+				r.RemoteInfo.AsanaWorkspace = &tfTypes.AsanaWorkspace{}
+				r.RemoteInfo.AsanaWorkspace.WorkspaceGid = types.StringValue(resp.RemoteInfo.AsanaWorkspace.WorkspaceGid)
+			}
 			if resp.RemoteInfo.AwsAccount == nil {
 				r.RemoteInfo.AwsAccount = nil
 			} else {
@@ -231,6 +237,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			} else {
 				r.RemoteInfo.AzureVirtualMachine = &tfTypes.AzureEnterpriseApp{}
 				r.RemoteInfo.AzureVirtualMachine.ResourceID = types.StringValue(resp.RemoteInfo.AzureVirtualMachine.ResourceID)
+			}
+			if resp.RemoteInfo.BitwardenOrganization == nil {
+				r.RemoteInfo.BitwardenOrganization = nil
+			} else {
+				r.RemoteInfo.BitwardenOrganization = &tfTypes.ZendeskOrganization{}
+				r.RemoteInfo.BitwardenOrganization.OrganizationID = types.StringValue(resp.RemoteInfo.BitwardenOrganization.OrganizationID)
 			}
 			if resp.RemoteInfo.ClickhouseConsoleRole == nil {
 				r.RemoteInfo.ClickhouseConsoleRole = nil
@@ -563,6 +575,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			} else {
 				r.RemoteInfo.RampRole = &tfTypes.RampRole{}
 				r.RemoteInfo.RampRole.Role = types.StringValue(resp.RemoteInfo.RampRole.Role)
+			}
+			if resp.RemoteInfo.RipplingDepartment == nil {
+				r.RemoteInfo.RipplingDepartment = nil
+			} else {
+				r.RemoteInfo.RipplingDepartment = &tfTypes.RampDepartment{}
+				r.RemoteInfo.RipplingDepartment.DepartmentID = types.StringValue(resp.RemoteInfo.RipplingDepartment.DepartmentID)
 			}
 			if resp.RemoteInfo.SalesforcePermissionSet == nil {
 				r.RemoteInfo.SalesforcePermissionSet = nil

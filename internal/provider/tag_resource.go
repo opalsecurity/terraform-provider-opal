@@ -127,8 +127,6 @@ func (r *TagResource) Create(ctx context.Context, req resource.CreateRequest, re
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToSharedCreateTagInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -188,8 +186,6 @@ func (r *TagResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsGetTagByIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
@@ -268,8 +264,6 @@ func (r *TagResource) Delete(ctx context.Context, req resource.DeleteRequest, re
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsDeleteTagByIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)

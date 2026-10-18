@@ -169,6 +169,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Anthropic workspace.`,
 					},
+					"asana_workspace": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"workspace_gid": schema.StringAttribute{
+								Computed:    true,
+								Description: `The workspace gid of the Asana Workspace.`,
+							},
+						},
+						Description: `Remote info for Asana Workspace.`,
+					},
 					"aws_account": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -458,6 +468,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for Azure virtual machine.`,
+					},
+					"bitwarden_organization": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"organization_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The organization id of the Bitwarden Organization.`,
+							},
+						},
+						Description: `Remote info for Bitwarden Organization.`,
 					},
 					"clickhouse_console_role": schema.SingleNestedAttribute{
 						Computed: true,
@@ -1059,6 +1079,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Ramp built-in role.`,
 					},
+					"rippling_department": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"department_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Rippling department.`,
+							},
+						},
+						Description: `Remote info for Rippling department.`,
+					},
 					"salesforce_permission_set": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -1458,8 +1488,6 @@ func (r *ResourceDataSource) Read(ctx context.Context, req datasource.ReadReques
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config)
 
 	request, requestDiags := data.ToOperationsGetResourceIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
