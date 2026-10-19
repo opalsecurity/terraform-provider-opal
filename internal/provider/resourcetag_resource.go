@@ -99,8 +99,6 @@ func (r *ResourceTagResource) Create(ctx context.Context, req resource.CreateReq
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToOperationsCreateResourceTagRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -195,8 +193,6 @@ func (r *ResourceTagResource) Delete(ctx context.Context, req resource.DeleteReq
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsDeleteResourceTagRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
