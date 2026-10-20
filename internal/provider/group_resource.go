@@ -31,6 +31,7 @@ import (
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/operations"
 	stateupgraders "github.com/opalsecurity/terraform-provider-opal/v3/internal/stateupgraders"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/boolvalidators"
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/int64validators"
@@ -2409,9 +2410,80 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		return
 	}
 
+	// Detect the "unlink configuration template" transition: state had a
+	// configuration_template_id and the plan has it as null. Terraform's
+	// generated PUT body (built via Speakeasy) omits a null
+	// configuration_template_id entirely (`json:"...,omitempty"`), so a plain
+	// PUT would silently leave the template attached. Instead, call the
+	// dedicated POST /groups/{group_id}/unlink-configuration-template
+	// action endpoint first, which deep-copies the template into a private
+	// configuration and repoints the group. The subsequent PUT below then
+	// updates any other mutated fields against the fresh (untemplated) config.
+	var stateModel GroupResourceModel
+	var configModel GroupResourceModel
+	resp.Diagnostics.Append(req.State.Get(ctx, &stateModel)...)
+	resp.Diagnostics.Append(req.Config.Get(ctx, &configModel)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	// Inspect req.Config (the raw HCL the user wrote) rather than req.Plan.
+	// configuration_template_id is Optional+Computed with no UseStateForUnknown
+	// plan modifier, so an explicit `= null` in HCL arrives at the plan layer
+	// as Unknown (not Null): the framework defers to the provider to compute
+	// a value. Config preserves the user's null intent intact and is the only
+	// reliable signal that they asked to remove the template.
+	stateHasTemplate := !stateModel.ConfigurationTemplateID.IsNull() &&
+		!stateModel.ConfigurationTemplateID.IsUnknown() &&
+		stateModel.ConfigurationTemplateID.ValueString() != ""
+	userWantsUnlink := configModel.ConfigurationTemplateID.IsNull()
+	if stateHasTemplate && userWantsUnlink {
+		unlinkRes, err := r.client.Groups.UnlinkGroupConfigurationTemplate(
+			ctx,
+			operations.UnlinkGroupConfigurationTemplateRequest{
+				GroupID: stateModel.ID.ValueString(),
+			},
+		)
+		if err != nil {
+			resp.Diagnostics.AddError("failure to invoke API (unlink configuration template)", redactSensitiveValues(ctx, err.Error()))
+			if unlinkRes != nil && unlinkRes.RawResponse != nil {
+				resp.Diagnostics.AddError("unexpected http request/response", debugResponse(unlinkRes.RawResponse))
+			}
+			return
+		}
+		if unlinkRes == nil || unlinkRes.StatusCode != 200 {
+			resp.Diagnostics.AddError(
+				fmt.Sprintf("unexpected response from unlink-configuration-template. Status: %v", func() int {
+					if unlinkRes == nil {
+						return 0
+					}
+					return unlinkRes.StatusCode
+				}()),
+				func() string {
+					if unlinkRes != nil {
+						return debugResponse(unlinkRes.RawResponse)
+					}
+					return ""
+				}(),
+			)
+			return
+		}
+	}
+
 	merge(ctx, req, resp, &data)
 	if resp.Diagnostics.HasError() {
 		return
+	}
+
+	// After merge, data.ConfigurationTemplateID may still carry the previous
+	// state's template id. merge() uses UnhandledUnknownAsEmpty=true, so an
+	// Unknown plan value does not overwrite the state value in `data`. If the
+	// user explicitly set configuration_template_id = null in config and we
+	// just invoked the unlink endpoint above, we must also strip the id from
+	// `data` so the subsequent Groups.Update PUT body omits it (via omitempty
+	// on the SDK model). Otherwise the PUT would re-link the template we just
+	// detached.
+	if stateHasTemplate && userWantsUnlink && data != nil {
+		data.ConfigurationTemplateID = types.StringNull()
 	}
 
 	request, requestDiags := data.ToSharedUpdateGroupInfoList(ctx)
