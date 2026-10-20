@@ -168,8 +168,6 @@ func (r *ScopedRolePermissionListResource) Create(ctx context.Context, req resou
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToOperationsSetResourceScopedRolePermissionsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -230,8 +228,6 @@ func (r *ScopedRolePermissionListResource) Read(ctx context.Context, req resourc
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.State)
-
 	request, requestDiags := data.ToOperationsGetResourceScopedRolePermissionsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -285,8 +281,6 @@ func (r *ScopedRolePermissionListResource) Update(ctx context.Context, req resou
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
 
 	request, requestDiags := data.ToOperationsSetResourceScopedRolePermissionsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)

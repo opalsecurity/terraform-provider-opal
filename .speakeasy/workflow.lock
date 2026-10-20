@@ -1,9 +1,9 @@
-speakeasyVersion: 1.801.0
+speakeasyVersion: 1.803.0
 sources:
     opal-terraform-provider:
         sourceNamespace: opal-terraform-provider
-        sourceRevisionDigest: sha256:e2e024b8b48e3922c0cb049e5b8fb660b8e57d40250ff855385e312ff7dbe6a9
-        sourceBlobDigest: sha256:1bdc1d6a1bab5c6205a9a4b2e342609e5cf5e5db078959055a6dee42de5b21dc
+        sourceRevisionDigest: sha256:e20c637336f75890367b23f7aeb7293e2eae13c9070ae493fa0b7e9fb3d470f7
+        sourceBlobDigest: sha256:bbfbc145967208bdd6ee66696e0cd804042cbfa3a47ab1835df96f2056c4d3c9
         tags:
             - latest
             - "1.0"
@@ -11,15 +11,15 @@ targets:
     terraform:
         source: opal-terraform-provider
         sourceNamespace: opal-terraform-provider
-        sourceRevisionDigest: sha256:e2e024b8b48e3922c0cb049e5b8fb660b8e57d40250ff855385e312ff7dbe6a9
-        sourceBlobDigest: sha256:1bdc1d6a1bab5c6205a9a4b2e342609e5cf5e5db078959055a6dee42de5b21dc
+        sourceRevisionDigest: sha256:e20c637336f75890367b23f7aeb7293e2eae13c9070ae493fa0b7e9fb3d470f7
+        sourceBlobDigest: sha256:bbfbc145967208bdd6ee66696e0cd804042cbfa3a47ab1835df96f2056c4d3c9
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
     sources:
         opal-terraform-provider:
             inputs:
-                - location: https://app.opal.dev/openapi.yaml
+                - location: /Users/mario/src/opal/web/backend/router/handlers/public/openapi.yaml
             overlays:
                 - location: terraform_overlay.yaml
             output: openapi.yaml
