@@ -31,6 +31,7 @@ import (
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/operations"
 	stateupgraders "github.com/opalsecurity/terraform-provider-opal/v3/internal/stateupgraders"
 	speakeasy_boolvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/boolvalidators"
 	speakeasy_int64validators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/int64validators"
@@ -3725,9 +3726,83 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 		return
 	}
 
+	// Detect the "unlink configuration template" transition: state had a
+	// configuration_template_id and the plan has it as null. Terraform's
+	// generated PUT body (built via Speakeasy) omits a null
+	// configuration_template_id entirely (`json:"...,omitempty"`), so a plain
+	// PUT would silently leave the template attached. Instead, call the
+	// dedicated POST /resources/{resource_id}/unlink-configuration-template
+	// action endpoint first, which deep-copies the template into a private
+	// configuration and repoints the resource. The subsequent PUT below then
+	// updates any other mutated fields against the fresh (untemplated) config.
+	var stateModel ResourceResourceModel
+	var configModel ResourceResourceModel
+	resp.Diagnostics.Append(req.State.Get(ctx, &stateModel)...)
+	resp.Diagnostics.Append(req.Config.Get(ctx, &configModel)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	// Inspect req.Config (the raw HCL the user wrote) rather than req.Plan.
+	// configuration_template_id is Optional+Computed with no UseStateForUnknown
+	// plan modifier, so an explicit `= null` in HCL arrives at the plan layer
+	// as Unknown (not Null): the framework defers to the provider to compute
+	// a value. Config preserves the user's null intent intact and is the only
+	// reliable signal that they asked to remove the template.
+	stateHasTemplate := !stateModel.ConfigurationTemplateID.IsNull() &&
+		!stateModel.ConfigurationTemplateID.IsUnknown() &&
+		stateModel.ConfigurationTemplateID.ValueString() != ""
+	userWantsUnlink := configModel.ConfigurationTemplateID.IsNull()
+	// After merge below, data.ConfigurationTemplateID may still carry the
+	// previous state's template id. merge() uses UnhandledUnknownAsEmpty=true,
+	// so an Unknown plan value does not overwrite the state value in `data`.
+	// If the user explicitly set configuration_template_id = null in config
+	// and we invoke the unlink endpoint, we must also strip the id from
+	// `data` so the subsequent Resources.Update PUT body omits it (via
+	// omitempty on the SDK model). Otherwise the PUT would re-link the
+	// template we just detached. This stripping happens after merge below.
+	if stateHasTemplate && userWantsUnlink {
+		unlinkRes, err := r.client.Resources.UnlinkResourceConfigurationTemplate(
+			ctx,
+			operations.UnlinkResourceConfigurationTemplateRequest{
+				ResourceID: stateModel.ID.ValueString(),
+			},
+		)
+		if err != nil {
+			resp.Diagnostics.AddError("failure to invoke API (unlink configuration template)", redactSensitiveValues(ctx, err.Error()))
+			if unlinkRes != nil && unlinkRes.RawResponse != nil {
+				resp.Diagnostics.AddError("unexpected http request/response", debugResponse(unlinkRes.RawResponse))
+			}
+			return
+		}
+		if unlinkRes == nil || unlinkRes.StatusCode != 200 {
+			resp.Diagnostics.AddError(
+				fmt.Sprintf("unexpected response from unlink-configuration-template. Status: %v", func() int {
+					if unlinkRes == nil {
+						return 0
+					}
+					return unlinkRes.StatusCode
+				}()),
+				func() string {
+					if unlinkRes != nil {
+						return debugResponse(unlinkRes.RawResponse)
+					}
+					return ""
+				}(),
+			)
+			return
+		}
+	}
+
 	merge(ctx, req, resp, &data)
 	if resp.Diagnostics.HasError() {
 		return
+	}
+
+	// See the comment above the unlink branch: merge() does not overwrite a
+	// state-populated field with an Unknown plan value, so strip the id out of
+	// `data` here to prevent the subsequent PUT from re-linking.
+	if stateHasTemplate && userWantsUnlink && data != nil {
+		data.ConfigurationTemplateID = types.StringNull()
 	}
 
 	request, requestDiags := data.ToSharedUpdateResourceInfoList(ctx)
