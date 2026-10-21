@@ -139,8 +139,6 @@ func (r *ScriptResource) Create(ctx context.Context, req resource.CreateRequest,
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToSharedCreateOpalScriptInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -201,8 +199,6 @@ func (r *ScriptResource) Read(ctx context.Context, req resource.ReadRequest, res
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.State)
-
 	request, requestDiags := data.ToOperationsGetOpalScriptRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -256,8 +252,6 @@ func (r *ScriptResource) Update(ctx context.Context, req resource.UpdateRequest,
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
 
 	request, requestDiags := data.ToOperationsUpdateOpalScriptRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
@@ -318,8 +312,6 @@ func (r *ScriptResource) Delete(ctx context.Context, req resource.DeleteRequest,
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsDeleteOpalScriptRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)

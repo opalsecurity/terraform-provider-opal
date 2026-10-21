@@ -124,6 +124,9 @@ const (
 	ResourceTypeEnumVercelProject                     ResourceTypeEnum = "VERCEL_PROJECT"
 	ResourceTypeEnumAxiomRole                         ResourceTypeEnum = "AXIOM_ROLE"
 	ResourceTypeEnumAxiomCustomRole                   ResourceTypeEnum = "AXIOM_CUSTOM_ROLE"
+	ResourceTypeEnumRipplingDepartment                ResourceTypeEnum = "RIPPLING_DEPARTMENT"
+	ResourceTypeEnumAsanaWorkspace                    ResourceTypeEnum = "ASANA_WORKSPACE"
+	ResourceTypeEnumBitwardenOrganization             ResourceTypeEnum = "BITWARDEN_ORGANIZATION"
 )
 
 func (e ResourceTypeEnum) ToPointer() *ResourceTypeEnum {
@@ -358,6 +361,12 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "AXIOM_ROLE":
 		fallthrough
 	case "AXIOM_CUSTOM_ROLE":
+		fallthrough
+	case "RIPPLING_DEPARTMENT":
+		fallthrough
+	case "ASANA_WORKSPACE":
+		fallthrough
+	case "BITWARDEN_ORGANIZATION":
 		*e = ResourceTypeEnum(v)
 		return nil
 	default:
