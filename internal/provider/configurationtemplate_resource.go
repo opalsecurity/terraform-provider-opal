@@ -130,6 +130,7 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 								"group_ids": types.SetType{
 									ElemType: types.StringType,
 								},
+								"opal_script_id": types.StringType,
 								"role_remote_ids": types.SetType{
 									ElemType: types.StringType,
 								},
@@ -141,6 +142,10 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 									Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 									ElementType: types.StringType,
 									Description: `The list of group IDs to match. Default: []`,
+								},
+								"opal_script_id": schema.StringAttribute{
+									Optional:    true,
+									Description: `The ID of a ` + "`" + `REQUEST_CONFIGURATION_CONDITION` + "`" + ` OpalScript that decides whether this request configuration applies. Cannot be combined with ` + "`" + `group_ids` + "`" + ` or ` + "`" + `role_remote_ids` + "`" + `.`,
 								},
 								"role_remote_ids": schema.SetAttribute{
 									Computed:    true,
@@ -406,8 +411,6 @@ func (r *ConfigurationTemplateResource) Create(ctx context.Context, req resource
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToSharedCreateConfigurationTemplateInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -488,8 +491,6 @@ func (r *ConfigurationTemplateResource) Update(ctx context.Context, req resource
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
-
 	request, requestDiags := data.ToSharedUpdateConfigurationTemplateInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -549,8 +550,6 @@ func (r *ConfigurationTemplateResource) Delete(ctx context.Context, req resource
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsDeleteConfigurationTemplateRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)

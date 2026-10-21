@@ -115,12 +115,19 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 			for groupIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].Condition.GroupIds {
 				groupIds = append(groupIds, r.RequestConfigurations[requestConfigurationsIndex].Condition.GroupIds[groupIdsIndex].ValueString())
 			}
+			opalScriptID := new(string)
+			if !r.RequestConfigurations[requestConfigurationsIndex].Condition.OpalScriptID.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].Condition.OpalScriptID.IsNull() {
+				*opalScriptID = r.RequestConfigurations[requestConfigurationsIndex].Condition.OpalScriptID.ValueString()
+			} else {
+				opalScriptID = nil
+			}
 			roleRemoteIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds))
 			for roleRemoteIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds {
 				roleRemoteIds = append(roleRemoteIds, r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds[roleRemoteIdsIndex].ValueString())
 			}
 			condition = &shared.Condition{
 				GroupIds:      groupIds,
+				OpalScriptID:  opalScriptID,
 				RoleRemoteIds: roleRemoteIds,
 			}
 		}
@@ -351,12 +358,19 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 			for groupIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].Condition.GroupIds {
 				groupIds = append(groupIds, r.RequestConfigurations[requestConfigurationsIndex].Condition.GroupIds[groupIdsIndex].ValueString())
 			}
+			opalScriptID := new(string)
+			if !r.RequestConfigurations[requestConfigurationsIndex].Condition.OpalScriptID.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].Condition.OpalScriptID.IsNull() {
+				*opalScriptID = r.RequestConfigurations[requestConfigurationsIndex].Condition.OpalScriptID.ValueString()
+			} else {
+				opalScriptID = nil
+			}
 			roleRemoteIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds))
 			for roleRemoteIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds {
 				roleRemoteIds = append(roleRemoteIds, r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds[roleRemoteIdsIndex].ValueString())
 			}
 			condition = &shared.Condition{
 				GroupIds:      groupIds,
+				OpalScriptID:  opalScriptID,
 				RoleRemoteIds: roleRemoteIds,
 			}
 		}
