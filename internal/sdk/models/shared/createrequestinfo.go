@@ -135,9 +135,11 @@ type CreateRequestInfo struct {
 	// The duration of the request in minutes. -1 represents an indefinite duration
 	DurationMinutes int64                     `json:"duration_minutes"`
 	Groups          []CreateRequestInfoGroups `json:"groups"`
-	Reason          string                    `json:"reason"`
-	Resources       []Resources               `json:"resources"`
-	SupportTicket   *SupportTicket            `json:"support_ticket,omitempty"`
+	// The ID of the user who asked for this access, for callers filing a request on someone else's behalf. Opal records this claim as given and does not verify it, so it never affects authorization, reviewer routing, or who may cancel the request; the authenticated caller remains the requester. Must be a user of your organization. Only accepted from a service user for which an Opal admin has enabled "Let this service user record who asked for access" under Settings on the service user's page; any other caller receives a 403 when this field is set.
+	InitiatedByUserID *string        `json:"initiated_by_user_id,omitempty"`
+	Reason            string         `json:"reason"`
+	Resources         []Resources    `json:"resources"`
+	SupportTicket     *SupportTicket `json:"support_ticket,omitempty"`
 	// The ID of the group the request is for.  Should not be specified if target_user_id is specified.
 	TargetGroupID *string `json:"target_group_id,omitempty"`
 	// The ID of the user to be granted access. Should not be specified if target_group_id is specified.
@@ -163,6 +165,13 @@ func (c *CreateRequestInfo) GetGroups() []CreateRequestInfoGroups {
 		return []CreateRequestInfoGroups{}
 	}
 	return c.Groups
+}
+
+func (c *CreateRequestInfo) GetInitiatedByUserID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.InitiatedByUserID
 }
 
 func (c *CreateRequestInfo) GetReason() string {

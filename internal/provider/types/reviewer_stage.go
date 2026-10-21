@@ -9,6 +9,7 @@ import (
 
 type ReviewerStage struct {
 	Escalation             *ReviewerStageEscalation `tfsdk:"escalation"`
+	OpalScriptIds          []types.String           `tfsdk:"opal_script_ids"`
 	Operator               types.String             `tfsdk:"operator"`
 	OwnerIds               []types.String           `tfsdk:"owner_ids"`
 	RequireAdminApproval   types.Bool               `tfsdk:"require_admin_approval"`

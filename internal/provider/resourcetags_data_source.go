@@ -122,6 +122,8 @@ func (r *ResourceTagsDataSource) Read(ctx context.Context, req datasource.ReadRe
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.Config)
+
 	request, requestDiags := data.ToOperationsGetResourceTagsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -130,7 +132,7 @@ func (r *ResourceTagsDataSource) Read(ctx context.Context, req datasource.ReadRe
 	}
 	res, err := r.client.Resources.GetTags(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}

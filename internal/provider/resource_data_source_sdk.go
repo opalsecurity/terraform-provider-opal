@@ -712,6 +712,10 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 						reviewerStages.Escalation.UserIds = append(reviewerStages.Escalation.UserIds, types.StringValue(v))
 					}
 				}
+				reviewerStages.OpalScriptIds = make([]types.String, 0, len(reviewerStagesItem.OpalScriptIds))
+				for _, v := range reviewerStagesItem.OpalScriptIds {
+					reviewerStages.OpalScriptIds = append(reviewerStages.OpalScriptIds, types.StringValue(v))
+				}
 				if reviewerStagesItem.Operator != nil {
 					reviewerStages.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
 				} else {

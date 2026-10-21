@@ -45,6 +45,9 @@ resource "opal_configuration_template" "my_configurationtemplate" {
               "7552a605-a334-4cfc-86fe-6f003cb0055a"
             ]
           }
+          opal_script_ids = [
+            "4baadd59-f1dd-4159-b865-dc0c24283b5e"
+          ]
           operator = "AND"
           owner_ids = [
             "b36e5198-3e15-4769-a321-00db76ac9873"

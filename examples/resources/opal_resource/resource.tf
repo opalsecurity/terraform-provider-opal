@@ -363,6 +363,9 @@ resource "opal_resource" "my_resource" {
               "e358667e-12e4-4f71-924f-4ddf9ff454f9"
             ]
           }
+          opal_script_ids = [
+            "1e04a3c9-6a74-4638-8f5c-3cb00524ac6b"
+          ]
           operator = "AND"
           owner_ids = [
             "c1fddd27-1944-4f29-a2c5-cd206276bb44"

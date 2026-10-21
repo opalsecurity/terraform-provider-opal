@@ -48,6 +48,7 @@ Because the stage's reviewers are unioned in rather than copied,
 removing someone from the stage also removes them from the escalation.
 At least one owner or user named here must not already be a reviewer
 of the stage. (see [below for nested schema](#nestedatt--data--escalation))
+- `opal_script_ids` (Set of String) The IDs of OpalScripts assigned as reviewers for this stage. Only `REQUEST_REVIEW` scripts can review; any other script type is rejected.
 - `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. A stage that sets `escalation` must use `OR`; `AND` is rejected there, because the escalation timer joins the stage as an additional reviewer and would otherwise become a required approver that stalls every request until the timeout.
 - `owner_ids` (Set of String) The IDs of owners assigned as reviewers for this stage.
 - `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval.

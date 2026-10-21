@@ -28,10 +28,30 @@ data "opal_app" "my_app" {
 ### Read-Only
 
 - `admin_owner_id` (String) The ID of the owner of the app.
+- `custom_connector` (Attributes) Configuration for a Custom Connector app. Does not include the signing
+secret; secrets are write-only and never returned by the API. (see [below for nested schema](#nestedatt--custom_connector))
 - `description` (String) A description of the app.
+- `import_visibility` (String) The visibility level of the entity.
 - `name` (String) The name of the app.
 - `type` (String) The type of an app.
 - `validations` (Attributes List) Validation checks of an apps' configuration and permissions. (see [below for nested schema](#nestedatt--validations))
+- `visibility` (String) The visibility level of the entity.
+- `visibility_group_ids` (List of String) The IDs of groups that can see this app when visibility is `LIMITED`.
+
+<a id="nestedatt--custom_connector"></a>
+### Nested Schema for `custom_connector`
+
+Read-Only:
+
+- `base_url` (String) The base URL of the Custom Connector.
+- `identifier` (String) The identifier of the Custom Connector.
+- `supports_event_ingestion` (Boolean) Whether the Custom Connector supports event ingestion.
+- `supports_groups` (Boolean) Whether the Custom Connector supports groups.
+- `supports_nested_groups` (Boolean) Whether the Custom Connector supports nested groups.
+- `supports_nested_resources` (Boolean) Whether the Custom Connector supports nested resources.
+- `tls_ca_cert_content` (String) Optional PEM-encoded CA certificate content for TLS.
+- `tls_mode` (Boolean) Whether TLS verification is enabled for the Custom Connector.
+
 
 <a id="nestedatt--validations"></a>
 ### Nested Schema for `validations`

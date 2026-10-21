@@ -109,6 +109,8 @@ func (r *TagUserResource) Create(ctx context.Context, req resource.CreateRequest
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
+
 	request, requestDiags := data.ToOperationsCreateUserTagRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -117,7 +119,7 @@ func (r *TagUserResource) Create(ctx context.Context, req resource.CreateRequest
 	}
 	res, err := r.client.Tags.CreateUser(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -204,6 +206,8 @@ func (r *TagUserResource) Delete(ctx context.Context, req resource.DeleteRequest
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.State)
+
 	request, requestDiags := data.ToOperationsDeleteUserTagRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -212,7 +216,7 @@ func (r *TagUserResource) Delete(ctx context.Context, req resource.DeleteRequest
 	}
 	res, err := r.client.Tags.Delete(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}

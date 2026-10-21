@@ -14,12 +14,13 @@ import (
 type ViewerCampaignItemDecision string
 
 const (
-	ViewerCampaignItemDecisionApproved     ViewerCampaignItemDecision = "APPROVED"
-	ViewerCampaignItemDecisionRevoked      ViewerCampaignItemDecision = "REVOKED"
-	ViewerCampaignItemDecisionChangeRole   ViewerCampaignItemDecision = "CHANGE_ROLE"
-	ViewerCampaignItemDecisionAdminRevoked ViewerCampaignItemDecision = "ADMIN_REVOKED"
-	ViewerCampaignItemDecisionNoAction     ViewerCampaignItemDecision = "NO_ACTION"
-	ViewerCampaignItemDecisionReassigned   ViewerCampaignItemDecision = "REASSIGNED"
+	ViewerCampaignItemDecisionApproved         ViewerCampaignItemDecision = "APPROVED"
+	ViewerCampaignItemDecisionRevoked          ViewerCampaignItemDecision = "REVOKED"
+	ViewerCampaignItemDecisionChangeRole       ViewerCampaignItemDecision = "CHANGE_ROLE"
+	ViewerCampaignItemDecisionReduceExpiration ViewerCampaignItemDecision = "REDUCE_EXPIRATION"
+	ViewerCampaignItemDecisionAdminRevoked     ViewerCampaignItemDecision = "ADMIN_REVOKED"
+	ViewerCampaignItemDecisionNoAction         ViewerCampaignItemDecision = "NO_ACTION"
+	ViewerCampaignItemDecisionReassigned       ViewerCampaignItemDecision = "REASSIGNED"
 )
 
 func (e ViewerCampaignItemDecision) ToPointer() *ViewerCampaignItemDecision {
@@ -37,6 +38,8 @@ func (e *ViewerCampaignItemDecision) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "CHANGE_ROLE":
 		fallthrough
+	case "REDUCE_EXPIRATION":
+		fallthrough
 	case "ADMIN_REVOKED":
 		fallthrough
 	case "NO_ACTION":
@@ -53,12 +56,13 @@ func (e *ViewerCampaignItemDecision) UnmarshalJSON(data []byte) error {
 type PendingDecision string
 
 const (
-	PendingDecisionApproved     PendingDecision = "APPROVED"
-	PendingDecisionRevoked      PendingDecision = "REVOKED"
-	PendingDecisionChangeRole   PendingDecision = "CHANGE_ROLE"
-	PendingDecisionAdminRevoked PendingDecision = "ADMIN_REVOKED"
-	PendingDecisionNoAction     PendingDecision = "NO_ACTION"
-	PendingDecisionReassigned   PendingDecision = "REASSIGNED"
+	PendingDecisionApproved         PendingDecision = "APPROVED"
+	PendingDecisionRevoked          PendingDecision = "REVOKED"
+	PendingDecisionChangeRole       PendingDecision = "CHANGE_ROLE"
+	PendingDecisionReduceExpiration PendingDecision = "REDUCE_EXPIRATION"
+	PendingDecisionAdminRevoked     PendingDecision = "ADMIN_REVOKED"
+	PendingDecisionNoAction         PendingDecision = "NO_ACTION"
+	PendingDecisionReassigned       PendingDecision = "REASSIGNED"
 )
 
 func (e PendingDecision) ToPointer() *PendingDecision {
@@ -75,6 +79,8 @@ func (e *PendingDecision) UnmarshalJSON(data []byte) error {
 	case "REVOKED":
 		fallthrough
 	case "CHANGE_ROLE":
+		fallthrough
+	case "REDUCE_EXPIRATION":
 		fallthrough
 	case "ADMIN_REVOKED":
 		fallthrough
@@ -117,6 +123,8 @@ type ViewerCampaignItem struct {
 	PendingNote *string `json:"pending_note,omitempty"`
 	// Pending target access level remote ID when decision is CHANGE_ROLE.
 	PendingUpdatedAccessLevelRemoteID *string `json:"pending_updated_access_level_remote_id,omitempty"`
+	// Staged built-in duration in minutes when the pending decision is REDUCE_EXPIRATION.
+	PendingUpdatedDurationInMinutes *int64 `json:"pending_updated_duration_in_minutes,omitempty"`
 	// Principal ID from the role assignment.
 	PrincipalID string `json:"principal_id"`
 	// The type of an entity.
@@ -127,6 +135,8 @@ type ViewerCampaignItem struct {
 	RoleAssignmentID string `json:"role_assignment_id"`
 	// Target access level remote ID when decision is CHANGE_ROLE.
 	UpdatedAccessLevelRemoteID *string `json:"updated_access_level_remote_id,omitempty"`
+	// Built-in duration in minutes when decision is REDUCE_EXPIRATION.
+	UpdatedDurationInMinutes *int64 `json:"updated_duration_in_minutes,omitempty"`
 }
 
 func (v ViewerCampaignItem) MarshalJSON() ([]byte, error) {
@@ -231,6 +241,13 @@ func (v *ViewerCampaignItem) GetPendingUpdatedAccessLevelRemoteID() *string {
 	return v.PendingUpdatedAccessLevelRemoteID
 }
 
+func (v *ViewerCampaignItem) GetPendingUpdatedDurationInMinutes() *int64 {
+	if v == nil {
+		return nil
+	}
+	return v.PendingUpdatedDurationInMinutes
+}
+
 func (v *ViewerCampaignItem) GetPrincipalID() string {
 	if v == nil {
 		return ""
@@ -264,4 +281,11 @@ func (v *ViewerCampaignItem) GetUpdatedAccessLevelRemoteID() *string {
 		return nil
 	}
 	return v.UpdatedAccessLevelRemoteID
+}
+
+func (v *ViewerCampaignItem) GetUpdatedDurationInMinutes() *int64 {
+	if v == nil {
+		return nil
+	}
+	return v.UpdatedDurationInMinutes
 }

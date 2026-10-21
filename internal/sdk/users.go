@@ -1242,7 +1242,7 @@ func (s *Users) GetUserTags(ctx context.Context, request operations.GetUserTagsR
 
 }
 
-// GetUsers - Returns a list of users for your organization.
+// GetUsers - Returns a list of users for your organization. Includes agent-labeled identities that appear on the Users page. Classic service accounts are not included.
 func (s *Users) GetUsers(ctx context.Context, request operations.GetUsersRequest, opts ...operations.Option) (*operations.GetUsersResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{

@@ -120,6 +120,8 @@ func (r *IdpGroupMappingsResource) Create(ctx context.Context, req resource.Crea
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
+
 	request, requestDiags := data.ToOperationsUpdateIdpGroupMappingsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -128,7 +130,7 @@ func (r *IdpGroupMappingsResource) Create(ctx context.Context, req resource.Crea
 	}
 	res, err := r.client.IdpGroupMappings.UpdateIdpGroupMappings(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -156,7 +158,7 @@ func (r *IdpGroupMappingsResource) Create(ctx context.Context, req resource.Crea
 	}
 	res1, err := r.client.IdpGroupMappings.GetIdpGroupMappings(ctx, *request1)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res1 != nil && res1.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
 		}
@@ -208,6 +210,8 @@ func (r *IdpGroupMappingsResource) Read(ctx context.Context, req resource.ReadRe
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.State)
+
 	request, requestDiags := data.ToOperationsGetIdpGroupMappingsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -216,7 +220,7 @@ func (r *IdpGroupMappingsResource) Read(ctx context.Context, req resource.ReadRe
 	}
 	res, err := r.client.IdpGroupMappings.GetIdpGroupMappings(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -262,6 +266,8 @@ func (r *IdpGroupMappingsResource) Update(ctx context.Context, req resource.Upda
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
+
 	request, requestDiags := data.ToOperationsUpdateIdpGroupMappingsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -270,7 +276,7 @@ func (r *IdpGroupMappingsResource) Update(ctx context.Context, req resource.Upda
 	}
 	res, err := r.client.IdpGroupMappings.UpdateIdpGroupMappings(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}
@@ -298,7 +304,7 @@ func (r *IdpGroupMappingsResource) Update(ctx context.Context, req resource.Upda
 	}
 	res1, err := r.client.IdpGroupMappings.GetIdpGroupMappings(ctx, *request1)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res1 != nil && res1.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
 		}

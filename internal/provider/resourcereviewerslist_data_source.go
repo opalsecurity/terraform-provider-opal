@@ -95,6 +95,8 @@ func (r *ResourceReviewersListDataSource) Read(ctx context.Context, req datasour
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.Config)
+
 	request, requestDiags := data.ToOperationsGetResourceReviewersRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -103,7 +105,7 @@ func (r *ResourceReviewersListDataSource) Read(ctx context.Context, req datasour
 	}
 	res, err := r.client.Resources.GetReviewers(ctx, *request)
 	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", err.Error())
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
 			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res.RawResponse))
 		}

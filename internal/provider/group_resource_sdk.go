@@ -417,6 +417,10 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 						reviewerStages.Escalation.UserIds = append(reviewerStages.Escalation.UserIds, types.StringValue(v))
 					}
 				}
+				reviewerStages.OpalScriptIds = make([]types.String, 0, len(reviewerStagesItem.OpalScriptIds))
+				for _, v := range reviewerStagesItem.OpalScriptIds {
+					reviewerStages.OpalScriptIds = append(reviewerStages.OpalScriptIds, types.StringValue(v))
+				}
 				if reviewerStagesItem.Operator != nil {
 					reviewerStages.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
 				} else {
@@ -516,6 +520,10 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(ctx context.Contex
 				for _, v := range reviewerStagesItem.Escalation.UserIds {
 					reviewerStages.Escalation.UserIds = append(reviewerStages.Escalation.UserIds, types.StringValue(v))
 				}
+			}
+			reviewerStages.OpalScriptIds = make([]types.String, 0, len(reviewerStagesItem.OpalScriptIds))
+			for _, v := range reviewerStagesItem.OpalScriptIds {
+				reviewerStages.OpalScriptIds = append(reviewerStages.OpalScriptIds, types.StringValue(v))
 			}
 			if reviewerStagesItem.Operator != nil {
 				reviewerStages.Operator = types.StringValue(string(*reviewerStagesItem.Operator))
@@ -1351,6 +1359,10 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 					UserIds:      userIds,
 				}
 			}
+			opalScriptIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OpalScriptIds))
+			for opalScriptIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OpalScriptIds {
+				opalScriptIds = append(opalScriptIds, r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].OpalScriptIds[opalScriptIdsIndex].ValueString())
+			}
 			operator := new(shared.Operator)
 			if !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.IsNull() {
 				*operator = shared.Operator(r.RequestConfigurations[requestConfigurationsIndex].ReviewerStages[reviewerStagesIndex].Operator.ValueString())
@@ -1379,6 +1391,7 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 			}
 			reviewerStages = append(reviewerStages, shared.ReviewerStage{
 				Escalation:             escalation,
+				OpalScriptIds:          opalScriptIds,
 				Operator:               operator,
 				OwnerIds:               ownerIds1,
 				RequireAdminApproval:   requireAdminApproval,

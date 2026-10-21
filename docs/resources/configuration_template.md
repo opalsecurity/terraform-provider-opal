@@ -60,6 +60,9 @@ resource "opal_configuration_template" "my_configurationtemplate" {
               "7552a605-a334-4cfc-86fe-6f003cb0055a"
             ]
           }
+          opal_script_ids = [
+            "4baadd59-f1dd-4159-b865-dc0c24283b5e"
+          ]
           operator = "AND"
           owner_ids = [
             "b36e5198-3e15-4769-a321-00db76ac9873"
@@ -180,6 +183,7 @@ Because the stage's reviewers are unioned in rather than copied,
 removing someone from the stage also removes them from the escalation.
 At least one owner or user named here must not already be a reviewer
 of the stage. (see [below for nested schema](#nestedatt--request_configurations--reviewer_stages--escalation))
+- `opal_script_ids` (Set of String) The IDs of OpalScripts assigned as reviewers for this stage. Only `REQUEST_REVIEW` scripts can review; any other script type is rejected.
 - `operator` (String) The operator of the reviewer stage. Admin and manager approval are also treated as reviewers. A stage that sets `escalation` must use `OR`; `AND` is rejected there, because the escalation timer joins the stage as an additional reviewer and would otherwise become a required approver that stalls every request until the timeout. Default: "AND"; must be one of ["AND", "OR"]
 - `require_admin_approval` (Boolean) Whether this reviewer stage should require admin approval. Default: false
 - `require_manager_approval` (Boolean) Whether this reviewer stage should require manager approval. Default: false

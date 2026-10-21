@@ -4,6 +4,7 @@
 package shared
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
@@ -107,6 +108,50 @@ func (u ReviewerStages) MarshalJSON() ([]byte, error) {
 	return nil, errors.New("could not marshal union type ReviewerStages: all fields are null")
 }
 
+// Source - The channel that created the request. Omitted when the source was not recorded.
+// MCP counts only OAuth sessions. An agent using an API token or a person's
+// credentials is counted as API, CLI, or WEB.
+type Source string
+
+const (
+	SourceWeb            Source = "WEB"
+	SourceSlack          Source = "SLACK"
+	SourceMicrosoftTeams Source = "MICROSOFT_TEAMS"
+	SourceCli            Source = "CLI"
+	SourceAPI            Source = "API"
+	SourceMcp            Source = "MCP"
+	SourceAccessReview   Source = "ACCESS_REVIEW"
+)
+
+func (e Source) ToPointer() *Source {
+	return &e
+}
+func (e *Source) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "WEB":
+		fallthrough
+	case "SLACK":
+		fallthrough
+	case "MICROSOFT_TEAMS":
+		fallthrough
+	case "CLI":
+		fallthrough
+	case "API":
+		fallthrough
+	case "MCP":
+		fallthrough
+	case "ACCESS_REVIEW":
+		*e = Source(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for Source: %v", v)
+	}
+}
+
 // # Request Object
 // ### Description
 // The `Request` object is used to represent a request.
@@ -122,6 +167,8 @@ type Request struct {
 	DurationMinutes *int64 `json:"duration_minutes,omitempty"`
 	// The unique identifier of the request.
 	ID string `json:"id"`
+	// The unique identifier of the user the caller asserted asked for this access. Unverified - Opal records the claim as given. Absent unless the caller supplied it.
+	InitiatedByUserID *string `json:"initiated_by_user_id,omitempty"`
 	// The reason for the request.
 	Reason string `json:"reason"`
 	// The list of targets for the request.
@@ -130,6 +177,10 @@ type Request struct {
 	RequesterID string `json:"requester_id"`
 	// The configured reviewer stages for every item in this request, or an error message if reviewers could not be loaded
 	ReviewerStages *ReviewerStages `json:"reviewer_stages,omitempty"`
+	// The channel that created the request. Omitted when the source was not recorded.
+	// MCP counts only OAuth sessions. An agent using an API token or a person's
+	// credentials is counted as API, CLI, or WEB.
+	Source *Source `json:"source,omitempty"`
 	// The stages configuration for a request item
 	//
 	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
@@ -188,6 +239,13 @@ func (r *Request) GetID() string {
 	return r.ID
 }
 
+func (r *Request) GetInitiatedByUserID() *string {
+	if r == nil {
+		return nil
+	}
+	return r.InitiatedByUserID
+}
+
 func (r *Request) GetReason() string {
 	if r == nil {
 		return ""
@@ -214,6 +272,13 @@ func (r *Request) GetReviewerStages() *ReviewerStages {
 		return nil
 	}
 	return r.ReviewerStages
+}
+
+func (r *Request) GetSource() *Source {
+	if r == nil {
+		return nil
+	}
+	return r.Source
 }
 
 func (r *Request) GetStages() *RequestItemStages {

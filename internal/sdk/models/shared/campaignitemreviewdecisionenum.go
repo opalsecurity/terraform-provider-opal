@@ -15,6 +15,7 @@ const (
 	CampaignItemReviewDecisionEnumApproved              CampaignItemReviewDecisionEnum = "APPROVED"
 	CampaignItemReviewDecisionEnumRevoked               CampaignItemReviewDecisionEnum = "REVOKED"
 	CampaignItemReviewDecisionEnumChangeRole            CampaignItemReviewDecisionEnum = "CHANGE_ROLE"
+	CampaignItemReviewDecisionEnumReduceExpiration      CampaignItemReviewDecisionEnum = "REDUCE_EXPIRATION"
 	CampaignItemReviewDecisionEnumAdminRevoked          CampaignItemReviewDecisionEnum = "ADMIN_REVOKED"
 	CampaignItemReviewDecisionEnumNoAction              CampaignItemReviewDecisionEnum = "NO_ACTION"
 	CampaignItemReviewDecisionEnumReassigned            CampaignItemReviewDecisionEnum = "REASSIGNED"
@@ -36,6 +37,8 @@ func (e *CampaignItemReviewDecisionEnum) UnmarshalJSON(data []byte) error {
 	case "REVOKED":
 		fallthrough
 	case "CHANGE_ROLE":
+		fallthrough
+	case "REDUCE_EXPIRATION":
 		fallthrough
 	case "ADMIN_REVOKED":
 		fallthrough
