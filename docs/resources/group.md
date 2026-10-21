@@ -41,6 +41,10 @@ resource "opal_group" "my_group" {
     active_directory_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
+    asana_team = {
+      team_gid      = "...my_team_gid..."
+      workspace_gid = "...my_workspace_gid..."
+    }
     aws_sso_group = {
       group_id = 898931321
     }
@@ -52,6 +56,9 @@ resource "opal_group" "my_group" {
     }
     azure_ad_security_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    bitwarden_group = {
+      group_id = "...my_group_id..."
     }
     clickhouse_role = {
       role_id = "my_clickhouse_role"
@@ -123,6 +130,12 @@ resource "opal_group" "my_group" {
     ramp_location = {
       location_id = "f4efe11c-221f-4b49-a1e4-33eaf96a49ee"
     }
+    rippling_supergroup = {
+      supergroup_id = "8caed98e-1234-5678-9abc-def012345678"
+    }
+    rippling_team = {
+      team_id = "8caed98e-1234-5678-9abc-def012345678"
+    }
     rootly_on_call_schedule = {
       schedule_id = "01HZ8XQM9ZQX8RKMZQ8ZQX8RK"
     }
@@ -131,6 +144,12 @@ resource "opal_group" "my_group" {
     }
     snowflake_role = {
       role_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    square_job = {
+      group_id = "...my_group_id..."
+    }
+    square_location = {
+      group_id = "...my_group_id..."
     }
     tableau_group = {
       group_id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
@@ -223,7 +242,7 @@ resource "opal_group" "my_group" {
 ### Required
 
 - `app_id` (String) The ID of the app for the group. Requires replacement if changed.
-- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP"]; Requires replacement if changed.
+- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP", "ASANA_TEAM", "BITWARDEN_GROUP", "SQUARE_LOCATION", "SQUARE_JOB", "RIPPLING_TEAM", "RIPPLING_SUPERGROUP"]; Requires replacement if changed.
 - `name` (String) The name of the group.
 
 ### Optional
@@ -264,10 +283,12 @@ resource "opal_group" "my_group" {
 Optional:
 
 - `active_directory_group` (Attributes) Remote info for Active Directory group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--active_directory_group))
+- `asana_team` (Attributes) Remote info for Asana Team. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--asana_team))
 - `aws_sso_group` (Attributes) Remote info for AWS SSO group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_sso_group))
 - `axiom_group` (Attributes) Remote info for Axiom RBAC group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--axiom_group))
 - `azure_ad_microsoft_365_group` (Attributes) Remote info for Microsoft Entra ID Microsoft 365 group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_ad_microsoft_365_group))
 - `azure_ad_security_group` (Attributes) Remote info for Microsoft Entra ID Security group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_ad_security_group))
+- `bitwarden_group` (Attributes) Remote info for Bitwarden Group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--bitwarden_group))
 - `clickhouse_role` (Attributes) Remote info for ClickHouse role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--clickhouse_role))
 - `confluence_group` (Attributes) Remote info for Confluence group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--confluence_group))
 - `connector_group` (Attributes) Remote info for Connector group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--connector_group))
@@ -291,9 +312,13 @@ Optional:
 - `pagerduty_on_call_schedule` (Attributes) Remote info for PagerDuty on-call schedule group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--pagerduty_on_call_schedule))
 - `ramp_department` (Attributes) Remote info for Ramp department. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--ramp_department))
 - `ramp_location` (Attributes) Remote info for Ramp location. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--ramp_location))
+- `rippling_supergroup` (Attributes) Remote info for Rippling supergroup. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--rippling_supergroup))
+- `rippling_team` (Attributes) Remote info for Rippling team. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--rippling_team))
 - `rootly_on_call_schedule` (Attributes) Remote info for Rootly on-call schedule group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--rootly_on_call_schedule))
 - `slack_user_group` (Attributes) Remote info for Slack user group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--slack_user_group))
 - `snowflake_role` (Attributes) Remote info for Snowflake role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--snowflake_role))
+- `square_job` (Attributes) Remote info for Square Job. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--square_job))
+- `square_location` (Attributes) Remote info for Square Location. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--square_location))
 - `tableau_group` (Attributes) Remote info for Tableau group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--tableau_group))
 - `tailscale_group` (Attributes) Remote info for Tailscale group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--tailscale_group))
 - `twingate_group` (Attributes) Remote info for Twingate group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--twingate_group))
@@ -310,6 +335,15 @@ Optional:
 Optional:
 
 - `group_id` (String) The id of the Google group. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--asana_team"></a>
+### Nested Schema for `remote_info.asana_team`
+
+Optional:
+
+- `team_gid` (String) The team gid of the Asana Team. Not Null; Requires replacement if changed.
+- `workspace_gid` (String) The workspace gid of the Asana Team. Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--aws_sso_group"></a>
@@ -342,6 +376,14 @@ Optional:
 Optional:
 
 - `group_id` (String) The id of the Microsoft Entra ID Security group. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--bitwarden_group"></a>
+### Nested Schema for `remote_info.bitwarden_group`
+
+Optional:
+
+- `group_id` (String) The group id of the Bitwarden Group. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--clickhouse_role"></a>
@@ -529,6 +571,22 @@ Optional:
 - `location_id` (String) The ID of the Ramp location. Not Null; Requires replacement if changed.
 
 
+<a id="nestedatt--remote_info--rippling_supergroup"></a>
+### Nested Schema for `remote_info.rippling_supergroup`
+
+Optional:
+
+- `supergroup_id` (String) The ID of the Rippling supergroup. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--rippling_team"></a>
+### Nested Schema for `remote_info.rippling_team`
+
+Optional:
+
+- `team_id` (String) The ID of the Rippling team. Not Null; Requires replacement if changed.
+
+
 <a id="nestedatt--remote_info--rootly_on_call_schedule"></a>
 ### Nested Schema for `remote_info.rootly_on_call_schedule`
 
@@ -551,6 +609,22 @@ Optional:
 Optional:
 
 - `role_id` (String) The id of the Snowflake role. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--square_job"></a>
+### Nested Schema for `remote_info.square_job`
+
+Optional:
+
+- `group_id` (String) The group id of the Square Job. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--square_location"></a>
+### Nested Schema for `remote_info.square_location`
+
+Optional:
+
+- `group_id` (String) The group id of the Square Location. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--tableau_group"></a>

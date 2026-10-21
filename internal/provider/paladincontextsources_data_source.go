@@ -126,8 +126,6 @@ func (r *PaladinContextSourcesDataSource) Read(ctx context.Context, req datasour
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsListPaladinContextSourcesRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

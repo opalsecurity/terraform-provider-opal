@@ -51,6 +51,8 @@ tags:
     description: Operations related to requests
   - name: resources
     description: Operations related to resources
+  - name: role-assignments
+    description: Operations related to role assignments (general grants between an entity and a principal)
   - name: paladin
     description: Operations related to Paladin
   - name: sessions
@@ -1845,6 +1847,115 @@ paths:
       x-speakeasy-entity-operation:
         - Group#delete
         - AccessRule#delete
+  /groups/{group_id}/configuration-template:
+    get:
+      summary: Get the ID of the configuration template linked to a group
+      description: |
+        Returns the ID of the configuration template that the group is currently
+        linked to. The response body is
+        `{"configuration_template_id": "<uuid>" | null}`:
+
+          * `<uuid>` is the ID of the configuration template the group is linked to.
+          * `null` means the group is not linked to any configuration template
+            and uses its own private configuration.
+
+        This endpoint only exposes the link between a group and a configuration
+        template — it does not return the template's own fields (name,
+        description, request configurations, visibility, etc.). To read those,
+        call `GET /configuration-templates/{configuration_template_id}` with the
+        ID returned here.
+      operationId: get_group_configuration_template
+      parameters:
+        - description: The ID of the group whose configuration template link is being read.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupConfigurationTemplate"
+          description: The ID of the configuration template currently linked to the group, or `null` if the group uses its own private configuration.
+        "403":
+          description: The caller is not authorized to view this group.
+        "404":
+          description: The group was not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
+    put:
+      summary: Set the ID of the configuration template linked to a group
+      description: |
+        Attaches, repoints, or detaches the configuration template linked to a
+        group. This endpoint only manages the link (by ID) between a group and
+        an existing configuration template — it does not create, modify, or
+        delete the template itself. To manage a template's own fields (name,
+        description, request configurations, visibility, etc.), use the
+        `/configuration-templates` endpoints.
+
+        The request body is `{"configuration_template_id": "<uuid>" | null}`:
+
+          * A `<uuid>` value links the group to the configuration template with
+            that ID. If the group was previously linked to a different
+            template, the group is repointed in place.
+          * `null` detaches the group from its current configuration template.
+            The template is deep-copied into a new private configuration with
+            the same settings so the group's current behaviour is preserved,
+            and the group is repointed at the fork.
+
+        The `configuration_template_id` field is required. Sending `{}` or any
+        body in which the field is omitted is rejected with `400`.
+
+        The call is idempotent: if the request body matches the group's current
+        link, no changes are made and no audit events are emitted.
+
+        This endpoint is the preferred, Terraform-friendly surface for linking
+        and unlinking configuration templates on groups. The equivalent
+        `configuration_template_id` field on `PUT /groups` remains available
+        but is deprecated for this purpose.
+      operationId: update_group_configuration_template
+      parameters:
+        - description: The ID of the group whose configuration template link is being set.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GroupConfigurationTemplate"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupConfigurationTemplate"
+          description: The ID of the configuration template now linked to the group, or `null` if the group was detached.
+        "400":
+          description: The request body was malformed, the required `configuration_template_id` field was omitted, or the target `configuration_template_id` does not reference a configuration template.
+        "403":
+          description: The caller is not authorized to update this group.
+        "404":
+          description: The group was not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
   /groups/{group_id}/message-channels:
     get:
       description: Gets the list of audit and reviewer message channels attached to a group.
@@ -4094,6 +4205,74 @@ paths:
         - BearerAuth: []
       tags:
         - requests
+  /role-assignments:
+    post:
+      summary: Add role assignments
+      description: |
+        Grants one or more principals (user, group, or resource) access to one or more
+        entities (resource or group). The request body is batched to match the GraphQL
+        `addRoleAssignments` mutation, which this endpoint thin-wraps. The caller must
+        hold the `EDIT_ASSIGNMENTS` role permission on every entity in the batch.
+
+        Omit `access_level_remote_id` for entities that have a single default access
+        level. Omit `duration_minutes` (or send `0`) for an indefinite grant.
+
+        **Atomicity:** the batch is applied as a single transaction. If any entry
+        fails input validation, authorization, lookup, or creation, **no entries
+        are created** and the response identifies the first failing entry's
+        `entity_id` and `principal_id` (and the request-array index for input
+        validation errors). Clients should retry with the offending entry
+        removed; partial-success is intentionally not supported, matching the
+        semantics of the GraphQL `addRoleAssignments` mutation that this
+        endpoint wraps.
+
+        Prefer this endpoint for batch or programmatic use (e.g. Terraform). For a
+        single grant on a specific entity/principal pair, the per-pair endpoints —
+        `/resources/{id}/users/{id}`, `/groups/{id}/users/{id}`,
+        `/groups/{id}/resources/{id}`, `/groups/{id}/containing-groups`,
+        `/resources/{id}/non-human-identities/{id}` — are often simpler.
+      operationId: addRoleAssignments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddRoleAssignmentsRequest"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddRoleAssignmentsResponse"
+          description: The requested role assignments were created.
+        "400":
+          description: |
+            Invalid request body: unknown field, missing required field, malformed JSON,
+            invalid enum (entity_type must be RESOURCE or GROUP; principal_type must be
+            RESOURCE, GROUP, or USER), negative duration_minutes, or role_assignments
+            batch size outside the allowed range.
+        "403":
+          description: Caller is not authorized to edit role assignments on one or more of the entities.
+        "404":
+          description: One or more referenced entities or principals does not exist in the organization.
+        "409":
+          description: |
+            One of the requested role assignments already exists. The error
+            message identifies the offending entity_id and principal_id so a
+            batch client can locate the colliding entry. Matches the convention
+            of the per-pair endpoints (`/resources/{id}/users/{id}`,
+            `/groups/{id}/users/{id}`), which also return 409 for the same
+            condition.
+        "422":
+          description: |
+            Request was syntactically valid but could not be fulfilled. Includes
+            group nesting cycles, self-grants, invalid durations, access-level
+            mismatches, assignments on computed groups or non-requestable
+            resources, and unsupported entity/principal type combinations.
+      security:
+        - BearerAuth: []
+      tags:
+        - role-assignments
   /resources:
     get:
       summary: Get resources
@@ -5695,6 +5874,54 @@ paths:
         - BearerAuth: []
       tags:
         - users
+  /users/{user_id}/mfa/reset:
+    post:
+      summary: Reset a user's Opal MFA
+      description: |
+        Deletes the user's Auth0 (Opal) MFA enrollments so they are prompted to
+        re-enroll on their next sign-in. Only applies to orgs that use Opal/Auth0
+        for MFA (not available on-prem, and a no-op success for users who have
+        never signed into Auth0).
+      operationId: resetUserMfa
+      parameters:
+        - description: The ID of the user whose MFA should be reset.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          in: path
+          name: user_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          description: |
+            The MFA enrollments were reset, or the user has no Auth0 enrollments
+            to reset (never signed into Auth0).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                required:
+                  - success
+        "400":
+          description: |
+            The deployment does not support MFA reset (on-prem), the organization
+            does not use Opal/Auth0 MFA, or the request body contained unknown
+            JSON fields.
+        "403":
+          description: The caller is not authorized to reset MFA for this user.
+        "404":
+          description: The user was not found.
+        "409":
+          description: The Opal system user cannot be modified.
+      security:
+        - BearerAuth: []
+      tags:
+        - users
   /users/remote_users:
     get:
       description: Returns a list of remote users for your organization.
@@ -6838,6 +7065,8 @@ components:
           $ref: "#/components/schemas/EntityDescriptionFilter"
         entityTag:
           $ref: "#/components/schemas/EntityTagFilter"
+        entityTagKey:
+          $ref: "#/components/schemas/EntityTagKeyFilter"
         hrIdpStatus:
           $ref: "#/components/schemas/IdpStatusFilter"
         entityAdminOwner:
@@ -7244,12 +7473,26 @@ components:
           example: team
         value:
           type: string
-          description: The tag value to filter by. If omitted, matches any value for the given key.
+          description: The tag value to filter by. If omitted, matches only tags with no value; use entityTagKey to match any value for a key.
           example: platform
         connectionId:
           type: string
           format: uuid
           description: If specified, filters by tags associated with this connection.
+    EntityTagKeyFilter:
+      type: object
+      required:
+        - keys
+      description: >
+        Filters entities that have a tag whose key is one of `keys`, whatever its value (including no value). Keys match exactly and case-sensitively. An empty list matches nothing. AGENT entities carry no tags, so they never match; under `not`, every agent matches, as with entityTag.
+
+      properties:
+        keys:
+          type: array
+          description: The tag keys to match.
+          items:
+            type: string
+          example: ["Critical"]
     IdpStatusFilter:
       type: object
       description: >
@@ -7483,6 +7726,7 @@ components:
         reminder_schedule: [7, 3, 1]
         reminder_include_manager: true
         require_reason_on_denial: false
+        auto_stop_when_complete: false
         hide_ai_suggestions: false
         custom_start_message: null
         group_asset_visibility_policy: STRICT
@@ -7562,6 +7806,10 @@ components:
           description: Whether reviewers must provide a reason when denying (revoking) access.
           example: false
           type: boolean
+        auto_stop_when_complete:
+          description: Whether the campaign stops automatically once every review item is complete. Stopping locks further reviews so admins can review the decisions or end the campaign to generate the report.
+          example: false
+          type: boolean
         hide_ai_suggestions:
           description: Whether AI suggestions are hidden from reviewers.
           example: false
@@ -7612,6 +7860,7 @@ components:
         - revoke_on
         - reminder_include_manager
         - require_reason_on_denial
+        - auto_stop_when_complete
         - hide_ai_suggestions
         - group_asset_visibility_policy
         - is_template
@@ -7686,6 +7935,10 @@ components:
           type: boolean
         require_reason_on_denial:
           description: Whether reviewers must provide a reason when denying (revoking) access.
+          example: false
+          type: boolean
+        auto_stop_when_complete:
+          description: Whether the campaign stops automatically once every review item is complete. Stopping locks further reviews so admins can review the decisions or end the campaign to generate the report.
           example: false
           type: boolean
         hide_ai_suggestions:
@@ -7816,6 +8069,10 @@ components:
           type: boolean
         require_reason_on_denial:
           description: Whether reviewers must provide a reason when denying (revoking) access.
+          example: false
+          type: boolean
+        auto_stop_when_complete:
+          description: Whether the campaign stops automatically once every review item is complete. Stopping locks further reviews so admins can review the decisions or end the campaign to generate the report.
           example: false
           type: boolean
         hide_ai_suggestions:
@@ -8845,7 +9102,11 @@ components:
         - VERCEL
         - AXIOM
         # GENERATED:BEGIN connection-type-enum
+        - ASANA
+        - BITWARDEN
+        - SQUARE
         # GENERATED:END connection-type-enum
+        - RIPPLING
       example: OKTA_DIRECTORY
       type: string
     EntityTypeEnum:
@@ -8856,6 +9117,121 @@ components:
         - USER
       example: GROUP
       type: string
+    AddRoleAssignmentInput:
+      description: A single role assignment to create in a batch add request.
+      type: object
+      required:
+        - entity_id
+        - entity_type
+        - principal_id
+        - principal_type
+      properties:
+        entity_id:
+          description: The ID of the entity (resource or group) being accessed.
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          format: uuid
+          type: string
+        entity_type:
+          description: The type of the entity being accessed. Must be `RESOURCE` or `GROUP`.
+          allOf:
+            - $ref: "#/components/schemas/EntityTypeEnum"
+        principal_id:
+          description: The ID of the principal (user, group, or resource) being granted access.
+          example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+          format: uuid
+          type: string
+        principal_type:
+          description: The type of the principal being granted access. Must be `RESOURCE`, `GROUP`, or `USER`.
+          allOf:
+            - $ref: "#/components/schemas/EntityTypeEnum"
+        access_level_remote_id:
+          description: Remote ID of the access level to grant. Omit for entities that only have a single default access level.
+          nullable: true
+          type: string
+        duration_minutes:
+          description: Duration of the grant in minutes. Omit or send `0` for an indefinite grant.
+          minimum: 0
+          nullable: true
+          type: integer
+    AddRoleAssignmentsRequest:
+      description: Request body for `POST /role-assignments`.
+      type: object
+      required:
+        - role_assignments
+      properties:
+        role_assignments:
+          description: The list of role assignments to add.
+          items:
+            $ref: "#/components/schemas/AddRoleAssignmentInput"
+          minItems: 1
+          maxItems: 100
+          type: array
+    RoleAssignment:
+      description: A role assignment representing access granted to a principal for an entity.
+      type: object
+      required:
+        - id
+        - entity_id
+        - entity_type
+        - principal_id
+        - principal_type
+      properties:
+        id:
+          description: Unique identifier for the role assignment.
+          format: uuid
+          type: string
+        entity_id:
+          description: The ID of the entity (resource or group) being accessed.
+          format: uuid
+          type: string
+        entity_type:
+          $ref: "#/components/schemas/EntityTypeEnum"
+        principal_id:
+          description: The ID of the principal being granted access.
+          format: uuid
+          type: string
+        principal_type:
+          $ref: "#/components/schemas/EntityTypeEnum"
+        access_level:
+          description: The level of access granted. Null when the entity does not define access levels.
+          allOf:
+            - $ref: "#/components/schemas/ResourceAccessLevel"
+          nullable: true
+        expiration:
+          description: When this access expires. Null when the grant is indefinite.
+          format: date-time
+          nullable: true
+          type: string
+        granted_at:
+          description: When this access was first granted.
+          format: date-time
+          nullable: true
+          type: string
+    AddRoleAssignmentsEntry:
+      description: A single entry in the result of `POST /role-assignments`.
+      type: object
+      required:
+        - role_assignment
+      properties:
+        role_assignment:
+          $ref: "#/components/schemas/RoleAssignment"
+    AddRoleAssignmentsResponse:
+      description: Response body for `POST /role-assignments`.
+      type: object
+      required:
+        - task_ids
+        - entries
+      properties:
+        task_ids:
+          description: Opaque IDs of push tasks enqueued to propagate the new assignments to end systems. Each ID is a base64-encoded, URL-safe string that mirrors the identifier returned by the GraphQL `addRoleAssignments` mutation.
+          items:
+            type: string
+          type: array
+        entries:
+          description: One entry per role assignment created, in request order.
+          items:
+            $ref: "#/components/schemas/AddRoleAssignmentsEntry"
+          type: array
     ViewerCampaignItemSortFieldEnum:
       description: Sort field for viewer campaign items.
       enum:
@@ -11078,7 +11454,13 @@ components:
         - WRIKE_GROUP
         - AXIOM_GROUP
         # GENERATED:BEGIN group-type-enum
+        - ASANA_TEAM
+        - BITWARDEN_GROUP
+        - SQUARE_LOCATION
+        - SQUARE_JOB
         # GENERATED:END group-type-enum
+        - RIPPLING_TEAM
+        - RIPPLING_SUPERGROUP
       example: OPAL_GROUP
       type: string
     ResourceTypeEnum:
@@ -11196,7 +11578,10 @@ components:
         - VERCEL_PROJECT
         - AXIOM_ROLE
         - AXIOM_CUSTOM_ROLE
+        - RIPPLING_DEPARTMENT
         # GENERATED:BEGIN resource-type-enum
+        - ASANA_WORKSPACE
+        - BITWARDEN_ORGANIZATION
         # GENERATED:END resource-type-enum
       example: AWS_IAM_ROLE
       type: string
@@ -11509,6 +11894,31 @@ components:
       x-speakeasy-entity:
         - OnCallScheduleList
         - GroupOnCallSchedules
+    GroupConfigurationTemplate:
+      description: |-
+        A reference, by ID only, to the configuration template a group is
+        linked to. This schema does not include any of the template's own
+        fields (name, description, request configurations, visibility, etc.) —
+        to read or modify those, use the `/configuration-templates` endpoints
+        with the ID carried here. A `null` `configuration_template_id`
+        indicates that the group is not linked to a configuration template
+        and uses its own private configuration.
+      example:
+        configuration_template_id: 06851574-e50d-40ca-8c78-f72ae6ab4304
+      properties:
+        configuration_template_id:
+          description: |-
+            The ID of the configuration template that the group is linked to,
+            or `null` if the group is not linked to a configuration template.
+            Only the ID is exposed here; the template's own fields are managed
+            through the `/configuration-templates` endpoints.
+          example: 06851574-e50d-40ca-8c78-f72ae6ab4304
+          format: uuid
+          nullable: true
+          type: string
+      type: object
+      required:
+        - configuration_template_id
     VisibilityInfo:
       description: Visibility infomation of an entity.
       example:
@@ -12273,8 +12683,67 @@ components:
           type: object
           required:
             - team_id
-            # GENERATED:BEGIN group-remote-info-properties
-            # GENERATED:END group-remote-info-properties
+        # GENERATED:BEGIN group-remote-info-properties
+        asana_team:
+          description: Remote info for Asana Team.
+          properties:
+            team_gid:
+              description: The team gid of the Asana Team.
+              type: string
+            workspace_gid:
+              description: The workspace gid of the Asana Team.
+              type: string
+          type: object
+          required:
+            - team_gid
+        bitwarden_group:
+          description: Remote info for Bitwarden Group.
+          properties:
+            group_id:
+              description: The group id of the Bitwarden Group.
+              type: string
+          type: object
+          required:
+            - group_id
+        square_location:
+          description: Remote info for Square Location.
+          properties:
+            group_id:
+              description: The group id of the Square Location.
+              type: string
+          type: object
+          required:
+            - group_id
+        square_job:
+          description: Remote info for Square Job.
+          properties:
+            group_id:
+              description: The group id of the Square Job.
+              type: string
+          type: object
+          required:
+            - group_id
+        # GENERATED:END group-remote-info-properties
+        rippling_team:
+          description: Remote info for Rippling team.
+          properties:
+            team_id:
+              description: The ID of the Rippling team.
+              example: 8caed98e-1234-5678-9abc-def012345678
+              type: string
+          type: object
+          required:
+            - team_id
+        rippling_supergroup:
+          description: Remote info for Rippling supergroup.
+          properties:
+            supergroup_id:
+              description: The ID of the Rippling supergroup.
+              example: 8caed98e-1234-5678-9abc-def012345678
+              type: string
+          type: object
+          required:
+            - supergroup_id
       type: object
       x-speakeasy-entity: GroupRemote
     ResourceRemoteInfo:
@@ -13451,8 +13920,36 @@ components:
           type: object
           required:
             - role_id
-            # GENERATED:BEGIN resource-remote-info-properties
-            # GENERATED:END resource-remote-info-properties
+        # GENERATED:BEGIN resource-remote-info-properties
+        asana_workspace:
+          description: Remote info for Asana Workspace.
+          properties:
+            workspace_gid:
+              description: The workspace gid of the Asana Workspace.
+              type: string
+          type: object
+          required:
+            - workspace_gid
+        bitwarden_organization:
+          description: Remote info for Bitwarden Organization.
+          properties:
+            organization_id:
+              description: The organization id of the Bitwarden Organization.
+              type: string
+          type: object
+          required:
+            - organization_id
+        # GENERATED:END resource-remote-info-properties
+        rippling_department:
+          description: Remote info for Rippling department.
+          properties:
+            department_id:
+              description: The ID of the Rippling department.
+              example: 8caed98e-1234-5678-9abc-def012345678
+              type: string
+          type: object
+          required:
+            - department_id
       type: object
     RiskSensitivityEnum:
       type: string
