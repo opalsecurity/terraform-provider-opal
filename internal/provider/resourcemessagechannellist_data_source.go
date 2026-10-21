@@ -124,8 +124,6 @@ func (r *ResourceMessageChannelListDataSource) Read(ctx context.Context, req dat
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetResourceMessageChannelsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

@@ -114,8 +114,6 @@ func (r *ScriptDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetOpalScriptRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
