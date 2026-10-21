@@ -19,6 +19,9 @@ resource "opal_resource" "my_resource" {
     anthropic_workspace = {
       workspace_id = "ws-123456"
     }
+    asana_workspace = {
+      workspace_gid = "...my_workspace_gid..."
+    }
     aws_account = {
       account_id             = 234234234234
       organizational_unit_id = "ou-1234"
@@ -102,6 +105,9 @@ resource "opal_resource" "my_resource" {
     }
     azure_virtual_machine = {
       resource_id = "/subscriptions/0000/resourceGroups/rg/providers/Microsoft.Compute/virtualMachines/vm01"
+    }
+    bitwarden_organization = {
+      organization_id = "...my_organization_id..."
     }
     clickhouse_console_role = {
       role_id = "123e4567-e89b-12d3-a456-426614174000"
@@ -278,6 +284,9 @@ resource "opal_resource" "my_resource" {
     }
     ramp_role = {
       role = "BUSINESS_USER"
+    }
+    rippling_department = {
+      department_id = "8caed98e-1234-5678-9abc-def012345678"
     }
     salesforce_permission_set = {
       permission_set_id = "0PS5Y090202wOV7WAM"
