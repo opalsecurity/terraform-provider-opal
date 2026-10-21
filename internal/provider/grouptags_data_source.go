@@ -122,8 +122,6 @@ func (r *GroupTagsDataSource) Read(ctx context.Context, req datasource.ReadReque
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetGroupTagsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

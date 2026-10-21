@@ -205,8 +205,6 @@ func (r *AppDataSource) Read(ctx context.Context, req datasource.ReadRequest, re
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetAppIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
