@@ -26,6 +26,10 @@ resource "opal_group" "my_group" {
     active_directory_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
+    asana_team = {
+      team_gid      = "...my_team_gid..."
+      workspace_gid = "...my_workspace_gid..."
+    }
     aws_sso_group = {
       group_id = 898931321
     }
@@ -37,6 +41,9 @@ resource "opal_group" "my_group" {
     }
     azure_ad_security_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    bitwarden_group = {
+      group_id = "...my_group_id..."
     }
     clickhouse_role = {
       role_id = "my_clickhouse_role"
@@ -108,6 +115,12 @@ resource "opal_group" "my_group" {
     ramp_location = {
       location_id = "f4efe11c-221f-4b49-a1e4-33eaf96a49ee"
     }
+    rippling_supergroup = {
+      supergroup_id = "8caed98e-1234-5678-9abc-def012345678"
+    }
+    rippling_team = {
+      team_id = "8caed98e-1234-5678-9abc-def012345678"
+    }
     rootly_on_call_schedule = {
       schedule_id = "01HZ8XQM9ZQX8RKMZQ8ZQX8RK"
     }
@@ -116,6 +129,12 @@ resource "opal_group" "my_group" {
     }
     snowflake_role = {
       role_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
+    }
+    square_job = {
+      group_id = "...my_group_id..."
+    }
+    square_location = {
+      group_id = "...my_group_id..."
     }
     tableau_group = {
       group_id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
@@ -153,6 +172,7 @@ resource "opal_group" "my_group" {
         group_ids = [
           "1b978423-db0a-4037-a4cf-f79c60cb67b3",
         ]
+        opal_script_id = "32acc112-21ff-4669-91c2-21e27683eaa1"
         role_remote_ids = [
           "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]

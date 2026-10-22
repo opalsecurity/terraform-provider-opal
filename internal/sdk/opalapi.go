@@ -3,7 +3,7 @@
 
 package sdk
 
-// Generated from OpenAPI doc version 1.0 and generator version 2.946.0
+// Generated from OpenAPI doc version 1.0 and generator version 2.950.2
 
 import (
 	"context"
@@ -97,6 +97,8 @@ type OpalAPI struct {
 	Requests *Requests
 	// Operations related to resources
 	Resources *Resources
+	// Operations related to role assignments (general grants between an entity and a principal)
+	RoleAssignments *RoleAssignments
 	// Operations related to sessions
 	Sessions *Sessions
 	// Operations related to tags
@@ -185,9 +187,9 @@ func New(opts ...SDKOption) *OpalAPI {
 	sdk := &OpalAPI{
 		SDKVersion: "3.10.3",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:         "speakeasy-sdk/terraform 3.10.3 2.946.0 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
+			UserAgent:         "speakeasy-sdk/terraform 3.10.3 2.950.2 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
 			SDKVersion:        "3.10.3",
-			GenVersion:        "2.946.0",
+			GenVersion:        "2.950.2",
 			OpenAPIDocVersion: "1.0",
 			ServerList:        ServerList,
 		},
@@ -230,6 +232,7 @@ func New(opts ...SDKOption) *OpalAPI {
 	sdk.RequestTemplates = newRequestTemplates(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Requests = newRequests(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Resources = newResources(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.RoleAssignments = newRoleAssignments(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Sessions = newSessions(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Tags = newTags(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Tokens = newTokens(sdk, sdk.sdkConfiguration, sdk.hooks)
