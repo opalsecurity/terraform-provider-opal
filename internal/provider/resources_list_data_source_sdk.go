@@ -72,6 +72,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.AnthropicWorkspace = &tfTypes.AnthropicWorkspace{}
 					results.RemoteInfo.AnthropicWorkspace.WorkspaceID = types.StringValue(resultsItem.RemoteInfo.AnthropicWorkspace.WorkspaceID)
 				}
+				if resultsItem.RemoteInfo.AsanaWorkspace == nil {
+					results.RemoteInfo.AsanaWorkspace = nil
+				} else {
+					results.RemoteInfo.AsanaWorkspace = &tfTypes.AsanaWorkspace{}
+					results.RemoteInfo.AsanaWorkspace.WorkspaceGid = types.StringValue(resultsItem.RemoteInfo.AsanaWorkspace.WorkspaceGid)
+				}
 				if resultsItem.RemoteInfo.AwsAccount == nil {
 					results.RemoteInfo.AwsAccount = nil
 				} else {
@@ -224,6 +230,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				} else {
 					results.RemoteInfo.AzureVirtualMachine = &tfTypes.AzureEnterpriseApp{}
 					results.RemoteInfo.AzureVirtualMachine.ResourceID = types.StringValue(resultsItem.RemoteInfo.AzureVirtualMachine.ResourceID)
+				}
+				if resultsItem.RemoteInfo.BitwardenOrganization == nil {
+					results.RemoteInfo.BitwardenOrganization = nil
+				} else {
+					results.RemoteInfo.BitwardenOrganization = &tfTypes.ZendeskOrganization{}
+					results.RemoteInfo.BitwardenOrganization.OrganizationID = types.StringValue(resultsItem.RemoteInfo.BitwardenOrganization.OrganizationID)
 				}
 				if resultsItem.RemoteInfo.ClickhouseConsoleRole == nil {
 					results.RemoteInfo.ClickhouseConsoleRole = nil
@@ -557,6 +569,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.RampRole = &tfTypes.RampRole{}
 					results.RemoteInfo.RampRole.Role = types.StringValue(resultsItem.RemoteInfo.RampRole.Role)
 				}
+				if resultsItem.RemoteInfo.RipplingDepartment == nil {
+					results.RemoteInfo.RipplingDepartment = nil
+				} else {
+					results.RemoteInfo.RipplingDepartment = &tfTypes.RampDepartment{}
+					results.RemoteInfo.RipplingDepartment.DepartmentID = types.StringValue(resultsItem.RemoteInfo.RipplingDepartment.DepartmentID)
+				}
 				if resultsItem.RemoteInfo.SalesforcePermissionSet == nil {
 					results.RemoteInfo.SalesforcePermissionSet = nil
 				} else {
@@ -673,6 +691,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					for _, v := range requestConfigurationsItem.Condition.GroupIds {
 						requestConfigurations.Condition.GroupIds = append(requestConfigurations.Condition.GroupIds, types.StringValue(v))
 					}
+					requestConfigurations.Condition.OpalScriptID = types.StringPointerValue(requestConfigurationsItem.Condition.OpalScriptID)
 					requestConfigurations.Condition.RoleRemoteIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
 					for _, v := range requestConfigurationsItem.Condition.RoleRemoteIds {
 						requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
