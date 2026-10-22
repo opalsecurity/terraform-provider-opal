@@ -3,10 +3,6 @@
 
 package shared
 
-import (
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
-)
-
 // UpdateAppInfo - Information needed to update an app. Currently supports only Push-only
 // apps (`CUSTOM`) and Custom Connector apps (`CUSTOM_CONNECTOR`).
 type UpdateAppInfo struct {
@@ -32,18 +28,7 @@ type UpdateAppInfo struct {
 	// The visibility level of the entity.
 	Visibility *VisibilityTypeEnum `json:"visibility,omitempty"`
 	// The IDs of groups that can see this app when visibility is `LIMITED`.
-	VisibilityGroupIds []string `json:"visibility_group_ids"`
-}
-
-func (u UpdateAppInfo) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(u, "", false)
-}
-
-func (u *UpdateAppInfo) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &u, "", false, nil); err != nil {
-		return err
-	}
-	return nil
+	VisibilityGroupIds []string `json:"visibility_group_ids,omitempty"`
 }
 
 func (u *UpdateAppInfo) GetAdminOwnerID() *string {

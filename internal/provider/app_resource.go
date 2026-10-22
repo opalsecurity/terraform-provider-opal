@@ -8,12 +8,10 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/setdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -240,12 +238,11 @@ func (r *AppResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 			"visibility_group_ids": schema.SetAttribute{
 				Computed: true,
 				Optional: true,
-				Default:  setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 				PlanModifiers: []planmodifier.Set{
 					speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
 				},
 				ElementType: types.StringType,
-				Description: `The IDs of groups that can see this app when visibility is ` + "`" + `LIMITED` + "`" + `. Default: []`,
+				Description: `The IDs of groups that can see this app when visibility is ` + "`" + `LIMITED` + "`" + `.`,
 			},
 		},
 	}
