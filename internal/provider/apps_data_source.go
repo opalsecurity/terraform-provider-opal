@@ -113,10 +113,6 @@ func (r *AppsDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 							Computed:    true,
 							Description: `The ID of the app.`,
 						},
-						"import_visibility": schema.StringAttribute{
-							Computed:    true,
-							Description: `The visibility level of the entity.`,
-						},
 						"name": schema.StringAttribute{
 							Computed:    true,
 							Description: `The name of the app.`,
@@ -166,11 +162,6 @@ func (r *AppsDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 							Computed:    true,
 							Description: `The visibility level of the entity.`,
 						},
-						"visibility_group_ids": schema.SetAttribute{
-							Computed:    true,
-							ElementType: types.StringType,
-							Description: `The IDs of groups that can see this app when visibility is ` + "`" + `LIMITED` + "`" + `.`,
-						},
 					},
 				},
 			},
@@ -219,8 +210,6 @@ func (r *AppsDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config)
 
 	request, requestDiags := data.ToOperationsGetAppsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
