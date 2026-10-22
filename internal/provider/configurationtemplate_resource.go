@@ -224,11 +224,6 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 											`At least one owner or user named here must not already be a reviewer` + "\n" +
 											`of the stage.`,
 									},
-									"opal_script_ids": schema.SetAttribute{
-										Optional:    true,
-										ElementType: types.StringType,
-										Description: `The IDs of OpalScripts assigned as reviewers for this stage. Only ` + "`" + `REQUEST_REVIEW` + "`" + ` scripts can review; any other script type is rejected.`,
-									},
 									"operator": schema.StringAttribute{
 										Computed:    true,
 										Optional:    true,
@@ -406,8 +401,6 @@ func (r *ConfigurationTemplateResource) Create(ctx context.Context, req resource
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToSharedCreateConfigurationTemplateInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -488,8 +481,6 @@ func (r *ConfigurationTemplateResource) Update(ctx context.Context, req resource
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
-
 	request, requestDiags := data.ToSharedUpdateConfigurationTemplateInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -549,8 +540,6 @@ func (r *ConfigurationTemplateResource) Delete(ctx context.Context, req resource
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsDeleteConfigurationTemplateRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)

@@ -1582,15 +1582,6 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 											`At least one owner or user named here must not already be a reviewer` + "\n" +
 											`of the stage.`,
 									},
-									"opal_script_ids": schema.SetAttribute{
-										Computed: true,
-										Optional: true,
-										PlanModifiers: []planmodifier.Set{
-											speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
-										},
-										ElementType: types.StringType,
-										Description: `The IDs of OpalScripts assigned as reviewers for this stage. Only ` + "`" + `REQUEST_REVIEW` + "`" + ` scripts can review; any other script type is rejected.`,
-									},
 									"operator": schema.StringAttribute{
 										Computed: true,
 										Optional: true,
@@ -1756,8 +1747,6 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
 
 	request, requestDiags := data.ToSharedCreateGroupInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
@@ -2088,8 +2077,6 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.State)
-
 	request, requestDiags := data.ToOperationsGetGroupRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -2248,8 +2235,6 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
 
 	request, requestDiags := data.ToSharedUpdateGroupInfoList(ctx)
 	resp.Diagnostics.Append(requestDiags...)
@@ -2542,8 +2527,6 @@ func (r *GroupResource) Delete(ctx context.Context, req resource.DeleteRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsDeleteGroupRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
