@@ -15,6 +15,25 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
 )
 
+func (r *AppResourceModel) RefreshFromOperationsGetAppVisibilityResponseBody(ctx context.Context, resp *operations.GetAppVisibilityResponseBody) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		if resp.ImportVisibility != nil {
+			r.ImportVisibility = types.StringValue(string(*resp.ImportVisibility))
+		} else {
+			r.ImportVisibility = types.StringNull()
+		}
+		r.Visibility = types.StringValue(string(resp.Visibility))
+		r.VisibilityGroupIds = make([]types.String, 0, len(resp.VisibilityGroupIds))
+		for _, v := range resp.VisibilityGroupIds {
+			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
+		}
+	}
+
+	return diags
+}
+
 func (r *AppResourceModel) RefreshFromSharedApp(ctx context.Context, resp *shared.App) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -67,10 +86,6 @@ func (r *AppResourceModel) RefreshFromSharedApp(ctx context.Context, resp *share
 		} else {
 			r.Visibility = types.StringNull()
 		}
-		r.VisibilityGroupIds = make([]types.String, 0, len(resp.VisibilityGroupIds))
-		for _, v := range resp.VisibilityGroupIds {
-			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
-		}
 	}
 
 	return diags
@@ -102,6 +117,19 @@ func (r *AppResourceModel) ToOperationsGetAppIDRequest(ctx context.Context) (*op
 	return &out, diags
 }
 
+func (r *AppResourceModel) ToOperationsGetAppVisibilityRequest(ctx context.Context) (*operations.GetAppVisibilityRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetAppVisibilityRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
 func (r *AppResourceModel) ToOperationsUpdateAppRequest(ctx context.Context) (*operations.UpdateAppRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -118,6 +146,27 @@ func (r *AppResourceModel) ToOperationsUpdateAppRequest(ctx context.Context) (*o
 	out := operations.UpdateAppRequest{
 		UpdateAppInfo: *updateAppInfo,
 		ID:            id,
+	}
+
+	return &out, diags
+}
+
+func (r *AppResourceModel) ToOperationsUpdateAppVisibilityRequest(ctx context.Context) (*operations.UpdateAppVisibilityRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	updateAppVisibilityInfo, updateAppVisibilityInfoDiags := r.ToSharedUpdateAppVisibilityInfo(ctx)
+	diags.Append(updateAppVisibilityInfoDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.UpdateAppVisibilityRequest{
+		UpdateAppVisibilityInfo: *updateAppVisibilityInfo,
+		ID:                      id,
 	}
 
 	return &out, diags
@@ -191,35 +240,16 @@ func (r *AppResourceModel) ToSharedCreateAppInfo(ctx context.Context) (*shared.C
 	var description string
 	description = r.Description.ValueString()
 
-	importVisibility := new(shared.ImportVisibility)
-	if !r.ImportVisibility.IsUnknown() && !r.ImportVisibility.IsNull() {
-		*importVisibility = shared.ImportVisibility(r.ImportVisibility.ValueString())
-	} else {
-		importVisibility = nil
-	}
 	var name string
 	name = r.Name.ValueString()
 
 	typeVar := shared.CreateAppInfoType(r.Type.ValueString())
-	visibility := new(shared.Visibility)
-	if !r.Visibility.IsUnknown() && !r.Visibility.IsNull() {
-		*visibility = shared.Visibility(r.Visibility.ValueString())
-	} else {
-		visibility = nil
-	}
-	visibilityGroupIds := make([]string, 0, len(r.VisibilityGroupIds))
-	for visibilityGroupIdsIndex := range r.VisibilityGroupIds {
-		visibilityGroupIds = append(visibilityGroupIds, r.VisibilityGroupIds[visibilityGroupIdsIndex].ValueString())
-	}
 	out := shared.CreateAppInfo{
-		AdminOwnerID:       adminOwnerID,
-		CustomConnector:    customConnector,
-		Description:        description,
-		ImportVisibility:   importVisibility,
-		Name:               name,
-		Type:               typeVar,
-		Visibility:         visibility,
-		VisibilityGroupIds: visibilityGroupIds,
+		AdminOwnerID:    adminOwnerID,
+		CustomConnector: customConnector,
+		Description:     description,
+		Name:            name,
+		Type:            typeVar,
 	}
 
 	return &out, diags
@@ -326,16 +356,39 @@ func (r *AppResourceModel) ToSharedUpdateAppInfo(ctx context.Context) (*shared.U
 	} else {
 		visibility = nil
 	}
+	out := shared.UpdateAppInfo{
+		AdminOwnerID:     adminOwnerID,
+		CustomConnector:  customConnector,
+		Description:      description,
+		ImportVisibility: importVisibility,
+		Name:             name,
+		Visibility:       visibility,
+	}
+
+	return &out, diags
+}
+
+func (r *AppResourceModel) ToSharedUpdateAppVisibilityInfo(ctx context.Context) (*shared.UpdateAppVisibilityInfo, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	importVisibility := new(shared.VisibilityTypeEnum)
+	if !r.ImportVisibility.IsUnknown() && !r.ImportVisibility.IsNull() {
+		*importVisibility = shared.VisibilityTypeEnum(r.ImportVisibility.ValueString())
+	} else {
+		importVisibility = nil
+	}
+	visibility := new(shared.VisibilityTypeEnum)
+	if !r.Visibility.IsUnknown() && !r.Visibility.IsNull() {
+		*visibility = shared.VisibilityTypeEnum(r.Visibility.ValueString())
+	} else {
+		visibility = nil
+	}
 	visibilityGroupIds := make([]string, 0, len(r.VisibilityGroupIds))
 	for visibilityGroupIdsIndex := range r.VisibilityGroupIds {
 		visibilityGroupIds = append(visibilityGroupIds, r.VisibilityGroupIds[visibilityGroupIdsIndex].ValueString())
 	}
-	out := shared.UpdateAppInfo{
-		AdminOwnerID:       adminOwnerID,
-		CustomConnector:    customConnector,
-		Description:        description,
+	out := shared.UpdateAppVisibilityInfo{
 		ImportVisibility:   importVisibility,
-		Name:               name,
 		Visibility:         visibility,
 		VisibilityGroupIds: visibilityGroupIds,
 	}

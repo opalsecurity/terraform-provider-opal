@@ -15,6 +15,25 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
 )
 
+func (r *AppDataSourceModel) RefreshFromOperationsGetAppVisibilityResponseBody(ctx context.Context, resp *operations.GetAppVisibilityResponseBody) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		if resp.ImportVisibility != nil {
+			r.ImportVisibility = types.StringValue(string(*resp.ImportVisibility))
+		} else {
+			r.ImportVisibility = types.StringNull()
+		}
+		r.Visibility = types.StringValue(string(resp.Visibility))
+		r.VisibilityGroupIds = make([]types.String, 0, len(resp.VisibilityGroupIds))
+		for _, v := range resp.VisibilityGroupIds {
+			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
+		}
+	}
+
+	return diags
+}
+
 func (r *AppDataSourceModel) RefreshFromSharedApp(ctx context.Context, resp *shared.App) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -63,10 +82,6 @@ func (r *AppDataSourceModel) RefreshFromSharedApp(ctx context.Context, resp *sha
 		} else {
 			r.Visibility = types.StringNull()
 		}
-		r.VisibilityGroupIds = make([]types.String, 0, len(resp.VisibilityGroupIds))
-		for _, v := range resp.VisibilityGroupIds {
-			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
-		}
 	}
 
 	return diags
@@ -79,6 +94,19 @@ func (r *AppDataSourceModel) ToOperationsGetAppIDRequest(ctx context.Context) (*
 	id = r.ID.ValueString()
 
 	out := operations.GetAppIDRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *AppDataSourceModel) ToOperationsGetAppVisibilityRequest(ctx context.Context) (*operations.GetAppVisibilityRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetAppVisibilityRequest{
 		ID: id,
 	}
 

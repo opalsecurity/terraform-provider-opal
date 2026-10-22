@@ -1608,8 +1608,6 @@ func (r *ResourcesListDataSource) Read(ctx context.Context, req datasource.ReadR
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetResourcesRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

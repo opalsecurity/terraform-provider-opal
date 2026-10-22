@@ -167,7 +167,6 @@ func (r *AppDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 			"visibility_group_ids": schema.SetAttribute{
 				Computed:    true,
 				ElementType: types.StringType,
-				Description: `The IDs of groups that can see this app when visibility is ` + "`" + `LIMITED` + "`" + `.`,
 			},
 		},
 	}
@@ -211,8 +210,6 @@ func (r *AppDataSource) Read(ctx context.Context, req datasource.ReadRequest, re
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetAppIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -240,6 +237,37 @@ func (r *AppDataSource) Read(ctx context.Context, req datasource.ReadRequest, re
 		return
 	}
 	resp.Diagnostics.Append(data.RefreshFromSharedApp(ctx, res.App)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request1, request1Diags := data.ToOperationsGetAppVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res1, err := r.client.Apps.GetVisibility(ctx, *request1)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		if res1 != nil && res1.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+		}
+		return
+	}
+	if res1 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
+		return
+	}
+	if res1.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
+		return
+	}
+	if !(res1.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetAppVisibilityResponseBody(ctx, res1.Object)...)
 
 	if resp.Diagnostics.HasError() {
 		return

@@ -68,10 +68,6 @@ func (r *AppsDataSourceModel) RefreshFromSharedAppsList(ctx context.Context, res
 			} else {
 				apps.Visibility = types.StringNull()
 			}
-			apps.VisibilityGroupIds = make([]types.String, 0, len(appsItem.VisibilityGroupIds))
-			for _, v := range appsItem.VisibilityGroupIds {
-				apps.VisibilityGroupIds = append(apps.VisibilityGroupIds, types.StringValue(v))
-			}
 
 			r.Apps = append(r.Apps, apps)
 		}

@@ -18,7 +18,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/customdefaults"
 	speakeasy_setplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/setplanmodifier"
 	speakeasy_stringplanmodifier "github.com/opalsecurity/terraform-provider-opal/v3/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/opalsecurity/terraform-provider-opal/v3/internal/provider/types"
@@ -159,15 +158,7 @@ func (r *AppResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 			},
 			"import_visibility": schema.StringAttribute{
 				Computed:    true,
-				Optional:    true,
-				Default:     customdefaults.ImportVisibilityGlobal(),
-				Description: `The visibility of imported items. Defaults to ` + "`" + `GLOBAL` + "`" + ` when omitted. must be one of ["GLOBAL", "LIMITED"]`,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"GLOBAL",
-						"LIMITED",
-					),
-				},
+				Description: `The visibility level of the entity.`,
 			},
 			"name": schema.StringAttribute{
 				Required:    true,
@@ -228,14 +219,7 @@ func (r *AppResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 			},
 			"visibility": schema.StringAttribute{
 				Computed:    true,
-				Optional:    true,
-				Description: `The visibility of the app. Defaults to ` + "`" + `GLOBAL` + "`" + ` when omitted. must be one of ["GLOBAL", "LIMITED"]`,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"GLOBAL",
-						"LIMITED",
-					),
-				},
+				Description: `The visibility level of the entity.`,
 			},
 			"visibility_group_ids": schema.SetAttribute{
 				Computed: true,
@@ -245,7 +229,7 @@ func (r *AppResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 					speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
 				},
 				ElementType: types.StringType,
-				Description: `The IDs of groups that can see this app when visibility is ` + "`" + `LIMITED` + "`" + `. Default: []`,
+				Description: `Default: []`,
 			},
 		},
 	}
@@ -328,6 +312,34 @@ func (r *AppResource) Create(ctx context.Context, req resource.CreateRequest, re
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	request1, request1Diags := data.ToOperationsUpdateAppVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res1, err := r.client.Apps.UpdateVisibility(ctx, *request1)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		if res1 != nil && res1.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+		}
+		return
+	}
+	if res1 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
+		return
+	}
+	if res1.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -388,6 +400,41 @@ func (r *AppResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	request1, request1Diags := data.ToOperationsGetAppVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res1, err := r.client.Apps.GetVisibility(ctx, *request1)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		if res1 != nil && res1.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+		}
+		return
+	}
+	if res1 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
+		return
+	}
+	if res1.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
+		return
+	}
+	if res1.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
+		return
+	}
+	if !(res1.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetAppVisibilityResponseBody(ctx, res1.Object)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -438,6 +485,34 @@ func (r *AppResource) Update(ctx context.Context, req resource.UpdateRequest, re
 	resp.Diagnostics.Append(data.RefreshFromSharedApp(ctx, res.App)...)
 
 	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request1, request1Diags := data.ToOperationsUpdateAppVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request1Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res1, err := r.client.Apps.UpdateVisibility(ctx, *request1)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		if res1 != nil && res1.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res1.RawResponse))
+		}
+		return
+	}
+	if res1 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
+		return
+	}
+	if res1.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
 

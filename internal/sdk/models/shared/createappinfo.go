@@ -6,35 +6,7 @@ package shared
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
 )
-
-// ImportVisibility - The visibility of imported items. Defaults to `GLOBAL` when omitted.
-type ImportVisibility string
-
-const (
-	ImportVisibilityGlobal  ImportVisibility = "GLOBAL"
-	ImportVisibilityLimited ImportVisibility = "LIMITED"
-)
-
-func (e ImportVisibility) ToPointer() *ImportVisibility {
-	return &e
-}
-func (e *ImportVisibility) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "GLOBAL":
-		fallthrough
-	case "LIMITED":
-		*e = ImportVisibility(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for ImportVisibility: %v", v)
-	}
-}
 
 // CreateAppInfoType - The type of the app. Must be `CUSTOM` (Push-only App) or
 // `CUSTOM_CONNECTOR`.
@@ -64,33 +36,6 @@ func (e *CreateAppInfoType) UnmarshalJSON(data []byte) error {
 	}
 }
 
-// Visibility - The visibility of the app. Defaults to `GLOBAL` when omitted.
-type Visibility string
-
-const (
-	VisibilityGlobal  Visibility = "GLOBAL"
-	VisibilityLimited Visibility = "LIMITED"
-)
-
-func (e Visibility) ToPointer() *Visibility {
-	return &e
-}
-func (e *Visibility) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "GLOBAL":
-		fallthrough
-	case "LIMITED":
-		*e = Visibility(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for Visibility: %v", v)
-	}
-}
-
 // CreateAppInfo - Information needed to create an app. Currently supports only Push-only
 // apps (`CUSTOM`) and Custom Connector apps (`CUSTOM_CONNECTOR`).
 type CreateAppInfo struct {
@@ -109,28 +54,11 @@ type CreateAppInfo struct {
 	CustomConnector *CreateCustomConnectorInfo `json:"custom_connector,omitempty"`
 	// A description of the app.
 	Description string `json:"description"`
-	// The visibility of imported items. Defaults to `GLOBAL` when omitted.
-	ImportVisibility *ImportVisibility `json:"import_visibility,omitempty"`
 	// The name of the app.
 	Name string `json:"name"`
 	// The type of the app. Must be `CUSTOM` (Push-only App) or
 	// `CUSTOM_CONNECTOR`.
 	Type CreateAppInfoType `json:"app_type"`
-	// The visibility of the app. Defaults to `GLOBAL` when omitted.
-	Visibility *Visibility `json:"visibility,omitempty"`
-	// The IDs of groups that can see this app when visibility is `LIMITED`.
-	VisibilityGroupIds []string `json:"visibility_group_ids"`
-}
-
-func (c CreateAppInfo) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(c, "", false)
-}
-
-func (c *CreateAppInfo) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &c, "", false, nil); err != nil {
-		return err
-	}
-	return nil
 }
 
 func (c *CreateAppInfo) GetAdminOwnerID() string {
@@ -154,13 +82,6 @@ func (c *CreateAppInfo) GetDescription() string {
 	return c.Description
 }
 
-func (c *CreateAppInfo) GetImportVisibility() *ImportVisibility {
-	if c == nil {
-		return nil
-	}
-	return c.ImportVisibility
-}
-
 func (c *CreateAppInfo) GetName() string {
 	if c == nil {
 		return ""
@@ -173,18 +94,4 @@ func (c *CreateAppInfo) GetType() CreateAppInfoType {
 		return CreateAppInfoType("")
 	}
 	return c.Type
-}
-
-func (c *CreateAppInfo) GetVisibility() *Visibility {
-	if c == nil {
-		return nil
-	}
-	return c.Visibility
-}
-
-func (c *CreateAppInfo) GetVisibilityGroupIds() []string {
-	if c == nil {
-		return nil
-	}
-	return c.VisibilityGroupIds
 }
