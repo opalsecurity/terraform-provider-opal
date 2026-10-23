@@ -6,7 +6,6 @@ package shared
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
 )
 
 // ImportVisibility - The visibility of imported items. Defaults to `GLOBAL` when omitted.
@@ -119,18 +118,7 @@ type CreateAppInfo struct {
 	// The visibility of the app. Defaults to `GLOBAL` when omitted.
 	Visibility *Visibility `json:"visibility,omitempty"`
 	// The IDs of groups that can see this app when visibility is `LIMITED`.
-	VisibilityGroupIds []string `json:"visibility_group_ids"`
-}
-
-func (c CreateAppInfo) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(c, "", false)
-}
-
-func (c *CreateAppInfo) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &c, "", false, nil); err != nil {
-		return err
-	}
-	return nil
+	VisibilityGroupIds []string `json:"visibility_group_ids,omitempty"`
 }
 
 func (c *CreateAppInfo) GetAdminOwnerID() string {

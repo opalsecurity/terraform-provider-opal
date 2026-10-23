@@ -122,8 +122,6 @@ func (r *BundleGroupResource) Create(ctx context.Context, req resource.CreateReq
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToOperationsAddBundleGroupRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -227,8 +225,6 @@ func (r *BundleGroupResource) Delete(ctx context.Context, req resource.DeleteReq
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsRemoveBundleGroupRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
