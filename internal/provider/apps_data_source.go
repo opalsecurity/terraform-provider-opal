@@ -163,7 +163,8 @@ func (r *AppsDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 						"visibility_group_ids": schema.ListAttribute{
 							Computed:    true,
 							ElementType: types.StringType,
-							Description: `The IDs of groups that can see this app when visibility is ` + "`" + `LIMITED` + "`" + `.`,
+							MarkdownDescription: `The IDs of groups that can see this app when visibility is ` + "`" + `LIMITED` + "`" + `.` + "\n" +
+								`Must be empty when visibility is ` + "`" + `GLOBAL` + "`" + `.`,
 						},
 					},
 				},
@@ -213,8 +214,6 @@ func (r *AppsDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config)
 
 	request, requestDiags := data.ToOperationsGetAppsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
