@@ -26,6 +26,7 @@ type Resource struct {
 	RequestConfigurations       []RequestConfiguration          `tfsdk:"request_configurations"`
 	RequireMfaToApprove         types.Bool                      `tfsdk:"require_mfa_to_approve"`
 	RequireMfaToConnect         types.Bool                      `tfsdk:"require_mfa_to_connect"`
+	RequiresForfeitReason       types.Bool                      `tfsdk:"requires_forfeit_reason"`
 	ResourceType                types.String                    `tfsdk:"resource_type"`
 	RiskSensitivity             types.String                    `tfsdk:"risk_sensitivity"`
 	RiskSensitivityOverride     types.String                    `tfsdk:"risk_sensitivity_override"`

@@ -14,6 +14,8 @@ type UpdateGroupInfo struct {
 	// The ID of the owner of the group.
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
 	// The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+	//
+	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
 	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
 	// Custom request notification sent to the requester when the request is approved.
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
@@ -36,7 +38,9 @@ type UpdateGroupInfo struct {
 	// The request configuration list of the configuration template. If not provided, the default request configuration will be used.
 	RequestConfigurations []RequestConfiguration `json:"request_configurations,omitempty"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this group.
-	RequireMfaToApprove     *bool                `default:"false" json:"require_mfa_to_approve"`
+	RequireMfaToApprove *bool `default:"false" json:"require_mfa_to_approve"`
+	// A bool representing whether or not a reason is required when forfeiting access to this group.
+	RequiresForfeitReason   *bool                `json:"requires_forfeit_reason,omitempty"`
 	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
 }
 
@@ -133,6 +137,13 @@ func (u *UpdateGroupInfo) GetRequireMfaToApprove() *bool {
 		return nil
 	}
 	return u.RequireMfaToApprove
+}
+
+func (u *UpdateGroupInfo) GetRequiresForfeitReason() *bool {
+	if u == nil {
+		return nil
+	}
+	return u.RequiresForfeitReason
 }
 
 func (u *UpdateGroupInfo) GetRiskSensitivityOverride() *RiskSensitivityEnum {

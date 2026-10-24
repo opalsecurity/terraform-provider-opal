@@ -16,6 +16,28 @@ func (a *ActiveDirectoryGroup) GetGroupID() string {
 	return a.GroupID
 }
 
+// AsanaTeam - Remote info for Asana Team.
+type AsanaTeam struct {
+	// The team gid of the Asana Team.
+	TeamGid string `json:"team_gid"`
+	// The workspace gid of the Asana Team.
+	WorkspaceGid *string `json:"workspace_gid,omitempty"`
+}
+
+func (a *AsanaTeam) GetTeamGid() string {
+	if a == nil {
+		return ""
+	}
+	return a.TeamGid
+}
+
+func (a *AsanaTeam) GetWorkspaceGid() *string {
+	if a == nil {
+		return nil
+	}
+	return a.WorkspaceGid
+}
+
 // AwsSsoGroup - Remote info for AWS SSO group.
 type AwsSsoGroup struct {
 	// The id of the AWS SSO group.
@@ -69,6 +91,45 @@ func (a *AzureAdSecurityGroup) GetGroupID() string {
 		return ""
 	}
 	return a.GroupID
+}
+
+// BitwardenGroup - Remote info for Bitwarden Group.
+type BitwardenGroup struct {
+	// The group id of the Bitwarden Group.
+	GroupID string `json:"group_id"`
+}
+
+func (b *BitwardenGroup) GetGroupID() string {
+	if b == nil {
+		return ""
+	}
+	return b.GroupID
+}
+
+// BoxGroup - Remote info for Box Group.
+type BoxGroup struct {
+	// The group id of the Box Group.
+	GroupID string `json:"group_id"`
+}
+
+func (b *BoxGroup) GetGroupID() string {
+	if b == nil {
+		return ""
+	}
+	return b.GroupID
+}
+
+// CalendlyGroup - Remote info for Calendly Group.
+type CalendlyGroup struct {
+	// The group id of the Calendly Group.
+	GroupID string `json:"group_id"`
+}
+
+func (c *CalendlyGroup) GetGroupID() string {
+	if c == nil {
+		return ""
+	}
+	return c.GroupID
 }
 
 // ClickhouseRole - Remote info for ClickHouse role.
@@ -379,6 +440,32 @@ func (r *RampLocation) GetLocationID() string {
 	return r.LocationID
 }
 
+// RipplingSupergroup - Remote info for Rippling supergroup.
+type RipplingSupergroup struct {
+	// The ID of the Rippling supergroup.
+	SupergroupID string `json:"supergroup_id"`
+}
+
+func (r *RipplingSupergroup) GetSupergroupID() string {
+	if r == nil {
+		return ""
+	}
+	return r.SupergroupID
+}
+
+// RipplingTeam - Remote info for Rippling team.
+type RipplingTeam struct {
+	// The ID of the Rippling team.
+	TeamID string `json:"team_id"`
+}
+
+func (r *RipplingTeam) GetTeamID() string {
+	if r == nil {
+		return ""
+	}
+	return r.TeamID
+}
+
 // RootlyOnCallSchedule - Remote info for Rootly on-call schedule group.
 type RootlyOnCallSchedule struct {
 	// The id of the Rootly on-call schedule.
@@ -416,6 +503,32 @@ func (s *SnowflakeRole) GetRoleID() string {
 		return ""
 	}
 	return s.RoleID
+}
+
+// SquareJob - Remote info for Square Job.
+type SquareJob struct {
+	// The group id of the Square Job.
+	GroupID string `json:"group_id"`
+}
+
+func (s *SquareJob) GetGroupID() string {
+	if s == nil {
+		return ""
+	}
+	return s.GroupID
+}
+
+// SquareLocation - Remote info for Square Location.
+type SquareLocation struct {
+	// The group id of the Square Location.
+	GroupID string `json:"group_id"`
+}
+
+func (s *SquareLocation) GetGroupID() string {
+	if s == nil {
+		return ""
+	}
+	return s.GroupID
 }
 
 // TableauGroup - Remote info for Tableau group.
@@ -539,6 +652,8 @@ func (z *ZoomGroup) GetGroupID() string {
 type GroupRemoteInfo struct {
 	// Remote info for Active Directory group.
 	ActiveDirectoryGroup *ActiveDirectoryGroup `json:"active_directory_group,omitempty"`
+	// Remote info for Asana Team.
+	AsanaTeam *AsanaTeam `json:"asana_team,omitempty"`
 	// Remote info for AWS SSO group.
 	AwsSsoGroup *AwsSsoGroup `json:"aws_sso_group,omitempty"`
 	// Remote info for Axiom RBAC group.
@@ -547,6 +662,12 @@ type GroupRemoteInfo struct {
 	AzureAdMicrosoft365Group *AzureAdMicrosoft365Group `json:"azure_ad_microsoft_365_group,omitempty"`
 	// Remote info for Microsoft Entra ID Security group.
 	AzureAdSecurityGroup *AzureAdSecurityGroup `json:"azure_ad_security_group,omitempty"`
+	// Remote info for Bitwarden Group.
+	BitwardenGroup *BitwardenGroup `json:"bitwarden_group,omitempty"`
+	// Remote info for Box Group.
+	BoxGroup *BoxGroup `json:"box_group,omitempty"`
+	// Remote info for Calendly Group.
+	CalendlyGroup *CalendlyGroup `json:"calendly_group,omitempty"`
 	// Remote info for ClickHouse role.
 	ClickhouseRole *ClickhouseRole `json:"clickhouse_role,omitempty"`
 	// Remote info for Confluence group.
@@ -593,12 +714,20 @@ type GroupRemoteInfo struct {
 	RampDepartment *RampDepartment `json:"ramp_department,omitempty"`
 	// Remote info for Ramp location.
 	RampLocation *RampLocation `json:"ramp_location,omitempty"`
+	// Remote info for Rippling supergroup.
+	RipplingSupergroup *RipplingSupergroup `json:"rippling_supergroup,omitempty"`
+	// Remote info for Rippling team.
+	RipplingTeam *RipplingTeam `json:"rippling_team,omitempty"`
 	// Remote info for Rootly on-call schedule group.
 	RootlyOnCallSchedule *RootlyOnCallSchedule `json:"rootly_on_call_schedule,omitempty"`
 	// Remote info for Slack user group.
 	SlackUserGroup *SlackUserGroup `json:"slack_user_group,omitempty"`
 	// Remote info for Snowflake role.
 	SnowflakeRole *SnowflakeRole `json:"snowflake_role,omitempty"`
+	// Remote info for Square Job.
+	SquareJob *SquareJob `json:"square_job,omitempty"`
+	// Remote info for Square Location.
+	SquareLocation *SquareLocation `json:"square_location,omitempty"`
 	// Remote info for Tableau group.
 	TableauGroup *TableauGroup `json:"tableau_group,omitempty"`
 	// Remote info for Tailscale group.
@@ -624,6 +753,13 @@ func (g *GroupRemoteInfo) GetActiveDirectoryGroup() *ActiveDirectoryGroup {
 		return nil
 	}
 	return g.ActiveDirectoryGroup
+}
+
+func (g *GroupRemoteInfo) GetAsanaTeam() *AsanaTeam {
+	if g == nil {
+		return nil
+	}
+	return g.AsanaTeam
 }
 
 func (g *GroupRemoteInfo) GetAwsSsoGroup() *AwsSsoGroup {
@@ -652,6 +788,27 @@ func (g *GroupRemoteInfo) GetAzureAdSecurityGroup() *AzureAdSecurityGroup {
 		return nil
 	}
 	return g.AzureAdSecurityGroup
+}
+
+func (g *GroupRemoteInfo) GetBitwardenGroup() *BitwardenGroup {
+	if g == nil {
+		return nil
+	}
+	return g.BitwardenGroup
+}
+
+func (g *GroupRemoteInfo) GetBoxGroup() *BoxGroup {
+	if g == nil {
+		return nil
+	}
+	return g.BoxGroup
+}
+
+func (g *GroupRemoteInfo) GetCalendlyGroup() *CalendlyGroup {
+	if g == nil {
+		return nil
+	}
+	return g.CalendlyGroup
 }
 
 func (g *GroupRemoteInfo) GetClickhouseRole() *ClickhouseRole {
@@ -815,6 +972,20 @@ func (g *GroupRemoteInfo) GetRampLocation() *RampLocation {
 	return g.RampLocation
 }
 
+func (g *GroupRemoteInfo) GetRipplingSupergroup() *RipplingSupergroup {
+	if g == nil {
+		return nil
+	}
+	return g.RipplingSupergroup
+}
+
+func (g *GroupRemoteInfo) GetRipplingTeam() *RipplingTeam {
+	if g == nil {
+		return nil
+	}
+	return g.RipplingTeam
+}
+
 func (g *GroupRemoteInfo) GetRootlyOnCallSchedule() *RootlyOnCallSchedule {
 	if g == nil {
 		return nil
@@ -834,6 +1005,20 @@ func (g *GroupRemoteInfo) GetSnowflakeRole() *SnowflakeRole {
 		return nil
 	}
 	return g.SnowflakeRole
+}
+
+func (g *GroupRemoteInfo) GetSquareJob() *SquareJob {
+	if g == nil {
+		return nil
+	}
+	return g.SquareJob
+}
+
+func (g *GroupRemoteInfo) GetSquareLocation() *SquareLocation {
+	if g == nil {
+		return nil
+	}
+	return g.SquareLocation
 }
 
 func (g *GroupRemoteInfo) GetTableauGroup() *TableauGroup {
