@@ -50,6 +50,7 @@ secret; secrets are write-only and never returned by the API. (see [below for ne
 - `validations` (Attributes List) Validation checks of an apps' configuration and permissions. (see [below for nested schema](#nestedatt--apps--validations))
 - `visibility` (String) The visibility level of the entity.
 - `visibility_group_ids` (List of String) The IDs of groups that can see this app when visibility is `LIMITED`.
+Must be empty when visibility is `GLOBAL`.
 
 <a id="nestedatt--apps--custom_connector"></a>
 ### Nested Schema for `apps.custom_connector`

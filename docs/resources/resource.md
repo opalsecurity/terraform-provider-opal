@@ -34,6 +34,9 @@ resource "opal_resource" "my_resource" {
     anthropic_workspace = {
       workspace_id = "ws-123456"
     }
+    asana_workspace = {
+      workspace_gid = "...my_workspace_gid..."
+    }
     aws_account = {
       account_id             = 234234234234
       organizational_unit_id = "ou-1234"
@@ -117,6 +120,21 @@ resource "opal_resource" "my_resource" {
     }
     azure_virtual_machine = {
       resource_id = "/subscriptions/0000/resourceGroups/rg/providers/Microsoft.Compute/virtualMachines/vm01"
+    }
+    bitwarden_organization = {
+      organization_id = "...my_organization_id..."
+    }
+    box_enterprise = {
+      resource_id = "...my_resource_id..."
+    }
+    box_folder = {
+      resource_id = "...my_resource_id..."
+    }
+    calendly_event_type = {
+      resource_id = "...my_resource_id..."
+    }
+    calendly_role = {
+      resource_id = "...my_resource_id..."
     }
     clickhouse_console_role = {
       role_id = "123e4567-e89b-12d3-a456-426614174000"
@@ -294,6 +312,9 @@ resource "opal_resource" "my_resource" {
     ramp_role = {
       role = "BUSINESS_USER"
     }
+    rippling_department = {
+      department_id = "8caed98e-1234-5678-9abc-def012345678"
+    }
     salesforce_permission_set = {
       permission_set_id = "0PS5Y090202wOV7WAM"
     }
@@ -355,6 +376,7 @@ resource "opal_resource" "my_resource" {
         group_ids = [
           "1b978423-db0a-4037-a4cf-f79c60cb67b3",
         ]
+        opal_script_id = "32acc112-21ff-4669-91c2-21e27683eaa1"
         role_remote_ids = [
           "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]
@@ -396,6 +418,7 @@ resource "opal_resource" "my_resource" {
   ]
   require_mfa_to_approve    = false
   require_mfa_to_connect    = false
+  requires_forfeit_reason   = false
   resource_type             = "AWS_IAM_ROLE"
   risk_sensitivity_override = "HIGH"
   ticket_propagation = {
@@ -418,12 +441,12 @@ resource "opal_resource" "my_resource" {
 
 - `app_id` (String) The ID of the app for the resource. Requires replacement if changed.
 - `name` (String) The name of the resource.
-- `resource_type` (String) The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AWS_AGENTCORE_GATEWAY", "AWS_AGENTCORE_GATEWAY_TARGET", "AWS_AGENTCORE_GATEWAY_TOOL", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GCP_BILLING_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "CLICKHOUSE_CONSOLE_ROLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE", "LINEAR_ORGANIZATION", "LINEAR_PROJECT", "RAMP_FUND", "RAMP_ROLE", "WRIKE_USER_TYPE", "DATABRICKS_CATALOG", "DATABRICKS_SCHEMA", "DATABRICKS_VOLUME", "DATABRICKS_FUNCTION", "DATABRICKS_MODEL", "DATABRICKS_SERVICE", "DATABRICKS_MCP_SERVER", "VERCEL_ROLE", "VERCEL_PROJECT", "AXIOM_ROLE", "AXIOM_CUSTOM_ROLE"]; Requires replacement if changed.
+- `resource_type` (String) The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AWS_AGENTCORE_GATEWAY", "AWS_AGENTCORE_GATEWAY_TARGET", "AWS_AGENTCORE_GATEWAY_TOOL", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GCP_BILLING_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "CLICKHOUSE_CONSOLE_ROLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE", "LINEAR_ORGANIZATION", "LINEAR_PROJECT", "RAMP_FUND", "RAMP_ROLE", "WRIKE_USER_TYPE", "DATABRICKS_CATALOG", "DATABRICKS_SCHEMA", "DATABRICKS_VOLUME", "DATABRICKS_FUNCTION", "DATABRICKS_MODEL", "DATABRICKS_SERVICE", "DATABRICKS_MCP_SERVER", "VERCEL_ROLE", "VERCEL_PROJECT", "AXIOM_ROLE", "AXIOM_CUSTOM_ROLE", "RIPPLING_DEPARTMENT", "ASANA_WORKSPACE", "BITWARDEN_ORGANIZATION", "BOX_ENTERPRISE", "BOX_FOLDER", "CALENDLY_ROLE", "CALENDLY_EVENT_TYPE"]; Requires replacement if changed.
 
 ### Optional
 
 - `admin_owner_id` (String) The ID of the owner of the resource.
-- `configuration_template_id` (String) The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+- `configuration_template_id` (String, Deprecated) The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
 - `custom_request_notification` (String) Custom request notification sent upon request approval.
 - `description` (String) A description of the resource.
 - `extensions_duration_in_minutes` (Number, Deprecated) The duration for which access can be extended (in minutes). Deprecated, set the extension duration in the request_configuration you want it to apply to.
@@ -434,6 +457,7 @@ resource "opal_resource" "my_resource" {
 - `request_configurations` (Attributes List) A list of configurations for requests to this resource. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this resource. Default: false
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to this resource.
+- `requires_forfeit_reason` (Boolean) A bool representing whether or not a reason is required when forfeiting access to this resource.
 - `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
 - `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--ticket_propagation))
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
@@ -455,6 +479,7 @@ Optional:
 - `alicloud_ecs_instance` (Attributes) Remote info for AliCloud ECS instance. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--alicloud_ecs_instance))
 - `alicloud_ram_role` (Attributes) Remote info for AliCloud RAM role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--alicloud_ram_role))
 - `anthropic_workspace` (Attributes) Remote info for Anthropic workspace. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--anthropic_workspace))
+- `asana_workspace` (Attributes) Remote info for Asana Workspace. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--asana_workspace))
 - `aws_account` (Attributes) Remote info for AWS account. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_account))
 - `aws_ec2_instance` (Attributes) Remote info for AWS EC2 instance. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_ec2_instance))
 - `aws_eks_cluster` (Attributes) Remote info for AWS EKS cluster. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_eks_cluster))
@@ -478,6 +503,11 @@ Optional:
 - `azure_subscription` (Attributes) Remote info for Azure subscription. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_subscription))
 - `azure_user_assigned_managed_identity` (Attributes) Remote info for Azure user assigned managed identity. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_user_assigned_managed_identity))
 - `azure_virtual_machine` (Attributes) Remote info for Azure virtual machine. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_virtual_machine))
+- `bitwarden_organization` (Attributes) Remote info for Bitwarden Organization. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--bitwarden_organization))
+- `box_enterprise` (Attributes) Remote info for Box Enterprise. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--box_enterprise))
+- `box_folder` (Attributes) Remote info for Box Folder. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--box_folder))
+- `calendly_event_type` (Attributes) Remote info for Calendly Event Type. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--calendly_event_type))
+- `calendly_role` (Attributes) Remote info for Calendly Role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--calendly_role))
 - `clickhouse_console_role` (Attributes) Remote info for ClickHouse Cloud console role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--clickhouse_console_role))
 - `clickhouse_database` (Attributes) Remote info for ClickHouse database. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--clickhouse_database))
 - `clickhouse_table` (Attributes) Remote info for ClickHouse table. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--clickhouse_table))
@@ -530,6 +560,7 @@ Optional:
 - `pagerduty_role` (Attributes) Remote info for Pagerduty role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--pagerduty_role))
 - `ramp_fund` (Attributes) Remote info for Ramp fund. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--ramp_fund))
 - `ramp_role` (Attributes) Remote info for Ramp built-in role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--ramp_role))
+- `rippling_department` (Attributes) Remote info for Rippling department. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--rippling_department))
 - `salesforce_permission_set` (Attributes) Remote info for Salesforce permission set. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--salesforce_permission_set))
 - `salesforce_profile` (Attributes) Remote info for Salesforce profile. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--salesforce_profile))
 - `salesforce_role` (Attributes) Remote info for Salesforce role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--salesforce_role))
@@ -569,6 +600,14 @@ Optional:
 Optional:
 
 - `workspace_id` (String) The id of the workspace. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--asana_workspace"></a>
+### Nested Schema for `remote_info.asana_workspace`
+
+Optional:
+
+- `workspace_gid` (String) The workspace gid of the Asana Workspace. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--aws_account"></a>
@@ -768,6 +807,46 @@ Optional:
 Optional:
 
 - `resource_id` (String) The ARM resource ID of the virtual machine. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--bitwarden_organization"></a>
+### Nested Schema for `remote_info.bitwarden_organization`
+
+Optional:
+
+- `organization_id` (String) The organization id of the Bitwarden Organization. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--box_enterprise"></a>
+### Nested Schema for `remote_info.box_enterprise`
+
+Optional:
+
+- `resource_id` (String) The resource id of the Box Enterprise. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--box_folder"></a>
+### Nested Schema for `remote_info.box_folder`
+
+Optional:
+
+- `resource_id` (String) The resource id of the Box Folder. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--calendly_event_type"></a>
+### Nested Schema for `remote_info.calendly_event_type`
+
+Optional:
+
+- `resource_id` (String) The resource id of the Calendly Event Type. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--calendly_role"></a>
+### Nested Schema for `remote_info.calendly_role`
+
+Optional:
+
+- `resource_id` (String) The resource id of the Calendly Role. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--clickhouse_console_role"></a>
@@ -1206,6 +1285,14 @@ Optional:
 - `role` (String) The Ramp built-in role enum (e.g. BUSINESS_USER). Not Null; Requires replacement if changed.
 
 
+<a id="nestedatt--remote_info--rippling_department"></a>
+### Nested Schema for `remote_info.rippling_department`
+
+Optional:
+
+- `department_id` (String) The ID of the Rippling department. Not Null; Requires replacement if changed.
+
+
 <a id="nestedatt--remote_info--salesforce_permission_set"></a>
 ### Nested Schema for `remote_info.salesforce_permission_set`
 
@@ -1363,6 +1450,7 @@ Optional:
 Optional:
 
 - `group_ids` (Set of String) The list of group IDs to match. Default: []
+- `opal_script_id` (String) The ID of a `REQUEST_CONFIGURATION_CONDITION` OpalScript that decides whether this request configuration applies. Cannot be combined with `group_ids` or `role_remote_ids`.
 - `role_remote_ids` (Set of String) The list of role remote IDs to match. Default: []
 
 
