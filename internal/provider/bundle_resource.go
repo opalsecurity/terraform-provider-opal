@@ -163,8 +163,6 @@ func (r *BundleResource) Create(ctx context.Context, req resource.CreateRequest,
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToSharedCreateBundleInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -252,8 +250,6 @@ func (r *BundleResource) Read(ctx context.Context, req resource.ReadRequest, res
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsGetBundleRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
@@ -343,8 +339,6 @@ func (r *BundleResource) Update(ctx context.Context, req resource.UpdateRequest,
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
 
 	request, requestDiags := data.ToOperationsUpdateBundleRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
@@ -436,8 +430,6 @@ func (r *BundleResource) Delete(ctx context.Context, req resource.DeleteRequest,
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsDeleteBundleRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
