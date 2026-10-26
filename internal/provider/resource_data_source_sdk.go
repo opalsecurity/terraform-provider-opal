@@ -816,6 +816,29 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 	return diags
 }
 
+func (r *ResourceDataSourceModel) RefreshFromSharedResourceConfigurationTemplate(ctx context.Context, resp *shared.ResourceConfigurationTemplate) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
+	}
+
+	return diags
+}
+
+func (r *ResourceDataSourceModel) ToOperationsGetResourceConfigurationTemplateRequest(ctx context.Context) (*operations.GetResourceConfigurationTemplateRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetResourceConfigurationTemplateRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
 func (r *ResourceDataSourceModel) ToOperationsGetResourceIDRequest(ctx context.Context) (*operations.GetResourceIDRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 

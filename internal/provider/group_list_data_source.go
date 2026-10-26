@@ -144,7 +144,7 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 						},
 						"configuration_template_id": schema.StringAttribute{
 							Computed:    true,
-							Description: `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
+							Description: `The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.`,
 						},
 						"custom_request_notification": schema.StringAttribute{
 							Computed:    true,

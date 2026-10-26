@@ -132,7 +132,7 @@ type Group struct {
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
 	// The ID of the group's app.
 	AppID *string `json:"app_id,omitempty"`
-	// The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+	// The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
 	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
 	// Custom request notification sent to the requester when the request is approved.
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`

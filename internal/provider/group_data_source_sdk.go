@@ -509,6 +509,29 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 	return diags
 }
 
+func (r *GroupDataSourceModel) RefreshFromSharedGroupConfigurationTemplate(ctx context.Context, resp *shared.GroupConfigurationTemplate) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
+	}
+
+	return diags
+}
+
+func (r *GroupDataSourceModel) ToOperationsGetGroupConfigurationTemplateRequest(ctx context.Context) (*operations.GetGroupConfigurationTemplateRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetGroupConfigurationTemplateRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
 func (r *GroupDataSourceModel) ToOperationsGetGroupMessageChannelsRequest(ctx context.Context) (*operations.GetGroupMessageChannelsRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 

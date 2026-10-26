@@ -816,11 +816,20 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 	return diags
 }
 
+func (r *ResourceResourceModel) RefreshFromSharedResourceConfigurationTemplate(ctx context.Context, resp *shared.ResourceConfigurationTemplate) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
+	}
+
+	return diags
+}
+
 func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.Context, resp *shared.UpdateResourceInfo) diag.Diagnostics {
 	var diags diag.Diagnostics
 
 	r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
-	r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
 	r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 	r.Description = types.StringPointerValue(resp.Description)
 	r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)
@@ -960,6 +969,19 @@ func (r *ResourceResourceModel) ToOperationsDeleteResourceRequest(ctx context.Co
 	return &out, diags
 }
 
+func (r *ResourceResourceModel) ToOperationsGetResourceConfigurationTemplateRequest(ctx context.Context) (*operations.GetResourceConfigurationTemplateRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetResourceConfigurationTemplateRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
 func (r *ResourceResourceModel) ToOperationsGetResourceIDRequest(ctx context.Context) (*operations.GetResourceIDRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -981,6 +1003,27 @@ func (r *ResourceResourceModel) ToOperationsGetResourceVisibilityRequest(ctx con
 
 	out := operations.GetResourceVisibilityRequest{
 		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *ResourceResourceModel) ToOperationsUpdateResourceConfigurationTemplateRequest(ctx context.Context) (*operations.UpdateResourceConfigurationTemplateRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	resourceConfigurationTemplate, resourceConfigurationTemplateDiags := r.ToSharedResourceConfigurationTemplate(ctx)
+	diags.Append(resourceConfigurationTemplateDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.UpdateResourceConfigurationTemplateRequest{
+		ResourceConfigurationTemplate: *resourceConfigurationTemplate,
+		ID:                            id,
 	}
 
 	return &out, diags
@@ -2255,6 +2298,22 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 	return &out, diags
 }
 
+func (r *ResourceResourceModel) ToSharedResourceConfigurationTemplate(ctx context.Context) (*shared.ResourceConfigurationTemplate, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	configurationTemplateID := new(string)
+	if !r.ConfigurationTemplateID.IsUnknown() && !r.ConfigurationTemplateID.IsNull() {
+		*configurationTemplateID = r.ConfigurationTemplateID.ValueString()
+	} else {
+		configurationTemplateID = nil
+	}
+	out := shared.ResourceConfigurationTemplate{
+		ConfigurationTemplateID: configurationTemplateID,
+	}
+
+	return &out, diags
+}
+
 func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) (*shared.UpdateResourceInfo, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -2263,12 +2322,6 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 		*adminOwnerID = r.AdminOwnerID.ValueString()
 	} else {
 		adminOwnerID = nil
-	}
-	configurationTemplateID := new(string)
-	if !r.ConfigurationTemplateID.IsUnknown() && !r.ConfigurationTemplateID.IsNull() {
-		*configurationTemplateID = r.ConfigurationTemplateID.ValueString()
-	} else {
-		configurationTemplateID = nil
 	}
 	customRequestNotification := new(string)
 	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
@@ -2513,7 +2566,6 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 	}
 	out := shared.UpdateResourceInfo{
 		AdminOwnerID:                adminOwnerID,
-		ConfigurationTemplateID:     configurationTemplateID,
 		CustomRequestNotification:   customRequestNotification,
 		Description:                 description,
 		ExtensionsDurationInMinutes: extensionsDurationInMinutes,

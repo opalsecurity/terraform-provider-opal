@@ -77,8 +77,11 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Description: `The ID of the group's app.`,
 			},
 			"configuration_template_id": schema.StringAttribute{
-				Computed:    true,
-				Description: `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
+				Computed: true,
+				MarkdownDescription: `The ID of the configuration template that the group is linked to,` + "\n" +
+					`or ` + "`" + `null` + "`" + ` if the group is not linked to a configuration template.` + "\n" +
+					`Only the ID is exposed here; the template's own fields are managed` + "\n" +
+					`through the ` + "`" + `/configuration-templates` + "`" + ` endpoints.`,
 			},
 			"custom_request_notification": schema.StringAttribute{
 				Computed:    true,
@@ -108,7 +111,7 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			},
 			"id": schema.StringAttribute{
 				Required:    true,
-				Description: `The ID of the group.`,
+				Description: `The ID of the group whose configuration template link is being read.`,
 			},
 			"last_successful_sync": schema.SingleNestedAttribute{
 				Computed: true,
@@ -1028,6 +1031,37 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		return
 	}
 	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupVisibilityResponseBody(ctx, res3.Object)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request4, request4Diags := data.ToOperationsGetGroupConfigurationTemplateRequest(ctx)
+	resp.Diagnostics.Append(request4Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res4, err := r.client.Groups.GetConfigurationTemplate(ctx, *request4)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		if res4 != nil && res4.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res4.RawResponse))
+		}
+		return
+	}
+	if res4 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res4))
+		return
+	}
+	if res4.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res4.StatusCode), debugResponse(res4.RawResponse))
+		return
+	}
+	if !(res4.GroupConfigurationTemplate != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res4.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromSharedGroupConfigurationTemplate(ctx, res4.GroupConfigurationTemplate)...)
 
 	if resp.Diagnostics.HasError() {
 		return

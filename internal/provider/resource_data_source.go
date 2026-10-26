@@ -82,8 +82,11 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Description: `The ID of the app.`,
 			},
 			"configuration_template_id": schema.StringAttribute{
-				Computed:    true,
-				Description: `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
+				Computed: true,
+				MarkdownDescription: `The ID of the configuration template that the resource is linked` + "\n" +
+					`to, or ` + "`" + `null` + "`" + ` if the resource is not linked to a configuration` + "\n" +
+					`template. Only the ID is exposed here; the template's own fields` + "\n" +
+					`are managed through the ` + "`" + `/configuration-templates` + "`" + ` endpoints.`,
 			},
 			"custom_request_notification": schema.StringAttribute{
 				Computed:    true,
@@ -105,7 +108,7 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			},
 			"id": schema.StringAttribute{
 				Required:    true,
-				Description: `The ID of the resource.`,
+				Description: `The ID of the resource whose configuration template link is being read.`,
 			},
 			"last_successful_sync": schema.SingleNestedAttribute{
 				Computed: true,
@@ -1596,6 +1599,37 @@ func (r *ResourceDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 	resp.Diagnostics.Append(data.RefreshFromOperationsGetResourceVisibilityResponseBody(ctx, res1.Object)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request2, request2Diags := data.ToOperationsGetResourceConfigurationTemplateRequest(ctx)
+	resp.Diagnostics.Append(request2Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res2, err := r.client.Resources.GetConfigurationTemplate(ctx, *request2)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		if res2 != nil && res2.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res2.RawResponse))
+		}
+		return
+	}
+	if res2 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res2))
+		return
+	}
+	if res2.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
+		return
+	}
+	if !(res2.ResourceConfigurationTemplate != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res2.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromSharedResourceConfigurationTemplate(ctx, res2.ResourceConfigurationTemplate)...)
 
 	if resp.Diagnostics.HasError() {
 		return
