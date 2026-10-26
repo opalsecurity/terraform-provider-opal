@@ -149,8 +149,6 @@ func (r *SessionsDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetSessionsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

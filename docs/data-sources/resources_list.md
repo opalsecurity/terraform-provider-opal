@@ -40,7 +40,7 @@ data "opal_resources_list" "my_resources_list" {
 - `remote_id` (String) Filter resources by their remote id. This will return all resources that have a remote id that matches the provided remote id. Note that this requires resource_type_filter to be provided.
 - `resource_ids` (List of String) The resource ids to filter by.
 - `resource_name` (String) Resource name.
-- `resource_type_filter` (String) The resource type to filter by. Required when remote_id is provided. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AWS_AGENTCORE_GATEWAY", "AWS_AGENTCORE_GATEWAY_TARGET", "AWS_AGENTCORE_GATEWAY_TOOL", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GCP_BILLING_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "CLICKHOUSE_CONSOLE_ROLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE", "LINEAR_ORGANIZATION", "LINEAR_PROJECT", "RAMP_FUND", "RAMP_ROLE", "WRIKE_USER_TYPE", "DATABRICKS_CATALOG", "DATABRICKS_SCHEMA", "DATABRICKS_VOLUME", "DATABRICKS_FUNCTION", "DATABRICKS_MODEL", "DATABRICKS_SERVICE", "DATABRICKS_MCP_SERVER", "VERCEL_ROLE", "VERCEL_PROJECT", "AXIOM_ROLE", "AXIOM_CUSTOM_ROLE"]
+- `resource_type_filter` (String) The resource type to filter by. Required when remote_id is provided. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AWS_AGENTCORE_GATEWAY", "AWS_AGENTCORE_GATEWAY_TARGET", "AWS_AGENTCORE_GATEWAY_TOOL", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GCP_BILLING_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "CURSOR_ORIGIN_REPOSITORY", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "CLICKHOUSE_CONSOLE_ROLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE", "LINEAR_ORGANIZATION", "LINEAR_PROJECT", "RAMP_FUND", "RAMP_ROLE", "WRIKE_USER_TYPE", "DATABRICKS_CATALOG", "DATABRICKS_SCHEMA", "DATABRICKS_VOLUME", "DATABRICKS_FUNCTION", "DATABRICKS_MODEL", "DATABRICKS_SERVICE", "DATABRICKS_MCP_SERVER", "VERCEL_ROLE", "VERCEL_PROJECT", "AXIOM_ROLE", "AXIOM_CUSTOM_ROLE", "RIPPLING_DEPARTMENT", "ASANA_WORKSPACE", "BITWARDEN_ORGANIZATION", "BOX_ENTERPRISE", "BOX_FOLDER", "CALENDLY_ROLE", "CALENDLY_EVENT_TYPE"]
 
 ### Read-Only
 
@@ -71,6 +71,7 @@ Read-Only:
 - `request_configurations` (Attributes List) A list of configurations for requests to this resource. (see [below for nested schema](#nestedatt--results--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to this resource.
+- `requires_forfeit_reason` (Boolean) A bool representing whether or not a reason is required when forfeiting access to this resource.
 - `resource_type` (String) The type of the resource.
 - `risk_sensitivity` (String) The risk sensitivity level for the resource. When an override is set, this field will match that.
 - `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur.
@@ -93,6 +94,7 @@ Read-Only:
 - `alicloud_ecs_instance` (Attributes) Remote info for AliCloud ECS instance. (see [below for nested schema](#nestedatt--results--remote_info--alicloud_ecs_instance))
 - `alicloud_ram_role` (Attributes) Remote info for AliCloud RAM role. (see [below for nested schema](#nestedatt--results--remote_info--alicloud_ram_role))
 - `anthropic_workspace` (Attributes) Remote info for Anthropic workspace. (see [below for nested schema](#nestedatt--results--remote_info--anthropic_workspace))
+- `asana_workspace` (Attributes) Remote info for Asana Workspace. (see [below for nested schema](#nestedatt--results--remote_info--asana_workspace))
 - `aws_account` (Attributes) Remote info for AWS account. (see [below for nested schema](#nestedatt--results--remote_info--aws_account))
 - `aws_ec2_instance` (Attributes) Remote info for AWS EC2 instance. (see [below for nested schema](#nestedatt--results--remote_info--aws_ec2_instance))
 - `aws_eks_cluster` (Attributes) Remote info for AWS EKS cluster. (see [below for nested schema](#nestedatt--results--remote_info--aws_eks_cluster))
@@ -116,11 +118,17 @@ Read-Only:
 - `azure_subscription` (Attributes) Remote info for Azure subscription. (see [below for nested schema](#nestedatt--results--remote_info--azure_subscription))
 - `azure_user_assigned_managed_identity` (Attributes) Remote info for Azure user assigned managed identity. (see [below for nested schema](#nestedatt--results--remote_info--azure_user_assigned_managed_identity))
 - `azure_virtual_machine` (Attributes) Remote info for Azure virtual machine. (see [below for nested schema](#nestedatt--results--remote_info--azure_virtual_machine))
+- `bitwarden_organization` (Attributes) Remote info for Bitwarden Organization. (see [below for nested schema](#nestedatt--results--remote_info--bitwarden_organization))
+- `box_enterprise` (Attributes) Remote info for Box Enterprise. (see [below for nested schema](#nestedatt--results--remote_info--box_enterprise))
+- `box_folder` (Attributes) Remote info for Box Folder. (see [below for nested schema](#nestedatt--results--remote_info--box_folder))
+- `calendly_event_type` (Attributes) Remote info for Calendly Event Type. (see [below for nested schema](#nestedatt--results--remote_info--calendly_event_type))
+- `calendly_role` (Attributes) Remote info for Calendly Role. (see [below for nested schema](#nestedatt--results--remote_info--calendly_role))
 - `clickhouse_console_role` (Attributes) Remote info for ClickHouse Cloud console role. (see [below for nested schema](#nestedatt--results--remote_info--clickhouse_console_role))
 - `clickhouse_database` (Attributes) Remote info for ClickHouse database. (see [below for nested schema](#nestedatt--results--remote_info--clickhouse_database))
 - `clickhouse_table` (Attributes) Remote info for ClickHouse table. (see [below for nested schema](#nestedatt--results--remote_info--clickhouse_table))
 - `coupa_role` (Attributes) Remote info for Coupa role. (see [below for nested schema](#nestedatt--results--remote_info--coupa_role))
 - `cursor_organization` (Attributes) Remote info for a Cursor organization. (see [below for nested schema](#nestedatt--results--remote_info--cursor_organization))
+- `cursor_origin_repository` (Attributes) Remote info for a Cursor Origin repository. (see [below for nested schema](#nestedatt--results--remote_info--cursor_origin_repository))
 - `custom_connector` (Attributes) Remote info for a custom connector resource. (see [below for nested schema](#nestedatt--results--remote_info--custom_connector))
 - `databricks_account_service_principal` (Attributes) Remote info for Databricks account service principal. (see [below for nested schema](#nestedatt--results--remote_info--databricks_account_service_principal))
 - `databricks_catalog` (Attributes) Remote info for Databricks Unity Catalog catalog. (see [below for nested schema](#nestedatt--results--remote_info--databricks_catalog))
@@ -168,6 +176,7 @@ Read-Only:
 - `pagerduty_role` (Attributes) Remote info for Pagerduty role. (see [below for nested schema](#nestedatt--results--remote_info--pagerduty_role))
 - `ramp_fund` (Attributes) Remote info for Ramp fund. (see [below for nested schema](#nestedatt--results--remote_info--ramp_fund))
 - `ramp_role` (Attributes) Remote info for Ramp built-in role. (see [below for nested schema](#nestedatt--results--remote_info--ramp_role))
+- `rippling_department` (Attributes) Remote info for Rippling department. (see [below for nested schema](#nestedatt--results--remote_info--rippling_department))
 - `salesforce_permission_set` (Attributes) Remote info for Salesforce permission set. (see [below for nested schema](#nestedatt--results--remote_info--salesforce_permission_set))
 - `salesforce_profile` (Attributes) Remote info for Salesforce profile. (see [below for nested schema](#nestedatt--results--remote_info--salesforce_profile))
 - `salesforce_role` (Attributes) Remote info for Salesforce role. (see [below for nested schema](#nestedatt--results--remote_info--salesforce_role))
@@ -207,6 +216,14 @@ Read-Only:
 Read-Only:
 
 - `workspace_id` (String) The id of the workspace.
+
+
+<a id="nestedatt--results--remote_info--asana_workspace"></a>
+### Nested Schema for `results.remote_info.asana_workspace`
+
+Read-Only:
+
+- `workspace_gid` (String) The workspace gid of the Asana Workspace.
 
 
 <a id="nestedatt--results--remote_info--aws_account"></a>
@@ -408,6 +425,46 @@ Read-Only:
 - `resource_id` (String) The ARM resource ID of the virtual machine.
 
 
+<a id="nestedatt--results--remote_info--bitwarden_organization"></a>
+### Nested Schema for `results.remote_info.bitwarden_organization`
+
+Read-Only:
+
+- `organization_id` (String) The organization id of the Bitwarden Organization.
+
+
+<a id="nestedatt--results--remote_info--box_enterprise"></a>
+### Nested Schema for `results.remote_info.box_enterprise`
+
+Read-Only:
+
+- `resource_id` (String) The resource id of the Box Enterprise.
+
+
+<a id="nestedatt--results--remote_info--box_folder"></a>
+### Nested Schema for `results.remote_info.box_folder`
+
+Read-Only:
+
+- `resource_id` (String) The resource id of the Box Folder.
+
+
+<a id="nestedatt--results--remote_info--calendly_event_type"></a>
+### Nested Schema for `results.remote_info.calendly_event_type`
+
+Read-Only:
+
+- `resource_id` (String) The resource id of the Calendly Event Type.
+
+
+<a id="nestedatt--results--remote_info--calendly_role"></a>
+### Nested Schema for `results.remote_info.calendly_role`
+
+Read-Only:
+
+- `resource_id` (String) The resource id of the Calendly Role.
+
+
 <a id="nestedatt--results--remote_info--clickhouse_console_role"></a>
 ### Nested Schema for `results.remote_info.clickhouse_console_role`
 
@@ -447,6 +504,14 @@ Read-Only:
 Read-Only:
 
 - `org_id` (String) The id of the organization.
+
+
+<a id="nestedatt--results--remote_info--cursor_origin_repository"></a>
+### Nested Schema for `results.remote_info.cursor_origin_repository`
+
+Read-Only:
+
+- `repository_name` (String) The repository's owner slug and name.
 
 
 <a id="nestedatt--results--remote_info--custom_connector"></a>
@@ -844,6 +909,14 @@ Read-Only:
 - `role` (String) The Ramp built-in role enum (e.g. BUSINESS_USER).
 
 
+<a id="nestedatt--results--remote_info--rippling_department"></a>
+### Nested Schema for `results.remote_info.rippling_department`
+
+Read-Only:
+
+- `department_id` (String) The ID of the Rippling department.
+
+
 <a id="nestedatt--results--remote_info--salesforce_permission_set"></a>
 ### Nested Schema for `results.remote_info.salesforce_permission_set`
 
@@ -1001,6 +1074,7 @@ Read-Only:
 Read-Only:
 
 - `group_ids` (Set of String) The list of group IDs to match.
+- `opal_script_id` (String) The ID of a `REQUEST_CONFIGURATION_CONDITION` OpalScript that decides whether this request configuration applies. Cannot be combined with `group_ids` or `role_remote_ids`.
 - `role_remote_ids` (Set of String) The list of role remote IDs to match.
 
 

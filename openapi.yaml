@@ -15,6 +15,8 @@ servers:
 tags:
   - name: access-rules
     description: Operations related to access rules
+  - name: agent-activity
+    description: Operations related to agent activity telemetry
   - name: apps
     description: Operations related to apps
   - name: bundles
@@ -51,6 +53,8 @@ tags:
     description: Operations related to requests
   - name: resources
     description: Operations related to resources
+  - name: role-assignments
+    description: Operations related to role assignments (general grants between an entity and a principal)
   - name: paladin
     description: Operations related to Paladin
   - name: sessions
@@ -64,6 +68,140 @@ tags:
   - name: users
     description: Operations related to users
 paths:
+  /agent-activity:
+    post:
+      summary: Report agent activity
+      description: >-
+        **Prototype (AG-285).** Reports activity observed by an agent runtime on a developer's machine - today, Claude Code hook events.
+
+
+        This is **telemetry from cooperating machines, not attestation**. Opal can only see what a configured, consenting client chooses to send, cannot verify that a fleet is configured at all, and has no way to detect a machine that is reporting nothing. Absence of activity for an agent therefore means "nothing was reported", never "the agent did nothing".
+
+
+        The request body is either a batch envelope (`{"events": [...]}`), a bare JSON array of events, or a single raw Claude Code hook payload - the last so a hook can POST here directly with no relay in between.
+
+
+        The bearer token establishes the **organization** and nothing finer. No field in the payload is treated as an identity claim Opal trusts: the actor headers below are used for best-effort attribution and display only. Events that cannot be attributed to an agent are retained and surfaced as unattributed activity rather than dropped.
+      operationId: reportAgentActivity
+      parameters:
+        - description: >-
+            The identity the reporting client claims this activity belongs to - an email or an Anthropic user id. **Unverified**: a Claude Code hook payload contains no user identity, so this has to be injected by whoever deploys the hook (via the http handler's `headers` map and `allowedEnvVars` interpolation), and whoever controls the machine controls the header. Used only when the API key itself does not identify a developer. When the email belongs to a person in the organization, that person is recorded as who the activity was reported for (always as a claim), and the activity is attributed to the one Claude agent they own, if they own exactly one. The API key's own email is never treated this way: a key belongs to whoever created it, which with a shared key is not who is at the keyboard. Omitting it is valid.
+          explode: false
+          in: header
+          name: X-Opal-Actor
+          required: false
+          schema:
+            type: string
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AgentActivityIngestRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentActivityIngestResult"
+          description: A per-batch accounting of what was accepted, stored, and attributed.
+        "400":
+          description: The body was unparseable, empty, or carried more events than one request may.
+        "403":
+          description: Agent activity ingest is not enabled for this organization.
+        "413":
+          description: The request body exceeded the maximum accepted size.
+      security:
+        - BearerAuth: []
+      tags:
+        - agent-activity
+  /inference-hooks/anthropic:
+    post:
+      summary: Anthropic inference hook verdict
+      description: >-
+        **Prototype (AG-336).** The AI security server endpoint for Anthropic Inference hooks. Anthropic POSTs each governed frame here and waits for an allow or deny verdict. Configure it in claude.ai with this URL and a custom `Authorization: Bearer <Opal API key>` request header.
+
+
+        `tool_call` frames are evaluated against the organization's runtime policy rules. One verdict covers every tool call in the frame. Every other frame type, including `prompt`, is allowed without inspection. Any non-200 response is a webhook failure, so the organization's Anthropic failure-handling setting decides the outcome.
+      operationId: anthropicInferenceHook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnthropicInferenceHookVerdict"
+          description: The verdict for the frame.
+        "500":
+          description: The frame could not be evaluated. Anthropic applies the organization's failure handling.
+      security:
+        - BearerAuth: []
+      tags:
+        - agent-activity
+  /agent-kill-switch:
+    get:
+      summary: Get the agent kill switch
+      description: >-
+        **Prototype (AG-297).** Returns whether agent tool calls are currently being denied for this organization, and the activation that is in force or that last was.
+
+
+        `active` is evaluated against the clock on every read, so an activation past its `expires_at` reads as inactive without anything having swept it.
+      operationId: getAgentKillSwitch
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentKillSwitch"
+          description: The current state of the kill switch.
+        "403":
+          description: The caller is not an admin, or the agent kill switch is not enabled for this organization.
+      security:
+        - BearerAuth: []
+      tags:
+        - agent-activity
+    put:
+      summary: Set the agent kill switch
+      description: >-
+        **Prototype (AG-297).** Turns the org-level agent kill switch on or off. Admin only.
+
+
+        While it is on, Opal answers every `PreToolUse` hook POST to `/agent-activity` with a `deny` decision, so a cooperating Claude Code client stops running tools.
+
+
+        **It is not a security boundary, and it fails open.** It reaches only clients that are configured to POST to `/agent-activity` and that honour the answer; a client on a non-default base URL, an older build, or with no hook deployed is unaffected. If Opal is unreachable or slow the tool call proceeds, because Claude Code treats a failed `PreToolUse` hook as a non-blocking error by design.
+
+
+        Activation is always time-bound: `duration_minutes` is capped, and an activation that reaches `expires_at` stops denying on its own.
+      operationId: setAgentKillSwitch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SetAgentKillSwitchRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentKillSwitch"
+          description: The state of the kill switch after the change.
+        "400":
+          description: The body was unparseable, or `duration_minutes` was out of range.
+        "403":
+          description: The caller is not an admin, or the agent kill switch is not enabled for this organization.
+      security:
+        - BearerAuth: []
+      tags:
+        - agent-activity
   /apps:
     get:
       summary: Get apps
@@ -127,6 +265,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/App"
           description: The app that was created.
+        "400":
+          description: |
+            Invalid request body — for example, `visibility_group_ids` is
+            non-empty while `visibility` is `GLOBAL`, an unsupported `app_type`,
+            or a missing/invalid `custom_connector` configuration.
       security:
         - BearerAuth: []
       tags:
@@ -193,6 +336,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/App"
           description: The updated app.
+        "400":
+          description: |
+            Invalid request body — for example, `visibility_group_ids` is
+            non-empty while the effective visibility is `GLOBAL` (either
+            explicitly on this request or already stored on the app), or a
+            `custom_connector` field is invalid for this app type.
       security:
         - BearerAuth: []
       tags:
@@ -1845,6 +1994,115 @@ paths:
       x-speakeasy-entity-operation:
         - Group#delete
         - AccessRule#delete
+  /groups/{group_id}/configuration-template:
+    get:
+      summary: Get the ID of the configuration template linked to a group
+      description: |
+        Returns the ID of the configuration template that the group is currently
+        linked to. The response body is
+        `{"configuration_template_id": "<uuid>" | null}`:
+
+          * `<uuid>` is the ID of the configuration template the group is linked to.
+          * `null` means the group is not linked to any configuration template
+            and uses its own private configuration.
+
+        This endpoint only exposes the link between a group and a configuration
+        template — it does not return the template's own fields (name,
+        description, request configurations, visibility, etc.). To read those,
+        call `GET /configuration-templates/{configuration_template_id}` with the
+        ID returned here.
+      operationId: get_group_configuration_template
+      parameters:
+        - description: The ID of the group whose configuration template link is being read.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupConfigurationTemplate"
+          description: The ID of the configuration template currently linked to the group, or `null` if the group uses its own private configuration.
+        "403":
+          description: The caller is not authorized to view this group.
+        "404":
+          description: The group was not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
+    put:
+      summary: Set the ID of the configuration template linked to a group
+      description: |
+        Attaches, repoints, or detaches the configuration template linked to a
+        group. This endpoint only manages the link (by ID) between a group and
+        an existing configuration template — it does not create, modify, or
+        delete the template itself. To manage a template's own fields (name,
+        description, request configurations, visibility, etc.), use the
+        `/configuration-templates` endpoints.
+
+        The request body is `{"configuration_template_id": "<uuid>" | null}`:
+
+          * A `<uuid>` value links the group to the configuration template with
+            that ID. If the group was previously linked to a different
+            template, the group is repointed in place.
+          * `null` detaches the group from its current configuration template.
+            The template is deep-copied into a new private configuration with
+            the same settings so the group's current behaviour is preserved,
+            and the group is repointed at the fork.
+
+        The `configuration_template_id` field is required. Sending `{}` or any
+        body in which the field is omitted is rejected with `400`.
+
+        The call is idempotent: if the request body matches the group's current
+        link, no changes are made and no audit events are emitted.
+
+        This endpoint is the preferred, Terraform-friendly surface for linking
+        and unlinking configuration templates on groups. The equivalent
+        `configuration_template_id` field on `PUT /groups` remains available
+        but is deprecated for this purpose.
+      operationId: update_group_configuration_template
+      parameters:
+        - description: The ID of the group whose configuration template link is being set.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GroupConfigurationTemplate"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupConfigurationTemplate"
+          description: The ID of the configuration template now linked to the group, or `null` if the group was detached.
+        "400":
+          description: The request body was malformed, the required `configuration_template_id` field was omitted, or the target `configuration_template_id` does not reference a configuration template.
+        "403":
+          description: The caller is not authorized to update this group.
+        "404":
+          description: The group was not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
   /groups/{group_id}/message-channels:
     get:
       description: Gets the list of audit and reviewer message channels attached to a group.
@@ -4094,6 +4352,172 @@ paths:
         - BearerAuth: []
       tags:
         - requests
+  /role-assignments:
+    post:
+      summary: Add role assignments
+      description: |
+        Grants one or more principals (user, group, or resource) access to one or more
+        entities (resource or group). The request body is batched to match the GraphQL
+        `addRoleAssignments` mutation, which this endpoint thin-wraps. The caller must
+        hold the `EDIT_ASSIGNMENTS` role permission on every entity in the batch.
+
+        Omit `access_level_remote_id` for entities that have a single default access
+        level. Omit `duration_minutes` (or send `0`) for an indefinite grant.
+
+        **Atomicity:** the batch is applied as a single transaction. If any entry
+        fails input validation, authorization, lookup, or creation, **no entries
+        are created** and the response identifies the first failing entry's
+        `entity_id` and `principal_id` (and the request-array index for input
+        validation errors). Clients should retry with the offending entry
+        removed; partial-success is intentionally not supported, matching the
+        semantics of the GraphQL `addRoleAssignments` mutation that this
+        endpoint wraps.
+
+        Prefer this endpoint for batch or programmatic use (e.g. Terraform). For a
+        single grant on a specific entity/principal pair, the per-pair endpoints —
+        `/resources/{id}/users/{id}`, `/groups/{id}/users/{id}`,
+        `/groups/{id}/resources/{id}`, `/groups/{id}/containing-groups`,
+        `/resources/{id}/non-human-identities/{id}` — are often simpler.
+      operationId: addRoleAssignments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddRoleAssignmentsRequest"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddRoleAssignmentsResponse"
+          description: The requested role assignments were created.
+        "400":
+          description: |
+            Invalid request body: unknown field, missing required field, malformed JSON,
+            invalid enum (entity_type must be RESOURCE or GROUP; principal_type must be
+            RESOURCE, GROUP, or USER), negative duration_minutes, or role_assignments
+            batch size outside the allowed range.
+        "403":
+          description: Caller is not authorized to edit role assignments on one or more of the entities.
+        "404":
+          description: One or more referenced entities or principals does not exist in the organization.
+        "409":
+          description: |
+            One of the requested role assignments already exists. The error
+            message identifies the offending entity_id and principal_id so a
+            batch client can locate the colliding entry. Matches the convention
+            of the per-pair endpoints (`/resources/{id}/users/{id}`,
+            `/groups/{id}/users/{id}`), which also return 409 for the same
+            condition.
+        "422":
+          description: |
+            Request was syntactically valid but could not be fulfilled. Includes
+            group nesting cycles, self-grants, invalid durations, access-level
+            mismatches, assignments on computed groups or non-requestable
+            resources, and unsupported entity/principal type combinations.
+      security:
+        - BearerAuth: []
+      tags:
+        - role-assignments
+    get:
+      summary: List role assignments
+      description: |
+        Returns a paginated list of role assignments. This endpoint is
+        **admin-only**: the caller's bearer token must belong to a user with the
+        admin or read-only admin role. Non-admin callers receive 403.
+
+        Mirrors the GraphQL `directRoleAssignments` query and shares the same
+        underlying code path, so pagination order, sort default
+        (`first_granted_at` DESC), and the set of grants returned are identical
+        across the two surfaces.
+
+        The REST filter surface is intentionally narrower on first ship — sort,
+        risk-factor filters, text search, access-scope filters, the
+        agents/humans toggle, and access-level filtering are deferred to a
+        future revision. For a single entity/principal pair, the per-pair
+        endpoints — `/resources/{resource_id}/users`,
+        `/resources/{resource_id}/groups`,
+        `/resources/{resource_id}/non-human-identities`,
+        `/groups/{group_id}/users`, `/groups/{group_id}/containing-groups` —
+        are often simpler.
+      operationId: listRoleAssignments
+      parameters:
+        - description: Filter to grants on these entity (resource or group) IDs. Any-match.
+          explode: true
+          in: query
+          name: entity_ids
+          required: false
+          schema:
+            items:
+              format: uuid
+              type: string
+            type: array
+          style: form
+        - description: Filter to grants with these principal (user, group, or resource) IDs. Any-match.
+          explode: true
+          in: query
+          name: principal_ids
+          required: false
+          schema:
+            items:
+              format: uuid
+              type: string
+            type: array
+          style: form
+        - description: Filter by entity type. Omit to include both RESOURCE and GROUP entities.
+          explode: true
+          in: query
+          name: entity_type
+          required: false
+          schema:
+            $ref: "#/components/schemas/RoleAssignmentEntityTypeEnum"
+          style: form
+        - description: Filter by principal type. Omit to include USER, GROUP, and RESOURCE principals.
+          explode: true
+          in: query
+          name: principal_type
+          required: false
+          schema:
+            $ref: "#/components/schemas/EntityTypeEnum"
+          style: form
+        - description: The pagination cursor value.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          explode: true
+          in: query
+          name: cursor
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: Number of results to return per page. Default is 200.
+          example: 200
+          explode: true
+          in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedRoleAssignmentsList"
+          description: Paginated list of role assignments.
+        "400":
+          description: |
+            Invalid query parameter: unknown entity_type / principal_type enum
+            value, malformed UUID, malformed cursor, or page_size outside the
+            allowed range.
+        "403":
+          description: Caller is not an admin or read-only admin.
+      security:
+        - BearerAuth: []
+      tags:
+        - role-assignments
   /resources:
     get:
       summary: Get resources
@@ -4310,6 +4734,115 @@ paths:
         - resources
       x-speakeasy-name-override: delete
       x-speakeasy-entity-operation: Resource#delete
+  /resources/{resource_id}/configuration-template:
+    get:
+      summary: Get the ID of the configuration template linked to a resource
+      description: |
+        Returns the ID of the configuration template that the resource is
+        currently linked to. The response body is
+        `{"configuration_template_id": "<uuid>" | null}`:
+
+          * `<uuid>` is the ID of the configuration template the resource is linked to.
+          * `null` means the resource is not linked to any configuration template
+            and uses its own private configuration.
+
+        This endpoint only exposes the link between a resource and a
+        configuration template — it does not return the template's own fields
+        (name, description, request configurations, visibility, etc.). To read
+        those, call `GET /configuration-templates/{configuration_template_id}`
+        with the ID returned here.
+      operationId: get_resource_configuration_template
+      parameters:
+        - description: The ID of the resource whose configuration template link is being read.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: resource_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceConfigurationTemplate"
+          description: The ID of the configuration template currently linked to the resource, or `null` if the resource uses its own private configuration.
+        "403":
+          description: The caller is not authorized to view this resource.
+        "404":
+          description: The resource was not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - resources
+    put:
+      summary: Set the ID of the configuration template linked to a resource
+      description: |
+        Attaches, repoints, or detaches the configuration template linked to a
+        resource. This endpoint only manages the link (by ID) between a
+        resource and an existing configuration template — it does not create,
+        modify, or delete the template itself. To manage a template's own
+        fields (name, description, request configurations, visibility, etc.),
+        use the `/configuration-templates` endpoints.
+
+        The request body is `{"configuration_template_id": "<uuid>" | null}`:
+
+          * A `<uuid>` value links the resource to the configuration template
+            with that ID. If the resource was previously linked to a different
+            template, the resource is repointed in place.
+          * `null` detaches the resource from its current configuration
+            template. The template is deep-copied into a new private
+            configuration with the same settings so the resource's current
+            behaviour is preserved, and the resource is repointed at the fork.
+
+        The `configuration_template_id` field is required. Sending `{}` or any
+        body in which the field is omitted is rejected with `400`.
+
+        The call is idempotent: if the request body matches the resource's
+        current link, no changes are made and no audit events are emitted.
+
+        This endpoint is the preferred, Terraform-friendly surface for linking
+        and unlinking configuration templates on resources. The equivalent
+        `configuration_template_id` field on `PUT /resources` remains available
+        but is deprecated for this purpose.
+      operationId: update_resource_configuration_template
+      parameters:
+        - description: The ID of the resource whose configuration template link is being set.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: resource_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResourceConfigurationTemplate"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceConfigurationTemplate"
+          description: The ID of the configuration template now linked to the resource, or `null` if the resource was detached.
+        "400":
+          description: The request body was malformed, the required `configuration_template_id` field was omitted, or the target `configuration_template_id` does not reference a configuration template.
+        "403":
+          description: The caller is not authorized to update this resource.
+        "404":
+          description: The resource was not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - resources
   /resources/{resource_id}/message-channels:
     get:
       description: Gets the list of audit message channels attached to a resource.
@@ -5695,6 +6228,54 @@ paths:
         - BearerAuth: []
       tags:
         - users
+  /users/{user_id}/mfa/reset:
+    post:
+      summary: Reset a user's Opal MFA
+      description: |
+        Deletes the user's Auth0 (Opal) MFA enrollments so they are prompted to
+        re-enroll on their next sign-in. Only applies to orgs that use Opal/Auth0
+        for MFA (not available on-prem, and a no-op success for users who have
+        never signed into Auth0).
+      operationId: resetUserMfa
+      parameters:
+        - description: The ID of the user whose MFA should be reset.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          in: path
+          name: user_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          description: |
+            The MFA enrollments were reset, or the user has no Auth0 enrollments
+            to reset (never signed into Auth0).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                required:
+                  - success
+        "400":
+          description: |
+            The deployment does not support MFA reset (on-prem), the organization
+            does not use Opal/Auth0 MFA, or the request body contained unknown
+            JSON fields.
+        "403":
+          description: The caller is not authorized to reset MFA for this user.
+        "404":
+          description: The user was not found.
+        "409":
+          description: The Opal system user cannot be modified.
+      security:
+        - BearerAuth: []
+      tags:
+        - users
   /users/remote_users:
     get:
       description: Returns a list of remote users for your organization.
@@ -6817,6 +7398,240 @@ paths:
       x-speakeasy-entity-operation: Delegation#delete
 components:
   schemas:
+    AgentActivityEvent:
+      description: |-
+        # AgentActivityEvent Object
+        ### Description
+        One activity event reported by an agent runtime. Today this is a Claude Code hook
+        payload, posted either by the hook itself or by a relay that batches them.
+
+        Only the fields below are read; everything else in the payload is parsed and
+        **discarded**, never persisted. That still includes `tool_response` (the result
+        body, which carries file contents and third-party workspace data) and
+        `transcript_path` / `scratchpad_dir` (absolute paths on an employee's own laptop,
+        which Opal cannot govern and should not be accumulating).
+
+        `tool_input` IS now read and stored. It was previously discarded pending a
+        data-handling decision; that decision has since been made, and without arguments
+        no policy can name what a call acted on - a rule about a file path, a command
+        family or a web domain refers to something that exists only inside `tool_input`.
+      properties:
+        hook_event_name:
+          description: Which hook fired, e.g. `PostToolUse`, `PreToolUse`, `PermissionDenied`. Required; an event with no name cannot be interpreted and is rejected.
+          type: string
+        tool_input:
+          description: |-
+            The call's arguments, as the runtime sent them. Server-defined for an MCP tool;
+            a fixed shape per built-in (`command` for Bash, `file_path` for Edit, `url` for
+            WebFetch).
+
+            Stored as sent, and separately reduced to a normalized target the activity feed
+            and policy can match on. The stored copy is the record of fact; the derived
+            target is recomputed whenever the extractor improves.
+
+            Capped before storage. A capped payload is no longer valid JSON, so the row
+            records that it was capped rather than leaving each reader to discover it by
+            failing to parse.
+          type: object
+          additionalProperties: true
+        session_id:
+          description: The agent session this event belongs to. Opaque to Opal.
+          type: string
+        prompt_id:
+          description: Groups every tool call made under one user instruction, so a run can be read back as the instruction that caused it rather than as unrelated rows.
+          type: string
+        agent_id:
+          description: Set only when the call came from an autonomous subagent rather than the session a person is typing into. Stored as `subagent_id` - Opal's own `agent_id` already means something else.
+          type: string
+        agent_type:
+          description: The subagent's type, e.g. `general-purpose`. Set alongside `agent_id`.
+          type: string
+        permission_mode:
+          description: The session's permission mode, e.g. `default`, `acceptEdits`, `bypassPermissions`. A session running `bypassPermissions` had no approval gate in front of any tool call it made.
+          type: string
+        actor_email:
+          description: >-
+            The identity the sender reports for this specific event. **Unverified**, the same as `X-Opal-Actor`, and used only when neither the API key nor that header identified a developer. An `http` hook cannot populate this; a `command`-type hook or a relay can (`$USER`, a hostname, `git config user.email`), which is why it is per-event rather than per-request - a relay can batch several developers.
+          type: string
+        transcript_path:
+          description: >-
+            Read at ingest **only** to parse an operating-system username out of, as the last-resort attribution step, and then discarded. The path itself is never stored: it is an absolute path on an employee's laptop and Opal has no business accumulating those.
+          type: string
+        tool_name:
+          description: |-
+            The tool invoked, for tool-scoped events. Empty for session-level events.
+
+            An MCP tool is named `mcp__<server>__<tool>`. The whole string is stored as sent,
+            and the server and the tool are also stored in their own fields (see `mcp_server`).
+          type: string
+        mcp_server:
+          $ref: "#/components/schemas/AgentActivityMcpServer"
+        tool_use_id:
+          description: The tool invocation's id, used together with `hook_event_name` to deduplicate a retried delivery. Absent on events that carry none, which are stored at-least-once.
+          type: string
+        cwd:
+          description: The working directory the agent was operating in.
+          type: string
+        timestamp:
+          description: When the client says the event occurred (RFC 3339). Clamped server-side to a window around receipt, because a client-controlled sort key is otherwise a way to pin rows to the top of every list. Defaults to receipt time when absent or unparseable.
+          format: date-time
+          type: string
+      required:
+        - hook_event_name
+      type: object
+      additionalProperties: true
+    AgentActivityMcpServer:
+      description: |-
+        # AgentActivityMcpServer Object
+        ### Description
+        The MCP server behind a tool call, as Claude Code reports it. Claude Code v2.1.274 and
+        later adds this object to the hook input of an MCP tool call; an older client does not
+        send it, and it is never present for a built-in tool such as `Bash`.
+
+        When `name` is present it is stored as the call's server. When this object is absent,
+        the server is read from `tool_name` instead: the part after the `mcp__` prefix and
+        before the next `__`. The tool is always read from `tool_name`.
+
+        Only `name` is read. `source` says where the server's definition came from (`plugin`,
+        `sdk`, or a configuration scope such as `user` or `project`) and is parsed and
+        **discarded**. Neither field is an identity: `name` is whatever the user called the
+        server in their own configuration.
+      properties:
+        name:
+          description: The server's name.
+          type: string
+        source:
+          description: Where the server's definition came from, such as `plugin`, `sdk`, `user` or `project`. Not stored.
+          type: string
+      type: object
+    AgentActivityIngestRequest:
+      description: |-
+        # AgentActivityIngestRequest Object
+        ### Description
+        A batch of agent activity events.
+
+        Three body shapes are accepted: this envelope (`{"events": [...]}`), a bare JSON
+        array of `AgentActivityEvent`, and a single `AgentActivityEvent` object. The last
+        exists so a Claude Code hook can POST here directly, since a hook sends one bare
+        payload per event and cannot wrap it.
+      properties:
+        events:
+          items:
+            $ref: "#/components/schemas/AgentActivityEvent"
+          type: array
+      type: object
+      additionalProperties: true
+    AnthropicInferenceHookVerdict:
+      description: |-
+        # AnthropicInferenceHookVerdict Object
+        ### Description
+        An Anthropic Inference hooks verdict. `deny_reason` is shown to the end user on a deny.
+      properties:
+        action:
+          enum:
+            - allow
+            - deny
+          type: string
+        deny_reason:
+          maxLength: 500
+          type: string
+        reference_id:
+          maxLength: 50
+          type: string
+      required:
+        - action
+      type: object
+    AgentActivityIngestResult:
+      description: |-
+        # AgentActivityIngestResult Object
+        ### Description
+        What one ingest request actually did.
+
+        `received` and `stored` differ when a delivery was retried and deduplicated.
+        `attributed` and `unattributed` sum to `received` rather than to `stored`, because
+        attribution happens before deduplication. Unattributed events are kept, not dropped:
+        activity Opal cannot tie to a governed agent is itself a governance finding.
+      properties:
+        received:
+          description: Events parsed out of the request body.
+          type: integer
+        stored:
+          description: Rows actually written. Lower than `received` when a retried delivery was deduplicated on `tool_use_id`.
+          type: integer
+        attributed:
+          description: Events that resolved to an agent in this organization.
+          type: integer
+        unattributed:
+          description: Events that resolved to no agent, and are therefore visible only in the unattributed activity list. A persistently high value means the reporting clients are not sending an identity Opal can resolve.
+          type: integer
+      required:
+        - received
+        - stored
+        - attributed
+        - unattributed
+      type: object
+    AgentKillSwitch:
+      description: |-
+        # AgentKillSwitch Object
+        ### Description
+        The org-level agent kill switch, and the activation that is in force or last was.
+
+        `active` is what matters; the rest is the record of how it got that way. An
+        activation is in force only while it has not been deactivated AND `expires_at` is
+        still in the future, and that is evaluated on every read - so `active` can be
+        `false` on a row that was never explicitly turned off.
+
+        Everything below `active` describes the LATEST activation whether or not it is
+        still in force, so an admin reading an inactive switch can still see who last
+        turned it on and when it ended.
+      properties:
+        active:
+          description: Whether agent tool calls are being denied right now. This is the field to read; it already accounts for expiry.
+          type: boolean
+        activated_at:
+          description: When the latest activation was turned on. Absent if it never has been.
+          format: date-time
+          type: string
+        activated_by_user_id:
+          description: The admin who turned it on. Absent when that user has since been hard-deleted - the activation record outlives them deliberately.
+          format: uuid
+          type: string
+        expires_at:
+          description: When the latest activation stops denying on its own. In the past for an activation that already ran out.
+          format: date-time
+          type: string
+        deactivated_at:
+          description: When the latest activation was turned off before its expiry, either by an admin or by being superseded. Absent when it ended at `expires_at`, or has not ended.
+          format: date-time
+          type: string
+        reason:
+          description: The admin's stated reason. Not an internal note - it is shown to the developer whose tool call is denied, in their own terminal.
+          type: string
+      required:
+        - active
+      type: object
+    SetAgentKillSwitchRequest:
+      description: |-
+        # SetAgentKillSwitchRequest Object
+        ### Description
+        Turns the agent kill switch on or off.
+
+        Setting `active` to `true` while it is already on supersedes the current activation
+        rather than extending it: the old row keeps its own reason and window as part of the
+        audit trail, and a new one starts.
+      properties:
+        active:
+          description: True denies agent tool calls for this organization; false lifts the denial.
+          type: boolean
+        duration_minutes:
+          description: How long the denial lasts, from now. Ignored when `active` is false. Capped server-side - a kill switch with no end is how an organization discovers months later that its engineers have been quietly working around it.
+          type: integer
+        reason:
+          description: Why. Shown verbatim to the developer whose tool call is denied, so write it for them rather than for the audit log - it is the only explanation they get.
+          type: string
+      required:
+        - active
+      type: object
     AccessEntityFilters:
       type: object
       description: Filters for matching entities by type, name, tag, IDs, connections, or access levels. Supports recursive logical composition via allOf/anyOf.
@@ -6838,6 +7653,8 @@ components:
           $ref: "#/components/schemas/EntityDescriptionFilter"
         entityTag:
           $ref: "#/components/schemas/EntityTagFilter"
+        entityTagKey:
+          $ref: "#/components/schemas/EntityTagKeyFilter"
         hrIdpStatus:
           $ref: "#/components/schemas/IdpStatusFilter"
         entityAdminOwner:
@@ -7244,12 +8061,26 @@ components:
           example: team
         value:
           type: string
-          description: The tag value to filter by. If omitted, matches any value for the given key.
+          description: The tag value to filter by. If omitted, matches only tags with no value; use entityTagKey to match any value for a key.
           example: platform
         connectionId:
           type: string
           format: uuid
           description: If specified, filters by tags associated with this connection.
+    EntityTagKeyFilter:
+      type: object
+      required:
+        - keys
+      description: >
+        Filters entities that have a tag whose key is one of `keys`, whatever its value (including no value). Keys match exactly and case-sensitively. An empty list matches nothing. AGENT entities carry no tags, so they never match; under `not`, every agent matches, as with entityTag.
+
+      properties:
+        keys:
+          type: array
+          description: The tag keys to match.
+          items:
+            type: string
+          example: ["Critical"]
     IdpStatusFilter:
       type: object
       description: >
@@ -7483,6 +8314,7 @@ components:
         reminder_schedule: [7, 3, 1]
         reminder_include_manager: true
         require_reason_on_denial: false
+        auto_stop_when_complete: false
         hide_ai_suggestions: false
         custom_start_message: null
         group_asset_visibility_policy: STRICT
@@ -7562,6 +8394,10 @@ components:
           description: Whether reviewers must provide a reason when denying (revoking) access.
           example: false
           type: boolean
+        auto_stop_when_complete:
+          description: Whether the campaign stops automatically once every review item is complete. Stopping locks further reviews so admins can review the decisions or end the campaign to generate the report.
+          example: false
+          type: boolean
         hide_ai_suggestions:
           description: Whether AI suggestions are hidden from reviewers.
           example: false
@@ -7612,6 +8448,7 @@ components:
         - revoke_on
         - reminder_include_manager
         - require_reason_on_denial
+        - auto_stop_when_complete
         - hide_ai_suggestions
         - group_asset_visibility_policy
         - is_template
@@ -7686,6 +8523,10 @@ components:
           type: boolean
         require_reason_on_denial:
           description: Whether reviewers must provide a reason when denying (revoking) access.
+          example: false
+          type: boolean
+        auto_stop_when_complete:
+          description: Whether the campaign stops automatically once every review item is complete. Stopping locks further reviews so admins can review the decisions or end the campaign to generate the report.
           example: false
           type: boolean
         hide_ai_suggestions:
@@ -7816,6 +8657,10 @@ components:
           type: boolean
         require_reason_on_denial:
           description: Whether reviewers must provide a reason when denying (revoking) access.
+          example: false
+          type: boolean
+        auto_stop_when_complete:
+          description: Whether the campaign stops automatically once every review item is complete. Stopping locks further reviews so admins can review the decisions or end the campaign to generate the report.
           example: false
           type: boolean
         hide_ai_suggestions:
@@ -8555,6 +9400,7 @@ components:
         visibility_group_ids:
           description: |-
             The IDs of groups that can see this app when visibility is `LIMITED`.
+            Must be empty when visibility is `GLOBAL`.
           items:
             format: uuid
             type: string
@@ -8610,6 +9456,9 @@ components:
         supports_event_ingestion:
           description: Whether the Custom Connector supports event ingestion.
           type: boolean
+        supports_idp:
+          description: Whether the Custom Connector can be connected as an upstream user directory.
+          type: boolean
       required:
         - identifier
         - base_url
@@ -8618,6 +9467,7 @@ components:
         - supports_nested_resources
         - supports_nested_groups
         - supports_event_ingestion
+        - supports_idp
       type: object
     CreateAppInfo:
       description: |-
@@ -8649,6 +9499,8 @@ components:
         visibility_group_ids:
           description: |-
             The IDs of groups that can see this app when visibility is `LIMITED`.
+            Must be empty when visibility is `GLOBAL`; the server returns `400`
+            otherwise.
           items:
             format: uuid
             type: string
@@ -8710,6 +9562,11 @@ components:
             Whether the Custom Connector supports event ingestion. Defaults to
             `false`.
           type: boolean
+        supports_idp:
+          description: |-
+            Whether the Custom Connector can be connected as an upstream user
+            directory. Defaults to `false`.
+          type: boolean
       required:
         - identifier
         - base_url
@@ -8735,6 +9592,9 @@ components:
         visibility_group_ids:
           description: |-
             The IDs of groups that can see this app when visibility is `LIMITED`.
+            Must be empty when the effective visibility is `GLOBAL` (either sent
+            explicitly on this request or already stored on the app); the server
+            returns `400` otherwise.
           items:
             format: uuid
             type: string
@@ -8781,6 +9641,9 @@ components:
           type: boolean
         supports_event_ingestion:
           description: Whether the Custom Connector supports event ingestion.
+          type: boolean
+        supports_idp:
+          description: Whether the Custom Connector can be connected as an upstream user directory.
           type: boolean
       type: object
     AppTypeEnum:
@@ -8845,7 +9708,13 @@ components:
         - VERCEL
         - AXIOM
         # GENERATED:BEGIN connection-type-enum
+        - ASANA
+        - BITWARDEN
+        - BOX
+        - CALENDLY
+        - SQUARE
         # GENERATED:END connection-type-enum
+        - RIPPLING
       example: OKTA_DIRECTORY
       type: string
     EntityTypeEnum:
@@ -8856,6 +9725,158 @@ components:
         - USER
       example: GROUP
       type: string
+    AddRoleAssignmentInput:
+      description: A single role assignment to create in a batch add request.
+      type: object
+      required:
+        - entity_id
+        - entity_type
+        - principal_id
+        - principal_type
+      properties:
+        entity_id:
+          description: The ID of the entity (resource or group) being accessed.
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          format: uuid
+          type: string
+        entity_type:
+          description: The type of the entity being accessed. Must be `RESOURCE` or `GROUP`.
+          allOf:
+            - $ref: "#/components/schemas/EntityTypeEnum"
+        principal_id:
+          description: The ID of the principal (user, group, or resource) being granted access.
+          example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+          format: uuid
+          type: string
+        principal_type:
+          description: The type of the principal being granted access. Must be `RESOURCE`, `GROUP`, or `USER`.
+          allOf:
+            - $ref: "#/components/schemas/EntityTypeEnum"
+        access_level_remote_id:
+          description: Remote ID of the access level to grant. Omit for entities that only have a single default access level.
+          nullable: true
+          type: string
+        duration_minutes:
+          description: Duration of the grant in minutes. Omit or send `0` for an indefinite grant.
+          minimum: 0
+          nullable: true
+          type: integer
+    AddRoleAssignmentsRequest:
+      description: Request body for `POST /role-assignments`.
+      type: object
+      required:
+        - role_assignments
+      properties:
+        role_assignments:
+          description: The list of role assignments to add.
+          items:
+            $ref: "#/components/schemas/AddRoleAssignmentInput"
+          minItems: 1
+          maxItems: 100
+          type: array
+    RoleAssignment:
+      description: A role assignment representing access granted to a principal for an entity.
+      type: object
+      required:
+        - id
+        - entity_id
+        - entity_type
+        - principal_id
+        - principal_type
+      properties:
+        id:
+          description: Unique identifier for the role assignment.
+          format: uuid
+          type: string
+        entity_id:
+          description: The ID of the entity (resource or group) being accessed.
+          format: uuid
+          type: string
+        entity_type:
+          $ref: "#/components/schemas/EntityTypeEnum"
+        principal_id:
+          description: The ID of the principal being granted access.
+          format: uuid
+          type: string
+        principal_type:
+          $ref: "#/components/schemas/EntityTypeEnum"
+        access_level:
+          description: The level of access granted. Null when the entity does not define access levels.
+          allOf:
+            - $ref: "#/components/schemas/ResourceAccessLevel"
+          nullable: true
+        expiration:
+          description: When this access expires. Null when the grant is indefinite.
+          format: date-time
+          nullable: true
+          type: string
+        granted_at:
+          description: When this access was first granted.
+          format: date-time
+          nullable: true
+          type: string
+    AddRoleAssignmentsEntry:
+      description: A single entry in the result of `POST /role-assignments`.
+      type: object
+      required:
+        - role_assignment
+      properties:
+        role_assignment:
+          $ref: "#/components/schemas/RoleAssignment"
+    RoleAssignmentEntityTypeEnum:
+      description: Entity type for a role assignment. Entities are the resources or groups access is granted on.
+      enum:
+        - GROUP
+        - RESOURCE
+      example: RESOURCE
+      type: string
+    PaginatedRoleAssignmentsList:
+      description: A paginated page of role assignments.
+      example:
+        next: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+        previous: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+        results:
+          - id: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+            entity_id: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+            entity_type: RESOURCE
+            principal_id: e8581682-04f7-473a-a419-472f0fb26d46
+            principal_type: USER
+            granted_at: 2024-07-10T19:21:00Z
+      properties:
+        next:
+          description: The cursor with which to continue pagination if additional result pages exist.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          nullable: true
+          type: string
+        previous:
+          description: The cursor used to obtain the current result page.
+          example: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+          nullable: true
+          type: string
+        results:
+          items:
+            $ref: "#/components/schemas/RoleAssignment"
+          type: array
+      type: object
+      required:
+        - results
+    AddRoleAssignmentsResponse:
+      description: Response body for `POST /role-assignments`.
+      type: object
+      required:
+        - task_ids
+        - entries
+      properties:
+        task_ids:
+          description: Opaque IDs of push tasks enqueued to propagate the new assignments to end systems. Each ID is a base64-encoded, URL-safe string that mirrors the identifier returned by the GraphQL `addRoleAssignments` mutation.
+          items:
+            type: string
+          type: array
+        entries:
+          description: One entry per role assignment created, in request order.
+          items:
+            $ref: "#/components/schemas/AddRoleAssignmentsEntry"
+          type: array
     ViewerCampaignItemSortFieldEnum:
       description: Sort field for viewer campaign items.
       enum:
@@ -9676,6 +10697,7 @@ components:
         - REQUEST_REVIEW
         - REQUEST_DELEGATION_CONDITION
         - CONTEXT_PROVIDER
+        - REQUEST_CONFIGURATION_CONDITION
       example: REQUEST_REVIEW
       type: string
     OpalScript:
@@ -10553,6 +11575,10 @@ components:
           example: False
           type: boolean
           default: false
+        requires_forfeit_reason:
+          description: A bool representing whether or not a reason is required when forfeiting access to this group.
+          example: False
+          type: boolean
         require_mfa_to_request:
           description: A bool representing whether or not to require MFA for requesting access to this group.
           example: False
@@ -10915,6 +11941,10 @@ components:
           example: False
           type: boolean
           default: false
+        requires_forfeit_reason:
+          description: A bool representing whether or not a reason is required when forfeiting access to this group.
+          example: False
+          type: boolean
         require_mfa_to_request:
           description: A bool representing whether or not to require MFA for requesting access to this group. Deprecated in favor of `request_configurations`.
           example: False
@@ -10928,11 +11958,13 @@ components:
           deprecated: true
           x-speakeasy-ignore: true
         configuration_template_id:
-          description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+          description: |-
+            The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           nullable: true
           type: string
+          deprecated: true
           # Keep omitempty so Go clients/tests that leave the pointer nil omit
           # the field (no change) instead of marshaling JSON null (unlink).
           x-oapi-codegen-extra-tags:
@@ -11062,6 +12094,7 @@ components:
         - GRAFANA_TEAM
         - CLICKHOUSE_ROLE
         - SLACK_USER_GROUP
+        - CURSOR_GROUP
         - TWINGATE_GROUP
         - TWINGATE_GROUP_SYNCED
         - ZENDESK_GROUP
@@ -11078,7 +12111,15 @@ components:
         - WRIKE_GROUP
         - AXIOM_GROUP
         # GENERATED:BEGIN group-type-enum
+        - ASANA_TEAM
+        - BITWARDEN_GROUP
+        - BOX_GROUP
+        - CALENDLY_GROUP
+        - SQUARE_LOCATION
+        - SQUARE_JOB
         # GENERATED:END group-type-enum
+        - RIPPLING_TEAM
+        - RIPPLING_SUPERGROUP
       example: OPAL_GROUP
       type: string
     ResourceTypeEnum:
@@ -11154,6 +12195,7 @@ components:
         - DATASTAX_ASTRA_ROLE
         - COUPA_ROLE
         - CURSOR_ORGANIZATION
+        - CURSOR_ORIGIN_REPOSITORY
         - OPENAI_PLATFORM_PROJECT
         - OPENAI_PLATFORM_SERVICE_ACCOUNT
         - ANTHROPIC_WORKSPACE
@@ -11196,7 +12238,14 @@ components:
         - VERCEL_PROJECT
         - AXIOM_ROLE
         - AXIOM_CUSTOM_ROLE
+        - RIPPLING_DEPARTMENT
         # GENERATED:BEGIN resource-type-enum
+        - ASANA_WORKSPACE
+        - BITWARDEN_ORGANIZATION
+        - BOX_ENTERPRISE
+        - BOX_FOLDER
+        - CALENDLY_ROLE
+        - CALENDLY_EVENT_TYPE
         # GENERATED:END resource-type-enum
       example: AWS_IAM_ROLE
       type: string
@@ -11509,6 +12558,56 @@ components:
       x-speakeasy-entity:
         - OnCallScheduleList
         - GroupOnCallSchedules
+    GroupConfigurationTemplate:
+      description: |-
+        A reference, by ID only, to the configuration template a group is
+        linked to. This schema does not include any of the template's own
+        fields (name, description, request configurations, visibility, etc.) —
+        to read or modify those, use the `/configuration-templates` endpoints
+        with the ID carried here. A `null` `configuration_template_id`
+        indicates that the group is not linked to a configuration template
+        and uses its own private configuration.
+      example:
+        configuration_template_id: 06851574-e50d-40ca-8c78-f72ae6ab4304
+      properties:
+        configuration_template_id:
+          description: |-
+            The ID of the configuration template that the group is linked to,
+            or `null` if the group is not linked to a configuration template.
+            Only the ID is exposed here; the template's own fields are managed
+            through the `/configuration-templates` endpoints.
+          example: 06851574-e50d-40ca-8c78-f72ae6ab4304
+          format: uuid
+          nullable: true
+          type: string
+      type: object
+      required:
+        - configuration_template_id
+    ResourceConfigurationTemplate:
+      description: |-
+        A reference, by ID only, to the configuration template a resource is
+        linked to. This schema does not include any of the template's own
+        fields (name, description, request configurations, visibility, etc.) —
+        to read or modify those, use the `/configuration-templates` endpoints
+        with the ID carried here. A `null` `configuration_template_id`
+        indicates that the resource is not linked to a configuration template
+        and uses its own private configuration.
+      example:
+        configuration_template_id: 06851574-e50d-40ca-8c78-f72ae6ab4304
+      properties:
+        configuration_template_id:
+          description: |-
+            The ID of the configuration template that the resource is linked
+            to, or `null` if the resource is not linked to a configuration
+            template. Only the ID is exposed here; the template's own fields
+            are managed through the `/configuration-templates` endpoints.
+          example: 06851574-e50d-40ca-8c78-f72ae6ab4304
+          format: uuid
+          nullable: true
+          type: string
+      type: object
+      required:
+        - configuration_template_id
     VisibilityInfo:
       description: Visibility infomation of an entity.
       example:
@@ -11871,6 +12970,16 @@ components:
             group_id:
               description: The id of the Tailscale group.
               example: 898931321
+              type: string
+          type: object
+          required:
+            - group_id
+        cursor_group:
+          description: Remote info for a Cursor group.
+          properties:
+            group_id:
+              description: The id of the Cursor group, or team:members / team:admins for the owning team's built-in groups.
+              example: grp_01k2ja2000e0080000000000n2
               type: string
           type: object
           required:
@@ -12273,8 +13382,85 @@ components:
           type: object
           required:
             - team_id
-            # GENERATED:BEGIN group-remote-info-properties
-            # GENERATED:END group-remote-info-properties
+        # GENERATED:BEGIN group-remote-info-properties
+        asana_team:
+          description: Remote info for Asana Team.
+          properties:
+            team_gid:
+              description: The team gid of the Asana Team.
+              type: string
+            workspace_gid:
+              description: The workspace gid of the Asana Team.
+              type: string
+          type: object
+          required:
+            - team_gid
+        bitwarden_group:
+          description: Remote info for Bitwarden Group.
+          properties:
+            group_id:
+              description: The group id of the Bitwarden Group.
+              type: string
+          type: object
+          required:
+            - group_id
+        box_group:
+          description: Remote info for Box Group.
+          properties:
+            group_id:
+              description: The group id of the Box Group.
+              type: string
+          type: object
+          required:
+            - group_id
+        calendly_group:
+          description: Remote info for Calendly Group.
+          properties:
+            group_id:
+              description: The group id of the Calendly Group.
+              type: string
+          type: object
+          required:
+            - group_id
+        square_location:
+          description: Remote info for Square Location.
+          properties:
+            group_id:
+              description: The group id of the Square Location.
+              type: string
+          type: object
+          required:
+            - group_id
+        square_job:
+          description: Remote info for Square Job.
+          properties:
+            group_id:
+              description: The group id of the Square Job.
+              type: string
+          type: object
+          required:
+            - group_id
+        # GENERATED:END group-remote-info-properties
+        rippling_team:
+          description: Remote info for Rippling team.
+          properties:
+            team_id:
+              description: The ID of the Rippling team.
+              example: 8caed98e-1234-5678-9abc-def012345678
+              type: string
+          type: object
+          required:
+            - team_id
+        rippling_supergroup:
+          description: Remote info for Rippling supergroup.
+          properties:
+            supergroup_id:
+              description: The ID of the Rippling supergroup.
+              example: 8caed98e-1234-5678-9abc-def012345678
+              type: string
+          type: object
+          required:
+            - supergroup_id
       type: object
       x-speakeasy-entity: GroupRemote
     ResourceRemoteInfo:
@@ -13060,6 +14246,16 @@ components:
           type: object
           required:
             - org_id
+        cursor_origin_repository:
+          description: Remote info for a Cursor Origin repository.
+          properties:
+            repository_name:
+              description: The repository's owner slug and name.
+              example: acme/rocket
+              type: string
+          type: object
+          required:
+            - repository_name
         openai_platform_project:
           description: Remote info for OpenAI Platform project.
           properties:
@@ -13451,8 +14647,72 @@ components:
           type: object
           required:
             - role_id
-            # GENERATED:BEGIN resource-remote-info-properties
-            # GENERATED:END resource-remote-info-properties
+        # GENERATED:BEGIN resource-remote-info-properties
+        asana_workspace:
+          description: Remote info for Asana Workspace.
+          properties:
+            workspace_gid:
+              description: The workspace gid of the Asana Workspace.
+              type: string
+          type: object
+          required:
+            - workspace_gid
+        bitwarden_organization:
+          description: Remote info for Bitwarden Organization.
+          properties:
+            organization_id:
+              description: The organization id of the Bitwarden Organization.
+              type: string
+          type: object
+          required:
+            - organization_id
+        box_enterprise:
+          description: Remote info for Box Enterprise.
+          properties:
+            resource_id:
+              description: The resource id of the Box Enterprise.
+              type: string
+          type: object
+          required:
+            - resource_id
+        box_folder:
+          description: Remote info for Box Folder.
+          properties:
+            resource_id:
+              description: The resource id of the Box Folder.
+              type: string
+          type: object
+          required:
+            - resource_id
+        calendly_role:
+          description: Remote info for Calendly Role.
+          properties:
+            resource_id:
+              description: The resource id of the Calendly Role.
+              type: string
+          type: object
+          required:
+            - resource_id
+        calendly_event_type:
+          description: Remote info for Calendly Event Type.
+          properties:
+            resource_id:
+              description: The resource id of the Calendly Event Type.
+              type: string
+          type: object
+          required:
+            - resource_id
+        # GENERATED:END resource-remote-info-properties
+        rippling_department:
+          description: Remote info for Rippling department.
+          properties:
+            department_id:
+              description: The ID of the Rippling department.
+              example: 8caed98e-1234-5678-9abc-def012345678
+              type: string
+          type: object
+          required:
+            - department_id
       type: object
     RiskSensitivityEnum:
       type: string
@@ -14678,6 +15938,10 @@ components:
           example: False
           type: boolean
           default: false
+        requires_forfeit_reason:
+          description: A bool representing whether or not a reason is required when forfeiting access to this resource.
+          example: False
+          type: boolean
         require_mfa_to_request:
           description: A bool representing whether or not to require MFA for requesting access to this resource.
           example: False
@@ -14913,6 +16177,10 @@ components:
           example: False
           type: boolean
           default: false
+        requires_forfeit_reason:
+          description: A bool representing whether or not a reason is required when forfeiting access to this resource.
+          example: False
+          type: boolean
         require_mfa_to_request:
           description: A bool representing whether or not to require MFA for requesting access to this resource. Deprecated in favor of `request_configurations`.
           example: False
@@ -14949,11 +16217,13 @@ components:
           example: False
           type: boolean
         configuration_template_id:
-          description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+          description: |-
+            The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           nullable: true
           type: string
+          deprecated: true
           # Keep omitempty so Go clients/tests that leave the pointer nil omit
           # the field (no change) instead of marshaling JSON null (unlink).
           x-oapi-codegen-extra-tags:
@@ -15755,6 +17025,11 @@ components:
             type: string
           format: set
           default: []
+        opal_script_id:
+          description: The ID of a `REQUEST_CONFIGURATION_CONDITION` OpalScript that decides whether this request configuration applies. Cannot be combined with `group_ids` or `role_remote_ids`.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          type: string
+          format: uuid
     RequestConfiguration:
       description: |-
         # Request Configuration Object
@@ -16001,6 +17276,10 @@ components:
           description: A bool representing whether or not to require MFA to connect to resources associated with this configuration template.
           example: False
           type: boolean
+        requires_forfeit_reason:
+          description: A bool representing whether or not a reason is required when forfeiting access to resources or groups using this configuration template.
+          example: False
+          type: boolean
         name:
           description: The name of the configuration template.
           example: Prod AWS Template
@@ -16147,6 +17426,10 @@ components:
           type: boolean
         require_mfa_to_connect:
           description: A bool representing whether or not to require MFA to connect to resources associated with this configuration template.
+          example: False
+          type: boolean
+        requires_forfeit_reason:
+          description: A bool representing whether or not a reason is required when forfeiting access to resources or groups using this configuration template.
           example: False
           type: boolean
         ticket_propagation:
@@ -16302,6 +17585,10 @@ components:
           type: boolean
         require_mfa_to_connect:
           description: A bool representing whether or not to require MFA to connect to resources associated with this configuration template.
+          example: False
+          type: boolean
+        requires_forfeit_reason:
+          description: A bool representing whether or not a reason is required when forfeiting access to resources or groups using this configuration template.
           example: False
           type: boolean
         ticket_propagation:
