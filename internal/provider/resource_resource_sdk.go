@@ -37,6 +37,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			r.AncestorResourceIds = append(r.AncestorResourceIds, types.StringValue(v))
 		}
 		r.AppID = types.StringPointerValue(resp.AppID)
+		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.DescendantResourceIds = make([]types.String, 0, len(resp.DescendantResourceIds))
 		for _, v := range resp.DescendantResourceIds {
