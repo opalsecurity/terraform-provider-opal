@@ -187,10 +187,10 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *OpalAPI {
 	sdk := &OpalAPI{
-		SDKVersion: "3.11.0",
+		SDKVersion: "3.11.1",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:         "speakeasy-sdk/terraform 3.11.0 2.950.13 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
-			SDKVersion:        "3.11.0",
+			UserAgent:         "speakeasy-sdk/terraform 3.11.1 2.950.13 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
+			SDKVersion:        "3.11.1",
 			GenVersion:        "2.950.13",
 			OpenAPIDocVersion: "1.0",
 			ServerList:        ServerList,
