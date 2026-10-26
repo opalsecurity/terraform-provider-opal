@@ -50,6 +50,7 @@ type GroupDataSourceModel struct {
 	RemoteName                  types.String                                 `tfsdk:"remote_name"`
 	RequestConfigurations       []tfTypes.RequestConfiguration               `tfsdk:"request_configurations"`
 	RequireMfaToApprove         types.Bool                                   `tfsdk:"require_mfa_to_approve"`
+	RequiresForfeitReason       types.Bool                                   `tfsdk:"requires_forfeit_reason"`
 	RiskSensitivity             types.String                                 `tfsdk:"risk_sensitivity"`
 	RiskSensitivityOverride     types.String                                 `tfsdk:"risk_sensitivity_override"`
 	Visibility                  types.String                                 `tfsdk:"visibility"`
@@ -220,6 +221,20 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Active Directory group.`,
 					},
+					"asana_team": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"team_gid": schema.StringAttribute{
+								Computed:    true,
+								Description: `The team gid of the Asana Team.`,
+							},
+							"workspace_gid": schema.StringAttribute{
+								Computed:    true,
+								Description: `The workspace gid of the Asana Team.`,
+							},
+						},
+						Description: `Remote info for Asana Team.`,
+					},
 					"aws_sso_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -259,6 +274,36 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							},
 						},
 						Description: `Remote info for Microsoft Entra ID Security group.`,
+					},
+					"bitwarden_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The group id of the Bitwarden Group.`,
+							},
+						},
+						Description: `Remote info for Bitwarden Group.`,
+					},
+					"box_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The group id of the Box Group.`,
+							},
+						},
+						Description: `Remote info for Box Group.`,
+					},
+					"calendly_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The group id of the Calendly Group.`,
+							},
+						},
+						Description: `Remote info for Calendly Group.`,
 					},
 					"clickhouse_role": schema.SingleNestedAttribute{
 						Computed: true,
@@ -494,6 +539,26 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Ramp location.`,
 					},
+					"rippling_supergroup": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"supergroup_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Rippling supergroup.`,
+							},
+						},
+						Description: `Remote info for Rippling supergroup.`,
+					},
+					"rippling_team": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"team_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Rippling team.`,
+							},
+						},
+						Description: `Remote info for Rippling team.`,
+					},
 					"rootly_on_call_schedule": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -523,6 +588,26 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							},
 						},
 						Description: `Remote info for Snowflake role.`,
+					},
+					"square_job": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The group id of the Square Job.`,
+							},
+						},
+						Description: `Remote info for Square Job.`,
+					},
+					"square_location": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The group id of the Square Location.`,
+							},
+						},
+						Description: `Remote info for Square Location.`,
 					},
 					"tableau_group": schema.SingleNestedAttribute{
 						Computed: true,
@@ -641,6 +726,10 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 									ElementType: types.StringType,
 									Description: `The list of group IDs to match.`,
 								},
+								"opal_script_id": schema.StringAttribute{
+									Computed:    true,
+									Description: `The ID of a ` + "`" + `REQUEST_CONFIGURATION_CONDITION` + "`" + ` OpalScript that decides whether this request configuration applies. Cannot be combined with ` + "`" + `group_ids` + "`" + ` or ` + "`" + `role_remote_ids` + "`" + `.`,
+								},
 								"role_remote_ids": schema.SetAttribute{
 									Computed:    true,
 									ElementType: types.StringType,
@@ -757,6 +846,10 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Computed:    true,
 				Description: `A bool representing whether or not to require MFA for reviewers to approve requests for this group.`,
 			},
+			"requires_forfeit_reason": schema.BoolAttribute{
+				Computed:    true,
+				Description: `A bool representing whether or not a reason is required when forfeiting access to this group.`,
+			},
 			"risk_sensitivity": schema.StringAttribute{
 				Computed:    true,
 				Description: `The risk sensitivity level for the group. When an override is set, this field will match that.`,
@@ -814,8 +907,6 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config)
 
 	request, requestDiags := data.ToOperationsGetGroupRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)

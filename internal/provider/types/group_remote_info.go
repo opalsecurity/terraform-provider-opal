@@ -5,10 +5,14 @@ package types
 
 type GroupRemoteInfo struct {
 	ActiveDirectoryGroup     *ActiveDirectoryGroup     `tfsdk:"active_directory_group"`
+	AsanaTeam                *AsanaTeam                `tfsdk:"asana_team"`
 	AwsSsoGroup              *ActiveDirectoryGroup     `tfsdk:"aws_sso_group"`
 	AxiomGroup               *ActiveDirectoryGroup     `tfsdk:"axiom_group"`
 	AzureAdMicrosoft365Group *ActiveDirectoryGroup     `tfsdk:"azure_ad_microsoft_365_group"`
 	AzureAdSecurityGroup     *ActiveDirectoryGroup     `tfsdk:"azure_ad_security_group"`
+	BitwardenGroup           *ActiveDirectoryGroup     `tfsdk:"bitwarden_group"`
+	BoxGroup                 *ActiveDirectoryGroup     `tfsdk:"box_group"`
+	CalendlyGroup            *ActiveDirectoryGroup     `tfsdk:"calendly_group"`
 	ClickhouseRole           *ClickhouseRole           `tfsdk:"clickhouse_role"`
 	ConfluenceGroup          *ActiveDirectoryGroup     `tfsdk:"confluence_group"`
 	ConnectorGroup           *ActiveDirectoryGroup     `tfsdk:"connector_group"`
@@ -32,9 +36,13 @@ type GroupRemoteInfo struct {
 	PagerdutyOnCallSchedule  *IncidentioOnCallSchedule `tfsdk:"pagerduty_on_call_schedule"`
 	RampDepartment           *RampDepartment           `tfsdk:"ramp_department"`
 	RampLocation             *RampLocation             `tfsdk:"ramp_location"`
+	RipplingSupergroup       *RipplingSupergroup       `tfsdk:"rippling_supergroup"`
+	RipplingTeam             *GrafanaTeam              `tfsdk:"rippling_team"`
 	RootlyOnCallSchedule     *IncidentioOnCallSchedule `tfsdk:"rootly_on_call_schedule"`
 	SlackUserGroup           *ActiveDirectoryGroup     `tfsdk:"slack_user_group"`
 	SnowflakeRole            *ClickhouseRole           `tfsdk:"snowflake_role"`
+	SquareJob                *ActiveDirectoryGroup     `tfsdk:"square_job"`
+	SquareLocation           *ActiveDirectoryGroup     `tfsdk:"square_location"`
 	TableauGroup             *ActiveDirectoryGroup     `tfsdk:"tableau_group"`
 	TailscaleGroup           *ActiveDirectoryGroup     `tfsdk:"tailscale_group"`
 	TwingateGroup            *ActiveDirectoryGroup     `tfsdk:"twingate_group"`
