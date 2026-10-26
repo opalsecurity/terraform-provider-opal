@@ -82,11 +82,8 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Description: `The ID of the app.`,
 			},
 			"configuration_template_id": schema.StringAttribute{
-				Computed: true,
-				MarkdownDescription: `The ID of the configuration template that the resource is linked` + "\n" +
-					`to, or ` + "`" + `null` + "`" + ` if the resource is not linked to a configuration` + "\n" +
-					`template. Only the ID is exposed here; the template's own fields` + "\n" +
-					`are managed through the ` + "`" + `/configuration-templates` + "`" + ` endpoints.`,
+				Computed:    true,
+				Description: `The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.`,
 			},
 			"custom_request_notification": schema.StringAttribute{
 				Computed:    true,

@@ -77,11 +77,8 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Description: `The ID of the group's app.`,
 			},
 			"configuration_template_id": schema.StringAttribute{
-				Computed: true,
-				MarkdownDescription: `The ID of the configuration template that the group is linked to,` + "\n" +
-					`or ` + "`" + `null` + "`" + ` if the group is not linked to a configuration template.` + "\n" +
-					`Only the ID is exposed here; the template's own fields are managed` + "\n" +
-					`through the ` + "`" + `/configuration-templates` + "`" + ` endpoints.`,
+				Computed:    true,
+				Description: `The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.`,
 			},
 			"custom_request_notification": schema.StringAttribute{
 				Computed:    true,

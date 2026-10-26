@@ -37,6 +37,7 @@ import (
 	custom_listvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/listvalidators"
 	speakeasy_objectvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/objectvalidators"
 	speakeasy_setvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/setvalidators"
+	custom_stringvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/stringvalidators"
 	speakeasy_stringvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/stringvalidators"
 )
 
@@ -117,11 +118,12 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Description: `The ID of the app for the resource. Requires replacement if changed.`,
 			},
 			"configuration_template_id": schema.StringAttribute{
-				Computed: true,
-				MarkdownDescription: `The ID of the configuration template that the resource is linked` + "\n" +
-					`to, or ` + "`" + `null` + "`" + ` if the resource is not linked to a configuration` + "\n" +
-					`template. Only the ID is exposed here; the template's own fields` + "\n" +
-					`are managed through the ` + "`" + `/configuration-templates` + "`" + ` endpoints.`,
+				Computed:    true,
+				Optional:    true,
+				Description: `The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.`,
+				Validators: []validator.String{
+					custom_stringvalidators.ResourceConfigurationTemplateID(),
+				},
 			},
 			"custom_request_notification": schema.StringAttribute{
 				Computed: true,

@@ -37,6 +37,7 @@ import (
 	custom_listvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/listvalidators"
 	speakeasy_objectvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/objectvalidators"
 	speakeasy_setvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/setvalidators"
+	custom_stringvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/stringvalidators"
 	speakeasy_stringvalidators "github.com/opalsecurity/terraform-provider-opal/v3/internal/validators/stringvalidators"
 )
 
@@ -114,11 +115,12 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Description: `The ID of the app for the group. Requires replacement if changed.`,
 			},
 			"configuration_template_id": schema.StringAttribute{
-				Computed: true,
-				MarkdownDescription: `The ID of the configuration template that the group is linked to,` + "\n" +
-					`or ` + "`" + `null` + "`" + ` if the group is not linked to a configuration template.` + "\n" +
-					`Only the ID is exposed here; the template's own fields are managed` + "\n" +
-					`through the ` + "`" + `/configuration-templates` + "`" + ` endpoints.`,
+				Computed:    true,
+				Optional:    true,
+				Description: `The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.`,
+				Validators: []validator.String{
+					custom_stringvalidators.GroupConfigurationTemplateID(),
+				},
 			},
 			"custom_request_notification": schema.StringAttribute{
 				Computed: true,

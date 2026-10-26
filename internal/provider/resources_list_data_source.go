@@ -241,10 +241,6 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 							Computed:    true,
 							Description: `The ID of the app.`,
 						},
-						"configuration_template_id": schema.StringAttribute{
-							Computed:    true,
-							Description: `The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.`,
-						},
 						"custom_request_notification": schema.StringAttribute{
 							Computed:    true,
 							Description: `Custom request notification sent upon request approval.`,
