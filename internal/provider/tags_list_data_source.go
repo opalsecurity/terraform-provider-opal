@@ -142,8 +142,6 @@ func (r *TagsListDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetTagsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
