@@ -11,7 +11,7 @@ import (
 type UpdateAppRequest struct {
 	UpdateAppInfo shared.UpdateAppInfo `request:"mediaType=application/json"`
 	// The ID of the app.
-	AppID string `pathParam:"style=simple,explode=true,name=app_id"`
+	ID string `pathParam:"style=simple,explode=true,name=app_id"`
 }
 
 func (u *UpdateAppRequest) GetUpdateAppInfo() shared.UpdateAppInfo {
@@ -21,11 +21,11 @@ func (u *UpdateAppRequest) GetUpdateAppInfo() shared.UpdateAppInfo {
 	return u.UpdateAppInfo
 }
 
-func (u *UpdateAppRequest) GetAppID() string {
+func (u *UpdateAppRequest) GetID() string {
 	if u == nil {
 		return ""
 	}
-	return u.AppID
+	return u.ID
 }
 
 type UpdateAppResponse struct {

@@ -95,7 +95,13 @@ func (r *AppDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 					},
 				},
 				MarkdownDescription: `Configuration for a Custom Connector app. Does not include the signing` + "\n" +
-					`secret; secrets are write-only and never returned by the API.`,
+					`secret; secrets are write-only and never returned by the API.` + "\n" +
+					`` + "\n" +
+					`**Known limitation (Terraform):** every ` + "`" + `terraform apply` + "`" + ` on a` + "\n" +
+					`` + "`" + `CUSTOM_CONNECTOR` + "`" + ` app re-validates the connector by issuing an` + "\n" +
+					`HTTP request to its ` + "`" + `/status` + "`" + ` endpoint, even when no` + "\n" +
+					`` + "`" + `custom_connector` + "`" + ` field changed. Ensure the connector is` + "\n" +
+					`reachable at apply time.`,
 			},
 			"description": schema.StringAttribute{
 				Computed:    true,
@@ -158,7 +164,7 @@ func (r *AppDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 				Computed:    true,
 				Description: `The visibility level of the entity.`,
 			},
-			"visibility_group_ids": schema.ListAttribute{
+			"visibility_group_ids": schema.SetAttribute{
 				Computed:    true,
 				ElementType: types.StringType,
 				Description: `The IDs of groups that can see this app when visibility is ` + "`" + `LIMITED` + "`" + `.`,

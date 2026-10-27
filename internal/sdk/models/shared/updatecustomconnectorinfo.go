@@ -5,6 +5,14 @@ package shared
 
 // UpdateCustomConnectorInfo - Information needed to update a Custom Connector app. Omitted fields are
 // left unchanged. Provide `signing_secret` only when rotating the secret.
+//
+// **Known limitation (Terraform):** every `terraform apply` on a
+// `CUSTOM_CONNECTOR` app re-validates the connector by issuing an
+// HTTP request to its `/status` endpoint, even when no
+// `custom_connector` field changed (e.g. a description-only edit).
+// Ensure the connector is reachable at apply time, or the apply
+// will fail with an HTTP 400 error from the Opal API. Tracked for
+// a server-side fix.
 type UpdateCustomConnectorInfo struct {
 	// The base URL of the Custom Connector.
 	BaseURL *string `json:"base_url,omitempty"`

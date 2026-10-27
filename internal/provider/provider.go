@@ -137,6 +137,7 @@ func (p *OpalProvider) Actions(_ context.Context) []func() action.Action {
 func (p *OpalProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewAccessRuleResource,
+		NewAppResource,
 		NewBundleResource,
 		NewBundleGroupResource,
 		NewBundleResourceResource,

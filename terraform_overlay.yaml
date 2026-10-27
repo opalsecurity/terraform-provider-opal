@@ -32,6 +32,165 @@ actions:
   - target: $["paths"]["/apps/{app_id}"]["get"]
     update:
       x-speakeasy-entity-operation: App#get
+  # PROD-1493: writable App resource (CUSTOM + CUSTOM_CONNECTOR only; API enforces)
+  - target: $["paths"]["/apps"]["post"]
+    update:
+      x-speakeasy-name-override: create
+  - target: $["paths"]["/apps"]["post"]
+    update:
+      x-speakeasy-entity-operation: App#create
+  - target: $["paths"]["/apps/{app_id}"]["put"]["operationId"]
+    update: updateApp
+  - target: $["paths"]["/apps/{app_id}"]["put"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/apps/{app_id}"]["put"]
+    update:
+      x-speakeasy-name-override: update
+  - target: $["paths"]["/apps/{app_id}"]["put"]
+    update:
+      x-speakeasy-entity-operation: App#update
+  - target: $["paths"]["/apps/{app_id}"]["delete"]["operationId"]
+    update: deleteApp
+  - target: $["paths"]["/apps/{app_id}"]["delete"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/apps/{app_id}"]["delete"]
+    update:
+      x-speakeasy-name-override: delete
+  - target: $["paths"]["/apps/{app_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: App#delete
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["app_type"]
+    update:
+      x-speakeasy-param-force-new: true
+  # PROD-1493: rename `app_type` → `type` in the create request to match the
+  # existing override on `App.app_type` (used by the data source since April
+  # 2024 — see commit c906d463). Without this, the resource ends up with two
+  # separate attributes (`app_type` from the write side, `type` from refresh),
+  # which breaks `terraform import` because refresh populates `type` but leaves
+  # `app_type` null, triggering a RequiresReplace plan on the next apply.
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["app_type"]
+    update:
+      x-speakeasy-name-override: type
+  # PROD-1493: narrow the create-side `app_type` enum to only the values the
+  # REST API actually accepts for POST /v1/apps. The shared `AppTypeEnum`
+  # lists every connector Opal supports, which — once merged into the TF
+  # `type` attribute via the name-override above — lets a user write
+  # `type = "OKTA_DIRECTORY"` and plan successfully, only to hit API 400 at
+  # apply time ("only CUSTOM and CUSTOM_CONNECTOR are supported"). Inlining
+  # the writable subset makes Terraform catch the mistake at plan time with
+  # the standard "must be one of" validator error, matching the actual API
+  # contract. Mechanical pattern mirrors the existing App.app_type override
+  # (inline enum + remove $ref) and is bounded to the request schema — the
+  # response-side App.app_type schema keeps its full enum so the data source
+  # and refresh paths still accept any value from the DB.
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["app_type"]
+    update:
+      type: string
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["app_type"]
+    update:
+      enum:
+        - CUSTOM
+        - CUSTOM_CONNECTOR
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["app_type"]["$ref"]
+    remove: true
+  # PROD-1493: make the Speakeasy-generated example in
+  # `examples/resources/opal_app/resource.tf` internally consistent and valid
+  # under both plan-time validators and the backend's accept-rules. Without
+  # these overrides the example falls back to:
+  #   - `type = "OKTA_DIRECTORY"` (from App.app_type's existing example) which
+  #     fails the narrowed CreateAppInfo.app_type OneOf validator at plan time
+  #   - `visibility = "GLOBAL"` paired with a non-empty `visibility_group_ids`
+  #     list, which PROD-1554's backend validator rejects with HTTP 400
+  # Pinning the create-side example to CUSTOM_CONNECTOR + LIMITED produces a
+  # resource.tf a user could literally copy-paste (modulo substituting their
+  # own IDs) and have it both validate and apply.
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["app_type"]
+    update:
+      example: CUSTOM_CONNECTOR
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["name"]
+    update:
+      example: My Custom Connector App
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["description"]
+    update:
+      example: In-house billing connector for the finance team.
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["visibility"]
+    update:
+      allOf:
+        - $ref: "#/components/schemas/VisibilityTypeEnum"
+      example: LIMITED
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["visibility"]["$ref"]
+    remove: true
+  # PROD-1493: hide the Custom Connector signing secret from `terraform plan`
+  # output. The field is already written to state (unavoidable — Terraform
+  # needs it for the next apply), but marking it `Sensitive: true` keeps it
+  # out of plan diffs, CI logs, screenshots, etc. The OpenAPI
+  # `format: password` only affects wire-level docs; Speakeasy needs its own
+  # extension to translate that into TF's `Sensitive` flag.
+  - target: $["components"]["schemas"]["CreateCustomConnectorInfo"]["properties"]["signing_secret"]
+    update:
+      x-speakeasy-param-sensitive: true
+  - target: $["components"]["schemas"]["UpdateCustomConnectorInfo"]["properties"]["signing_secret"]
+    update:
+      x-speakeasy-param-sensitive: true
+  - target: $["components"]["schemas"]["CreateCustomConnectorInfo"]["properties"]["identifier"]
+    update:
+      x-speakeasy-param-force-new: true
+  - target: $["components"]["schemas"]["CreateCustomConnectorInfo"]["properties"]["signing_secret"]
+    update:
+      format: password
+  - target: $["components"]["schemas"]["UpdateCustomConnectorInfo"]["properties"]["signing_secret"]
+    update:
+      format: password
+  - target: $["components"]["schemas"]["App"]["properties"]["validations"]
+    update:
+      x-speakeasy-param-readonly: true
+  # PROD-1493: Known limitation — document the connector re-validation side effect
+  # of `UpdateConnection` on the TF-user-facing attribute descriptions, so that
+  # anyone browsing the resource docs or hovering the `custom_connector` block
+  # in their editor sees it before they hit it. The underlying backend behavior
+  # (`UpdateConnection` always re-validates when `Metadata`/`Credentials` is
+  # non-nil, which Speakeasy's generated full-state serializer always sends for
+  # CUSTOM_CONNECTOR apps) is tracked for a server-side fix. The three schemas
+  # cover each rendering surface: resource overview, create block, update block.
+  - target: $["components"]["schemas"]["CreateCustomConnectorInfo"]
+    update:
+      description: |-
+        Information needed to create a Custom Connector app.
+
+        **Known limitation (Terraform):** every `terraform apply` on a
+        `CUSTOM_CONNECTOR` app re-validates the connector by issuing an
+        HTTP request to its `/status` endpoint, even when no
+        `custom_connector` field changed. Ensure the connector is
+        reachable at apply time, or the apply will fail with an HTTP 400
+        error from the Opal API. Tracked for a server-side fix that will
+        only re-validate when the connector configuration actually
+        changes.
+  - target: $["components"]["schemas"]["UpdateCustomConnectorInfo"]
+    update:
+      description: |-
+        Information needed to update a Custom Connector app. Omitted fields are
+        left unchanged. Provide `signing_secret` only when rotating the secret.
+
+        **Known limitation (Terraform):** every `terraform apply` on a
+        `CUSTOM_CONNECTOR` app re-validates the connector by issuing an
+        HTTP request to its `/status` endpoint, even when no
+        `custom_connector` field changed (e.g. a description-only edit).
+        Ensure the connector is reachable at apply time, or the apply
+        will fail with an HTTP 400 error from the Opal API. Tracked for
+        a server-side fix.
+  - target: $["components"]["schemas"]["CustomConnectorAppConfig"]
+    update:
+      description: |-
+        Configuration for a Custom Connector app. Does not include the signing
+        secret; secrets are write-only and never returned by the API.
+
+        **Known limitation (Terraform):** every `terraform apply` on a
+        `CUSTOM_CONNECTOR` app re-validates the connector by issuing an
+        HTTP request to its `/status` endpoint, even when no
+        `custom_connector` field changed. Ensure the connector is
+        reachable at apply time.
   - target: $["paths"]["/bundles"]["get"]
     update:
       x-speakeasy-entity-operation: PaginatedBundleList#read
@@ -1163,6 +1322,61 @@ actions:
   - target: $["components"]["schemas"]["App"]
     update:
       x-speakeasy-entity: App
+  # Treat visibility_group_ids as an unordered set — the backend returns IDs
+  # alphabetically sorted, so a plain list causes permanent drift when a user
+  # writes them in a different order. Matches VisibilityInfo above.
+  - target: $["components"]["schemas"]["App"]["properties"]["visibility_group_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["App"]["properties"]["visibility_group_ids"]
+    update:
+      default: []
+  - target: $["components"]["schemas"]["App"]["properties"]["visibility_group_ids"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["visibility_group_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["visibility_group_ids"]
+    update:
+      default: []
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["visibility_group_ids"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["UpdateAppInfo"]["properties"]["visibility_group_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["UpdateAppInfo"]["properties"]["visibility_group_ids"]
+    update:
+      default: []
+  - target: $["components"]["schemas"]["UpdateAppInfo"]["properties"]["visibility_group_ids"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  # PROD-1493: default `import_visibility` to GLOBAL on the TF resource,
+  # mirroring the backend default at `handlers_apps.go:123`
+  # (`importVisibility := model.VisibilityGlobal`) and matching the OpenAPI
+  # docstring on `CreateAppInfo.import_visibility`. Without this, the Speakeasy
+  # resource generator does not emit a response→state setter for this field
+  # (the data source does — the quirk is specific to resource gen), so when a
+  # user omits it the plan stays Unknown through apply and Terraform errors
+  # with `Provider returned invalid result object after apply`. Resolving the
+  # default at plan time avoids that path entirely.
+  #
+  # The directive is applied on `CreateAppInfo.import_visibility` (the request
+  # body side where the default is user-facing) rather than on the App response
+  # schema, because OpenAPI 3.0 ignores siblings to `$ref` and the response
+  # property is a bare `$ref`. We also wrap the ref in `allOf` here so the
+  # Speakeasy generator picks up the sibling directive.
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["import_visibility"]
+    update:
+      allOf:
+        - $ref: "#/components/schemas/VisibilityTypeEnum"
+      x-speakeasy-terraform-custom-default:
+        imports:
+          - github.com/opalsecurity/terraform-provider-opal/v3/internal/customdefaults
+        schemaDefinition: customdefaults.ImportVisibilityGlobal()
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["import_visibility"]["$ref"]
+    remove: true
   - target: $["components"]["schemas"]["Event"]
     update:
       x-speakeasy-entity: Events

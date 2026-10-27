@@ -41,7 +41,13 @@ Read-Only:
 
 - `admin_owner_id` (String) The ID of the owner of the app.
 - `custom_connector` (Attributes) Configuration for a Custom Connector app. Does not include the signing
-secret; secrets are write-only and never returned by the API. (see [below for nested schema](#nestedatt--apps--custom_connector))
+secret; secrets are write-only and never returned by the API.
+
+**Known limitation (Terraform):** every `terraform apply` on a
+`CUSTOM_CONNECTOR` app re-validates the connector by issuing an
+HTTP request to its `/status` endpoint, even when no
+`custom_connector` field changed. Ensure the connector is
+reachable at apply time. (see [below for nested schema](#nestedatt--apps--custom_connector))
 - `description` (String) A description of the app.
 - `id` (String) The ID of the app.
 - `import_visibility` (String) The visibility level of the entity.
@@ -49,7 +55,7 @@ secret; secrets are write-only and never returned by the API. (see [below for ne
 - `type` (String) The type of an app.
 - `validations` (Attributes List) Validation checks of an apps' configuration and permissions. (see [below for nested schema](#nestedatt--apps--validations))
 - `visibility` (String) The visibility level of the entity.
-- `visibility_group_ids` (List of String) The IDs of groups that can see this app when visibility is `LIMITED`.
+- `visibility_group_ids` (Set of String) The IDs of groups that can see this app when visibility is `LIMITED`.
 
 <a id="nestedatt--apps--custom_connector"></a>
 ### Nested Schema for `apps.custom_connector`

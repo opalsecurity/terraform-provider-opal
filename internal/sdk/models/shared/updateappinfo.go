@@ -3,6 +3,10 @@
 
 package shared
 
+import (
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
+)
+
 // UpdateAppInfo - Information needed to update an app. Currently supports only Push-only
 // apps (`CUSTOM`) and Custom Connector apps (`CUSTOM_CONNECTOR`).
 type UpdateAppInfo struct {
@@ -10,6 +14,14 @@ type UpdateAppInfo struct {
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
 	// Information needed to update a Custom Connector app. Omitted fields are
 	// left unchanged. Provide `signing_secret` only when rotating the secret.
+	//
+	// **Known limitation (Terraform):** every `terraform apply` on a
+	// `CUSTOM_CONNECTOR` app re-validates the connector by issuing an
+	// HTTP request to its `/status` endpoint, even when no
+	// `custom_connector` field changed (e.g. a description-only edit).
+	// Ensure the connector is reachable at apply time, or the apply
+	// will fail with an HTTP 400 error from the Opal API. Tracked for
+	// a server-side fix.
 	CustomConnector *UpdateCustomConnectorInfo `json:"custom_connector,omitempty"`
 	// The updated description of the app.
 	Description *string `json:"description,omitempty"`
@@ -20,7 +32,18 @@ type UpdateAppInfo struct {
 	// The visibility level of the entity.
 	Visibility *VisibilityTypeEnum `json:"visibility,omitempty"`
 	// The IDs of groups that can see this app when visibility is `LIMITED`.
-	VisibilityGroupIds []string `json:"visibility_group_ids,omitempty"`
+	VisibilityGroupIds []string `json:"visibility_group_ids"`
+}
+
+func (u UpdateAppInfo) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(u, "", false)
+}
+
+func (u *UpdateAppInfo) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &u, "", false, nil); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (u *UpdateAppInfo) GetAdminOwnerID() *string {

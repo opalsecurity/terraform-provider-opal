@@ -4,6 +4,15 @@
 package shared
 
 // CreateCustomConnectorInfo - Information needed to create a Custom Connector app.
+//
+// **Known limitation (Terraform):** every `terraform apply` on a
+// `CUSTOM_CONNECTOR` app re-validates the connector by issuing an
+// HTTP request to its `/status` endpoint, even when no
+// `custom_connector` field changed. Ensure the connector is
+// reachable at apply time, or the apply will fail with an HTTP 400
+// error from the Opal API. Tracked for a server-side fix that will
+// only re-validate when the connector configuration actually
+// changes.
 type CreateCustomConnectorInfo struct {
 	// The base URL of the Custom Connector.
 	BaseURL string `json:"base_url"`

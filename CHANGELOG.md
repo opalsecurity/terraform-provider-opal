@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+ - Adds `opal_app` **resource** for managing Push-only (`CUSTOM`) and Custom Connector (`CUSTOM_CONNECTOR`) apps via `POST`/`PUT`/`DELETE` `/apps` (PROD-1493). Data sources `opal_app` / `opal_apps` are unchanged. `custom_connector.signing_secret` is write-only. Other `app_type` values are rejected by the API.
+
 ## v3.7.5
  - Fixes `max_duration = -1` on `request_configurations` showing as permanent drift
 
