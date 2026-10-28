@@ -75,6 +75,7 @@ type ResourceResourceModel struct {
 	RequestConfigurations       []tfTypes.RequestConfiguration          `tfsdk:"request_configurations"`
 	RequireMfaToApprove         types.Bool                              `tfsdk:"require_mfa_to_approve"`
 	RequireMfaToConnect         types.Bool                              `tfsdk:"require_mfa_to_connect"`
+	RequiresForfeitReason       types.Bool                              `tfsdk:"requires_forfeit_reason"`
 	ResourceType                types.String                            `tfsdk:"resource_type"`
 	RiskSensitivity             types.String                            `tfsdk:"risk_sensitivity"`
 	RiskSensitivityOverride     types.String                            `tfsdk:"risk_sensitivity_override"`
@@ -117,9 +118,10 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Description: `The ID of the app for the resource. Requires replacement if changed.`,
 			},
 			"configuration_template_id": schema.StringAttribute{
-				Computed:    true,
-				Optional:    true,
-				Description: `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
+				Computed:           true,
+				Optional:           true,
+				DeprecationMessage: `This will be removed in a future release, please migrate away from it as soon as possible`,
+				Description:        `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
 				Validators: []validator.String{
 					custom_stringvalidators.ResourceConfigurationTemplateID(),
 				},
@@ -294,6 +296,29 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 							},
 						},
 						Description: `Remote info for Anthropic workspace. Requires replacement if changed.`,
+					},
+					"asana_workspace": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"workspace_gid": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The workspace gid of the Asana Workspace. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Asana Workspace. Requires replacement if changed.`,
 					},
 					"aws_account": schema.SingleNestedAttribute{
 						Computed: true,
@@ -990,6 +1015,121 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						},
 						Description: `Remote info for Azure virtual machine. Requires replacement if changed.`,
 					},
+					"bitwarden_organization": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"organization_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The organization id of the Bitwarden Organization. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Bitwarden Organization. Requires replacement if changed.`,
+					},
+					"box_enterprise": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The resource id of the Box Enterprise. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Box Enterprise. Requires replacement if changed.`,
+					},
+					"box_folder": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The resource id of the Box Folder. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Box Folder. Requires replacement if changed.`,
+					},
+					"calendly_event_type": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The resource id of the Calendly Event Type. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Calendly Event Type. Requires replacement if changed.`,
+					},
+					"calendly_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The resource id of the Calendly Role. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Calendly Role. Requires replacement if changed.`,
+					},
 					"clickhouse_console_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -1116,6 +1256,29 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 							},
 						},
 						Description: `Remote info for a Cursor organization. Requires replacement if changed.`,
+					},
+					"cursor_origin_repository": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"repository_name": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The repository's owner slug and name. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for a Cursor Origin repository. Requires replacement if changed.`,
 					},
 					"custom_connector": schema.SingleNestedAttribute{
 						Computed: true,
@@ -2420,6 +2583,29 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						},
 						Description: `Remote info for Ramp built-in role. Requires replacement if changed.`,
 					},
+					"rippling_department": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"department_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Rippling department. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Rippling department. Requires replacement if changed.`,
+					},
 					"salesforce_permission_set": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -2882,6 +3068,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 								"group_ids": types.SetType{
 									ElemType: types.StringType,
 								},
+								"opal_script_id": types.StringType,
 								"role_remote_ids": types.SetType{
 									ElemType: types.StringType,
 								},
@@ -2899,6 +3086,14 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 									},
 									ElementType: types.StringType,
 									Description: `The list of group IDs to match. Default: []`,
+								},
+								"opal_script_id": schema.StringAttribute{
+									Computed: true,
+									Optional: true,
+									PlanModifiers: []planmodifier.String{
+										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+									},
+									Description: `The ID of a ` + "`" + `REQUEST_CONFIGURATION_CONDITION` + "`" + ` OpalScript that decides whether this request configuration applies. Cannot be combined with ` + "`" + `group_ids` + "`" + ` or ` + "`" + `role_remote_ids` + "`" + `.`,
 								},
 								"role_remote_ids": schema.SetAttribute{
 									Computed: true,
@@ -3141,13 +3336,18 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				},
 				Description: `A bool representing whether or not to require MFA to connect to this resource.`,
 			},
+			"requires_forfeit_reason": schema.BoolAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `A bool representing whether or not a reason is required when forfeiting access to this resource.`,
+			},
 			"resource_type": schema.StringAttribute{
 				Required: true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AWS_AGENTCORE_GATEWAY", "AWS_AGENTCORE_GATEWAY_TARGET", "AWS_AGENTCORE_GATEWAY_TOOL", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GCP_BILLING_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "CLICKHOUSE_CONSOLE_ROLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE", "LINEAR_ORGANIZATION", "LINEAR_PROJECT", "RAMP_FUND", "RAMP_ROLE", "WRIKE_USER_TYPE", "DATABRICKS_CATALOG", "DATABRICKS_SCHEMA", "DATABRICKS_VOLUME", "DATABRICKS_FUNCTION", "DATABRICKS_MODEL", "DATABRICKS_SERVICE", "DATABRICKS_MCP_SERVER", "VERCEL_ROLE", "VERCEL_PROJECT", "AXIOM_ROLE", "AXIOM_CUSTOM_ROLE"]; Requires replacement if changed.`,
+				Description: `The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AWS_AGENTCORE_GATEWAY", "AWS_AGENTCORE_GATEWAY_TARGET", "AWS_AGENTCORE_GATEWAY_TOOL", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GCP_BILLING_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "CURSOR_ORIGIN_REPOSITORY", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "CLICKHOUSE_CONSOLE_ROLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE", "LINEAR_ORGANIZATION", "LINEAR_PROJECT", "RAMP_FUND", "RAMP_ROLE", "WRIKE_USER_TYPE", "DATABRICKS_CATALOG", "DATABRICKS_SCHEMA", "DATABRICKS_VOLUME", "DATABRICKS_FUNCTION", "DATABRICKS_MODEL", "DATABRICKS_SERVICE", "DATABRICKS_MCP_SERVER", "VERCEL_ROLE", "VERCEL_PROJECT", "AXIOM_ROLE", "AXIOM_CUSTOM_ROLE", "RIPPLING_DEPARTMENT", "ASANA_WORKSPACE", "BITWARDEN_ORGANIZATION", "BOX_ENTERPRISE", "BOX_FOLDER", "CALENDLY_ROLE", "CALENDLY_EVENT_TYPE"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"AWS_IAM_ROLE",
@@ -3220,6 +3420,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						"DATASTAX_ASTRA_ROLE",
 						"COUPA_ROLE",
 						"CURSOR_ORGANIZATION",
+						"CURSOR_ORIGIN_REPOSITORY",
 						"OPENAI_PLATFORM_PROJECT",
 						"OPENAI_PLATFORM_SERVICE_ACCOUNT",
 						"ANTHROPIC_WORKSPACE",
@@ -3262,6 +3463,13 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						"VERCEL_PROJECT",
 						"AXIOM_ROLE",
 						"AXIOM_CUSTOM_ROLE",
+						"RIPPLING_DEPARTMENT",
+						"ASANA_WORKSPACE",
+						"BITWARDEN_ORGANIZATION",
+						"BOX_ENTERPRISE",
+						"BOX_FOLDER",
+						"CALENDLY_ROLE",
+						"CALENDLY_EVENT_TYPE",
 					),
 				},
 			},
@@ -3406,8 +3614,6 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
 
 	request, requestDiags := data.ToSharedCreateResourceInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
@@ -3571,8 +3777,6 @@ func (r *ResourceResource) Read(ctx context.Context, req resource.ReadRequest, r
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.State)
-
 	request, requestDiags := data.ToOperationsGetResourceIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -3661,8 +3865,6 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
 
 	request, requestDiags := data.ToSharedUpdateResourceInfoList(ctx)
 	resp.Diagnostics.Append(requestDiags...)
@@ -3825,8 +4027,6 @@ func (r *ResourceResource) Delete(ctx context.Context, req resource.DeleteReques
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsDeleteResourceRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)

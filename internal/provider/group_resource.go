@@ -81,6 +81,7 @@ type GroupResourceModel struct {
 	RemoteName                  types.String                                 `tfsdk:"remote_name"`
 	RequestConfigurations       []tfTypes.RequestConfiguration               `tfsdk:"request_configurations"`
 	RequireMfaToApprove         types.Bool                                   `tfsdk:"require_mfa_to_approve"`
+	RequiresForfeitReason       types.Bool                                   `tfsdk:"requires_forfeit_reason"`
 	RiskSensitivity             types.String                                 `tfsdk:"risk_sensitivity"`
 	RiskSensitivityOverride     types.String                                 `tfsdk:"risk_sensitivity_override"`
 	TeamID                      types.String                                 `tfsdk:"team_id"`
@@ -114,9 +115,10 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Description: `The ID of the app for the group. Requires replacement if changed.`,
 			},
 			"configuration_template_id": schema.StringAttribute{
-				Computed:    true,
-				Optional:    true,
-				Description: `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
+				Computed:           true,
+				Optional:           true,
+				DeprecationMessage: `This will be removed in a future release, please migrate away from it as soon as possible`,
+				Description:        `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
 				Validators: []validator.String{
 					custom_stringvalidators.GroupConfigurationTemplateID(),
 				},
@@ -171,7 +173,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP"]; Requires replacement if changed.`,
+				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "CURSOR_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP", "ASANA_TEAM", "BITWARDEN_GROUP", "BOX_GROUP", "CALENDLY_GROUP", "SQUARE_LOCATION", "SQUARE_JOB", "RIPPLING_TEAM", "RIPPLING_SUPERGROUP"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"ACTIVE_DIRECTORY_GROUP",
@@ -201,6 +203,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						"GRAFANA_TEAM",
 						"CLICKHOUSE_ROLE",
 						"SLACK_USER_GROUP",
+						"CURSOR_GROUP",
 						"TWINGATE_GROUP",
 						"TWINGATE_GROUP_SYNCED",
 						"ZENDESK_GROUP",
@@ -216,6 +219,14 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						"RAMP_LOCATION",
 						"WRIKE_GROUP",
 						"AXIOM_GROUP",
+						"ASANA_TEAM",
+						"BITWARDEN_GROUP",
+						"BOX_GROUP",
+						"CALENDLY_GROUP",
+						"SQUARE_LOCATION",
+						"SQUARE_JOB",
+						"RIPPLING_TEAM",
+						"RIPPLING_SUPERGROUP",
 					),
 				},
 			},
@@ -452,6 +463,38 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						},
 						Description: `Remote info for Active Directory group. Requires replacement if changed.`,
 					},
+					"asana_team": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"team_gid": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The team gid of the Asana Team. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+							"workspace_gid": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The workspace gid of the Asana Team. Requires replacement if changed.`,
+							},
+						},
+						Description: `Remote info for Asana Team. Requires replacement if changed.`,
+					},
 					"aws_sso_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -544,6 +587,75 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						},
 						Description: `Remote info for Microsoft Entra ID Security group. Requires replacement if changed.`,
 					},
+					"bitwarden_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The group id of the Bitwarden Group. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Bitwarden Group. Requires replacement if changed.`,
+					},
+					"box_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The group id of the Box Group. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Box Group. Requires replacement if changed.`,
+					},
+					"calendly_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The group id of the Calendly Group. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Calendly Group. Requires replacement if changed.`,
+					},
 					"clickhouse_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -612,6 +724,29 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							},
 						},
 						Description: `Remote info for Connector group. Requires replacement if changed.`,
+					},
+					"cursor_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The id of the Cursor group, or team:members / team:admins for the owning team's built-in groups. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for a Cursor group. Requires replacement if changed.`,
 					},
 					"databricks_account_group": schema.SingleNestedAttribute{
 						Computed: true,
@@ -1082,6 +1217,52 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						},
 						Description: `Remote info for Ramp location. Requires replacement if changed.`,
 					},
+					"rippling_supergroup": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"supergroup_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Rippling supergroup. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Rippling supergroup. Requires replacement if changed.`,
+					},
+					"rippling_team": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"team_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Rippling team. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Rippling team. Requires replacement if changed.`,
+					},
 					"rootly_on_call_schedule": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -1150,6 +1331,52 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							},
 						},
 						Description: `Remote info for Snowflake role. Requires replacement if changed.`,
+					},
+					"square_job": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The group id of the Square Job. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Square Job. Requires replacement if changed.`,
+					},
+					"square_location": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The group id of the Square Location. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Square Location. Requires replacement if changed.`,
 					},
 					"tableau_group": schema.SingleNestedAttribute{
 						Computed: true,
@@ -1411,6 +1638,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 								"group_ids": types.SetType{
 									ElemType: types.StringType,
 								},
+								"opal_script_id": types.StringType,
 								"role_remote_ids": types.SetType{
 									ElemType: types.StringType,
 								},
@@ -1428,6 +1656,14 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 									},
 									ElementType: types.StringType,
 									Description: `The list of group IDs to match. Default: []`,
+								},
+								"opal_script_id": schema.StringAttribute{
+									Computed: true,
+									Optional: true,
+									PlanModifiers: []planmodifier.String{
+										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+									},
+									Description: `The ID of a ` + "`" + `REQUEST_CONFIGURATION_CONDITION` + "`" + ` OpalScript that decides whether this request configuration applies. Cannot be combined with ` + "`" + `group_ids` + "`" + ` or ` + "`" + `role_remote_ids` + "`" + `.`,
 								},
 								"role_remote_ids": schema.SetAttribute{
 									Computed: true,
@@ -1662,6 +1898,11 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Default:     booldefault.StaticBool(false),
 				Description: `A bool representing whether or not to require MFA for reviewers to approve requests for this group. Default: false`,
 			},
+			"requires_forfeit_reason": schema.BoolAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `A bool representing whether or not a reason is required when forfeiting access to this group.`,
+			},
 			"risk_sensitivity": schema.StringAttribute{
 				Computed: true,
 				PlanModifiers: []planmodifier.String{
@@ -1756,8 +1997,6 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
 
 	request, requestDiags := data.ToSharedCreateGroupInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
@@ -2088,8 +2327,6 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.State)
-
 	request, requestDiags := data.ToOperationsGetGroupRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -2248,8 +2485,6 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
 
 	request, requestDiags := data.ToSharedUpdateGroupInfoList(ctx)
 	resp.Diagnostics.Append(requestDiags...)
@@ -2542,8 +2777,6 @@ func (r *GroupResource) Delete(ctx context.Context, req resource.DeleteRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsDeleteGroupRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
