@@ -299,6 +299,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.CursorOrganization = &tfTypes.CursorOrganization{}
 				r.RemoteInfo.CursorOrganization.OrgID = types.StringValue(resp.RemoteInfo.CursorOrganization.OrgID)
 			}
+			if resp.RemoteInfo.CursorOriginRepository == nil {
+				r.RemoteInfo.CursorOriginRepository = nil
+			} else {
+				r.RemoteInfo.CursorOriginRepository = &tfTypes.CursorOriginRepository{}
+				r.RemoteInfo.CursorOriginRepository.RepositoryName = types.StringValue(resp.RemoteInfo.CursorOriginRepository.RepositoryName)
+			}
 			if resp.RemoteInfo.CustomConnector == nil {
 				r.RemoteInfo.CustomConnector = nil
 			} else {
@@ -1455,6 +1461,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				OrgID: orgID,
 			}
 		}
+		var cursorOriginRepository *shared.CursorOriginRepository
+		if r.RemoteInfo.CursorOriginRepository != nil {
+			var repositoryName string
+			repositoryName = r.RemoteInfo.CursorOriginRepository.RepositoryName.ValueString()
+
+			cursorOriginRepository = &shared.CursorOriginRepository{
+				RepositoryName: repositoryName,
+			}
+		}
 		var customConnector *shared.CustomConnector
 		if r.RemoteInfo.CustomConnector != nil {
 			var canHaveUsageEvents bool
@@ -2167,6 +2182,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			ClickhouseTable:                   clickhouseTable,
 			CoupaRole:                         coupaRole,
 			CursorOrganization:                cursorOrganization,
+			CursorOriginRepository:            cursorOriginRepository,
 			CustomConnector:                   customConnector,
 			DatabricksAccountServicePrincipal: databricksAccountServicePrincipal,
 			DatabricksCatalog:                 databricksCatalog,

@@ -35,6 +35,21 @@ type AgentActivityEvent struct {
 	Cwd *string `json:"cwd,omitempty"`
 	// Which hook fired, e.g. `PostToolUse`, `PreToolUse`, `PermissionDenied`. Required; an event with no name cannot be interpreted and is rejected.
 	HookEventName string `json:"hook_event_name"`
+	// # AgentActivityMcpServer Object
+	// ### Description
+	// The MCP server behind a tool call, as Claude Code reports it. Claude Code v2.1.274 and
+	// later adds this object to the hook input of an MCP tool call; an older client does not
+	// send it, and it is never present for a built-in tool such as `Bash`.
+	//
+	// When `name` is present it is stored as the call's server. When this object is absent,
+	// the server is read from `tool_name` instead: the part after the `mcp__` prefix and
+	// before the next `__`. The tool is always read from `tool_name`.
+	//
+	// Only `name` is read. `source` says where the server's definition came from (`plugin`,
+	// `sdk`, or a configuration scope such as `user` or `project`) and is parsed and
+	// **discarded**. Neither field is an identity: `name` is whatever the user called the
+	// server in their own configuration.
+	McpServer *AgentActivityMcpServer `json:"mcp_server,omitempty"`
 	// The session's permission mode, e.g. `default`, `acceptEdits`, `bypassPermissions`. A session running `bypassPermissions` had no approval gate in front of any tool call it made.
 	PermissionMode *string `json:"permission_mode,omitempty"`
 	// Groups every tool call made under one user instruction, so a run can be read back as the instruction that caused it rather than as unrelated rows.
@@ -56,6 +71,9 @@ type AgentActivityEvent struct {
 	// failing to parse.
 	ToolInput map[string]any `json:"tool_input,omitempty"`
 	// The tool invoked, for tool-scoped events. Empty for session-level events.
+	//
+	// An MCP tool is named `mcp__<server>__<tool>`. The whole string is stored as sent,
+	// and the server and the tool are also stored in their own fields (see `mcp_server`).
 	ToolName *string `json:"tool_name,omitempty"`
 	// The tool invocation's id, used together with `hook_event_name` to deduplicate a retried delivery. Absent on events that carry none, which are stored at-least-once.
 	ToolUseID *string `json:"tool_use_id,omitempty"`
@@ -114,6 +132,13 @@ func (a *AgentActivityEvent) GetHookEventName() string {
 		return ""
 	}
 	return a.HookEventName
+}
+
+func (a *AgentActivityEvent) GetMcpServer() *AgentActivityMcpServer {
+	if a == nil {
+		return nil
+	}
+	return a.McpServer
 }
 
 func (a *AgentActivityEvent) GetPermissionMode() *string {

@@ -299,6 +299,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.CursorOrganization = &tfTypes.CursorOrganization{}
 				r.RemoteInfo.CursorOrganization.OrgID = types.StringValue(resp.RemoteInfo.CursorOrganization.OrgID)
 			}
+			if resp.RemoteInfo.CursorOriginRepository == nil {
+				r.RemoteInfo.CursorOriginRepository = nil
+			} else {
+				r.RemoteInfo.CursorOriginRepository = &tfTypes.CursorOriginRepository{}
+				r.RemoteInfo.CursorOriginRepository.RepositoryName = types.StringValue(resp.RemoteInfo.CursorOriginRepository.RepositoryName)
+			}
 			if resp.RemoteInfo.CustomConnector == nil {
 				r.RemoteInfo.CustomConnector = nil
 			} else {

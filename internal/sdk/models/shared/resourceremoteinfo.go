@@ -630,6 +630,19 @@ func (c *CursorOrganization) GetOrgID() string {
 	return c.OrgID
 }
 
+// CursorOriginRepository - Remote info for a Cursor Origin repository.
+type CursorOriginRepository struct {
+	// The repository's owner slug and name.
+	RepositoryName string `json:"repository_name"`
+}
+
+func (c *CursorOriginRepository) GetRepositoryName() string {
+	if c == nil {
+		return ""
+	}
+	return c.RepositoryName
+}
+
 // CustomConnector - Remote info for a custom connector resource.
 type CustomConnector struct {
 	// A bool representing whether or not the resource can have usage data.
@@ -1745,6 +1758,8 @@ type ResourceRemoteInfo struct {
 	CoupaRole *CoupaRole `json:"coupa_role,omitempty"`
 	// Remote info for a Cursor organization.
 	CursorOrganization *CursorOrganization `json:"cursor_organization,omitempty"`
+	// Remote info for a Cursor Origin repository.
+	CursorOriginRepository *CursorOriginRepository `json:"cursor_origin_repository,omitempty"`
 	// Remote info for a custom connector resource.
 	CustomConnector *CustomConnector `json:"custom_connector,omitempty"`
 	// Remote info for Databricks account service principal.
@@ -2132,6 +2147,13 @@ func (r *ResourceRemoteInfo) GetCursorOrganization() *CursorOrganization {
 		return nil
 	}
 	return r.CursorOrganization
+}
+
+func (r *ResourceRemoteInfo) GetCursorOriginRepository() *CursorOriginRepository {
+	if r == nil {
+		return nil
+	}
+	return r.CursorOriginRepository
 }
 
 func (r *ResourceRemoteInfo) GetCustomConnector() *CustomConnector {

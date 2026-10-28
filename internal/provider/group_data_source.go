@@ -335,6 +335,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Connector group.`,
 					},
+					"cursor_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the Cursor group, or team:members / team:admins for the owning team's built-in groups.`,
+							},
+						},
+						Description: `Remote info for a Cursor group.`,
+					},
 					"databricks_account_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{

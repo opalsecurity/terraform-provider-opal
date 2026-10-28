@@ -16,6 +16,7 @@ type GroupRemoteInfo struct {
 	ClickhouseRole           *ClickhouseRole           `tfsdk:"clickhouse_role"`
 	ConfluenceGroup          *ActiveDirectoryGroup     `tfsdk:"confluence_group"`
 	ConnectorGroup           *ActiveDirectoryGroup     `tfsdk:"connector_group"`
+	CursorGroup              *ActiveDirectoryGroup     `tfsdk:"cursor_group"`
 	DatabricksAccountGroup   *ActiveDirectoryGroup     `tfsdk:"databricks_account_group"`
 	DevinGroup               *DevinGroup               `tfsdk:"devin_group"`
 	DocusignGroup            *ActiveDirectoryGroup     `tfsdk:"docusign_group"`

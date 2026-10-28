@@ -126,6 +126,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.ConnectorGroup = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.ConnectorGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.ConnectorGroup.GroupID)
 				}
+				if resultsItem.RemoteInfo.CursorGroup == nil {
+					results.RemoteInfo.CursorGroup = nil
+				} else {
+					results.RemoteInfo.CursorGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.CursorGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.CursorGroup.GroupID)
+				}
 				if resultsItem.RemoteInfo.DatabricksAccountGroup == nil {
 					results.RemoteInfo.DatabricksAccountGroup = nil
 				} else {

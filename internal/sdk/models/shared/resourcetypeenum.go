@@ -82,6 +82,7 @@ const (
 	ResourceTypeEnumDatastaxAstraRole                 ResourceTypeEnum = "DATASTAX_ASTRA_ROLE"
 	ResourceTypeEnumCoupaRole                         ResourceTypeEnum = "COUPA_ROLE"
 	ResourceTypeEnumCursorOrganization                ResourceTypeEnum = "CURSOR_ORGANIZATION"
+	ResourceTypeEnumCursorOriginRepository            ResourceTypeEnum = "CURSOR_ORIGIN_REPOSITORY"
 	ResourceTypeEnumOpenaiPlatformProject             ResourceTypeEnum = "OPENAI_PLATFORM_PROJECT"
 	ResourceTypeEnumOpenaiPlatformServiceAccount      ResourceTypeEnum = "OPENAI_PLATFORM_SERVICE_ACCOUNT"
 	ResourceTypeEnumAnthropicWorkspace                ResourceTypeEnum = "ANTHROPIC_WORKSPACE"
@@ -281,6 +282,8 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "COUPA_ROLE":
 		fallthrough
 	case "CURSOR_ORGANIZATION":
+		fallthrough
+	case "CURSOR_ORIGIN_REPOSITORY":
 		fallthrough
 	case "OPENAI_PLATFORM_PROJECT":
 		fallthrough

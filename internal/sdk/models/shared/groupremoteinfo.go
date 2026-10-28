@@ -171,6 +171,19 @@ func (c *ConnectorGroup) GetGroupID() string {
 	return c.GroupID
 }
 
+// CursorGroup - Remote info for a Cursor group.
+type CursorGroup struct {
+	// The id of the Cursor group, or team:members / team:admins for the owning team's built-in groups.
+	GroupID string `json:"group_id"`
+}
+
+func (c *CursorGroup) GetGroupID() string {
+	if c == nil {
+		return ""
+	}
+	return c.GroupID
+}
+
 // DatabricksAccountGroup - Remote info for Databricks account group.
 type DatabricksAccountGroup struct {
 	// The id of the Databricks account group.
@@ -674,6 +687,8 @@ type GroupRemoteInfo struct {
 	ConfluenceGroup *ConfluenceGroup `json:"confluence_group,omitempty"`
 	// Remote info for Connector group.
 	ConnectorGroup *ConnectorGroup `json:"connector_group,omitempty"`
+	// Remote info for a Cursor group.
+	CursorGroup *CursorGroup `json:"cursor_group,omitempty"`
 	// Remote info for Databricks account group.
 	DatabricksAccountGroup *DatabricksAccountGroup `json:"databricks_account_group,omitempty"`
 	// Remote info for Devin group.
@@ -830,6 +845,13 @@ func (g *GroupRemoteInfo) GetConnectorGroup() *ConnectorGroup {
 		return nil
 	}
 	return g.ConnectorGroup
+}
+
+func (g *GroupRemoteInfo) GetCursorGroup() *CursorGroup {
+	if g == nil {
+		return nil
+	}
+	return g.CursorGroup
 }
 
 func (g *GroupRemoteInfo) GetDatabricksAccountGroup() *DatabricksAccountGroup {

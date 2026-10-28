@@ -39,6 +39,7 @@ const (
 	GroupTypeEnumGrafanaTeam              GroupTypeEnum = "GRAFANA_TEAM"
 	GroupTypeEnumClickhouseRole           GroupTypeEnum = "CLICKHOUSE_ROLE"
 	GroupTypeEnumSlackUserGroup           GroupTypeEnum = "SLACK_USER_GROUP"
+	GroupTypeEnumCursorGroup              GroupTypeEnum = "CURSOR_GROUP"
 	GroupTypeEnumTwingateGroup            GroupTypeEnum = "TWINGATE_GROUP"
 	GroupTypeEnumTwingateGroupSynced      GroupTypeEnum = "TWINGATE_GROUP_SYNCED"
 	GroupTypeEnumZendeskGroup             GroupTypeEnum = "ZENDESK_GROUP"
@@ -126,6 +127,8 @@ func (e *GroupTypeEnum) UnmarshalJSON(data []byte) error {
 	case "CLICKHOUSE_ROLE":
 		fallthrough
 	case "SLACK_USER_GROUP":
+		fallthrough
+	case "CURSOR_GROUP":
 		fallthrough
 	case "TWINGATE_GROUP":
 		fallthrough

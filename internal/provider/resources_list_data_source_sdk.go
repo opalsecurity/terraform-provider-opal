@@ -292,6 +292,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.CursorOrganization = &tfTypes.CursorOrganization{}
 					results.RemoteInfo.CursorOrganization.OrgID = types.StringValue(resultsItem.RemoteInfo.CursorOrganization.OrgID)
 				}
+				if resultsItem.RemoteInfo.CursorOriginRepository == nil {
+					results.RemoteInfo.CursorOriginRepository = nil
+				} else {
+					results.RemoteInfo.CursorOriginRepository = &tfTypes.CursorOriginRepository{}
+					results.RemoteInfo.CursorOriginRepository.RepositoryName = types.StringValue(resultsItem.RemoteInfo.CursorOriginRepository.RepositoryName)
+				}
 				if resultsItem.RemoteInfo.CustomConnector == nil {
 					results.RemoteInfo.CustomConnector = nil
 				} else {

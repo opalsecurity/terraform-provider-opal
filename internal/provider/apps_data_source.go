@@ -79,6 +79,10 @@ func (r *AppsDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 									Computed:    true,
 									Description: `Whether the Custom Connector supports groups.`,
 								},
+								"supports_idp": schema.BoolAttribute{
+									Computed:    true,
+									Description: `Whether the Custom Connector can be connected as an upstream user directory.`,
+								},
 								"supports_nested_groups": schema.BoolAttribute{
 									Computed:    true,
 									Description: `Whether the Custom Connector supports nested groups.`,

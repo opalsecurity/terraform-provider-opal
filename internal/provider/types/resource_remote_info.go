@@ -41,6 +41,7 @@ type ResourceRemoteInfo struct {
 	ClickhouseTable                   *ClickhouseTable                   `tfsdk:"clickhouse_table"`
 	CoupaRole                         *ClickhouseRole                    `tfsdk:"coupa_role"`
 	CursorOrganization                *CursorOrganization                `tfsdk:"cursor_organization"`
+	CursorOriginRepository            *CursorOriginRepository            `tfsdk:"cursor_origin_repository"`
 	CustomConnector                   *CustomConnector                   `tfsdk:"custom_connector"`
 	DatabricksAccountServicePrincipal *DatabricksAccountServicePrincipal `tfsdk:"databricks_account_service_principal"`
 	DatabricksCatalog                 *DatabricksCatalog                 `tfsdk:"databricks_catalog"`

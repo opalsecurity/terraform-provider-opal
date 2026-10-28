@@ -60,6 +60,9 @@ resource "opal_group" "my_group" {
     connector_group = {
       group_id = 898931321
     }
+    cursor_group = {
+      group_id = "grp_01k2ja2000e0080000000000n2"
+    }
     databricks_account_group = {
       group_id = 898931321
     }

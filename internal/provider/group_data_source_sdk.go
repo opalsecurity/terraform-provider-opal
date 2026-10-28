@@ -200,6 +200,12 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.ConnectorGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.ConnectorGroup.GroupID = types.StringValue(resp.RemoteInfo.ConnectorGroup.GroupID)
 			}
+			if resp.RemoteInfo.CursorGroup == nil {
+				r.RemoteInfo.CursorGroup = nil
+			} else {
+				r.RemoteInfo.CursorGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.CursorGroup.GroupID = types.StringValue(resp.RemoteInfo.CursorGroup.GroupID)
+			}
 			if resp.RemoteInfo.DatabricksAccountGroup == nil {
 				r.RemoteInfo.DatabricksAccountGroup = nil
 			} else {

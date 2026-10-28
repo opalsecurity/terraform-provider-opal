@@ -574,6 +574,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for a Cursor organization.`,
 					},
+					"cursor_origin_repository": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"repository_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The repository's owner slug and name.`,
+							},
+						},
+						Description: `Remote info for a Cursor Origin repository.`,
+					},
 					"custom_connector": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
