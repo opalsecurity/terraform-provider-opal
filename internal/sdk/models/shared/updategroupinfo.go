@@ -38,9 +38,7 @@ type UpdateGroupInfo struct {
 	// The request configuration list of the configuration template. If not provided, the default request configuration will be used.
 	RequestConfigurations []RequestConfiguration `json:"request_configurations,omitempty"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this group.
-	RequireMfaToApprove *bool `default:"false" json:"require_mfa_to_approve"`
-	// A bool representing whether or not a reason is required when forfeiting access to this group.
-	RequiresForfeitReason   *bool                `json:"requires_forfeit_reason,omitempty"`
+	RequireMfaToApprove     *bool                `default:"false" json:"require_mfa_to_approve"`
 	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
 }
 
@@ -137,13 +135,6 @@ func (u *UpdateGroupInfo) GetRequireMfaToApprove() *bool {
 		return nil
 	}
 	return u.RequireMfaToApprove
-}
-
-func (u *UpdateGroupInfo) GetRequiresForfeitReason() *bool {
-	if u == nil {
-		return nil
-	}
-	return u.RequiresForfeitReason
 }
 
 func (u *UpdateGroupInfo) GetRiskSensitivityOverride() *RiskSensitivityEnum {

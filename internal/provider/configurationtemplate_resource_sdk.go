@@ -35,7 +35,6 @@ func (r *ConfigurationTemplateResourceModel) RefreshFromSharedConfigurationTempl
 		r.RequestConfigurationID = types.StringPointerValue(resp.RequestConfigurationID)
 		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
 		r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
-		r.RequiresForfeitReason = types.BoolPointerValue(resp.RequiresForfeitReason)
 		if resp.TicketPropagation == nil {
 			r.TicketPropagation = nil
 		} else {
@@ -256,12 +255,6 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 	var requireMfaToConnect bool
 	requireMfaToConnect = r.RequireMfaToConnect.ValueBool()
 
-	requiresForfeitReason := new(bool)
-	if !r.RequiresForfeitReason.IsUnknown() && !r.RequiresForfeitReason.IsNull() {
-		*requiresForfeitReason = r.RequiresForfeitReason.ValueBool()
-	} else {
-		requiresForfeitReason = nil
-	}
 	var ticketPropagation *shared.TicketPropagationConfiguration
 	if r.TicketPropagation != nil {
 		var enabledOnGrant bool
@@ -308,7 +301,6 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 		RequestConfigurations:        requestConfigurations,
 		RequireMfaToApprove:          requireMfaToApprove,
 		RequireMfaToConnect:          requireMfaToConnect,
-		RequiresForfeitReason:        requiresForfeitReason,
 		TicketPropagation:            ticketPropagation,
 		Visibility:                   visibility,
 	}
@@ -509,12 +501,6 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 	} else {
 		requireMfaToConnect = nil
 	}
-	requiresForfeitReason := new(bool)
-	if !r.RequiresForfeitReason.IsUnknown() && !r.RequiresForfeitReason.IsNull() {
-		*requiresForfeitReason = r.RequiresForfeitReason.ValueBool()
-	} else {
-		requiresForfeitReason = nil
-	}
 	var ticketPropagation *shared.TicketPropagationConfiguration
 	if r.TicketPropagation != nil {
 		var enabledOnGrant bool
@@ -563,7 +549,6 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 		RequestConfigurations:        requestConfigurations,
 		RequireMfaToApprove:          requireMfaToApprove,
 		RequireMfaToConnect:          requireMfaToConnect,
-		RequiresForfeitReason:        requiresForfeitReason,
 		TicketPropagation:            ticketPropagation,
 		Visibility:                   visibility,
 	}

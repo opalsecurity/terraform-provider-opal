@@ -39,7 +39,6 @@ func (r *ConfigurationTemplateListDataSourceModel) RefreshFromSharedPaginatedCon
 			results.RequestConfigurationID = types.StringPointerValue(resultsItem.RequestConfigurationID)
 			results.RequireMfaToApprove = types.BoolPointerValue(resultsItem.RequireMfaToApprove)
 			results.RequireMfaToConnect = types.BoolPointerValue(resultsItem.RequireMfaToConnect)
-			results.RequiresForfeitReason = types.BoolPointerValue(resultsItem.RequiresForfeitReason)
 			if resultsItem.TicketPropagation == nil {
 				results.TicketPropagation = nil
 			} else {

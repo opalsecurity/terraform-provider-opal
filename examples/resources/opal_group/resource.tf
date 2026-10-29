@@ -115,6 +115,12 @@ resource "opal_group" "my_group" {
     okta_group_rule = {
       rule_id = "0pr3f7zMZZHPgUoWO0g4"
     }
+    onelogin_group = {
+      group_id = "...my_group_id..."
+    }
+    onelogin_role = {
+      group_id = "...my_group_id..."
+    }
     pagerduty_on_call_schedule = {
       schedule_id = "PNZNINN"
     }
@@ -222,7 +228,6 @@ resource "opal_group" "my_group" {
     }
   ]
   require_mfa_to_approve    = false
-  requires_forfeit_reason   = false
   risk_sensitivity_override = "CRITICAL"
   team_id                   = "T01234567"
   visibility                = "GLOBAL"

@@ -83,6 +83,7 @@ type ResourceRemoteInfo struct {
 	OktaApp                           *OktaApp                           `tfsdk:"okta_app"`
 	OktaCustomRole                    *ClickhouseRole                    `tfsdk:"okta_custom_role"`
 	OktaStandardRole                  *OktaStandardRole                  `tfsdk:"okta_standard_role"`
+	OneloginApp                       *AzureEnterpriseApp                `tfsdk:"onelogin_app"`
 	OpenaiPlatformProject             *GcpProject                        `tfsdk:"openai_platform_project"`
 	OpenaiPlatformServiceAccount      *OpenaiPlatformServiceAccount      `tfsdk:"openai_platform_service_account"`
 	OracleFusionRole                  *ClickhouseRole                    `tfsdk:"oracle_fusion_role"`

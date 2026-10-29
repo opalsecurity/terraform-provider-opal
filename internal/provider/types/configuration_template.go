@@ -18,7 +18,6 @@ type ConfigurationTemplate struct {
 	RequestConfigurationID       types.String                    `tfsdk:"request_configuration_id"`
 	RequireMfaToApprove          types.Bool                      `tfsdk:"require_mfa_to_approve"`
 	RequireMfaToConnect          types.Bool                      `tfsdk:"require_mfa_to_connect"`
-	RequiresForfeitReason        types.Bool                      `tfsdk:"requires_forfeit_reason"`
 	TicketPropagation            *TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
 	Visibility                   *VisibilityInfo                 `tfsdk:"visibility"`
 }

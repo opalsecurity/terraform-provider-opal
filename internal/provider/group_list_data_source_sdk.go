@@ -235,6 +235,18 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.OktaGroupRule = &tfTypes.OktaGroupRule{}
 					results.RemoteInfo.OktaGroupRule.RuleID = types.StringValue(resultsItem.RemoteInfo.OktaGroupRule.RuleID)
 				}
+				if resultsItem.RemoteInfo.OneloginGroup == nil {
+					results.RemoteInfo.OneloginGroup = nil
+				} else {
+					results.RemoteInfo.OneloginGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.OneloginGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.OneloginGroup.GroupID)
+				}
+				if resultsItem.RemoteInfo.OneloginRole == nil {
+					results.RemoteInfo.OneloginRole = nil
+				} else {
+					results.RemoteInfo.OneloginRole = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.OneloginRole.GroupID = types.StringValue(resultsItem.RemoteInfo.OneloginRole.GroupID)
+				}
 				if resultsItem.RemoteInfo.PagerdutyOnCallSchedule == nil {
 					results.RemoteInfo.PagerdutyOnCallSchedule = nil
 				} else {
@@ -425,7 +437,6 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				results.RequestConfigurations = append(results.RequestConfigurations, requestConfigurations)
 			}
 			results.RequireMfaToApprove = types.BoolPointerValue(resultsItem.RequireMfaToApprove)
-			results.RequiresForfeitReason = types.BoolPointerValue(resultsItem.RequiresForfeitReason)
 			if resultsItem.RiskSensitivity != nil {
 				results.RiskSensitivity = types.StringValue(string(*resultsItem.RiskSensitivity))
 			} else {

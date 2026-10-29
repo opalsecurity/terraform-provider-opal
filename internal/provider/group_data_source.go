@@ -50,7 +50,6 @@ type GroupDataSourceModel struct {
 	RemoteName                  types.String                                 `tfsdk:"remote_name"`
 	RequestConfigurations       []tfTypes.RequestConfiguration               `tfsdk:"request_configurations"`
 	RequireMfaToApprove         types.Bool                                   `tfsdk:"require_mfa_to_approve"`
-	RequiresForfeitReason       types.Bool                                   `tfsdk:"requires_forfeit_reason"`
 	RiskSensitivity             types.String                                 `tfsdk:"risk_sensitivity"`
 	RiskSensitivityOverride     types.String                                 `tfsdk:"risk_sensitivity_override"`
 	Visibility                  types.String                                 `tfsdk:"visibility"`
@@ -519,6 +518,26 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Okta Directory group rule.`,
 					},
+					"onelogin_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The group id of the OneLogin Group.`,
+							},
+						},
+						Description: `Remote info for OneLogin Group.`,
+					},
+					"onelogin_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The group id of the OneLogin Role.`,
+							},
+						},
+						Description: `Remote info for OneLogin Role.`,
+					},
 					"pagerduty_on_call_schedule": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -855,10 +874,6 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			"require_mfa_to_approve": schema.BoolAttribute{
 				Computed:    true,
 				Description: `A bool representing whether or not to require MFA for reviewers to approve requests for this group.`,
-			},
-			"requires_forfeit_reason": schema.BoolAttribute{
-				Computed:    true,
-				Description: `A bool representing whether or not a reason is required when forfeiting access to this group.`,
 			},
 			"risk_sensitivity": schema.StringAttribute{
 				Computed:    true,

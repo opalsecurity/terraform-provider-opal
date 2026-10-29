@@ -26,7 +26,6 @@ type Group struct {
 	RemoteName                  types.String           `tfsdk:"remote_name"`
 	RequestConfigurations       []RequestConfiguration `tfsdk:"request_configurations"`
 	RequireMfaToApprove         types.Bool             `tfsdk:"require_mfa_to_approve"`
-	RequiresForfeitReason       types.Bool             `tfsdk:"requires_forfeit_reason"`
 	RiskSensitivity             types.String           `tfsdk:"risk_sensitivity"`
 	RiskSensitivityOverride     types.String           `tfsdk:"risk_sensitivity_override"`
 }

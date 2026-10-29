@@ -48,7 +48,6 @@ type ResourceDataSourceModel struct {
 	RequestConfigurations       []tfTypes.RequestConfiguration          `tfsdk:"request_configurations"`
 	RequireMfaToApprove         types.Bool                              `tfsdk:"require_mfa_to_approve"`
 	RequireMfaToConnect         types.Bool                              `tfsdk:"require_mfa_to_connect"`
-	RequiresForfeitReason       types.Bool                              `tfsdk:"requires_forfeit_reason"`
 	ResourceType                types.String                            `tfsdk:"resource_type"`
 	RiskSensitivity             types.String                            `tfsdk:"risk_sensitivity"`
 	RiskSensitivityOverride     types.String                            `tfsdk:"risk_sensitivity_override"`
@@ -1066,6 +1065,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Okta directory standard role.`,
 					},
+					"onelogin_app": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The resource id of the OneLogin App.`,
+							},
+						},
+						Description: `Remote info for OneLogin App.`,
+					},
 					"openai_platform_project": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -1462,10 +1471,6 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"require_mfa_to_connect": schema.BoolAttribute{
 				Computed:    true,
 				Description: `A bool representing whether or not to require MFA to connect to this resource.`,
-			},
-			"requires_forfeit_reason": schema.BoolAttribute{
-				Computed:    true,
-				Description: `A bool representing whether or not a reason is required when forfeiting access to this resource.`,
 			},
 			"resource_type": schema.StringAttribute{
 				Computed:    true,

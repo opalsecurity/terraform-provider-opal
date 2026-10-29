@@ -569,6 +569,12 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.OktaStandardRole = &tfTypes.OktaStandardRole{}
 				r.RemoteInfo.OktaStandardRole.RoleType = types.StringValue(resp.RemoteInfo.OktaStandardRole.RoleType)
 			}
+			if resp.RemoteInfo.OneloginApp == nil {
+				r.RemoteInfo.OneloginApp = nil
+			} else {
+				r.RemoteInfo.OneloginApp = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.OneloginApp.ResourceID = types.StringValue(resp.RemoteInfo.OneloginApp.ResourceID)
+			}
 			if resp.RemoteInfo.OpenaiPlatformProject == nil {
 				r.RemoteInfo.OpenaiPlatformProject = nil
 			} else {
@@ -788,7 +794,6 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 		}
 		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
 		r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
-		r.RequiresForfeitReason = types.BoolPointerValue(resp.RequiresForfeitReason)
 		if resp.ResourceType != nil {
 			r.ResourceType = types.StringValue(string(*resp.ResourceType))
 		} else {
@@ -910,7 +915,6 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.
 	}
 	r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
 	r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
-	r.RequiresForfeitReason = types.BoolPointerValue(resp.RequiresForfeitReason)
 	if resp.RiskSensitivityOverride != nil {
 		r.RiskSensitivityOverride = types.StringValue(string(*resp.RiskSensitivityOverride))
 	} else {
@@ -1917,6 +1921,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				RoleType: roleType,
 			}
 		}
+		var oneloginApp *shared.OneloginApp
+		if r.RemoteInfo.OneloginApp != nil {
+			var resourceId20 string
+			resourceId20 = r.RemoteInfo.OneloginApp.ResourceID.ValueString()
+
+			oneloginApp = &shared.OneloginApp{
+				ResourceID: resourceId20,
+			}
+		}
 		var openaiPlatformProject *shared.OpenaiPlatformProject
 		if r.RemoteInfo.OpenaiPlatformProject != nil {
 			var projectId8 string
@@ -2074,11 +2087,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var twingateResource *shared.TwingateResource
 		if r.RemoteInfo.TwingateResource != nil {
-			var resourceId20 string
-			resourceId20 = r.RemoteInfo.TwingateResource.ResourceID.ValueString()
+			var resourceId21 string
+			resourceId21 = r.RemoteInfo.TwingateResource.ResourceID.ValueString()
 
 			twingateResource = &shared.TwingateResource{
-				ResourceID: resourceId20,
+				ResourceID: resourceId21,
 			}
 		}
 		var vercelProject *shared.VercelProject
@@ -2224,6 +2237,7 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			OktaApp:                           oktaApp,
 			OktaCustomRole:                    oktaCustomRole,
 			OktaStandardRole:                  oktaStandardRole,
+			OneloginApp:                       oneloginApp,
 			OpenaiPlatformProject:             openaiPlatformProject,
 			OpenaiPlatformServiceAccount:      openaiPlatformServiceAccount,
 			OracleFusionRole:                  oracleFusionRole,
@@ -2488,12 +2502,6 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 	} else {
 		requireMfaToConnect = nil
 	}
-	requiresForfeitReason := new(bool)
-	if !r.RequiresForfeitReason.IsUnknown() && !r.RequiresForfeitReason.IsNull() {
-		*requiresForfeitReason = r.RequiresForfeitReason.ValueBool()
-	} else {
-		requiresForfeitReason = nil
-	}
 	riskSensitivityOverride := new(shared.RiskSensitivityEnum)
 	if !r.RiskSensitivityOverride.IsUnknown() && !r.RiskSensitivityOverride.IsNull() {
 		*riskSensitivityOverride = shared.RiskSensitivityEnum(r.RiskSensitivityOverride.ValueString())
@@ -2541,7 +2549,6 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 		RequestConfigurations:       requestConfigurations,
 		RequireMfaToApprove:         requireMfaToApprove,
 		RequireMfaToConnect:         requireMfaToConnect,
-		RequiresForfeitReason:       requiresForfeitReason,
 		RiskSensitivityOverride:     riskSensitivityOverride,
 		TicketPropagation:           ticketPropagation,
 	}

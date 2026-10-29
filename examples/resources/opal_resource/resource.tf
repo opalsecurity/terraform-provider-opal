@@ -281,6 +281,9 @@ resource "opal_resource" "my_resource" {
     okta_standard_role = {
       role_type = "ORG_ADMIN"
     }
+    onelogin_app = {
+      resource_id = "...my_resource_id..."
+    }
     openai_platform_project = {
       project_id = "proj_abc"
     }
@@ -406,7 +409,6 @@ resource "opal_resource" "my_resource" {
   ]
   require_mfa_to_approve    = false
   require_mfa_to_connect    = false
-  requires_forfeit_reason   = false
   resource_type             = "AWS_IAM_ROLE"
   risk_sensitivity_override = "HIGH"
   ticket_propagation = {

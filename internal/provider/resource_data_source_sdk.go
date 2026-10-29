@@ -569,6 +569,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.OktaStandardRole = &tfTypes.OktaStandardRole{}
 				r.RemoteInfo.OktaStandardRole.RoleType = types.StringValue(resp.RemoteInfo.OktaStandardRole.RoleType)
 			}
+			if resp.RemoteInfo.OneloginApp == nil {
+				r.RemoteInfo.OneloginApp = nil
+			} else {
+				r.RemoteInfo.OneloginApp = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.OneloginApp.ResourceID = types.StringValue(resp.RemoteInfo.OneloginApp.ResourceID)
+			}
 			if resp.RemoteInfo.OpenaiPlatformProject == nil {
 				r.RemoteInfo.OpenaiPlatformProject = nil
 			} else {
@@ -788,7 +794,6 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 		}
 		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
 		r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
-		r.RequiresForfeitReason = types.BoolPointerValue(resp.RequiresForfeitReason)
 		if resp.ResourceType != nil {
 			r.ResourceType = types.StringValue(string(*resp.ResourceType))
 		} else {
