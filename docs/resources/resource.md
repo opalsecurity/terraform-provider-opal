@@ -424,6 +424,7 @@ resource "opal_resource" "my_resource" {
   ]
   require_mfa_to_approve    = false
   require_mfa_to_connect    = false
+  requires_forfeit_reason   = false
   resource_type             = "AWS_IAM_ROLE"
   risk_sensitivity_override = "HIGH"
   ticket_propagation = {
@@ -462,6 +463,7 @@ resource "opal_resource" "my_resource" {
 - `request_configurations` (Attributes List) A list of configurations for requests to this resource. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this resource. Default: false
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to this resource.
+- `requires_forfeit_reason` (Boolean) A bool representing whether or not a reason is required when forfeiting access to this resource.
 - `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
 - `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--ticket_propagation))
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]

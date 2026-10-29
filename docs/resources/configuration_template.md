@@ -77,8 +77,9 @@ resource "opal_configuration_template" "my_configurationtemplate" {
       ]
     }
   ]
-  require_mfa_to_approve = false
-  require_mfa_to_connect = false
+  require_mfa_to_approve  = false
+  require_mfa_to_connect  = false
+  requires_forfeit_reason = false
   ticket_propagation = {
     enabled_on_grant      = true
     enabled_on_revocation = false
@@ -112,6 +113,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
 - `member_on_call_schedule_ids` (Set of String) The IDs of the on-call schedules linked to the configuration template. Default: []
 - `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template. Default: false
+- `requires_forfeit_reason` (Boolean) A bool representing whether or not a reason is required when forfeiting access to resources or groups using this configuration template.
 - `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--ticket_propagation))
 
 ### Read-Only

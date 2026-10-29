@@ -1295,35 +1295,6 @@ actions:
     update:
       description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
       x-speakeasy-plan-validators: GroupConfigurationTemplateID
-
-  # Hold requires_forfeit_reason back from this regen — it's a new top-level
-  # attribute pulled in by spec drift that would also require a state-upgrader
-  # bump in internal/stateupgraders/{group,resource}_v0.go (see #194 for the
-  # outage class this prevents). Stripping it here keeps this regen free of
-  # hand-written changes outside the overlay itself; a follow-up PR
-  # re-introduces the attribute together with the upgrader entries.
-  - target: $["components"]["schemas"]["Group"]["properties"]["requires_forfeit_reason"]
-    update:
-      x-speakeasy-ignore: true
-  - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["requires_forfeit_reason"]
-    update:
-      x-speakeasy-ignore: true
-  - target: $["components"]["schemas"]["Resource"]["properties"]["requires_forfeit_reason"]
-    update:
-      x-speakeasy-ignore: true
-  - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["requires_forfeit_reason"]
-    update:
-      x-speakeasy-ignore: true
-  - target: $["components"]["schemas"]["ConfigurationTemplate"]["properties"]["requires_forfeit_reason"]
-    update:
-      x-speakeasy-ignore: true
-  - target: $["components"]["schemas"]["CreateConfigurationTemplateInfo"]["properties"]["requires_forfeit_reason"]
-    update:
-      x-speakeasy-ignore: true
-  - target: $["components"]["schemas"]["UpdateConfigurationTemplateInfo"]["properties"]["requires_forfeit_reason"]
-    update:
-      x-speakeasy-ignore: true
-
   - target: $["components"]["schemas"]["Group"]["properties"]["match_remote_description"]
     update:
       x-speakeasy-param-suppress-computed-diff: true

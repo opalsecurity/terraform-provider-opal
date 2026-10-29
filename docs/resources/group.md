@@ -243,6 +243,7 @@ resource "opal_group" "my_group" {
     }
   ]
   require_mfa_to_approve    = false
+  requires_forfeit_reason   = false
   risk_sensitivity_override = "CRITICAL"
   team_id                   = "T01234567"
   visibility                = "GLOBAL"
@@ -278,6 +279,7 @@ resource "opal_group" "my_group" {
 - `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info))
 - `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this group. Default: false
+- `requires_forfeit_reason` (Boolean) A bool representing whether or not a reason is required when forfeiting access to this group.
 - `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur. must be one of ["UNKNOWN", "CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"]
 - `team_id` (String) Slack workspace ID. Required when the Slack connection spans multiple workspaces. Requires replacement if changed.
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]

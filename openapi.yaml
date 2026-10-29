@@ -11738,7 +11738,6 @@ components:
           description: A bool representing whether or not a reason is required when forfeiting access to this group.
           example: False
           type: boolean
-          x-speakeasy-ignore: true
         require_mfa_to_request:
           description: A bool representing whether or not to require MFA for requesting access to this group.
           example: False
@@ -12105,7 +12104,6 @@ components:
           description: A bool representing whether or not a reason is required when forfeiting access to this group.
           example: False
           type: boolean
-          x-speakeasy-ignore: true
         require_mfa_to_request:
           description: A bool representing whether or not to require MFA for requesting access to this group. Deprecated in favor of `request_configurations`.
           example: False
@@ -16146,7 +16144,6 @@ components:
           description: A bool representing whether or not a reason is required when forfeiting access to this resource.
           example: False
           type: boolean
-          x-speakeasy-ignore: true
         require_mfa_to_request:
           description: A bool representing whether or not to require MFA for requesting access to this resource.
           example: False
@@ -16386,7 +16383,6 @@ components:
           description: A bool representing whether or not a reason is required when forfeiting access to this resource.
           example: False
           type: boolean
-          x-speakeasy-ignore: true
         require_mfa_to_request:
           description: A bool representing whether or not to require MFA for requesting access to this resource. Deprecated in favor of `request_configurations`.
           example: False
@@ -17486,7 +17482,6 @@ components:
           description: A bool representing whether or not a reason is required when forfeiting access to resources or groups using this configuration template.
           example: False
           type: boolean
-          x-speakeasy-ignore: true
         name:
           description: The name of the configuration template.
           example: Prod AWS Template
@@ -17639,7 +17634,6 @@ components:
           description: A bool representing whether or not a reason is required when forfeiting access to resources or groups using this configuration template.
           example: False
           type: boolean
-          x-speakeasy-ignore: true
         ticket_propagation:
           $ref: "#/components/schemas/TicketPropagationConfiguration"
         custom_request_notification:
@@ -17799,7 +17793,6 @@ components:
           description: A bool representing whether or not a reason is required when forfeiting access to resources or groups using this configuration template.
           example: False
           type: boolean
-          x-speakeasy-ignore: true
         ticket_propagation:
           $ref: "#/components/schemas/TicketPropagationConfiguration"
         custom_request_notification:

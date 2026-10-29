@@ -71,6 +71,7 @@ Read-Only:
 - `request_configurations` (Attributes List) A list of configurations for requests to this resource. (see [below for nested schema](#nestedatt--results--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to this resource.
+- `requires_forfeit_reason` (Boolean) A bool representing whether or not a reason is required when forfeiting access to this resource.
 - `resource_type` (String) The type of the resource.
 - `risk_sensitivity` (String) The risk sensitivity level for the resource. When an override is set, this field will match that.
 - `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur.

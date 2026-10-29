@@ -794,6 +794,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 		}
 		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
 		r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
+		r.RequiresForfeitReason = types.BoolPointerValue(resp.RequiresForfeitReason)
 		if resp.ResourceType != nil {
 			r.ResourceType = types.StringValue(string(*resp.ResourceType))
 		} else {
