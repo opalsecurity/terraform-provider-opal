@@ -14,6 +14,8 @@ type UpdateResourceInfo struct {
 	// The ID of the owner of the resource.
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
 	// The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+	//
+	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
 	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
 	// Custom request notification sent upon request approval.
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
@@ -38,7 +40,9 @@ type UpdateResourceInfo struct {
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this resource.
 	RequireMfaToApprove *bool `default:"false" json:"require_mfa_to_approve"`
 	// A bool representing whether or not to require MFA to connect to this resource.
-	RequireMfaToConnect     *bool                `json:"require_mfa_to_connect,omitempty"`
+	RequireMfaToConnect *bool `json:"require_mfa_to_connect,omitempty"`
+	// A bool representing whether or not a reason is required when forfeiting access to this resource.
+	RequiresForfeitReason   *bool                `json:"requires_forfeit_reason,omitempty"`
 	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
 	// Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.
 	TicketPropagation *TicketPropagationConfiguration `json:"ticket_propagation,omitempty"`
@@ -144,6 +148,13 @@ func (u *UpdateResourceInfo) GetRequireMfaToConnect() *bool {
 		return nil
 	}
 	return u.RequireMfaToConnect
+}
+
+func (u *UpdateResourceInfo) GetRequiresForfeitReason() *bool {
+	if u == nil {
+		return nil
+	}
+	return u.RequiresForfeitReason
 }
 
 func (u *UpdateResourceInfo) GetRiskSensitivityOverride() *RiskSensitivityEnum {

@@ -9,5 +9,6 @@ import (
 
 type Condition struct {
 	GroupIds      []types.String `tfsdk:"group_ids"`
+	OpalScriptID  types.String   `tfsdk:"opal_script_id"`
 	RoleRemoteIds []types.String `tfsdk:"role_remote_ids"`
 }

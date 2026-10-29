@@ -12,9 +12,10 @@ import (
 type OpalScriptTypeEnum string
 
 const (
-	OpalScriptTypeEnumRequestReview              OpalScriptTypeEnum = "REQUEST_REVIEW"
-	OpalScriptTypeEnumRequestDelegationCondition OpalScriptTypeEnum = "REQUEST_DELEGATION_CONDITION"
-	OpalScriptTypeEnumContextProvider            OpalScriptTypeEnum = "CONTEXT_PROVIDER"
+	OpalScriptTypeEnumRequestReview                 OpalScriptTypeEnum = "REQUEST_REVIEW"
+	OpalScriptTypeEnumRequestDelegationCondition    OpalScriptTypeEnum = "REQUEST_DELEGATION_CONDITION"
+	OpalScriptTypeEnumContextProvider               OpalScriptTypeEnum = "CONTEXT_PROVIDER"
+	OpalScriptTypeEnumRequestConfigurationCondition OpalScriptTypeEnum = "REQUEST_CONFIGURATION_CONDITION"
 )
 
 func (e OpalScriptTypeEnum) ToPointer() *OpalScriptTypeEnum {
@@ -31,6 +32,8 @@ func (e *OpalScriptTypeEnum) UnmarshalJSON(data []byte) error {
 	case "REQUEST_DELEGATION_CONDITION":
 		fallthrough
 	case "CONTEXT_PROVIDER":
+		fallthrough
+	case "REQUEST_CONFIGURATION_CONDITION":
 		*e = OpalScriptTypeEnum(v)
 		return nil
 	default:
