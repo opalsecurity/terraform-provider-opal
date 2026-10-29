@@ -2025,21 +2025,25 @@ paths:
             format: uuid
             type: string
           style: simple
+          x-speakeasy-name-override: id
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GroupConfigurationTemplate"
+                allOf:
+                  - $ref: "#/components/schemas/GroupConfigurationTemplate"
           description: The ID of the configuration template currently linked to the group, or `null` if the group uses its own private configuration.
         "403":
           description: The caller is not authorized to view this group.
         "404":
-          description: The group was not found.
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
         - groups
+      x-speakeasy-name-override: get_configuration_template
+      x-speakeasy-entity-operation: Group#read#5
     put:
       summary: Set the ID of the configuration template linked to a group
       description: |
@@ -2082,6 +2086,7 @@ paths:
             format: uuid
             type: string
           style: simple
+          x-speakeasy-name-override: id
       requestBody:
         required: true
         content:
@@ -2092,8 +2097,7 @@ paths:
         "200":
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/GroupConfigurationTemplate"
+              x-speakeasy-ignore: true
           description: The ID of the configuration template now linked to the group, or `null` if the group was detached.
         "400":
           description: The request body was malformed, the required `configuration_template_id` field was omitted, or the target `configuration_template_id` does not reference a configuration template.
@@ -2105,6 +2109,10 @@ paths:
         - BearerAuth: []
       tags:
         - groups
+      x-speakeasy-name-override: update_configuration_template
+      x-speakeasy-entity-operation:
+        - Group#create#6
+        - Group#update#5
   /groups/{group_id}/message-channels:
     get:
       description: Gets the list of audit and reviewer message channels attached to a group.
@@ -4830,21 +4838,27 @@ paths:
             format: uuid
             type: string
           style: simple
+          x-speakeasy-name-override: id
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResourceConfigurationTemplate"
+                allOf:
+                  - $ref: "#/components/schemas/ResourceConfigurationTemplate"
           description: The ID of the configuration template currently linked to the resource, or `null` if the resource uses its own private configuration.
         "403":
           description: The caller is not authorized to view this resource.
         "404":
-          description: The resource was not found.
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
         - resources
+      x-speakeasy-name-override: get_configuration_template
+      x-speakeasy-entity-operation:
+        - Resource#get#3
+        - Resource#create#6
     put:
       summary: Set the ID of the configuration template linked to a resource
       description: |
@@ -4887,6 +4901,7 @@ paths:
             format: uuid
             type: string
           style: simple
+          x-speakeasy-name-override: id
       requestBody:
         required: true
         content:
@@ -4897,8 +4912,7 @@ paths:
         "200":
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/ResourceConfigurationTemplate"
+              x-speakeasy-ignore: true
           description: The ID of the configuration template now linked to the resource, or `null` if the resource was detached.
         "400":
           description: The request body was malformed, the required `configuration_template_id` field was omitted, or the target `configuration_template_id` does not reference a configuration template.
@@ -4910,6 +4924,10 @@ paths:
         - BearerAuth: []
       tags:
         - resources
+      x-speakeasy-name-override: update_configuration_template
+      x-speakeasy-entity-operation:
+        - Resource#create#5
+        - Resource#update#3
   /resources/{resource_id}/message-channels:
     get:
       description: Gets the list of audit message channels attached to a resource.
@@ -11755,11 +11773,11 @@ components:
           type: string
           x-speakeasy-ignore: true
         configuration_template_id:
-          description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+          description: The ID of the associated configuration template.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
-          x-speakeasy-plan-validators: GroupConfigurationTemplateID
+          x-speakeasy-ignore: true
         group_binding_id:
           description: The ID of the associated group binding.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -12118,7 +12136,14 @@ components:
           x-speakeasy-ignore: true
         configuration_template_id:
           description: |-
-            The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+            Deprecated. Use `PUT /groups/{group_id}/configuration-template`
+            instead; that endpoint exposes attach, re-point, and detach as a
+            single idempotent REST sub-resource and is the Terraform-friendly
+            surface for managing this linkage. This field remains honored on
+            the main PUT for now: set to a UUID to attach or re-point, set to
+            `null` to unlink (forks the template into a private configuration
+            that preserves the current settings), omit to leave linkage
+            unchanged. Scheduled for removal in a future major version.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           nullable: true
@@ -12128,7 +12153,7 @@ components:
           # the field (no change) instead of marshaling JSON null (unlink).
           x-oapi-codegen-extra-tags:
             json: configuration_template_id,omitempty
-          x-speakeasy-plan-validators: GroupConfigurationTemplateID
+          x-speakeasy-ignore: true
         request_template_id:
           description: The ID of the associated request template. Deprecated in favor of `request_configurations`.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -12747,14 +12772,12 @@ components:
       properties:
         configuration_template_id:
           description: |-
-            The ID of the configuration template that the group is linked to,
-            or `null` if the group is not linked to a configuration template.
-            Only the ID is exposed here; the template's own fields are managed
-            through the `/configuration-templates` endpoints.
+            The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           nullable: true
           type: string
+          x-speakeasy-plan-validators: GroupConfigurationTemplateID
       type: object
       required:
         - configuration_template_id
@@ -12772,14 +12795,12 @@ components:
       properties:
         configuration_template_id:
           description: |-
-            The ID of the configuration template that the resource is linked
-            to, or `null` if the resource is not linked to a configuration
-            template. Only the ID is exposed here; the template's own fields
-            are managed through the `/configuration-templates` endpoints.
+            The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           nullable: true
           type: string
+          x-speakeasy-plan-validators: ResourceConfigurationTemplateID
       type: object
       required:
         - configuration_template_id
@@ -16177,11 +16198,11 @@ components:
           type: string
           x-speakeasy-param-suppress-computed-diff: true
         configuration_template_id:
-          description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+          description: The ID of the associated configuration template.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
-          x-speakeasy-plan-validators: ResourceConfigurationTemplateID
+          x-speakeasy-ignore: true
         request_configurations:
           type: array
           items:
@@ -16420,7 +16441,14 @@ components:
           type: boolean
         configuration_template_id:
           description: |-
-            The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+            Deprecated. Use `PUT /resources/{resource_id}/configuration-template`
+            instead; that endpoint exposes attach, re-point, and detach as a
+            single idempotent REST sub-resource and is the Terraform-friendly
+            surface for managing this linkage. This field remains honored on
+            the main PUT for now: set to a UUID to attach or re-point, set to
+            `null` to unlink (forks the template into a private configuration
+            that preserves the current settings), omit to leave linkage
+            unchanged. Scheduled for removal in a future major version.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           nullable: true
@@ -16430,7 +16458,7 @@ components:
           # the field (no change) instead of marshaling JSON null (unlink).
           x-oapi-codegen-extra-tags:
             json: configuration_template_id,omitempty
-          x-speakeasy-plan-validators: ResourceConfigurationTemplateID
+          x-speakeasy-ignore: true
         request_template_id:
           description: The ID of the associated request template. Deprecated in favor of `request_configurations`.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
