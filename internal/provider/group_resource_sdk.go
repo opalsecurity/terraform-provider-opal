@@ -309,6 +309,18 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 				r.RemoteInfo.OktaGroupRule = &tfTypes.OktaGroupRule{}
 				r.RemoteInfo.OktaGroupRule.RuleID = types.StringValue(resp.RemoteInfo.OktaGroupRule.RuleID)
 			}
+			if resp.RemoteInfo.OneloginGroup == nil {
+				r.RemoteInfo.OneloginGroup = nil
+			} else {
+				r.RemoteInfo.OneloginGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.OneloginGroup.GroupID = types.StringValue(resp.RemoteInfo.OneloginGroup.GroupID)
+			}
+			if resp.RemoteInfo.OneloginRole == nil {
+				r.RemoteInfo.OneloginRole = nil
+			} else {
+				r.RemoteInfo.OneloginRole = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.OneloginRole.GroupID = types.StringValue(resp.RemoteInfo.OneloginRole.GroupID)
+			}
 			if resp.RemoteInfo.PagerdutyOnCallSchedule == nil {
 				r.RemoteInfo.PagerdutyOnCallSchedule = nil
 			} else {
@@ -1093,6 +1105,24 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 				RuleID: ruleID,
 			}
 		}
+		var oneloginGroup *shared.OneloginGroup
+		if r.RemoteInfo.OneloginGroup != nil {
+			var groupId19 string
+			groupId19 = r.RemoteInfo.OneloginGroup.GroupID.ValueString()
+
+			oneloginGroup = &shared.OneloginGroup{
+				GroupID: groupId19,
+			}
+		}
+		var oneloginRole *shared.OneloginRole
+		if r.RemoteInfo.OneloginRole != nil {
+			var groupId20 string
+			groupId20 = r.RemoteInfo.OneloginRole.GroupID.ValueString()
+
+			oneloginRole = &shared.OneloginRole{
+				GroupID: groupId20,
+			}
+		}
 		var pagerdutyOnCallSchedule *shared.PagerdutyOnCallSchedule
 		if r.RemoteInfo.PagerdutyOnCallSchedule != nil {
 			var scheduleId1 string
@@ -1149,11 +1179,11 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		}
 		var slackUserGroup *shared.SlackUserGroup
 		if r.RemoteInfo.SlackUserGroup != nil {
-			var groupId19 string
-			groupId19 = r.RemoteInfo.SlackUserGroup.GroupID.ValueString()
+			var groupId21 string
+			groupId21 = r.RemoteInfo.SlackUserGroup.GroupID.ValueString()
 
 			slackUserGroup = &shared.SlackUserGroup{
-				GroupID: groupId19,
+				GroupID: groupId21,
 			}
 		}
 		var snowflakeRole *shared.SnowflakeRole
@@ -1167,83 +1197,83 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		}
 		var squareJob *shared.SquareJob
 		if r.RemoteInfo.SquareJob != nil {
-			var groupId20 string
-			groupId20 = r.RemoteInfo.SquareJob.GroupID.ValueString()
+			var groupId22 string
+			groupId22 = r.RemoteInfo.SquareJob.GroupID.ValueString()
 
 			squareJob = &shared.SquareJob{
-				GroupID: groupId20,
+				GroupID: groupId22,
 			}
 		}
 		var squareLocation *shared.SquareLocation
 		if r.RemoteInfo.SquareLocation != nil {
-			var groupId21 string
-			groupId21 = r.RemoteInfo.SquareLocation.GroupID.ValueString()
+			var groupId23 string
+			groupId23 = r.RemoteInfo.SquareLocation.GroupID.ValueString()
 
 			squareLocation = &shared.SquareLocation{
-				GroupID: groupId21,
+				GroupID: groupId23,
 			}
 		}
 		var tableauGroup *shared.TableauGroup
 		if r.RemoteInfo.TableauGroup != nil {
-			var groupId22 string
-			groupId22 = r.RemoteInfo.TableauGroup.GroupID.ValueString()
+			var groupId24 string
+			groupId24 = r.RemoteInfo.TableauGroup.GroupID.ValueString()
 
 			tableauGroup = &shared.TableauGroup{
-				GroupID: groupId22,
+				GroupID: groupId24,
 			}
 		}
 		var tailscaleGroup *shared.TailscaleGroup
 		if r.RemoteInfo.TailscaleGroup != nil {
-			var groupId23 string
-			groupId23 = r.RemoteInfo.TailscaleGroup.GroupID.ValueString()
+			var groupId25 string
+			groupId25 = r.RemoteInfo.TailscaleGroup.GroupID.ValueString()
 
 			tailscaleGroup = &shared.TailscaleGroup{
-				GroupID: groupId23,
+				GroupID: groupId25,
 			}
 		}
 		var twingateGroup *shared.TwingateGroup
 		if r.RemoteInfo.TwingateGroup != nil {
-			var groupId24 string
-			groupId24 = r.RemoteInfo.TwingateGroup.GroupID.ValueString()
+			var groupId26 string
+			groupId26 = r.RemoteInfo.TwingateGroup.GroupID.ValueString()
 
 			twingateGroup = &shared.TwingateGroup{
-				GroupID: groupId24,
+				GroupID: groupId26,
 			}
 		}
 		var twingateGroupSynced *shared.TwingateGroupSynced
 		if r.RemoteInfo.TwingateGroupSynced != nil {
-			var groupId25 string
-			groupId25 = r.RemoteInfo.TwingateGroupSynced.GroupID.ValueString()
+			var groupId27 string
+			groupId27 = r.RemoteInfo.TwingateGroupSynced.GroupID.ValueString()
 
 			twingateGroupSynced = &shared.TwingateGroupSynced{
-				GroupID: groupId25,
+				GroupID: groupId27,
 			}
 		}
 		var workdayUserSecurityGroup *shared.WorkdayUserSecurityGroup
 		if r.RemoteInfo.WorkdayUserSecurityGroup != nil {
-			var groupId26 string
-			groupId26 = r.RemoteInfo.WorkdayUserSecurityGroup.GroupID.ValueString()
+			var groupId28 string
+			groupId28 = r.RemoteInfo.WorkdayUserSecurityGroup.GroupID.ValueString()
 
 			workdayUserSecurityGroup = &shared.WorkdayUserSecurityGroup{
-				GroupID: groupId26,
+				GroupID: groupId28,
 			}
 		}
 		var wrikeGroup *shared.WrikeGroup
 		if r.RemoteInfo.WrikeGroup != nil {
-			var groupId27 string
-			groupId27 = r.RemoteInfo.WrikeGroup.GroupID.ValueString()
+			var groupId29 string
+			groupId29 = r.RemoteInfo.WrikeGroup.GroupID.ValueString()
 
 			wrikeGroup = &shared.WrikeGroup{
-				GroupID: groupId27,
+				GroupID: groupId29,
 			}
 		}
 		var zendeskGroup *shared.ZendeskGroup
 		if r.RemoteInfo.ZendeskGroup != nil {
-			var groupId28 string
-			groupId28 = r.RemoteInfo.ZendeskGroup.GroupID.ValueString()
+			var groupId30 string
+			groupId30 = r.RemoteInfo.ZendeskGroup.GroupID.ValueString()
 
 			zendeskGroup = &shared.ZendeskGroup{
-				GroupID: groupId28,
+				GroupID: groupId30,
 			}
 		}
 		var zendeskOrganization *shared.ZendeskOrganization
@@ -1257,11 +1287,11 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		}
 		var zoomGroup *shared.ZoomGroup
 		if r.RemoteInfo.ZoomGroup != nil {
-			var groupId29 string
-			groupId29 = r.RemoteInfo.ZoomGroup.GroupID.ValueString()
+			var groupId31 string
+			groupId31 = r.RemoteInfo.ZoomGroup.GroupID.ValueString()
 
 			zoomGroup = &shared.ZoomGroup{
-				GroupID: groupId29,
+				GroupID: groupId31,
 			}
 		}
 		remoteInfo = &shared.GroupRemoteInfo{
@@ -1295,6 +1325,8 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 			LinearTeam:               linearTeam,
 			OktaGroup:                oktaGroup,
 			OktaGroupRule:            oktaGroupRule,
+			OneloginGroup:            oneloginGroup,
+			OneloginRole:             oneloginRole,
 			PagerdutyOnCallSchedule:  pagerdutyOnCallSchedule,
 			RampDepartment:           rampDepartment,
 			RampLocation:             rampLocation,

@@ -281,6 +281,9 @@ resource "opal_resource" "my_resource" {
     okta_standard_role = {
       role_type = "ORG_ADMIN"
     }
+    onelogin_app = {
+      resource_id = "...my_resource_id..."
+    }
     openai_platform_project = {
       project_id = "proj_abc"
     }

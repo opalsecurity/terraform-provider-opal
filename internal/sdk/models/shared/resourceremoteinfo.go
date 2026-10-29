@@ -1338,6 +1338,19 @@ func (o *OktaStandardRole) GetRoleType() string {
 	return o.RoleType
 }
 
+// OneloginApp - Remote info for OneLogin App.
+type OneloginApp struct {
+	// The resource id of the OneLogin App.
+	ResourceID string `json:"resource_id"`
+}
+
+func (o *OneloginApp) GetResourceID() string {
+	if o == nil {
+		return ""
+	}
+	return o.ResourceID
+}
+
 // OpenaiPlatformProject - Remote info for OpenAI Platform project.
 type OpenaiPlatformProject struct {
 	// The id of the project.
@@ -1842,6 +1855,8 @@ type ResourceRemoteInfo struct {
 	OktaCustomRole *OktaCustomRole `json:"okta_custom_role,omitempty"`
 	// Remote info for Okta directory standard role.
 	OktaStandardRole *OktaStandardRole `json:"okta_standard_role,omitempty"`
+	// Remote info for OneLogin App.
+	OneloginApp *OneloginApp `json:"onelogin_app,omitempty"`
 	// Remote info for OpenAI Platform project.
 	OpenaiPlatformProject *OpenaiPlatformProject `json:"openai_platform_project,omitempty"`
 	// Remote info for OpenAI Platform service account.
@@ -2441,6 +2456,13 @@ func (r *ResourceRemoteInfo) GetOktaStandardRole() *OktaStandardRole {
 		return nil
 	}
 	return r.OktaStandardRole
+}
+
+func (r *ResourceRemoteInfo) GetOneloginApp() *OneloginApp {
+	if r == nil {
+		return nil
+	}
+	return r.OneloginApp
 }
 
 func (r *ResourceRemoteInfo) GetOpenaiPlatformProject() *OpenaiPlatformProject {

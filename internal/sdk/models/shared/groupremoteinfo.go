@@ -414,6 +414,32 @@ func (o *OktaGroupRule) GetRuleID() string {
 	return o.RuleID
 }
 
+// OneloginGroup - Remote info for OneLogin Group.
+type OneloginGroup struct {
+	// The group id of the OneLogin Group.
+	GroupID string `json:"group_id"`
+}
+
+func (o *OneloginGroup) GetGroupID() string {
+	if o == nil {
+		return ""
+	}
+	return o.GroupID
+}
+
+// OneloginRole - Remote info for OneLogin Role.
+type OneloginRole struct {
+	// The group id of the OneLogin Role.
+	GroupID string `json:"group_id"`
+}
+
+func (o *OneloginRole) GetGroupID() string {
+	if o == nil {
+		return ""
+	}
+	return o.GroupID
+}
+
 // PagerdutyOnCallSchedule - Remote info for PagerDuty on-call schedule group.
 type PagerdutyOnCallSchedule struct {
 	// The id of the PagerDuty on-call schedule.
@@ -723,6 +749,10 @@ type GroupRemoteInfo struct {
 	OktaGroup *OktaGroup `json:"okta_group,omitempty"`
 	// Remote info for Okta Directory group rule.
 	OktaGroupRule *OktaGroupRule `json:"okta_group_rule,omitempty"`
+	// Remote info for OneLogin Group.
+	OneloginGroup *OneloginGroup `json:"onelogin_group,omitempty"`
+	// Remote info for OneLogin Role.
+	OneloginRole *OneloginRole `json:"onelogin_role,omitempty"`
 	// Remote info for PagerDuty on-call schedule group.
 	PagerdutyOnCallSchedule *PagerdutyOnCallSchedule `json:"pagerduty_on_call_schedule,omitempty"`
 	// Remote info for Ramp department.
@@ -971,6 +1001,20 @@ func (g *GroupRemoteInfo) GetOktaGroupRule() *OktaGroupRule {
 		return nil
 	}
 	return g.OktaGroupRule
+}
+
+func (g *GroupRemoteInfo) GetOneloginGroup() *OneloginGroup {
+	if g == nil {
+		return nil
+	}
+	return g.OneloginGroup
+}
+
+func (g *GroupRemoteInfo) GetOneloginRole() *OneloginRole {
+	if g == nil {
+		return nil
+	}
+	return g.OneloginRole
 }
 
 func (g *GroupRemoteInfo) GetPagerdutyOnCallSchedule() *PagerdutyOnCallSchedule {

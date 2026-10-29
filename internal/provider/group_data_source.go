@@ -519,6 +519,26 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Okta Directory group rule.`,
 					},
+					"onelogin_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The group id of the OneLogin Group.`,
+							},
+						},
+						Description: `Remote info for OneLogin Group.`,
+					},
+					"onelogin_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The group id of the OneLogin Role.`,
+							},
+						},
+						Description: `Remote info for OneLogin Role.`,
+					},
 					"pagerduty_on_call_schedule": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{

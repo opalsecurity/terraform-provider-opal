@@ -1066,6 +1066,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Okta directory standard role.`,
 					},
+					"onelogin_app": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The resource id of the OneLogin App.`,
+							},
+						},
+						Description: `Remote info for OneLogin App.`,
+					},
 					"openai_platform_project": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{

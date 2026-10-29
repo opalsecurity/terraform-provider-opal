@@ -34,6 +34,8 @@ type GroupRemoteInfo struct {
 	LinearTeam               *GrafanaTeam              `tfsdk:"linear_team"`
 	OktaGroup                *ActiveDirectoryGroup     `tfsdk:"okta_group"`
 	OktaGroupRule            *OktaGroupRule            `tfsdk:"okta_group_rule"`
+	OneloginGroup            *ActiveDirectoryGroup     `tfsdk:"onelogin_group"`
+	OneloginRole             *ActiveDirectoryGroup     `tfsdk:"onelogin_role"`
 	PagerdutyOnCallSchedule  *IncidentioOnCallSchedule `tfsdk:"pagerduty_on_call_schedule"`
 	RampDepartment           *RampDepartment           `tfsdk:"ramp_department"`
 	RampLocation             *RampLocation             `tfsdk:"ramp_location"`

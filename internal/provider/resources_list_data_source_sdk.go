@@ -562,6 +562,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.OktaStandardRole = &tfTypes.OktaStandardRole{}
 					results.RemoteInfo.OktaStandardRole.RoleType = types.StringValue(resultsItem.RemoteInfo.OktaStandardRole.RoleType)
 				}
+				if resultsItem.RemoteInfo.OneloginApp == nil {
+					results.RemoteInfo.OneloginApp = nil
+				} else {
+					results.RemoteInfo.OneloginApp = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.OneloginApp.ResourceID = types.StringValue(resultsItem.RemoteInfo.OneloginApp.ResourceID)
+				}
 				if resultsItem.RemoteInfo.OpenaiPlatformProject == nil {
 					results.RemoteInfo.OpenaiPlatformProject = nil
 				} else {

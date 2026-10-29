@@ -132,6 +132,7 @@ const (
 	ResourceTypeEnumBoxFolder                         ResourceTypeEnum = "BOX_FOLDER"
 	ResourceTypeEnumCalendlyRole                      ResourceTypeEnum = "CALENDLY_ROLE"
 	ResourceTypeEnumCalendlyEventType                 ResourceTypeEnum = "CALENDLY_EVENT_TYPE"
+	ResourceTypeEnumOneloginApp                       ResourceTypeEnum = "ONELOGIN_APP"
 )
 
 func (e ResourceTypeEnum) ToPointer() *ResourceTypeEnum {
@@ -382,6 +383,8 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "CALENDLY_ROLE":
 		fallthrough
 	case "CALENDLY_EVENT_TYPE":
+		fallthrough
+	case "ONELOGIN_APP":
 		*e = ResourceTypeEnum(v)
 		return nil
 	default:

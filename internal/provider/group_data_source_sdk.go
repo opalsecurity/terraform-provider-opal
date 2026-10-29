@@ -309,6 +309,18 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.OktaGroupRule = &tfTypes.OktaGroupRule{}
 				r.RemoteInfo.OktaGroupRule.RuleID = types.StringValue(resp.RemoteInfo.OktaGroupRule.RuleID)
 			}
+			if resp.RemoteInfo.OneloginGroup == nil {
+				r.RemoteInfo.OneloginGroup = nil
+			} else {
+				r.RemoteInfo.OneloginGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.OneloginGroup.GroupID = types.StringValue(resp.RemoteInfo.OneloginGroup.GroupID)
+			}
+			if resp.RemoteInfo.OneloginRole == nil {
+				r.RemoteInfo.OneloginRole = nil
+			} else {
+				r.RemoteInfo.OneloginRole = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.OneloginRole.GroupID = types.StringValue(resp.RemoteInfo.OneloginRole.GroupID)
+			}
 			if resp.RemoteInfo.PagerdutyOnCallSchedule == nil {
 				r.RemoteInfo.PagerdutyOnCallSchedule = nil
 			} else {
