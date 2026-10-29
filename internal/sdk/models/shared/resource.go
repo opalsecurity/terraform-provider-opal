@@ -166,6 +166,8 @@ type Resource struct {
 	RequireMfaToApprove *bool `default:"false" json:"require_mfa_to_approve"`
 	// A bool representing whether or not to require MFA to connect to this resource.
 	RequireMfaToConnect *bool `json:"require_mfa_to_connect,omitempty"`
+	// A bool representing whether or not a reason is required when forfeiting access to this resource.
+	RequiresForfeitReason *bool `json:"requires_forfeit_reason,omitempty"`
 	// The type of the resource.
 	ResourceType *ResourceTypeEnum `json:"resource_type,omitempty"`
 	// The risk sensitivity level for the resource. When an override is set, this field will match that.
@@ -310,6 +312,13 @@ func (r *Resource) GetRequireMfaToConnect() *bool {
 		return nil
 	}
 	return r.RequireMfaToConnect
+}
+
+func (r *Resource) GetRequiresForfeitReason() *bool {
+	if r == nil {
+		return nil
+	}
+	return r.RequiresForfeitReason
 }
 
 func (r *Resource) GetResourceType() *ResourceTypeEnum {
