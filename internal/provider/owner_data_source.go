@@ -112,8 +112,6 @@ func (r *OwnerDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetOwnerIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

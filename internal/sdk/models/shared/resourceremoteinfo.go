@@ -42,6 +42,19 @@ func (a *AnthropicWorkspace) GetWorkspaceID() string {
 	return a.WorkspaceID
 }
 
+// AsanaWorkspace - Remote info for Asana Workspace.
+type AsanaWorkspace struct {
+	// The workspace gid of the Asana Workspace.
+	WorkspaceGid string `json:"workspace_gid"`
+}
+
+func (a *AsanaWorkspace) GetWorkspaceGid() string {
+	if a == nil {
+		return ""
+	}
+	return a.WorkspaceGid
+}
+
 // AwsAccount - Remote info for AWS account.
 type AwsAccount struct {
 	// The id of the AWS account.
@@ -478,6 +491,71 @@ func (a *AzureVirtualMachine) GetResourceID() string {
 	return a.ResourceID
 }
 
+// BitwardenOrganization - Remote info for Bitwarden Organization.
+type BitwardenOrganization struct {
+	// The organization id of the Bitwarden Organization.
+	OrganizationID string `json:"organization_id"`
+}
+
+func (b *BitwardenOrganization) GetOrganizationID() string {
+	if b == nil {
+		return ""
+	}
+	return b.OrganizationID
+}
+
+// BoxEnterprise - Remote info for Box Enterprise.
+type BoxEnterprise struct {
+	// The resource id of the Box Enterprise.
+	ResourceID string `json:"resource_id"`
+}
+
+func (b *BoxEnterprise) GetResourceID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ResourceID
+}
+
+// BoxFolder - Remote info for Box Folder.
+type BoxFolder struct {
+	// The resource id of the Box Folder.
+	ResourceID string `json:"resource_id"`
+}
+
+func (b *BoxFolder) GetResourceID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ResourceID
+}
+
+// CalendlyEventType - Remote info for Calendly Event Type.
+type CalendlyEventType struct {
+	// The resource id of the Calendly Event Type.
+	ResourceID string `json:"resource_id"`
+}
+
+func (c *CalendlyEventType) GetResourceID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ResourceID
+}
+
+// CalendlyRole - Remote info for Calendly Role.
+type CalendlyRole struct {
+	// The resource id of the Calendly Role.
+	ResourceID string `json:"resource_id"`
+}
+
+func (c *CalendlyRole) GetResourceID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ResourceID
+}
+
 // ClickhouseConsoleRole - Remote info for ClickHouse Cloud console role.
 type ClickhouseConsoleRole struct {
 	// The UUID of the ClickHouse Cloud console role.
@@ -550,6 +628,19 @@ func (c *CursorOrganization) GetOrgID() string {
 		return ""
 	}
 	return c.OrgID
+}
+
+// CursorOriginRepository - Remote info for a Cursor Origin repository.
+type CursorOriginRepository struct {
+	// The repository's owner slug and name.
+	RepositoryName string `json:"repository_name"`
+}
+
+func (c *CursorOriginRepository) GetRepositoryName() string {
+	if c == nil {
+		return ""
+	}
+	return c.RepositoryName
 }
 
 // CustomConnector - Remote info for a custom connector resource.
@@ -1247,6 +1338,19 @@ func (o *OktaStandardRole) GetRoleType() string {
 	return o.RoleType
 }
 
+// OneloginApp - Remote info for OneLogin App.
+type OneloginApp struct {
+	// The resource id of the OneLogin App.
+	ResourceID string `json:"resource_id"`
+}
+
+func (o *OneloginApp) GetResourceID() string {
+	if o == nil {
+		return ""
+	}
+	return o.ResourceID
+}
+
 // OpenaiPlatformProject - Remote info for OpenAI Platform project.
 type OpenaiPlatformProject struct {
 	// The id of the project.
@@ -1332,6 +1436,19 @@ func (r *RampRole) GetRole() string {
 		return ""
 	}
 	return r.Role
+}
+
+// RipplingDepartment - Remote info for Rippling department.
+type RipplingDepartment struct {
+	// The ID of the Rippling department.
+	DepartmentID string `json:"department_id"`
+}
+
+func (r *RipplingDepartment) GetDepartmentID() string {
+	if r == nil {
+		return ""
+	}
+	return r.DepartmentID
 }
 
 // SalesforcePermissionSet - Remote info for Salesforce permission set.
@@ -1586,6 +1703,8 @@ type ResourceRemoteInfo struct {
 	AlicloudRAMRole *AlicloudRAMRole `json:"alicloud_ram_role,omitempty"`
 	// Remote info for Anthropic workspace.
 	AnthropicWorkspace *AnthropicWorkspace `json:"anthropic_workspace,omitempty"`
+	// Remote info for Asana Workspace.
+	AsanaWorkspace *AsanaWorkspace `json:"asana_workspace,omitempty"`
 	// Remote info for AWS account.
 	AwsAccount *AwsAccount `json:"aws_account,omitempty"`
 	// Remote info for AWS EC2 instance.
@@ -1632,6 +1751,16 @@ type ResourceRemoteInfo struct {
 	AzureUserAssignedManagedIdentity *AzureUserAssignedManagedIdentity `json:"azure_user_assigned_managed_identity,omitempty"`
 	// Remote info for Azure virtual machine.
 	AzureVirtualMachine *AzureVirtualMachine `json:"azure_virtual_machine,omitempty"`
+	// Remote info for Bitwarden Organization.
+	BitwardenOrganization *BitwardenOrganization `json:"bitwarden_organization,omitempty"`
+	// Remote info for Box Enterprise.
+	BoxEnterprise *BoxEnterprise `json:"box_enterprise,omitempty"`
+	// Remote info for Box Folder.
+	BoxFolder *BoxFolder `json:"box_folder,omitempty"`
+	// Remote info for Calendly Event Type.
+	CalendlyEventType *CalendlyEventType `json:"calendly_event_type,omitempty"`
+	// Remote info for Calendly Role.
+	CalendlyRole *CalendlyRole `json:"calendly_role,omitempty"`
 	// Remote info for ClickHouse Cloud console role.
 	ClickhouseConsoleRole *ClickhouseConsoleRole `json:"clickhouse_console_role,omitempty"`
 	// Remote info for ClickHouse database.
@@ -1642,6 +1771,8 @@ type ResourceRemoteInfo struct {
 	CoupaRole *CoupaRole `json:"coupa_role,omitempty"`
 	// Remote info for a Cursor organization.
 	CursorOrganization *CursorOrganization `json:"cursor_organization,omitempty"`
+	// Remote info for a Cursor Origin repository.
+	CursorOriginRepository *CursorOriginRepository `json:"cursor_origin_repository,omitempty"`
 	// Remote info for a custom connector resource.
 	CustomConnector *CustomConnector `json:"custom_connector,omitempty"`
 	// Remote info for Databricks account service principal.
@@ -1724,6 +1855,8 @@ type ResourceRemoteInfo struct {
 	OktaCustomRole *OktaCustomRole `json:"okta_custom_role,omitempty"`
 	// Remote info for Okta directory standard role.
 	OktaStandardRole *OktaStandardRole `json:"okta_standard_role,omitempty"`
+	// Remote info for OneLogin App.
+	OneloginApp *OneloginApp `json:"onelogin_app,omitempty"`
 	// Remote info for OpenAI Platform project.
 	OpenaiPlatformProject *OpenaiPlatformProject `json:"openai_platform_project,omitempty"`
 	// Remote info for OpenAI Platform service account.
@@ -1736,6 +1869,8 @@ type ResourceRemoteInfo struct {
 	RampFund *RampFund `json:"ramp_fund,omitempty"`
 	// Remote info for Ramp built-in role.
 	RampRole *RampRole `json:"ramp_role,omitempty"`
+	// Remote info for Rippling department.
+	RipplingDepartment *RipplingDepartment `json:"rippling_department,omitempty"`
 	// Remote info for Salesforce permission set.
 	SalesforcePermissionSet *SalesforcePermissionSet `json:"salesforce_permission_set,omitempty"`
 	// Remote info for Salesforce profile.
@@ -1789,6 +1924,13 @@ func (r *ResourceRemoteInfo) GetAnthropicWorkspace() *AnthropicWorkspace {
 		return nil
 	}
 	return r.AnthropicWorkspace
+}
+
+func (r *ResourceRemoteInfo) GetAsanaWorkspace() *AsanaWorkspace {
+	if r == nil {
+		return nil
+	}
+	return r.AsanaWorkspace
 }
 
 func (r *ResourceRemoteInfo) GetAwsAccount() *AwsAccount {
@@ -1952,6 +2094,41 @@ func (r *ResourceRemoteInfo) GetAzureVirtualMachine() *AzureVirtualMachine {
 	return r.AzureVirtualMachine
 }
 
+func (r *ResourceRemoteInfo) GetBitwardenOrganization() *BitwardenOrganization {
+	if r == nil {
+		return nil
+	}
+	return r.BitwardenOrganization
+}
+
+func (r *ResourceRemoteInfo) GetBoxEnterprise() *BoxEnterprise {
+	if r == nil {
+		return nil
+	}
+	return r.BoxEnterprise
+}
+
+func (r *ResourceRemoteInfo) GetBoxFolder() *BoxFolder {
+	if r == nil {
+		return nil
+	}
+	return r.BoxFolder
+}
+
+func (r *ResourceRemoteInfo) GetCalendlyEventType() *CalendlyEventType {
+	if r == nil {
+		return nil
+	}
+	return r.CalendlyEventType
+}
+
+func (r *ResourceRemoteInfo) GetCalendlyRole() *CalendlyRole {
+	if r == nil {
+		return nil
+	}
+	return r.CalendlyRole
+}
+
 func (r *ResourceRemoteInfo) GetClickhouseConsoleRole() *ClickhouseConsoleRole {
 	if r == nil {
 		return nil
@@ -1985,6 +2162,13 @@ func (r *ResourceRemoteInfo) GetCursorOrganization() *CursorOrganization {
 		return nil
 	}
 	return r.CursorOrganization
+}
+
+func (r *ResourceRemoteInfo) GetCursorOriginRepository() *CursorOriginRepository {
+	if r == nil {
+		return nil
+	}
+	return r.CursorOriginRepository
 }
 
 func (r *ResourceRemoteInfo) GetCustomConnector() *CustomConnector {
@@ -2274,6 +2458,13 @@ func (r *ResourceRemoteInfo) GetOktaStandardRole() *OktaStandardRole {
 	return r.OktaStandardRole
 }
 
+func (r *ResourceRemoteInfo) GetOneloginApp() *OneloginApp {
+	if r == nil {
+		return nil
+	}
+	return r.OneloginApp
+}
+
 func (r *ResourceRemoteInfo) GetOpenaiPlatformProject() *OpenaiPlatformProject {
 	if r == nil {
 		return nil
@@ -2314,6 +2505,13 @@ func (r *ResourceRemoteInfo) GetRampRole() *RampRole {
 		return nil
 	}
 	return r.RampRole
+}
+
+func (r *ResourceRemoteInfo) GetRipplingDepartment() *RipplingDepartment {
+	if r == nil {
+		return nil
+	}
+	return r.RipplingDepartment
 }
 
 func (r *ResourceRemoteInfo) GetSalesforcePermissionSet() *SalesforcePermissionSet {
