@@ -22,6 +22,8 @@ type UpdateCampaignConfigurationInfo struct {
 	AllowReviewersToReduceExpiration *bool `json:"allow_reviewers_to_reduce_expiration,omitempty"`
 	// Whether reviewers can review their own access.
 	AllowSelfReview *bool `json:"allow_self_review,omitempty"`
+	// Whether the campaign stops automatically once every review item is complete. Stopping locks further reviews so admins can review the decisions or end the campaign to generate the report.
+	AutoStopWhenComplete *bool `json:"auto_stop_when_complete,omitempty"`
 	// Cron expression driving the recurring schedule. Only valid on template campaigns. Pass an empty string to clear the active months (next_scheduled_run is cleared); the campaign remains a template.
 	CronExpression *string `json:"cron_expression,omitempty"`
 	// Optional custom message included when notifying reviewers that the campaign started.
@@ -85,6 +87,13 @@ func (u *UpdateCampaignConfigurationInfo) GetAllowSelfReview() *bool {
 		return nil
 	}
 	return u.AllowSelfReview
+}
+
+func (u *UpdateCampaignConfigurationInfo) GetAutoStopWhenComplete() *bool {
+	if u == nil {
+		return nil
+	}
+	return u.AutoStopWhenComplete
 }
 
 func (u *UpdateCampaignConfigurationInfo) GetCronExpression() *string {
