@@ -511,6 +511,7 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			r.RequestConfigurations = append(r.RequestConfigurations, requestConfigurations)
 		}
 		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
+		r.RequiresForfeitReason = types.BoolPointerValue(resp.RequiresForfeitReason)
 		if resp.RiskSensitivity != nil {
 			r.RiskSensitivity = types.StringValue(string(*resp.RiskSensitivity))
 		} else {

@@ -166,6 +166,8 @@ type Group struct {
 	RequestConfigurations []RequestConfiguration `json:"request_configurations,omitempty"`
 	// A bool representing whether or not to require MFA for reviewers to approve requests for this group.
 	RequireMfaToApprove *bool `default:"false" json:"require_mfa_to_approve"`
+	// A bool representing whether or not a reason is required when forfeiting access to this group.
+	RequiresForfeitReason *bool `json:"requires_forfeit_reason,omitempty"`
 	// The risk sensitivity level for the group. When an override is set, this field will match that.
 	RiskSensitivity         *RiskSensitivity         `json:"risk_sensitivity,omitempty"`
 	RiskSensitivityOverride *RiskSensitivityOverride `json:"risk_sensitivity_override,omitempty"`
@@ -306,6 +308,13 @@ func (g *Group) GetRequireMfaToApprove() *bool {
 		return nil
 	}
 	return g.RequireMfaToApprove
+}
+
+func (g *Group) GetRequiresForfeitReason() *bool {
+	if g == nil {
+		return nil
+	}
+	return g.RequiresForfeitReason
 }
 
 func (g *Group) GetRiskSensitivity() *RiskSensitivity {

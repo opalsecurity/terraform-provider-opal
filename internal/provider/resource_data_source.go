@@ -48,6 +48,7 @@ type ResourceDataSourceModel struct {
 	RequestConfigurations       []tfTypes.RequestConfiguration          `tfsdk:"request_configurations"`
 	RequireMfaToApprove         types.Bool                              `tfsdk:"require_mfa_to_approve"`
 	RequireMfaToConnect         types.Bool                              `tfsdk:"require_mfa_to_connect"`
+	RequiresForfeitReason       types.Bool                              `tfsdk:"requires_forfeit_reason"`
 	ResourceType                types.String                            `tfsdk:"resource_type"`
 	RiskSensitivity             types.String                            `tfsdk:"risk_sensitivity"`
 	RiskSensitivityOverride     types.String                            `tfsdk:"risk_sensitivity_override"`
@@ -1471,6 +1472,10 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"require_mfa_to_connect": schema.BoolAttribute{
 				Computed:    true,
 				Description: `A bool representing whether or not to require MFA to connect to this resource.`,
+			},
+			"requires_forfeit_reason": schema.BoolAttribute{
+				Computed:    true,
+				Description: `A bool representing whether or not a reason is required when forfeiting access to this resource.`,
 			},
 			"resource_type": schema.StringAttribute{
 				Computed:    true,

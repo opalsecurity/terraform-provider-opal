@@ -81,6 +81,7 @@ type GroupResourceModel struct {
 	RemoteName                  types.String                                 `tfsdk:"remote_name"`
 	RequestConfigurations       []tfTypes.RequestConfiguration               `tfsdk:"request_configurations"`
 	RequireMfaToApprove         types.Bool                                   `tfsdk:"require_mfa_to_approve"`
+	RequiresForfeitReason       types.Bool                                   `tfsdk:"requires_forfeit_reason"`
 	RiskSensitivity             types.String                                 `tfsdk:"risk_sensitivity"`
 	RiskSensitivityOverride     types.String                                 `tfsdk:"risk_sensitivity_override"`
 	TeamID                      types.String                                 `tfsdk:"team_id"`
@@ -1944,6 +1945,11 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Optional:    true,
 				Default:     booldefault.StaticBool(false),
 				Description: `A bool representing whether or not to require MFA for reviewers to approve requests for this group. Default: false`,
+			},
+			"requires_forfeit_reason": schema.BoolAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `A bool representing whether or not a reason is required when forfeiting access to this group.`,
 			},
 			"risk_sensitivity": schema.StringAttribute{
 				Computed: true,

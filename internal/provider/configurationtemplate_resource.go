@@ -56,6 +56,7 @@ type ConfigurationTemplateResourceModel struct {
 	RequestConfigurations        []tfTypes.RequestConfiguration          `tfsdk:"request_configurations"`
 	RequireMfaToApprove          types.Bool                              `tfsdk:"require_mfa_to_approve"`
 	RequireMfaToConnect          types.Bool                              `tfsdk:"require_mfa_to_connect"`
+	RequiresForfeitReason        types.Bool                              `tfsdk:"requires_forfeit_reason"`
 	TicketPropagation            *tfTypes.TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
 	Visibility                   *tfTypes.VisibilityInfo                 `tfsdk:"visibility"`
 }
@@ -285,6 +286,11 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 			"require_mfa_to_connect": schema.BoolAttribute{
 				Required:    true,
 				Description: `A bool representing whether or not to require MFA to connect to resources associated with this configuration template.`,
+			},
+			"requires_forfeit_reason": schema.BoolAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `A bool representing whether or not a reason is required when forfeiting access to resources or groups using this configuration template.`,
 			},
 			"ticket_propagation": schema.SingleNestedAttribute{
 				Computed: true,
