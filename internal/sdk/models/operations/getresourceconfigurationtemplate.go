@@ -10,14 +10,14 @@ import (
 
 type GetResourceConfigurationTemplateRequest struct {
 	// The ID of the resource whose configuration template link is being read.
-	ResourceID string `pathParam:"style=simple,explode=false,name=resource_id"`
+	ID string `pathParam:"style=simple,explode=false,name=resource_id"`
 }
 
-func (g *GetResourceConfigurationTemplateRequest) GetResourceID() string {
+func (g *GetResourceConfigurationTemplateRequest) GetID() string {
 	if g == nil {
 		return ""
 	}
-	return g.ResourceID
+	return g.ID
 }
 
 type GetResourceConfigurationTemplateResponse struct {

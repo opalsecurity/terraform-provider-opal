@@ -334,6 +334,46 @@ actions:
       x-speakeasy-entity-operation:
         - Group#create#5
         - Group#update#4
+  # /groups/{group_id}/configuration-template — fold into Group lifecycle.
+  # See /resources/{resource_id}/configuration-template for the resources-side
+  # mirror. Both pairs replace the deprecated top-level configuration_template_id
+  # field on UpdateGroupInfo / UpdateResourceInfo (which is x-speakeasy-ignore'd
+  # further down) and the hand-written SDK hook that used to strip it.
+  - target: $["paths"]["/groups/{group_id}/configuration-template"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/groups/{group_id}/configuration-template"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]
+    update:
+      allOf:
+        - $ref: "#/components/schemas/GroupConfigurationTemplate"
+  - target: $["paths"]["/groups/{group_id}/configuration-template"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]["$ref"]
+    remove: true
+  - target: $["paths"]["/groups/{group_id}/configuration-template"]["get"]["responses"]
+    update:
+      "404":
+        description: Not Found
+  - target: $["paths"]["/groups/{group_id}/configuration-template"]["get"]
+    update:
+      x-speakeasy-name-override: get_configuration_template
+  - target: $["paths"]["/groups/{group_id}/configuration-template"]["get"]
+    update:
+      x-speakeasy-entity-operation: Group#read#5
+  - target: $["paths"]["/groups/{group_id}/configuration-template"]["put"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/groups/{group_id}/configuration-template"]["put"]["responses"]["200"]["content"]["application/json"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["paths"]["/groups/{group_id}/configuration-template"]["put"]["responses"]["200"]["content"]["application/json"]["schema"]
+    remove: true
+  - target: $["paths"]["/groups/{group_id}/configuration-template"]["put"]
+    update:
+      x-speakeasy-name-override: update_configuration_template
+  - target: $["paths"]["/groups/{group_id}/configuration-template"]["put"]
+    update:
+      x-speakeasy-entity-operation:
+        - Group#create#6
+        - Group#update#5
   - target: $["paths"]["/groups/{group_id}/reviewers"]["get"]["operationId"]
     update: getGroupReviewers
   - target: $["paths"]["/groups/{group_id}/reviewers"]["get"]["responses"]
@@ -698,6 +738,46 @@ actions:
       x-speakeasy-entity-operation:
         - Resource#create#3
         - Resource#update#2
+  # /resources/{resource_id}/configuration-template — fold into Resource lifecycle.
+  # Mirror of the groups-side block above. The GET is also tagged with Resource#create#6
+  # to re-read the link after the PUT in Create (matches the visibility precedent).
+  - target: $["paths"]["/resources/{resource_id}/configuration-template"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/resources/{resource_id}/configuration-template"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]
+    update:
+      allOf:
+        - $ref: "#/components/schemas/ResourceConfigurationTemplate"
+  - target: $["paths"]["/resources/{resource_id}/configuration-template"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]["$ref"]
+    remove: true
+  - target: $["paths"]["/resources/{resource_id}/configuration-template"]["get"]["responses"]
+    update:
+      "404":
+        description: Not Found
+  - target: $["paths"]["/resources/{resource_id}/configuration-template"]["get"]
+    update:
+      x-speakeasy-name-override: get_configuration_template
+  - target: $["paths"]["/resources/{resource_id}/configuration-template"]["get"]
+    update:
+      x-speakeasy-entity-operation:
+        - Resource#get#3
+        - Resource#create#6
+  - target: $["paths"]["/resources/{resource_id}/configuration-template"]["put"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/resources/{resource_id}/configuration-template"]["put"]["responses"]["200"]["content"]["application/json"]
+    update:
+      x-speakeasy-ignore: true
+  - target: $["paths"]["/resources/{resource_id}/configuration-template"]["put"]["responses"]["200"]["content"]["application/json"]["schema"]
+    remove: true
+  - target: $["paths"]["/resources/{resource_id}/configuration-template"]["put"]
+    update:
+      x-speakeasy-name-override: update_configuration_template
+  - target: $["paths"]["/resources/{resource_id}/configuration-template"]["put"]
+    update:
+      x-speakeasy-entity-operation:
+        - Resource#create#5
+        - Resource#update#3
   - target: $["paths"]["/resources/{resource_id}/reviewers"]["get"]["operationId"]
     update: getResourceReviewers
   - target: $["paths"]["/resources/{resource_id}/reviewers"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]
@@ -1291,9 +1371,20 @@ actions:
   - target: $["components"]["schemas"]["Group"]["properties"]["is_requestable"]
     update:
       x-speakeasy-ignore: true
+  # configuration_template_id is sourced from the dedicated sub-resource
+  # (GroupConfigurationTemplate) rather than the parent Group schema, so Speakeasy
+  # characterizes it as Optional+Computed instead of Computed-only — mirrors how
+  # the visibility attribute is bound (visibility is not a property of Group).
+  # The plan validator reference is applied on the sub-resource schema below.
+  # Note: this also drops the field from the SDK's shared.Group struct; in-repo
+  # consumers (the TF provider's Refresh path and the e2e fixtures) read it
+  # through shared.GroupConfigurationTemplate instead.
   - target: $["components"]["schemas"]["Group"]["properties"]["configuration_template_id"]
     update:
-      description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["GroupConfigurationTemplate"]["properties"]["configuration_template_id"]
+    update:
+      description: The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
       x-speakeasy-plan-validators: GroupConfigurationTemplateID
   - target: $["components"]["schemas"]["Group"]["properties"]["match_remote_description"]
     update:
@@ -1393,10 +1484,13 @@ actions:
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["request_template_id"]
     update:
       x-speakeasy-ignore: true
+  # configuration_template_id is managed via the dedicated sub-resource endpoint
+  # (PUT /groups/{group_id}/configuration-template) rather than this parent PUT.
+  # Ignoring it here keeps the field out of the bulk PUT payload so the backend
+  # never sees it on this path.
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["configuration_template_id"]
     update:
-      description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
-      x-speakeasy-plan-validators: GroupConfigurationTemplateID
+      x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateGroupInfo"]["properties"]["is_requestable"]
     update:
       x-speakeasy-ignore: true
@@ -1913,9 +2007,13 @@ actions:
   - target: $["components"]["schemas"]["Resource"]["properties"]["parent_resource_id"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
+  # See the groups-side comment above for the rationale.
   - target: $["components"]["schemas"]["Resource"]["properties"]["configuration_template_id"]
     update:
-      description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+      x-speakeasy-ignore: true
+  - target: $["components"]["schemas"]["ResourceConfigurationTemplate"]["properties"]["configuration_template_id"]
+    update:
+      description: The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
       x-speakeasy-plan-validators: ResourceConfigurationTemplateID
   - target: $["components"]["schemas"]["Resource"]["properties"]["match_remote_description"]
     update:
@@ -2018,10 +2116,12 @@ actions:
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["request_template_id"]
     update:
       x-speakeasy-ignore: true
+  # configuration_template_id is managed via the dedicated sub-resource endpoint
+  # (PUT /resources/{resource_id}/configuration-template); see the groups-side
+  # comment for the rationale.
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["configuration_template_id"]
     update:
-      description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
-      x-speakeasy-plan-validators: ResourceConfigurationTemplateID
+      x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["UpdateResourceInfo"]["properties"]["is_requestable"]
     update:
       x-speakeasy-ignore: true

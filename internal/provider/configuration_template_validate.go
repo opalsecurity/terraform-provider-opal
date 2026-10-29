@@ -24,6 +24,8 @@ var groupConfigurationTemplateConflictAttributes = []string{
 	"require_mfa_to_approve",
 	"custom_request_notification",
 	"extensions_duration_in_minutes",
+	"message_channel_ids",
+	"on_call_schedule_ids",
 	"visibility_group_ids",
 	"visibility",
 	"request_configurations",
@@ -41,12 +43,28 @@ var resourceConfigurationTemplateConflictAttributes = []string{
 	"request_configurations",
 }
 
-func (r *GroupResource) ValidateConfig(_ context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
-	validateConfigurationTemplateConflicts(req.Config.Raw, groupConfigurationTemplateConflictAttributes, &resp.Diagnostics)
+func (r *GroupResource) ValidateConfig(
+	_ context.Context,
+	req resource.ValidateConfigRequest,
+	resp *resource.ValidateConfigResponse,
+) {
+	validateConfigurationTemplateConflicts(
+		req.Config.Raw,
+		groupConfigurationTemplateConflictAttributes,
+		&resp.Diagnostics,
+	)
 }
 
-func (r *ResourceResource) ValidateConfig(_ context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
-	validateConfigurationTemplateConflicts(req.Config.Raw, resourceConfigurationTemplateConflictAttributes, &resp.Diagnostics)
+func (r *ResourceResource) ValidateConfig(
+	_ context.Context,
+	req resource.ValidateConfigRequest,
+	resp *resource.ValidateConfigResponse,
+) {
+	validateConfigurationTemplateConflicts(
+		req.Config.Raw,
+		resourceConfigurationTemplateConflictAttributes,
+		&resp.Diagnostics,
+	)
 }
 
 // validateConfigurationTemplateConflicts rejects HCL that sets
