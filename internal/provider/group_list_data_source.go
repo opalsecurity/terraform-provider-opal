@@ -873,10 +873,6 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							Computed:    true,
 							Description: `A bool representing whether or not to require MFA for reviewers to approve requests for this group.`,
 						},
-						"requires_forfeit_reason": schema.BoolAttribute{
-							Computed:    true,
-							Description: `A bool representing whether or not a reason is required when forfeiting access to this group.`,
-						},
 						"risk_sensitivity": schema.StringAttribute{
 							Computed:    true,
 							Description: `The risk sensitivity level for the group. When an override is set, this field will match that.`,

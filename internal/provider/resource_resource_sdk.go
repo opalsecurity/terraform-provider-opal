@@ -794,7 +794,6 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 		}
 		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
 		r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
-		r.RequiresForfeitReason = types.BoolPointerValue(resp.RequiresForfeitReason)
 		if resp.ResourceType != nil {
 			r.ResourceType = types.StringValue(string(*resp.ResourceType))
 		} else {
@@ -916,7 +915,6 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.
 	}
 	r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
 	r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
-	r.RequiresForfeitReason = types.BoolPointerValue(resp.RequiresForfeitReason)
 	if resp.RiskSensitivityOverride != nil {
 		r.RiskSensitivityOverride = types.StringValue(string(*resp.RiskSensitivityOverride))
 	} else {
@@ -2504,12 +2502,6 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 	} else {
 		requireMfaToConnect = nil
 	}
-	requiresForfeitReason := new(bool)
-	if !r.RequiresForfeitReason.IsUnknown() && !r.RequiresForfeitReason.IsNull() {
-		*requiresForfeitReason = r.RequiresForfeitReason.ValueBool()
-	} else {
-		requiresForfeitReason = nil
-	}
 	riskSensitivityOverride := new(shared.RiskSensitivityEnum)
 	if !r.RiskSensitivityOverride.IsUnknown() && !r.RiskSensitivityOverride.IsNull() {
 		*riskSensitivityOverride = shared.RiskSensitivityEnum(r.RiskSensitivityOverride.ValueString())
@@ -2557,7 +2549,6 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 		RequestConfigurations:       requestConfigurations,
 		RequireMfaToApprove:         requireMfaToApprove,
 		RequireMfaToConnect:         requireMfaToConnect,
-		RequiresForfeitReason:       requiresForfeitReason,
 		RiskSensitivityOverride:     riskSensitivityOverride,
 		TicketPropagation:           ticketPropagation,
 	}

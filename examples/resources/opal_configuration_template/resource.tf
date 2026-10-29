@@ -62,9 +62,8 @@ resource "opal_configuration_template" "my_configurationtemplate" {
       ]
     }
   ]
-  require_mfa_to_approve  = false
-  require_mfa_to_connect  = false
-  requires_forfeit_reason = false
+  require_mfa_to_approve = false
+  require_mfa_to_connect = false
   ticket_propagation = {
     enabled_on_grant      = true
     enabled_on_revocation = false

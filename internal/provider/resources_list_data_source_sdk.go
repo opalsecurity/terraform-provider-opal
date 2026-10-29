@@ -787,7 +787,6 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 			}
 			results.RequireMfaToApprove = types.BoolPointerValue(resultsItem.RequireMfaToApprove)
 			results.RequireMfaToConnect = types.BoolPointerValue(resultsItem.RequireMfaToConnect)
-			results.RequiresForfeitReason = types.BoolPointerValue(resultsItem.RequiresForfeitReason)
 			if resultsItem.ResourceType != nil {
 				results.ResourceType = types.StringValue(string(*resultsItem.ResourceType))
 			} else {

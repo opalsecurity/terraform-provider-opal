@@ -1635,10 +1635,6 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 							Computed:    true,
 							Description: `A bool representing whether or not to require MFA to connect to this resource.`,
 						},
-						"requires_forfeit_reason": schema.BoolAttribute{
-							Computed:    true,
-							Description: `A bool representing whether or not a reason is required when forfeiting access to this resource.`,
-						},
 						"resource_type": schema.StringAttribute{
 							Computed:    true,
 							Description: `The type of the resource.`,

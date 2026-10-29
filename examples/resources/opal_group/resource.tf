@@ -228,7 +228,6 @@ resource "opal_group" "my_group" {
     }
   ]
   require_mfa_to_approve    = false
-  requires_forfeit_reason   = false
   risk_sensitivity_override = "CRITICAL"
   team_id                   = "T01234567"
   visibility                = "GLOBAL"

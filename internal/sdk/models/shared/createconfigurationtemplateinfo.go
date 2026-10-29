@@ -32,8 +32,6 @@ type CreateConfigurationTemplateInfo struct {
 	RequireMfaToApprove *bool `default:"false" json:"require_mfa_to_approve"`
 	// A bool representing whether or not to require MFA to connect to resources associated with this configuration template.
 	RequireMfaToConnect bool `json:"require_mfa_to_connect"`
-	// A bool representing whether or not a reason is required when forfeiting access to resources or groups using this configuration template.
-	RequiresForfeitReason *bool `json:"requires_forfeit_reason,omitempty"`
 	// Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource.
 	TicketPropagation *TicketPropagationConfiguration `json:"ticket_propagation,omitempty"`
 	// Visibility infomation of an entity.
@@ -112,13 +110,6 @@ func (c *CreateConfigurationTemplateInfo) GetRequireMfaToConnect() bool {
 		return false
 	}
 	return c.RequireMfaToConnect
-}
-
-func (c *CreateConfigurationTemplateInfo) GetRequiresForfeitReason() *bool {
-	if c == nil {
-		return nil
-	}
-	return c.RequiresForfeitReason
 }
 
 func (c *CreateConfigurationTemplateInfo) GetTicketPropagation() *TicketPropagationConfiguration {

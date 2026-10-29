@@ -511,7 +511,6 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 			r.RequestConfigurations = append(r.RequestConfigurations, requestConfigurations)
 		}
 		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
-		r.RequiresForfeitReason = types.BoolPointerValue(resp.RequiresForfeitReason)
 		if resp.RiskSensitivity != nil {
 			r.RiskSensitivity = types.StringValue(string(*resp.RiskSensitivity))
 		} else {
@@ -617,7 +616,6 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(ctx context.Contex
 		r.RequestConfigurations = append(r.RequestConfigurations, requestConfigurations)
 	}
 	r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
-	r.RequiresForfeitReason = types.BoolPointerValue(resp.RequiresForfeitReason)
 	if resp.RiskSensitivityOverride != nil {
 		r.RiskSensitivityOverride = types.StringValue(string(*resp.RiskSensitivityOverride))
 	} else {
@@ -1615,12 +1613,6 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 	} else {
 		requireMfaToApprove = nil
 	}
-	requiresForfeitReason := new(bool)
-	if !r.RequiresForfeitReason.IsUnknown() && !r.RequiresForfeitReason.IsNull() {
-		*requiresForfeitReason = r.RequiresForfeitReason.ValueBool()
-	} else {
-		requiresForfeitReason = nil
-	}
 	riskSensitivityOverride := new(shared.RiskSensitivityEnum)
 	if !r.RiskSensitivityOverride.IsUnknown() && !r.RiskSensitivityOverride.IsNull() {
 		*riskSensitivityOverride = shared.RiskSensitivityEnum(r.RiskSensitivityOverride.ValueString())
@@ -1640,7 +1632,6 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 		Name:                        name,
 		RequestConfigurations:       requestConfigurations,
 		RequireMfaToApprove:         requireMfaToApprove,
-		RequiresForfeitReason:       requiresForfeitReason,
 		RiskSensitivityOverride:     riskSensitivityOverride,
 	}
 

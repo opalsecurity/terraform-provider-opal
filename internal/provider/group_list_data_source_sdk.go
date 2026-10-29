@@ -437,7 +437,6 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				results.RequestConfigurations = append(results.RequestConfigurations, requestConfigurations)
 			}
 			results.RequireMfaToApprove = types.BoolPointerValue(resultsItem.RequireMfaToApprove)
-			results.RequiresForfeitReason = types.BoolPointerValue(resultsItem.RequiresForfeitReason)
 			if resultsItem.RiskSensitivity != nil {
 				results.RiskSensitivity = types.StringValue(string(*resultsItem.RiskSensitivity))
 			} else {
