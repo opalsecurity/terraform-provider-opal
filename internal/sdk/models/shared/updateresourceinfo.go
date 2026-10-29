@@ -13,10 +13,6 @@ import (
 type UpdateResourceInfo struct {
 	// The ID of the owner of the resource.
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
-	// The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
-	//
-	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
-	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
 	// Custom request notification sent upon request approval.
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the resource.
@@ -64,13 +60,6 @@ func (u *UpdateResourceInfo) GetAdminOwnerID() *string {
 		return nil
 	}
 	return u.AdminOwnerID
-}
-
-func (u *UpdateResourceInfo) GetConfigurationTemplateID() *string {
-	if u == nil {
-		return nil
-	}
-	return u.ConfigurationTemplateID
 }
 
 func (u *UpdateResourceInfo) GetCustomRequestNotification() *string {
