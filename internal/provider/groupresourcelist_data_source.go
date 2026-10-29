@@ -138,8 +138,6 @@ func (r *GroupResourceListDataSource) Read(ctx context.Context, req datasource.R
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetGroupResourcesRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

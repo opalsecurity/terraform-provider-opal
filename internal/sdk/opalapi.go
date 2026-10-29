@@ -3,7 +3,7 @@
 
 package sdk
 
-// Generated from OpenAPI doc version 1.0 and generator version 2.946.0
+// Generated from OpenAPI doc version 1.0 and generator version 2.954.8
 
 import (
 	"context"
@@ -58,6 +58,8 @@ type OpalAPI struct {
 	SDKVersion string
 	// Operations related to access rules
 	AccessRules *AccessRules
+	// Operations related to agent activity telemetry
+	AgentActivity *AgentActivity
 	// Operations related to apps
 	Apps *Apps
 	// Operations related to bundles
@@ -97,6 +99,10 @@ type OpalAPI struct {
 	Requests *Requests
 	// Operations related to resources
 	Resources *Resources
+	// Operations related to role assignments (general grants between an entity and a principal)
+	RoleAssignments *RoleAssignments
+	// Operations related to service users (non-human identities owned by a team)
+	ServiceUsers *ServiceUsers
 	// Operations related to sessions
 	Sessions *Sessions
 	// Operations related to tags
@@ -183,11 +189,11 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *OpalAPI {
 	sdk := &OpalAPI{
-		SDKVersion: "3.10.0",
+		SDKVersion: "3.11.4",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:         "speakeasy-sdk/terraform 3.10.0 2.946.0 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
-			SDKVersion:        "3.10.0",
-			GenVersion:        "2.946.0",
+			UserAgent:         "speakeasy-sdk/terraform 3.11.4 2.954.8 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
+			SDKVersion:        "3.11.4",
+			GenVersion:        "2.954.8",
 			OpenAPIDocVersion: "1.0",
 			ServerList:        ServerList,
 		},
@@ -210,6 +216,7 @@ func New(opts ...SDKOption) *OpalAPI {
 	}
 
 	sdk.AccessRules = newAccessRules(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.AgentActivity = newAgentActivity(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Apps = newApps(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Bundles = newBundles(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Campaigns = newCampaigns(sdk, sdk.sdkConfiguration, sdk.hooks)
@@ -230,6 +237,8 @@ func New(opts ...SDKOption) *OpalAPI {
 	sdk.RequestTemplates = newRequestTemplates(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Requests = newRequests(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Resources = newResources(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.RoleAssignments = newRoleAssignments(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.ServiceUsers = newServiceUsers(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Sessions = newSessions(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Tags = newTags(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Tokens = newTokens(sdk, sdk.sdkConfiguration, sdk.hooks)

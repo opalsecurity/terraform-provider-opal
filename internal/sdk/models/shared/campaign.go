@@ -85,6 +85,8 @@ type Configuration struct {
 	AllowReviewersToReduceExpiration bool `json:"allow_reviewers_to_reduce_expiration"`
 	// Whether reviewers can review their own access.
 	AllowSelfReview bool `json:"allow_self_review"`
+	// Whether the campaign stops automatically once every review item is complete. Stopping locks further reviews so admins can review the decisions or end the campaign to generate the report.
+	AutoStopWhenComplete bool `json:"auto_stop_when_complete"`
 	// The ID of the campaign configuration.
 	ConfigurationID string `json:"configuration_id"`
 	// The creation time of the configuration.
@@ -159,6 +161,13 @@ func (c *Configuration) GetAllowSelfReview() bool {
 		return false
 	}
 	return c.AllowSelfReview
+}
+
+func (c *Configuration) GetAutoStopWhenComplete() bool {
+	if c == nil {
+		return false
+	}
+	return c.AutoStopWhenComplete
 }
 
 func (c *Configuration) GetConfigurationID() string {

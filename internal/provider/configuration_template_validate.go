@@ -22,6 +22,7 @@ var (
 var groupConfigurationTemplateConflictAttributes = []string{
 	"admin_owner_id",
 	"require_mfa_to_approve",
+	"requires_forfeit_reason",
 	"custom_request_notification",
 	"extensions_duration_in_minutes",
 	"visibility_group_ids",
@@ -32,6 +33,7 @@ var groupConfigurationTemplateConflictAttributes = []string{
 var resourceConfigurationTemplateConflictAttributes = []string{
 	"admin_owner_id",
 	"require_mfa_to_approve",
+	"requires_forfeit_reason",
 	"require_mfa_to_connect",
 	"ticket_propagation",
 	"custom_request_notification",

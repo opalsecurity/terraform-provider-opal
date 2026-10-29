@@ -39,6 +39,7 @@ Read-Only:
 - `request_configuration_id` (String) The ID of the request configuration linked to the configuration template.
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template.
 - `require_mfa_to_connect` (Boolean) A bool representing whether or not to require MFA to connect to resources associated with this configuration template.
+- `requires_forfeit_reason` (Boolean) A bool representing whether or not a reason is required when forfeiting access to resources or groups using this configuration template.
 - `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--results--ticket_propagation))
 - `visibility` (Attributes) Visibility infomation of an entity. (see [below for nested schema](#nestedatt--results--visibility))
 

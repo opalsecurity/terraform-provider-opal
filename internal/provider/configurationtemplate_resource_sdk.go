@@ -35,6 +35,7 @@ func (r *ConfigurationTemplateResourceModel) RefreshFromSharedConfigurationTempl
 		r.RequestConfigurationID = types.StringPointerValue(resp.RequestConfigurationID)
 		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
 		r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
+		r.RequiresForfeitReason = types.BoolPointerValue(resp.RequiresForfeitReason)
 		if resp.TicketPropagation == nil {
 			r.TicketPropagation = nil
 		} else {
@@ -115,12 +116,19 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 			for groupIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].Condition.GroupIds {
 				groupIds = append(groupIds, r.RequestConfigurations[requestConfigurationsIndex].Condition.GroupIds[groupIdsIndex].ValueString())
 			}
+			opalScriptID := new(string)
+			if !r.RequestConfigurations[requestConfigurationsIndex].Condition.OpalScriptID.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].Condition.OpalScriptID.IsNull() {
+				*opalScriptID = r.RequestConfigurations[requestConfigurationsIndex].Condition.OpalScriptID.ValueString()
+			} else {
+				opalScriptID = nil
+			}
 			roleRemoteIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds))
 			for roleRemoteIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds {
 				roleRemoteIds = append(roleRemoteIds, r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds[roleRemoteIdsIndex].ValueString())
 			}
 			condition = &shared.Condition{
 				GroupIds:      groupIds,
+				OpalScriptID:  opalScriptID,
 				RoleRemoteIds: roleRemoteIds,
 			}
 		}
@@ -248,6 +256,12 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 	var requireMfaToConnect bool
 	requireMfaToConnect = r.RequireMfaToConnect.ValueBool()
 
+	requiresForfeitReason := new(bool)
+	if !r.RequiresForfeitReason.IsUnknown() && !r.RequiresForfeitReason.IsNull() {
+		*requiresForfeitReason = r.RequiresForfeitReason.ValueBool()
+	} else {
+		requiresForfeitReason = nil
+	}
 	var ticketPropagation *shared.TicketPropagationConfiguration
 	if r.TicketPropagation != nil {
 		var enabledOnGrant bool
@@ -294,6 +308,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 		RequestConfigurations:        requestConfigurations,
 		RequireMfaToApprove:          requireMfaToApprove,
 		RequireMfaToConnect:          requireMfaToConnect,
+		RequiresForfeitReason:        requiresForfeitReason,
 		TicketPropagation:            ticketPropagation,
 		Visibility:                   visibility,
 	}
@@ -351,12 +366,19 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 			for groupIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].Condition.GroupIds {
 				groupIds = append(groupIds, r.RequestConfigurations[requestConfigurationsIndex].Condition.GroupIds[groupIdsIndex].ValueString())
 			}
+			opalScriptID := new(string)
+			if !r.RequestConfigurations[requestConfigurationsIndex].Condition.OpalScriptID.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].Condition.OpalScriptID.IsNull() {
+				*opalScriptID = r.RequestConfigurations[requestConfigurationsIndex].Condition.OpalScriptID.ValueString()
+			} else {
+				opalScriptID = nil
+			}
 			roleRemoteIds := make([]string, 0, len(r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds))
 			for roleRemoteIdsIndex := range r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds {
 				roleRemoteIds = append(roleRemoteIds, r.RequestConfigurations[requestConfigurationsIndex].Condition.RoleRemoteIds[roleRemoteIdsIndex].ValueString())
 			}
 			condition = &shared.Condition{
 				GroupIds:      groupIds,
+				OpalScriptID:  opalScriptID,
 				RoleRemoteIds: roleRemoteIds,
 			}
 		}
@@ -487,6 +509,12 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 	} else {
 		requireMfaToConnect = nil
 	}
+	requiresForfeitReason := new(bool)
+	if !r.RequiresForfeitReason.IsUnknown() && !r.RequiresForfeitReason.IsNull() {
+		*requiresForfeitReason = r.RequiresForfeitReason.ValueBool()
+	} else {
+		requiresForfeitReason = nil
+	}
 	var ticketPropagation *shared.TicketPropagationConfiguration
 	if r.TicketPropagation != nil {
 		var enabledOnGrant bool
@@ -535,6 +563,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 		RequestConfigurations:        requestConfigurations,
 		RequireMfaToApprove:          requireMfaToApprove,
 		RequireMfaToConnect:          requireMfaToConnect,
+		RequiresForfeitReason:        requiresForfeitReason,
 		TicketPropagation:            ticketPropagation,
 		Visibility:                   visibility,
 	}

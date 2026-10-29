@@ -46,6 +46,7 @@ data "opal_group" "my_group" {
 - `remote_name` (String) The name of the remote.
 - `request_configurations` (Attributes List) A list of request configurations for this group. (see [below for nested schema](#nestedatt--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this group.
+- `requires_forfeit_reason` (Boolean) A bool representing whether or not a reason is required when forfeiting access to this group.
 - `risk_sensitivity` (String) The risk sensitivity level for the group. When an override is set, this field will match that.
 - `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur.
 - `visibility` (String) The visibility level of the entity.
@@ -107,13 +108,18 @@ Read-Only:
 Read-Only:
 
 - `active_directory_group` (Attributes) Remote info for Active Directory group. (see [below for nested schema](#nestedatt--remote_info--active_directory_group))
+- `asana_team` (Attributes) Remote info for Asana Team. (see [below for nested schema](#nestedatt--remote_info--asana_team))
 - `aws_sso_group` (Attributes) Remote info for AWS SSO group. (see [below for nested schema](#nestedatt--remote_info--aws_sso_group))
 - `axiom_group` (Attributes) Remote info for Axiom RBAC group. (see [below for nested schema](#nestedatt--remote_info--axiom_group))
 - `azure_ad_microsoft_365_group` (Attributes) Remote info for Microsoft Entra ID Microsoft 365 group. (see [below for nested schema](#nestedatt--remote_info--azure_ad_microsoft_365_group))
 - `azure_ad_security_group` (Attributes) Remote info for Microsoft Entra ID Security group. (see [below for nested schema](#nestedatt--remote_info--azure_ad_security_group))
+- `bitwarden_group` (Attributes) Remote info for Bitwarden Group. (see [below for nested schema](#nestedatt--remote_info--bitwarden_group))
+- `box_group` (Attributes) Remote info for Box Group. (see [below for nested schema](#nestedatt--remote_info--box_group))
+- `calendly_group` (Attributes) Remote info for Calendly Group. (see [below for nested schema](#nestedatt--remote_info--calendly_group))
 - `clickhouse_role` (Attributes) Remote info for ClickHouse role. (see [below for nested schema](#nestedatt--remote_info--clickhouse_role))
 - `confluence_group` (Attributes) Remote info for Confluence group. (see [below for nested schema](#nestedatt--remote_info--confluence_group))
 - `connector_group` (Attributes) Remote info for Connector group. (see [below for nested schema](#nestedatt--remote_info--connector_group))
+- `cursor_group` (Attributes) Remote info for a Cursor group. (see [below for nested schema](#nestedatt--remote_info--cursor_group))
 - `databricks_account_group` (Attributes) Remote info for Databricks account group. (see [below for nested schema](#nestedatt--remote_info--databricks_account_group))
 - `devin_group` (Attributes) Remote info for Devin group. (see [below for nested schema](#nestedatt--remote_info--devin_group))
 - `docusign_group` (Attributes) Remote info for Docusign group. (see [below for nested schema](#nestedatt--remote_info--docusign_group))
@@ -131,12 +137,18 @@ Read-Only:
 - `linear_team` (Attributes) Remote info for Linear team. (see [below for nested schema](#nestedatt--remote_info--linear_team))
 - `okta_group` (Attributes) Remote info for Okta Directory group. (see [below for nested schema](#nestedatt--remote_info--okta_group))
 - `okta_group_rule` (Attributes) Remote info for Okta Directory group rule. (see [below for nested schema](#nestedatt--remote_info--okta_group_rule))
+- `onelogin_group` (Attributes) Remote info for OneLogin Group. (see [below for nested schema](#nestedatt--remote_info--onelogin_group))
+- `onelogin_role` (Attributes) Remote info for OneLogin Role. (see [below for nested schema](#nestedatt--remote_info--onelogin_role))
 - `pagerduty_on_call_schedule` (Attributes) Remote info for PagerDuty on-call schedule group. (see [below for nested schema](#nestedatt--remote_info--pagerduty_on_call_schedule))
 - `ramp_department` (Attributes) Remote info for Ramp department. (see [below for nested schema](#nestedatt--remote_info--ramp_department))
 - `ramp_location` (Attributes) Remote info for Ramp location. (see [below for nested schema](#nestedatt--remote_info--ramp_location))
+- `rippling_supergroup` (Attributes) Remote info for Rippling supergroup. (see [below for nested schema](#nestedatt--remote_info--rippling_supergroup))
+- `rippling_team` (Attributes) Remote info for Rippling team. (see [below for nested schema](#nestedatt--remote_info--rippling_team))
 - `rootly_on_call_schedule` (Attributes) Remote info for Rootly on-call schedule group. (see [below for nested schema](#nestedatt--remote_info--rootly_on_call_schedule))
 - `slack_user_group` (Attributes) Remote info for Slack user group. (see [below for nested schema](#nestedatt--remote_info--slack_user_group))
 - `snowflake_role` (Attributes) Remote info for Snowflake role. (see [below for nested schema](#nestedatt--remote_info--snowflake_role))
+- `square_job` (Attributes) Remote info for Square Job. (see [below for nested schema](#nestedatt--remote_info--square_job))
+- `square_location` (Attributes) Remote info for Square Location. (see [below for nested schema](#nestedatt--remote_info--square_location))
 - `tableau_group` (Attributes) Remote info for Tableau group. (see [below for nested schema](#nestedatt--remote_info--tableau_group))
 - `tailscale_group` (Attributes) Remote info for Tailscale group. (see [below for nested schema](#nestedatt--remote_info--tailscale_group))
 - `twingate_group` (Attributes) Remote info for Twingate group. (see [below for nested schema](#nestedatt--remote_info--twingate_group))
@@ -153,6 +165,15 @@ Read-Only:
 Read-Only:
 
 - `group_id` (String) The id of the Google group.
+
+
+<a id="nestedatt--remote_info--asana_team"></a>
+### Nested Schema for `remote_info.asana_team`
+
+Read-Only:
+
+- `team_gid` (String) The team gid of the Asana Team.
+- `workspace_gid` (String) The workspace gid of the Asana Team.
 
 
 <a id="nestedatt--remote_info--aws_sso_group"></a>
@@ -187,6 +208,30 @@ Read-Only:
 - `group_id` (String) The id of the Microsoft Entra ID Security group.
 
 
+<a id="nestedatt--remote_info--bitwarden_group"></a>
+### Nested Schema for `remote_info.bitwarden_group`
+
+Read-Only:
+
+- `group_id` (String) The group id of the Bitwarden Group.
+
+
+<a id="nestedatt--remote_info--box_group"></a>
+### Nested Schema for `remote_info.box_group`
+
+Read-Only:
+
+- `group_id` (String) The group id of the Box Group.
+
+
+<a id="nestedatt--remote_info--calendly_group"></a>
+### Nested Schema for `remote_info.calendly_group`
+
+Read-Only:
+
+- `group_id` (String) The group id of the Calendly Group.
+
+
 <a id="nestedatt--remote_info--clickhouse_role"></a>
 ### Nested Schema for `remote_info.clickhouse_role`
 
@@ -209,6 +254,14 @@ Read-Only:
 Read-Only:
 
 - `group_id` (String) The id of the Connector group.
+
+
+<a id="nestedatt--remote_info--cursor_group"></a>
+### Nested Schema for `remote_info.cursor_group`
+
+Read-Only:
+
+- `group_id` (String) The id of the Cursor group, or team:members / team:admins for the owning team's built-in groups.
 
 
 <a id="nestedatt--remote_info--databricks_account_group"></a>
@@ -348,6 +401,22 @@ Read-Only:
 - `rule_id` (String) The id of the Okta group rule.
 
 
+<a id="nestedatt--remote_info--onelogin_group"></a>
+### Nested Schema for `remote_info.onelogin_group`
+
+Read-Only:
+
+- `group_id` (String) The group id of the OneLogin Group.
+
+
+<a id="nestedatt--remote_info--onelogin_role"></a>
+### Nested Schema for `remote_info.onelogin_role`
+
+Read-Only:
+
+- `group_id` (String) The group id of the OneLogin Role.
+
+
 <a id="nestedatt--remote_info--pagerduty_on_call_schedule"></a>
 ### Nested Schema for `remote_info.pagerduty_on_call_schedule`
 
@@ -372,6 +441,22 @@ Read-Only:
 - `location_id` (String) The ID of the Ramp location.
 
 
+<a id="nestedatt--remote_info--rippling_supergroup"></a>
+### Nested Schema for `remote_info.rippling_supergroup`
+
+Read-Only:
+
+- `supergroup_id` (String) The ID of the Rippling supergroup.
+
+
+<a id="nestedatt--remote_info--rippling_team"></a>
+### Nested Schema for `remote_info.rippling_team`
+
+Read-Only:
+
+- `team_id` (String) The ID of the Rippling team.
+
+
 <a id="nestedatt--remote_info--rootly_on_call_schedule"></a>
 ### Nested Schema for `remote_info.rootly_on_call_schedule`
 
@@ -394,6 +479,22 @@ Read-Only:
 Read-Only:
 
 - `role_id` (String) The id of the Snowflake role.
+
+
+<a id="nestedatt--remote_info--square_job"></a>
+### Nested Schema for `remote_info.square_job`
+
+Read-Only:
+
+- `group_id` (String) The group id of the Square Job.
+
+
+<a id="nestedatt--remote_info--square_location"></a>
+### Nested Schema for `remote_info.square_location`
+
+Read-Only:
+
+- `group_id` (String) The group id of the Square Location.
 
 
 <a id="nestedatt--remote_info--tableau_group"></a>
@@ -493,6 +594,7 @@ Read-Only:
 Read-Only:
 
 - `group_ids` (Set of String) The list of group IDs to match.
+- `opal_script_id` (String) The ID of a `REQUEST_CONFIGURATION_CONDITION` OpalScript that decides whether this request configuration applies. Cannot be combined with `group_ids` or `role_remote_ids`.
 - `role_remote_ids` (Set of String) The list of role remote IDs to match.
 
 
