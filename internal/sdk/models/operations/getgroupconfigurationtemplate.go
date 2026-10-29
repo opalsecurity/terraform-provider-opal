@@ -10,14 +10,14 @@ import (
 
 type GetGroupConfigurationTemplateRequest struct {
 	// The ID of the group whose configuration template link is being read.
-	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
+	ID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (g *GetGroupConfigurationTemplateRequest) GetGroupID() string {
+func (g *GetGroupConfigurationTemplateRequest) GetID() string {
 	if g == nil {
 		return ""
 	}
-	return g.GroupID
+	return g.ID
 }
 
 type GetGroupConfigurationTemplateResponse struct {
