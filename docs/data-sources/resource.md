@@ -23,14 +23,14 @@ data "opal_resource" "my_resource" {
 
 ### Required
 
-- `id` (String) The ID of the resource.
+- `id` (String) The ID of the resource whose configuration template link is being read.
 
 ### Read-Only
 
 - `admin_owner_id` (String) The ID of the owner of the resource.
 - `ancestor_resource_ids` (List of String) List of resource IDs that are ancestors of this resource.
 - `app_id` (String) The ID of the app.
-- `configuration_template_id` (String) The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+- `configuration_template_id` (String) The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
 - `custom_request_notification` (String) Custom request notification sent upon request approval.
 - `descendant_resource_ids` (List of String) List of resource IDs that are descendants of this resource.
 - `description` (String) A description of the resource.

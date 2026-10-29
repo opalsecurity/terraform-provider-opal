@@ -98,7 +98,6 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 	if resp != nil {
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 		r.AppID = types.StringPointerValue(resp.AppID)
-		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.Description = types.StringPointerValue(resp.Description)
 		r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)
@@ -545,11 +544,20 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 	return diags
 }
 
+func (r *GroupResourceModel) RefreshFromSharedGroupConfigurationTemplate(ctx context.Context, resp *shared.GroupConfigurationTemplate) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
+	}
+
+	return diags
+}
+
 func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(ctx context.Context, resp *shared.UpdateGroupInfo) diag.Diagnostics {
 	var diags diag.Diagnostics
 
 	r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
-	r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
 	r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 	r.Description = types.StringPointerValue(resp.Description)
 	r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)
@@ -678,6 +686,19 @@ func (r *GroupResourceModel) ToOperationsDeleteGroupRequest(ctx context.Context)
 	return &out, diags
 }
 
+func (r *GroupResourceModel) ToOperationsGetGroupConfigurationTemplateRequest(ctx context.Context) (*operations.GetGroupConfigurationTemplateRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetGroupConfigurationTemplateRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
 func (r *GroupResourceModel) ToOperationsGetGroupMessageChannelsRequest(ctx context.Context) (*operations.GetGroupMessageChannelsRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -725,6 +746,27 @@ func (r *GroupResourceModel) ToOperationsGetGroupVisibilityRequest(ctx context.C
 
 	out := operations.GetGroupVisibilityRequest{
 		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupResourceModel) ToOperationsUpdateGroupConfigurationTemplateRequest(ctx context.Context) (*operations.UpdateGroupConfigurationTemplateRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	groupConfigurationTemplate, groupConfigurationTemplateDiags := r.ToSharedGroupConfigurationTemplate(ctx)
+	diags.Append(groupConfigurationTemplateDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.UpdateGroupConfigurationTemplateRequest{
+		GroupConfigurationTemplate: *groupConfigurationTemplate,
+		ID:                         id,
 	}
 
 	return &out, diags
@@ -1426,6 +1468,22 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 	return &out, diags
 }
 
+func (r *GroupResourceModel) ToSharedGroupConfigurationTemplate(ctx context.Context) (*shared.GroupConfigurationTemplate, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	configurationTemplateID := new(string)
+	if !r.ConfigurationTemplateID.IsUnknown() && !r.ConfigurationTemplateID.IsNull() {
+		*configurationTemplateID = r.ConfigurationTemplateID.ValueString()
+	} else {
+		configurationTemplateID = nil
+	}
+	out := shared.GroupConfigurationTemplate{
+		ConfigurationTemplateID: configurationTemplateID,
+	}
+
+	return &out, diags
+}
+
 func (r *GroupResourceModel) ToSharedMessageChannelIDList(ctx context.Context) (*shared.MessageChannelIDList, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -1462,12 +1520,6 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 		*adminOwnerID = r.AdminOwnerID.ValueString()
 	} else {
 		adminOwnerID = nil
-	}
-	configurationTemplateID := new(string)
-	if !r.ConfigurationTemplateID.IsUnknown() && !r.ConfigurationTemplateID.IsNull() {
-		*configurationTemplateID = r.ConfigurationTemplateID.ValueString()
-	} else {
-		configurationTemplateID = nil
 	}
 	customRequestNotification := new(string)
 	if !r.CustomRequestNotification.IsUnknown() && !r.CustomRequestNotification.IsNull() {
@@ -1677,7 +1729,6 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 	}
 	out := shared.UpdateGroupInfo{
 		AdminOwnerID:                adminOwnerID,
-		ConfigurationTemplateID:     configurationTemplateID,
 		CustomRequestNotification:   customRequestNotification,
 		Description:                 description,
 		ExtensionsDurationInMinutes: extensionsDurationInMinutes,

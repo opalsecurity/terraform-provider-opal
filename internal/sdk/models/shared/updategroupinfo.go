@@ -13,10 +13,6 @@ import (
 type UpdateGroupInfo struct {
 	// The ID of the owner of the group.
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
-	// The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
-	//
-	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
-	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
 	// Custom request notification sent to the requester when the request is approved.
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the group.
@@ -60,13 +56,6 @@ func (u *UpdateGroupInfo) GetAdminOwnerID() *string {
 		return nil
 	}
 	return u.AdminOwnerID
-}
-
-func (u *UpdateGroupInfo) GetConfigurationTemplateID() *string {
-	if u == nil {
-		return nil
-	}
-	return u.ConfigurationTemplateID
 }
 
 func (u *UpdateGroupInfo) GetCustomRequestNotification() *string {

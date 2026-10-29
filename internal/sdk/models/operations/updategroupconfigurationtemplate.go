@@ -11,7 +11,7 @@ import (
 type UpdateGroupConfigurationTemplateRequest struct {
 	GroupConfigurationTemplate shared.GroupConfigurationTemplate `request:"mediaType=application/json"`
 	// The ID of the group whose configuration template link is being set.
-	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
+	ID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
 func (u *UpdateGroupConfigurationTemplateRequest) GetGroupConfigurationTemplate() shared.GroupConfigurationTemplate {
@@ -21,18 +21,16 @@ func (u *UpdateGroupConfigurationTemplateRequest) GetGroupConfigurationTemplate(
 	return u.GroupConfigurationTemplate
 }
 
-func (u *UpdateGroupConfigurationTemplateRequest) GetGroupID() string {
+func (u *UpdateGroupConfigurationTemplateRequest) GetID() string {
 	if u == nil {
 		return ""
 	}
-	return u.GroupID
+	return u.ID
 }
 
 type UpdateGroupConfigurationTemplateResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
-	// The ID of the configuration template now linked to the group, or `null` if the group was detached.
-	GroupConfigurationTemplate *shared.GroupConfigurationTemplate
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
@@ -44,13 +42,6 @@ func (u *UpdateGroupConfigurationTemplateResponse) GetContentType() string {
 		return ""
 	}
 	return u.ContentType
-}
-
-func (u *UpdateGroupConfigurationTemplateResponse) GetGroupConfigurationTemplate() *shared.GroupConfigurationTemplate {
-	if u == nil {
-		return nil
-	}
-	return u.GroupConfigurationTemplate
 }
 
 func (u *UpdateGroupConfigurationTemplateResponse) GetStatusCode() int {

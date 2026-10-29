@@ -11,7 +11,6 @@ type Resource struct {
 	AdminOwnerID                types.String                    `tfsdk:"admin_owner_id"`
 	AncestorResourceIds         []types.String                  `tfsdk:"ancestor_resource_ids"`
 	AppID                       types.String                    `tfsdk:"app_id"`
-	ConfigurationTemplateID     types.String                    `tfsdk:"configuration_template_id"`
 	CustomRequestNotification   types.String                    `tfsdk:"custom_request_notification"`
 	DescendantResourceIds       []types.String                  `tfsdk:"descendant_resource_ids"`
 	Description                 types.String                    `tfsdk:"description"`

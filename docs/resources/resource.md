@@ -452,7 +452,7 @@ resource "opal_resource" "my_resource" {
 ### Optional
 
 - `admin_owner_id` (String) The ID of the owner of the resource.
-- `configuration_template_id` (String, Deprecated) The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+- `configuration_template_id` (String) The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
 - `custom_request_notification` (String) Custom request notification sent upon request approval.
 - `description` (String) A description of the resource.
 - `extensions_duration_in_minutes` (Number, Deprecated) The duration for which access can be extended (in minutes). Deprecated, set the extension duration in the request_configuration you want it to apply to.
@@ -473,7 +473,7 @@ resource "opal_resource" "my_resource" {
 
 - `ancestor_resource_ids` (List of String) List of resource IDs that are ancestors of this resource.
 - `descendant_resource_ids` (List of String) List of resource IDs that are descendants of this resource.
-- `id` (String) The ID of the resource.
+- `id` (String) The ID of the resource whose configuration template link is being read.
 - `last_successful_sync` (Attributes) Information about the last successful sync of this resource. (see [below for nested schema](#nestedatt--last_successful_sync))
 - `risk_sensitivity` (String) The risk sensitivity level for the resource. When an override is set, this field will match that.
 
