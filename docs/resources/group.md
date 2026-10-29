@@ -265,7 +265,7 @@ resource "opal_group" "my_group" {
 ### Optional
 
 - `admin_owner_id` (String) The ID of the owner of the group.
-- `configuration_template_id` (String, Deprecated) The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+- `configuration_template_id` (String) The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
 - `custom_request_notification` (String) Custom request notification sent to the requester when the request is approved.
 - `description` (String) A description of the group.
 - `extensions_duration_in_minutes` (Number, Deprecated) The duration for which access can be extended (in minutes). Deprecated, set the extension duration in the request_configuration you want it to apply to.
@@ -288,7 +288,7 @@ resource "opal_group" "my_group" {
 ### Read-Only
 
 - `group_binding_id` (String) The ID of the associated group binding.
-- `id` (String) The ID of the group.
+- `id` (String) The ID of the group whose configuration template link is being set.
 - `last_successful_sync` (Attributes) Information about the last successful sync of this group. (see [below for nested schema](#nestedatt--last_successful_sync))
 - `message_channels` (Attributes) The audit and reviewer message channels attached to the group. (see [below for nested schema](#nestedatt--message_channels))
 - `on_call_schedules` (Attributes) The on call schedules attached to the group. (see [below for nested schema](#nestedatt--on_call_schedules))

@@ -118,10 +118,9 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Description: `The ID of the app for the resource. Requires replacement if changed.`,
 			},
 			"configuration_template_id": schema.StringAttribute{
-				Computed:           true,
-				Optional:           true,
-				DeprecationMessage: `This will be removed in a future release, please migrate away from it as soon as possible`,
-				Description:        `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
+				Computed:    true,
+				Optional:    true,
+				Description: `The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.`,
 				Validators: []validator.String{
 					custom_stringvalidators.ResourceConfigurationTemplateID(),
 				},
@@ -167,7 +166,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				PlanModifiers: []planmodifier.String{
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The ID of the resource.`,
+				Description: `The ID of the resource whose configuration template link is being read.`,
 			},
 			"last_successful_sync": schema.SingleNestedAttribute{
 				Computed: true,
@@ -3778,6 +3777,71 @@ func (r *ResourceResource) Create(ctx context.Context, req resource.CreateReques
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	request4, request4Diags := data.ToOperationsUpdateResourceConfigurationTemplateRequest(ctx)
+	resp.Diagnostics.Append(request4Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res4, err := r.client.Resources.UpdateConfigurationTemplate(ctx, *request4)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		if res4 != nil && res4.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res4.RawResponse))
+		}
+		return
+	}
+	if res4 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res4))
+		return
+	}
+	if res4.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res4.StatusCode), debugResponse(res4.RawResponse))
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request5, request5Diags := data.ToOperationsGetResourceConfigurationTemplateRequest(ctx)
+	resp.Diagnostics.Append(request5Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res5, err := r.client.Resources.GetConfigurationTemplate(ctx, *request5)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		if res5 != nil && res5.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res5.RawResponse))
+		}
+		return
+	}
+	if res5 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res5))
+		return
+	}
+	if res5.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res5.StatusCode), debugResponse(res5.RawResponse))
+		return
+	}
+	if !(res5.ResourceConfigurationTemplate != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res5.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromSharedResourceConfigurationTemplate(ctx, res5.ResourceConfigurationTemplate)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -3871,6 +3935,41 @@ func (r *ResourceResource) Read(ctx context.Context, req resource.ReadRequest, r
 	if resp.Diagnostics.HasError() {
 		return
 	}
+	request2, request2Diags := data.ToOperationsGetResourceConfigurationTemplateRequest(ctx)
+	resp.Diagnostics.Append(request2Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res2, err := r.client.Resources.GetConfigurationTemplate(ctx, *request2)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		if res2 != nil && res2.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res2.RawResponse))
+		}
+		return
+	}
+	if res2 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res2))
+		return
+	}
+	if res2.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
+		return
+	}
+	if res2.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
+		return
+	}
+	if !(res2.ResourceConfigurationTemplate != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res2.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromSharedResourceConfigurationTemplate(ctx, res2.ResourceConfigurationTemplate)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -3955,13 +4054,13 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request2, request2Diags := data.ToOperationsGetResourceIDRequest(ctx)
+	request2, request2Diags := data.ToOperationsUpdateResourceConfigurationTemplateRequest(ctx)
 	resp.Diagnostics.Append(request2Diags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res2, err := r.client.Resources.GetID(ctx, *request2)
+	res2, err := r.client.Resources.UpdateConfigurationTemplate(ctx, *request2)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res2 != nil && res2.RawResponse != nil {
@@ -3977,28 +4076,19 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
 		return
 	}
-	if !(res2.Resource != nil) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res2.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromSharedResource(ctx, res2.Resource)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
 
 	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request3, request3Diags := data.ToOperationsGetResourceVisibilityRequest(ctx)
+	request3, request3Diags := data.ToOperationsGetResourceIDRequest(ctx)
 	resp.Diagnostics.Append(request3Diags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res3, err := r.client.Resources.GetVisibility(ctx, *request3)
+	res3, err := r.client.Resources.GetID(ctx, *request3)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res3 != nil && res3.RawResponse != nil {
@@ -4014,11 +4104,85 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res3.StatusCode), debugResponse(res3.RawResponse))
 		return
 	}
-	if !(res3.Object != nil) {
+	if !(res3.Resource != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res3.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromOperationsGetResourceVisibilityResponseBody(ctx, res3.Object)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedResource(ctx, res3.Resource)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request4, request4Diags := data.ToOperationsGetResourceVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request4Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res4, err := r.client.Resources.GetVisibility(ctx, *request4)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		if res4 != nil && res4.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res4.RawResponse))
+		}
+		return
+	}
+	if res4 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res4))
+		return
+	}
+	if res4.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res4.StatusCode), debugResponse(res4.RawResponse))
+		return
+	}
+	if !(res4.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res4.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetResourceVisibilityResponseBody(ctx, res4.Object)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request5, request5Diags := data.ToOperationsGetResourceConfigurationTemplateRequest(ctx)
+	resp.Diagnostics.Append(request5Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res5, err := r.client.Resources.GetConfigurationTemplate(ctx, *request5)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		if res5 != nil && res5.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res5.RawResponse))
+		}
+		return
+	}
+	if res5 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res5))
+		return
+	}
+	if res5.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res5.StatusCode), debugResponse(res5.RawResponse))
+		return
+	}
+	if !(res5.ResourceConfigurationTemplate != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res5.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromSharedResourceConfigurationTemplate(ctx, res5.ResourceConfigurationTemplate)...)
 
 	if resp.Diagnostics.HasError() {
 		return
