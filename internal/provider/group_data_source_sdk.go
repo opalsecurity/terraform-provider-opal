@@ -133,6 +133,13 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.ActiveDirectoryGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.ActiveDirectoryGroup.GroupID = types.StringValue(resp.RemoteInfo.ActiveDirectoryGroup.GroupID)
 			}
+			if resp.RemoteInfo.AsanaTeam == nil {
+				r.RemoteInfo.AsanaTeam = nil
+			} else {
+				r.RemoteInfo.AsanaTeam = &tfTypes.AsanaTeam{}
+				r.RemoteInfo.AsanaTeam.TeamGid = types.StringValue(resp.RemoteInfo.AsanaTeam.TeamGid)
+				r.RemoteInfo.AsanaTeam.WorkspaceGid = types.StringPointerValue(resp.RemoteInfo.AsanaTeam.WorkspaceGid)
+			}
 			if resp.RemoteInfo.AwsSsoGroup == nil {
 				r.RemoteInfo.AwsSsoGroup = nil
 			} else {
@@ -157,6 +164,24 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.AzureAdSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.AzureAdSecurityGroup.GroupID = types.StringValue(resp.RemoteInfo.AzureAdSecurityGroup.GroupID)
 			}
+			if resp.RemoteInfo.BitwardenGroup == nil {
+				r.RemoteInfo.BitwardenGroup = nil
+			} else {
+				r.RemoteInfo.BitwardenGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.BitwardenGroup.GroupID = types.StringValue(resp.RemoteInfo.BitwardenGroup.GroupID)
+			}
+			if resp.RemoteInfo.BoxGroup == nil {
+				r.RemoteInfo.BoxGroup = nil
+			} else {
+				r.RemoteInfo.BoxGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.BoxGroup.GroupID = types.StringValue(resp.RemoteInfo.BoxGroup.GroupID)
+			}
+			if resp.RemoteInfo.CalendlyGroup == nil {
+				r.RemoteInfo.CalendlyGroup = nil
+			} else {
+				r.RemoteInfo.CalendlyGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.CalendlyGroup.GroupID = types.StringValue(resp.RemoteInfo.CalendlyGroup.GroupID)
+			}
 			if resp.RemoteInfo.ClickhouseRole == nil {
 				r.RemoteInfo.ClickhouseRole = nil
 			} else {
@@ -174,6 +199,12 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			} else {
 				r.RemoteInfo.ConnectorGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.ConnectorGroup.GroupID = types.StringValue(resp.RemoteInfo.ConnectorGroup.GroupID)
+			}
+			if resp.RemoteInfo.CursorGroup == nil {
+				r.RemoteInfo.CursorGroup = nil
+			} else {
+				r.RemoteInfo.CursorGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.CursorGroup.GroupID = types.StringValue(resp.RemoteInfo.CursorGroup.GroupID)
 			}
 			if resp.RemoteInfo.DatabricksAccountGroup == nil {
 				r.RemoteInfo.DatabricksAccountGroup = nil
@@ -278,6 +309,18 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.OktaGroupRule = &tfTypes.OktaGroupRule{}
 				r.RemoteInfo.OktaGroupRule.RuleID = types.StringValue(resp.RemoteInfo.OktaGroupRule.RuleID)
 			}
+			if resp.RemoteInfo.OneloginGroup == nil {
+				r.RemoteInfo.OneloginGroup = nil
+			} else {
+				r.RemoteInfo.OneloginGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.OneloginGroup.GroupID = types.StringValue(resp.RemoteInfo.OneloginGroup.GroupID)
+			}
+			if resp.RemoteInfo.OneloginRole == nil {
+				r.RemoteInfo.OneloginRole = nil
+			} else {
+				r.RemoteInfo.OneloginRole = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.OneloginRole.GroupID = types.StringValue(resp.RemoteInfo.OneloginRole.GroupID)
+			}
 			if resp.RemoteInfo.PagerdutyOnCallSchedule == nil {
 				r.RemoteInfo.PagerdutyOnCallSchedule = nil
 			} else {
@@ -296,6 +339,18 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.RampLocation = &tfTypes.RampLocation{}
 				r.RemoteInfo.RampLocation.LocationID = types.StringValue(resp.RemoteInfo.RampLocation.LocationID)
 			}
+			if resp.RemoteInfo.RipplingSupergroup == nil {
+				r.RemoteInfo.RipplingSupergroup = nil
+			} else {
+				r.RemoteInfo.RipplingSupergroup = &tfTypes.RipplingSupergroup{}
+				r.RemoteInfo.RipplingSupergroup.SupergroupID = types.StringValue(resp.RemoteInfo.RipplingSupergroup.SupergroupID)
+			}
+			if resp.RemoteInfo.RipplingTeam == nil {
+				r.RemoteInfo.RipplingTeam = nil
+			} else {
+				r.RemoteInfo.RipplingTeam = &tfTypes.GrafanaTeam{}
+				r.RemoteInfo.RipplingTeam.TeamID = types.StringValue(resp.RemoteInfo.RipplingTeam.TeamID)
+			}
 			if resp.RemoteInfo.RootlyOnCallSchedule == nil {
 				r.RemoteInfo.RootlyOnCallSchedule = nil
 			} else {
@@ -313,6 +368,18 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			} else {
 				r.RemoteInfo.SnowflakeRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.SnowflakeRole.RoleID = types.StringValue(resp.RemoteInfo.SnowflakeRole.RoleID)
+			}
+			if resp.RemoteInfo.SquareJob == nil {
+				r.RemoteInfo.SquareJob = nil
+			} else {
+				r.RemoteInfo.SquareJob = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.SquareJob.GroupID = types.StringValue(resp.RemoteInfo.SquareJob.GroupID)
+			}
+			if resp.RemoteInfo.SquareLocation == nil {
+				r.RemoteInfo.SquareLocation = nil
+			} else {
+				r.RemoteInfo.SquareLocation = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.SquareLocation.GroupID = types.StringValue(resp.RemoteInfo.SquareLocation.GroupID)
 			}
 			if resp.RemoteInfo.TableauGroup == nil {
 				r.RemoteInfo.TableauGroup = nil
@@ -385,6 +452,7 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				for _, v := range requestConfigurationsItem.Condition.GroupIds {
 					requestConfigurations.Condition.GroupIds = append(requestConfigurations.Condition.GroupIds, types.StringValue(v))
 				}
+				requestConfigurations.Condition.OpalScriptID = types.StringPointerValue(requestConfigurationsItem.Condition.OpalScriptID)
 				requestConfigurations.Condition.RoleRemoteIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
 				for _, v := range requestConfigurationsItem.Condition.RoleRemoteIds {
 					requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))

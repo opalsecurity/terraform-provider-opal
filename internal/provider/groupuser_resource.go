@@ -185,8 +185,6 @@ func (r *GroupUserResource) Create(ctx context.Context, req resource.CreateReque
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToOperationsCreateGroupUserRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -290,8 +288,6 @@ func (r *GroupUserResource) Delete(ctx context.Context, req resource.DeleteReque
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsDeleteGroupUserRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)

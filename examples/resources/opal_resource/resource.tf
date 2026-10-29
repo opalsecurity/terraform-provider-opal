@@ -19,6 +19,9 @@ resource "opal_resource" "my_resource" {
     anthropic_workspace = {
       workspace_id = "ws-123456"
     }
+    asana_workspace = {
+      workspace_gid = "...my_workspace_gid..."
+    }
     aws_account = {
       account_id             = 234234234234
       organizational_unit_id = "ou-1234"
@@ -103,6 +106,21 @@ resource "opal_resource" "my_resource" {
     azure_virtual_machine = {
       resource_id = "/subscriptions/0000/resourceGroups/rg/providers/Microsoft.Compute/virtualMachines/vm01"
     }
+    bitwarden_organization = {
+      organization_id = "...my_organization_id..."
+    }
+    box_enterprise = {
+      resource_id = "...my_resource_id..."
+    }
+    box_folder = {
+      resource_id = "...my_resource_id..."
+    }
+    calendly_event_type = {
+      resource_id = "...my_resource_id..."
+    }
+    calendly_role = {
+      resource_id = "...my_resource_id..."
+    }
     clickhouse_console_role = {
       role_id = "123e4567-e89b-12d3-a456-426614174000"
     }
@@ -118,6 +136,9 @@ resource "opal_resource" "my_resource" {
     }
     cursor_organization = {
       org_id = "123e4567-e89b-12d3-a456-426614174000"
+    }
+    cursor_origin_repository = {
+      repository_name = "acme/rocket"
     }
     custom_connector = {
       can_have_usage_events = false
@@ -260,6 +281,9 @@ resource "opal_resource" "my_resource" {
     okta_standard_role = {
       role_type = "ORG_ADMIN"
     }
+    onelogin_app = {
+      resource_id = "...my_resource_id..."
+    }
     openai_platform_project = {
       project_id = "proj_abc"
     }
@@ -278,6 +302,9 @@ resource "opal_resource" "my_resource" {
     }
     ramp_role = {
       role = "BUSINESS_USER"
+    }
+    rippling_department = {
+      department_id = "8caed98e-1234-5678-9abc-def012345678"
     }
     salesforce_permission_set = {
       permission_set_id = "0PS5Y090202wOV7WAM"
@@ -340,6 +367,7 @@ resource "opal_resource" "my_resource" {
         group_ids = [
           "1b978423-db0a-4037-a4cf-f79c60cb67b3",
         ]
+        opal_script_id = "32acc112-21ff-4669-91c2-21e27683eaa1"
         role_remote_ids = [
           "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]

@@ -37,6 +37,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
         group_ids = [
           "1b978423-db0a-4037-a4cf-f79c60cb67b3",
         ]
+        opal_script_id = "32acc112-21ff-4669-91c2-21e27683eaa1"
         role_remote_ids = [
           "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]
@@ -157,6 +158,7 @@ Optional:
 Optional:
 
 - `group_ids` (Set of String) The list of group IDs to match. Default: []
+- `opal_script_id` (String) The ID of a `REQUEST_CONFIGURATION_CONDITION` OpalScript that decides whether this request configuration applies. Cannot be combined with `group_ids` or `role_remote_ids`.
 - `role_remote_ids` (Set of String) The list of role remote IDs to match. Default: []
 
 
