@@ -11,9 +11,6 @@ import (
 	"sort"
 	"strings"
 	"sync"
-
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
-	"github.com/hashicorp/terraform-plugin-go/tftypes"
 )
 
 // Values shorter than this match too much unrelated text to be worth redacting.
@@ -47,52 +44,6 @@ func registerSensitiveValues(values ...any) {
 	}
 }
 
-// withSensitiveValues returns ctx carrying every known string held under an
-// attribute marked sensitive or write-only in the given tfsdk.Config,
-// tfsdk.Plan or tfsdk.State. The SDK builds its HTTP requests from ctx, so
-// debugResponse and the debug transport log can redact those values.
-func withSensitiveValues(ctx context.Context, sources ...any) context.Context {
-	values, _ := ctx.Value(sensitiveValuesKey{}).([]string)
-	for _, source := range sources {
-		var data tfsdk.Config
-		switch s := source.(type) {
-		case tfsdk.Config:
-			data = s
-		case tfsdk.Plan:
-			data = tfsdk.Config(s)
-		case tfsdk.State:
-			data = tfsdk.Config(s)
-		}
-		if data.Schema == nil {
-			continue
-		}
-		_ = tftypes.Walk(data.Raw, func(p *tftypes.AttributePath, v tftypes.Value) (bool, error) {
-			if len(p.Steps()) == 0 {
-				return true, nil
-			}
-			attribute, err := data.Schema.AttributeAtTerraformPath(ctx, p)
-			if err != nil || !(attribute.IsSensitive() || attribute.IsWriteOnly()) {
-				return true, nil
-			}
-			values = append(values, knownStrings(v)...)
-			return false, nil
-		})
-	}
-	return context.WithValue(ctx, sensitiveValuesKey{}, values)
-}
-
-func knownStrings(v tftypes.Value) []string {
-	var values []string
-	_ = tftypes.Walk(v, func(_ *tftypes.AttributePath, leaf tftypes.Value) (bool, error) {
-		var s string
-		if leaf.Type().Is(tftypes.String) && leaf.IsKnown() && !leaf.IsNull() && leaf.As(&s) == nil && s != "" {
-			values = append(values, s)
-		}
-		return true, nil
-	})
-	return values
-}
-
 // redactSensitiveValues replaces the sensitive values carried by ctx, and the
 // registered provider credentials, wherever they appear in s: verbatim,
 // URL-encoded in a query or path, or escaped inside a JSON string.
@@ -122,7 +73,7 @@ func redactSensitiveValues(ctx context.Context, s string) string {
 
 	// Longest first, so a value contained in another cannot split it.
 	sort.Slice(forms, func(i, j int) bool { return len(forms[i]) > len(forms[j]) })
-	pairs := make([]string, 0, 2*len(forms))
+	var pairs []string
 	for _, form := range forms {
 		pairs = append(pairs, form, "(sensitive)")
 	}
