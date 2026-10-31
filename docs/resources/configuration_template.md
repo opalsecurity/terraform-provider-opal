@@ -37,6 +37,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
         group_ids = [
           "1b978423-db0a-4037-a4cf-f79c60cb67b3",
         ]
+        opal_script_id = "32acc112-21ff-4669-91c2-21e27683eaa1"
         role_remote_ids = [
           "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]
@@ -76,8 +77,9 @@ resource "opal_configuration_template" "my_configurationtemplate" {
       ]
     }
   ]
-  require_mfa_to_approve = false
-  require_mfa_to_connect = false
+  require_mfa_to_approve  = false
+  require_mfa_to_connect  = false
+  requires_forfeit_reason = false
   ticket_propagation = {
     enabled_on_grant      = true
     enabled_on_revocation = false
@@ -111,6 +113,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
 - `member_on_call_schedule_ids` (Set of String) The IDs of the on-call schedules linked to the configuration template. Default: []
 - `request_configurations` (Attributes List) The request configuration list of the configuration template. If not provided, the default request configuration will be used. (see [below for nested schema](#nestedatt--request_configurations))
 - `require_mfa_to_approve` (Boolean) A bool representing whether or not to require MFA for reviewers to approve requests for this configuration template. Default: false
+- `requires_forfeit_reason` (Boolean) A bool representing whether or not a reason is required when forfeiting access to resources or groups using this configuration template.
 - `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--ticket_propagation))
 
 ### Read-Only
@@ -157,6 +160,7 @@ Optional:
 Optional:
 
 - `group_ids` (Set of String) The list of group IDs to match. Default: []
+- `opal_script_id` (String) The ID of a `REQUEST_CONFIGURATION_CONDITION` OpalScript that decides whether this request configuration applies. Cannot be combined with `group_ids` or `role_remote_ids`.
 - `role_remote_ids` (Set of String) The list of role remote IDs to match. Default: []
 
 

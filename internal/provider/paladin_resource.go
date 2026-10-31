@@ -135,8 +135,6 @@ func (r *PaladinResource) Create(ctx context.Context, req resource.CreateRequest
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToSharedCreatePaladinInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -197,8 +195,6 @@ func (r *PaladinResource) Read(ctx context.Context, req resource.ReadRequest, re
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.State)
-
 	request, requestDiags := data.ToOperationsGetPaladinRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -252,8 +248,6 @@ func (r *PaladinResource) Update(ctx context.Context, req resource.UpdateRequest
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
 
 	request, requestDiags := data.ToOperationsUpdatePaladinRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
@@ -314,8 +308,6 @@ func (r *PaladinResource) Delete(ctx context.Context, req resource.DeleteRequest
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsDeletePaladinRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
