@@ -122,8 +122,6 @@ func (r *ResourceTagsDataSource) Read(ctx context.Context, req datasource.ReadRe
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetResourceTagsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

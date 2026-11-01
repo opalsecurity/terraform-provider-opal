@@ -39,6 +39,7 @@ const (
 	GroupTypeEnumGrafanaTeam              GroupTypeEnum = "GRAFANA_TEAM"
 	GroupTypeEnumClickhouseRole           GroupTypeEnum = "CLICKHOUSE_ROLE"
 	GroupTypeEnumSlackUserGroup           GroupTypeEnum = "SLACK_USER_GROUP"
+	GroupTypeEnumCursorGroup              GroupTypeEnum = "CURSOR_GROUP"
 	GroupTypeEnumTwingateGroup            GroupTypeEnum = "TWINGATE_GROUP"
 	GroupTypeEnumTwingateGroupSynced      GroupTypeEnum = "TWINGATE_GROUP_SYNCED"
 	GroupTypeEnumZendeskGroup             GroupTypeEnum = "ZENDESK_GROUP"
@@ -54,6 +55,16 @@ const (
 	GroupTypeEnumRampLocation             GroupTypeEnum = "RAMP_LOCATION"
 	GroupTypeEnumWrikeGroup               GroupTypeEnum = "WRIKE_GROUP"
 	GroupTypeEnumAxiomGroup               GroupTypeEnum = "AXIOM_GROUP"
+	GroupTypeEnumAsanaTeam                GroupTypeEnum = "ASANA_TEAM"
+	GroupTypeEnumBitwardenGroup           GroupTypeEnum = "BITWARDEN_GROUP"
+	GroupTypeEnumBoxGroup                 GroupTypeEnum = "BOX_GROUP"
+	GroupTypeEnumCalendlyGroup            GroupTypeEnum = "CALENDLY_GROUP"
+	GroupTypeEnumOneloginRole             GroupTypeEnum = "ONELOGIN_ROLE"
+	GroupTypeEnumOneloginGroup            GroupTypeEnum = "ONELOGIN_GROUP"
+	GroupTypeEnumSquareLocation           GroupTypeEnum = "SQUARE_LOCATION"
+	GroupTypeEnumSquareJob                GroupTypeEnum = "SQUARE_JOB"
+	GroupTypeEnumRipplingTeam             GroupTypeEnum = "RIPPLING_TEAM"
+	GroupTypeEnumRipplingSupergroup       GroupTypeEnum = "RIPPLING_SUPERGROUP"
 )
 
 func (e GroupTypeEnum) ToPointer() *GroupTypeEnum {
@@ -119,6 +130,8 @@ func (e *GroupTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "SLACK_USER_GROUP":
 		fallthrough
+	case "CURSOR_GROUP":
+		fallthrough
 	case "TWINGATE_GROUP":
 		fallthrough
 	case "TWINGATE_GROUP_SYNCED":
@@ -148,6 +161,26 @@ func (e *GroupTypeEnum) UnmarshalJSON(data []byte) error {
 	case "WRIKE_GROUP":
 		fallthrough
 	case "AXIOM_GROUP":
+		fallthrough
+	case "ASANA_TEAM":
+		fallthrough
+	case "BITWARDEN_GROUP":
+		fallthrough
+	case "BOX_GROUP":
+		fallthrough
+	case "CALENDLY_GROUP":
+		fallthrough
+	case "ONELOGIN_ROLE":
+		fallthrough
+	case "ONELOGIN_GROUP":
+		fallthrough
+	case "SQUARE_LOCATION":
+		fallthrough
+	case "SQUARE_JOB":
+		fallthrough
+	case "RIPPLING_TEAM":
+		fallthrough
+	case "RIPPLING_SUPERGROUP":
 		*e = GroupTypeEnum(v)
 		return nil
 	default:

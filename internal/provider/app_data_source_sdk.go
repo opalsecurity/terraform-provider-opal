@@ -28,6 +28,7 @@ func (r *AppDataSourceModel) RefreshFromSharedApp(ctx context.Context, resp *sha
 			r.CustomConnector.Identifier = types.StringValue(resp.CustomConnector.Identifier)
 			r.CustomConnector.SupportsEventIngestion = types.BoolValue(resp.CustomConnector.SupportsEventIngestion)
 			r.CustomConnector.SupportsGroups = types.BoolValue(resp.CustomConnector.SupportsGroups)
+			r.CustomConnector.SupportsIdp = types.BoolValue(resp.CustomConnector.SupportsIdp)
 			r.CustomConnector.SupportsNestedGroups = types.BoolValue(resp.CustomConnector.SupportsNestedGroups)
 			r.CustomConnector.SupportsNestedResources = types.BoolValue(resp.CustomConnector.SupportsNestedResources)
 			r.CustomConnector.TLSCaCertContent = types.StringPointerValue(resp.CustomConnector.TLSCaCertContent)

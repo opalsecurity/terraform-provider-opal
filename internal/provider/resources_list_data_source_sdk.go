@@ -72,6 +72,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.AnthropicWorkspace = &tfTypes.AnthropicWorkspace{}
 					results.RemoteInfo.AnthropicWorkspace.WorkspaceID = types.StringValue(resultsItem.RemoteInfo.AnthropicWorkspace.WorkspaceID)
 				}
+				if resultsItem.RemoteInfo.AsanaWorkspace == nil {
+					results.RemoteInfo.AsanaWorkspace = nil
+				} else {
+					results.RemoteInfo.AsanaWorkspace = &tfTypes.AsanaWorkspace{}
+					results.RemoteInfo.AsanaWorkspace.WorkspaceGid = types.StringValue(resultsItem.RemoteInfo.AsanaWorkspace.WorkspaceGid)
+				}
 				if resultsItem.RemoteInfo.AwsAccount == nil {
 					results.RemoteInfo.AwsAccount = nil
 				} else {
@@ -225,6 +231,36 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.AzureVirtualMachine = &tfTypes.AzureEnterpriseApp{}
 					results.RemoteInfo.AzureVirtualMachine.ResourceID = types.StringValue(resultsItem.RemoteInfo.AzureVirtualMachine.ResourceID)
 				}
+				if resultsItem.RemoteInfo.BitwardenOrganization == nil {
+					results.RemoteInfo.BitwardenOrganization = nil
+				} else {
+					results.RemoteInfo.BitwardenOrganization = &tfTypes.ZendeskOrganization{}
+					results.RemoteInfo.BitwardenOrganization.OrganizationID = types.StringValue(resultsItem.RemoteInfo.BitwardenOrganization.OrganizationID)
+				}
+				if resultsItem.RemoteInfo.BoxEnterprise == nil {
+					results.RemoteInfo.BoxEnterprise = nil
+				} else {
+					results.RemoteInfo.BoxEnterprise = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.BoxEnterprise.ResourceID = types.StringValue(resultsItem.RemoteInfo.BoxEnterprise.ResourceID)
+				}
+				if resultsItem.RemoteInfo.BoxFolder == nil {
+					results.RemoteInfo.BoxFolder = nil
+				} else {
+					results.RemoteInfo.BoxFolder = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.BoxFolder.ResourceID = types.StringValue(resultsItem.RemoteInfo.BoxFolder.ResourceID)
+				}
+				if resultsItem.RemoteInfo.CalendlyEventType == nil {
+					results.RemoteInfo.CalendlyEventType = nil
+				} else {
+					results.RemoteInfo.CalendlyEventType = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.CalendlyEventType.ResourceID = types.StringValue(resultsItem.RemoteInfo.CalendlyEventType.ResourceID)
+				}
+				if resultsItem.RemoteInfo.CalendlyRole == nil {
+					results.RemoteInfo.CalendlyRole = nil
+				} else {
+					results.RemoteInfo.CalendlyRole = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.CalendlyRole.ResourceID = types.StringValue(resultsItem.RemoteInfo.CalendlyRole.ResourceID)
+				}
 				if resultsItem.RemoteInfo.ClickhouseConsoleRole == nil {
 					results.RemoteInfo.ClickhouseConsoleRole = nil
 				} else {
@@ -255,6 +291,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				} else {
 					results.RemoteInfo.CursorOrganization = &tfTypes.CursorOrganization{}
 					results.RemoteInfo.CursorOrganization.OrgID = types.StringValue(resultsItem.RemoteInfo.CursorOrganization.OrgID)
+				}
+				if resultsItem.RemoteInfo.CursorOriginRepository == nil {
+					results.RemoteInfo.CursorOriginRepository = nil
+				} else {
+					results.RemoteInfo.CursorOriginRepository = &tfTypes.CursorOriginRepository{}
+					results.RemoteInfo.CursorOriginRepository.RepositoryName = types.StringValue(resultsItem.RemoteInfo.CursorOriginRepository.RepositoryName)
 				}
 				if resultsItem.RemoteInfo.CustomConnector == nil {
 					results.RemoteInfo.CustomConnector = nil
@@ -520,6 +562,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.OktaStandardRole = &tfTypes.OktaStandardRole{}
 					results.RemoteInfo.OktaStandardRole.RoleType = types.StringValue(resultsItem.RemoteInfo.OktaStandardRole.RoleType)
 				}
+				if resultsItem.RemoteInfo.OneloginApp == nil {
+					results.RemoteInfo.OneloginApp = nil
+				} else {
+					results.RemoteInfo.OneloginApp = &tfTypes.AzureEnterpriseApp{}
+					results.RemoteInfo.OneloginApp.ResourceID = types.StringValue(resultsItem.RemoteInfo.OneloginApp.ResourceID)
+				}
 				if resultsItem.RemoteInfo.OpenaiPlatformProject == nil {
 					results.RemoteInfo.OpenaiPlatformProject = nil
 				} else {
@@ -556,6 +604,12 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				} else {
 					results.RemoteInfo.RampRole = &tfTypes.RampRole{}
 					results.RemoteInfo.RampRole.Role = types.StringValue(resultsItem.RemoteInfo.RampRole.Role)
+				}
+				if resultsItem.RemoteInfo.RipplingDepartment == nil {
+					results.RemoteInfo.RipplingDepartment = nil
+				} else {
+					results.RemoteInfo.RipplingDepartment = &tfTypes.RampDepartment{}
+					results.RemoteInfo.RipplingDepartment.DepartmentID = types.StringValue(resultsItem.RemoteInfo.RipplingDepartment.DepartmentID)
 				}
 				if resultsItem.RemoteInfo.SalesforcePermissionSet == nil {
 					results.RemoteInfo.SalesforcePermissionSet = nil
@@ -673,6 +727,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					for _, v := range requestConfigurationsItem.Condition.GroupIds {
 						requestConfigurations.Condition.GroupIds = append(requestConfigurations.Condition.GroupIds, types.StringValue(v))
 					}
+					requestConfigurations.Condition.OpalScriptID = types.StringPointerValue(requestConfigurationsItem.Condition.OpalScriptID)
 					requestConfigurations.Condition.RoleRemoteIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
 					for _, v := range requestConfigurationsItem.Condition.RoleRemoteIds {
 						requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
@@ -732,6 +787,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 			}
 			results.RequireMfaToApprove = types.BoolPointerValue(resultsItem.RequireMfaToApprove)
 			results.RequireMfaToConnect = types.BoolPointerValue(resultsItem.RequireMfaToConnect)
+			results.RequiresForfeitReason = types.BoolPointerValue(resultsItem.RequiresForfeitReason)
 			if resultsItem.ResourceType != nil {
 				results.ResourceType = types.StringValue(string(*resultsItem.ResourceType))
 			} else {

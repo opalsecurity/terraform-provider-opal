@@ -109,8 +109,6 @@ func (r *GroupCatalogMappingResource) Create(ctx context.Context, req resource.C
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToOperationsCreateIdpGroupMappingRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -171,8 +169,6 @@ func (r *GroupCatalogMappingResource) Read(ctx context.Context, req resource.Rea
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.State)
-
 	request, requestDiags := data.ToOperationsGetIdpGroupMappingRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -226,8 +222,6 @@ func (r *GroupCatalogMappingResource) Update(ctx context.Context, req resource.U
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
 
 	request, requestDiags := data.ToOperationsCreateIdpGroupMappingRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
@@ -288,8 +282,6 @@ func (r *GroupCatalogMappingResource) Delete(ctx context.Context, req resource.D
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsDeleteIdpGroupMappingsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)

@@ -21,6 +21,8 @@ type CreateAppInfo struct {
 	// The visibility level of the entity.
 	Visibility *VisibilityTypeEnum `json:"visibility,omitempty"`
 	// The IDs of groups that can see this app when visibility is `LIMITED`.
+	// Must be empty when visibility is `GLOBAL`; the server returns `400`
+	// otherwise.
 	VisibilityGroupIds []string `json:"visibility_group_ids,omitempty"`
 }
 

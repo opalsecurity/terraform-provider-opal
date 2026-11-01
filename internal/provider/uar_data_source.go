@@ -194,8 +194,6 @@ func (r *UarDataSource) Read(ctx context.Context, req datasource.ReadRequest, re
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetUARIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

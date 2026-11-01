@@ -81,6 +81,9 @@ type AccessEntityFilters struct {
 	EntityName *EntityNameFilter `json:"entityName,omitempty"`
 	// Filters entities by a tag key/value pair, optionally scoped to a connection.
 	EntityTag *EntityTagFilter `json:"entityTag,omitempty"`
+	// Filters entities that have a tag whose key is one of `keys`, whatever its value (including no value). Keys match exactly and case-sensitively. An empty list matches nothing. AGENT entities carry no tags, so they never match; under `not`, every agent matches, as with entityTag.
+	//
+	EntityTagKey *EntityTagKeyFilter `json:"entityTagKey,omitempty"`
 	// Filter by entity type. Only RESOURCE, GROUP, and USER are queryable via OpalQuery.
 	EntityTypes []EntityTypes `json:"entityTypes,omitempty"`
 	// Filters USER entities by their HR/IDP lifecycle status. Only applies to USER entities; GROUP and RESOURCE entities never match, in either polarity. `statuses` combine with OR. `not` inverts the match within the user domain (e.g. "IDP status is NOT active"), so it still returns only users rather than sweeping in groups/resources.
@@ -162,6 +165,13 @@ func (a *AccessEntityFilters) GetEntityTag() *EntityTagFilter {
 		return nil
 	}
 	return a.EntityTag
+}
+
+func (a *AccessEntityFilters) GetEntityTagKey() *EntityTagKeyFilter {
+	if a == nil {
+		return nil
+	}
+	return a.EntityTagKey
 }
 
 func (a *AccessEntityFilters) GetEntityTypes() []EntityTypes {

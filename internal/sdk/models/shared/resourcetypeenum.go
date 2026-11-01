@@ -82,6 +82,7 @@ const (
 	ResourceTypeEnumDatastaxAstraRole                 ResourceTypeEnum = "DATASTAX_ASTRA_ROLE"
 	ResourceTypeEnumCoupaRole                         ResourceTypeEnum = "COUPA_ROLE"
 	ResourceTypeEnumCursorOrganization                ResourceTypeEnum = "CURSOR_ORGANIZATION"
+	ResourceTypeEnumCursorOriginRepository            ResourceTypeEnum = "CURSOR_ORIGIN_REPOSITORY"
 	ResourceTypeEnumOpenaiPlatformProject             ResourceTypeEnum = "OPENAI_PLATFORM_PROJECT"
 	ResourceTypeEnumOpenaiPlatformServiceAccount      ResourceTypeEnum = "OPENAI_PLATFORM_SERVICE_ACCOUNT"
 	ResourceTypeEnumAnthropicWorkspace                ResourceTypeEnum = "ANTHROPIC_WORKSPACE"
@@ -124,6 +125,14 @@ const (
 	ResourceTypeEnumVercelProject                     ResourceTypeEnum = "VERCEL_PROJECT"
 	ResourceTypeEnumAxiomRole                         ResourceTypeEnum = "AXIOM_ROLE"
 	ResourceTypeEnumAxiomCustomRole                   ResourceTypeEnum = "AXIOM_CUSTOM_ROLE"
+	ResourceTypeEnumRipplingDepartment                ResourceTypeEnum = "RIPPLING_DEPARTMENT"
+	ResourceTypeEnumAsanaWorkspace                    ResourceTypeEnum = "ASANA_WORKSPACE"
+	ResourceTypeEnumBitwardenOrganization             ResourceTypeEnum = "BITWARDEN_ORGANIZATION"
+	ResourceTypeEnumBoxEnterprise                     ResourceTypeEnum = "BOX_ENTERPRISE"
+	ResourceTypeEnumBoxFolder                         ResourceTypeEnum = "BOX_FOLDER"
+	ResourceTypeEnumCalendlyRole                      ResourceTypeEnum = "CALENDLY_ROLE"
+	ResourceTypeEnumCalendlyEventType                 ResourceTypeEnum = "CALENDLY_EVENT_TYPE"
+	ResourceTypeEnumOneloginApp                       ResourceTypeEnum = "ONELOGIN_APP"
 )
 
 func (e ResourceTypeEnum) ToPointer() *ResourceTypeEnum {
@@ -275,6 +284,8 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "CURSOR_ORGANIZATION":
 		fallthrough
+	case "CURSOR_ORIGIN_REPOSITORY":
+		fallthrough
 	case "OPENAI_PLATFORM_PROJECT":
 		fallthrough
 	case "OPENAI_PLATFORM_SERVICE_ACCOUNT":
@@ -358,6 +369,22 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "AXIOM_ROLE":
 		fallthrough
 	case "AXIOM_CUSTOM_ROLE":
+		fallthrough
+	case "RIPPLING_DEPARTMENT":
+		fallthrough
+	case "ASANA_WORKSPACE":
+		fallthrough
+	case "BITWARDEN_ORGANIZATION":
+		fallthrough
+	case "BOX_ENTERPRISE":
+		fallthrough
+	case "BOX_FOLDER":
+		fallthrough
+	case "CALENDLY_ROLE":
+		fallthrough
+	case "CALENDLY_EVENT_TYPE":
+		fallthrough
+	case "ONELOGIN_APP":
 		*e = ResourceTypeEnum(v)
 		return nil
 	default:

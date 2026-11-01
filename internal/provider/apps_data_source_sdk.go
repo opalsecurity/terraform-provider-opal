@@ -33,6 +33,7 @@ func (r *AppsDataSourceModel) RefreshFromSharedAppsList(ctx context.Context, res
 				apps.CustomConnector.Identifier = types.StringValue(appsItem.CustomConnector.Identifier)
 				apps.CustomConnector.SupportsEventIngestion = types.BoolValue(appsItem.CustomConnector.SupportsEventIngestion)
 				apps.CustomConnector.SupportsGroups = types.BoolValue(appsItem.CustomConnector.SupportsGroups)
+				apps.CustomConnector.SupportsIdp = types.BoolValue(appsItem.CustomConnector.SupportsIdp)
 				apps.CustomConnector.SupportsNestedGroups = types.BoolValue(appsItem.CustomConnector.SupportsNestedGroups)
 				apps.CustomConnector.SupportsNestedResources = types.BoolValue(appsItem.CustomConnector.SupportsNestedResources)
 				apps.CustomConnector.TLSCaCertContent = types.StringPointerValue(appsItem.CustomConnector.TLSCaCertContent)
