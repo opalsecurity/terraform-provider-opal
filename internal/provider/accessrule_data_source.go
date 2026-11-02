@@ -200,8 +200,6 @@ func (r *AccessRuleDataSource) Read(ctx context.Context, req datasource.ReadRequ
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetAccessRuleRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

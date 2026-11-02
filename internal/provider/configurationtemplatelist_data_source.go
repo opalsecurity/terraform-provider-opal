@@ -91,6 +91,10 @@ func (r *ConfigurationTemplateListDataSource) Schema(ctx context.Context, req da
 							Computed:    true,
 							Description: `A bool representing whether or not to require MFA to connect to resources associated with this configuration template.`,
 						},
+						"requires_forfeit_reason": schema.BoolAttribute{
+							Computed:    true,
+							Description: `A bool representing whether or not a reason is required when forfeiting access to resources or groups using this configuration template.`,
+						},
 						"ticket_propagation": schema.SingleNestedAttribute{
 							Computed: true,
 							Attributes: map[string]schema.Attribute{
@@ -168,8 +172,6 @@ func (r *ConfigurationTemplateListDataSource) Read(ctx context.Context, req data
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config)
 
 	res, err := r.client.ConfigurationTemplates.Get(ctx)
 	if err != nil {

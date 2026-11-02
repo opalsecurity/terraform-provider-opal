@@ -56,6 +56,7 @@ type ConfigurationTemplateResourceModel struct {
 	RequestConfigurations        []tfTypes.RequestConfiguration          `tfsdk:"request_configurations"`
 	RequireMfaToApprove          types.Bool                              `tfsdk:"require_mfa_to_approve"`
 	RequireMfaToConnect          types.Bool                              `tfsdk:"require_mfa_to_connect"`
+	RequiresForfeitReason        types.Bool                              `tfsdk:"requires_forfeit_reason"`
 	TicketPropagation            *tfTypes.TicketPropagationConfiguration `tfsdk:"ticket_propagation"`
 	Visibility                   *tfTypes.VisibilityInfo                 `tfsdk:"visibility"`
 }
@@ -130,6 +131,7 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 								"group_ids": types.SetType{
 									ElemType: types.StringType,
 								},
+								"opal_script_id": types.StringType,
 								"role_remote_ids": types.SetType{
 									ElemType: types.StringType,
 								},
@@ -141,6 +143,10 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 									Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 									ElementType: types.StringType,
 									Description: `The list of group IDs to match. Default: []`,
+								},
+								"opal_script_id": schema.StringAttribute{
+									Optional:    true,
+									Description: `The ID of a ` + "`" + `REQUEST_CONFIGURATION_CONDITION` + "`" + ` OpalScript that decides whether this request configuration applies. Cannot be combined with ` + "`" + `group_ids` + "`" + ` or ` + "`" + `role_remote_ids` + "`" + `.`,
 								},
 								"role_remote_ids": schema.SetAttribute{
 									Computed:    true,
@@ -281,6 +287,11 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 				Required:    true,
 				Description: `A bool representing whether or not to require MFA to connect to resources associated with this configuration template.`,
 			},
+			"requires_forfeit_reason": schema.BoolAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `A bool representing whether or not a reason is required when forfeiting access to resources or groups using this configuration template.`,
+			},
 			"ticket_propagation": schema.SingleNestedAttribute{
 				Computed: true,
 				Optional: true,
@@ -406,8 +417,6 @@ func (r *ConfigurationTemplateResource) Create(ctx context.Context, req resource
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToSharedCreateConfigurationTemplateInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -488,8 +497,6 @@ func (r *ConfigurationTemplateResource) Update(ctx context.Context, req resource
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
-
 	request, requestDiags := data.ToSharedUpdateConfigurationTemplateInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -549,8 +556,6 @@ func (r *ConfigurationTemplateResource) Delete(ctx context.Context, req resource
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsDeleteConfigurationTemplateRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)

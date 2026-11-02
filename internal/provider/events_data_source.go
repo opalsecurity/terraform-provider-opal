@@ -202,8 +202,6 @@ func (r *EventsDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetEventsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

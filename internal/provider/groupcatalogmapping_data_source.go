@@ -104,8 +104,6 @@ func (r *GroupCatalogMappingDataSource) Read(ctx context.Context, req datasource
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetIdpGroupMappingRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

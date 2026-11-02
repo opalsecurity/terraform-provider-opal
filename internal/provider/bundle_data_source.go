@@ -139,8 +139,6 @@ func (r *BundleDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetBundleRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

@@ -124,8 +124,6 @@ func (r *DelegationDataSource) Read(ctx context.Context, req datasource.ReadRequ
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetDelegationRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

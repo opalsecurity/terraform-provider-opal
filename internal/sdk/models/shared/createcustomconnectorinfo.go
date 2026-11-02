@@ -17,6 +17,9 @@ type CreateCustomConnectorInfo struct {
 	SupportsEventIngestion *bool `json:"supports_event_ingestion,omitempty"`
 	// Whether the Custom Connector supports groups. Defaults to `false`.
 	SupportsGroups *bool `json:"supports_groups,omitempty"`
+	// Whether the Custom Connector can be connected as an upstream user
+	// directory. Defaults to `false`.
+	SupportsIdp *bool `json:"supports_idp,omitempty"`
 	// Whether the Custom Connector supports nested groups. Defaults to
 	// `false`.
 	SupportsNestedGroups *bool `json:"supports_nested_groups,omitempty"`
@@ -62,6 +65,13 @@ func (c *CreateCustomConnectorInfo) GetSupportsGroups() *bool {
 		return nil
 	}
 	return c.SupportsGroups
+}
+
+func (c *CreateCustomConnectorInfo) GetSupportsIdp() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.SupportsIdp
 }
 
 func (c *CreateCustomConnectorInfo) GetSupportsNestedGroups() *bool {

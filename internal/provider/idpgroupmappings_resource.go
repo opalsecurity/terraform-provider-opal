@@ -120,8 +120,6 @@ func (r *IdpGroupMappingsResource) Create(ctx context.Context, req resource.Crea
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToOperationsUpdateIdpGroupMappingsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -210,8 +208,6 @@ func (r *IdpGroupMappingsResource) Read(ctx context.Context, req resource.ReadRe
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.State)
-
 	request, requestDiags := data.ToOperationsGetIdpGroupMappingsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -265,8 +261,6 @@ func (r *IdpGroupMappingsResource) Update(ctx context.Context, req resource.Upda
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
 
 	request, requestDiags := data.ToOperationsUpdateIdpGroupMappingsRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)

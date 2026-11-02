@@ -127,8 +127,6 @@ func (r *OwnerResource) Create(ctx context.Context, req resource.CreateRequest, 
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToSharedCreateOwnerInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -189,8 +187,6 @@ func (r *OwnerResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.State)
-
 	request, requestDiags := data.ToOperationsGetOwnerIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -244,8 +240,6 @@ func (r *OwnerResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
 
 	request, requestDiags := data.ToSharedUpdateOwnerInfoList(ctx)
 	resp.Diagnostics.Append(requestDiags...)
@@ -338,8 +332,6 @@ func (r *OwnerResource) Delete(ctx context.Context, req resource.DeleteRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsDeleteOwnerRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)

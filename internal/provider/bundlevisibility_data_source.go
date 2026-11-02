@@ -99,8 +99,6 @@ func (r *BundleVisibilityDataSource) Read(ctx context.Context, req datasource.Re
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetBundleVisibilityRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
