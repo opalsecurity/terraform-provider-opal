@@ -25,6 +25,8 @@ var groupConfigurationTemplateConflictAttributes = []string{
 	"requires_forfeit_reason",
 	"custom_request_notification",
 	"extensions_duration_in_minutes",
+	"message_channel_ids",
+	"on_call_schedule_ids",
 	"visibility_group_ids",
 	"visibility",
 	"request_configurations",
