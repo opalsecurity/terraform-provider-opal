@@ -139,8 +139,6 @@ func (r *PaginatedBundleResourceListDataSource) Read(ctx context.Context, req da
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetBundleResourcesRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

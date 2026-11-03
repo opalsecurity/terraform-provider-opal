@@ -28,7 +28,7 @@ resource "opal_script" "my_script" {
 
 - `name` (String) The name of the OpalScript.
 - `script` (String) The source of the OpalScript.
-- `script_type` (String) The kind of automation an OpalScript performs. must be one of ["REQUEST_REVIEW", "REQUEST_DELEGATION_CONDITION", "CONTEXT_PROVIDER"]; Requires replacement if changed.
+- `script_type` (String) The kind of automation an OpalScript performs. must be one of ["REQUEST_REVIEW", "REQUEST_DELEGATION_CONDITION", "CONTEXT_PROVIDER", "REQUEST_CONFIGURATION_CONDITION"]; Requires replacement if changed.
 
 ### Optional
 

@@ -48,6 +48,7 @@ type ResourceDataSourceModel struct {
 	RequestConfigurations       []tfTypes.RequestConfiguration          `tfsdk:"request_configurations"`
 	RequireMfaToApprove         types.Bool                              `tfsdk:"require_mfa_to_approve"`
 	RequireMfaToConnect         types.Bool                              `tfsdk:"require_mfa_to_connect"`
+	RequiresForfeitReason       types.Bool                              `tfsdk:"requires_forfeit_reason"`
 	ResourceType                types.String                            `tfsdk:"resource_type"`
 	RiskSensitivity             types.String                            `tfsdk:"risk_sensitivity"`
 	RiskSensitivityOverride     types.String                            `tfsdk:"risk_sensitivity_override"`
@@ -168,6 +169,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for Anthropic workspace.`,
+					},
+					"asana_workspace": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"workspace_gid": schema.StringAttribute{
+								Computed:    true,
+								Description: `The workspace gid of the Asana Workspace.`,
+							},
+						},
+						Description: `Remote info for Asana Workspace.`,
 					},
 					"aws_account": schema.SingleNestedAttribute{
 						Computed: true,
@@ -459,6 +470,56 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Azure virtual machine.`,
 					},
+					"bitwarden_organization": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"organization_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The organization id of the Bitwarden Organization.`,
+							},
+						},
+						Description: `Remote info for Bitwarden Organization.`,
+					},
+					"box_enterprise": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The resource id of the Box Enterprise.`,
+							},
+						},
+						Description: `Remote info for Box Enterprise.`,
+					},
+					"box_folder": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The resource id of the Box Folder.`,
+							},
+						},
+						Description: `Remote info for Box Folder.`,
+					},
+					"calendly_event_type": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The resource id of the Calendly Event Type.`,
+							},
+						},
+						Description: `Remote info for Calendly Event Type.`,
+					},
+					"calendly_role": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The resource id of the Calendly Role.`,
+							},
+						},
+						Description: `Remote info for Calendly Role.`,
+					},
 					"clickhouse_console_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -512,6 +573,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for a Cursor organization.`,
+					},
+					"cursor_origin_repository": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"repository_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `The repository's owner slug and name.`,
+							},
+						},
+						Description: `Remote info for a Cursor Origin repository.`,
 					},
 					"custom_connector": schema.SingleNestedAttribute{
 						Computed: true,
@@ -995,6 +1066,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Okta directory standard role.`,
 					},
+					"onelogin_app": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"resource_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The resource id of the OneLogin App.`,
+							},
+						},
+						Description: `Remote info for OneLogin App.`,
+					},
 					"openai_platform_project": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -1058,6 +1139,16 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for Ramp built-in role.`,
+					},
+					"rippling_department": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"department_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Rippling department.`,
+							},
+						},
+						Description: `Remote info for Rippling department.`,
 					},
 					"salesforce_permission_set": schema.SingleNestedAttribute{
 						Computed: true,
@@ -1258,6 +1349,10 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 									ElementType: types.StringType,
 									Description: `The list of group IDs to match.`,
 								},
+								"opal_script_id": schema.StringAttribute{
+									Computed:    true,
+									Description: `The ID of a ` + "`" + `REQUEST_CONFIGURATION_CONDITION` + "`" + ` OpalScript that decides whether this request configuration applies. Cannot be combined with ` + "`" + `group_ids` + "`" + ` or ` + "`" + `role_remote_ids` + "`" + `.`,
+								},
 								"role_remote_ids": schema.SetAttribute{
 									Computed:    true,
 									ElementType: types.StringType,
@@ -1378,6 +1473,10 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Computed:    true,
 				Description: `A bool representing whether or not to require MFA to connect to this resource.`,
 			},
+			"requires_forfeit_reason": schema.BoolAttribute{
+				Computed:    true,
+				Description: `A bool representing whether or not a reason is required when forfeiting access to this resource.`,
+			},
 			"resource_type": schema.StringAttribute{
 				Computed:    true,
 				Description: `The type of the resource.`,
@@ -1458,8 +1557,6 @@ func (r *ResourceDataSource) Read(ctx context.Context, req datasource.ReadReques
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config)
 
 	request, requestDiags := data.ToOperationsGetResourceIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)

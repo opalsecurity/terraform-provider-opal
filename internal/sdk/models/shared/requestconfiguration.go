@@ -11,6 +11,8 @@ import (
 type Condition struct {
 	// The list of group IDs to match.
 	GroupIds []string `json:"group_ids"`
+	// The ID of a `REQUEST_CONFIGURATION_CONDITION` OpalScript that decides whether this request configuration applies. Cannot be combined with `group_ids` or `role_remote_ids`.
+	OpalScriptID *string `json:"opal_script_id,omitempty"`
 	// The list of role remote IDs to match.
 	RoleRemoteIds []string `json:"role_remote_ids"`
 }
@@ -31,6 +33,13 @@ func (c *Condition) GetGroupIds() []string {
 		return nil
 	}
 	return c.GroupIds
+}
+
+func (c *Condition) GetOpalScriptID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.OpalScriptID
 }
 
 func (c *Condition) GetRoleRemoteIds() []string {

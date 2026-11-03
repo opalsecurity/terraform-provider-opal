@@ -146,8 +146,6 @@ func (r *ResourcesAccessStatusDataSource) Read(ctx context.Context, req datasour
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetResourceUserAccessStatusRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

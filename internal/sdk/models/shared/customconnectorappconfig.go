@@ -14,6 +14,8 @@ type CustomConnectorAppConfig struct {
 	SupportsEventIngestion bool `json:"supports_event_ingestion"`
 	// Whether the Custom Connector supports groups.
 	SupportsGroups bool `json:"supports_groups"`
+	// Whether the Custom Connector can be connected as an upstream user directory.
+	SupportsIdp bool `json:"supports_idp"`
 	// Whether the Custom Connector supports nested groups.
 	SupportsNestedGroups bool `json:"supports_nested_groups"`
 	// Whether the Custom Connector supports nested resources.
@@ -50,6 +52,13 @@ func (c *CustomConnectorAppConfig) GetSupportsGroups() bool {
 		return false
 	}
 	return c.SupportsGroups
+}
+
+func (c *CustomConnectorAppConfig) GetSupportsIdp() bool {
+	if c == nil {
+		return false
+	}
+	return c.SupportsIdp
 }
 
 func (c *CustomConnectorAppConfig) GetSupportsNestedGroups() bool {

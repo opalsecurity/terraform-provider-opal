@@ -122,8 +122,6 @@ func (r *BundleResourceResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToOperationsAddBundleResourceRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -227,8 +225,6 @@ func (r *BundleResourceResource) Delete(ctx context.Context, req resource.Delete
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsRemoveBundleResourceRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)

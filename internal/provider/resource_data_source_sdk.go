@@ -79,6 +79,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.AnthropicWorkspace = &tfTypes.AnthropicWorkspace{}
 				r.RemoteInfo.AnthropicWorkspace.WorkspaceID = types.StringValue(resp.RemoteInfo.AnthropicWorkspace.WorkspaceID)
 			}
+			if resp.RemoteInfo.AsanaWorkspace == nil {
+				r.RemoteInfo.AsanaWorkspace = nil
+			} else {
+				r.RemoteInfo.AsanaWorkspace = &tfTypes.AsanaWorkspace{}
+				r.RemoteInfo.AsanaWorkspace.WorkspaceGid = types.StringValue(resp.RemoteInfo.AsanaWorkspace.WorkspaceGid)
+			}
 			if resp.RemoteInfo.AwsAccount == nil {
 				r.RemoteInfo.AwsAccount = nil
 			} else {
@@ -232,6 +238,36 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.AzureVirtualMachine = &tfTypes.AzureEnterpriseApp{}
 				r.RemoteInfo.AzureVirtualMachine.ResourceID = types.StringValue(resp.RemoteInfo.AzureVirtualMachine.ResourceID)
 			}
+			if resp.RemoteInfo.BitwardenOrganization == nil {
+				r.RemoteInfo.BitwardenOrganization = nil
+			} else {
+				r.RemoteInfo.BitwardenOrganization = &tfTypes.ZendeskOrganization{}
+				r.RemoteInfo.BitwardenOrganization.OrganizationID = types.StringValue(resp.RemoteInfo.BitwardenOrganization.OrganizationID)
+			}
+			if resp.RemoteInfo.BoxEnterprise == nil {
+				r.RemoteInfo.BoxEnterprise = nil
+			} else {
+				r.RemoteInfo.BoxEnterprise = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.BoxEnterprise.ResourceID = types.StringValue(resp.RemoteInfo.BoxEnterprise.ResourceID)
+			}
+			if resp.RemoteInfo.BoxFolder == nil {
+				r.RemoteInfo.BoxFolder = nil
+			} else {
+				r.RemoteInfo.BoxFolder = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.BoxFolder.ResourceID = types.StringValue(resp.RemoteInfo.BoxFolder.ResourceID)
+			}
+			if resp.RemoteInfo.CalendlyEventType == nil {
+				r.RemoteInfo.CalendlyEventType = nil
+			} else {
+				r.RemoteInfo.CalendlyEventType = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.CalendlyEventType.ResourceID = types.StringValue(resp.RemoteInfo.CalendlyEventType.ResourceID)
+			}
+			if resp.RemoteInfo.CalendlyRole == nil {
+				r.RemoteInfo.CalendlyRole = nil
+			} else {
+				r.RemoteInfo.CalendlyRole = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.CalendlyRole.ResourceID = types.StringValue(resp.RemoteInfo.CalendlyRole.ResourceID)
+			}
 			if resp.RemoteInfo.ClickhouseConsoleRole == nil {
 				r.RemoteInfo.ClickhouseConsoleRole = nil
 			} else {
@@ -262,6 +298,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			} else {
 				r.RemoteInfo.CursorOrganization = &tfTypes.CursorOrganization{}
 				r.RemoteInfo.CursorOrganization.OrgID = types.StringValue(resp.RemoteInfo.CursorOrganization.OrgID)
+			}
+			if resp.RemoteInfo.CursorOriginRepository == nil {
+				r.RemoteInfo.CursorOriginRepository = nil
+			} else {
+				r.RemoteInfo.CursorOriginRepository = &tfTypes.CursorOriginRepository{}
+				r.RemoteInfo.CursorOriginRepository.RepositoryName = types.StringValue(resp.RemoteInfo.CursorOriginRepository.RepositoryName)
 			}
 			if resp.RemoteInfo.CustomConnector == nil {
 				r.RemoteInfo.CustomConnector = nil
@@ -527,6 +569,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.OktaStandardRole = &tfTypes.OktaStandardRole{}
 				r.RemoteInfo.OktaStandardRole.RoleType = types.StringValue(resp.RemoteInfo.OktaStandardRole.RoleType)
 			}
+			if resp.RemoteInfo.OneloginApp == nil {
+				r.RemoteInfo.OneloginApp = nil
+			} else {
+				r.RemoteInfo.OneloginApp = &tfTypes.AzureEnterpriseApp{}
+				r.RemoteInfo.OneloginApp.ResourceID = types.StringValue(resp.RemoteInfo.OneloginApp.ResourceID)
+			}
 			if resp.RemoteInfo.OpenaiPlatformProject == nil {
 				r.RemoteInfo.OpenaiPlatformProject = nil
 			} else {
@@ -563,6 +611,12 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			} else {
 				r.RemoteInfo.RampRole = &tfTypes.RampRole{}
 				r.RemoteInfo.RampRole.Role = types.StringValue(resp.RemoteInfo.RampRole.Role)
+			}
+			if resp.RemoteInfo.RipplingDepartment == nil {
+				r.RemoteInfo.RipplingDepartment = nil
+			} else {
+				r.RemoteInfo.RipplingDepartment = &tfTypes.RampDepartment{}
+				r.RemoteInfo.RipplingDepartment.DepartmentID = types.StringValue(resp.RemoteInfo.RipplingDepartment.DepartmentID)
 			}
 			if resp.RemoteInfo.SalesforcePermissionSet == nil {
 				r.RemoteInfo.SalesforcePermissionSet = nil
@@ -680,6 +734,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				for _, v := range requestConfigurationsItem.Condition.GroupIds {
 					requestConfigurations.Condition.GroupIds = append(requestConfigurations.Condition.GroupIds, types.StringValue(v))
 				}
+				requestConfigurations.Condition.OpalScriptID = types.StringPointerValue(requestConfigurationsItem.Condition.OpalScriptID)
 				requestConfigurations.Condition.RoleRemoteIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
 				for _, v := range requestConfigurationsItem.Condition.RoleRemoteIds {
 					requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
@@ -739,6 +794,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 		}
 		r.RequireMfaToApprove = types.BoolPointerValue(resp.RequireMfaToApprove)
 		r.RequireMfaToConnect = types.BoolPointerValue(resp.RequireMfaToConnect)
+		r.RequiresForfeitReason = types.BoolPointerValue(resp.RequiresForfeitReason)
 		if resp.ResourceType != nil {
 			r.ResourceType = types.StringValue(string(*resp.ResourceType))
 		} else {

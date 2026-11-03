@@ -50,6 +50,7 @@ secret; secrets are write-only and never returned by the API. (see [below for ne
 - `validations` (Attributes List) Validation checks of an apps' configuration and permissions. (see [below for nested schema](#nestedatt--apps--validations))
 - `visibility` (String) The visibility level of the entity.
 - `visibility_group_ids` (List of String) The IDs of groups that can see this app when visibility is `LIMITED`.
+Must be empty when visibility is `GLOBAL`.
 
 <a id="nestedatt--apps--custom_connector"></a>
 ### Nested Schema for `apps.custom_connector`
@@ -60,6 +61,7 @@ Read-Only:
 - `identifier` (String) The identifier of the Custom Connector.
 - `supports_event_ingestion` (Boolean) Whether the Custom Connector supports event ingestion.
 - `supports_groups` (Boolean) Whether the Custom Connector supports groups.
+- `supports_idp` (Boolean) Whether the Custom Connector can be connected as an upstream user directory.
 - `supports_nested_groups` (Boolean) Whether the Custom Connector supports nested groups.
 - `supports_nested_resources` (Boolean) Whether the Custom Connector supports nested resources.
 - `tls_ca_cert_content` (String) Optional PEM-encoded CA certificate content for TLS.

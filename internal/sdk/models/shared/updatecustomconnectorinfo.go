@@ -17,6 +17,8 @@ type UpdateCustomConnectorInfo struct {
 	SupportsEventIngestion *bool `json:"supports_event_ingestion,omitempty"`
 	// Whether the Custom Connector supports groups.
 	SupportsGroups *bool `json:"supports_groups,omitempty"`
+	// Whether the Custom Connector can be connected as an upstream user directory.
+	SupportsIdp *bool `json:"supports_idp,omitempty"`
 	// Whether the Custom Connector supports nested groups.
 	SupportsNestedGroups *bool `json:"supports_nested_groups,omitempty"`
 	// Whether the Custom Connector supports nested resources.
@@ -60,6 +62,13 @@ func (u *UpdateCustomConnectorInfo) GetSupportsGroups() *bool {
 		return nil
 	}
 	return u.SupportsGroups
+}
+
+func (u *UpdateCustomConnectorInfo) GetSupportsIdp() *bool {
+	if u == nil {
+		return nil
+	}
+	return u.SupportsIdp
 }
 
 func (u *UpdateCustomConnectorInfo) GetSupportsNestedGroups() *bool {

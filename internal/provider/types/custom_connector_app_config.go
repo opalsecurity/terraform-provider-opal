@@ -12,6 +12,7 @@ type CustomConnectorAppConfig struct {
 	Identifier              types.String `tfsdk:"identifier"`
 	SupportsEventIngestion  types.Bool   `tfsdk:"supports_event_ingestion"`
 	SupportsGroups          types.Bool   `tfsdk:"supports_groups"`
+	SupportsIdp             types.Bool   `tfsdk:"supports_idp"`
 	SupportsNestedGroups    types.Bool   `tfsdk:"supports_nested_groups"`
 	SupportsNestedResources types.Bool   `tfsdk:"supports_nested_resources"`
 	TLSCaCertContent        types.String `tfsdk:"tls_ca_cert_content"`
