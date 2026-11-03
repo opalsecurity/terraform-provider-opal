@@ -59,6 +59,13 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.ActiveDirectoryGroup = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.ActiveDirectoryGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.ActiveDirectoryGroup.GroupID)
 				}
+				if resultsItem.RemoteInfo.AsanaTeam == nil {
+					results.RemoteInfo.AsanaTeam = nil
+				} else {
+					results.RemoteInfo.AsanaTeam = &tfTypes.AsanaTeam{}
+					results.RemoteInfo.AsanaTeam.TeamGid = types.StringValue(resultsItem.RemoteInfo.AsanaTeam.TeamGid)
+					results.RemoteInfo.AsanaTeam.WorkspaceGid = types.StringPointerValue(resultsItem.RemoteInfo.AsanaTeam.WorkspaceGid)
+				}
 				if resultsItem.RemoteInfo.AwsSsoGroup == nil {
 					results.RemoteInfo.AwsSsoGroup = nil
 				} else {
@@ -83,6 +90,24 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.AzureAdSecurityGroup = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.AzureAdSecurityGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.AzureAdSecurityGroup.GroupID)
 				}
+				if resultsItem.RemoteInfo.BitwardenGroup == nil {
+					results.RemoteInfo.BitwardenGroup = nil
+				} else {
+					results.RemoteInfo.BitwardenGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.BitwardenGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.BitwardenGroup.GroupID)
+				}
+				if resultsItem.RemoteInfo.BoxGroup == nil {
+					results.RemoteInfo.BoxGroup = nil
+				} else {
+					results.RemoteInfo.BoxGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.BoxGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.BoxGroup.GroupID)
+				}
+				if resultsItem.RemoteInfo.CalendlyGroup == nil {
+					results.RemoteInfo.CalendlyGroup = nil
+				} else {
+					results.RemoteInfo.CalendlyGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.CalendlyGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.CalendlyGroup.GroupID)
+				}
 				if resultsItem.RemoteInfo.ClickhouseRole == nil {
 					results.RemoteInfo.ClickhouseRole = nil
 				} else {
@@ -100,6 +125,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				} else {
 					results.RemoteInfo.ConnectorGroup = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.ConnectorGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.ConnectorGroup.GroupID)
+				}
+				if resultsItem.RemoteInfo.CursorGroup == nil {
+					results.RemoteInfo.CursorGroup = nil
+				} else {
+					results.RemoteInfo.CursorGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.CursorGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.CursorGroup.GroupID)
 				}
 				if resultsItem.RemoteInfo.DatabricksAccountGroup == nil {
 					results.RemoteInfo.DatabricksAccountGroup = nil
@@ -204,6 +235,18 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.OktaGroupRule = &tfTypes.OktaGroupRule{}
 					results.RemoteInfo.OktaGroupRule.RuleID = types.StringValue(resultsItem.RemoteInfo.OktaGroupRule.RuleID)
 				}
+				if resultsItem.RemoteInfo.OneloginGroup == nil {
+					results.RemoteInfo.OneloginGroup = nil
+				} else {
+					results.RemoteInfo.OneloginGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.OneloginGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.OneloginGroup.GroupID)
+				}
+				if resultsItem.RemoteInfo.OneloginRole == nil {
+					results.RemoteInfo.OneloginRole = nil
+				} else {
+					results.RemoteInfo.OneloginRole = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.OneloginRole.GroupID = types.StringValue(resultsItem.RemoteInfo.OneloginRole.GroupID)
+				}
 				if resultsItem.RemoteInfo.PagerdutyOnCallSchedule == nil {
 					results.RemoteInfo.PagerdutyOnCallSchedule = nil
 				} else {
@@ -222,6 +265,18 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.RampLocation = &tfTypes.RampLocation{}
 					results.RemoteInfo.RampLocation.LocationID = types.StringValue(resultsItem.RemoteInfo.RampLocation.LocationID)
 				}
+				if resultsItem.RemoteInfo.RipplingSupergroup == nil {
+					results.RemoteInfo.RipplingSupergroup = nil
+				} else {
+					results.RemoteInfo.RipplingSupergroup = &tfTypes.RipplingSupergroup{}
+					results.RemoteInfo.RipplingSupergroup.SupergroupID = types.StringValue(resultsItem.RemoteInfo.RipplingSupergroup.SupergroupID)
+				}
+				if resultsItem.RemoteInfo.RipplingTeam == nil {
+					results.RemoteInfo.RipplingTeam = nil
+				} else {
+					results.RemoteInfo.RipplingTeam = &tfTypes.GrafanaTeam{}
+					results.RemoteInfo.RipplingTeam.TeamID = types.StringValue(resultsItem.RemoteInfo.RipplingTeam.TeamID)
+				}
 				if resultsItem.RemoteInfo.RootlyOnCallSchedule == nil {
 					results.RemoteInfo.RootlyOnCallSchedule = nil
 				} else {
@@ -239,6 +294,18 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				} else {
 					results.RemoteInfo.SnowflakeRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.SnowflakeRole.RoleID = types.StringValue(resultsItem.RemoteInfo.SnowflakeRole.RoleID)
+				}
+				if resultsItem.RemoteInfo.SquareJob == nil {
+					results.RemoteInfo.SquareJob = nil
+				} else {
+					results.RemoteInfo.SquareJob = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.SquareJob.GroupID = types.StringValue(resultsItem.RemoteInfo.SquareJob.GroupID)
+				}
+				if resultsItem.RemoteInfo.SquareLocation == nil {
+					results.RemoteInfo.SquareLocation = nil
+				} else {
+					results.RemoteInfo.SquareLocation = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.SquareLocation.GroupID = types.StringValue(resultsItem.RemoteInfo.SquareLocation.GroupID)
 				}
 				if resultsItem.RemoteInfo.TableauGroup == nil {
 					results.RemoteInfo.TableauGroup = nil
@@ -311,6 +378,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					for _, v := range requestConfigurationsItem.Condition.GroupIds {
 						requestConfigurations.Condition.GroupIds = append(requestConfigurations.Condition.GroupIds, types.StringValue(v))
 					}
+					requestConfigurations.Condition.OpalScriptID = types.StringPointerValue(requestConfigurationsItem.Condition.OpalScriptID)
 					requestConfigurations.Condition.RoleRemoteIds = make([]types.String, 0, len(requestConfigurationsItem.Condition.RoleRemoteIds))
 					for _, v := range requestConfigurationsItem.Condition.RoleRemoteIds {
 						requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
@@ -369,6 +437,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				results.RequestConfigurations = append(results.RequestConfigurations, requestConfigurations)
 			}
 			results.RequireMfaToApprove = types.BoolPointerValue(resultsItem.RequireMfaToApprove)
+			results.RequiresForfeitReason = types.BoolPointerValue(resultsItem.RequiresForfeitReason)
 			if resultsItem.RiskSensitivity != nil {
 				results.RiskSensitivity = types.StringValue(string(*resultsItem.RiskSensitivity))
 			} else {

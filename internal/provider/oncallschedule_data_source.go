@@ -104,8 +104,6 @@ func (r *OnCallScheduleDataSource) Read(ctx context.Context, req datasource.Read
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetOnCallScheduleIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

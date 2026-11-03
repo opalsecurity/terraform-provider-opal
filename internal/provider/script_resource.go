@@ -80,12 +80,13 @@ func (r *ScriptResource) Schema(ctx context.Context, req resource.SchemaRequest,
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The kind of automation an OpalScript performs. must be one of ["REQUEST_REVIEW", "REQUEST_DELEGATION_CONDITION", "CONTEXT_PROVIDER"]; Requires replacement if changed.`,
+				Description: `The kind of automation an OpalScript performs. must be one of ["REQUEST_REVIEW", "REQUEST_DELEGATION_CONDITION", "CONTEXT_PROVIDER", "REQUEST_CONFIGURATION_CONDITION"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"REQUEST_REVIEW",
 						"REQUEST_DELEGATION_CONDITION",
 						"CONTEXT_PROVIDER",
+						"REQUEST_CONFIGURATION_CONDITION",
 					),
 				},
 			},
@@ -138,8 +139,6 @@ func (r *ScriptResource) Create(ctx context.Context, req resource.CreateRequest,
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
 
 	request, requestDiags := data.ToSharedCreateOpalScriptInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
@@ -201,8 +200,6 @@ func (r *ScriptResource) Read(ctx context.Context, req resource.ReadRequest, res
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.State)
-
 	request, requestDiags := data.ToOperationsGetOpalScriptRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -256,8 +253,6 @@ func (r *ScriptResource) Update(ctx context.Context, req resource.UpdateRequest,
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
 
 	request, requestDiags := data.ToOperationsUpdateOpalScriptRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
@@ -318,8 +313,6 @@ func (r *ScriptResource) Delete(ctx context.Context, req resource.DeleteRequest,
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsDeleteOpalScriptRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)

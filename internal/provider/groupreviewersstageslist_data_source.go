@@ -159,8 +159,6 @@ func (r *GroupReviewersStagesListDataSource) Read(ctx context.Context, req datas
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetGroupReviewersStagesRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 

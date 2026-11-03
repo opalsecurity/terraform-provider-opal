@@ -126,8 +126,6 @@ func (r *MessageChannelResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
-
 	request, requestDiags := data.ToSharedCreateMessageChannelInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -187,8 +185,6 @@ func (r *MessageChannelResource) Read(ctx context.Context, req resource.ReadRequ
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
-	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsGetMessageChannelIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)

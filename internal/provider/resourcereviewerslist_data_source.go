@@ -95,8 +95,6 @@ func (r *ResourceReviewersListDataSource) Read(ctx context.Context, req datasour
 		return
 	}
 
-	ctx = withSensitiveValues(ctx, req.Config)
-
 	request, requestDiags := data.ToOperationsGetResourceReviewersRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
