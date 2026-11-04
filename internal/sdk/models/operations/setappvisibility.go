@@ -11,7 +11,7 @@ import (
 type SetAppVisibilityRequest struct {
 	AppVisibilityInfo shared.AppVisibilityInfo `request:"mediaType=application/json"`
 	// The ID of the app.
-	AppID string `pathParam:"style=simple,explode=false,name=app_id"`
+	ID string `pathParam:"style=simple,explode=false,name=app_id"`
 }
 
 func (s *SetAppVisibilityRequest) GetAppVisibilityInfo() shared.AppVisibilityInfo {
@@ -21,11 +21,11 @@ func (s *SetAppVisibilityRequest) GetAppVisibilityInfo() shared.AppVisibilityInf
 	return s.AppVisibilityInfo
 }
 
-func (s *SetAppVisibilityRequest) GetAppID() string {
+func (s *SetAppVisibilityRequest) GetID() string {
 	if s == nil {
 		return ""
 	}
-	return s.AppID
+	return s.ID
 }
 
 type SetAppVisibilityResponse struct {

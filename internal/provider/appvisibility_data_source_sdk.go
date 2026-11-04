@@ -33,11 +33,11 @@ func (r *AppVisibilityDataSourceModel) RefreshFromSharedAppVisibilityInfo(ctx co
 func (r *AppVisibilityDataSourceModel) ToOperationsGetAppVisibilityRequest(ctx context.Context) (*operations.GetAppVisibilityRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	var appID string
-	appID = r.AppID.ValueString()
+	var id string
+	id = r.ID.ValueString()
 
 	out := operations.GetAppVisibilityRequest{
-		AppID: appID,
+		ID: id,
 	}
 
 	return &out, diags

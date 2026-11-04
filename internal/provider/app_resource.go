@@ -4,9 +4,7 @@
 package provider
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -44,7 +42,6 @@ type AppResource struct {
 // AppResourceModel describes the resource data model.
 type AppResourceModel struct {
 	AdminOwnerID       types.String                       `tfsdk:"admin_owner_id"`
-	AppID              types.String                       `tfsdk:"app_id"`
 	AppType            types.String                       `tfsdk:"app_type"`
 	CustomConnector    *tfTypes.CreateCustomConnectorInfo `tfsdk:"custom_connector"`
 	Description        types.String                       `tfsdk:"description"`
@@ -68,10 +65,6 @@ func (r *AppResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 			"admin_owner_id": schema.StringAttribute{
 				Required:    true,
 				Description: `The ID of the owner of the app.`,
-			},
-			"app_id": schema.StringAttribute{
-				Required:    true,
-				Description: `The ID of the app.`,
 			},
 			"app_type": schema.StringAttribute{
 				Required: true,
@@ -665,26 +658,5 @@ func (r *AppResource) Delete(ctx context.Context, req resource.DeleteRequest, re
 }
 
 func (r *AppResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	dec := json.NewDecoder(bytes.NewReader([]byte(req.ID)))
-	dec.DisallowUnknownFields()
-	var data struct {
-		AppID string `json:"app_id"`
-		ID    string `json:"id"`
-	}
-
-	if err := dec.Decode(&data); err != nil {
-		resp.Diagnostics.AddError("Invalid ID", `The import ID is not valid. It is expected to be a JSON object string with the format: '{"app_id": "32acc112-21ff-4669-91c2-21e27683eaa1", "id": "32acc112-21ff-4669-91c2-21e27683eaa1"}': `+err.Error())
-		return
-	}
-
-	if len(data.AppID) == 0 {
-		resp.Diagnostics.AddError("Missing required field", `The field app_id is required but was not found in the json encoded ID. It's expected to be a value alike '"32acc112-21ff-4669-91c2-21e27683eaa1"'`)
-		return
-	}
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("app_id"), data.AppID)...)
-	if len(data.ID) == 0 {
-		resp.Diagnostics.AddError("Missing required field", `The field id is required but was not found in the json encoded ID. It's expected to be a value alike '"32acc112-21ff-4669-91c2-21e27683eaa1"'`)
-		return
-	}
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), data.ID)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), req.ID)...)
 }
