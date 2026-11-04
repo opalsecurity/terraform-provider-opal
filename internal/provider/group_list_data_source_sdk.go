@@ -59,6 +59,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.ActiveDirectoryGroup = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.ActiveDirectoryGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.ActiveDirectoryGroup.GroupID)
 				}
+				if resultsItem.RemoteInfo.ActivecampaignGroup == nil {
+					results.RemoteInfo.ActivecampaignGroup = nil
+				} else {
+					results.RemoteInfo.ActivecampaignGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.ActivecampaignGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.ActivecampaignGroup.GroupID)
+				}
 				if resultsItem.RemoteInfo.AsanaTeam == nil {
 					results.RemoteInfo.AsanaTeam = nil
 				} else {

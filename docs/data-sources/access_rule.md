@@ -62,7 +62,7 @@ Read-Only:
 Read-Only:
 
 - `attribute` (String)
-- `values` (List of String)
+- `values` (List of String) Values to match; a user matches if their attribute equals any of them. For HR_IDP_STATUS, use HrIdpStatus values, or UNSET for users with no IDP status (shown as "Inactive"). UNSET must be the last value.
 
 
 <a id="nestedatt--rule_clauses--unless--clauses--selectors"></a>
@@ -98,7 +98,7 @@ Read-Only:
 Read-Only:
 
 - `attribute` (String)
-- `values` (List of String)
+- `values` (List of String) Values to match; a user matches if their attribute equals any of them. For HR_IDP_STATUS, use HrIdpStatus values, or UNSET for users with no IDP status (shown as "Inactive"). UNSET must be the last value.
 
 
 <a id="nestedatt--rule_clauses--when--clauses--selectors"></a>

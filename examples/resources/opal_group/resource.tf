@@ -26,6 +26,9 @@ resource "opal_group" "my_group" {
     active_directory_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
+    activecampaign_group = {
+      group_id = "...my_group_id..."
+    }
     asana_team = {
       team_gid      = "...my_team_gid..."
       workspace_gid = "...my_workspace_gid..."

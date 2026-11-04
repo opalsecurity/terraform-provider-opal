@@ -55,6 +55,7 @@ const (
 	GroupTypeEnumRampLocation             GroupTypeEnum = "RAMP_LOCATION"
 	GroupTypeEnumWrikeGroup               GroupTypeEnum = "WRIKE_GROUP"
 	GroupTypeEnumAxiomGroup               GroupTypeEnum = "AXIOM_GROUP"
+	GroupTypeEnumActivecampaignGroup      GroupTypeEnum = "ACTIVECAMPAIGN_GROUP"
 	GroupTypeEnumAsanaTeam                GroupTypeEnum = "ASANA_TEAM"
 	GroupTypeEnumBitwardenGroup           GroupTypeEnum = "BITWARDEN_GROUP"
 	GroupTypeEnumBoxGroup                 GroupTypeEnum = "BOX_GROUP"
@@ -161,6 +162,8 @@ func (e *GroupTypeEnum) UnmarshalJSON(data []byte) error {
 	case "WRIKE_GROUP":
 		fallthrough
 	case "AXIOM_GROUP":
+		fallthrough
+	case "ACTIVECAMPAIGN_GROUP":
 		fallthrough
 	case "ASANA_TEAM":
 		fallthrough

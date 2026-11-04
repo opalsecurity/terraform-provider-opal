@@ -5,6 +5,7 @@ package types
 
 type GroupRemoteInfo struct {
 	ActiveDirectoryGroup     *ActiveDirectoryGroup     `tfsdk:"active_directory_group"`
+	ActivecampaignGroup      *ActiveDirectoryGroup     `tfsdk:"activecampaign_group"`
 	AsanaTeam                *AsanaTeam                `tfsdk:"asana_team"`
 	AwsSsoGroup              *ActiveDirectoryGroup     `tfsdk:"aws_sso_group"`
 	AxiomGroup               *ActiveDirectoryGroup     `tfsdk:"axiom_group"`

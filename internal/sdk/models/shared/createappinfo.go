@@ -14,16 +14,8 @@ type CreateAppInfo struct {
 	CustomConnector *CreateCustomConnectorInfo `json:"custom_connector,omitempty"`
 	// A description of the app.
 	Description string `json:"description"`
-	// The visibility level of the entity.
-	ImportVisibility *VisibilityTypeEnum `json:"import_visibility,omitempty"`
 	// The name of the app.
 	Name string `json:"name"`
-	// The visibility level of the entity.
-	Visibility *VisibilityTypeEnum `json:"visibility,omitempty"`
-	// The IDs of groups that can see this app when visibility is `LIMITED`.
-	// Must be empty when visibility is `GLOBAL`; the server returns `400`
-	// otherwise.
-	VisibilityGroupIds []string `json:"visibility_group_ids,omitempty"`
 }
 
 func (c *CreateAppInfo) GetAdminOwnerID() string {
@@ -54,30 +46,9 @@ func (c *CreateAppInfo) GetDescription() string {
 	return c.Description
 }
 
-func (c *CreateAppInfo) GetImportVisibility() *VisibilityTypeEnum {
-	if c == nil {
-		return nil
-	}
-	return c.ImportVisibility
-}
-
 func (c *CreateAppInfo) GetName() string {
 	if c == nil {
 		return ""
 	}
 	return c.Name
-}
-
-func (c *CreateAppInfo) GetVisibility() *VisibilityTypeEnum {
-	if c == nil {
-		return nil
-	}
-	return c.Visibility
-}
-
-func (c *CreateAppInfo) GetVisibilityGroupIds() []string {
-	if c == nil {
-		return nil
-	}
-	return c.VisibilityGroupIds
 }

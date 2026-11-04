@@ -112,7 +112,7 @@ Optional:
 Optional:
 
 - `attribute` (String) Not Null; must be "HR_IDP_STATUS"
-- `values` (List of String) Not Null
+- `values` (List of String) Values to match; a user matches if their attribute equals any of them. For HR_IDP_STATUS, use HrIdpStatus values, or UNSET for users with no IDP status (shown as "Inactive"). UNSET must be the last value. Not Null
 
 
 <a id="nestedatt--rule_clauses--when--clauses--selectors"></a>
@@ -148,7 +148,7 @@ Optional:
 Optional:
 
 - `attribute` (String) Not Null; must be "HR_IDP_STATUS"
-- `values` (List of String) Not Null
+- `values` (List of String) Values to match; a user matches if their attribute equals any of them. For HR_IDP_STATUS, use HrIdpStatus values, or UNSET for users with no IDP status (shown as "Inactive"). UNSET must be the last value. Not Null
 
 
 <a id="nestedatt--rule_clauses--unless--clauses--selectors"></a>

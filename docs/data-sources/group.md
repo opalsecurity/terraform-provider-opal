@@ -108,6 +108,7 @@ Read-Only:
 Read-Only:
 
 - `active_directory_group` (Attributes) Remote info for Active Directory group. (see [below for nested schema](#nestedatt--remote_info--active_directory_group))
+- `activecampaign_group` (Attributes) Remote info for ActiveCampaign Group. (see [below for nested schema](#nestedatt--remote_info--activecampaign_group))
 - `asana_team` (Attributes) Remote info for Asana Team. (see [below for nested schema](#nestedatt--remote_info--asana_team))
 - `aws_sso_group` (Attributes) Remote info for AWS SSO group. (see [below for nested schema](#nestedatt--remote_info--aws_sso_group))
 - `axiom_group` (Attributes) Remote info for Axiom RBAC group. (see [below for nested schema](#nestedatt--remote_info--axiom_group))
@@ -165,6 +166,14 @@ Read-Only:
 Read-Only:
 
 - `group_id` (String) The id of the Google group.
+
+
+<a id="nestedatt--remote_info--activecampaign_group"></a>
+### Nested Schema for `remote_info.activecampaign_group`
+
+Read-Only:
+
+- `group_id` (String) The group id of the ActiveCampaign Group.
 
 
 <a id="nestedatt--remote_info--asana_team"></a>

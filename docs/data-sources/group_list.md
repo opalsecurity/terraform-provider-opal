@@ -32,7 +32,7 @@ data "opal_group_list" "my_group_list" {
 
 - `group_ids` (List of String) The group ids to filter by.
 - `group_name` (String) Group name.
-- `group_type_filter` (String) The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "CURSOR_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP", "ASANA_TEAM", "BITWARDEN_GROUP", "BOX_GROUP", "CALENDLY_GROUP", "ONELOGIN_ROLE", "ONELOGIN_GROUP", "SQUARE_LOCATION", "SQUARE_JOB", "RIPPLING_TEAM", "RIPPLING_SUPERGROUP"]
+- `group_type_filter` (String) The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "CURSOR_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP", "ACTIVECAMPAIGN_GROUP", "ASANA_TEAM", "BITWARDEN_GROUP", "BOX_GROUP", "CALENDLY_GROUP", "ONELOGIN_ROLE", "ONELOGIN_GROUP", "SQUARE_LOCATION", "SQUARE_JOB", "RIPPLING_TEAM", "RIPPLING_SUPERGROUP"]
 - `page_size` (Number) Number of results to return per page. Default is 200.
 - `requestable` (Boolean) If true, only return groups that allow access requests. Does not check whether the caller is permitted to request the group.
 
@@ -82,6 +82,7 @@ Read-Only:
 Read-Only:
 
 - `active_directory_group` (Attributes) Remote info for Active Directory group. (see [below for nested schema](#nestedatt--results--remote_info--active_directory_group))
+- `activecampaign_group` (Attributes) Remote info for ActiveCampaign Group. (see [below for nested schema](#nestedatt--results--remote_info--activecampaign_group))
 - `asana_team` (Attributes) Remote info for Asana Team. (see [below for nested schema](#nestedatt--results--remote_info--asana_team))
 - `aws_sso_group` (Attributes) Remote info for AWS SSO group. (see [below for nested schema](#nestedatt--results--remote_info--aws_sso_group))
 - `axiom_group` (Attributes) Remote info for Axiom RBAC group. (see [below for nested schema](#nestedatt--results--remote_info--axiom_group))
@@ -139,6 +140,14 @@ Read-Only:
 Read-Only:
 
 - `group_id` (String) The id of the Google group.
+
+
+<a id="nestedatt--results--remote_info--activecampaign_group"></a>
+### Nested Schema for `results.remote_info.activecampaign_group`
+
+Read-Only:
+
+- `group_id` (String) The group id of the ActiveCampaign Group.
 
 
 <a id="nestedatt--results--remote_info--asana_team"></a>

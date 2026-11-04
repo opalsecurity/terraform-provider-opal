@@ -33,6 +33,8 @@ type AgentActivityEvent struct {
 	AgentType *string `json:"agent_type,omitempty"`
 	// The working directory the agent was operating in.
 	Cwd *string `json:"cwd,omitempty"`
+	// How long the tool call took to run, in milliseconds, as Claude Code measured it. Claude Code's documentation says it leaves out time spent in permission prompts and in `PreToolUse` hooks. It is sent with `PostToolUse` and `PostToolUseFailure` only; it is ignored on any other event. **Unverified.** Stored only when it is a number from 0 to 86400000 (24 hours), rounded to a whole millisecond; any other value is dropped and the event is stored without it. A value of the wrong type never rejects the event or the batch it came in.
+	DurationMs any `json:"duration_ms,omitempty"`
 	// Which hook fired, e.g. `PostToolUse`, `PreToolUse`, `PermissionDenied`. Required; an event with no name cannot be interpreted and is rejected.
 	HookEventName string `json:"hook_event_name"`
 	// # AgentActivityMcpServer Object
@@ -45,11 +47,24 @@ type AgentActivityEvent struct {
 	// the server is read from `tool_name` instead: the part after the `mcp__` prefix and
 	// before the next `__`. The tool is always read from `tool_name`.
 	//
-	// Only `name` is read. `source` says where the server's definition came from (`plugin`,
-	// `sdk`, or a configuration scope such as `user` or `project`) and is parsed and
-	// **discarded**. Neither field is an identity: `name` is whatever the user called the
-	// server in their own configuration.
+	// `name` is stored as the call's server. `source` says where the server's definition came
+	// from (`plugin`, `sdk`, or a configuration scope such as `user` or `project`) and is
+	// stored as sent, cut to 64 characters. Neither field is an identity: `name` is whatever
+	// the user called the server in their own configuration, and `source` is what the machine
+	// said.
 	McpServer *AgentActivityMcpServer `json:"mcp_server,omitempty"`
+	// # AgentActivityOpalReported Object
+	// ### Description
+	// What the sending machine says about who and what it is, added by the Opal hook
+	// script. Every field is optional and **unverified**: whoever controls the machine
+	// controls them. They can disagree, and Opal keeps every one that is present, each cut
+	// to a fixed length (254 characters for an email, 64 for `os_user`, 255 for
+	// `hostname`) with control characters removed.
+	//
+	// The emails are also tried, in the order below and after the `X-Opal-Actor` header,
+	// to find the agent, so a person without a git email can still match through their
+	// Claude account.
+	OpalReported *AgentActivityOpalReported `json:"opal_reported,omitempty"`
 	// The session's permission mode, e.g. `default`, `acceptEdits`, `bypassPermissions`. A session running `bypassPermissions` had no approval gate in front of any tool call it made.
 	PermissionMode *string `json:"permission_mode,omitempty"`
 	// Groups every tool call made under one user instruction, so a run can be read back as the instruction that caused it rather than as unrelated rows.
@@ -127,6 +142,13 @@ func (a *AgentActivityEvent) GetCwd() *string {
 	return a.Cwd
 }
 
+func (a *AgentActivityEvent) GetDurationMs() any {
+	if a == nil {
+		return nil
+	}
+	return a.DurationMs
+}
+
 func (a *AgentActivityEvent) GetHookEventName() string {
 	if a == nil {
 		return ""
@@ -139,6 +161,13 @@ func (a *AgentActivityEvent) GetMcpServer() *AgentActivityMcpServer {
 		return nil
 	}
 	return a.McpServer
+}
+
+func (a *AgentActivityEvent) GetOpalReported() *AgentActivityOpalReported {
+	if a == nil {
+		return nil
+	}
+	return a.OpalReported
 }
 
 func (a *AgentActivityEvent) GetPermissionMode() *string {

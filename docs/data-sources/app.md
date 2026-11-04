@@ -14,7 +14,8 @@ App DataSource
 
 ```terraform
 data "opal_app" "my_app" {
-  id = "32acc112-21ff-4669-91c2-21e27683eaa1"
+  app_id = "32acc112-21ff-4669-91c2-21e27683eaa1"
+  id     = "32acc112-21ff-4669-91c2-21e27683eaa1"
 }
 ```
 
@@ -23,6 +24,7 @@ data "opal_app" "my_app" {
 
 ### Required
 
+- `app_id` (String) The ID of the app.
 - `id` (String) The ID of the app.
 
 ### Read-Only
@@ -36,7 +38,7 @@ secret; secrets are write-only and never returned by the API. (see [below for ne
 - `type` (String) The type of an app.
 - `validations` (Attributes List) Validation checks of an apps' configuration and permissions. (see [below for nested schema](#nestedatt--validations))
 - `visibility` (String) The visibility level of the entity.
-- `visibility_group_ids` (List of String) The IDs of groups that can see this app when visibility is `LIMITED`.
+- `visibility_group_ids` (Set of String) The IDs of groups that can see this app when visibility is `LIMITED`.
 Must be empty when visibility is `GLOBAL`.
 
 <a id="nestedatt--custom_connector"></a>
