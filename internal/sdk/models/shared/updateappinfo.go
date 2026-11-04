@@ -3,6 +3,71 @@
 
 package shared
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
+// UpdateAppInfoImportVisibility - Deprecated in favor of `PUT /v1/apps/{app_id}/visibility`.
+//
+// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
+type UpdateAppInfoImportVisibility string
+
+const (
+	UpdateAppInfoImportVisibilityGlobal  UpdateAppInfoImportVisibility = "GLOBAL"
+	UpdateAppInfoImportVisibilityLimited UpdateAppInfoImportVisibility = "LIMITED"
+)
+
+func (e UpdateAppInfoImportVisibility) ToPointer() *UpdateAppInfoImportVisibility {
+	return &e
+}
+func (e *UpdateAppInfoImportVisibility) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "GLOBAL":
+		fallthrough
+	case "LIMITED":
+		*e = UpdateAppInfoImportVisibility(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for UpdateAppInfoImportVisibility: %v", v)
+	}
+}
+
+// UpdateAppInfoVisibility - Deprecated in favor of `PUT /v1/apps/{app_id}/visibility`: manage
+// an app's visibility through the sub-endpoint instead of inline on
+// update. Still fully functional and validated on this surface.
+//
+// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
+type UpdateAppInfoVisibility string
+
+const (
+	UpdateAppInfoVisibilityGlobal  UpdateAppInfoVisibility = "GLOBAL"
+	UpdateAppInfoVisibilityLimited UpdateAppInfoVisibility = "LIMITED"
+)
+
+func (e UpdateAppInfoVisibility) ToPointer() *UpdateAppInfoVisibility {
+	return &e
+}
+func (e *UpdateAppInfoVisibility) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "GLOBAL":
+		fallthrough
+	case "LIMITED":
+		*e = UpdateAppInfoVisibility(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for UpdateAppInfoVisibility: %v", v)
+	}
+}
+
 // UpdateAppInfo - Information needed to update an app. Currently supports only Push-only
 // apps (`CUSTOM`) and Custom Connector apps (`CUSTOM_CONNECTOR`).
 type UpdateAppInfo struct {
@@ -13,16 +78,25 @@ type UpdateAppInfo struct {
 	CustomConnector *UpdateCustomConnectorInfo `json:"custom_connector,omitempty"`
 	// The updated description of the app.
 	Description *string `json:"description,omitempty"`
-	// The visibility level of the entity.
-	ImportVisibility *VisibilityTypeEnum `json:"import_visibility,omitempty"`
+	// Deprecated in favor of `PUT /v1/apps/{app_id}/visibility`.
+	//
+	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
+	ImportVisibility *UpdateAppInfoImportVisibility `json:"import_visibility,omitempty"`
 	// The updated name of the app.
 	Name *string `json:"name,omitempty"`
-	// The visibility level of the entity.
-	Visibility *VisibilityTypeEnum `json:"visibility,omitempty"`
+	// Deprecated in favor of `PUT /v1/apps/{app_id}/visibility`: manage
+	// an app's visibility through the sub-endpoint instead of inline on
+	// update. Still fully functional and validated on this surface.
+	//
+	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
+	Visibility *UpdateAppInfoVisibility `json:"visibility,omitempty"`
 	// The IDs of groups that can see this app when visibility is `LIMITED`.
 	// Must be empty when the effective visibility is `GLOBAL` (either sent
 	// explicitly on this request or already stored on the app); the server
 	// returns `400` otherwise.
+	// Deprecated in favor of `PUT /v1/apps/{app_id}/visibility`.
+	//
+	// Deprecated: This will be removed in a future release, please migrate away from it as soon as possible.
 	VisibilityGroupIds []string `json:"visibility_group_ids,omitempty"`
 }
 
@@ -47,7 +121,7 @@ func (u *UpdateAppInfo) GetDescription() *string {
 	return u.Description
 }
 
-func (u *UpdateAppInfo) GetImportVisibility() *VisibilityTypeEnum {
+func (u *UpdateAppInfo) GetImportVisibility() *UpdateAppInfoImportVisibility {
 	if u == nil {
 		return nil
 	}
@@ -61,7 +135,7 @@ func (u *UpdateAppInfo) GetName() *string {
 	return u.Name
 }
 
-func (u *UpdateAppInfo) GetVisibility() *VisibilityTypeEnum {
+func (u *UpdateAppInfo) GetVisibility() *UpdateAppInfoVisibility {
 	if u == nil {
 		return nil
 	}
