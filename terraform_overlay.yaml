@@ -31,7 +31,16 @@ actions:
       x-speakeasy-name-override: get_id
   - target: $["paths"]["/apps/{app_id}"]["get"]
     update:
-      x-speakeasy-entity-operation: App#get
+      x-speakeasy-entity-operation: App#read
+  - target: $["paths"]["/apps"]["post"]
+    update:
+      x-speakeasy-entity-operation: App#create
+  - target: $["paths"]["/apps/{app_id}"]["put"]
+    update:
+      x-speakeasy-entity-operation: App#update
+  - target: $["paths"]["/apps/{app_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: App#delete
   - target: $["paths"]["/bundles"]["get"]
     update:
       x-speakeasy-entity-operation: PaginatedBundleList#read
