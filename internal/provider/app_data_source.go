@@ -32,7 +32,6 @@ type AppDataSource struct {
 // AppDataSourceModel describes the data model.
 type AppDataSourceModel struct {
 	AdminOwnerID       types.String                      `tfsdk:"admin_owner_id"`
-	AppID              types.String                      `tfsdk:"app_id"`
 	CustomConnector    *tfTypes.CustomConnectorAppConfig `tfsdk:"custom_connector"`
 	Description        types.String                      `tfsdk:"description"`
 	ID                 types.String                      `tfsdk:"id"`
@@ -58,10 +57,6 @@ func (r *AppDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 			"admin_owner_id": schema.StringAttribute{
 				Computed:    true,
 				Description: `The ID of the owner of the app.`,
-			},
-			"app_id": schema.StringAttribute{
-				Required:    true,
-				Description: `The ID of the app.`,
 			},
 			"custom_connector": schema.SingleNestedAttribute{
 				Computed: true,

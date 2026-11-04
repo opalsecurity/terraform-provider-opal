@@ -15,8 +15,7 @@ App Resource
 ```terraform
 resource "opal_app" "my_app" {
   admin_owner_id = "7c86c85d-0651-43e2-a748-d69d658418e8"
-  app_id         = "32acc112-21ff-4669-91c2-21e27683eaa1"
-  app_type       = "OKTA_DIRECTORY"
+  app_type       = "CUSTOM_CONNECTOR"
   custom_connector = {
     base_url                  = "https://my-connector.example.com"
     identifier                = "my-connector"
@@ -31,11 +30,8 @@ resource "opal_app" "my_app" {
   }
   description       = "Bookkeeping app for internal tools."
   import_visibility = "GLOBAL"
-  name              = "My Push-only App"
+  name              = "My Custom Connector App"
   visibility        = "GLOBAL"
-  visibility_group_ids = [
-    "0ac67328-c5ec-4f7b-a4c6-2ce408cea5ee"
-  ]
 }
 ```
 
@@ -45,7 +41,6 @@ resource "opal_app" "my_app" {
 ### Required
 
 - `admin_owner_id` (String) The ID of the owner of the app.
-- `app_id` (String) The ID of the app.
 - `app_type` (String) The type of an app. must be one of ["ACTIVE_DIRECTORY", "ANTHROPIC", "AZURE_AD", "AWS", "AWS_SSO", "CLICKHOUSE", "COUPA", "CURSOR", "CUSTOM", "CONFLUENCE", "CUSTOM_CONNECTOR", "DATABRICKS", "DATASTAX_ASTRA", "ALICLOUD", "DEVIN", "DOCUSIGN", "DUO", "GCP", "GIT_HUB", "GIT_LAB", "GOOGLE_GROUPS", "GOOGLE_WORKSPACE", "GRAFANA", "HUBSPOT", "ILEVEL", "INCIDENTIO", "JIRA", "LDAP", "LINEAR", "MARIADB", "MONGO", "MONGO_ATLAS", "MYSQL", "NETSUITE", "DATADOG", "OKTA_CIAM", "OKTA_DIRECTORY", "OPENAI_PLATFORM", "OPAL", "ORACLE_FUSION", "PAGERDUTY", "POSTGRES", "ROOTLY", "SALESFORCE", "SNOWFLAKE", "SLACK", "TABLEAU", "TAILSCALE", "TELEPORT", "TWINGATE", "VAULT", "WORKDAY", "ZENDESK", "ZOOM", "RAMP", "WRIKE", "VERCEL", "AXIOM", "ACTIVECAMPAIGN", "ASANA", "BITWARDEN", "BOX", "CALENDLY", "ONELOGIN", "SQUARE", "RIPPLING"]; Requires replacement if changed.
 - `description` (String) A description of the app.
 - `name` (String) The name of the app.
@@ -110,15 +105,12 @@ In Terraform v1.5.0 and later, the [`import` block](https://developer.hashicorp.
 ```terraform
 import {
   to = opal_app.my_opal_app
-  id = jsonencode({
-    app_id = "32acc112-21ff-4669-91c2-21e27683eaa1"
-    id     = "32acc112-21ff-4669-91c2-21e27683eaa1"
-  })
+  id = "32acc112-21ff-4669-91c2-21e27683eaa1"
 }
 ```
 
 The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
 
 ```shell
-terraform import opal_app.my_opal_app '{"app_id": "32acc112-21ff-4669-91c2-21e27683eaa1", "id": "32acc112-21ff-4669-91c2-21e27683eaa1"}'
+terraform import opal_app.my_opal_app "32acc112-21ff-4669-91c2-21e27683eaa1"
 ```

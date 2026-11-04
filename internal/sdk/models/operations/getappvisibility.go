@@ -10,14 +10,14 @@ import (
 
 type GetAppVisibilityRequest struct {
 	// The ID of the app.
-	AppID string `pathParam:"style=simple,explode=false,name=app_id"`
+	ID string `pathParam:"style=simple,explode=false,name=app_id"`
 }
 
-func (g *GetAppVisibilityRequest) GetAppID() string {
+func (g *GetAppVisibilityRequest) GetID() string {
 	if g == nil {
 		return ""
 	}
-	return g.AppID
+	return g.ID
 }
 
 type GetAppVisibilityResponse struct {

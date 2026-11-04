@@ -9,14 +9,14 @@ import (
 
 type DeleteAppRequest struct {
 	// The ID of the app.
-	AppID string `pathParam:"style=simple,explode=true,name=app_id"`
+	ID string `pathParam:"style=simple,explode=true,name=app_id"`
 }
 
-func (d *DeleteAppRequest) GetAppID() string {
+func (d *DeleteAppRequest) GetID() string {
 	if d == nil {
 		return ""
 	}
-	return d.AppID
+	return d.ID
 }
 
 type DeleteAppResponse struct {

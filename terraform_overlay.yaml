@@ -35,17 +35,33 @@ actions:
   - target: $["paths"]["/apps"]["post"]
     update:
       x-speakeasy-entity-operation: App#create
+  - target: $["paths"]["/apps/{app_id}"]["put"]["parameters"][0]
+    update:
+      # Match GET /apps/{app_id} and Group's sibling-op pattern: path param must
+      # share the entity's `id` attribute so Create can populate it from the
+      # response and later ops (update/delete/visibility) reuse it. Without this,
+      # Speakeasy emits a separate Required `app_id` that Create never fills.
+      x-speakeasy-name-override: id
   - target: $["paths"]["/apps/{app_id}"]["put"]
     update:
       x-speakeasy-entity-operation: App#update
+  - target: $["paths"]["/apps/{app_id}"]["delete"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
   - target: $["paths"]["/apps/{app_id}"]["delete"]
     update:
       x-speakeasy-entity-operation: App#delete
+  - target: $["paths"]["/apps/{app_id}/visibility"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
   - target: $["paths"]["/apps/{app_id}/visibility"]["get"]
     update:
       x-speakeasy-entity-operation:
         - App#read#2
         - AppVisibility#read
+  - target: $["paths"]["/apps/{app_id}/visibility"]["put"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
   - target: $["paths"]["/apps/{app_id}/visibility"]["put"]
     update:
       x-speakeasy-entity-operation:
@@ -1103,6 +1119,10 @@ actions:
   - target: $["components"]["schemas"]["App"]["properties"]["app_id"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["App"]["properties"]["app_id"]
+    update:
+      # Server-assigned; mirrors Bundle.bundle_id readonly so create configs omit it.
+      x-speakeasy-param-readonly: true
   - target: $["components"]["schemas"]["App"]["properties"]["app_type"]
     update:
       # have to do all of this instead because the speakeasy codegen cli doesn't currently (3/18/2023 support x-speakeasy-name-override along with $ref)

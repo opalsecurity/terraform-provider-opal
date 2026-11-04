@@ -85,11 +85,11 @@ func (r *AppResourceModel) RefreshFromSharedAppVisibilityInfo(ctx context.Contex
 func (r *AppResourceModel) ToOperationsDeleteAppRequest(ctx context.Context) (*operations.DeleteAppRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	var appID string
-	appID = r.AppID.ValueString()
+	var id string
+	id = r.ID.ValueString()
 
 	out := operations.DeleteAppRequest{
-		AppID: appID,
+		ID: id,
 	}
 
 	return &out, diags
@@ -111,11 +111,11 @@ func (r *AppResourceModel) ToOperationsGetAppIDRequest(ctx context.Context) (*op
 func (r *AppResourceModel) ToOperationsGetAppVisibilityRequest(ctx context.Context) (*operations.GetAppVisibilityRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	var appID string
-	appID = r.AppID.ValueString()
+	var id string
+	id = r.ID.ValueString()
 
 	out := operations.GetAppVisibilityRequest{
-		AppID: appID,
+		ID: id,
 	}
 
 	return &out, diags
@@ -131,12 +131,12 @@ func (r *AppResourceModel) ToOperationsSetAppVisibilityRequest(ctx context.Conte
 		return nil, diags
 	}
 
-	var appID string
-	appID = r.AppID.ValueString()
+	var id string
+	id = r.ID.ValueString()
 
 	out := operations.SetAppVisibilityRequest{
 		AppVisibilityInfo: *appVisibilityInfo,
-		AppID:             appID,
+		ID:                id,
 	}
 
 	return &out, diags
@@ -152,12 +152,12 @@ func (r *AppResourceModel) ToOperationsUpdateAppRequest(ctx context.Context) (*o
 		return nil, diags
 	}
 
-	var appID string
-	appID = r.AppID.ValueString()
+	var id string
+	id = r.ID.ValueString()
 
 	out := operations.UpdateAppRequest{
 		UpdateAppInfo: *updateAppInfo,
-		AppID:         appID,
+		ID:            id,
 	}
 
 	return &out, diags

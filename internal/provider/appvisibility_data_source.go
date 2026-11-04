@@ -29,7 +29,7 @@ type AppVisibilityDataSource struct {
 
 // AppVisibilityDataSourceModel describes the data model.
 type AppVisibilityDataSourceModel struct {
-	AppID              types.String   `tfsdk:"app_id"`
+	ID                 types.String   `tfsdk:"id"`
 	ImportVisibility   types.String   `tfsdk:"import_visibility"`
 	Visibility         types.String   `tfsdk:"visibility"`
 	VisibilityGroupIds []types.String `tfsdk:"visibility_group_ids"`
@@ -46,7 +46,7 @@ func (r *AppVisibilityDataSource) Schema(ctx context.Context, req datasource.Sch
 		MarkdownDescription: "AppVisibility DataSource",
 
 		Attributes: map[string]schema.Attribute{
-			"app_id": schema.StringAttribute{
+			"id": schema.StringAttribute{
 				Required:    true,
 				Description: `The ID of the app.`,
 			},

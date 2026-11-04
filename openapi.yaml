@@ -334,6 +334,11 @@ paths:
             format: uuid
             type: string
           style: simple
+          # Match GET /apps/{app_id} and Group's sibling-op pattern: path param must
+          # share the entity's `id` attribute so Create can populate it from the
+          # response and later ops (update/delete/visibility) reuse it. Without this,
+          # Speakeasy emits a separate Required `app_id` that Create never fills.
+          x-speakeasy-name-override: id
       requestBody:
         required: true
         content:
@@ -376,6 +381,7 @@ paths:
             format: uuid
             type: string
           style: simple
+          x-speakeasy-name-override: id
       responses:
         "200":
           description: The app was successfully deleted.
@@ -400,6 +406,7 @@ paths:
             format: uuid
             type: string
           style: simple
+          x-speakeasy-name-override: id
       responses:
         "200":
           content:
@@ -442,6 +449,7 @@ paths:
             format: uuid
             type: string
           style: simple
+          x-speakeasy-name-override: id
       requestBody:
         required: true
         content:
@@ -9579,6 +9587,8 @@ components:
           type: string
           x-speakeasy-name-override: id
           x-speakeasy-param-suppress-computed-diff: true
+          # Server-assigned; mirrors Bundle.bundle_id readonly so create configs omit it.
+          x-speakeasy-param-readonly: true
         name:
           description: The name of the app.
           example: Okta Org
