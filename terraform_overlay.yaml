@@ -41,6 +41,16 @@ actions:
   - target: $["paths"]["/apps/{app_id}"]["delete"]
     update:
       x-speakeasy-entity-operation: App#delete
+  - target: $["paths"]["/apps/{app_id}/visibility"]["get"]
+    update:
+      x-speakeasy-entity-operation:
+        - App#read#2
+        - AppVisibility#read
+  - target: $["paths"]["/apps/{app_id}/visibility"]["put"]
+    update:
+      x-speakeasy-entity-operation:
+        - App#create#2
+        - App#update#2
   - target: $["paths"]["/bundles"]["get"]
     update:
       x-speakeasy-entity-operation: PaginatedBundleList#read
@@ -1172,6 +1182,44 @@ actions:
   - target: $["components"]["schemas"]["App"]
     update:
       x-speakeasy-entity: App
+  # Visibility is managed through GET/PUT /apps/{app_id}/visibility (App#read#2 / App#create#2 / App#update#2)
+  # so refresh can detect drift. Remove (rather than x-speakeasy-ignore, which doesn't work next to a $ref)
+  # the deprecated inline fields so there is a single source for these attributes.
+  - target: $["components"]["schemas"]["App"]["properties"]["visibility"]
+    remove: true
+  - target: $["components"]["schemas"]["App"]["properties"]["visibility_group_ids"]
+    remove: true
+  - target: $["components"]["schemas"]["App"]["properties"]["import_visibility"]
+    remove: true
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["visibility"]
+    remove: true
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["visibility_group_ids"]
+    remove: true
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["import_visibility"]
+    remove: true
+  - target: $["components"]["schemas"]["UpdateAppInfo"]["properties"]["visibility"]
+    remove: true
+  - target: $["components"]["schemas"]["UpdateAppInfo"]["properties"]["visibility_group_ids"]
+    remove: true
+  - target: $["components"]["schemas"]["UpdateAppInfo"]["properties"]["import_visibility"]
+    remove: true
+  # Mirror VisibilityInfo Terraform polish onto AppVisibilityInfo (Bundle/Group/Resource
+  # share VisibilityInfo; App has its own schema because of import_visibility).
+  - target: $["components"]["schemas"]["AppVisibilityInfo"]["properties"]["visibility_group_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["AppVisibilityInfo"]["properties"]["visibility_group_ids"]
+    update:
+      default: []
+  - target: $["components"]["schemas"]["AppVisibilityInfo"]["properties"]["visibility_group_ids"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["AppVisibilityInfo"]["properties"]["import_visibility"]
+    update:
+      default: GLOBAL
+  - target: $["components"]["schemas"]["AppVisibilityInfo"]
+    update:
+      x-speakeasy-entity: AppVisibility
   - target: $["components"]["schemas"]["Event"]
     update:
       x-speakeasy-entity: Events
