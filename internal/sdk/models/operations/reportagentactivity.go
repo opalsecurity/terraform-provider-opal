@@ -10,8 +10,10 @@ import (
 
 type ReportAgentActivityRequest struct {
 	AgentActivityIngestRequest shared.AgentActivityIngestRequest `request:"mediaType=application/json"`
-	// The identity the reporting client claims this activity belongs to - an email or an Anthropic user id. **Unverified**: a Claude Code hook payload contains no user identity, so this has to be injected by whoever deploys the hook (via the http handler's `headers` map and `allowedEnvVars` interpolation), and whoever controls the machine controls the header. Used only when the API key itself does not identify a developer. When the email belongs to a person in the organization, that person is recorded as who the activity was reported for (always as a claim), and the activity is attributed to the one Claude agent they own, if they own exactly one. The API key's own email is never treated this way: a key belongs to whoever created it, which with a shared key is not who is at the keyboard. Omitting it is valid.
+	// The identity the reporting client claims this activity belongs to - an email or an Anthropic user id. **Unverified**: a Claude Code hook payload contains no user identity, so this has to be injected by whoever deploys the hook (via the http handler's `headers` map and `allowedEnvVars` interpolation), and whoever controls the machine controls the header. Used only when the API key itself does not identify a developer. When the email belongs to a person in the organization, that person is recorded as who the activity was reported for (always as a claim), and the activity is attributed to the one Claude agent they own, if they own exactly one. The API key's own email is never treated this way: a key belongs to whoever created it, which with a shared key is not who is at the keyboard. Omitting it is valid. When an event's `opal_reported` object carries other emails, Opal also tries them, in the order `configured_email`, `claude_account_email`, `git_email`, after this header and skipping any that repeat it. The first one that resolves to an agent wins.
 	XOpalActor *string `header:"style=simple,explode=false,name=X-Opal-Actor"`
+	// The name of the machine that sent this request, as that machine reports it (`hostname -s`). **Unverified**: two machines can share a name, and whoever controls the machine controls the header. Stored with each event, so a reader can tell which machine reported it. When an event's own `opal_reported.hostname` names a different machine, this header wins and the body's value is kept beside it. Omitting it is valid.
+	XOpalHost *string `header:"style=simple,explode=false,name=X-Opal-Host"`
 }
 
 func (r *ReportAgentActivityRequest) GetAgentActivityIngestRequest() shared.AgentActivityIngestRequest {
@@ -28,8 +30,15 @@ func (r *ReportAgentActivityRequest) GetXOpalActor() *string {
 	return r.XOpalActor
 }
 
+func (r *ReportAgentActivityRequest) GetXOpalHost() *string {
+	if r == nil {
+		return nil
+	}
+	return r.XOpalHost
+}
+
 type ReportAgentActivityResponse struct {
-	// A per-batch accounting of what was accepted, stored, and attributed.
+	// A per-batch accounting of what was accepted, stored, and attributed. An organization that has agent activity turned off gets a 200 with an empty body for every body shape, so a sender does not keep the events and try again.
 	AgentActivityIngestResult *shared.AgentActivityIngestResult
 	// HTTP response content type for this operation
 	ContentType string

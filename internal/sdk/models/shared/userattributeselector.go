@@ -33,7 +33,8 @@ func (e *Attribute) UnmarshalJSON(data []byte) error {
 
 type UserAttributeSelector struct {
 	Attribute Attribute `json:"attribute"`
-	Values    []string  `json:"values"`
+	// Values to match; a user matches if their attribute equals any of them. For HR_IDP_STATUS, use HrIdpStatus values, or UNSET for users with no IDP status (shown as "Inactive"). UNSET must be the last value.
+	Values []string `json:"values"`
 }
 
 func (u *UserAttributeSelector) GetAttribute() Attribute {

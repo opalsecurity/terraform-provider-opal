@@ -127,6 +127,7 @@ const (
 	ResourceTypeEnumAxiomCustomRole                   ResourceTypeEnum = "AXIOM_CUSTOM_ROLE"
 	ResourceTypeEnumRipplingDepartment                ResourceTypeEnum = "RIPPLING_DEPARTMENT"
 	ResourceTypeEnumAsanaWorkspace                    ResourceTypeEnum = "ASANA_WORKSPACE"
+	ResourceTypeEnumAsanaWorkspaceGuest               ResourceTypeEnum = "ASANA_WORKSPACE_GUEST"
 	ResourceTypeEnumBitwardenOrganization             ResourceTypeEnum = "BITWARDEN_ORGANIZATION"
 	ResourceTypeEnumBoxEnterprise                     ResourceTypeEnum = "BOX_ENTERPRISE"
 	ResourceTypeEnumBoxFolder                         ResourceTypeEnum = "BOX_FOLDER"
@@ -373,6 +374,8 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "RIPPLING_DEPARTMENT":
 		fallthrough
 	case "ASANA_WORKSPACE":
+		fallthrough
+	case "ASANA_WORKSPACE_GUEST":
 		fallthrough
 	case "BITWARDEN_ORGANIZATION":
 		fallthrough

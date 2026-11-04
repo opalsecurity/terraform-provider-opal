@@ -112,7 +112,7 @@ func (r *AccessRuleResource) Schema(ctx context.Context, req resource.SchemaRequ
 														Computed:    true,
 														Optional:    true,
 														ElementType: types.StringType,
-														Description: `Not Null`,
+														Description: `Values to match; a user matches if their attribute equals any of them. For HR_IDP_STATUS, use HrIdpStatus values, or UNSET for users with no IDP status (shown as "Inactive"). UNSET must be the last value. Not Null`,
 														Validators: []validator.List{
 															speakeasy_listvalidators.NotNull(),
 														},
@@ -202,7 +202,7 @@ func (r *AccessRuleResource) Schema(ctx context.Context, req resource.SchemaRequ
 														Computed:    true,
 														Optional:    true,
 														ElementType: types.StringType,
-														Description: `Not Null`,
+														Description: `Values to match; a user matches if their attribute equals any of them. For HR_IDP_STATUS, use HrIdpStatus values, or UNSET for users with no IDP status (shown as "Inactive"). UNSET must be the last value. Not Null`,
 														Validators: []validator.List{
 															speakeasy_listvalidators.NotNull(),
 														},

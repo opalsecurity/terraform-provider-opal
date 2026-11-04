@@ -650,8 +650,6 @@ func (s *AgentActivity) ReportAgentActivity(ctx context.Context, request operati
 		}
 	case httpRes.StatusCode == 400:
 		fallthrough
-	case httpRes.StatusCode == 403:
-		fallthrough
 	case httpRes.StatusCode == 413:
 		utils.DrainBody(httpRes)
 	default:

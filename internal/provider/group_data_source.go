@@ -221,6 +221,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Active Directory group.`,
 					},
+					"activecampaign_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The group id of the ActiveCampaign Group.`,
+							},
+						},
+						Description: `Remote info for ActiveCampaign Group.`,
+					},
 					"asana_team": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{

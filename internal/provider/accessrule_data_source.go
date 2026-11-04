@@ -85,6 +85,7 @@ func (r *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 													"values": schema.ListAttribute{
 														Computed:    true,
 														ElementType: types.StringType,
+														Description: `Values to match; a user matches if their attribute equals any of them. For HR_IDP_STATUS, use HrIdpStatus values, or UNSET for users with no IDP status (shown as "Inactive"). UNSET must be the last value.`,
 													},
 												},
 											},
@@ -127,6 +128,7 @@ func (r *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 													"values": schema.ListAttribute{
 														Computed:    true,
 														ElementType: types.StringType,
+														Description: `Values to match; a user matches if their attribute equals any of them. For HR_IDP_STATUS, use HrIdpStatus values, or UNSET for users with no IDP status (shown as "Inactive"). UNSET must be the last value.`,
 													},
 												},
 											},

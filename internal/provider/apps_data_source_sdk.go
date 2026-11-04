@@ -41,11 +41,6 @@ func (r *AppsDataSourceModel) RefreshFromSharedAppsList(ctx context.Context, res
 			}
 			apps.Description = types.StringValue(appsItem.Description)
 			apps.ID = types.StringValue(appsItem.ID)
-			if appsItem.ImportVisibility != nil {
-				apps.ImportVisibility = types.StringValue(string(*appsItem.ImportVisibility))
-			} else {
-				apps.ImportVisibility = types.StringNull()
-			}
 			apps.Name = types.StringValue(appsItem.Name)
 			apps.Type = types.StringValue(string(appsItem.Type))
 			apps.Validations = []tfTypes.AppValidation{}
@@ -63,15 +58,6 @@ func (r *AppsDataSourceModel) RefreshFromSharedAppsList(ctx context.Context, res
 				validations.UsageReason = types.StringPointerValue(validationsItem.UsageReason)
 
 				apps.Validations = append(apps.Validations, validations)
-			}
-			if appsItem.Visibility != nil {
-				apps.Visibility = types.StringValue(string(*appsItem.Visibility))
-			} else {
-				apps.Visibility = types.StringNull()
-			}
-			apps.VisibilityGroupIds = make([]types.String, 0, len(appsItem.VisibilityGroupIds))
-			for _, v := range appsItem.VisibilityGroupIds {
-				apps.VisibilityGroupIds = append(apps.VisibilityGroupIds, types.StringValue(v))
 			}
 
 			r.Apps = append(r.Apps, apps)
