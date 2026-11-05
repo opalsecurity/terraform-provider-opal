@@ -1240,6 +1240,14 @@ actions:
   - target: $["components"]["schemas"]["AppVisibilityInfo"]
     update:
       x-speakeasy-entity: AppVisibility
+  # Redact the Custom Connector signing secret in terraform plan/apply/state show output.
+  # Still stored in state (Sensitive ≠ write-only); API never returns it on read.
+  - target: $["components"]["schemas"]["CreateCustomConnectorInfo"]["properties"]["signing_secret"]
+    update:
+      x-speakeasy-param-sensitive: true
+  - target: $["components"]["schemas"]["UpdateCustomConnectorInfo"]["properties"]["signing_secret"]
+    update:
+      x-speakeasy-param-sensitive: true
   - target: $["components"]["schemas"]["Event"]
     update:
       x-speakeasy-entity: Events

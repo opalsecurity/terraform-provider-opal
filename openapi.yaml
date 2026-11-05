@@ -9775,6 +9775,7 @@ components:
             The signing secret used to authenticate requests to the Custom
             Connector. Write-only; never returned by the API.
           type: string
+          x-speakeasy-param-sensitive: true
         tls_mode:
           description: |-
             Whether TLS verification is enabled. Defaults to `true` when omitted.
@@ -9848,6 +9849,7 @@ components:
             New signing secret. Write-only; never returned by the API. Omit to
             leave the existing secret unchanged.
           type: string
+          x-speakeasy-param-sensitive: true
         tls_mode:
           description: Whether TLS verification is enabled for the Custom Connector.
           type: boolean
