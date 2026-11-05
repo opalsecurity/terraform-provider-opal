@@ -133,6 +133,12 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.ActiveDirectoryGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.ActiveDirectoryGroup.GroupID = types.StringValue(resp.RemoteInfo.ActiveDirectoryGroup.GroupID)
 			}
+			if resp.RemoteInfo.ActivecampaignGroup == nil {
+				r.RemoteInfo.ActivecampaignGroup = nil
+			} else {
+				r.RemoteInfo.ActivecampaignGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.ActivecampaignGroup.GroupID = types.StringValue(resp.RemoteInfo.ActivecampaignGroup.GroupID)
+			}
 			if resp.RemoteInfo.AsanaTeam == nil {
 				r.RemoteInfo.AsanaTeam = nil
 			} else {

@@ -16,6 +16,19 @@ func (a *ActiveDirectoryGroup) GetGroupID() string {
 	return a.GroupID
 }
 
+// ActivecampaignGroup - Remote info for ActiveCampaign Group.
+type ActivecampaignGroup struct {
+	// The group id of the ActiveCampaign Group.
+	GroupID string `json:"group_id"`
+}
+
+func (a *ActivecampaignGroup) GetGroupID() string {
+	if a == nil {
+		return ""
+	}
+	return a.GroupID
+}
+
 // AsanaTeam - Remote info for Asana Team.
 type AsanaTeam struct {
 	// The team gid of the Asana Team.
@@ -691,6 +704,8 @@ func (z *ZoomGroup) GetGroupID() string {
 type GroupRemoteInfo struct {
 	// Remote info for Active Directory group.
 	ActiveDirectoryGroup *ActiveDirectoryGroup `json:"active_directory_group,omitempty"`
+	// Remote info for ActiveCampaign Group.
+	ActivecampaignGroup *ActivecampaignGroup `json:"activecampaign_group,omitempty"`
 	// Remote info for Asana Team.
 	AsanaTeam *AsanaTeam `json:"asana_team,omitempty"`
 	// Remote info for AWS SSO group.
@@ -798,6 +813,13 @@ func (g *GroupRemoteInfo) GetActiveDirectoryGroup() *ActiveDirectoryGroup {
 		return nil
 	}
 	return g.ActiveDirectoryGroup
+}
+
+func (g *GroupRemoteInfo) GetActivecampaignGroup() *ActivecampaignGroup {
+	if g == nil {
+		return nil
+	}
+	return g.ActivecampaignGroup
 }
 
 func (g *GroupRemoteInfo) GetAsanaTeam() *AsanaTeam {

@@ -13,14 +13,15 @@ package shared
 // the server is read from `tool_name` instead: the part after the `mcp__` prefix and
 // before the next `__`. The tool is always read from `tool_name`.
 //
-// Only `name` is read. `source` says where the server's definition came from (`plugin`,
-// `sdk`, or a configuration scope such as `user` or `project`) and is parsed and
-// **discarded**. Neither field is an identity: `name` is whatever the user called the
-// server in their own configuration.
+// `name` is stored as the call's server. `source` says where the server's definition came
+// from (`plugin`, `sdk`, or a configuration scope such as `user` or `project`) and is
+// stored as sent, cut to 64 characters. Neither field is an identity: `name` is whatever
+// the user called the server in their own configuration, and `source` is what the machine
+// said.
 type AgentActivityMcpServer struct {
 	// The server's name.
 	Name *string `json:"name,omitempty"`
-	// Where the server's definition came from, such as `plugin`, `sdk`, `user` or `project`. Not stored.
+	// Where the server's definition came from, such as `plugin`, `sdk`, `user` or `project`. Stored as sent, cut to 64 characters.
 	Source *string `json:"source,omitempty"`
 }
 
