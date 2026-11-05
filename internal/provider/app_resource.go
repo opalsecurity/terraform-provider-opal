@@ -164,8 +164,9 @@ func (r *AppResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 						},
 					},
 					"signing_secret": schema.StringAttribute{
-						Computed: true,
-						Optional: true,
+						Computed:  true,
+						Optional:  true,
+						Sensitive: true,
 						MarkdownDescription: `The signing secret used to authenticate requests to the Custom` + "\n" +
 							`Connector. Write-only; never returned by the API.` + "\n" +
 							`Not Null`,
@@ -346,6 +347,8 @@ func (r *AppResource) Create(ctx context.Context, req resource.CreateRequest, re
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.Config, req.Plan)
+
 	request, requestDiags := data.ToSharedCreateAppInfo(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -443,6 +446,8 @@ func (r *AppResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 		return
 	}
 
+	ctx = withSensitiveValues(ctx, req.State)
+
 	request, requestDiags := data.ToOperationsGetAppIDRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
@@ -531,6 +536,8 @@ func (r *AppResource) Update(ctx context.Context, req resource.UpdateRequest, re
 	if resp.Diagnostics.HasError() {
 		return
 	}
+
+	ctx = withSensitiveValues(ctx, req.Config, req.Plan, req.State)
 
 	request, requestDiags := data.ToOperationsUpdateAppRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
@@ -628,6 +635,8 @@ func (r *AppResource) Delete(ctx context.Context, req resource.DeleteRequest, re
 	if resp.Diagnostics.HasError() {
 		return
 	}
+
+	ctx = withSensitiveValues(ctx, req.State)
 
 	request, requestDiags := data.ToOperationsDeleteAppRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
