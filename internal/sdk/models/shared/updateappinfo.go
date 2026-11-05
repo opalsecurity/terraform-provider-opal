@@ -13,17 +13,8 @@ type UpdateAppInfo struct {
 	CustomConnector *UpdateCustomConnectorInfo `json:"custom_connector,omitempty"`
 	// The updated description of the app.
 	Description *string `json:"description,omitempty"`
-	// The visibility level of the entity.
-	ImportVisibility *VisibilityTypeEnum `json:"import_visibility,omitempty"`
 	// The updated name of the app.
 	Name *string `json:"name,omitempty"`
-	// The visibility level of the entity.
-	Visibility *VisibilityTypeEnum `json:"visibility,omitempty"`
-	// The IDs of groups that can see this app when visibility is `LIMITED`.
-	// Must be empty when the effective visibility is `GLOBAL` (either sent
-	// explicitly on this request or already stored on the app); the server
-	// returns `400` otherwise.
-	VisibilityGroupIds []string `json:"visibility_group_ids,omitempty"`
 }
 
 func (u *UpdateAppInfo) GetAdminOwnerID() *string {
@@ -47,30 +38,9 @@ func (u *UpdateAppInfo) GetDescription() *string {
 	return u.Description
 }
 
-func (u *UpdateAppInfo) GetImportVisibility() *VisibilityTypeEnum {
-	if u == nil {
-		return nil
-	}
-	return u.ImportVisibility
-}
-
 func (u *UpdateAppInfo) GetName() *string {
 	if u == nil {
 		return nil
 	}
 	return u.Name
-}
-
-func (u *UpdateAppInfo) GetVisibility() *VisibilityTypeEnum {
-	if u == nil {
-		return nil
-	}
-	return u.Visibility
-}
-
-func (u *UpdateAppInfo) GetVisibilityGroupIds() []string {
-	if u == nil {
-		return nil
-	}
-	return u.VisibilityGroupIds
 }

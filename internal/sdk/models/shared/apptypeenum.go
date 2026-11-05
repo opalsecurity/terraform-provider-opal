@@ -70,6 +70,7 @@ const (
 	AppTypeEnumWrike           AppTypeEnum = "WRIKE"
 	AppTypeEnumVercel          AppTypeEnum = "VERCEL"
 	AppTypeEnumAxiom           AppTypeEnum = "AXIOM"
+	AppTypeEnumActivecampaign  AppTypeEnum = "ACTIVECAMPAIGN"
 	AppTypeEnumAsana           AppTypeEnum = "ASANA"
 	AppTypeEnumBitwarden       AppTypeEnum = "BITWARDEN"
 	AppTypeEnumBox             AppTypeEnum = "BOX"
@@ -203,6 +204,8 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 	case "VERCEL":
 		fallthrough
 	case "AXIOM":
+		fallthrough
+	case "ACTIVECAMPAIGN":
 		fallthrough
 	case "ASANA":
 		fallthrough

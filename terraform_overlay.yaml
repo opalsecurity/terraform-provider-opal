@@ -31,7 +31,42 @@ actions:
       x-speakeasy-name-override: get_id
   - target: $["paths"]["/apps/{app_id}"]["get"]
     update:
-      x-speakeasy-entity-operation: App#get
+      x-speakeasy-entity-operation: App#read
+  - target: $["paths"]["/apps"]["post"]
+    update:
+      x-speakeasy-entity-operation: App#create
+  - target: $["paths"]["/apps/{app_id}"]["put"]["parameters"][0]
+    update:
+      # Match GET /apps/{app_id} and Group's sibling-op pattern: path param must
+      # share the entity's `id` attribute so Create can populate it from the
+      # response and later ops (update/delete/visibility) reuse it. Without this,
+      # Speakeasy emits a separate Required `app_id` that Create never fills.
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/apps/{app_id}"]["put"]
+    update:
+      x-speakeasy-entity-operation: App#update
+  - target: $["paths"]["/apps/{app_id}"]["delete"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/apps/{app_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: App#delete
+  - target: $["paths"]["/apps/{app_id}/visibility"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/apps/{app_id}/visibility"]["get"]
+    update:
+      x-speakeasy-entity-operation:
+        - App#read#2
+        - AppVisibility#read
+  - target: $["paths"]["/apps/{app_id}/visibility"]["put"]["parameters"][0]
+    update:
+      x-speakeasy-name-override: id
+  - target: $["paths"]["/apps/{app_id}/visibility"]["put"]
+    update:
+      x-speakeasy-entity-operation:
+        - App#create#2
+        - App#update#2
   - target: $["paths"]["/bundles"]["get"]
     update:
       x-speakeasy-entity-operation: PaginatedBundleList#read
@@ -1084,6 +1119,10 @@ actions:
   - target: $["components"]["schemas"]["App"]["properties"]["app_id"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["App"]["properties"]["app_id"]
+    update:
+      # Server-assigned; mirrors Bundle.bundle_id readonly so create configs omit it.
+      x-speakeasy-param-readonly: true
   - target: $["components"]["schemas"]["App"]["properties"]["app_type"]
     update:
       # have to do all of this instead because the speakeasy codegen cli doesn't currently (3/18/2023 support x-speakeasy-name-override along with $ref)
@@ -1163,6 +1202,52 @@ actions:
   - target: $["components"]["schemas"]["App"]
     update:
       x-speakeasy-entity: App
+  # Visibility is managed through GET/PUT /apps/{app_id}/visibility (App#read#2 / App#create#2 / App#update#2)
+  # so refresh can detect drift. Remove (rather than x-speakeasy-ignore, which doesn't work next to a $ref)
+  # the deprecated inline fields so there is a single source for these attributes.
+  - target: $["components"]["schemas"]["App"]["properties"]["visibility"]
+    remove: true
+  - target: $["components"]["schemas"]["App"]["properties"]["visibility_group_ids"]
+    remove: true
+  - target: $["components"]["schemas"]["App"]["properties"]["import_visibility"]
+    remove: true
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["visibility"]
+    remove: true
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["visibility_group_ids"]
+    remove: true
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["import_visibility"]
+    remove: true
+  - target: $["components"]["schemas"]["UpdateAppInfo"]["properties"]["visibility"]
+    remove: true
+  - target: $["components"]["schemas"]["UpdateAppInfo"]["properties"]["visibility_group_ids"]
+    remove: true
+  - target: $["components"]["schemas"]["UpdateAppInfo"]["properties"]["import_visibility"]
+    remove: true
+  # Mirror VisibilityInfo Terraform polish onto AppVisibilityInfo (Bundle/Group/Resource
+  # share VisibilityInfo; App has its own schema because of import_visibility).
+  - target: $["components"]["schemas"]["AppVisibilityInfo"]["properties"]["visibility_group_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["AppVisibilityInfo"]["properties"]["visibility_group_ids"]
+    update:
+      default: []
+  - target: $["components"]["schemas"]["AppVisibilityInfo"]["properties"]["visibility_group_ids"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["AppVisibilityInfo"]["properties"]["import_visibility"]
+    update:
+      default: GLOBAL
+  - target: $["components"]["schemas"]["AppVisibilityInfo"]
+    update:
+      x-speakeasy-entity: AppVisibility
+  # Redact the Custom Connector signing secret in terraform plan/apply/state show output.
+  # Still stored in state (Sensitive ≠ write-only); API never returns it on read.
+  - target: $["components"]["schemas"]["CreateCustomConnectorInfo"]["properties"]["signing_secret"]
+    update:
+      x-speakeasy-param-sensitive: true
+  - target: $["components"]["schemas"]["UpdateCustomConnectorInfo"]["properties"]["signing_secret"]
+    update:
+      x-speakeasy-param-sensitive: true
   - target: $["components"]["schemas"]["Event"]
     update:
       x-speakeasy-entity: Events
