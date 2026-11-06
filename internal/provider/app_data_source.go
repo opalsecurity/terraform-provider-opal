@@ -259,6 +259,14 @@ func (r *AppDataSource) Read(ctx context.Context, req datasource.ReadRequest, re
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res1))
 		return
 	}
+	if res1.StatusCode == 400 {
+		// GET /apps/{id}/visibility rejects app types that are not managed via
+		// the apps API (for example OKTA_DIRECTORY or AWS_SSO). Those apps
+		// still read fine from GET /apps/{id}, so leave the visibility
+		// attributes null instead of failing the whole data source.
+		resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+		return
+	}
 	if res1.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
