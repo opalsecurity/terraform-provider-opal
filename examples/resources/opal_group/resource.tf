@@ -69,6 +69,9 @@ resource "opal_group" "my_group" {
     databricks_account_group = {
       group_id = 898931321
     }
+    datadog_on_call_schedule = {
+      schedule_id = "3653d3c6-0c75-11ea-ad28-fb5701eabc7d"
+    }
     devin_group = {
       group_name = "devin-group-01"
     }

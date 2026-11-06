@@ -210,6 +210,19 @@ func (d *DatabricksAccountGroup) GetGroupID() string {
 	return d.GroupID
 }
 
+// DatadogOnCallSchedule - Remote info for Datadog on-call schedule group.
+type DatadogOnCallSchedule struct {
+	// The id of the Datadog on-call schedule.
+	ScheduleID string `json:"schedule_id"`
+}
+
+func (d *DatadogOnCallSchedule) GetScheduleID() string {
+	if d == nil {
+		return ""
+	}
+	return d.ScheduleID
+}
+
 // DevinGroup - Remote info for Devin group.
 type DevinGroup struct {
 	// The name of the Devin group.
@@ -732,6 +745,8 @@ type GroupRemoteInfo struct {
 	CursorGroup *CursorGroup `json:"cursor_group,omitempty"`
 	// Remote info for Databricks account group.
 	DatabricksAccountGroup *DatabricksAccountGroup `json:"databricks_account_group,omitempty"`
+	// Remote info for Datadog on-call schedule group.
+	DatadogOnCallSchedule *DatadogOnCallSchedule `json:"datadog_on_call_schedule,omitempty"`
 	// Remote info for Devin group.
 	DevinGroup *DevinGroup `json:"devin_group,omitempty"`
 	// Remote info for Docusign group.
@@ -911,6 +926,13 @@ func (g *GroupRemoteInfo) GetDatabricksAccountGroup() *DatabricksAccountGroup {
 		return nil
 	}
 	return g.DatabricksAccountGroup
+}
+
+func (g *GroupRemoteInfo) GetDatadogOnCallSchedule() *DatadogOnCallSchedule {
+	if g == nil {
+		return nil
+	}
+	return g.DatadogOnCallSchedule
 }
 
 func (g *GroupRemoteInfo) GetDevinGroup() *DevinGroup {

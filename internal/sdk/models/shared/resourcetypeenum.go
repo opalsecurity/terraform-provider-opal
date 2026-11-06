@@ -25,6 +25,8 @@ const (
 	ResourceTypeEnumAwsAgentcoreGateway               ResourceTypeEnum = "AWS_AGENTCORE_GATEWAY"
 	ResourceTypeEnumAwsAgentcoreGatewayTarget         ResourceTypeEnum = "AWS_AGENTCORE_GATEWAY_TARGET"
 	ResourceTypeEnumAwsAgentcoreGatewayTool           ResourceTypeEnum = "AWS_AGENTCORE_GATEWAY_TOOL"
+	ResourceTypeEnumMcpServer                         ResourceTypeEnum = "MCP_SERVER"
+	ResourceTypeEnumMcpTool                           ResourceTypeEnum = "MCP_TOOL"
 	ResourceTypeEnumAzureManagementGroup              ResourceTypeEnum = "AZURE_MANAGEMENT_GROUP"
 	ResourceTypeEnumAzureResourceGroup                ResourceTypeEnum = "AZURE_RESOURCE_GROUP"
 	ResourceTypeEnumAzureSubscription                 ResourceTypeEnum = "AZURE_SUBSCRIPTION"
@@ -126,11 +128,11 @@ const (
 	ResourceTypeEnumAxiomRole                         ResourceTypeEnum = "AXIOM_ROLE"
 	ResourceTypeEnumAxiomCustomRole                   ResourceTypeEnum = "AXIOM_CUSTOM_ROLE"
 	ResourceTypeEnumRipplingDepartment                ResourceTypeEnum = "RIPPLING_DEPARTMENT"
+	ResourceTypeEnumBoxEnterprise                     ResourceTypeEnum = "BOX_ENTERPRISE"
+	ResourceTypeEnumBoxFolder                         ResourceTypeEnum = "BOX_FOLDER"
 	ResourceTypeEnumAsanaWorkspace                    ResourceTypeEnum = "ASANA_WORKSPACE"
 	ResourceTypeEnumAsanaWorkspaceGuest               ResourceTypeEnum = "ASANA_WORKSPACE_GUEST"
 	ResourceTypeEnumBitwardenOrganization             ResourceTypeEnum = "BITWARDEN_ORGANIZATION"
-	ResourceTypeEnumBoxEnterprise                     ResourceTypeEnum = "BOX_ENTERPRISE"
-	ResourceTypeEnumBoxFolder                         ResourceTypeEnum = "BOX_FOLDER"
 	ResourceTypeEnumCalendlyRole                      ResourceTypeEnum = "CALENDLY_ROLE"
 	ResourceTypeEnumCalendlyEventType                 ResourceTypeEnum = "CALENDLY_EVENT_TYPE"
 	ResourceTypeEnumOneloginApp                       ResourceTypeEnum = "ONELOGIN_APP"
@@ -170,6 +172,10 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "AWS_AGENTCORE_GATEWAY_TARGET":
 		fallthrough
 	case "AWS_AGENTCORE_GATEWAY_TOOL":
+		fallthrough
+	case "MCP_SERVER":
+		fallthrough
+	case "MCP_TOOL":
 		fallthrough
 	case "AZURE_MANAGEMENT_GROUP":
 		fallthrough
@@ -373,15 +379,15 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "RIPPLING_DEPARTMENT":
 		fallthrough
+	case "BOX_ENTERPRISE":
+		fallthrough
+	case "BOX_FOLDER":
+		fallthrough
 	case "ASANA_WORKSPACE":
 		fallthrough
 	case "ASANA_WORKSPACE_GUEST":
 		fallthrough
 	case "BITWARDEN_ORGANIZATION":
-		fallthrough
-	case "BOX_ENTERPRISE":
-		fallthrough
-	case "BOX_FOLDER":
 		fallthrough
 	case "CALENDLY_ROLE":
 		fallthrough

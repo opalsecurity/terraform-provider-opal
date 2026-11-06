@@ -8,9 +8,29 @@ import (
 	"net/http"
 )
 
+type CancelRequestRequestBody struct {
+	// Cancel as this Opal user instead of the caller. Only for service users an admin has allowed to act for users, in organizations with the feature enabled. The user must be active in the identity provider and be an Opal admin or the request's requester, target or initiated_by user. Unknown body fields are ignored, so a misspelled field cancels as the caller.
+	ActingUserID *string `json:"acting_user_id,omitempty"`
+}
+
+func (c *CancelRequestRequestBody) GetActingUserID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ActingUserID
+}
+
 type CancelRequestRequest struct {
+	RequestBody *CancelRequestRequestBody `request:"mediaType=application/json"`
 	// The ID of the request to cancel.
 	ID string `pathParam:"style=simple,explode=false,name=id"`
+}
+
+func (c *CancelRequestRequest) GetRequestBody() *CancelRequestRequestBody {
+	if c == nil {
+		return nil
+	}
+	return c.RequestBody
 }
 
 func (c *CancelRequestRequest) GetID() string {

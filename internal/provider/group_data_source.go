@@ -365,6 +365,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Databricks account group.`,
 					},
+					"datadog_on_call_schedule": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"schedule_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the Datadog on-call schedule.`,
+							},
+						},
+						Description: `Remote info for Datadog on-call schedule group.`,
+					},
 					"devin_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
