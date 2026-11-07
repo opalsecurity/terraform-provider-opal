@@ -27,6 +27,7 @@ func (r *AppResourceModel) RefreshFromSharedApp(ctx context.Context, resp *share
 			r.CustomConnector = &tfTypes.CreateCustomConnectorInfo{}
 			r.CustomConnector.BaseURL = types.StringValue(resp.CustomConnector.BaseURL)
 			r.CustomConnector.Identifier = types.StringValue(resp.CustomConnector.Identifier)
+			r.CustomConnector.IdpProtocol = types.StringValue(string(resp.CustomConnector.IdpProtocol))
 			r.CustomConnector.SupportsEventIngestion = types.BoolValue(resp.CustomConnector.SupportsEventIngestion)
 			r.CustomConnector.SupportsGroups = types.BoolValue(resp.CustomConnector.SupportsGroups)
 			r.CustomConnector.SupportsIdp = types.BoolValue(resp.CustomConnector.SupportsIdp)
@@ -201,6 +202,12 @@ func (r *AppResourceModel) ToSharedCreateAppInfo(ctx context.Context) (*shared.C
 		var identifier string
 		identifier = r.CustomConnector.Identifier.ValueString()
 
+		idpProtocol := new(shared.CustomConnectorIdpProtocolEnum)
+		if !r.CustomConnector.IdpProtocol.IsUnknown() && !r.CustomConnector.IdpProtocol.IsNull() {
+			*idpProtocol = shared.CustomConnectorIdpProtocolEnum(r.CustomConnector.IdpProtocol.ValueString())
+		} else {
+			idpProtocol = nil
+		}
 		var signingSecret string
 		signingSecret = r.CustomConnector.SigningSecret.ValueString()
 
@@ -249,6 +256,7 @@ func (r *AppResourceModel) ToSharedCreateAppInfo(ctx context.Context) (*shared.C
 		customConnector = &shared.CreateCustomConnectorInfo{
 			BaseURL:                 baseURL,
 			Identifier:              identifier,
+			IdpProtocol:             idpProtocol,
 			SigningSecret:           signingSecret,
 			SupportsEventIngestion:  supportsEventIngestion,
 			SupportsGroups:          supportsGroups,
@@ -298,6 +306,12 @@ func (r *AppResourceModel) ToSharedUpdateAppInfo(ctx context.Context) (*shared.U
 			*identifier = r.CustomConnector.Identifier.ValueString()
 		} else {
 			identifier = nil
+		}
+		idpProtocol := new(shared.CustomConnectorIdpProtocolEnum)
+		if !r.CustomConnector.IdpProtocol.IsUnknown() && !r.CustomConnector.IdpProtocol.IsNull() {
+			*idpProtocol = shared.CustomConnectorIdpProtocolEnum(r.CustomConnector.IdpProtocol.ValueString())
+		} else {
+			idpProtocol = nil
 		}
 		signingSecret := new(string)
 		if !r.CustomConnector.SigningSecret.IsUnknown() && !r.CustomConnector.SigningSecret.IsNull() {
@@ -350,6 +364,7 @@ func (r *AppResourceModel) ToSharedUpdateAppInfo(ctx context.Context) (*shared.U
 		customConnector = &shared.UpdateCustomConnectorInfo{
 			BaseURL:                 baseURL,
 			Identifier:              identifier,
+			IdpProtocol:             idpProtocol,
 			SigningSecret:           signingSecret,
 			SupportsEventIngestion:  supportsEventIngestion,
 			SupportsGroups:          supportsGroups,

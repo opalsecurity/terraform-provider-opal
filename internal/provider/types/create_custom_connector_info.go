@@ -10,6 +10,7 @@ import (
 type CreateCustomConnectorInfo struct {
 	BaseURL                 types.String `tfsdk:"base_url"`
 	Identifier              types.String `tfsdk:"identifier"`
+	IdpProtocol             types.String `tfsdk:"idp_protocol"`
 	SigningSecret           types.String `tfsdk:"signing_secret"`
 	SupportsEventIngestion  types.Bool   `tfsdk:"supports_event_ingestion"`
 	SupportsGroups          types.Bool   `tfsdk:"supports_groups"`

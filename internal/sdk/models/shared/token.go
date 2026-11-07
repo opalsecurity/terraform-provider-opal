@@ -10,7 +10,7 @@ import (
 
 // Token - A first-party API token.
 type Token struct {
-	// The access level of an API token.
+	// The access level of an API token. AGENT_HOOKS tokens are made only by the Claude Code hook kit's browser sign-in and can only report agent activity; they cannot be created through this API.
 	AccessLevel APIAccessLevelEnum `json:"access_level"`
 	// The date and time the token was created.
 	CreatedAt time.Time `json:"created_at"`

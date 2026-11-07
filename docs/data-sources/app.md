@@ -46,6 +46,9 @@ Read-Only:
 
 - `base_url` (String) The base URL of the Custom Connector.
 - `identifier` (String) The identifier of the Custom Connector.
+- `idp_protocol` (String) How Opal reads users from the Custom Connector when it is an upstream directory: `OPAL` for
+Opal's custom connector API, or `SCIM` for a SCIM 2.0 server, authenticated with the signing
+secret as a bearer token. Defaults to `OPAL`.
 - `supports_event_ingestion` (Boolean) Whether the Custom Connector supports event ingestion.
 - `supports_groups` (Boolean) Whether the Custom Connector supports groups.
 - `supports_idp` (Boolean) Whether the Custom Connector can be connected as an upstream user directory.
