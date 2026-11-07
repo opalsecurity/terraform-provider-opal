@@ -10,10 +10,19 @@ import (
 
 // ApproveRequestRequestBody - Approval parameters
 type ApproveRequestRequestBody struct {
+	// Approve as this Opal user instead of the caller. Only for service users an admin has allowed to act for users, in organizations with the feature enabled. The user must be active in the identity provider and be a reviewer on the request's current stage and not the request's target; the decision counts as theirs. Requests that require MFA to approve, and ADMIN level, are rejected.
+	ActingUserID *string `json:"acting_user_id,omitempty"`
 	// Optional comment for the approval
 	Comment *string `json:"comment,omitempty"`
 	// The decision level for the approval
 	Level shared.RequestApprovalEnum `json:"level"`
+}
+
+func (a *ApproveRequestRequestBody) GetActingUserID() *string {
+	if a == nil {
+		return nil
+	}
+	return a.ActingUserID
 }
 
 func (a *ApproveRequestRequestBody) GetComment() *string {

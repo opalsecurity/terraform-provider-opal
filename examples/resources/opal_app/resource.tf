@@ -4,6 +4,7 @@ resource "opal_app" "my_app" {
   custom_connector = {
     base_url                  = "https://my-connector.example.com"
     identifier                = "my-connector"
+    idp_protocol              = "OPAL"
     signing_secret            = "...my_signing_secret..."
     supports_event_ingestion  = false
     supports_groups           = true

@@ -10,7 +10,7 @@ import (
 
 // CreateTokenInfo - Information needed to create a first-party API token.
 type CreateTokenInfo struct {
-	// The access level of an API token.
+	// The access level of an API token. AGENT_HOOKS tokens are made only by the Claude Code hook kit's browser sign-in and can only report agent activity; they cannot be created through this API.
 	AccessLevel APIAccessLevelEnum `json:"access_level"`
 	// Optional expiration time for the token.
 	ExpiresAt *time.Time `json:"expires_at,omitempty"`

@@ -44,6 +44,9 @@ resource "opal_group" "my_group" {
     activecampaign_group = {
       group_id = "...my_group_id..."
     }
+    aha_team = {
+      group_id = "...my_group_id..."
+    }
     asana_team = {
       team_gid      = "...my_team_gid..."
       workspace_gid = "...my_workspace_gid..."
@@ -83,6 +86,9 @@ resource "opal_group" "my_group" {
     }
     databricks_account_group = {
       group_id = 898931321
+    }
+    datadog_on_call_schedule = {
+      schedule_id = "3653d3c6-0c75-11ea-ad28-fb5701eabc7d"
     }
     devin_group = {
       group_name = "devin-group-01"
@@ -262,7 +268,7 @@ resource "opal_group" "my_group" {
 ### Required
 
 - `app_id` (String) The ID of the app for the group. Requires replacement if changed.
-- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "CURSOR_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP", "ACTIVECAMPAIGN_GROUP", "ASANA_TEAM", "BITWARDEN_GROUP", "BOX_GROUP", "CALENDLY_GROUP", "ONELOGIN_ROLE", "ONELOGIN_GROUP", "SQUARE_LOCATION", "SQUARE_JOB", "RIPPLING_TEAM", "RIPPLING_SUPERGROUP"]; Requires replacement if changed.
+- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DATADOG_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "CURSOR_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP", "BOX_GROUP", "ACTIVECAMPAIGN_GROUP", "AHA_TEAM", "ASANA_TEAM", "BITWARDEN_GROUP", "CALENDLY_GROUP", "ONELOGIN_ROLE", "ONELOGIN_GROUP", "SQUARE_LOCATION", "SQUARE_JOB", "RIPPLING_TEAM", "RIPPLING_SUPERGROUP"]; Requires replacement if changed.
 - `name` (String) The name of the group.
 
 ### Optional
@@ -305,6 +311,7 @@ Optional:
 
 - `active_directory_group` (Attributes) Remote info for Active Directory group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--active_directory_group))
 - `activecampaign_group` (Attributes) Remote info for ActiveCampaign Group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--activecampaign_group))
+- `aha_team` (Attributes) Remote info for Aha Team. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aha_team))
 - `asana_team` (Attributes) Remote info for Asana Team. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--asana_team))
 - `aws_sso_group` (Attributes) Remote info for AWS SSO group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_sso_group))
 - `axiom_group` (Attributes) Remote info for Axiom RBAC group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--axiom_group))
@@ -318,6 +325,7 @@ Optional:
 - `connector_group` (Attributes) Remote info for Connector group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--connector_group))
 - `cursor_group` (Attributes) Remote info for a Cursor group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--cursor_group))
 - `databricks_account_group` (Attributes) Remote info for Databricks account group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--databricks_account_group))
+- `datadog_on_call_schedule` (Attributes) Remote info for Datadog on-call schedule group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--datadog_on_call_schedule))
 - `devin_group` (Attributes) Remote info for Devin group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--devin_group))
 - `docusign_group` (Attributes) Remote info for Docusign group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--docusign_group))
 - `docusign_signing_group` (Attributes) Remote info for Docusign signing group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--docusign_signing_group))
@@ -370,6 +378,14 @@ Optional:
 Optional:
 
 - `group_id` (String) The group id of the ActiveCampaign Group. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--aha_team"></a>
+### Nested Schema for `remote_info.aha_team`
+
+Optional:
+
+- `group_id` (String) The group id of the Aha Team. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--asana_team"></a>
@@ -475,6 +491,14 @@ Optional:
 Optional:
 
 - `group_id` (String) The id of the Databricks account group. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--datadog_on_call_schedule"></a>
+### Nested Schema for `remote_info.datadog_on_call_schedule`
+
+Optional:
+
+- `schedule_id` (String) The id of the Datadog on-call schedule. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--devin_group"></a>

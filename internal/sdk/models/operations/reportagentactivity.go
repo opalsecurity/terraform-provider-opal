@@ -12,6 +12,8 @@ type ReportAgentActivityRequest struct {
 	AgentActivityIngestRequest shared.AgentActivityIngestRequest `request:"mediaType=application/json"`
 	// The identity the reporting client claims this activity belongs to - an email or an Anthropic user id. **Unverified**: a Claude Code hook payload contains no user identity, so this has to be injected by whoever deploys the hook (via the http handler's `headers` map and `allowedEnvVars` interpolation), and whoever controls the machine controls the header. Used only when the API key itself does not identify a developer. When the email belongs to a person in the organization, that person is recorded as who the activity was reported for (always as a claim), and the activity is attributed to the one Claude agent they own, if they own exactly one. The API key's own email is never treated this way: a key belongs to whoever created it, which with a shared key is not who is at the keyboard. Omitting it is valid. When an event's `opal_reported` object carries other emails, Opal also tries them, in the order `configured_email`, `claude_account_email`, `git_email`, after this header and skipping any that repeat it. The first one that resolves to an agent wins.
 	XOpalActor *string `header:"style=simple,explode=false,name=X-Opal-Actor"`
+	// `1` when the sender collects conversation content: the prompt of a `UserPromptSubmit` event, the `tool_response` of a `PostToolUse` event and the `last_assistant_message` of a `Stop` or `SubagentStop` event. Without it (or an event's own `opal_content`) those fields are read and discarded, as before. An `http` hook sets it in its `headers` map, because it cannot change the payload. Opal stores the content only when the organization stores content as well.
+	XOpalContent *string `header:"style=simple,explode=false,name=X-Opal-Content"`
 	// The name of the machine that sent this request, as that machine reports it (`hostname -s`). **Unverified**: two machines can share a name, and whoever controls the machine controls the header. Stored with each event, so a reader can tell which machine reported it. When an event's own `opal_reported.hostname` names a different machine, this header wins and the body's value is kept beside it. Omitting it is valid.
 	XOpalHost *string `header:"style=simple,explode=false,name=X-Opal-Host"`
 }
@@ -28,6 +30,13 @@ func (r *ReportAgentActivityRequest) GetXOpalActor() *string {
 		return nil
 	}
 	return r.XOpalActor
+}
+
+func (r *ReportAgentActivityRequest) GetXOpalContent() *string {
+	if r == nil {
+		return nil
+	}
+	return r.XOpalContent
 }
 
 func (r *ReportAgentActivityRequest) GetXOpalHost() *string {
