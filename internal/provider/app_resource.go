@@ -71,7 +71,7 @@ func (r *AppResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 				},
-				Description: `The type of an app. must be one of ["ACTIVE_DIRECTORY", "ANTHROPIC", "AZURE_AD", "AWS", "AWS_SSO", "CLICKHOUSE", "COUPA", "CURSOR", "CUSTOM", "CONFLUENCE", "CUSTOM_CONNECTOR", "DATABRICKS", "DATASTAX_ASTRA", "ALICLOUD", "DEVIN", "DOCUSIGN", "DUO", "GCP", "GIT_HUB", "GIT_LAB", "GOOGLE_GROUPS", "GOOGLE_WORKSPACE", "GRAFANA", "HUBSPOT", "ILEVEL", "INCIDENTIO", "JIRA", "LDAP", "LINEAR", "MARIADB", "MONGO", "MONGO_ATLAS", "MYSQL", "NETSUITE", "DATADOG", "OKTA_CIAM", "OKTA_DIRECTORY", "OPENAI_PLATFORM", "OPAL", "ORACLE_FUSION", "PAGERDUTY", "POSTGRES", "ROOTLY", "SALESFORCE", "SNOWFLAKE", "SLACK", "TABLEAU", "TAILSCALE", "TELEPORT", "TWINGATE", "VAULT", "WORKDAY", "ZENDESK", "ZOOM", "RAMP", "WRIKE", "VERCEL", "AXIOM", "ACTIVECAMPAIGN", "ASANA", "BITWARDEN", "BOX", "CALENDLY", "ONELOGIN", "SQUARE", "RIPPLING"]; Requires replacement if changed.`,
+				Description: `The type of an app. must be one of ["ACTIVE_DIRECTORY", "ANTHROPIC", "AZURE_AD", "AWS", "AWS_SSO", "CLICKHOUSE", "COUPA", "CURSOR", "CUSTOM", "CONFLUENCE", "CUSTOM_CONNECTOR", "DATABRICKS", "DATASTAX_ASTRA", "ALICLOUD", "DEVIN", "DOCUSIGN", "DUO", "GCP", "GIT_HUB", "GIT_LAB", "GOOGLE_GROUPS", "GOOGLE_WORKSPACE", "GRAFANA", "HUBSPOT", "ILEVEL", "INCIDENTIO", "JIRA", "LDAP", "LINEAR", "MARIADB", "MONGO", "MONGO_ATLAS", "MYSQL", "NETSUITE", "DATADOG", "OKTA_CIAM", "OKTA_DIRECTORY", "OPENAI_PLATFORM", "OPAL", "ORACLE_FUSION", "PAGERDUTY", "POSTGRES", "ROOTLY", "SALESFORCE", "SNOWFLAKE", "SLACK", "TABLEAU", "TAILSCALE", "TELEPORT", "TWINGATE", "VAULT", "WORKDAY", "ZENDESK", "ZOOM", "RAMP", "WRIKE", "VERCEL", "AXIOM", "ACTIVECAMPAIGN", "AHA", "ASANA", "BITWARDEN", "CALENDLY", "ONELOGIN", "SQUARE", "RIPPLING"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"ACTIVE_DIRECTORY",
@@ -133,9 +133,9 @@ func (r *AppResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 						"VERCEL",
 						"AXIOM",
 						"ACTIVECAMPAIGN",
+						"AHA",
 						"ASANA",
 						"BITWARDEN",
-						"BOX",
 						"CALENDLY",
 						"ONELOGIN",
 						"SQUARE",
@@ -161,6 +161,20 @@ func (r *AppResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 						Description: `The identifier of the Custom Connector. Not Null`,
 						Validators: []validator.String{
 							speakeasy_stringvalidators.NotNull(),
+						},
+					},
+					"idp_protocol": schema.StringAttribute{
+						Computed: true,
+						Optional: true,
+						MarkdownDescription: `How Opal reads users from the Custom Connector when it is an upstream directory: ` + "`" + `OPAL` + "`" + ` for` + "\n" +
+							`Opal's custom connector API, or ` + "`" + `SCIM` + "`" + ` for a SCIM 2.0 server, authenticated with the signing` + "\n" +
+							`secret as a bearer token. Defaults to ` + "`" + `OPAL` + "`" + `.` + "\n" +
+							`must be one of ["OPAL", "SCIM"]`,
+						Validators: []validator.String{
+							stringvalidator.OneOf(
+								"OPAL",
+								"SCIM",
+							),
 						},
 					},
 					"signing_secret": schema.StringAttribute{

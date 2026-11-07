@@ -31,6 +31,7 @@ func (r *AppsDataSourceModel) RefreshFromSharedAppsList(ctx context.Context, res
 				apps.CustomConnector = &tfTypes.CustomConnectorAppConfig{}
 				apps.CustomConnector.BaseURL = types.StringValue(appsItem.CustomConnector.BaseURL)
 				apps.CustomConnector.Identifier = types.StringValue(appsItem.CustomConnector.Identifier)
+				apps.CustomConnector.IdpProtocol = types.StringValue(string(appsItem.CustomConnector.IdpProtocol))
 				apps.CustomConnector.SupportsEventIngestion = types.BoolValue(appsItem.CustomConnector.SupportsEventIngestion)
 				apps.CustomConnector.SupportsGroups = types.BoolValue(appsItem.CustomConnector.SupportsGroups)
 				apps.CustomConnector.SupportsIdp = types.BoolValue(appsItem.CustomConnector.SupportsIdp)
