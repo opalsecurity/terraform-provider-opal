@@ -10,10 +10,19 @@ import (
 
 // DenyRequestRequestBody - Denial parameters
 type DenyRequestRequestBody struct {
+	// Deny as this Opal user instead of the caller. Only for service users an admin has allowed to act for users, in organizations with the feature enabled. The user must be active in the identity provider and be a reviewer on the request's current stage and not the request's target; the decision counts as theirs. ADMIN level is rejected.
+	ActingUserID *string `json:"acting_user_id,omitempty"`
 	// Comment for the denial
 	Comment string `json:"comment"`
 	// The decision level for the approval
 	Level *shared.RequestApprovalEnum `json:"level,omitempty"`
+}
+
+func (d *DenyRequestRequestBody) GetActingUserID() *string {
+	if d == nil {
+		return nil
+	}
+	return d.ActingUserID
 }
 
 func (d *DenyRequestRequestBody) GetComment() string {
