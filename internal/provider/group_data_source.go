@@ -221,6 +221,26 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Active Directory group.`,
 					},
+					"activecampaign_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The group id of the ActiveCampaign Group.`,
+							},
+						},
+						Description: `Remote info for ActiveCampaign Group.`,
+					},
+					"aha_team": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The group id of the Aha Team.`,
+							},
+						},
+						Description: `Remote info for Aha Team.`,
+					},
 					"asana_team": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -354,6 +374,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							},
 						},
 						Description: `Remote info for Databricks account group.`,
+					},
+					"datadog_on_call_schedule": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"schedule_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the Datadog on-call schedule.`,
+							},
+						},
+						Description: `Remote info for Datadog on-call schedule group.`,
 					},
 					"devin_group": schema.SingleNestedAttribute{
 						Computed: true,

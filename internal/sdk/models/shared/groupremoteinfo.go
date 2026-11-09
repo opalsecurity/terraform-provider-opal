@@ -16,6 +16,32 @@ func (a *ActiveDirectoryGroup) GetGroupID() string {
 	return a.GroupID
 }
 
+// ActivecampaignGroup - Remote info for ActiveCampaign Group.
+type ActivecampaignGroup struct {
+	// The group id of the ActiveCampaign Group.
+	GroupID string `json:"group_id"`
+}
+
+func (a *ActivecampaignGroup) GetGroupID() string {
+	if a == nil {
+		return ""
+	}
+	return a.GroupID
+}
+
+// AhaTeam - Remote info for Aha Team.
+type AhaTeam struct {
+	// The group id of the Aha Team.
+	GroupID string `json:"group_id"`
+}
+
+func (a *AhaTeam) GetGroupID() string {
+	if a == nil {
+		return ""
+	}
+	return a.GroupID
+}
+
 // AsanaTeam - Remote info for Asana Team.
 type AsanaTeam struct {
 	// The team gid of the Asana Team.
@@ -195,6 +221,19 @@ func (d *DatabricksAccountGroup) GetGroupID() string {
 		return ""
 	}
 	return d.GroupID
+}
+
+// DatadogOnCallSchedule - Remote info for Datadog on-call schedule group.
+type DatadogOnCallSchedule struct {
+	// The id of the Datadog on-call schedule.
+	ScheduleID string `json:"schedule_id"`
+}
+
+func (d *DatadogOnCallSchedule) GetScheduleID() string {
+	if d == nil {
+		return ""
+	}
+	return d.ScheduleID
 }
 
 // DevinGroup - Remote info for Devin group.
@@ -691,6 +730,10 @@ func (z *ZoomGroup) GetGroupID() string {
 type GroupRemoteInfo struct {
 	// Remote info for Active Directory group.
 	ActiveDirectoryGroup *ActiveDirectoryGroup `json:"active_directory_group,omitempty"`
+	// Remote info for ActiveCampaign Group.
+	ActivecampaignGroup *ActivecampaignGroup `json:"activecampaign_group,omitempty"`
+	// Remote info for Aha Team.
+	AhaTeam *AhaTeam `json:"aha_team,omitempty"`
 	// Remote info for Asana Team.
 	AsanaTeam *AsanaTeam `json:"asana_team,omitempty"`
 	// Remote info for AWS SSO group.
@@ -717,6 +760,8 @@ type GroupRemoteInfo struct {
 	CursorGroup *CursorGroup `json:"cursor_group,omitempty"`
 	// Remote info for Databricks account group.
 	DatabricksAccountGroup *DatabricksAccountGroup `json:"databricks_account_group,omitempty"`
+	// Remote info for Datadog on-call schedule group.
+	DatadogOnCallSchedule *DatadogOnCallSchedule `json:"datadog_on_call_schedule,omitempty"`
 	// Remote info for Devin group.
 	DevinGroup *DevinGroup `json:"devin_group,omitempty"`
 	// Remote info for Docusign group.
@@ -798,6 +843,20 @@ func (g *GroupRemoteInfo) GetActiveDirectoryGroup() *ActiveDirectoryGroup {
 		return nil
 	}
 	return g.ActiveDirectoryGroup
+}
+
+func (g *GroupRemoteInfo) GetActivecampaignGroup() *ActivecampaignGroup {
+	if g == nil {
+		return nil
+	}
+	return g.ActivecampaignGroup
+}
+
+func (g *GroupRemoteInfo) GetAhaTeam() *AhaTeam {
+	if g == nil {
+		return nil
+	}
+	return g.AhaTeam
 }
 
 func (g *GroupRemoteInfo) GetAsanaTeam() *AsanaTeam {
@@ -889,6 +948,13 @@ func (g *GroupRemoteInfo) GetDatabricksAccountGroup() *DatabricksAccountGroup {
 		return nil
 	}
 	return g.DatabricksAccountGroup
+}
+
+func (g *GroupRemoteInfo) GetDatadogOnCallSchedule() *DatadogOnCallSchedule {
+	if g == nil {
+		return nil
+	}
+	return g.DatadogOnCallSchedule
 }
 
 func (g *GroupRemoteInfo) GetDevinGroup() *DevinGroup {

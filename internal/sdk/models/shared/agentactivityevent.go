@@ -14,10 +14,15 @@ import (
 // payload, posted either by the hook itself or by a relay that batches them.
 //
 // Only the fields below are read; everything else in the payload is parsed and
-// **discarded**, never persisted. That still includes `tool_response` (the result
-// body, which carries file contents and third-party workspace data) and
-// `transcript_path` / `scratchpad_dir` (absolute paths on an employee's own laptop,
-// which Opal cannot govern and should not be accumulating).
+// **discarded**, never persisted. That includes `transcript_path` / `scratchpad_dir`
+// (absolute paths on an employee's own laptop, which Opal cannot govern and should not
+// be accumulating).
+//
+// `prompt`, `tool_response` and `last_assistant_message` (the conversation content) are
+// stored only when the sender collects them (`opal_content` on the event, or the
+// `X-Opal-Content` header) and the organization stores content. Secrets in the shapes
+// Opal recognizes are masked and each text is cut to the organization's limit before
+// it is written. Otherwise they are discarded too.
 //
 // `tool_input` IS now read and stored. It was previously discarded pending a
 // data-handling decision; that decision has since been made, and without arguments
@@ -33,8 +38,14 @@ type AgentActivityEvent struct {
 	AgentType *string `json:"agent_type,omitempty"`
 	// The working directory the agent was operating in.
 	Cwd *string `json:"cwd,omitempty"`
+	// How long the tool call took to run, in milliseconds, as Claude Code measured it. Claude Code's documentation says it leaves out time spent in permission prompts and in `PreToolUse` hooks. It is sent with `PostToolUse` and `PostToolUseFailure` only; it is ignored on any other event. **Unverified.** Stored only when it is a number from 0 to 86400000 (24 hours), rounded to a whole millisecond; any other value is dropped and the event is stored without it. A value of the wrong type never rejects the event or the batch it came in.
+	DurationMs any `json:"duration_ms,omitempty"`
 	// Which hook fired, e.g. `PostToolUse`, `PreToolUse`, `PermissionDenied`. Required; an event with no name cannot be interpreted and is rejected.
 	HookEventName string `json:"hook_event_name"`
+	// The text of the model's final message in the turn (`Stop`, `SubagentStop`), a string.
+	// Stored only as described above, and only when `opal_content.assistant_text` is absent.
+	// Read whatever its type, like `prompt`.
+	LastAssistantMessage any `json:"last_assistant_message,omitempty"`
 	// # AgentActivityMcpServer Object
 	// ### Description
 	// The MCP server behind a tool call, as Claude Code reports it. Claude Code v2.1.274 and
@@ -45,13 +56,49 @@ type AgentActivityEvent struct {
 	// the server is read from `tool_name` instead: the part after the `mcp__` prefix and
 	// before the next `__`. The tool is always read from `tool_name`.
 	//
-	// Only `name` is read. `source` says where the server's definition came from (`plugin`,
-	// `sdk`, or a configuration scope such as `user` or `project`) and is parsed and
-	// **discarded**. Neither field is an identity: `name` is whatever the user called the
-	// server in their own configuration.
+	// `name` is stored as the call's server. `source` says where the server's definition came
+	// from (`plugin`, `sdk`, or a configuration scope such as `user` or `project`) and is
+	// stored as sent, cut to 64 characters. Neither field is an identity: `name` is whatever
+	// the user called the server in their own configuration, and `source` is what the machine
+	// said.
 	McpServer *AgentActivityMcpServer `json:"mcp_server,omitempty"`
+	// # AgentActivityContentReport Object
+	// ### Description
+	// What Opal's hook kit adds to an event when it collects conversation content. Its
+	// presence means the sender collects content, like the `X-Opal-Content` header. The kit
+	// has already masked secrets in the texts and cut them to its own limit.
+	OpalContent *AgentActivityContentReport `json:"opal_content,omitempty"`
+	// An id Opal's hook kit gives each event it holds for sending, so that a retried delivery of an event without a `tool_use_id` (a prompt, the end of a turn) is stored once. Used only for an event that has no `tool_use_id` and is not a tool-call event, and only when it is 8 to 64 letters, digits and dashes; otherwise ignored.
+	OpalEventID *string `json:"opal_event_id,omitempty"`
+	// # AgentActivityOpalMcpServer Object
+	// ### Description
+	// Where the MCP server behind a tool call connects, as the Opal hook kit read it from the
+	// developer's own Claude Code configuration. Claude Code's hook payload names the server
+	// but not where it connects, so the kit adds this for an `mcp__<server>__<tool>` call when
+	// it finds the server in the configuration.
+	//
+	// Opal uses it to identify the server in the organization's MCP server registry: by its
+	// URL, or by the hash of its command. The URL is stored without its query, fragment or
+	// user name and password.
+	OpalMcpServer *AgentActivityOpalMcpServer `json:"opal_mcp_server,omitempty"`
+	// # AgentActivityOpalReported Object
+	// ### Description
+	// What the sending machine says about who and what it is, added by the Opal hook
+	// script. Every field is optional and **unverified**: whoever controls the machine
+	// controls them. They can disagree, and Opal keeps every one that is present, each cut
+	// to a fixed length (254 characters for an email, 64 for `os_user`, 255 for
+	// `hostname`) with control characters removed.
+	//
+	// The emails are also tried, in the order below and after the `X-Opal-Actor` header,
+	// to find the agent, so a person without a git email can still match through their
+	// Claude account.
+	OpalReported *AgentActivityOpalReported `json:"opal_reported,omitempty"`
 	// The session's permission mode, e.g. `default`, `acceptEdits`, `bypassPermissions`. A session running `bypassPermissions` had no approval gate in front of any tool call it made.
 	PermissionMode *string `json:"permission_mode,omitempty"`
+	// The text a person submitted (`UserPromptSubmit`), a string. Stored only as described
+	// above. Read whatever its type, so that a change in its shape cannot make Opal refuse
+	// the event.
+	Prompt any `json:"prompt,omitempty"`
 	// Groups every tool call made under one user instruction, so a run can be read back as the instruction that caused it rather than as unrelated rows.
 	PromptID *string `json:"prompt_id,omitempty"`
 	// The agent session this event belongs to. Opaque to Opal.
@@ -75,7 +122,11 @@ type AgentActivityEvent struct {
 	// An MCP tool is named `mcp__<server>__<tool>`. The whole string is stored as sent,
 	// and the server and the tool are also stored in their own fields (see `mcp_server`).
 	ToolName *string `json:"tool_name,omitempty"`
-	// The tool invocation's id, used together with `hook_event_name` to deduplicate a retried delivery. Absent on events that carry none, which are stored at-least-once.
+	// What the tool returned (`PostToolUse`), in the tool's own shape, or as text when the
+	// sender already converted it. Stored only as described above, as text: every image
+	// is replaced by a placeholder that names its type and size.
+	ToolResponse any `json:"tool_response,omitempty"`
+	// The tool invocation's id, used together with `hook_event_name` to deduplicate a retried delivery. Absent on events that carry none, which are stored at-least-once unless they carry `opal_event_id`.
 	ToolUseID *string `json:"tool_use_id,omitempty"`
 	// Read at ingest **only** to parse an operating-system username out of, as the last-resort attribution step, and then discarded. The path itself is never stored: it is an absolute path on an employee's laptop and Opal has no business accumulating those.
 	TranscriptPath *string `json:"transcript_path,omitempty"`
@@ -127,11 +178,25 @@ func (a *AgentActivityEvent) GetCwd() *string {
 	return a.Cwd
 }
 
+func (a *AgentActivityEvent) GetDurationMs() any {
+	if a == nil {
+		return nil
+	}
+	return a.DurationMs
+}
+
 func (a *AgentActivityEvent) GetHookEventName() string {
 	if a == nil {
 		return ""
 	}
 	return a.HookEventName
+}
+
+func (a *AgentActivityEvent) GetLastAssistantMessage() any {
+	if a == nil {
+		return nil
+	}
+	return a.LastAssistantMessage
 }
 
 func (a *AgentActivityEvent) GetMcpServer() *AgentActivityMcpServer {
@@ -141,11 +206,46 @@ func (a *AgentActivityEvent) GetMcpServer() *AgentActivityMcpServer {
 	return a.McpServer
 }
 
+func (a *AgentActivityEvent) GetOpalContent() *AgentActivityContentReport {
+	if a == nil {
+		return nil
+	}
+	return a.OpalContent
+}
+
+func (a *AgentActivityEvent) GetOpalEventID() *string {
+	if a == nil {
+		return nil
+	}
+	return a.OpalEventID
+}
+
+func (a *AgentActivityEvent) GetOpalMcpServer() *AgentActivityOpalMcpServer {
+	if a == nil {
+		return nil
+	}
+	return a.OpalMcpServer
+}
+
+func (a *AgentActivityEvent) GetOpalReported() *AgentActivityOpalReported {
+	if a == nil {
+		return nil
+	}
+	return a.OpalReported
+}
+
 func (a *AgentActivityEvent) GetPermissionMode() *string {
 	if a == nil {
 		return nil
 	}
 	return a.PermissionMode
+}
+
+func (a *AgentActivityEvent) GetPrompt() any {
+	if a == nil {
+		return nil
+	}
+	return a.Prompt
 }
 
 func (a *AgentActivityEvent) GetPromptID() *string {
@@ -181,6 +281,13 @@ func (a *AgentActivityEvent) GetToolName() *string {
 		return nil
 	}
 	return a.ToolName
+}
+
+func (a *AgentActivityEvent) GetToolResponse() any {
+	if a == nil {
+		return nil
+	}
+	return a.ToolResponse
 }
 
 func (a *AgentActivityEvent) GetToolUseID() *string {

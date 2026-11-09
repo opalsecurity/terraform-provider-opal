@@ -132,6 +132,18 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.ActiveDirectoryGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.ActiveDirectoryGroup.GroupID = types.StringValue(resp.RemoteInfo.ActiveDirectoryGroup.GroupID)
 			}
+			if resp.RemoteInfo.ActivecampaignGroup == nil {
+				r.RemoteInfo.ActivecampaignGroup = nil
+			} else {
+				r.RemoteInfo.ActivecampaignGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.ActivecampaignGroup.GroupID = types.StringValue(resp.RemoteInfo.ActivecampaignGroup.GroupID)
+			}
+			if resp.RemoteInfo.AhaTeam == nil {
+				r.RemoteInfo.AhaTeam = nil
+			} else {
+				r.RemoteInfo.AhaTeam = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.AhaTeam.GroupID = types.StringValue(resp.RemoteInfo.AhaTeam.GroupID)
+			}
 			if resp.RemoteInfo.AsanaTeam == nil {
 				r.RemoteInfo.AsanaTeam = nil
 			} else {
@@ -211,6 +223,12 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.DatabricksAccountGroup = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.DatabricksAccountGroup.GroupID = types.StringValue(resp.RemoteInfo.DatabricksAccountGroup.GroupID)
 			}
+			if resp.RemoteInfo.DatadogOnCallSchedule == nil {
+				r.RemoteInfo.DatadogOnCallSchedule = nil
+			} else {
+				r.RemoteInfo.DatadogOnCallSchedule = &tfTypes.DatadogOnCallSchedule{}
+				r.RemoteInfo.DatadogOnCallSchedule.ScheduleID = types.StringValue(resp.RemoteInfo.DatadogOnCallSchedule.ScheduleID)
+			}
 			if resp.RemoteInfo.DevinGroup == nil {
 				r.RemoteInfo.DevinGroup = nil
 			} else {
@@ -275,7 +293,7 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			if resp.RemoteInfo.IncidentioOnCallSchedule == nil {
 				r.RemoteInfo.IncidentioOnCallSchedule = nil
 			} else {
-				r.RemoteInfo.IncidentioOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
+				r.RemoteInfo.IncidentioOnCallSchedule = &tfTypes.DatadogOnCallSchedule{}
 				r.RemoteInfo.IncidentioOnCallSchedule.ScheduleID = types.StringValue(resp.RemoteInfo.IncidentioOnCallSchedule.ScheduleID)
 			}
 			if resp.RemoteInfo.JiraGroup == nil {
@@ -323,7 +341,7 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			if resp.RemoteInfo.PagerdutyOnCallSchedule == nil {
 				r.RemoteInfo.PagerdutyOnCallSchedule = nil
 			} else {
-				r.RemoteInfo.PagerdutyOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
+				r.RemoteInfo.PagerdutyOnCallSchedule = &tfTypes.DatadogOnCallSchedule{}
 				r.RemoteInfo.PagerdutyOnCallSchedule.ScheduleID = types.StringValue(resp.RemoteInfo.PagerdutyOnCallSchedule.ScheduleID)
 			}
 			if resp.RemoteInfo.RampDepartment == nil {
@@ -353,7 +371,7 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			if resp.RemoteInfo.RootlyOnCallSchedule == nil {
 				r.RemoteInfo.RootlyOnCallSchedule = nil
 			} else {
-				r.RemoteInfo.RootlyOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
+				r.RemoteInfo.RootlyOnCallSchedule = &tfTypes.DatadogOnCallSchedule{}
 				r.RemoteInfo.RootlyOnCallSchedule.ScheduleID = types.StringValue(resp.RemoteInfo.RootlyOnCallSchedule.ScheduleID)
 			}
 			if resp.RemoteInfo.SlackUserGroup == nil {

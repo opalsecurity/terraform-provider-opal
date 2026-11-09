@@ -30,12 +30,13 @@ type AccessRuleDataSource struct {
 
 // AccessRuleDataSourceModel describes the data model.
 type AccessRuleDataSourceModel struct {
-	AdminOwnerID types.String         `tfsdk:"admin_owner_id"`
-	Description  types.String         `tfsdk:"description"`
-	ID           types.String         `tfsdk:"id"`
-	Name         types.String         `tfsdk:"name"`
-	RuleClauses  *tfTypes.RuleClauses `tfsdk:"rule_clauses"`
-	Status       types.String         `tfsdk:"status"`
+	AdminOwnerID  types.String         `tfsdk:"admin_owner_id"`
+	Description   types.String         `tfsdk:"description"`
+	ID            types.String         `tfsdk:"id"`
+	Name          types.String         `tfsdk:"name"`
+	RuleClauses   *tfTypes.RuleClauses `tfsdk:"rule_clauses"`
+	Status        types.String         `tfsdk:"status"`
+	UsesOpalQuery types.Bool           `tfsdk:"uses_opal_query"`
 }
 
 // Metadata returns the data source type name.
@@ -85,6 +86,7 @@ func (r *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 													"values": schema.ListAttribute{
 														Computed:    true,
 														ElementType: types.StringType,
+														Description: `Values to match; a user matches if their attribute equals any of them. For HR_IDP_STATUS, use HrIdpStatus values, or UNSET for users with no IDP status (shown as "Inactive"). UNSET must be the last value.`,
 													},
 												},
 											},
@@ -107,6 +109,7 @@ func (r *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 										},
 									},
 								},
+								Description: `Empty only when the access rule has ` + "`" + `uses_opal_query` + "`" + ` set.`,
 							},
 						},
 					},
@@ -127,6 +130,7 @@ func (r *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 													"values": schema.ListAttribute{
 														Computed:    true,
 														ElementType: types.StringType,
+														Description: `Values to match; a user matches if their attribute equals any of them. For HR_IDP_STATUS, use HrIdpStatus values, or UNSET for users with no IDP status (shown as "Inactive"). UNSET must be the last value.`,
 													},
 												},
 											},
@@ -149,6 +153,7 @@ func (r *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 										},
 									},
 								},
+								Description: `Empty only when the access rule has ` + "`" + `uses_opal_query` + "`" + ` set.`,
 							},
 						},
 					},
@@ -157,6 +162,10 @@ func (r *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 			"status": schema.StringAttribute{
 				Computed:    true,
 				Description: `The status of the access rule.`,
+			},
+			"uses_opal_query": schema.BoolAttribute{
+				Computed:    true,
+				Description: `True when the access rule uses an Opal Query, which the API can't describe yet. Its ` + "`" + `ruleClauses` + "`" + ` are then empty; view the rule in Opal.`,
 			},
 		},
 	}

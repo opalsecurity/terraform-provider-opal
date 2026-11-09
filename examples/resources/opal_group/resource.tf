@@ -26,6 +26,12 @@ resource "opal_group" "my_group" {
     active_directory_group = {
       group_id = "01fa7402-01d8-103b-8deb-5f3a0ab7884"
     }
+    activecampaign_group = {
+      group_id = "...my_group_id..."
+    }
+    aha_team = {
+      group_id = "...my_group_id..."
+    }
     asana_team = {
       team_gid      = "...my_team_gid..."
       workspace_gid = "...my_workspace_gid..."
@@ -65,6 +71,9 @@ resource "opal_group" "my_group" {
     }
     databricks_account_group = {
       group_id = 898931321
+    }
+    datadog_on_call_schedule = {
+      schedule_id = "3653d3c6-0c75-11ea-ad28-fb5701eabc7d"
     }
     devin_group = {
       group_name = "devin-group-01"

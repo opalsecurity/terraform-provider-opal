@@ -3369,7 +3369,7 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AWS_AGENTCORE_GATEWAY", "AWS_AGENTCORE_GATEWAY_TARGET", "AWS_AGENTCORE_GATEWAY_TOOL", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GCP_BILLING_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "CURSOR_ORIGIN_REPOSITORY", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "CLICKHOUSE_CONSOLE_ROLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE", "LINEAR_ORGANIZATION", "LINEAR_PROJECT", "RAMP_FUND", "RAMP_ROLE", "WRIKE_USER_TYPE", "DATABRICKS_CATALOG", "DATABRICKS_SCHEMA", "DATABRICKS_VOLUME", "DATABRICKS_FUNCTION", "DATABRICKS_MODEL", "DATABRICKS_SERVICE", "DATABRICKS_MCP_SERVER", "VERCEL_ROLE", "VERCEL_PROJECT", "AXIOM_ROLE", "AXIOM_CUSTOM_ROLE", "RIPPLING_DEPARTMENT", "ASANA_WORKSPACE", "BITWARDEN_ORGANIZATION", "BOX_ENTERPRISE", "BOX_FOLDER", "CALENDLY_ROLE", "CALENDLY_EVENT_TYPE", "ONELOGIN_APP"]; Requires replacement if changed.`,
+				Description: `The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AWS_AGENTCORE_GATEWAY", "AWS_AGENTCORE_GATEWAY_TARGET", "AWS_AGENTCORE_GATEWAY_TOOL", "MCP_SERVER", "MCP_TOOL", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GCP_BILLING_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "CURSOR_ORIGIN_REPOSITORY", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "CLICKHOUSE_CONSOLE_ROLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE", "LINEAR_ORGANIZATION", "LINEAR_PROJECT", "RAMP_FUND", "RAMP_ROLE", "WRIKE_USER_TYPE", "DATABRICKS_CATALOG", "DATABRICKS_SCHEMA", "DATABRICKS_VOLUME", "DATABRICKS_FUNCTION", "DATABRICKS_MODEL", "DATABRICKS_SERVICE", "DATABRICKS_MCP_SERVER", "VERCEL_ROLE", "VERCEL_PROJECT", "AXIOM_ROLE", "AXIOM_CUSTOM_ROLE", "RIPPLING_DEPARTMENT", "BOX_ENTERPRISE", "BOX_FOLDER", "ASANA_WORKSPACE", "ASANA_WORKSPACE_GUEST", "BITWARDEN_ORGANIZATION", "CALENDLY_ROLE", "CALENDLY_EVENT_TYPE", "ONELOGIN_APP"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"AWS_IAM_ROLE",
@@ -3385,6 +3385,8 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						"AWS_AGENTCORE_GATEWAY",
 						"AWS_AGENTCORE_GATEWAY_TARGET",
 						"AWS_AGENTCORE_GATEWAY_TOOL",
+						"MCP_SERVER",
+						"MCP_TOOL",
 						"AZURE_MANAGEMENT_GROUP",
 						"AZURE_RESOURCE_GROUP",
 						"AZURE_SUBSCRIPTION",
@@ -3486,10 +3488,11 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 						"AXIOM_ROLE",
 						"AXIOM_CUSTOM_ROLE",
 						"RIPPLING_DEPARTMENT",
-						"ASANA_WORKSPACE",
-						"BITWARDEN_ORGANIZATION",
 						"BOX_ENTERPRISE",
 						"BOX_FOLDER",
+						"ASANA_WORKSPACE",
+						"ASANA_WORKSPACE_GUEST",
+						"BITWARDEN_ORGANIZATION",
 						"CALENDLY_ROLE",
 						"CALENDLY_EVENT_TYPE",
 						"ONELOGIN_APP",
@@ -3989,13 +3992,13 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 		return
 	}
 
-	request, requestDiags := data.ToSharedUpdateResourceInfoList(ctx)
+	request, requestDiags := data.ToOperationsUpdateResourceConfigurationTemplateRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.Resources.Update(ctx, *request)
+	res, err := r.client.Resources.UpdateConfigurationTemplate(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
@@ -4011,28 +4014,19 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.UpdateResourceInfoList != nil) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromSharedUpdateResourceInfoList(ctx, res.UpdateResourceInfoList)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
 
 	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request1, request1Diags := data.ToOperationsUpdateResourceVisibilityRequest(ctx)
+	request1, request1Diags := data.ToSharedUpdateResourceInfoList(ctx)
 	resp.Diagnostics.Append(request1Diags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res1, err := r.client.Resources.UpdateVisibility(ctx, *request1)
+	res1, err := r.client.Resources.Update(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res1 != nil && res1.RawResponse != nil {
@@ -4048,19 +4042,28 @@ func (r *ResourceResource) Update(ctx context.Context, req resource.UpdateReques
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
+	if !(res1.UpdateResourceInfoList != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromSharedUpdateResourceInfoList(ctx, res1.UpdateResourceInfoList)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request2, request2Diags := data.ToOperationsUpdateResourceConfigurationTemplateRequest(ctx)
+	request2, request2Diags := data.ToOperationsUpdateResourceVisibilityRequest(ctx)
 	resp.Diagnostics.Append(request2Diags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res2, err := r.client.Resources.UpdateConfigurationTemplate(ctx, *request2)
+	res2, err := r.client.Resources.UpdateVisibility(ctx, *request2)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res2 != nil && res2.RawResponse != nil {

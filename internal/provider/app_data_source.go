@@ -69,6 +69,12 @@ func (r *AppDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 						Computed:    true,
 						Description: `The identifier of the Custom Connector.`,
 					},
+					"idp_protocol": schema.StringAttribute{
+						Computed: true,
+						MarkdownDescription: `How Opal reads users from the Custom Connector when it is an upstream directory: ` + "`" + `OPAL` + "`" + ` for` + "\n" +
+							`Opal's custom connector API, or ` + "`" + `SCIM` + "`" + ` for a SCIM 2.0 server, authenticated with the signing` + "\n" +
+							`secret as a bearer token. Defaults to ` + "`" + `OPAL` + "`" + `.`,
+					},
 					"supports_event_ingestion": schema.BoolAttribute{
 						Computed:    true,
 						Description: `Whether the Custom Connector supports event ingestion.`,
