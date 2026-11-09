@@ -92,6 +92,7 @@ func (r *AccessRuleDataSourceModel) RefreshFromSharedAccessRule(ctx context.Cont
 			r.RuleClauses.When.Clauses = append(r.RuleClauses.When.Clauses, clauses1)
 		}
 		r.Status = types.StringValue(string(resp.Status))
+		r.UsesOpalQuery = types.BoolPointerValue(resp.UsesOpalQuery)
 	}
 
 	return diags

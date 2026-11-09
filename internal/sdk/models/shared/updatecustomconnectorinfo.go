@@ -10,6 +10,10 @@ type UpdateCustomConnectorInfo struct {
 	BaseURL *string `json:"base_url,omitempty"`
 	// The identifier of the Custom Connector.
 	Identifier *string `json:"identifier,omitempty"`
+	// How Opal reads users from the Custom Connector when it is an upstream directory: `OPAL` for
+	// Opal's custom connector API, or `SCIM` for a SCIM 2.0 server, authenticated with the signing
+	// secret as a bearer token. Defaults to `OPAL`.
+	IdpProtocol *CustomConnectorIdpProtocolEnum `json:"idp_protocol,omitempty"`
 	// New signing secret. Write-only; never returned by the API. Omit to
 	// leave the existing secret unchanged.
 	SigningSecret *string `json:"signing_secret,omitempty"`
@@ -41,6 +45,13 @@ func (u *UpdateCustomConnectorInfo) GetIdentifier() *string {
 		return nil
 	}
 	return u.Identifier
+}
+
+func (u *UpdateCustomConnectorInfo) GetIdpProtocol() *CustomConnectorIdpProtocolEnum {
+	if u == nil {
+		return nil
+	}
+	return u.IdpProtocol
 }
 
 func (u *UpdateCustomConnectorInfo) GetSigningSecret() *string {

@@ -10,6 +10,10 @@ type CustomConnectorAppConfig struct {
 	BaseURL string `json:"base_url"`
 	// The identifier of the Custom Connector.
 	Identifier string `json:"identifier"`
+	// How Opal reads users from the Custom Connector when it is an upstream directory: `OPAL` for
+	// Opal's custom connector API, or `SCIM` for a SCIM 2.0 server, authenticated with the signing
+	// secret as a bearer token. Defaults to `OPAL`.
+	IdpProtocol CustomConnectorIdpProtocolEnum `json:"idp_protocol"`
 	// Whether the Custom Connector supports event ingestion.
 	SupportsEventIngestion bool `json:"supports_event_ingestion"`
 	// Whether the Custom Connector supports groups.
@@ -38,6 +42,13 @@ func (c *CustomConnectorAppConfig) GetIdentifier() string {
 		return ""
 	}
 	return c.Identifier
+}
+
+func (c *CustomConnectorAppConfig) GetIdpProtocol() CustomConnectorIdpProtocolEnum {
+	if c == nil {
+		return CustomConnectorIdpProtocolEnum("")
+	}
+	return c.IdpProtocol
 }
 
 func (c *CustomConnectorAppConfig) GetSupportsEventIngestion() bool {
