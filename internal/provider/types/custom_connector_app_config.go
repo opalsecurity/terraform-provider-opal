@@ -10,6 +10,7 @@ import (
 type CustomConnectorAppConfig struct {
 	BaseURL                 types.String `tfsdk:"base_url"`
 	Identifier              types.String `tfsdk:"identifier"`
+	IdpProtocol             types.String `tfsdk:"idp_protocol"`
 	SupportsEventIngestion  types.Bool   `tfsdk:"supports_event_ingestion"`
 	SupportsGroups          types.Bool   `tfsdk:"supports_groups"`
 	SupportsIdp             types.Bool   `tfsdk:"supports_idp"`

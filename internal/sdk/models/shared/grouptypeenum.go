@@ -34,6 +34,7 @@ const (
 	GroupTypeEnumPagerdutyOnCallSchedule  GroupTypeEnum = "PAGERDUTY_ON_CALL_SCHEDULE"
 	GroupTypeEnumIncidentioOnCallSchedule GroupTypeEnum = "INCIDENTIO_ON_CALL_SCHEDULE"
 	GroupTypeEnumRootlyOnCallSchedule     GroupTypeEnum = "ROOTLY_ON_CALL_SCHEDULE"
+	GroupTypeEnumDatadogOnCallSchedule    GroupTypeEnum = "DATADOG_ON_CALL_SCHEDULE"
 	GroupTypeEnumDevinGroup               GroupTypeEnum = "DEVIN_GROUP"
 	GroupTypeEnumGitHubEnterpriseTeam     GroupTypeEnum = "GIT_HUB_ENTERPRISE_TEAM"
 	GroupTypeEnumGrafanaTeam              GroupTypeEnum = "GRAFANA_TEAM"
@@ -55,10 +56,11 @@ const (
 	GroupTypeEnumRampLocation             GroupTypeEnum = "RAMP_LOCATION"
 	GroupTypeEnumWrikeGroup               GroupTypeEnum = "WRIKE_GROUP"
 	GroupTypeEnumAxiomGroup               GroupTypeEnum = "AXIOM_GROUP"
+	GroupTypeEnumBoxGroup                 GroupTypeEnum = "BOX_GROUP"
 	GroupTypeEnumActivecampaignGroup      GroupTypeEnum = "ACTIVECAMPAIGN_GROUP"
+	GroupTypeEnumAhaTeam                  GroupTypeEnum = "AHA_TEAM"
 	GroupTypeEnumAsanaTeam                GroupTypeEnum = "ASANA_TEAM"
 	GroupTypeEnumBitwardenGroup           GroupTypeEnum = "BITWARDEN_GROUP"
-	GroupTypeEnumBoxGroup                 GroupTypeEnum = "BOX_GROUP"
 	GroupTypeEnumCalendlyGroup            GroupTypeEnum = "CALENDLY_GROUP"
 	GroupTypeEnumOneloginRole             GroupTypeEnum = "ONELOGIN_ROLE"
 	GroupTypeEnumOneloginGroup            GroupTypeEnum = "ONELOGIN_GROUP"
@@ -121,6 +123,8 @@ func (e *GroupTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "ROOTLY_ON_CALL_SCHEDULE":
 		fallthrough
+	case "DATADOG_ON_CALL_SCHEDULE":
+		fallthrough
 	case "DEVIN_GROUP":
 		fallthrough
 	case "GIT_HUB_ENTERPRISE_TEAM":
@@ -163,13 +167,15 @@ func (e *GroupTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "AXIOM_GROUP":
 		fallthrough
+	case "BOX_GROUP":
+		fallthrough
 	case "ACTIVECAMPAIGN_GROUP":
+		fallthrough
+	case "AHA_TEAM":
 		fallthrough
 	case "ASANA_TEAM":
 		fallthrough
 	case "BITWARDEN_GROUP":
-		fallthrough
-	case "BOX_GROUP":
 		fallthrough
 	case "CALENDLY_GROUP":
 		fallthrough

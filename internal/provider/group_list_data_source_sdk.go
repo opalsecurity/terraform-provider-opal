@@ -24,7 +24,6 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 
 			results.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
 			results.AppID = types.StringPointerValue(resultsItem.AppID)
-			results.ConfigurationTemplateID = types.StringPointerValue(resultsItem.ConfigurationTemplateID)
 			results.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
 			results.Description = types.StringPointerValue(resultsItem.Description)
 			results.ExtensionsDurationInMinutes = types.Int64PointerValue(resultsItem.ExtensionsDurationInMinutes)
@@ -64,6 +63,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				} else {
 					results.RemoteInfo.ActivecampaignGroup = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.ActivecampaignGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.ActivecampaignGroup.GroupID)
+				}
+				if resultsItem.RemoteInfo.AhaTeam == nil {
+					results.RemoteInfo.AhaTeam = nil
+				} else {
+					results.RemoteInfo.AhaTeam = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.AhaTeam.GroupID = types.StringValue(resultsItem.RemoteInfo.AhaTeam.GroupID)
 				}
 				if resultsItem.RemoteInfo.AsanaTeam == nil {
 					results.RemoteInfo.AsanaTeam = nil
@@ -144,6 +149,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.DatabricksAccountGroup = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.DatabricksAccountGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.DatabricksAccountGroup.GroupID)
 				}
+				if resultsItem.RemoteInfo.DatadogOnCallSchedule == nil {
+					results.RemoteInfo.DatadogOnCallSchedule = nil
+				} else {
+					results.RemoteInfo.DatadogOnCallSchedule = &tfTypes.DatadogOnCallSchedule{}
+					results.RemoteInfo.DatadogOnCallSchedule.ScheduleID = types.StringValue(resultsItem.RemoteInfo.DatadogOnCallSchedule.ScheduleID)
+				}
 				if resultsItem.RemoteInfo.DevinGroup == nil {
 					results.RemoteInfo.DevinGroup = nil
 				} else {
@@ -208,7 +219,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				if resultsItem.RemoteInfo.IncidentioOnCallSchedule == nil {
 					results.RemoteInfo.IncidentioOnCallSchedule = nil
 				} else {
-					results.RemoteInfo.IncidentioOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
+					results.RemoteInfo.IncidentioOnCallSchedule = &tfTypes.DatadogOnCallSchedule{}
 					results.RemoteInfo.IncidentioOnCallSchedule.ScheduleID = types.StringValue(resultsItem.RemoteInfo.IncidentioOnCallSchedule.ScheduleID)
 				}
 				if resultsItem.RemoteInfo.JiraGroup == nil {
@@ -256,7 +267,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				if resultsItem.RemoteInfo.PagerdutyOnCallSchedule == nil {
 					results.RemoteInfo.PagerdutyOnCallSchedule = nil
 				} else {
-					results.RemoteInfo.PagerdutyOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
+					results.RemoteInfo.PagerdutyOnCallSchedule = &tfTypes.DatadogOnCallSchedule{}
 					results.RemoteInfo.PagerdutyOnCallSchedule.ScheduleID = types.StringValue(resultsItem.RemoteInfo.PagerdutyOnCallSchedule.ScheduleID)
 				}
 				if resultsItem.RemoteInfo.RampDepartment == nil {
@@ -286,7 +297,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				if resultsItem.RemoteInfo.RootlyOnCallSchedule == nil {
 					results.RemoteInfo.RootlyOnCallSchedule = nil
 				} else {
-					results.RemoteInfo.RootlyOnCallSchedule = &tfTypes.IncidentioOnCallSchedule{}
+					results.RemoteInfo.RootlyOnCallSchedule = &tfTypes.DatadogOnCallSchedule{}
 					results.RemoteInfo.RootlyOnCallSchedule.ScheduleID = types.StringValue(resultsItem.RemoteInfo.RootlyOnCallSchedule.ScheduleID)
 				}
 				if resultsItem.RemoteInfo.SlackUserGroup == nil {
