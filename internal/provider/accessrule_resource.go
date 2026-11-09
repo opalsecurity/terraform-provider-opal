@@ -6,7 +6,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -39,12 +38,13 @@ type AccessRuleResource struct {
 
 // AccessRuleResourceModel describes the resource data model.
 type AccessRuleResourceModel struct {
-	AdminOwnerID types.String         `tfsdk:"admin_owner_id"`
-	Description  types.String         `tfsdk:"description"`
-	ID           types.String         `tfsdk:"id"`
-	Name         types.String         `tfsdk:"name"`
-	RuleClauses  *tfTypes.RuleClauses `tfsdk:"rule_clauses"`
-	Status       types.String         `tfsdk:"status"`
+	AdminOwnerID  types.String         `tfsdk:"admin_owner_id"`
+	Description   types.String         `tfsdk:"description"`
+	ID            types.String         `tfsdk:"id"`
+	Name          types.String         `tfsdk:"name"`
+	RuleClauses   *tfTypes.RuleClauses `tfsdk:"rule_clauses"`
+	Status        types.String         `tfsdk:"status"`
+	UsesOpalQuery types.Bool           `tfsdk:"uses_opal_query"`
 }
 
 func (r *AccessRuleResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -161,10 +161,9 @@ func (r *AccessRuleResource) Schema(ctx context.Context, req resource.SchemaRequ
 										},
 									},
 								},
-								Description: `Not Null`,
+								Description: `Empty only when the access rule has ` + "`" + `uses_opal_query` + "`" + ` set. Not Null`,
 								Validators: []validator.List{
 									speakeasy_listvalidators.NotNull(),
-									listvalidator.SizeAtLeast(1),
 								},
 							},
 						},
@@ -251,9 +250,7 @@ func (r *AccessRuleResource) Schema(ctx context.Context, req resource.SchemaRequ
 										},
 									},
 								},
-								Validators: []validator.List{
-									listvalidator.SizeAtLeast(1),
-								},
+								Description: `Empty only when the access rule has ` + "`" + `uses_opal_query` + "`" + ` set.`,
 							},
 						},
 					},
@@ -268,6 +265,10 @@ func (r *AccessRuleResource) Schema(ctx context.Context, req resource.SchemaRequ
 						"PAUSED",
 					),
 				},
+			},
+			"uses_opal_query": schema.BoolAttribute{
+				Computed:    true,
+				Description: `True when the access rule uses an Opal Query, which the API can't describe yet. Its ` + "`" + `ruleClauses` + "`" + ` are then empty; view the rule in Opal.`,
 			},
 		},
 	}

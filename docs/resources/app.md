@@ -19,6 +19,7 @@ resource "opal_app" "my_app" {
   custom_connector = {
     base_url                  = "https://my-connector.example.com"
     identifier                = "my-connector"
+    idp_protocol              = "OPAL"
     signing_secret            = "...my_signing_secret..."
     supports_event_ingestion  = false
     supports_groups           = true
@@ -41,7 +42,7 @@ resource "opal_app" "my_app" {
 ### Required
 
 - `admin_owner_id` (String) The ID of the owner of the app.
-- `app_type` (String) The type of an app. must be one of ["ACTIVE_DIRECTORY", "ANTHROPIC", "AZURE_AD", "AWS", "AWS_SSO", "CLICKHOUSE", "COUPA", "CURSOR", "CUSTOM", "CONFLUENCE", "CUSTOM_CONNECTOR", "DATABRICKS", "DATASTAX_ASTRA", "ALICLOUD", "DEVIN", "DOCUSIGN", "DUO", "GCP", "GIT_HUB", "GIT_LAB", "GOOGLE_GROUPS", "GOOGLE_WORKSPACE", "GRAFANA", "HUBSPOT", "ILEVEL", "INCIDENTIO", "JIRA", "LDAP", "LINEAR", "MARIADB", "MONGO", "MONGO_ATLAS", "MYSQL", "NETSUITE", "DATADOG", "OKTA_CIAM", "OKTA_DIRECTORY", "OPENAI_PLATFORM", "OPAL", "ORACLE_FUSION", "PAGERDUTY", "POSTGRES", "ROOTLY", "SALESFORCE", "SNOWFLAKE", "SLACK", "TABLEAU", "TAILSCALE", "TELEPORT", "TWINGATE", "VAULT", "WORKDAY", "ZENDESK", "ZOOM", "RAMP", "WRIKE", "VERCEL", "AXIOM", "ACTIVECAMPAIGN", "ASANA", "BITWARDEN", "BOX", "CALENDLY", "ONELOGIN", "SQUARE", "RIPPLING"]; Requires replacement if changed.
+- `app_type` (String) The type of an app. must be one of ["ACTIVE_DIRECTORY", "ANTHROPIC", "AZURE_AD", "AWS", "AWS_SSO", "CLICKHOUSE", "COUPA", "CURSOR", "CUSTOM", "CONFLUENCE", "CUSTOM_CONNECTOR", "DATABRICKS", "DATASTAX_ASTRA", "ALICLOUD", "DEVIN", "DOCUSIGN", "DUO", "GCP", "GIT_HUB", "GIT_LAB", "GOOGLE_GROUPS", "GOOGLE_WORKSPACE", "GRAFANA", "HUBSPOT", "ILEVEL", "INCIDENTIO", "JIRA", "LDAP", "LINEAR", "MARIADB", "MONGO", "MONGO_ATLAS", "MYSQL", "NETSUITE", "DATADOG", "OKTA_CIAM", "OKTA_DIRECTORY", "OPENAI_PLATFORM", "OPAL", "ORACLE_FUSION", "PAGERDUTY", "POSTGRES", "ROOTLY", "SALESFORCE", "SNOWFLAKE", "SLACK", "TABLEAU", "TAILSCALE", "TELEPORT", "TWINGATE", "VAULT", "WORKDAY", "ZENDESK", "ZOOM", "RAMP", "WRIKE", "VERCEL", "AXIOM", "ACTIVECAMPAIGN", "AHA", "ASANA", "BITWARDEN", "CALENDLY", "ONELOGIN", "SQUARE", "RIPPLING"]; Requires replacement if changed.
 - `description` (String) A description of the app.
 - `name` (String) The name of the app.
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]
@@ -67,6 +68,10 @@ Optional:
 
 - `base_url` (String) The base URL of the Custom Connector. Not Null
 - `identifier` (String) The identifier of the Custom Connector. Not Null
+- `idp_protocol` (String) How Opal reads users from the Custom Connector when it is an upstream directory: `OPAL` for
+Opal's custom connector API, or `SCIM` for a SCIM 2.0 server, authenticated with the signing
+secret as a bearer token. Defaults to `OPAL`.
+must be one of ["OPAL", "SCIM"]
 - `signing_secret` (String, Sensitive) The signing secret used to authenticate requests to the Custom
 Connector. Write-only; never returned by the API.
 Not Null

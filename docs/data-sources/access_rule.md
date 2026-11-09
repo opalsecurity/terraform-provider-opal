@@ -32,6 +32,7 @@ data "opal_access_rule" "my_accessrule" {
 - `name` (String) The name of the access rule.
 - `rule_clauses` (Attributes) (see [below for nested schema](#nestedatt--rule_clauses))
 - `status` (String) The status of the access rule.
+- `uses_opal_query` (Boolean) True when the access rule uses an Opal Query, which the API can't describe yet. Its `ruleClauses` are then empty; view the rule in Opal.
 
 <a id="nestedatt--rule_clauses"></a>
 ### Nested Schema for `rule_clauses`
@@ -46,7 +47,7 @@ Read-Only:
 
 Read-Only:
 
-- `clauses` (Attributes List) (see [below for nested schema](#nestedatt--rule_clauses--unless--clauses))
+- `clauses` (Attributes List) Empty only when the access rule has `uses_opal_query` set. (see [below for nested schema](#nestedatt--rule_clauses--unless--clauses))
 
 <a id="nestedatt--rule_clauses--unless--clauses"></a>
 ### Nested Schema for `rule_clauses.unless.clauses`
@@ -82,7 +83,7 @@ Read-Only:
 
 Read-Only:
 
-- `clauses` (Attributes List) (see [below for nested schema](#nestedatt--rule_clauses--when--clauses))
+- `clauses` (Attributes List) Empty only when the access rule has `uses_opal_query` set. (see [below for nested schema](#nestedatt--rule_clauses--when--clauses))
 
 <a id="nestedatt--rule_clauses--when--clauses"></a>
 ### Nested Schema for `rule_clauses.when.clauses`

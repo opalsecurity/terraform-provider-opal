@@ -53,6 +53,8 @@ type AccessRule struct {
 	RuleClauses RuleClauses `json:"ruleClauses"`
 	// The status of the access rule.
 	Status Status `json:"status"`
+	// True when the access rule uses an Opal Query, which the API can't describe yet. Its `ruleClauses` are then empty; view the rule in Opal.
+	UsesOpalQuery *bool `json:"uses_opal_query,omitempty"`
 }
 
 func (a *AccessRule) GetAdminOwnerID() string {
@@ -95,4 +97,11 @@ func (a *AccessRule) GetStatus() Status {
 		return Status("")
 	}
 	return a.Status
+}
+
+func (a *AccessRule) GetUsesOpalQuery() *bool {
+	if a == nil {
+		return nil
+	}
+	return a.UsesOpalQuery
 }
