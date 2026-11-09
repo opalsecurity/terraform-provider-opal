@@ -109,6 +109,7 @@ Read-Only:
 
 - `active_directory_group` (Attributes) Remote info for Active Directory group. (see [below for nested schema](#nestedatt--remote_info--active_directory_group))
 - `activecampaign_group` (Attributes) Remote info for ActiveCampaign Group. (see [below for nested schema](#nestedatt--remote_info--activecampaign_group))
+- `aha_team` (Attributes) Remote info for Aha Team. (see [below for nested schema](#nestedatt--remote_info--aha_team))
 - `asana_team` (Attributes) Remote info for Asana Team. (see [below for nested schema](#nestedatt--remote_info--asana_team))
 - `aws_sso_group` (Attributes) Remote info for AWS SSO group. (see [below for nested schema](#nestedatt--remote_info--aws_sso_group))
 - `axiom_group` (Attributes) Remote info for Axiom RBAC group. (see [below for nested schema](#nestedatt--remote_info--axiom_group))
@@ -122,6 +123,7 @@ Read-Only:
 - `connector_group` (Attributes) Remote info for Connector group. (see [below for nested schema](#nestedatt--remote_info--connector_group))
 - `cursor_group` (Attributes) Remote info for a Cursor group. (see [below for nested schema](#nestedatt--remote_info--cursor_group))
 - `databricks_account_group` (Attributes) Remote info for Databricks account group. (see [below for nested schema](#nestedatt--remote_info--databricks_account_group))
+- `datadog_on_call_schedule` (Attributes) Remote info for Datadog on-call schedule group. (see [below for nested schema](#nestedatt--remote_info--datadog_on_call_schedule))
 - `devin_group` (Attributes) Remote info for Devin group. (see [below for nested schema](#nestedatt--remote_info--devin_group))
 - `docusign_group` (Attributes) Remote info for Docusign group. (see [below for nested schema](#nestedatt--remote_info--docusign_group))
 - `docusign_signing_group` (Attributes) Remote info for Docusign signing group. (see [below for nested schema](#nestedatt--remote_info--docusign_signing_group))
@@ -174,6 +176,14 @@ Read-Only:
 Read-Only:
 
 - `group_id` (String) The group id of the ActiveCampaign Group.
+
+
+<a id="nestedatt--remote_info--aha_team"></a>
+### Nested Schema for `remote_info.aha_team`
+
+Read-Only:
+
+- `group_id` (String) The group id of the Aha Team.
 
 
 <a id="nestedatt--remote_info--asana_team"></a>
@@ -279,6 +289,14 @@ Read-Only:
 Read-Only:
 
 - `group_id` (String) The id of the Databricks account group.
+
+
+<a id="nestedatt--remote_info--datadog_on_call_schedule"></a>
+### Nested Schema for `remote_info.datadog_on_call_schedule`
+
+Read-Only:
+
+- `schedule_id` (String) The id of the Datadog on-call schedule.
 
 
 <a id="nestedatt--remote_info--devin_group"></a>

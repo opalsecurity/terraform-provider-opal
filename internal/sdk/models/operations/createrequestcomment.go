@@ -10,8 +10,17 @@ import (
 
 // CreateRequestCommentRequestBody - Comment parameters
 type CreateRequestCommentRequestBody struct {
+	// Comment as this Opal user instead of the caller. Only for service users an admin has allowed to act for users, in organizations with the feature enabled. The user must be active in the identity provider and be the request's requester, target or initiated_by user, an admin, or a reviewer who can act on or has acted on the request.
+	ActingUserID *string `json:"acting_user_id,omitempty"`
 	// comment
 	Comment string `json:"comment"`
+}
+
+func (c *CreateRequestCommentRequestBody) GetActingUserID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ActingUserID
 }
 
 func (c *CreateRequestCommentRequestBody) GetComment() string {

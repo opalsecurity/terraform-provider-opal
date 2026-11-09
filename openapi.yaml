@@ -104,6 +104,15 @@ paths:
           schema:
             type: string
           style: simple
+        - description: >-
+            `1` when the sender collects conversation content: the prompt of a `UserPromptSubmit` event, the `tool_response` of a `PostToolUse` event and the `last_assistant_message` of a `Stop` or `SubagentStop` event. Without it (or an event's own `opal_content`) those fields are read and discarded, as before. An `http` hook sets it in its `headers` map, because it cannot change the payload. Opal stores the content only when the organization stores content as well.
+          explode: false
+          in: header
+          name: X-Opal-Content
+          required: false
+          schema:
+            type: string
+          style: simple
       requestBody:
         content:
           application/json:
@@ -120,6 +129,76 @@ paths:
             A per-batch accounting of what was accepted, stored, and attributed. An organization that has agent activity turned off gets a 200 with an empty body for every body shape, so a sender does not keep the events and try again.
         "400":
           description: The body was unparseable, empty, or carried more events than one request may.
+        "413":
+          description: The request body exceeded the maximum accepted size.
+      security:
+        - BearerAuth: []
+      tags:
+        - agent-activity
+  /agent-activity/client-settings:
+    get:
+      summary: Get agent activity client settings
+      description: >-
+        **Prototype.** Returns how a client that reports agent activity (today, the Claude Code hook kit on a developer's machine) should send batched events for this organization: the minimum gap between two sends from one machine, the most events and bytes one request to `/agent-activity` may carry, the request rate to stay under, and how long the answer may be cached.
+
+
+        The rate is derived from the organization's own rate limit for `POST /agent-activity`, which every client in the organization shares: the clients that asked for these settings in the last cache period or two share half of it evenly, and the checks before tool calls keep the other half. A check before a tool call is not batched and should not be held back by this rate. A client is counted by its `X-Opal-Host` and `X-Opal-Actor` headers, so it should send the same ones it sends to `/agent-activity`.
+
+
+        A client should ask for these at most once per `cache_seconds`, and keep using its last answer, or its own defaults, when it cannot get one.
+      operationId: getAgentActivityClientSettings
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentActivityClientSettings"
+          description: The settings for this organization.
+        "403":
+          description: Agent activity ingest is not enabled for this organization.
+      security:
+        - BearerAuth: []
+      tags:
+        - agent-activity
+  /agent-activity/mcp-config:
+    post:
+      summary: Report MCP server configuration
+      description: >-
+        **Prototype.** Reports the MCP servers configured in Claude Code on one developer's machine, as the Opal hook kit read them: user-level and per-project servers in `~/.claude.json`, a project's `.mcp.json`, `managed-mcp.json`, and servers a plugin provides when they can be found.
+
+
+        For each server the kit sends its name, the scope it was configured in, its transport, and either its URL (`http`, `sse`) or a hash of its command's shape (`stdio`). It never sends environment values, headers or command arguments, which can hold secrets. Opal adds each server to the organization's MCP server registry and records that this person has it configured. Nothing on the machine is changed.
+
+
+        Like `/agent-activity`, this is **telemetry from cooperating machines**: the identity and the list are what the machine says. The bearer token establishes the organization and nothing finer.
+      operationId: reportMcpConfig
+      parameters:
+        - description: >-
+            The identity the reporting client claims - an email, or an operating-system user name. **Unverified**, used the same way as on `/agent-activity`.
+          explode: false
+          in: header
+          name: X-Opal-Actor
+          required: false
+          schema:
+            type: string
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/McpConfigReport"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/McpConfigReportResult"
+          description: How many servers were read and recorded.
+        "400":
+          description: The body was unparseable, or carried more servers than one report may.
+        "403":
+          description: The MCP server registry is not enabled for this organization.
         "413":
           description: The request body exceeded the maximum accepted size.
       security:
@@ -4222,6 +4301,11 @@ paths:
             schema:
               type: object
               properties:
+                acting_user_id:
+                  type: string
+                  format: uuid
+                  description: >-
+                    Approve as this Opal user instead of the caller. Only for service users an admin has allowed to act for users, in organizations with the feature enabled. The user must be active in the identity provider and be a reviewer on the request's current stage and not the request's target; the decision counts as theirs. Requests that require MFA to approve, and ADMIN level, are rejected.
                 level:
                   $ref: "#/components/schemas/RequestApprovalEnum"
                 comment:
@@ -4264,6 +4348,11 @@ paths:
             schema:
               type: object
               properties:
+                acting_user_id:
+                  type: string
+                  format: uuid
+                  description: >-
+                    Deny as this Opal user instead of the caller. Only for service users an admin has allowed to act for users, in organizations with the feature enabled. The user must be active in the identity provider and be a reviewer on the request's current stage and not the request's target; the decision counts as theirs. ADMIN level is rejected.
                 comment:
                   type: string
                   description: "Comment for the denial"
@@ -4299,6 +4388,18 @@ paths:
           schema:
             type: string
             format: uuid
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                acting_user_id:
+                  type: string
+                  format: uuid
+                  description: >-
+                    Cancel as this Opal user instead of the caller. Only for service users an admin has allowed to act for users, in organizations with the feature enabled. The user must be active in the identity provider and be an Opal admin or the request's requester, target or initiated_by user. Unknown body fields are ignored, so a misspelled field cancels as the caller.
       responses:
         "200":
           description: The canceled request.
@@ -4306,10 +4407,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Request"
+        "400":
+          description: The request body is invalid, or `acting_user_id` names a system or service user, or a user who is not active in the identity provider.
         "403":
-          description: The authenticated user cannot cancel this request.
+          description: The authenticated user cannot cancel this request, or is not allowed to act for users.
         "404":
-          description: The request was not found.
+          description: The request, or the user named by `acting_user_id`, was not found.
         "409":
           description: The request has already been actioned.
       security:
@@ -4477,6 +4580,11 @@ paths:
             schema:
               type: object
               properties:
+                acting_user_id:
+                  type: string
+                  format: uuid
+                  description: >-
+                    Comment as this Opal user instead of the caller. Only for service users an admin has allowed to act for users, in organizations with the feature enabled. The user must be active in the identity provider and be the request's requester, target or initiated_by user, an admin, or a reviewer who can act on or has acted on the request.
                 comment:
                   type: string
                   description: "comment"
@@ -6504,6 +6612,76 @@ paths:
         - BearerAuth: []
       tags:
         - users
+  /users/{user_id}/revoke-all:
+    post:
+      summary: Revoke all of a user's access
+      description: |
+        Immediately removes all of a user's access across connected systems,
+        regardless of the user's status in the identity provider. Intended for
+        incident response, e.g. a security tool reacting to a compromised account.
+        Ends the user's Opal sessions, deletes their Opal API tokens and
+        third-party tokens, revokes their MCP OAuth grants, removes their direct
+        group, access rule and resource access (pushing the removals to the
+        connected systems), and cancels their pending access requests. Recorded
+        as a USER_ACCESS_REVOKED event with the caller as the actor.
+
+        This does not lock the user out, and the revocation does not last on its
+        own. The user and their accounts in connected systems are kept, and they
+        can sign in again through your identity provider. Access granted by Opal
+        access rules is granted again on the next access rule sync while the user
+        still matches the rule, and memberships that identity provider rules
+        control return on the next identity provider sync. To keep the user's
+        access revoked, also disable or deprovision them in your identity
+        provider. With the organization setting that revokes access for
+        deprovisioned users turned on, Opal then offboards them and stops granting
+        them access through access rules.
+
+        Also not removed: membership in groups computed by a connected system
+        (e.g. dynamic groups), access to unmanaged groups and resources, and the
+        user's owner and reviewer roles. Removal from connected systems runs
+        asynchronously; a 200 response means the removals were started, not that
+        every connected system has finished. A removal that failed permanently
+        before is retried. A removal that is already in progress is left to
+        finish and is not started again, so check its propagation status if it
+        stays pending.
+      operationId: revokeAllUserAccess
+      parameters:
+        - description: The ID of the user whose access should be revoked.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          in: path
+          name: user_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          description: The user's access removal was started.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                required:
+                  - success
+        "400":
+          description: The request body contained unknown JSON fields.
+        "403":
+          description: The caller is not authorized to delete this user.
+        "404":
+          description: The user was not found.
+        "409":
+          description: |
+            The Opal system user cannot be modified, or the user is the last direct
+            Opal admin. Their API tokens, third-party tokens and MCP OAuth grants are
+            still revoked and their pending requests still canceled in that case.
+      security:
+        - BearerAuth: []
+      tags:
+        - users
   /users/remote_users:
     get:
       description: Returns a list of remote users for your organization.
@@ -7634,10 +7812,15 @@ components:
         payload, posted either by the hook itself or by a relay that batches them.
 
         Only the fields below are read; everything else in the payload is parsed and
-        **discarded**, never persisted. That still includes `tool_response` (the result
-        body, which carries file contents and third-party workspace data) and
-        `transcript_path` / `scratchpad_dir` (absolute paths on an employee's own laptop,
-        which Opal cannot govern and should not be accumulating).
+        **discarded**, never persisted. That includes `transcript_path` / `scratchpad_dir`
+        (absolute paths on an employee's own laptop, which Opal cannot govern and should not
+        be accumulating).
+
+        `prompt`, `tool_response` and `last_assistant_message` (the conversation content) are
+        stored only when the sender collects them (`opal_content` on the event, or the
+        `X-Opal-Content` header) and the organization stores content. Secrets in the shapes
+        Opal recognizes are masked and each text is cut to the organization's limit before
+        it is written. Otherwise they are discarded too.
 
         `tool_input` IS now read and stored. It was previously discarded pending a
         data-handling decision; that decision has since been made, and without arguments
@@ -7702,8 +7885,13 @@ components:
           type: string
         mcp_server:
           $ref: "#/components/schemas/AgentActivityMcpServer"
+        opal_mcp_server:
+          $ref: "#/components/schemas/AgentActivityOpalMcpServer"
         tool_use_id:
-          description: The tool invocation's id, used together with `hook_event_name` to deduplicate a retried delivery. Absent on events that carry none, which are stored at-least-once.
+          description: The tool invocation's id, used together with `hook_event_name` to deduplicate a retried delivery. Absent on events that carry none, which are stored at-least-once unless they carry `opal_event_id`.
+          type: string
+        opal_event_id:
+          description: An id Opal's hook kit gives each event it holds for sending, so that a retried delivery of an event without a `tool_use_id` (a prompt, the end of a turn) is stored once. Used only for an event that has no `tool_use_id` and is not a tool-call event, and only when it is 8 to 64 letters, digits and dashes; otherwise ignored.
           type: string
         cwd:
           description: The working directory the agent was operating in.
@@ -7712,10 +7900,62 @@ components:
           description: When the client says the event occurred (RFC 3339). Clamped server-side to a window around receipt, because a client-controlled sort key is otherwise a way to pin rows to the top of every list. Defaults to receipt time when absent or unparseable.
           format: date-time
           type: string
+        prompt:
+          description: |-
+            The text a person submitted (`UserPromptSubmit`), a string. Stored only as described
+            above. Read whatever its type, so that a change in its shape cannot make Opal refuse
+            the event.
+        tool_response:
+          description: |-
+            What the tool returned (`PostToolUse`), in the tool's own shape, or as text when the
+            sender already converted it. Stored only as described above, as text: every image
+            is replaced by a placeholder that names its type and size.
+        last_assistant_message:
+          description: |-
+            The text of the model's final message in the turn (`Stop`, `SubagentStop`), a string.
+            Stored only as described above, and only when `opal_content.assistant_text` is absent.
+            Read whatever its type, like `prompt`.
+        opal_content:
+          $ref: "#/components/schemas/AgentActivityContentReport"
       required:
         - hook_event_name
       type: object
       additionalProperties: true
+    AgentActivityContentReport:
+      description: |-
+        # AgentActivityContentReport Object
+        ### Description
+        What Opal's hook kit adds to an event when it collects conversation content. Its
+        presence means the sender collects content, like the `X-Opal-Content` header. The kit
+        has already masked secrets in the texts and cut them to its own limit.
+      properties:
+        assistant_text:
+          description: Every text the model wrote in the turn, read from the session's transcript (`Stop`, `SubagentStop`). Preferred over `last_assistant_message`, which holds only the final message.
+          type: string
+        thinking:
+          description: The model's thinking in the turn, when the transcript holds it as plain text.
+          type: string
+        images:
+          $ref: "#/components/schemas/AgentActivityImages"
+        truncated:
+          description: The fields the kit cut (`prompt`, `tool_response`, `assistant_text`, `last_assistant_message`, `thinking`), each with its size in bytes before the cut. A prompt or a tool result keeps its start; a turn's text and thinking keep their end. Sizes are stored up to 2147483647.
+          additionalProperties:
+            type: integer
+          type: object
+      type: object
+    AgentActivityImages:
+      description: |-
+        # AgentActivityImages Object
+        ### Description
+        The images attached to a prompt or returned by a tool. Only their number and size are
+        sent; the images themselves are not.
+      properties:
+        count:
+          type: integer
+        bytes:
+          format: int64
+          type: integer
+      type: object
     AgentActivityMcpServer:
       description: |-
         # AgentActivityMcpServer Object
@@ -7771,6 +8011,106 @@ components:
           description: >-
             The machine's name. The `X-Opal-Host` header wins when it names a different machine.
           type: string
+      type: object
+    AgentActivityOpalMcpServer:
+      description: |-
+        # AgentActivityOpalMcpServer Object
+        ### Description
+        Where the MCP server behind a tool call connects, as the Opal hook kit read it from the
+        developer's own Claude Code configuration. Claude Code's hook payload names the server
+        but not where it connects, so the kit adds this for an `mcp__<server>__<tool>` call when
+        it finds the server in the configuration.
+
+        Opal uses it to identify the server in the organization's MCP server registry: by its
+        URL, or by the hash of its command. The URL is stored without its query, fragment or
+        user name and password.
+      properties:
+        url:
+          description: The server's URL, for an `http` or `sse` server.
+          type: string
+        transport:
+          description: "`http`, `sse` or `stdio`."
+          type: string
+        command_hash:
+          description: For a `stdio` server, a SHA-256 of its command's shape, in hex. Arguments that can hold a secret are replaced before hashing, and the command itself is never sent.
+          type: string
+        scope:
+          description: The configuration the server was found in, such as `user`, `project`, `local`, `managed` or `plugin`.
+          type: string
+      type: object
+    McpConfigReport:
+      description: |-
+        # McpConfigReport Object
+        ### Description
+        The MCP servers configured in Claude Code on one machine.
+      properties:
+        servers:
+          items:
+            $ref: "#/components/schemas/McpConfigServer"
+          type: array
+        reporter:
+          $ref: "#/components/schemas/McpConfigReporter"
+      required:
+        - servers
+      type: object
+      additionalProperties: true
+    McpConfigReporter:
+      description: |-
+        # McpConfigReporter Object
+        ### Description
+        Who the reporting machine says it belongs to. Unverified, like `X-Opal-Actor`.
+      properties:
+        configured_email:
+          type: string
+        claude_account_email:
+          type: string
+        git_email:
+          type: string
+        os_user:
+          type: string
+      type: object
+      additionalProperties: true
+    McpConfigServer:
+      description: |-
+        # McpConfigServer Object
+        ### Description
+        One MCP server in a machine's Claude Code configuration. Exactly what the hook kit
+        sends: no environment values, headers or command arguments.
+      properties:
+        name:
+          description: The server's name in the configuration.
+          type: string
+        scope:
+          description: "`user`, `project`, `local`, `managed` or `plugin`."
+          type: string
+        transport:
+          description: "`http`, `sse` or `stdio`."
+          type: string
+        url:
+          description: The server's URL, for an `http` or `sse` server.
+          type: string
+        command_hash:
+          description: For a `stdio` server, a SHA-256 of its command's shape, in hex.
+          type: string
+      required:
+        - name
+      type: object
+      additionalProperties: true
+    McpConfigReportResult:
+      description: |-
+        # McpConfigReportResult Object
+        ### Description
+        What one configuration report did.
+      properties:
+        received:
+          description: Servers in the report.
+          type: integer
+        recorded:
+          description: Servers recorded in the registry. Lower than `received` when an entry had neither a name Opal could use nor a URL or command hash.
+          type: integer
+      required:
+        - received
+        - recorded
       type: object
     AgentActivityIngestRequest:
       description: |-
@@ -7837,6 +8177,41 @@ components:
         - stored
         - attributed
         - unattributed
+      type: object
+    AgentActivityClientSettings:
+      description: |-
+        # AgentActivityClientSettings Object
+        ### Description
+        How a client should send batched agent activity for this organization.
+      properties:
+        batch_wait_seconds:
+          description: The minimum gap between two sends from one machine. Send at once when the last send was at least this long ago; otherwise wait until this long after the last send, and send what arrived meanwhile as one request. Between 0 and 300.
+          format: double
+          type: number
+        max_events_per_request:
+          description: The most events one request to `/agent-activity` may carry.
+          type: integer
+        max_bytes_per_request:
+          description: The largest body, in bytes, `/agent-activity` accepts for a request with more than one event. A request with one event may be up to 1 MiB.
+          format: int64
+          type: integer
+        max_requests_per_second:
+          description: The rate of batched requests one client should stay under. Can be below 1.
+          format: double
+          type: number
+        burst_requests:
+          description: How many batched requests a client may send at once before the rate applies. At least 1.
+          type: integer
+        cache_seconds:
+          description: How long these settings may be kept before asking again.
+          type: integer
+      required:
+        - batch_wait_seconds
+        - max_events_per_request
+        - max_bytes_per_request
+        - max_requests_per_second
+        - burst_requests
+        - cache_seconds
       type: object
     AgentKillSwitch:
       description: |-
@@ -9715,6 +10090,8 @@ components:
         supports_idp:
           description: Whether the Custom Connector can be connected as an upstream user directory.
           type: boolean
+        idp_protocol:
+          $ref: "#/components/schemas/CustomConnectorIdpProtocolEnum"
       required:
         - identifier
         - base_url
@@ -9724,6 +10101,7 @@ components:
         - supports_nested_groups
         - supports_event_ingestion
         - supports_idp
+        - idp_protocol
       type: object
     CreateAppInfo:
       description: |-
@@ -9807,6 +10185,8 @@ components:
             Whether the Custom Connector can be connected as an upstream user
             directory. Defaults to `false`.
           type: boolean
+        idp_protocol:
+          $ref: "#/components/schemas/CustomConnectorIdpProtocolEnum"
       required:
         - identifier
         - base_url
@@ -9872,7 +10252,18 @@ components:
         supports_idp:
           description: Whether the Custom Connector can be connected as an upstream user directory.
           type: boolean
+        idp_protocol:
+          $ref: "#/components/schemas/CustomConnectorIdpProtocolEnum"
       type: object
+    CustomConnectorIdpProtocolEnum:
+      description: |-
+        How Opal reads users from the Custom Connector when it is an upstream directory: `OPAL` for
+        Opal's custom connector API, or `SCIM` for a SCIM 2.0 server, authenticated with the signing
+        secret as a bearer token. Defaults to `OPAL`.
+      enum:
+        - OPAL
+        - SCIM
+      type: string
     AppTypeEnum:
       description: The type of an app.
       enum:
@@ -9936,9 +10327,9 @@ components:
         - AXIOM
         # GENERATED:BEGIN connection-type-enum
         - ACTIVECAMPAIGN
+        - AHA
         - ASANA
         - BITWARDEN
-        - BOX
         - CALENDLY
         - ONELOGIN
         - SQUARE
@@ -12359,6 +12750,7 @@ components:
         - PAGERDUTY_ON_CALL_SCHEDULE
         - INCIDENTIO_ON_CALL_SCHEDULE
         - ROOTLY_ON_CALL_SCHEDULE
+        - DATADOG_ON_CALL_SCHEDULE
         - DEVIN_GROUP
         - GIT_HUB_ENTERPRISE_TEAM
         - GRAFANA_TEAM
@@ -12380,11 +12772,12 @@ components:
         - RAMP_LOCATION
         - WRIKE_GROUP
         - AXIOM_GROUP
+        - BOX_GROUP
         # GENERATED:BEGIN group-type-enum
         - ACTIVECAMPAIGN_GROUP
+        - AHA_TEAM
         - ASANA_TEAM
         - BITWARDEN_GROUP
-        - BOX_GROUP
         - CALENDLY_GROUP
         - ONELOGIN_ROLE
         - ONELOGIN_GROUP
@@ -12411,6 +12804,8 @@ components:
         - AWS_AGENTCORE_GATEWAY
         - AWS_AGENTCORE_GATEWAY_TARGET
         - AWS_AGENTCORE_GATEWAY_TOOL
+        - MCP_SERVER
+        - MCP_TOOL
         - AZURE_MANAGEMENT_GROUP
         - AZURE_RESOURCE_GROUP
         - AZURE_SUBSCRIPTION
@@ -12512,12 +12907,12 @@ components:
         - AXIOM_ROLE
         - AXIOM_CUSTOM_ROLE
         - RIPPLING_DEPARTMENT
+        - BOX_ENTERPRISE
+        - BOX_FOLDER
         # GENERATED:BEGIN resource-type-enum
         - ASANA_WORKSPACE
         - ASANA_WORKSPACE_GUEST
         - BITWARDEN_ORGANIZATION
-        - BOX_ENTERPRISE
-        - BOX_FOLDER
         - CALENDLY_ROLE
         - CALENDLY_EVENT_TYPE
         - ONELOGIN_APP
@@ -13525,6 +13920,16 @@ components:
           type: object
           required:
             - schedule_id
+        datadog_on_call_schedule:
+          description: Remote info for Datadog on-call schedule group.
+          properties:
+            schedule_id:
+              description: The id of the Datadog on-call schedule.
+              example: 3653d3c6-0c75-11ea-ad28-fb5701eabc7d
+              type: string
+          type: object
+          required:
+            - schedule_id
         devin_group:
           description: Remote info for Devin group.
           properties:
@@ -13705,12 +14110,30 @@ components:
           type: object
           required:
             - team_id
+        box_group:
+          description: Remote info for Box Group.
+          properties:
+            group_id:
+              description: The group id of the Box Group.
+              type: string
+          type: object
+          required:
+            - group_id
         # GENERATED:BEGIN group-remote-info-properties
         activecampaign_group:
           description: Remote info for ActiveCampaign Group.
           properties:
             group_id:
               description: The group id of the ActiveCampaign Group.
+              type: string
+          type: object
+          required:
+            - group_id
+        aha_team:
+          description: Remote info for Aha Team.
+          properties:
+            group_id:
+              description: The group id of the Aha Team.
               type: string
           type: object
           required:
@@ -13732,15 +14155,6 @@ components:
           properties:
             group_id:
               description: The group id of the Bitwarden Group.
-              type: string
-          type: object
-          required:
-            - group_id
-        box_group:
-          description: Remote info for Box Group.
-          properties:
-            group_id:
-              description: The group id of the Box Group.
               type: string
           type: object
           required:
@@ -14997,6 +15411,24 @@ components:
           type: object
           required:
             - role_id
+        box_enterprise:
+          description: Remote info for Box Enterprise.
+          properties:
+            resource_id:
+              description: The resource id of the Box Enterprise.
+              type: string
+          type: object
+          required:
+            - resource_id
+        box_folder:
+          description: Remote info for Box Folder.
+          properties:
+            resource_id:
+              description: The resource id of the Box Folder.
+              type: string
+          type: object
+          required:
+            - resource_id
         # GENERATED:BEGIN resource-remote-info-properties
         asana_workspace:
           description: Remote info for Asana Workspace.
@@ -15016,24 +15448,6 @@ components:
           type: object
           required:
             - organization_id
-        box_enterprise:
-          description: Remote info for Box Enterprise.
-          properties:
-            resource_id:
-              description: The resource id of the Box Enterprise.
-              type: string
-          type: object
-          required:
-            - resource_id
-        box_folder:
-          description: Remote info for Box Folder.
-          properties:
-            resource_id:
-              description: The resource id of the Box Folder.
-              type: string
-          type: object
-          required:
-            - resource_id
         calendly_role:
           description: Remote info for Calendly Role.
           properties:
@@ -17102,6 +17516,10 @@ components:
           example: ACTIVE
         ruleClauses:
           $ref: "#/components/schemas/RuleClauses"
+        uses_opal_query:
+          description: True when the access rule uses an Opal Query, which the API can't describe yet. Its `ruleClauses` are then empty; view the rule in Opal.
+          example: false
+          type: boolean
       required:
         - status
         - ruleClauses
@@ -17123,8 +17541,8 @@ components:
     RuleConjunction:
       properties:
         clauses:
+          description: Empty only when the access rule has `uses_opal_query` set.
           type: array
-          minItems: 1
           items:
             $ref: "#/components/schemas/RuleDisjunction"
       required:
@@ -18535,10 +18953,11 @@ components:
         - reason
       x-speakeasy-entity: Delegation
     ApiAccessLevelEnum:
-      description: The access level of an API token.
+      description: The access level of an API token. AGENT_HOOKS tokens are made only by the Claude Code hook kit's browser sign-in and can only report agent activity; they cannot be created through this API.
       enum:
         - READ_ONLY
         - FULL_ACCESS
+        - AGENT_HOOKS
       type: string
     EventStreamConnectionTypeEnum:
       description: The type of event stream connection.

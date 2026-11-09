@@ -26,6 +26,7 @@ func (r *AppDataSourceModel) RefreshFromSharedApp(ctx context.Context, resp *sha
 			r.CustomConnector = &tfTypes.CustomConnectorAppConfig{}
 			r.CustomConnector.BaseURL = types.StringValue(resp.CustomConnector.BaseURL)
 			r.CustomConnector.Identifier = types.StringValue(resp.CustomConnector.Identifier)
+			r.CustomConnector.IdpProtocol = types.StringValue(string(resp.CustomConnector.IdpProtocol))
 			r.CustomConnector.SupportsEventIngestion = types.BoolValue(resp.CustomConnector.SupportsEventIngestion)
 			r.CustomConnector.SupportsGroups = types.BoolValue(resp.CustomConnector.SupportsGroups)
 			r.CustomConnector.SupportsIdp = types.BoolValue(resp.CustomConnector.SupportsIdp)
