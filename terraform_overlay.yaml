@@ -174,7 +174,9 @@ actions:
     update:
       x-speakeasy-entity-operation:
         - Group#create#2
-        - Group#update
+        # Runs after configuration-template on Update so unlink/fork happens
+        # before this parent PUT carries own-config fields.
+        - Group#update#2
   - target: $["paths"]["/groups"]["post"]["description"]
     update: Creates a group. See [here](https://docs.opal.dev/reference/end-system-objects) for details about importing groups.
   - target: $["paths"]["/groups"]["post"]
@@ -246,7 +248,7 @@ actions:
     update:
       x-speakeasy-entity-operation:
         - Group#create#3
-        - Group#update#2
+        - Group#update#3
   - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["get"]["operationId"]
     update: getGroupOnCallSchedules
   - target: $["paths"]["/groups/{group_id}/on-call-schedules"]["get"]["parameters"][0]
@@ -287,7 +289,7 @@ actions:
     update:
       x-speakeasy-entity-operation:
         - Group#create#4
-        - Group#update#3
+        - Group#update#4
   - target: $["paths"]["/groups/{group_id}/resources"]["get"]["operationId"]
     update: getGroupResources
   - target: $["paths"]["/groups/{group_id}/resources"]["get"]["responses"]
@@ -368,7 +370,7 @@ actions:
     update:
       x-speakeasy-entity-operation:
         - Group#create#5
-        - Group#update#4
+        - Group#update#5
   # /groups/{group_id}/configuration-template — fold into Group lifecycle.
   # See /resources/{resource_id}/configuration-template for the resources-side
   # mirror. Both pairs replace the deprecated top-level configuration_template_id
@@ -406,9 +408,11 @@ actions:
       x-speakeasy-name-override: update_configuration_template
   - target: $["paths"]["/groups/{group_id}/configuration-template"]["put"]
     update:
+      # Update: run first (unnumbered) so unlink/attach/repoint precedes PUT /groups.
+      # Create: keep last (#6) so own-config create is unchanged.
       x-speakeasy-entity-operation:
         - Group#create#6
-        - Group#update#5
+        - Group#update
   - target: $["paths"]["/groups/{group_id}/reviewers"]["get"]["operationId"]
     update: getGroupReviewers
   - target: $["paths"]["/groups/{group_id}/reviewers"]["get"]["responses"]
@@ -675,7 +679,8 @@ actions:
   - target: $["paths"]["/resources"]["put"]
     update:
       x-speakeasy-entity-operation:
-        - Resource#update
+        # Runs after configuration-template on Update (see groups-side comment).
+        - Resource#update#2
         - Resource#create#2
   - target: $["paths"]["/resources"]["post"]
     update:
@@ -772,7 +777,7 @@ actions:
     update:
       x-speakeasy-entity-operation:
         - Resource#create#3
-        - Resource#update#2
+        - Resource#update#3
   # /resources/{resource_id}/configuration-template — fold into Resource lifecycle.
   # Mirror of the groups-side block above. The GET is also tagged with Resource#create#6
   # to re-read the link after the PUT in Create (matches the visibility precedent).
@@ -810,9 +815,10 @@ actions:
       x-speakeasy-name-override: update_configuration_template
   - target: $["paths"]["/resources/{resource_id}/configuration-template"]["put"]
     update:
+      # Update: run first; Create: keep before the post-create GET (#6).
       x-speakeasy-entity-operation:
         - Resource#create#5
-        - Resource#update#3
+        - Resource#update
   - target: $["paths"]["/resources/{resource_id}/reviewers"]["get"]["operationId"]
     update: getResourceReviewers
   - target: $["paths"]["/resources/{resource_id}/reviewers"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]

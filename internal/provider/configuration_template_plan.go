@@ -63,6 +63,26 @@ func validateConfigurationTemplatePlan(
 		return
 	}
 
+	// Unlink: configuration_template_id is Optional+Computed, so omitting it (or
+	// setting null) would otherwise keep the prior ID in the plan. The validators
+	// guarantee the user supplied their own configuration in that case, so a
+	// linked entity with no template in HCL is an unlink request.
+	if !req.State.Raw.IsNull() && attributeOmitted(config, "configuration_template_id") {
+		if state, err := terraformObjectValues(
+			req.State.Raw,
+		); err == nil &&
+			stateHasLinkedTemplate(state) {
+			resp.Diagnostics.Append(
+				resp.Plan.SetAttribute(
+					ctx,
+					path.Root("configuration_template_id"),
+					types.StringNull(),
+				)...,
+			)
+			return
+		}
+	}
+
 	// Template may be unknown at first plan when created in the same apply
 	// (configuration_template_id = opal_configuration_template.x.id). Detect from
 	// config so Default [] cannot win before the template ID is known.
