@@ -54,11 +54,22 @@ actions:
   - target: $["paths"]["/apps/{app_id}/visibility"]["get"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
+  # Visibility sub-endpoint is CUSTOM / CUSTOM_CONNECTOR only. Scope App#read#2
+  # to the managed resource so data.opal_app (any app type) does not call it —
+  # it fills visibility from GET /apps/{id} inline fields instead. The
+  # standalone opal_app_visibility data source still maps via AppVisibility#read
+  # (same type gate as the API).
   - target: $["paths"]["/apps/{app_id}/visibility"]["get"]
     update:
       x-speakeasy-entity-operation:
-        - App#read#2
-        - AppVisibility#read
+        terraform-resource: App#read#2
+        terraform-datasource: AppVisibility#read
+  - target: $["paths"]["/apps/{app_id}/visibility"]["get"]
+    update:
+      description: |-
+        Returns the visibility of this app. Only supported for apps whose type
+        is `CUSTOM` or `CUSTOM_CONNECTOR`. For other app types, read visibility
+        from `GET /apps/{app_id}` (or the `opal_app` data source).
   - target: $["paths"]["/apps/{app_id}/visibility"]["put"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
@@ -1202,20 +1213,31 @@ actions:
   - target: $["components"]["schemas"]["App"]
     update:
       x-speakeasy-entity: App
-  # Visibility is managed through GET/PUT /apps/{app_id}/visibility (App#read#2 / App#create#2 / App#update#2)
-  # so refresh can detect drift. Remove (rather than x-speakeasy-ignore, which doesn't work next to a $ref)
-  # the deprecated inline fields so there is a single source for these attributes.
-  - target: $["components"]["schemas"]["App"]["properties"]["visibility"]
-    remove: true
-  - target: $["components"]["schemas"]["App"]["properties"]["visibility_group_ids"]
-    remove: true
-  - target: $["components"]["schemas"]["App"]["properties"]["import_visibility"]
-    remove: true
+  # Keep inline visibility on App so data.opal_app can still populate
+  # visibility / visibility_group_ids / import_visibility from GET /apps/{id}
+  # for every app type (3.11.4-compatible). Writes stay on the visibility
+  # sub-endpoint: strip the deprecated inline fields from create/update bodies
+  # so the managed resource uses PUT /apps/{id}/visibility (App#create#2 /
+  # App#update#2) for drift. Resource Read still stitches GET visibility via
+  # App#read#2 (resource-only; see apps/{app_id}/visibility get above).
   - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["visibility"]
     remove: true
   - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["visibility_group_ids"]
     remove: true
   - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["import_visibility"]
+    remove: true
+  # Create only accepts writable app types; keep the full App.app_type enum so
+  # data.opal_app can decode discovery apps (OKTA_DIRECTORY, etc.).
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["app_type"]
+    update:
+      description: |-
+        The type of the app. Must be `CUSTOM` (Push-only App) or
+        `CUSTOM_CONNECTOR`.
+      type: string
+      enum:
+        - CUSTOM
+        - CUSTOM_CONNECTOR
+  - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["app_type"]["$ref"]
     remove: true
   - target: $["components"]["schemas"]["UpdateAppInfo"]["properties"]["visibility"]
     remove: true

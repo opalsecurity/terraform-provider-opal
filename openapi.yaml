@@ -472,7 +472,10 @@ paths:
   /apps/{app_id}/visibility:
     get:
       summary: Get app visibility
-      description: Returns the visibility of this app.
+      description: |-
+        Returns the visibility of this app. Only supported for apps whose type
+        is `CUSTOM` or `CUSTOM_CONNECTOR`. For other app types, read visibility
+        from `GET /apps/{app_id}` (or the `opal_app` data source).
       operationId: getAppVisibility
       parameters:
         - description: The ID of the app.
@@ -504,8 +507,8 @@ paths:
       tags:
         - apps
       x-speakeasy-entity-operation:
-        - App#read#2
-        - AppVisibility#read
+        terraform-resource: App#read#2
+        terraform-datasource: AppVisibility#read
     put:
       summary: Set app visibility
       description: |-
@@ -10040,6 +10043,21 @@ components:
           x-speakeasy-unknown-values: allow
           example: OKTA_DIRECTORY
           type: string
+        visibility:
+          description: The visibility level of the entity.
+          $ref: "#/components/schemas/VisibilityTypeEnum"
+        visibility_group_ids:
+          description: |-
+            The IDs of groups that can see this app when visibility is `LIMITED`.
+            Must be empty when visibility is `GLOBAL`.
+          items:
+            format: uuid
+            type: string
+          type: array
+          format: set
+        import_visibility:
+          description: The visibility level of the entity.
+          $ref: "#/components/schemas/VisibilityTypeEnum"
         validations:
           description: Validation checks of an apps' configuration and permissions.
           items:
@@ -10125,7 +10143,10 @@ components:
           description: |-
             The type of the app. Must be `CUSTOM` (Push-only App) or
             `CUSTOM_CONNECTOR`.
-          $ref: "#/components/schemas/AppTypeEnum"
+          type: string
+          enum:
+            - CUSTOM
+            - CUSTOM_CONNECTOR
         custom_connector:
           description: |-
             Required when `app_type` is `CUSTOM_CONNECTOR`. Must not be set when

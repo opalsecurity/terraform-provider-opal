@@ -3,12 +3,12 @@
 page_title: "opal_app Resource - terraform-provider-opal"
 subcategory: ""
 description: |-
-  App Resource
+  App Resource. Manages Push-only (CUSTOM) and Custom Connector (CUSTOM_CONNECTOR) apps, including visibility via the apps visibility sub-endpoint. For other app types, use the opal_app data source.
 ---
 
 # opal_app (Resource)
 
-App Resource
+App Resource. Manages Push-only (`CUSTOM`) and Custom Connector (`CUSTOM_CONNECTOR`) apps, including visibility via the apps visibility sub-endpoint. For other app types, use the `opal_app` data source.
 
 ## Example Usage
 
@@ -42,7 +42,9 @@ resource "opal_app" "my_app" {
 ### Required
 
 - `admin_owner_id` (String) The ID of the owner of the app.
-- `app_type` (String) The type of an app. must be one of ["ACTIVE_DIRECTORY", "ANTHROPIC", "AZURE_AD", "AWS", "AWS_SSO", "CLICKHOUSE", "COUPA", "CURSOR", "CUSTOM", "CONFLUENCE", "CUSTOM_CONNECTOR", "DATABRICKS", "DATASTAX_ASTRA", "ALICLOUD", "DEVIN", "DOCUSIGN", "DUO", "GCP", "GIT_HUB", "GIT_LAB", "GOOGLE_GROUPS", "GOOGLE_WORKSPACE", "GRAFANA", "HUBSPOT", "ILEVEL", "INCIDENTIO", "JIRA", "LDAP", "LINEAR", "MARIADB", "MONGO", "MONGO_ATLAS", "MYSQL", "NETSUITE", "DATADOG", "OKTA_CIAM", "OKTA_DIRECTORY", "OPENAI_PLATFORM", "OPAL", "ORACLE_FUSION", "PAGERDUTY", "POSTGRES", "ROOTLY", "SALESFORCE", "SNOWFLAKE", "SLACK", "TABLEAU", "TAILSCALE", "TELEPORT", "TWINGATE", "VAULT", "WORKDAY", "ZENDESK", "ZOOM", "RAMP", "WRIKE", "VERCEL", "AXIOM", "ACTIVECAMPAIGN", "AHA", "ASANA", "BITWARDEN", "CALENDLY", "ONELOGIN", "SQUARE", "RIPPLING"]; Requires replacement if changed.
+- `app_type` (String) The type of the app. Must be `CUSTOM` (Push-only App) or
+`CUSTOM_CONNECTOR`.
+must be one of ["CUSTOM", "CUSTOM_CONNECTOR"]; Requires replacement if changed.
 - `description` (String) A description of the app.
 - `name` (String) The name of the app.
 - `visibility` (String) The visibility level of the entity. must be one of ["GLOBAL", "LIMITED"]

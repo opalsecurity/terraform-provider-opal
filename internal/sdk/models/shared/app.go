@@ -3,71 +3,71 @@
 
 package shared
 
-// AppType - The type of an app.
-type AppType string
+// AppSchemasType - The type of an app.
+type AppSchemasType string
 
 const (
-	AppTypeActiveDirectory AppType = "ACTIVE_DIRECTORY"
-	AppTypeAnthropic       AppType = "ANTHROPIC"
-	AppTypeAzureAd         AppType = "AZURE_AD"
-	AppTypeAws             AppType = "AWS"
-	AppTypeAwsSso          AppType = "AWS_SSO"
-	AppTypeClickhouse      AppType = "CLICKHOUSE"
-	AppTypeCoupa           AppType = "COUPA"
-	AppTypeCursor          AppType = "CURSOR"
-	AppTypeCustom          AppType = "CUSTOM"
-	AppTypeConfluence      AppType = "CONFLUENCE"
-	AppTypeCustomConnector AppType = "CUSTOM_CONNECTOR"
-	AppTypeDatabricks      AppType = "DATABRICKS"
-	AppTypeDatastaxAstra   AppType = "DATASTAX_ASTRA"
-	AppTypeAlicloud        AppType = "ALICLOUD"
-	AppTypeDevin           AppType = "DEVIN"
-	AppTypeDocusign        AppType = "DOCUSIGN"
-	AppTypeDuo             AppType = "DUO"
-	AppTypeGcp             AppType = "GCP"
-	AppTypeGitHub          AppType = "GIT_HUB"
-	AppTypeGitLab          AppType = "GIT_LAB"
-	AppTypeGoogleGroups    AppType = "GOOGLE_GROUPS"
-	AppTypeGoogleWorkspace AppType = "GOOGLE_WORKSPACE"
-	AppTypeGrafana         AppType = "GRAFANA"
-	AppTypeHubspot         AppType = "HUBSPOT"
-	AppTypeIlevel          AppType = "ILEVEL"
-	AppTypeIncidentio      AppType = "INCIDENTIO"
-	AppTypeJira            AppType = "JIRA"
-	AppTypeLdap            AppType = "LDAP"
-	AppTypeMariadb         AppType = "MARIADB"
-	AppTypeMongo           AppType = "MONGO"
-	AppTypeMongoAtlas      AppType = "MONGO_ATLAS"
-	AppTypeMysql           AppType = "MYSQL"
-	AppTypeNetsuite        AppType = "NETSUITE"
-	AppTypeDatadog         AppType = "DATADOG"
-	AppTypeOktaCiam        AppType = "OKTA_CIAM"
-	AppTypeOktaDirectory   AppType = "OKTA_DIRECTORY"
-	AppTypeOpenaiPlatform  AppType = "OPENAI_PLATFORM"
-	AppTypeOpal            AppType = "OPAL"
-	AppTypeOracleFusion    AppType = "ORACLE_FUSION"
-	AppTypePagerduty       AppType = "PAGERDUTY"
-	AppTypePostgres        AppType = "POSTGRES"
-	AppTypeRootly          AppType = "ROOTLY"
-	AppTypeSalesforce      AppType = "SALESFORCE"
-	AppTypeSnowflake       AppType = "SNOWFLAKE"
-	AppTypeSlack           AppType = "SLACK"
-	AppTypeTableau         AppType = "TABLEAU"
-	AppTypeTailscale       AppType = "TAILSCALE"
-	AppTypeTeleport        AppType = "TELEPORT"
-	AppTypeTwingate        AppType = "TWINGATE"
-	AppTypeVault           AppType = "VAULT"
-	AppTypeWorkday         AppType = "WORKDAY"
-	AppTypeZendesk         AppType = "ZENDESK"
-	AppTypeZoom            AppType = "ZOOM"
+	AppSchemasTypeActiveDirectory AppSchemasType = "ACTIVE_DIRECTORY"
+	AppSchemasTypeAnthropic       AppSchemasType = "ANTHROPIC"
+	AppSchemasTypeAzureAd         AppSchemasType = "AZURE_AD"
+	AppSchemasTypeAws             AppSchemasType = "AWS"
+	AppSchemasTypeAwsSso          AppSchemasType = "AWS_SSO"
+	AppSchemasTypeClickhouse      AppSchemasType = "CLICKHOUSE"
+	AppSchemasTypeCoupa           AppSchemasType = "COUPA"
+	AppSchemasTypeCursor          AppSchemasType = "CURSOR"
+	AppSchemasTypeCustom          AppSchemasType = "CUSTOM"
+	AppSchemasTypeConfluence      AppSchemasType = "CONFLUENCE"
+	AppSchemasTypeCustomConnector AppSchemasType = "CUSTOM_CONNECTOR"
+	AppSchemasTypeDatabricks      AppSchemasType = "DATABRICKS"
+	AppSchemasTypeDatastaxAstra   AppSchemasType = "DATASTAX_ASTRA"
+	AppSchemasTypeAlicloud        AppSchemasType = "ALICLOUD"
+	AppSchemasTypeDevin           AppSchemasType = "DEVIN"
+	AppSchemasTypeDocusign        AppSchemasType = "DOCUSIGN"
+	AppSchemasTypeDuo             AppSchemasType = "DUO"
+	AppSchemasTypeGcp             AppSchemasType = "GCP"
+	AppSchemasTypeGitHub          AppSchemasType = "GIT_HUB"
+	AppSchemasTypeGitLab          AppSchemasType = "GIT_LAB"
+	AppSchemasTypeGoogleGroups    AppSchemasType = "GOOGLE_GROUPS"
+	AppSchemasTypeGoogleWorkspace AppSchemasType = "GOOGLE_WORKSPACE"
+	AppSchemasTypeGrafana         AppSchemasType = "GRAFANA"
+	AppSchemasTypeHubspot         AppSchemasType = "HUBSPOT"
+	AppSchemasTypeIlevel          AppSchemasType = "ILEVEL"
+	AppSchemasTypeIncidentio      AppSchemasType = "INCIDENTIO"
+	AppSchemasTypeJira            AppSchemasType = "JIRA"
+	AppSchemasTypeLdap            AppSchemasType = "LDAP"
+	AppSchemasTypeMariadb         AppSchemasType = "MARIADB"
+	AppSchemasTypeMongo           AppSchemasType = "MONGO"
+	AppSchemasTypeMongoAtlas      AppSchemasType = "MONGO_ATLAS"
+	AppSchemasTypeMysql           AppSchemasType = "MYSQL"
+	AppSchemasTypeNetsuite        AppSchemasType = "NETSUITE"
+	AppSchemasTypeDatadog         AppSchemasType = "DATADOG"
+	AppSchemasTypeOktaCiam        AppSchemasType = "OKTA_CIAM"
+	AppSchemasTypeOktaDirectory   AppSchemasType = "OKTA_DIRECTORY"
+	AppSchemasTypeOpenaiPlatform  AppSchemasType = "OPENAI_PLATFORM"
+	AppSchemasTypeOpal            AppSchemasType = "OPAL"
+	AppSchemasTypeOracleFusion    AppSchemasType = "ORACLE_FUSION"
+	AppSchemasTypePagerduty       AppSchemasType = "PAGERDUTY"
+	AppSchemasTypePostgres        AppSchemasType = "POSTGRES"
+	AppSchemasTypeRootly          AppSchemasType = "ROOTLY"
+	AppSchemasTypeSalesforce      AppSchemasType = "SALESFORCE"
+	AppSchemasTypeSnowflake       AppSchemasType = "SNOWFLAKE"
+	AppSchemasTypeSlack           AppSchemasType = "SLACK"
+	AppSchemasTypeTableau         AppSchemasType = "TABLEAU"
+	AppSchemasTypeTailscale       AppSchemasType = "TAILSCALE"
+	AppSchemasTypeTeleport        AppSchemasType = "TELEPORT"
+	AppSchemasTypeTwingate        AppSchemasType = "TWINGATE"
+	AppSchemasTypeVault           AppSchemasType = "VAULT"
+	AppSchemasTypeWorkday         AppSchemasType = "WORKDAY"
+	AppSchemasTypeZendesk         AppSchemasType = "ZENDESK"
+	AppSchemasTypeZoom            AppSchemasType = "ZOOM"
 )
 
-func (e AppType) ToPointer() *AppType {
+func (e AppSchemasType) ToPointer() *AppSchemasType {
 	return &e
 }
 
 // IsExact returns true if the value matches a known enum value, false otherwise.
-func (e *AppType) IsExact() bool {
+func (e *AppSchemasType) IsExact() bool {
 	if e != nil {
 		switch *e {
 		case "ACTIVE_DIRECTORY", "ANTHROPIC", "AZURE_AD", "AWS", "AWS_SSO", "CLICKHOUSE", "COUPA", "CURSOR", "CUSTOM", "CONFLUENCE", "CUSTOM_CONNECTOR", "DATABRICKS", "DATASTAX_ASTRA", "ALICLOUD", "DEVIN", "DOCUSIGN", "DUO", "GCP", "GIT_HUB", "GIT_LAB", "GOOGLE_GROUPS", "GOOGLE_WORKSPACE", "GRAFANA", "HUBSPOT", "ILEVEL", "INCIDENTIO", "JIRA", "LDAP", "MARIADB", "MONGO", "MONGO_ATLAS", "MYSQL", "NETSUITE", "DATADOG", "OKTA_CIAM", "OKTA_DIRECTORY", "OPENAI_PLATFORM", "OPAL", "ORACLE_FUSION", "PAGERDUTY", "POSTGRES", "ROOTLY", "SALESFORCE", "SNOWFLAKE", "SLACK", "TABLEAU", "TAILSCALE", "TELEPORT", "TWINGATE", "VAULT", "WORKDAY", "ZENDESK", "ZOOM":
@@ -93,12 +93,19 @@ type App struct {
 	Description string `json:"description"`
 	// The ID of the app.
 	ID string `json:"app_id"`
+	// The visibility level of the entity.
+	ImportVisibility *VisibilityTypeEnum `json:"import_visibility,omitempty"`
 	// The name of the app.
 	Name string `json:"name"`
 	// The type of an app.
-	Type AppType `json:"app_type"`
+	Type AppSchemasType `json:"app_type"`
 	// Validation checks of an apps' configuration and permissions.
 	Validations []AppValidation `json:"validations,omitempty"`
+	// The visibility level of the entity.
+	Visibility *VisibilityTypeEnum `json:"visibility,omitempty"`
+	// The IDs of groups that can see this app when visibility is `LIMITED`.
+	// Must be empty when visibility is `GLOBAL`.
+	VisibilityGroupIds []string `json:"visibility_group_ids,omitempty"`
 }
 
 func (a *App) GetAdminOwnerID() string {
@@ -129,6 +136,13 @@ func (a *App) GetID() string {
 	return a.ID
 }
 
+func (a *App) GetImportVisibility() *VisibilityTypeEnum {
+	if a == nil {
+		return nil
+	}
+	return a.ImportVisibility
+}
+
 func (a *App) GetName() string {
 	if a == nil {
 		return ""
@@ -136,9 +150,9 @@ func (a *App) GetName() string {
 	return a.Name
 }
 
-func (a *App) GetType() AppType {
+func (a *App) GetType() AppSchemasType {
 	if a == nil {
-		return AppType("")
+		return AppSchemasType("")
 	}
 	return a.Type
 }
@@ -148,4 +162,18 @@ func (a *App) GetValidations() []AppValidation {
 		return nil
 	}
 	return a.Validations
+}
+
+func (a *App) GetVisibility() *VisibilityTypeEnum {
+	if a == nil {
+		return nil
+	}
+	return a.Visibility
+}
+
+func (a *App) GetVisibilityGroupIds() []string {
+	if a == nil {
+		return nil
+	}
+	return a.VisibilityGroupIds
 }
