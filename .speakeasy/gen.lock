@@ -3,24 +3,24 @@ id: b5c8bf75-06e1-47c8-b9ae-ce49ba56069d
 management:
   docChecksum: cd08bd4d812c9c3f84cb2e389b37be41
   docVersion: "1.0"
-  speakeasyVersion: 1.806.0
-  generationVersion: 2.956.1
-  releaseVersion: 3.11.7
-  configChecksum: d382a9dd50d4f52c1a9c36770ce9f31c
+  speakeasyVersion: 1.808.0
+  generationVersion: 2.960.7
+  releaseVersion: 3.11.8
+  configChecksum: 1cf3b70833ab2121d6f0735394129e51
   repoURL: https://github.com/opalsecurity/terraform-provider-opal.git
   repoSubDirectory: .
   installationURL: https://github.com/opalsecurity/terraform-provider-opal
   published: true
 persistentEdits:
-  generation_id: 58c0a0da-17c8-48ab-8b12-327122367f83
-  pristine_commit_hash: 1aa6ea694dd5c936c174749629efa626ad801418
-  pristine_tree_hash: 9c66f234da643840d095934eac1820a009934218
+  generation_id: aabf99d3-573e-48a3-8acc-faadf3cab59b
+  pristine_commit_hash: 06ab93e4f2f1a18ba46f985ecaaf90b706f1977a
+  pristine_tree_hash: dea271fa01c4ae43317a7570dd73d68787bf08c2
 features:
   terraform:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.5
     constsAndDefaults: 0.3.2
-    core: 3.50.3
+    core: 3.50.6
     deprecations: 2.82.0
     globalSecurity: 2.82.3
     globalServerURLs: 2.83.2
@@ -252,8 +252,8 @@ trackedFiles:
     pristine_git_object: eb8eb0132c74305a9a4c668c0f802c6ea4c5da8a
   examples/provider/provider.tf:
     id: 954e955c0240
-    last_write_checksum: sha1:eb6e6754274778dff9700ee2e9aeb37b644e427c
-    pristine_git_object: 756284f6f89d9aa3b1caafbc084622856ec0a3e8
+    last_write_checksum: sha1:d9de770bf0d1afad6efe612eea11eded1831b305
+    pristine_git_object: 415e030fde6d00548b95d366ca727947670c72a7
   examples/resources/opal_access_rule/import-by-string-id.tf:
     id: 5d07a05dc439
     last_write_checksum: sha1:9978da2497ab3366e081ddfd1f5bcf2237e3d024
@@ -492,8 +492,8 @@ trackedFiles:
     pristine_git_object: ad40456bb8fc65645b0081fd325ed66905e7d1ad
   go.mod:
     id: c47645c391ad
-    last_write_checksum: sha1:09405827ce95bc634e8e9c8db06dd04e901041c6
-    pristine_git_object: 19d0485b2a2eb5d0f0515ff5c8b5715e349728d5
+    last_write_checksum: sha1:7111f550259d187972671985b46241bdd8e1047f
+    pristine_git_object: 239ab7a9ce832f692fdc4f8c54ee7e51bd4c8ea2
   internal/planmodifiers/boolplanmodifier/suppress_diff.go:
     id: 3cf85b98963e
     last_write_checksum: sha1:5b0ce6bd2591e94f26cf4b258e44c0a8709b396b
@@ -1900,12 +1900,12 @@ trackedFiles:
     pristine_git_object: bb038049c5d9ecc13ba4681571760de19df0a16e
   internal/sdk/internal/utils/json.go:
     id: 2231afac3add
-    last_write_checksum: sha1:87f8bd0d9aba3750028946a3d3cda727f6c1c064
-    pristine_git_object: f0c301077384d4b70f1aae76ba458505bb15b13f
+    last_write_checksum: sha1:42548a339883a966592144e8c51c0f38b43e540c
+    pristine_git_object: 3552431481aa76d1a00bd2710ad9ab9b8b90d398
   internal/sdk/internal/utils/pathparams.go:
     id: e7fec2afe4a6
-    last_write_checksum: sha1:79c92c2495cb23c4a1bf038f33404296771fb22f
-    pristine_git_object: fbbc386752790bf169ce4dd87fe207682e1be558
+    last_write_checksum: sha1:5bedb23bcb80b1c21b1a0a4af51eb8fbf9c5c2fc
+    pristine_git_object: 5123d9454c87d09b3fe7cff3af1a0a0db3e872e5
   internal/sdk/internal/utils/queryparams.go:
     id: fb88ad971185
     last_write_checksum: sha1:52b48bc9118544823aaeea0c2afa6134f86b1870
@@ -3920,8 +3920,8 @@ trackedFiles:
     pristine_git_object: 84445f102b7610634d28b20e4872db65b059dc8a
   internal/sdk/opalapi.go:
     id: 115b79f30ba9
-    last_write_checksum: sha1:dc2404ce22e5679ec5b4a23f2b5c4fafa38d543b
-    pristine_git_object: b125c24291f93febf14fc117623f2bd08b684ff1
+    last_write_checksum: sha1:d2db411f79193a925475bc0461fdadcc56881354
+    pristine_git_object: 10b6fbf752b9c87eaf3a22dfe64cc8c06c72176e
   internal/sdk/opalqueries.go:
     id: 42aa5bddbe00
     last_write_checksum: sha1:605682180a75baa96ca43faf8587c032f57a4ae1
@@ -5788,7 +5788,6 @@ examples:
           application/json: {"success": false}
 examplesVersion: 1.0.2
 generatedTests: {}
-releaseNotes: "## Terraform SDK Changes:\n* `Opal-API.apps.createApp()`: \n  *  `request` **Changed** (Breaking ⚠️)\n  *  `response.custom_connector.idp_protocol` **Added**\n* `Opal-API.resources.create()`: \n  *  `request.resource_type` **Changed**\n  *  `response.resource_type` **Changed** (Breaking ⚠️)\n* `Opal-API.uars.get()`:  `response.results[].uar_scope` **Changed** (Breaking ⚠️)\n* `Opal-API.uars.create()`: \n  *  `request.uar_scope` **Changed**\n  *  `response.uar_scope` **Changed** (Breaking ⚠️)\n* `Opal-API.tokens.getTokens()`:  `response.results[].access_level.enum(AGENT_HOOKS)` **Added** (Breaking ⚠️)\n* `Opal-API.tokens.createToken()`: \n  *  `request.access_level.enum(AGENT_HOOKS)` **Added**\n  *  `response.token.access_level.enum(AGENT_HOOKS)` **Added** (Breaking ⚠️)\n* `Opal-API.resources.get_id()`:  `response.resource_type` **Changed** (Breaking ⚠️)\n* `Opal-API.resources.get()`: \n  *  `request.resource_type_filter` **Changed**\n  *  `response.results[].resource_type` **Changed** (Breaking ⚠️)\n* `Opal-API.uars.get_id()`:  `response.uar_scope` **Changed** (Breaking ⚠️)\n* `Opal-API.non-human-identities.get_nhis()`:  `response.results[].resource_type` **Changed** (Breaking ⚠️)\n* `Opal-API.apps.get()`: \n  *  `request.app_type_filter` **Changed** (Breaking ⚠️)\n  *  `response.apps[].custom_connector.idp_protocol` **Added**\n* `Opal-API.requests.cancelRequest()`: \n  *  `request.RequestBody` **Added**\n  *  `response.status[400]` **Added** (Breaking ⚠️)\n* `Opal-API.group-bindings.createGroupBinding()`:  `response.groups[].group_type` **Changed** (Breaking ⚠️)\n* `Opal-API.group-bindings.getGroupBinding()`:  `response.groups[].group_type` **Changed** (Breaking ⚠️)\n* `Opal-API.group-bindings.getGroupBindings()`:  `response.results[].groups[].group_type` **Changed** (Breaking ⚠️)\n* `Opal-API.groups.create()`: \n  *  `request` **Changed**\n  *  `response` **Changed** (Breaking ⚠️)\n* `Opal-API.groups.getGroup()`:  `response` **Changed** (Breaking ⚠️)\n* `Opal-API.groups.list()`: \n  *  `request.group_type_filter` **Changed**\n  *  `response.results[]` **Changed** (Breaking ⚠️)\n* `Opal-API.agent-activity.reportAgentActivity()`:  `request` **Changed**\n* `Opal-API.requests.approveRequest()`: \n  *  `request.RequestBody.acting_user_id` **Added**\n* `Opal-API.apps.updateApp()`: \n  *  `request.UpdateAppInfo.custom_connector.idp_protocol` **Added**\n  *  `response.custom_connector.idp_protocol` **Added**\n* `Opal-API.requests.createRequestComment()`: \n  *  `request.RequestBody.acting_user_id` **Added**\n* `Opal-API.requests.denyRequest()`: \n  *  `request.RequestBody.acting_user_id` **Added**\n* `Opal-API.apps.get_id()`:  `response.custom_connector.idp_protocol` **Added**\n* `Opal-API.agent-activity.getAgentActivityClientSettings()`: **Added**\n* `Opal-API.access-rules.update_access_rule()`:  `response.uses_opal_query` **Added**\n* `Opal-API.access-rules.get_access_rules()`:  `response.results[].uses_opal_query` **Added**\n* `Opal-API.access-rules.get_access_rule()`:  `response.uses_opal_query` **Added**\n* `Opal-API.access-rules.create_access_rule()`:  `response.uses_opal_query` **Added**\n* `Opal-API.users.revokeAllUserAccess()`: **Added**\n* `Opal-API.agent-activity.reportMcpConfig()`: **Added**\n"
 generatedFiles:
   - .gitattributes
   - USAGE.md
