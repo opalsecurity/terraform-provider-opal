@@ -2721,13 +2721,13 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		return
 	}
 
-	request, requestDiags := data.ToSharedUpdateGroupInfoList(ctx)
+	request, requestDiags := data.ToOperationsUpdateGroupConfigurationTemplateRequest(ctx)
 	resp.Diagnostics.Append(requestDiags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res, err := r.client.Groups.Update(ctx, *request)
+	res, err := r.client.Groups.UpdateConfigurationTemplate(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res != nil && res.RawResponse != nil {
@@ -2743,28 +2743,19 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if !(res.UpdateGroupInfoList != nil) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromSharedUpdateGroupInfoList(ctx, res.UpdateGroupInfoList)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
 
 	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request1, request1Diags := data.ToOperationsUpdateGroupMessageChannelsRequest(ctx)
+	request1, request1Diags := data.ToSharedUpdateGroupInfoList(ctx)
 	resp.Diagnostics.Append(request1Diags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res1, err := r.client.Groups.UpdateMessageChannels(ctx, *request1)
+	res1, err := r.client.Groups.Update(ctx, *request1)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res1 != nil && res1.RawResponse != nil {
@@ -2780,6 +2771,43 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res1.StatusCode), debugResponse(res1.RawResponse))
 		return
 	}
+	if !(res1.UpdateGroupInfoList != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res1.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromSharedUpdateGroupInfoList(ctx, res1.UpdateGroupInfoList)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request2, request2Diags := data.ToOperationsUpdateGroupMessageChannelsRequest(ctx)
+	resp.Diagnostics.Append(request2Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res2, err := r.client.Groups.UpdateMessageChannels(ctx, *request2)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		if res2 != nil && res2.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res2.RawResponse))
+		}
+		return
+	}
+	if res2 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res2))
+		return
+	}
+	if res2.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
+		return
+	}
 
 	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
 
@@ -2790,26 +2818,26 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	// ROOTLY_ON_CALL_SCHEDULE) are synced from their respective providers and cannot have
 	// on-call schedules assigned to them via the API.
 	if !isOnCallScheduleGroupType(data.GroupType.ValueString()) {
-		request2, request2Diags := data.ToOperationsUpdateGroupOnCallSchedulesRequest(ctx)
-		resp.Diagnostics.Append(request2Diags...)
+		request3, request3Diags := data.ToOperationsUpdateGroupOnCallSchedulesRequest(ctx)
+		resp.Diagnostics.Append(request3Diags...)
 
 		if resp.Diagnostics.HasError() {
 			return
 		}
-		res2, err := r.client.Groups.UpdateOnCallSchedules(ctx, *request2)
+		res3, err := r.client.Groups.UpdateOnCallSchedules(ctx, *request3)
 		if err != nil {
 			resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
-			if res2 != nil && res2.RawResponse != nil {
-				resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res2.RawResponse))
+			if res3 != nil && res3.RawResponse != nil {
+				resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res3.RawResponse))
 			}
 			return
 		}
-		if res2 == nil {
-			resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res2))
+		if res3 == nil {
+			resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res3))
 			return
 		}
-		if res2.StatusCode != 200 {
-			resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res2.StatusCode), debugResponse(res2.RawResponse))
+		if res3.StatusCode != 200 {
+			resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res3.StatusCode), debugResponse(res3.RawResponse))
 			return
 		}
 
@@ -2819,41 +2847,13 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 			return
 		}
 	}
-	request3, request3Diags := data.ToOperationsUpdateGroupVisibilityRequest(ctx)
-	resp.Diagnostics.Append(request3Diags...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	res3, err := r.client.Groups.UpdateVisibility(ctx, *request3)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
-		if res3 != nil && res3.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res3.RawResponse))
-		}
-		return
-	}
-	if res3 == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res3))
-		return
-	}
-	if res3.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res3.StatusCode), debugResponse(res3.RawResponse))
-		return
-	}
-
-	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	request4, request4Diags := data.ToOperationsUpdateGroupConfigurationTemplateRequest(ctx)
+	request4, request4Diags := data.ToOperationsUpdateGroupVisibilityRequest(ctx)
 	resp.Diagnostics.Append(request4Diags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res4, err := r.client.Groups.UpdateConfigurationTemplate(ctx, *request4)
+	res4, err := r.client.Groups.UpdateVisibility(ctx, *request4)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res4 != nil && res4.RawResponse != nil {
