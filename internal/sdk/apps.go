@@ -633,7 +633,9 @@ func (s *Apps) Get(ctx context.Context, request operations.GetAppsRequest, opts 
 }
 
 // GetAppVisibility - Get app visibility
-// Returns the visibility of this app.
+// Returns the visibility of this app. Only supported for apps whose type
+// is `CUSTOM` or `CUSTOM_CONNECTOR`. For other app types, read visibility
+// from `GET /apps/{app_id}` (or the `opal_app` data source).
 func (s *Apps) GetAppVisibility(ctx context.Context, request operations.GetAppVisibilityRequest, opts ...operations.Option) (*operations.GetAppVisibilityResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{

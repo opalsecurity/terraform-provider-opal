@@ -60,7 +60,7 @@ func (r *AppResource) Metadata(ctx context.Context, req resource.MetadataRequest
 
 func (r *AppResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "App Resource",
+		MarkdownDescription: "App Resource. Manages Push-only (`CUSTOM`) and Custom Connector (`CUSTOM_CONNECTOR`) apps, including visibility via the apps visibility sub-endpoint. For other app types, use the `opal_app` data source.",
 		Attributes: map[string]schema.Attribute{
 			"admin_owner_id": schema.StringAttribute{
 				Required:    true,
@@ -71,75 +71,13 @@ func (r *AppResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 				},
-				Description: `The type of an app. must be one of ["ACTIVE_DIRECTORY", "ANTHROPIC", "AZURE_AD", "AWS", "AWS_SSO", "CLICKHOUSE", "COUPA", "CURSOR", "CUSTOM", "CONFLUENCE", "CUSTOM_CONNECTOR", "DATABRICKS", "DATASTAX_ASTRA", "ALICLOUD", "DEVIN", "DOCUSIGN", "DUO", "GCP", "GIT_HUB", "GIT_LAB", "GOOGLE_GROUPS", "GOOGLE_WORKSPACE", "GRAFANA", "HUBSPOT", "ILEVEL", "INCIDENTIO", "JIRA", "LDAP", "LINEAR", "MARIADB", "MONGO", "MONGO_ATLAS", "MYSQL", "NETSUITE", "DATADOG", "OKTA_CIAM", "OKTA_DIRECTORY", "OPENAI_PLATFORM", "OPAL", "ORACLE_FUSION", "PAGERDUTY", "POSTGRES", "ROOTLY", "SALESFORCE", "SNOWFLAKE", "SLACK", "TABLEAU", "TAILSCALE", "TELEPORT", "TWINGATE", "VAULT", "WORKDAY", "ZENDESK", "ZOOM", "RAMP", "WRIKE", "VERCEL", "AXIOM", "ACTIVECAMPAIGN", "AHA", "ASANA", "BITWARDEN", "CALENDLY", "ONELOGIN", "SQUARE", "RIPPLING"]; Requires replacement if changed.`,
+				MarkdownDescription: `The type of the app. Must be ` + "`" + `CUSTOM` + "`" + ` (Push-only App) or` + "\n" +
+					`` + "`" + `CUSTOM_CONNECTOR` + "`" + `.` + "\n" +
+					`must be one of ["CUSTOM", "CUSTOM_CONNECTOR"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
-						"ACTIVE_DIRECTORY",
-						"ANTHROPIC",
-						"AZURE_AD",
-						"AWS",
-						"AWS_SSO",
-						"CLICKHOUSE",
-						"COUPA",
-						"CURSOR",
 						"CUSTOM",
-						"CONFLUENCE",
 						"CUSTOM_CONNECTOR",
-						"DATABRICKS",
-						"DATASTAX_ASTRA",
-						"ALICLOUD",
-						"DEVIN",
-						"DOCUSIGN",
-						"DUO",
-						"GCP",
-						"GIT_HUB",
-						"GIT_LAB",
-						"GOOGLE_GROUPS",
-						"GOOGLE_WORKSPACE",
-						"GRAFANA",
-						"HUBSPOT",
-						"ILEVEL",
-						"INCIDENTIO",
-						"JIRA",
-						"LDAP",
-						"LINEAR",
-						"MARIADB",
-						"MONGO",
-						"MONGO_ATLAS",
-						"MYSQL",
-						"NETSUITE",
-						"DATADOG",
-						"OKTA_CIAM",
-						"OKTA_DIRECTORY",
-						"OPENAI_PLATFORM",
-						"OPAL",
-						"ORACLE_FUSION",
-						"PAGERDUTY",
-						"POSTGRES",
-						"ROOTLY",
-						"SALESFORCE",
-						"SNOWFLAKE",
-						"SLACK",
-						"TABLEAU",
-						"TAILSCALE",
-						"TELEPORT",
-						"TWINGATE",
-						"VAULT",
-						"WORKDAY",
-						"ZENDESK",
-						"ZOOM",
-						"RAMP",
-						"WRIKE",
-						"VERCEL",
-						"AXIOM",
-						"ACTIVECAMPAIGN",
-						"AHA",
-						"ASANA",
-						"BITWARDEN",
-						"CALENDLY",
-						"ONELOGIN",
-						"SQUARE",
-						"RIPPLING",
 					),
 				},
 			},
@@ -497,6 +435,35 @@ func (r *AppResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 	if resp.Diagnostics.HasError() {
 		return
 	}
+
+	// GET /apps/{id} returns app_type as `type`; create/update plan uses
+	// `app_type`. On import only `id` is in state, so copy type → app_type
+	// before the writable-type guard and visibility stitch or a CUSTOM import
+	// plans a requires-replace on app_type.
+	if data.AppType.IsNull() || data.AppType.IsUnknown() || data.AppType.ValueString() == "" {
+		if !data.Type.IsNull() && !data.Type.IsUnknown() && data.Type.ValueString() != "" {
+			data.AppType = data.Type
+		}
+	}
+
+	// GET /apps/{id}/visibility (and the managed opal_app resource) only
+	// supports CUSTOM / CUSTOM_CONNECTOR. Reject other types here so import of
+	// e.g. OKTA_DIRECTORY fails with a clear error instead of a 400 from the
+	// visibility sub-endpoint. Inline visibility from GET /apps/{id} is already
+	// on `data` via RefreshFromSharedApp; data.opal_app uses that path for every
+	// app type. Speakeasy: keep this guard across regenerations (persistentEdits).
+	appType := data.AppType.ValueString()
+	if appType == "" {
+		appType = data.Type.ValueString()
+	}
+	if !appTypeSupportsVisibilityEndpoint(appType) {
+		resp.Diagnostics.AddError(
+			"unsupported app type for opal_app resource",
+			fmt.Sprintf("app type %s cannot be managed via the opal_app resource; only CUSTOM and CUSTOM_CONNECTOR are supported. Use the opal_app data source to read this app (including visibility).", appType),
+		)
+		return
+	}
+
 	request1, request1Diags := data.ToOperationsGetAppVisibilityRequest(ctx)
 	resp.Diagnostics.Append(request1Diags...)
 

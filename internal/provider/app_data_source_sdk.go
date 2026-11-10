@@ -37,6 +37,11 @@ func (r *AppDataSourceModel) RefreshFromSharedApp(ctx context.Context, resp *sha
 		}
 		r.Description = types.StringValue(resp.Description)
 		r.ID = types.StringValue(resp.ID)
+		if resp.ImportVisibility != nil {
+			r.ImportVisibility = types.StringValue(string(*resp.ImportVisibility))
+		} else {
+			r.ImportVisibility = types.StringNull()
+		}
 		r.Name = types.StringValue(resp.Name)
 		r.Type = types.StringValue(string(resp.Type))
 		r.Validations = []tfTypes.AppValidation{}
@@ -55,21 +60,11 @@ func (r *AppDataSourceModel) RefreshFromSharedApp(ctx context.Context, resp *sha
 
 			r.Validations = append(r.Validations, validations)
 		}
-	}
-
-	return diags
-}
-
-func (r *AppDataSourceModel) RefreshFromSharedAppVisibilityInfo(ctx context.Context, resp *shared.AppVisibilityInfo) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if resp != nil {
-		if resp.ImportVisibility != nil {
-			r.ImportVisibility = types.StringValue(string(*resp.ImportVisibility))
+		if resp.Visibility != nil {
+			r.Visibility = types.StringValue(string(*resp.Visibility))
 		} else {
-			r.ImportVisibility = types.StringNull()
+			r.Visibility = types.StringNull()
 		}
-		r.Visibility = types.StringValue(string(resp.Visibility))
 		r.VisibilityGroupIds = make([]types.String, 0, len(resp.VisibilityGroupIds))
 		for _, v := range resp.VisibilityGroupIds {
 			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
@@ -86,19 +81,6 @@ func (r *AppDataSourceModel) ToOperationsGetAppIDRequest(ctx context.Context) (*
 	id = r.ID.ValueString()
 
 	out := operations.GetAppIDRequest{
-		ID: id,
-	}
-
-	return &out, diags
-}
-
-func (r *AppDataSourceModel) ToOperationsGetAppVisibilityRequest(ctx context.Context) (*operations.GetAppVisibilityRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.GetAppVisibilityRequest{
 		ID: id,
 	}
 

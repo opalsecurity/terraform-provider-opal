@@ -3,13 +3,47 @@
 
 package shared
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
+// AppType - The type of the app. Must be `CUSTOM` (Push-only App) or
+// `CUSTOM_CONNECTOR`.
+type AppType string
+
+const (
+	AppTypeCustom          AppType = "CUSTOM"
+	AppTypeCustomConnector AppType = "CUSTOM_CONNECTOR"
+)
+
+func (e AppType) ToPointer() *AppType {
+	return &e
+}
+func (e *AppType) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "CUSTOM":
+		fallthrough
+	case "CUSTOM_CONNECTOR":
+		*e = AppType(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for AppType: %v", v)
+	}
+}
+
 // CreateAppInfo - Information needed to create an app. Currently supports only Push-only
 // apps (`CUSTOM`) and Custom Connector apps (`CUSTOM_CONNECTOR`).
 type CreateAppInfo struct {
 	// The ID of the owner of the app.
 	AdminOwnerID string `json:"admin_owner_id"`
-	// The type of an app.
-	AppType AppTypeEnum `json:"app_type"`
+	// The type of the app. Must be `CUSTOM` (Push-only App) or
+	// `CUSTOM_CONNECTOR`.
+	AppType AppType `json:"app_type"`
 	// Information needed to create a Custom Connector app.
 	CustomConnector *CreateCustomConnectorInfo `json:"custom_connector,omitempty"`
 	// A description of the app.
@@ -25,9 +59,9 @@ func (c *CreateAppInfo) GetAdminOwnerID() string {
 	return c.AdminOwnerID
 }
 
-func (c *CreateAppInfo) GetAppType() AppTypeEnum {
+func (c *CreateAppInfo) GetAppType() AppType {
 	if c == nil {
-		return AppTypeEnum("")
+		return AppType("")
 	}
 	return c.AppType
 }

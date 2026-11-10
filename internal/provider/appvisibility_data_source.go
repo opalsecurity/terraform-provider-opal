@@ -43,7 +43,7 @@ func (r *AppVisibilityDataSource) Metadata(ctx context.Context, req datasource.M
 // Schema defines the schema for the data source.
 func (r *AppVisibilityDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "AppVisibility DataSource",
+		MarkdownDescription: "AppVisibility DataSource. Reads visibility via `GET /apps/{id}/visibility`, which only supports `CUSTOM` and `CUSTOM_CONNECTOR` apps. For other app types, read `visibility` / `visibility_group_ids` / `import_visibility` from the `opal_app` data source instead.",
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{

@@ -44,9 +44,13 @@ Read-Only:
 secret; secrets are write-only and never returned by the API. (see [below for nested schema](#nestedatt--apps--custom_connector))
 - `description` (String) A description of the app.
 - `id` (String) The ID of the app.
+- `import_visibility` (String) The visibility level of the entity.
 - `name` (String) The name of the app.
 - `type` (String) The type of an app.
 - `validations` (Attributes List) Validation checks of an apps' configuration and permissions. (see [below for nested schema](#nestedatt--apps--validations))
+- `visibility` (String) The visibility level of the entity.
+- `visibility_group_ids` (Set of String) The IDs of groups that can see this app when visibility is `LIMITED`.
+Must be empty when visibility is `GLOBAL`.
 
 <a id="nestedatt--apps--custom_connector"></a>
 ### Nested Schema for `apps.custom_connector`
