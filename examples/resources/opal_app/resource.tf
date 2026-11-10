@@ -1,6 +1,6 @@
 resource "opal_app" "my_app" {
   admin_owner_id = "7c86c85d-0651-43e2-a748-d69d658418e8"
-  app_type       = "OKTA_DIRECTORY"
+  app_type       = "CUSTOM_CONNECTOR"
   custom_connector = {
     base_url                  = "https://my-connector.example.com"
     identifier                = "my-connector"
