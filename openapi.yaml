@@ -2106,7 +2106,9 @@ paths:
       x-speakeasy-name-override: update
       x-speakeasy-entity-operation:
         - Group#create#2
-        - Group#update
+        # Runs after configuration-template on Update so unlink/fork happens
+        # before this parent PUT carries own-config fields.
+        - Group#update#2
     post:
       description: Creates a group. See [here](https://docs.opal.dev/reference/end-system-objects) for details about importing groups.
       operationId: createGroup
@@ -2300,9 +2302,11 @@ paths:
       tags:
         - groups
       x-speakeasy-name-override: update_configuration_template
+      # Update: run first (unnumbered) so unlink/attach/repoint precedes PUT /groups.
+      # Create: keep last (#6) so own-config create is unchanged.
       x-speakeasy-entity-operation:
         - Group#create#6
-        - Group#update#5
+        - Group#update
   /groups/{group_id}/message-channels:
     get:
       description: Gets the list of audit and reviewer message channels attached to a group.
@@ -2371,7 +2375,7 @@ paths:
       x-speakeasy-name-override: update_message_channels
       x-speakeasy-entity-operation:
         - Group#create#3
-        - Group#update#2
+        - Group#update#3
   /groups/{group_id}/on-call-schedules:
     get:
       description: Gets the list of on call schedules attached to a group.
@@ -2440,7 +2444,7 @@ paths:
       x-speakeasy-name-override: update_on_call_schedules
       x-speakeasy-entity-operation:
         - Group#create#4
-        - Group#update#3
+        - Group#update#4
   /groups/{group_id}/access_levels:
     get:
       summary: Get group access levels
@@ -2809,7 +2813,7 @@ paths:
       x-speakeasy-name-override: update_visibility
       x-speakeasy-entity-operation:
         - Group#create#5
-        - Group#update#4
+        - Group#update#5
   /groups/{group_id}/reviewers:
     get:
       deprecated: true
@@ -4948,7 +4952,8 @@ paths:
         - resources
       x-speakeasy-name-override: update
       x-speakeasy-entity-operation:
-        - Resource#update
+        # Runs after configuration-template on Update (see groups-side comment).
+        - Resource#update#2
         - Resource#create#2
     post:
       description: Creates a resource. See [here](https://docs.opal.dev/reference/end-system-objects) for details about importing resources.
@@ -5144,9 +5149,10 @@ paths:
       tags:
         - resources
       x-speakeasy-name-override: update_configuration_template
+      # Update: run first; Create: keep before the post-create GET (#6).
       x-speakeasy-entity-operation:
         - Resource#create#5
-        - Resource#update#3
+        - Resource#update
   /resources/{resource_id}/message-channels:
     get:
       description: Gets the list of audit message channels attached to a resource.
@@ -5285,7 +5291,7 @@ paths:
       x-speakeasy-name-override: update_visibility
       x-speakeasy-entity-operation:
         - Resource#create#3
-        - Resource#update#2
+        - Resource#update#3
   /resources/{resource_id}/reviewers:
     get:
       description: Gets the list of owner IDs of the reviewers for a resource.
