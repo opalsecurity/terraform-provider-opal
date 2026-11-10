@@ -10,6 +10,27 @@ import (
 	"sync"
 )
 
+// configurationTemplateUpdateHook keeps the parent PUT /groups and PUT
+// /resources calls (and their sibling PUTs) from sending template-owned
+// settings to an entity that is linked to a configuration template.
+//
+// The link itself is managed through PUT /{groups|resources}/{id}/configuration-template.
+// The provider runs that call first on Update, so the hook learns the entity's
+// link state from it (SDKInit wraps the HTTP client to observe the calls) and
+// then:
+//
+//   - BeforeRequest strips every field outside the allowlist from the parent
+//     PUT of a linked entity. The backend rejects those fields while an entity
+//     is linked, and Terraform state still carries the pre-attach values.
+//   - the transport short-circuits the visibility / message-channel /
+//     on-call-schedule sibling PUTs for a linked entity, because the template
+//     owns those settings.
+//   - the transport also short-circuits a visibility PUT that carries no
+//     visibility value at all. That is what Create sends for an entity that is
+//     about to be linked (the link is the last call of Create).
+//
+// An unlinked entity (including one just unlinked by a null template PUT) is
+// left untouched so its own configuration can be written.
 type configurationTemplateUpdateOperation struct {
 	itemsKey      string
 	allowedFields map[string]struct{}
@@ -20,7 +41,6 @@ var configurationTemplateUpdateOperations = map[string]configurationTemplateUpda
 		itemsKey: "groups",
 		allowedFields: fieldSet(
 			"group_id",
-			"configuration_template_id",
 			"name",
 			"description",
 			"match_remote_name",
@@ -33,7 +53,6 @@ var configurationTemplateUpdateOperations = map[string]configurationTemplateUpda
 		itemsKey: "resources",
 		allowedFields: fieldSet(
 			"resource_id",
-			"configuration_template_id",
 			"name",
 			"description",
 			"match_remote_name",
@@ -42,6 +61,12 @@ var configurationTemplateUpdateOperations = map[string]configurationTemplateUpda
 			"risk_sensitivity_override",
 		),
 	},
+}
+
+// siblingOperations are the sibling PUTs a template owns, per entity kind.
+var configurationTemplateSiblingOperations = map[string]map[string]struct{}{
+	"groups":    fieldSet("message-channels", "on-call-schedules", "visibility"),
+	"resources": fieldSet("visibility"),
 }
 
 func fieldSet(fields ...string) map[string]struct{} {
@@ -63,19 +88,19 @@ type configurationTemplateTransport struct {
 	hook *configurationTemplateUpdateHook
 }
 
-type configurationTemplateEntity struct {
-	kind string
-	id   string
-}
-
-func (h *configurationTemplateUpdateHook) SDKInit(baseURL string, client HTTPClient) (string, HTTPClient) {
+func (h *configurationTemplateUpdateHook) SDKInit(
+	baseURL string,
+	client HTTPClient,
+) (string, HTTPClient) {
+	h.mu.Lock()
+	defer h.mu.Unlock()
 	h.linkedGroupIDs = make(map[string]struct{})
 	h.linkedResourceIDs = make(map[string]struct{})
 	return baseURL, &configurationTemplateTransport{next: client, hook: h}
 }
 
 func (t *configurationTemplateTransport) Do(req *http.Request) (*http.Response, error) {
-	if t.hook.shouldSkipFollowUp(req) {
+	if t.hook.shouldSkipSibling(req) {
 		return &http.Response{
 			StatusCode:    http.StatusOK,
 			Status:        "200 OK",
@@ -86,103 +111,139 @@ func (t *configurationTemplateTransport) Do(req *http.Request) (*http.Response, 
 		}, nil
 	}
 
-	entities := configurationTemplateEntities(req)
+	link, observed := templateLinkFromRequest(req)
 	res, err := t.next.Do(req)
-	if err == nil && res != nil && res.StatusCode >= 200 && res.StatusCode < 300 {
-		t.hook.recordLinkedEntities(entities)
+	if observed && err == nil && res != nil && res.StatusCode >= 200 && res.StatusCode < 300 {
+		t.hook.recordLink(link)
 	}
 	return res, err
 }
 
-func configurationTemplateEntities(req *http.Request) []configurationTemplateEntity {
+type configurationTemplateLink struct {
+	kind   string
+	id     string
+	linked bool
+}
+
+// templateLinkFromRequest recognizes PUT /{groups|resources}/{id}/configuration-template
+// and reports whether the body links (non-empty id) or unlinks (null / empty).
+func templateLinkFromRequest(req *http.Request) (configurationTemplateLink, bool) {
 	if req.Method != http.MethodPut || req.Body == nil {
-		return nil
+		return configurationTemplateLink{}, false
 	}
-
-	segments := pathSegments(req.URL.Path)
-	if len(segments) == 0 {
-		return nil
-	}
-
-	operation, ok := map[string]configurationTemplateUpdateOperation{
-		"groups":    configurationTemplateUpdateOperations["updateGroups"],
-		"resources": configurationTemplateUpdateOperations["updateResources"],
-	}[segments[len(segments)-1]]
-	if !ok {
-		return nil
+	kind, id, operation, ok := entityOperation(req)
+	if !ok || operation != "configuration-template" {
+		return configurationTemplateLink{}, false
 	}
 
 	body, err := io.ReadAll(req.Body)
 	if err != nil {
-		return nil
+		return configurationTemplateLink{}, false
 	}
 	req.Body = io.NopCloser(bytes.NewReader(body))
 
-	var payload map[string][]map[string]json.RawMessage
+	var payload struct {
+		ConfigurationTemplateID *string `json:"configuration_template_id"`
+	}
 	if json.Unmarshal(body, &payload) != nil {
-		return nil
+		return configurationTemplateLink{}, false
 	}
-
-	idKey := strings.TrimSuffix(operation.itemsKey, "s") + "_id"
-	entities := make([]configurationTemplateEntity, 0, len(payload[operation.itemsKey]))
-	for _, item := range payload[operation.itemsKey] {
-		var templateID, entityID string
-		if json.Unmarshal(item["configuration_template_id"], &templateID) != nil || templateID == "" ||
-			json.Unmarshal(item[idKey], &entityID) != nil || entityID == "" {
-			continue
-		}
-		entities = append(entities, configurationTemplateEntity{kind: operation.itemsKey, id: entityID})
-	}
-	return entities
+	return configurationTemplateLink{
+		kind:   kind,
+		id:     id,
+		linked: payload.ConfigurationTemplateID != nil && *payload.ConfigurationTemplateID != "",
+	}, true
 }
 
-func (h *configurationTemplateUpdateHook) recordLinkedEntities(entities []configurationTemplateEntity) {
+func (h *configurationTemplateUpdateHook) recordLink(link configurationTemplateLink) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
-	for _, entity := range entities {
-		if entity.kind == "groups" {
-			h.linkedGroupIDs[entity.id] = struct{}{}
-		} else {
-			h.linkedResourceIDs[entity.id] = struct{}{}
-		}
+	set := h.linkedGroupIDs
+	if link.kind == "resources" {
+		set = h.linkedResourceIDs
+	}
+	if link.linked {
+		set[link.id] = struct{}{}
+	} else {
+		delete(set, link.id)
 	}
 }
 
-func (h *configurationTemplateUpdateHook) shouldSkipFollowUp(req *http.Request) bool {
-	if req.Method != http.MethodPut {
-		return false
-	}
-	segments := pathSegments(req.URL.Path)
-	if len(segments) < 3 {
-		return false
-	}
-	entityKind, entityID, operation := segments[len(segments)-3], segments[len(segments)-2], segments[len(segments)-1]
-
+func (h *configurationTemplateUpdateHook) isLinked(kind, id string) bool {
 	h.mu.RLock()
 	defer h.mu.RUnlock()
-	switch entityKind {
+	switch kind {
 	case "groups":
-		if operation != "message-channels" && operation != "on-call-schedules" && operation != "visibility" {
-			return false
-		}
-		_, linked := h.linkedGroupIDs[entityID]
-		return linked
+		_, ok := h.linkedGroupIDs[id]
+		return ok
 	case "resources":
-		if operation != "visibility" {
-			return false
-		}
-		_, linked := h.linkedResourceIDs[entityID]
-		return linked
+		_, ok := h.linkedResourceIDs[id]
+		return ok
 	default:
 		return false
 	}
+}
+
+func (h *configurationTemplateUpdateHook) shouldSkipSibling(req *http.Request) bool {
+	if req.Method != http.MethodPut {
+		return false
+	}
+	kind, id, operation, ok := entityOperation(req)
+	if !ok {
+		return false
+	}
+	if _, owned := configurationTemplateSiblingOperations[kind][operation]; !owned {
+		return false
+	}
+	if h.isLinked(kind, id) {
+		return true
+	}
+	return operation == "visibility" && visibilityBodyIsEmpty(req)
+}
+
+// visibilityBodyIsEmpty is true when a visibility PUT has no visibility value.
+// The backend rejects that with "Unrecognized visibility level", and it only
+// happens for an entity whose configuration comes from a template.
+func visibilityBodyIsEmpty(req *http.Request) bool {
+	if req.Body == nil || req.Body == http.NoBody {
+		return true
+	}
+	body, err := io.ReadAll(req.Body)
+	if err != nil {
+		return false
+	}
+	req.Body = io.NopCloser(bytes.NewReader(body))
+
+	var payload struct {
+		Visibility *string `json:"visibility"`
+	}
+	if json.Unmarshal(body, &payload) != nil {
+		return false
+	}
+	return payload.Visibility == nil || *payload.Visibility == ""
+}
+
+// entityOperation splits .../{groups|resources}/{id}/{operation}.
+func entityOperation(req *http.Request) (kind, id, operation string, ok bool) {
+	segments := pathSegments(req.URL.Path)
+	if len(segments) < 3 {
+		return "", "", "", false
+	}
+	kind, id, operation = segments[len(segments)-3], segments[len(segments)-2], segments[len(segments)-1]
+	if kind != "groups" && kind != "resources" {
+		return "", "", "", false
+	}
+	return kind, id, operation, true
 }
 
 func pathSegments(path string) []string {
 	return strings.Split(strings.Trim(path, "/"), "/")
 }
 
-func (h *configurationTemplateUpdateHook) BeforeRequest(hookCtx BeforeRequestContext, req *http.Request) (*http.Request, error) {
+func (h *configurationTemplateUpdateHook) BeforeRequest(
+	hookCtx BeforeRequestContext,
+	req *http.Request,
+) (*http.Request, error) {
 	operation, ok := configurationTemplateUpdateOperations[hookCtx.OperationID]
 	if !ok || req.Body == nil {
 		return req, nil
@@ -201,10 +262,12 @@ func (h *configurationTemplateUpdateHook) BeforeRequest(hookCtx BeforeRequestCon
 		return req, fmt.Errorf("decode configuration template update request: %w", err)
 	}
 
+	idKey := strings.TrimSuffix(operation.itemsKey, "s") + "_id"
 	changed := false
 	for _, item := range payload[operation.itemsKey] {
-		templateID, present := item["configuration_template_id"]
-		if !present || bytes.Equal(templateID, []byte("null")) || bytes.Equal(templateID, []byte(`""`)) {
+		var entityID string
+		if json.Unmarshal(item[idKey], &entityID) != nil ||
+			!h.isLinked(operation.itemsKey, entityID) {
 			continue
 		}
 
