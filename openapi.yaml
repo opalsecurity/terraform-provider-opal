@@ -13312,7 +13312,6 @@ components:
           format: uuid
           nullable: true
           type: string
-          x-speakeasy-plan-validators: GroupConfigurationTemplateID
       type: object
       required:
         - configuration_template_id
@@ -13335,7 +13334,6 @@ components:
           format: uuid
           nullable: true
           type: string
-          x-speakeasy-plan-validators: ResourceConfigurationTemplateID
       type: object
       required:
         - configuration_template_id

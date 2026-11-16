@@ -17,8 +17,8 @@ var (
 )
 
 // message_channel_ids and on_call_schedule_ids live in schemas shared with
-// other entities, so they cannot be added to GroupConfigurationTemplateID
-// without leaking the conflict. Visibility and visibility_group_ids are
+// other entities, so they cannot be added to the conflict list in
+// configuration_template_validate.go without leaking the conflict. Visibility and visibility_group_ids are
 // enforced there instead.
 var groupConfigurationTemplateLinkedOnlyUpdates = []string{
 	"message_channel_ids",
@@ -164,7 +164,7 @@ func markTemplateGovernedVisibilityUnknown(
 
 // preserveTemplateGovernedVisibility keeps prior visibility fields in the plan
 // when the template already governs them. Refresh populates those attributes
-// from GET /visibility, but they are omitted in HCL (ConflictsWith / ExactlyOneOf).
+// from GET /visibility, but they are omitted in HCL (see configuration_template_validate.go).
 func preserveTemplateGovernedVisibility(
 	ctx context.Context,
 	config map[string]tftypes.Value,

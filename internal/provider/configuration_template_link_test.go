@@ -2,7 +2,6 @@ package provider
 
 import (
 	"fmt"
-	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -97,6 +96,26 @@ resource "opal_resource" "r" {
   configuration_template_id = %[4]s
 }
 `, name, resName, knownCustomAppID, tmplRef)
+}
+
+func groupMinimalHCL(name string) string {
+	return fmt.Sprintf(`
+resource "opal_group" "g" {
+  name       = "%[1]s"
+  app_id     = "%[2]s"
+  group_type = "OPAL_GROUP"
+}
+`, name, knownOpalAppID)
+}
+
+func resourceMinimalHCL(name string) string {
+	return fmt.Sprintf(`
+resource "opal_resource" "r" {
+  name          = "%[1]s"
+  app_id        = "%[2]s"
+  resource_type = "CUSTOM"
+}
+`, name, knownCustomAppID)
 }
 
 func templateRef(label string) string {
@@ -201,19 +220,40 @@ func TestAccGroup_ConfigurationTemplate_UnlinkNullWithConfig(t *testing.T) {
 	})...)
 }
 
-// Unlinking without restating own configuration is rejected at plan time:
-// exactly one of configuration_template_id and request_configurations/visibility
-// must be set (see GroupConfigurationTemplateID).
+// Unlinking without restating own configuration is valid: the backend forks the
+// template into a private configuration, the same as REST and GraphQL.
 func TestAccGroup_ConfigurationTemplate_UnlinkNoFields(t *testing.T) {
 	n := testAccName("tmpl_g_unlinknofields")
 	p := testAccProviderConfig() + templateHCL(n, "a")
 	runTemplateLinkCase(t, append(groupAttachSteps(n, p), resource.TestStep{
-		Config:      p + groupLinkedHCL(n, n, "null"),
-		ExpectError: regexp.MustCompile(`Invalid Attribute Combination`),
-	}, resource.TestStep{
-		// Valid final config so the post-test destroy can plan.
-		Config: p + groupLinkedHCL(n, n, templateRef("a")),
+		Config: p + groupLinkedHCL(n, n, "null"),
+		Check:  resource.TestCheckNoResourceAttr("opal_group.g", "configuration_template_id"),
 	})...)
+}
+
+// Omitting configuration_template_id entirely unlinks as well.
+func TestAccGroup_ConfigurationTemplate_UnlinkOmitted(t *testing.T) {
+	n := testAccName("tmpl_g_unlinkomit")
+	p := testAccProviderConfig() + templateHCL(n, "a")
+	runTemplateLinkCase(t, append(groupAttachSteps(n, p), resource.TestStep{
+		Config: p + groupMinimalHCL(n),
+		Check:  resource.TestCheckNoResourceAttr("opal_group.g", "configuration_template_id"),
+	})...)
+}
+
+// Name, app and type are enough; owner and visibility default from the
+// connection, as with REST.
+func TestAccGroup_MinimalCreate(t *testing.T) {
+	n := testAccName("min_g")
+	runTemplateLinkCase(t, resource.TestStep{
+		Config: testAccProviderConfig() + groupMinimalHCL(n),
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestCheckResourceAttrSet("opal_group.g", "id"),
+			resource.TestCheckResourceAttrSet("opal_group.g", "admin_owner_id"),
+			resource.TestCheckResourceAttrSet("opal_group.g", "visibility"),
+			resource.TestCheckNoResourceAttr("opal_group.g", "configuration_template_id"),
+		),
+	})
 }
 
 func TestAccGroup_ConfigurationTemplate_RenameLinked(t *testing.T) {
@@ -300,6 +340,37 @@ func TestAccResource_ConfigurationTemplate_UnlinkWithConfig(t *testing.T) {
 		Config: p + resourceOwnConfigHCL(n, n, ""),
 		Check:  resource.TestCheckNoResourceAttr("opal_resource.r", "configuration_template_id"),
 	})...)
+}
+
+func TestAccResource_ConfigurationTemplate_UnlinkNoFields(t *testing.T) {
+	n := testAccName("tmpl_r_unlinknofields")
+	p := testAccProviderConfig() + templateHCL(n, "a")
+	runTemplateLinkCase(t, append(resourceAttachSteps(n, p), resource.TestStep{
+		Config: p + resourceLinkedHCL(n, n, "null"),
+		Check:  resource.TestCheckNoResourceAttr("opal_resource.r", "configuration_template_id"),
+	})...)
+}
+
+func TestAccResource_ConfigurationTemplate_UnlinkOmitted(t *testing.T) {
+	n := testAccName("tmpl_r_unlinkomit")
+	p := testAccProviderConfig() + templateHCL(n, "a")
+	runTemplateLinkCase(t, append(resourceAttachSteps(n, p), resource.TestStep{
+		Config: p + resourceMinimalHCL(n),
+		Check:  resource.TestCheckNoResourceAttr("opal_resource.r", "configuration_template_id"),
+	})...)
+}
+
+func TestAccResource_MinimalCreate(t *testing.T) {
+	n := testAccName("min_r")
+	runTemplateLinkCase(t, resource.TestStep{
+		Config: testAccProviderConfig() + resourceMinimalHCL(n),
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestCheckResourceAttrSet("opal_resource.r", "id"),
+			resource.TestCheckResourceAttrSet("opal_resource.r", "admin_owner_id"),
+			resource.TestCheckResourceAttrSet("opal_resource.r", "visibility"),
+			resource.TestCheckNoResourceAttr("opal_resource.r", "configuration_template_id"),
+		),
+	})
 }
 
 func TestAccResource_ConfigurationTemplate_RenameLinked(t *testing.T) {

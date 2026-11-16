@@ -1498,7 +1498,6 @@ actions:
   - target: $["components"]["schemas"]["GroupConfigurationTemplate"]["properties"]["configuration_template_id"]
     update:
       description: The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
-      x-speakeasy-plan-validators: GroupConfigurationTemplateID
   - target: $["components"]["schemas"]["Group"]["properties"]["match_remote_description"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
@@ -2127,7 +2126,6 @@ actions:
   - target: $["components"]["schemas"]["ResourceConfigurationTemplate"]["properties"]["configuration_template_id"]
     update:
       description: The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
-      x-speakeasy-plan-validators: ResourceConfigurationTemplateID
   - target: $["components"]["schemas"]["Resource"]["properties"]["match_remote_description"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
