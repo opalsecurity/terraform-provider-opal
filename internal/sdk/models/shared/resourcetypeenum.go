@@ -130,12 +130,18 @@ const (
 	ResourceTypeEnumRipplingDepartment                ResourceTypeEnum = "RIPPLING_DEPARTMENT"
 	ResourceTypeEnumBoxEnterprise                     ResourceTypeEnum = "BOX_ENTERPRISE"
 	ResourceTypeEnumBoxFolder                         ResourceTypeEnum = "BOX_FOLDER"
+	ResourceTypeEnumSlackWorkspace                    ResourceTypeEnum = "SLACK_WORKSPACE"
+	ResourceTypeEnumSlackOrganization                 ResourceTypeEnum = "SLACK_ORGANIZATION"
 	ResourceTypeEnumAsanaWorkspace                    ResourceTypeEnum = "ASANA_WORKSPACE"
 	ResourceTypeEnumAsanaWorkspaceGuest               ResourceTypeEnum = "ASANA_WORKSPACE_GUEST"
 	ResourceTypeEnumBitwardenOrganization             ResourceTypeEnum = "BITWARDEN_ORGANIZATION"
 	ResourceTypeEnumCalendlyRole                      ResourceTypeEnum = "CALENDLY_ROLE"
 	ResourceTypeEnumCalendlyEventType                 ResourceTypeEnum = "CALENDLY_EVENT_TYPE"
+	ResourceTypeEnumMiroOrganization                  ResourceTypeEnum = "MIRO_ORGANIZATION"
+	ResourceTypeEnumMiroBoard                         ResourceTypeEnum = "MIRO_BOARD"
 	ResourceTypeEnumOneloginApp                       ResourceTypeEnum = "ONELOGIN_APP"
+	ResourceTypeEnumTrayWorkspace                     ResourceTypeEnum = "TRAY_WORKSPACE"
+	ResourceTypeEnumTrayOrganization                  ResourceTypeEnum = "TRAY_ORGANIZATION"
 )
 
 func (e ResourceTypeEnum) ToPointer() *ResourceTypeEnum {
@@ -383,6 +389,10 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "BOX_FOLDER":
 		fallthrough
+	case "SLACK_WORKSPACE":
+		fallthrough
+	case "SLACK_ORGANIZATION":
+		fallthrough
 	case "ASANA_WORKSPACE":
 		fallthrough
 	case "ASANA_WORKSPACE_GUEST":
@@ -393,7 +403,15 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "CALENDLY_EVENT_TYPE":
 		fallthrough
+	case "MIRO_ORGANIZATION":
+		fallthrough
+	case "MIRO_BOARD":
+		fallthrough
 	case "ONELOGIN_APP":
+		fallthrough
+	case "TRAY_WORKSPACE":
+		fallthrough
+	case "TRAY_ORGANIZATION":
 		*e = ResourceTypeEnum(v)
 		return nil
 	default:

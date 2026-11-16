@@ -154,6 +154,8 @@ type Group struct {
 	MatchRemoteDescription *bool `json:"match_remote_description,omitempty"`
 	// A bool representing whether or not the group's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.
 	MatchRemoteName *bool `json:"match_remote_name,omitempty"`
+	// The maximum number of direct users allowed for this group at once. Set to null to remove the limit.
+	MaxDirectUsersAllowed *int64 `json:"max_direct_users_allowed,omitempty"`
 	// The name of the group.
 	Name *string `json:"name,omitempty"`
 	// Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided.
@@ -264,6 +266,13 @@ func (g *Group) GetMatchRemoteName() *bool {
 		return nil
 	}
 	return g.MatchRemoteName
+}
+
+func (g *Group) GetMaxDirectUsersAllowed() *int64 {
+	if g == nil {
+		return nil
+	}
+	return g.MaxDirectUsersAllowed
 }
 
 func (g *Group) GetName() *string {

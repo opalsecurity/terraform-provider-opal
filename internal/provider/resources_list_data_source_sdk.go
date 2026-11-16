@@ -47,6 +47,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 			}
 			results.MatchRemoteDescription = types.BoolPointerValue(resultsItem.MatchRemoteDescription)
 			results.MatchRemoteName = types.BoolPointerValue(resultsItem.MatchRemoteName)
+			results.MaxDirectUsersAllowed = types.Int64PointerValue(resultsItem.MaxDirectUsersAllowed)
 			results.Name = types.StringPointerValue(resultsItem.Name)
 			results.ParentResourceID = types.StringPointerValue(resultsItem.ParentResourceID)
 			if resultsItem.RemoteInfo == nil {
@@ -537,6 +538,18 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.LinearProject = &tfTypes.GcpProject{}
 					results.RemoteInfo.LinearProject.ProjectID = types.StringValue(resultsItem.RemoteInfo.LinearProject.ProjectID)
 				}
+				if resultsItem.RemoteInfo.MiroBoard == nil {
+					results.RemoteInfo.MiroBoard = nil
+				} else {
+					results.RemoteInfo.MiroBoard = &tfTypes.MiroBoard{}
+					results.RemoteInfo.MiroBoard.BoardID = types.StringValue(resultsItem.RemoteInfo.MiroBoard.BoardID)
+				}
+				if resultsItem.RemoteInfo.MiroOrganization == nil {
+					results.RemoteInfo.MiroOrganization = nil
+				} else {
+					results.RemoteInfo.MiroOrganization = &tfTypes.ZendeskOrganization{}
+					results.RemoteInfo.MiroOrganization.OrganizationID = types.StringValue(resultsItem.RemoteInfo.MiroOrganization.OrganizationID)
+				}
 				if resultsItem.RemoteInfo.NetsuiteRole == nil {
 					results.RemoteInfo.NetsuiteRole = nil
 				} else {
@@ -629,6 +642,18 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 					results.RemoteInfo.SalesforceRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.SalesforceRole.RoleID = types.StringValue(resultsItem.RemoteInfo.SalesforceRole.RoleID)
 				}
+				if resultsItem.RemoteInfo.SlackOrganization == nil {
+					results.RemoteInfo.SlackOrganization = nil
+				} else {
+					results.RemoteInfo.SlackOrganization = &tfTypes.ZendeskOrganization{}
+					results.RemoteInfo.SlackOrganization.OrganizationID = types.StringValue(resultsItem.RemoteInfo.SlackOrganization.OrganizationID)
+				}
+				if resultsItem.RemoteInfo.SlackWorkspace == nil {
+					results.RemoteInfo.SlackWorkspace = nil
+				} else {
+					results.RemoteInfo.SlackWorkspace = &tfTypes.AnthropicWorkspace{}
+					results.RemoteInfo.SlackWorkspace.WorkspaceID = types.StringValue(resultsItem.RemoteInfo.SlackWorkspace.WorkspaceID)
+				}
 				if resultsItem.RemoteInfo.SnowflakeDatabase == nil {
 					results.RemoteInfo.SnowflakeDatabase = nil
 				} else {
@@ -661,6 +686,18 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				} else {
 					results.RemoteInfo.TeleportRole = &tfTypes.IlevelAdvancedRole{}
 					results.RemoteInfo.TeleportRole.RoleName = types.StringValue(resultsItem.RemoteInfo.TeleportRole.RoleName)
+				}
+				if resultsItem.RemoteInfo.TrayOrganization == nil {
+					results.RemoteInfo.TrayOrganization = nil
+				} else {
+					results.RemoteInfo.TrayOrganization = &tfTypes.ZendeskOrganization{}
+					results.RemoteInfo.TrayOrganization.OrganizationID = types.StringValue(resultsItem.RemoteInfo.TrayOrganization.OrganizationID)
+				}
+				if resultsItem.RemoteInfo.TrayWorkspace == nil {
+					results.RemoteInfo.TrayWorkspace = nil
+				} else {
+					results.RemoteInfo.TrayWorkspace = &tfTypes.AnthropicWorkspace{}
+					results.RemoteInfo.TrayWorkspace.WorkspaceID = types.StringValue(resultsItem.RemoteInfo.TrayWorkspace.WorkspaceID)
 				}
 				if resultsItem.RemoteInfo.TwingateResource == nil {
 					results.RemoteInfo.TwingateResource = nil
@@ -850,12 +887,6 @@ func (r *ResourcesListDataSourceModel) ToOperationsGetResourcesRequest(ctx conte
 	} else {
 		parentResourceID = nil
 	}
-	remoteID := new(string)
-	if !r.RemoteID.IsUnknown() && !r.RemoteID.IsNull() {
-		*remoteID = r.RemoteID.ValueString()
-	} else {
-		remoteID = nil
-	}
 	resourceIds := make([]string, 0, len(r.ResourceIds))
 	for resourceIdsIndex := range r.ResourceIds {
 		resourceIds = append(resourceIds, r.ResourceIds[resourceIdsIndex].ValueString())
@@ -866,21 +897,32 @@ func (r *ResourcesListDataSourceModel) ToOperationsGetResourcesRequest(ctx conte
 	} else {
 		resourceName = nil
 	}
+	resourceNameMatch := new(shared.NameMatchType)
+	if !r.ResourceNameMatch.IsUnknown() && !r.ResourceNameMatch.IsNull() {
+		*resourceNameMatch = shared.NameMatchType(r.ResourceNameMatch.ValueString())
+	} else {
+		resourceNameMatch = nil
+	}
 	resourceTypeFilter := new(shared.ResourceTypeEnum)
 	if !r.ResourceTypeFilter.IsUnknown() && !r.ResourceTypeFilter.IsNull() {
 		*resourceTypeFilter = shared.ResourceTypeEnum(r.ResourceTypeFilter.ValueString())
 	} else {
 		resourceTypeFilter = nil
 	}
+	tagIds := make([]string, 0, len(r.TagIds))
+	for tagIdsIndex := range r.TagIds {
+		tagIds = append(tagIds, r.TagIds[tagIdsIndex].ValueString())
+	}
 	out := operations.GetResourcesRequest{
 		AncestorResourceID: ancestorResourceID,
 		Cursor:             cursor,
 		PageSize:           pageSize,
 		ParentResourceID:   parentResourceID,
-		RemoteID:           remoteID,
 		ResourceIds:        resourceIds,
 		ResourceName:       resourceName,
+		ResourceNameMatch:  resourceNameMatch,
 		ResourceTypeFilter: resourceTypeFilter,
+		TagIds:             tagIds,
 	}
 
 	return &out, diags

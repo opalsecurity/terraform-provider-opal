@@ -10,8 +10,9 @@ import (
 
 // # AgentActivityEvent Object
 // ### Description
-// One activity event reported by an agent runtime. Today this is a Claude Code hook
-// payload, posted either by the hook itself or by a relay that batches them.
+// One activity event reported by an agent runtime: a Claude Code or Codex hook payload,
+// or a Cursor hook payload the Opal kit rewrote into the same shape, posted either by the
+// hook itself or by a relay that batches them.
 //
 // Only the fields below are read; everything else in the payload is parsed and
 // **discarded**, never persisted. That includes `transcript_path` / `scratchpad_dir`
@@ -36,8 +37,12 @@ type AgentActivityEvent struct {
 	AgentID *string `json:"agent_id,omitempty"`
 	// The subagent's type, e.g. `general-purpose`. Set alongside `agent_id`.
 	AgentType *string `json:"agent_type,omitempty"`
+	// The Cursor version, which Cursor adds to every hook input. Read only to mark an event as coming from Cursor when `opal_reported.client` is absent; not stored. A Cursor tool-call event named `preToolUse`, `postToolUse` or `postToolUseFailure` is stored under the Claude Code name for the same event.
+	CursorVersion *string `json:"cursor_version,omitempty"`
 	// The working directory the agent was operating in.
 	Cwd *string `json:"cwd,omitempty"`
+	// Set by an Opal hook kit on a `PreToolUse` or `PermissionRequest` it sends again after its live check failed (it timed out, or Opal could not be reached or answered with a server error). The client did not wait for Opal's answer, so the call already ran: the event is a record of it, never a check, and is never answered with a decision. When a row for the same call is already stored, the event is merged into it: the row keeps its verdict, is marked as delivered late, and takes any field it lacks from the event. A block, hold or deny on such a row was not applied. Otherwise the event is stored as an unchecked record, marked as delivered late.
+	DeliveredLate *bool `json:"delivered_late,omitempty"`
 	// How long the tool call took to run, in milliseconds, as Claude Code measured it. Claude Code's documentation says it leaves out time spent in permission prompts and in `PreToolUse` hooks. It is sent with `PostToolUse` and `PostToolUseFailure` only; it is ignored on any other event. **Unverified.** Stored only when it is a number from 0 to 86400000 (24 hours), rounded to a whole millisecond; any other value is dropped and the event is stored without it. A value of the wrong type never rejects the event or the batch it came in.
 	DurationMs any `json:"duration_ms,omitempty"`
 	// Which hook fired, e.g. `PostToolUse`, `PreToolUse`, `PermissionDenied`. Required; an event with no name cannot be interpreted and is rejected.
@@ -62,6 +67,8 @@ type AgentActivityEvent struct {
 	// the user called the server in their own configuration, and `source` is what the machine
 	// said.
 	McpServer *AgentActivityMcpServer `json:"mcp_server,omitempty"`
+	// The model the runtime was using, as Codex reports it. Read to tell Codex from Claude Code. Stored only for Codex's `PostModelRequest`, in the row's details, with the request's `status` (`completed`, `failed` or `cancelled`), its `error` (redacted and cut to 1,000 characters) and its `token_usage` counts, all three read from the event's other fields whatever their type.
+	Model *string `json:"model,omitempty"`
 	// # AgentActivityContentReport Object
 	// ### Description
 	// What Opal's hook kit adds to an event when it collects conversation content. Its
@@ -81,6 +88,18 @@ type AgentActivityEvent struct {
 	// URL, or by the hash of its command. The URL is stored without its query, fragment or
 	// user name and password.
 	OpalMcpServer *AgentActivityOpalMcpServer `json:"opal_mcp_server,omitempty"`
+	// # AgentActivityPromptCheck Object
+	// ### Description
+	// What Opal's hook kit found when it looked for secrets in a prompt on the machine, before the
+	// prompt went on (`UserPromptSubmit`). Sent only for a prompt it found a secret in. The prompt's
+	// text is sent with it only when the sender collects conversation content, already masked.
+	//
+	// Read only on a `UserPromptSubmit` event. The prompt's row is stored with the outcome as its
+	// decision (`FLAGGED` or `BLOCKED`) and the kinds as its reason, and the activity list shows it.
+	// A client whose mode records only what Opal acted on (Enforce only) has these prompts stored
+	// and its other prompts dropped. An outcome other than the two below, or no kind Opal can
+	// read, is ignored, and the prompt is stored as any other.
+	OpalPromptCheck *AgentActivityPromptCheck `json:"opal_prompt_check,omitempty"`
 	// # AgentActivityOpalReported Object
 	// ### Description
 	// What the sending machine says about who and what it is, added by the Opal hook
@@ -103,6 +122,8 @@ type AgentActivityEvent struct {
 	PromptID *string `json:"prompt_id,omitempty"`
 	// The agent session this event belongs to. Opaque to Opal.
 	SessionID *string `json:"session_id,omitempty"`
+	// On the `PostToolUse` of a call that started a subagent (Claude Code's `Agent` tool, or `Task`, its older name), the subagent's id: the `agentId` of the call's `tool_response`, which every event inside that subagent sends as `agent_id`. Opal's hook kit sends it even when it sends no conversation content: it is the one value of `tool_response` the kit keeps. When it is absent, Opal reads `tool_response.agentId` itself, which is how Claude Code's HTTP hook reports it. Stored with the call as `spawned_subagent_id`, and only when it is 1 to 128 letters, digits, dashes and underscores; any other value is ignored and never rejects the event. Read whatever its type, like `prompt`.
+	SpawnedAgentID any `json:"spawned_agent_id,omitempty"`
 	// When the client says the event occurred (RFC 3339). Clamped server-side to a window around receipt, because a client-controlled sort key is otherwise a way to pin rows to the top of every list. Defaults to receipt time when absent or unparseable.
 	Timestamp *time.Time `json:"timestamp,omitempty"`
 	// The call's arguments, as the runtime sent them. Server-defined for an MCP tool;
@@ -116,6 +137,9 @@ type AgentActivityEvent struct {
 	// Capped before storage. A capped payload is no longer valid JSON, so the row
 	// records that it was capped rather than leaving each reader to discover it by
 	// failing to parse.
+	//
+	// A value that is not an object (Codex sends a string when a model's function
+	// arguments are not valid JSON) is stored as `{"raw": <value>}` rather than rejected.
 	ToolInput map[string]any `json:"tool_input,omitempty"`
 	// The tool invoked, for tool-scoped events. Empty for session-level events.
 	//
@@ -126,10 +150,12 @@ type AgentActivityEvent struct {
 	// sender already converted it. Stored only as described above, as text: every image
 	// is replaced by a placeholder that names its type and size.
 	ToolResponse any `json:"tool_response,omitempty"`
-	// The tool invocation's id, used together with `hook_event_name` to deduplicate a retried delivery. Absent on events that carry none, which are stored at-least-once unless they carry `opal_event_id`.
+	// The tool invocation's id, used together with `hook_event_name` to deduplicate a retried delivery. Absent on events that carry none, which are stored at-least-once unless they are a prompt or the end of a turn with `session_id` and `prompt_id`, or carry `opal_event_id`.
 	ToolUseID *string `json:"tool_use_id,omitempty"`
 	// Read at ingest **only** to parse an operating-system username out of, as the last-resort attribution step, and then discarded. The path itself is never stored: it is an absolute path on an employee's laptop and Opal has no business accumulating those.
 	TranscriptPath *string `json:"transcript_path,omitempty"`
+	// Codex's id for one user turn. Codex sends no `prompt_id`, so for a Codex event this is stored as the prompt id. Together with `model`, and with no `prompt_id`, it also marks an event as coming from Codex when `opal_reported.client` is absent.
+	TurnID *string `json:"turn_id,omitempty"`
 }
 
 func (a AgentActivityEvent) MarshalJSON() ([]byte, error) {
@@ -171,11 +197,25 @@ func (a *AgentActivityEvent) GetAgentType() *string {
 	return a.AgentType
 }
 
+func (a *AgentActivityEvent) GetCursorVersion() *string {
+	if a == nil {
+		return nil
+	}
+	return a.CursorVersion
+}
+
 func (a *AgentActivityEvent) GetCwd() *string {
 	if a == nil {
 		return nil
 	}
 	return a.Cwd
+}
+
+func (a *AgentActivityEvent) GetDeliveredLate() *bool {
+	if a == nil {
+		return nil
+	}
+	return a.DeliveredLate
 }
 
 func (a *AgentActivityEvent) GetDurationMs() any {
@@ -206,6 +246,13 @@ func (a *AgentActivityEvent) GetMcpServer() *AgentActivityMcpServer {
 	return a.McpServer
 }
 
+func (a *AgentActivityEvent) GetModel() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Model
+}
+
 func (a *AgentActivityEvent) GetOpalContent() *AgentActivityContentReport {
 	if a == nil {
 		return nil
@@ -225,6 +272,13 @@ func (a *AgentActivityEvent) GetOpalMcpServer() *AgentActivityOpalMcpServer {
 		return nil
 	}
 	return a.OpalMcpServer
+}
+
+func (a *AgentActivityEvent) GetOpalPromptCheck() *AgentActivityPromptCheck {
+	if a == nil {
+		return nil
+	}
+	return a.OpalPromptCheck
 }
 
 func (a *AgentActivityEvent) GetOpalReported() *AgentActivityOpalReported {
@@ -260,6 +314,13 @@ func (a *AgentActivityEvent) GetSessionID() *string {
 		return nil
 	}
 	return a.SessionID
+}
+
+func (a *AgentActivityEvent) GetSpawnedAgentID() any {
+	if a == nil {
+		return nil
+	}
+	return a.SpawnedAgentID
 }
 
 func (a *AgentActivityEvent) GetTimestamp() *time.Time {
@@ -302,4 +363,11 @@ func (a *AgentActivityEvent) GetTranscriptPath() *string {
 		return nil
 	}
 	return a.TranscriptPath
+}
+
+func (a *AgentActivityEvent) GetTurnID() *string {
+	if a == nil {
+		return nil
+	}
+	return a.TurnID
 }

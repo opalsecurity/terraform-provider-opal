@@ -43,6 +43,7 @@ type GroupDataSourceModel struct {
 	LastSuccessfulSync          *tfTypes.LastSuccessfulSync                  `tfsdk:"last_successful_sync"`
 	MatchRemoteDescription      types.Bool                                   `tfsdk:"match_remote_description"`
 	MatchRemoteName             types.Bool                                   `tfsdk:"match_remote_name"`
+	MaxDirectUsersAllowed       types.Int64                                  `tfsdk:"max_direct_users_allowed"`
 	MessageChannels             *tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
 	Name                        types.String                                 `tfsdk:"name"`
 	OnCallSchedules             *tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"on_call_schedules"`
@@ -131,6 +132,10 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			"match_remote_name": schema.BoolAttribute{
 				Computed:    true,
 				Description: `A bool representing whether or not the group's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.`,
+			},
+			"max_direct_users_allowed": schema.Int64Attribute{
+				Computed:    true,
+				Description: `The maximum number of direct users allowed for this group at once. Set to null to remove the limit.`,
 			},
 			"message_channels": schema.SingleNestedAttribute{
 				Computed: true,
@@ -528,6 +533,26 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							},
 						},
 						Description: `Remote info for Linear team.`,
+					},
+					"miro_team": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"team_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The team id of the Miro Team.`,
+							},
+						},
+						Description: `Remote info for Miro Team.`,
+					},
+					"miro_user_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"user_group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The user group id of the Miro User Group.`,
+							},
+						},
+						Description: `Remote info for Miro User Group.`,
 					},
 					"okta_group": schema.SingleNestedAttribute{
 						Computed: true,

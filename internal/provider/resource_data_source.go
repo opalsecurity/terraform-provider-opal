@@ -42,6 +42,7 @@ type ResourceDataSourceModel struct {
 	LastSuccessfulSync          *tfTypes.LastSuccessfulSync             `tfsdk:"last_successful_sync"`
 	MatchRemoteDescription      types.Bool                              `tfsdk:"match_remote_description"`
 	MatchRemoteName             types.Bool                              `tfsdk:"match_remote_name"`
+	MaxDirectUsersAllowed       types.Int64                             `tfsdk:"max_direct_users_allowed"`
 	Name                        types.String                            `tfsdk:"name"`
 	ParentResourceID            types.String                            `tfsdk:"parent_resource_id"`
 	RemoteInfo                  *tfTypes.ResourceRemoteInfo             `tfsdk:"remote_info"`
@@ -128,6 +129,10 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"match_remote_name": schema.BoolAttribute{
 				Computed:    true,
 				Description: `A bool representing whether or not the resource's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.`,
+			},
+			"max_direct_users_allowed": schema.Int64Attribute{
+				Computed:    true,
+				Description: `The maximum number of direct users allowed for this resource at once. Set to null to remove the limit.`,
 			},
 			"name": schema.StringAttribute{
 				Computed:    true,
@@ -1026,6 +1031,26 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Linear project.`,
 					},
+					"miro_board": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"board_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The board id of the Miro Board.`,
+							},
+						},
+						Description: `Remote info for Miro Board.`,
+					},
+					"miro_organization": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"organization_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The organization id of the Miro Organization.`,
+							},
+						},
+						Description: `Remote info for Miro Organization.`,
+					},
 					"netsuite_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -1184,6 +1209,26 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Salesforce role.`,
 					},
+					"slack_organization": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"organization_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Slack Enterprise Grid organization (enterprise ID).`,
+							},
+						},
+						Description: `Remote info for Slack Enterprise Grid organization.`,
+					},
+					"slack_workspace": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"workspace_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Slack workspace (team ID).`,
+							},
+						},
+						Description: `Remote info for Slack workspace.`,
+					},
 					"snowflake_database": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -1245,6 +1290,26 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for Teleport role.`,
+					},
+					"tray_organization": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"organization_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The organization id of the Tray Organization.`,
+							},
+						},
+						Description: `Remote info for Tray Organization.`,
+					},
+					"tray_workspace": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"workspace_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The workspace id of the Tray Workspace.`,
+							},
+						},
+						Description: `Remote info for Tray Workspace.`,
 					},
 					"twingate_resource": schema.SingleNestedAttribute{
 						Computed: true,

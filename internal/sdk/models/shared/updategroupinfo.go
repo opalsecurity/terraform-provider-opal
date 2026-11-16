@@ -29,6 +29,8 @@ type UpdateGroupInfo struct {
 	MatchRemoteDescription *bool `json:"match_remote_description,omitempty"`
 	// A bool representing whether or not the group's name should be synced from the end system. When true, the name is overwritten with the remote name on each sync, so a `name` provided together with this field set to true will be replaced at the next sync. If not provided, the current value is left unchanged.
 	MatchRemoteName *bool `json:"match_remote_name,omitempty"`
+	// The maximum number of direct users allowed for this group at once. Set to null to remove the limit.
+	MaxDirectUsersAllowed *int64 `json:"max_direct_users_allowed,omitempty"`
 	// The name of the group.
 	Name *string `json:"name,omitempty"`
 	// The request configuration list of the configuration template. If not provided, the default request configuration will be used.
@@ -105,6 +107,13 @@ func (u *UpdateGroupInfo) GetMatchRemoteName() *bool {
 		return nil
 	}
 	return u.MatchRemoteName
+}
+
+func (u *UpdateGroupInfo) GetMaxDirectUsersAllowed() *int64 {
+	if u == nil {
+		return nil
+	}
+	return u.MaxDirectUsersAllowed
 }
 
 func (u *UpdateGroupInfo) GetName() *string {

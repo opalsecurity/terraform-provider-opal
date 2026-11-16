@@ -152,6 +152,12 @@ func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(ctx context.Conte
 func (r *RequestsDataSourceModel) ToOperationsGetRequestsRequest(ctx context.Context) (*operations.GetRequestsRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	appID := new(string)
+	if !r.AppID.IsUnknown() && !r.AppID.IsNull() {
+		*appID = r.AppID.ValueString()
+	} else {
+		appID = nil
+	}
 	cursor := new(string)
 	if !r.Cursor.IsUnknown() && !r.Cursor.IsNull() {
 		*cursor = r.Cursor.ValueString()
@@ -207,6 +213,7 @@ func (r *RequestsDataSourceModel) ToOperationsGetRequestsRequest(ctx context.Con
 		targetUserID = nil
 	}
 	out := operations.GetRequestsRequest{
+		AppID:           appID,
 		Cursor:          cursor,
 		EndDateFilter:   endDateFilter,
 		GroupID:         groupID,

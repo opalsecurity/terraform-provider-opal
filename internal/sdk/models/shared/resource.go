@@ -152,6 +152,8 @@ type Resource struct {
 	MatchRemoteDescription *bool `json:"match_remote_description,omitempty"`
 	// A bool representing whether or not the resource's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.
 	MatchRemoteName *bool `json:"match_remote_name,omitempty"`
+	// The maximum number of direct users allowed for this resource at once. Set to null to remove the limit.
+	MaxDirectUsersAllowed *int64 `json:"max_direct_users_allowed,omitempty"`
 	// The name of the resource.
 	Name *string `json:"name,omitempty"`
 	// The ID of the parent resource.
@@ -261,6 +263,13 @@ func (r *Resource) GetMatchRemoteName() *bool {
 		return nil
 	}
 	return r.MatchRemoteName
+}
+
+func (r *Resource) GetMaxDirectUsersAllowed() *int64 {
+	if r == nil {
+		return nil
+	}
+	return r.MaxDirectUsersAllowed
 }
 
 func (r *Resource) GetName() *string {

@@ -79,6 +79,8 @@ type ResourceRemoteInfo struct {
 	IlevelAdvancedRole                *IlevelAdvancedRole                `tfsdk:"ilevel_advanced_role"`
 	LinearOrganization                *CursorOrganization                `tfsdk:"linear_organization"`
 	LinearProject                     *GcpProject                        `tfsdk:"linear_project"`
+	MiroBoard                         *MiroBoard                         `tfsdk:"miro_board"`
+	MiroOrganization                  *ZendeskOrganization               `tfsdk:"miro_organization"`
 	NetsuiteRole                      *ClickhouseRole                    `tfsdk:"netsuite_role"`
 	OktaApp                           *OktaApp                           `tfsdk:"okta_app"`
 	OktaCustomRole                    *ClickhouseRole                    `tfsdk:"okta_custom_role"`
@@ -94,11 +96,15 @@ type ResourceRemoteInfo struct {
 	SalesforcePermissionSet           *SalesforcePermissionSet           `tfsdk:"salesforce_permission_set"`
 	SalesforceProfile                 *SalesforceProfile                 `tfsdk:"salesforce_profile"`
 	SalesforceRole                    *ClickhouseRole                    `tfsdk:"salesforce_role"`
+	SlackOrganization                 *ZendeskOrganization               `tfsdk:"slack_organization"`
+	SlackWorkspace                    *AnthropicWorkspace                `tfsdk:"slack_workspace"`
 	SnowflakeDatabase                 *ClickhouseDatabase                `tfsdk:"snowflake_database"`
 	SnowflakeSchema                   *SnowflakeSchema                   `tfsdk:"snowflake_schema"`
 	SnowflakeTable                    *SnowflakeTable                    `tfsdk:"snowflake_table"`
 	TailscaleSSH                      *TailscaleSSH                      `tfsdk:"tailscale_ssh"`
 	TeleportRole                      *IlevelAdvancedRole                `tfsdk:"teleport_role"`
+	TrayOrganization                  *ZendeskOrganization               `tfsdk:"tray_organization"`
+	TrayWorkspace                     *AnthropicWorkspace                `tfsdk:"tray_workspace"`
 	TwingateResource                  *AzureEnterpriseApp                `tfsdk:"twingate_resource"`
 	VercelProject                     *GcpProject                        `tfsdk:"vercel_project"`
 	VercelRole                        *ClickhouseRole                    `tfsdk:"vercel_role"`

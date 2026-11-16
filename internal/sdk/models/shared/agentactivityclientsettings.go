@@ -13,6 +13,8 @@ type AgentActivityClientSettings struct {
 	BurstRequests int64 `json:"burst_requests"`
 	// How long these settings may be kept before asking again.
 	CacheSeconds int64 `json:"cache_seconds"`
+	// What the organization chose on the Setup tab for each client that runs the hook, keyed by client (claude_code, codex, cursor). A client that is not listed keeps the defaults.
+	Clients map[string]AgentActivityClientSetting `json:"clients"`
 	// The largest body, in bytes, `/agent-activity` accepts for a request with more than one event. A request with one event may be up to 1 MiB.
 	MaxBytesPerRequest int64 `json:"max_bytes_per_request"`
 	// The most events one request to `/agent-activity` may carry.
@@ -40,6 +42,13 @@ func (a *AgentActivityClientSettings) GetCacheSeconds() int64 {
 		return 0
 	}
 	return a.CacheSeconds
+}
+
+func (a *AgentActivityClientSettings) GetClients() map[string]AgentActivityClientSetting {
+	if a == nil {
+		return map[string]AgentActivityClientSetting{}
+	}
+	return a.Clients
 }
 
 func (a *AgentActivityClientSettings) GetMaxBytesPerRequest() int64 {

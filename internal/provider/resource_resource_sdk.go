@@ -54,6 +54,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 		}
 		r.MatchRemoteDescription = types.BoolPointerValue(resp.MatchRemoteDescription)
 		r.MatchRemoteName = types.BoolPointerValue(resp.MatchRemoteName)
+		r.MaxDirectUsersAllowed = types.Int64PointerValue(resp.MaxDirectUsersAllowed)
 		r.Name = types.StringPointerValue(resp.Name)
 		r.ParentResourceID = types.StringPointerValue(resp.ParentResourceID)
 		if resp.RemoteInfo == nil {
@@ -544,6 +545,18 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.LinearProject = &tfTypes.GcpProject{}
 				r.RemoteInfo.LinearProject.ProjectID = types.StringValue(resp.RemoteInfo.LinearProject.ProjectID)
 			}
+			if resp.RemoteInfo.MiroBoard == nil {
+				r.RemoteInfo.MiroBoard = nil
+			} else {
+				r.RemoteInfo.MiroBoard = &tfTypes.MiroBoard{}
+				r.RemoteInfo.MiroBoard.BoardID = types.StringValue(resp.RemoteInfo.MiroBoard.BoardID)
+			}
+			if resp.RemoteInfo.MiroOrganization == nil {
+				r.RemoteInfo.MiroOrganization = nil
+			} else {
+				r.RemoteInfo.MiroOrganization = &tfTypes.ZendeskOrganization{}
+				r.RemoteInfo.MiroOrganization.OrganizationID = types.StringValue(resp.RemoteInfo.MiroOrganization.OrganizationID)
+			}
 			if resp.RemoteInfo.NetsuiteRole == nil {
 				r.RemoteInfo.NetsuiteRole = nil
 			} else {
@@ -636,6 +649,18 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 				r.RemoteInfo.SalesforceRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.SalesforceRole.RoleID = types.StringValue(resp.RemoteInfo.SalesforceRole.RoleID)
 			}
+			if resp.RemoteInfo.SlackOrganization == nil {
+				r.RemoteInfo.SlackOrganization = nil
+			} else {
+				r.RemoteInfo.SlackOrganization = &tfTypes.ZendeskOrganization{}
+				r.RemoteInfo.SlackOrganization.OrganizationID = types.StringValue(resp.RemoteInfo.SlackOrganization.OrganizationID)
+			}
+			if resp.RemoteInfo.SlackWorkspace == nil {
+				r.RemoteInfo.SlackWorkspace = nil
+			} else {
+				r.RemoteInfo.SlackWorkspace = &tfTypes.AnthropicWorkspace{}
+				r.RemoteInfo.SlackWorkspace.WorkspaceID = types.StringValue(resp.RemoteInfo.SlackWorkspace.WorkspaceID)
+			}
 			if resp.RemoteInfo.SnowflakeDatabase == nil {
 				r.RemoteInfo.SnowflakeDatabase = nil
 			} else {
@@ -668,6 +693,18 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			} else {
 				r.RemoteInfo.TeleportRole = &tfTypes.IlevelAdvancedRole{}
 				r.RemoteInfo.TeleportRole.RoleName = types.StringValue(resp.RemoteInfo.TeleportRole.RoleName)
+			}
+			if resp.RemoteInfo.TrayOrganization == nil {
+				r.RemoteInfo.TrayOrganization = nil
+			} else {
+				r.RemoteInfo.TrayOrganization = &tfTypes.ZendeskOrganization{}
+				r.RemoteInfo.TrayOrganization.OrganizationID = types.StringValue(resp.RemoteInfo.TrayOrganization.OrganizationID)
+			}
+			if resp.RemoteInfo.TrayWorkspace == nil {
+				r.RemoteInfo.TrayWorkspace = nil
+			} else {
+				r.RemoteInfo.TrayWorkspace = &tfTypes.AnthropicWorkspace{}
+				r.RemoteInfo.TrayWorkspace.WorkspaceID = types.StringValue(resp.RemoteInfo.TrayWorkspace.WorkspaceID)
 			}
 			if resp.RemoteInfo.TwingateResource == nil {
 				r.RemoteInfo.TwingateResource = nil
@@ -847,6 +884,7 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.
 	r.ID = types.StringValue(resp.ID)
 	r.MatchRemoteDescription = types.BoolPointerValue(resp.MatchRemoteDescription)
 	r.MatchRemoteName = types.BoolPointerValue(resp.MatchRemoteName)
+	r.MaxDirectUsersAllowed = types.Int64PointerValue(resp.MaxDirectUsersAllowed)
 	r.Name = types.StringPointerValue(resp.Name)
 	r.ParentResourceID = types.StringPointerValue(resp.ParentResourceID)
 	r.RequestConfigurations = []tfTypes.RequestConfiguration{}
@@ -1090,6 +1128,12 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		*matchRemoteName = r.MatchRemoteName.ValueBool()
 	} else {
 		matchRemoteName = nil
+	}
+	maxDirectUsersAllowed := new(int64)
+	if !r.MaxDirectUsersAllowed.IsUnknown() && !r.MaxDirectUsersAllowed.IsNull() {
+		*maxDirectUsersAllowed = r.MaxDirectUsersAllowed.ValueInt64()
+	} else {
+		maxDirectUsersAllowed = nil
 	}
 	var name string
 	name = r.Name.ValueString()
@@ -1929,6 +1973,24 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				ProjectID: projectId7,
 			}
 		}
+		var miroBoard *shared.MiroBoard
+		if r.RemoteInfo.MiroBoard != nil {
+			var boardID string
+			boardID = r.RemoteInfo.MiroBoard.BoardID.ValueString()
+
+			miroBoard = &shared.MiroBoard{
+				BoardID: boardID,
+			}
+		}
+		var miroOrganization *shared.MiroOrganization
+		if r.RemoteInfo.MiroOrganization != nil {
+			var organizationId2 string
+			organizationId2 = r.RemoteInfo.MiroOrganization.OrganizationID.ValueString()
+
+			miroOrganization = &shared.MiroOrganization{
+				OrganizationID: organizationId2,
+			}
+		}
 		var netsuiteRole *shared.NetsuiteRole
 		if r.RemoteInfo.NetsuiteRole != nil {
 			var roleId11 string
@@ -2072,6 +2134,24 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				RoleID: roleId14,
 			}
 		}
+		var slackOrganization *shared.SlackOrganization
+		if r.RemoteInfo.SlackOrganization != nil {
+			var organizationId3 string
+			organizationId3 = r.RemoteInfo.SlackOrganization.OrganizationID.ValueString()
+
+			slackOrganization = &shared.SlackOrganization{
+				OrganizationID: organizationId3,
+			}
+		}
+		var slackWorkspace *shared.SlackWorkspace
+		if r.RemoteInfo.SlackWorkspace != nil {
+			var workspaceId1 string
+			workspaceId1 = r.RemoteInfo.SlackWorkspace.WorkspaceID.ValueString()
+
+			slackWorkspace = &shared.SlackWorkspace{
+				WorkspaceID: workspaceId1,
+			}
+		}
 		var snowflakeDatabase *shared.SnowflakeDatabase
 		if r.RemoteInfo.SnowflakeDatabase != nil {
 			var databaseName3 string
@@ -2127,6 +2207,24 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 
 			teleportRole = &shared.TeleportRole{
 				RoleName: roleName2,
+			}
+		}
+		var trayOrganization *shared.TrayOrganization
+		if r.RemoteInfo.TrayOrganization != nil {
+			var organizationId4 string
+			organizationId4 = r.RemoteInfo.TrayOrganization.OrganizationID.ValueString()
+
+			trayOrganization = &shared.TrayOrganization{
+				OrganizationID: organizationId4,
+			}
+		}
+		var trayWorkspace *shared.TrayWorkspace
+		if r.RemoteInfo.TrayWorkspace != nil {
+			var workspaceId2 string
+			workspaceId2 = r.RemoteInfo.TrayWorkspace.WorkspaceID.ValueString()
+
+			trayWorkspace = &shared.TrayWorkspace{
+				WorkspaceID: workspaceId2,
 			}
 		}
 		var twingateResource *shared.TwingateResource
@@ -2277,6 +2375,8 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			IlevelAdvancedRole:                ilevelAdvancedRole,
 			LinearOrganization:                linearOrganization,
 			LinearProject:                     linearProject,
+			MiroBoard:                         miroBoard,
+			MiroOrganization:                  miroOrganization,
 			NetsuiteRole:                      netsuiteRole,
 			OktaApp:                           oktaApp,
 			OktaCustomRole:                    oktaCustomRole,
@@ -2292,11 +2392,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			SalesforcePermissionSet:           salesforcePermissionSet,
 			SalesforceProfile:                 salesforceProfile,
 			SalesforceRole:                    salesforceRole,
+			SlackOrganization:                 slackOrganization,
+			SlackWorkspace:                    slackWorkspace,
 			SnowflakeDatabase:                 snowflakeDatabase,
 			SnowflakeSchema:                   snowflakeSchema,
 			SnowflakeTable:                    snowflakeTable,
 			TailscaleSSH:                      tailscaleSSH,
 			TeleportRole:                      teleportRole,
+			TrayOrganization:                  trayOrganization,
+			TrayWorkspace:                     trayWorkspace,
 			TwingateResource:                  twingateResource,
 			VercelProject:                     vercelProject,
 			VercelRole:                        vercelRole,
@@ -2306,6 +2410,12 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			ZoomLicense:                       zoomLicense,
 			ZoomRole:                          zoomRole,
 		}
+	}
+	requiresForfeitReason := new(bool)
+	if !r.RequiresForfeitReason.IsUnknown() && !r.RequiresForfeitReason.IsNull() {
+		*requiresForfeitReason = r.RequiresForfeitReason.ValueBool()
+	} else {
+		requiresForfeitReason = nil
 	}
 	resourceType := shared.ResourceTypeEnum(r.ResourceType.ValueString())
 	riskSensitivityOverride := new(shared.RiskSensitivityEnum)
@@ -2320,8 +2430,10 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		Description:               description,
 		MatchRemoteDescription:    matchRemoteDescription,
 		MatchRemoteName:           matchRemoteName,
+		MaxDirectUsersAllowed:     maxDirectUsersAllowed,
 		Name:                      name,
 		RemoteInfo:                remoteInfo,
+		RequiresForfeitReason:     requiresForfeitReason,
 		ResourceType:              resourceType,
 		RiskSensitivityOverride:   riskSensitivityOverride,
 	}
@@ -2386,6 +2498,12 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 		*matchRemoteName = r.MatchRemoteName.ValueBool()
 	} else {
 		matchRemoteName = nil
+	}
+	maxDirectUsersAllowed := new(int64)
+	if !r.MaxDirectUsersAllowed.IsUnknown() && !r.MaxDirectUsersAllowed.IsNull() {
+		*maxDirectUsersAllowed = r.MaxDirectUsersAllowed.ValueInt64()
+	} else {
+		maxDirectUsersAllowed = nil
 	}
 	name := new(string)
 	if !r.Name.IsUnknown() && !r.Name.IsNull() {
@@ -2603,6 +2721,7 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 		ID:                          id,
 		MatchRemoteDescription:      matchRemoteDescription,
 		MatchRemoteName:             matchRemoteName,
+		MaxDirectUsersAllowed:       maxDirectUsersAllowed,
 		Name:                        name,
 		ParentResourceID:            parentResourceID,
 		RequestConfigurations:       requestConfigurations,

@@ -37,6 +37,8 @@ func newAgentActivity(rootSDK *OpalAPI, sdkConfig config.SDKConfiguration, hooks
 // **Prototype (AG-336).** The AI security server endpoint for Anthropic Inference hooks. Anthropic POSTs each governed frame here and waits for an allow or deny verdict. Configure it in claude.ai with this URL and a custom `Authorization: Bearer <Opal API key>` request header.
 //
 // `tool_call` frames are evaluated against the organization's runtime policy rules. One verdict covers every tool call in the frame. Every other frame type, including `prompt`, is allowed without inspection. Any non-200 response is a webhook failure, so the organization's Anthropic failure-handling setting decides the outcome.
+//
+// Once the organization saves its Anthropic signing secret in Opal, a `tool_call` frame must carry a valid Standard Webhooks signature (`webhook-id`, `webhook-timestamp`, `webhook-signature`), or it is answered with a 401.
 func (s *AgentActivity) AnthropicInferenceHook(ctx context.Context, request map[string]any, opts ...operations.Option) (*operations.AnthropicInferenceHookResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -229,6 +231,8 @@ func (s *AgentActivity) AnthropicInferenceHook(ctx context.Context, request map[
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 401:
+		utils.DrainBody(httpRes)
 	case httpRes.StatusCode == 500:
 		utils.DrainBody(httpRes)
 	default:

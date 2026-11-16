@@ -20,6 +20,7 @@ type Group struct {
 	LastSuccessfulSync          *LastSuccessfulSync    `tfsdk:"last_successful_sync"`
 	MatchRemoteDescription      types.Bool             `tfsdk:"match_remote_description"`
 	MatchRemoteName             types.Bool             `tfsdk:"match_remote_name"`
+	MaxDirectUsersAllowed       types.Int64            `tfsdk:"max_direct_users_allowed"`
 	Name                        types.String           `tfsdk:"name"`
 	RemoteInfo                  *GroupRemoteInfo       `tfsdk:"remote_info"`
 	RemoteName                  types.String           `tfsdk:"remote_name"`
