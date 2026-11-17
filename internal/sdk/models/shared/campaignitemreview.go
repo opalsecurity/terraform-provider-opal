@@ -79,6 +79,14 @@ type CampaignItemReview struct {
 	// or substituted.
 	//
 	ResolutionMessage *string `json:"resolution_message,omitempty"`
+	// Denormalized email of the assigned reviewer. Null when the reviewer
+	// user row cannot be loaded.
+	//
+	ReviewerEmail *string `json:"reviewer_email,omitempty"`
+	// Denormalized display name of the assigned reviewer. Null when the
+	// reviewer user row cannot be loaded.
+	//
+	ReviewerFullName *string `json:"reviewer_full_name,omitempty"`
 	// The ID of the assigned reviewer.
 	ReviewerUserID string `json:"reviewer_user_id"`
 	// Target access level remote ID when decision is CHANGE_ROLE.
@@ -145,6 +153,20 @@ func (c *CampaignItemReview) GetResolutionMessage() *string {
 		return nil
 	}
 	return c.ResolutionMessage
+}
+
+func (c *CampaignItemReview) GetReviewerEmail() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ReviewerEmail
+}
+
+func (c *CampaignItemReview) GetReviewerFullName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ReviewerFullName
 }
 
 func (c *CampaignItemReview) GetReviewerUserID() string {

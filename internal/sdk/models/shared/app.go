@@ -3,6 +3,10 @@
 
 package shared
 
+import (
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
+)
+
 // AppSchemasType - The type of an app.
 type AppSchemasType string
 
@@ -105,7 +109,18 @@ type App struct {
 	Visibility *VisibilityTypeEnum `json:"visibility,omitempty"`
 	// The IDs of groups that can see this app when visibility is `LIMITED`.
 	// Must be empty when visibility is `GLOBAL`.
-	VisibilityGroupIds []string `json:"visibility_group_ids,omitempty"`
+	VisibilityGroupIds []string `json:"visibility_group_ids"`
+}
+
+func (a App) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(a, "", false)
+}
+
+func (a *App) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &a, "", false, nil); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (a *App) GetAdminOwnerID() string {

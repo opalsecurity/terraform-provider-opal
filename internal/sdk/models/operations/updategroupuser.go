@@ -11,6 +11,8 @@ import (
 type UpdateGroupUserRequestBody struct {
 	// The updated remote ID of the access level granted to this user.
 	AccessLevelRemoteID *string `json:"access_level_remote_id,omitempty"`
+	// Record this Opal user as the actor of the membership change in the audit event instead of the caller. Only for service users an admin has allowed to act for users, in organizations with the feature enabled. The named user must be a person (not a service user) in the caller's organization and active in the identity provider. Authorization is unchanged: the caller still needs permission to edit assignments on the group. The named user's own permissions on the group are not evaluated.
+	ActingUserID *string `json:"acting_user_id,omitempty"`
 	// The updated duration for which the group can be accessed (in minutes). Use 0 for indefinite, or a negative value to revoke access.
 	DurationMinutes int64 `json:"duration_minutes"`
 }
@@ -20,6 +22,13 @@ func (u *UpdateGroupUserRequestBody) GetAccessLevelRemoteID() *string {
 		return nil
 	}
 	return u.AccessLevelRemoteID
+}
+
+func (u *UpdateGroupUserRequestBody) GetActingUserID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.ActingUserID
 }
 
 func (u *UpdateGroupUserRequestBody) GetDurationMinutes() int64 {

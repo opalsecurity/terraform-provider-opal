@@ -15,6 +15,7 @@ resource "opal_group" "my_group" {
   ]
   match_remote_description = false
   match_remote_name        = false
+  max_direct_users_allowed = 10
   message_channel_ids = [
     "01f0dea1-52d3-4b76-b362-1ee677e90fd2"
   ]
@@ -117,6 +118,12 @@ resource "opal_group" "my_group" {
     }
     linear_team = {
       team_id = "8caed98e-1234-5678-9abc-def012345678"
+    }
+    miro_team = {
+      team_id = "...my_team_id..."
+    }
+    miro_user_group = {
+      user_group_id = "...my_user_group_id..."
     }
     okta_group = {
       group_id = "00gjs33pe8rtmRrp3rd6"

@@ -48,6 +48,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 			}
 			results.MatchRemoteDescription = types.BoolPointerValue(resultsItem.MatchRemoteDescription)
 			results.MatchRemoteName = types.BoolPointerValue(resultsItem.MatchRemoteName)
+			results.MaxDirectUsersAllowed = types.Int64PointerValue(resultsItem.MaxDirectUsersAllowed)
 			results.Name = types.StringPointerValue(resultsItem.Name)
 			if resultsItem.RemoteInfo == nil {
 				results.RemoteInfo = nil
@@ -240,6 +241,18 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				} else {
 					results.RemoteInfo.LinearTeam = &tfTypes.GrafanaTeam{}
 					results.RemoteInfo.LinearTeam.TeamID = types.StringValue(resultsItem.RemoteInfo.LinearTeam.TeamID)
+				}
+				if resultsItem.RemoteInfo.MiroTeam == nil {
+					results.RemoteInfo.MiroTeam = nil
+				} else {
+					results.RemoteInfo.MiroTeam = &tfTypes.GrafanaTeam{}
+					results.RemoteInfo.MiroTeam.TeamID = types.StringValue(resultsItem.RemoteInfo.MiroTeam.TeamID)
+				}
+				if resultsItem.RemoteInfo.MiroUserGroup == nil {
+					results.RemoteInfo.MiroUserGroup = nil
+				} else {
+					results.RemoteInfo.MiroUserGroup = &tfTypes.MiroUserGroup{}
+					results.RemoteInfo.MiroUserGroup.UserGroupID = types.StringValue(resultsItem.RemoteInfo.MiroUserGroup.UserGroupID)
 				}
 				if resultsItem.RemoteInfo.OktaGroup == nil {
 					results.RemoteInfo.OktaGroup = nil
@@ -499,18 +512,30 @@ func (r *GroupListDataSourceModel) ToOperationsGetGroupsRequest(ctx context.Cont
 	} else {
 		pageSize = nil
 	}
+	remoteID := new(string)
+	if !r.RemoteID.IsUnknown() && !r.RemoteID.IsNull() {
+		*remoteID = r.RemoteID.ValueString()
+	} else {
+		remoteID = nil
+	}
 	requestable := new(bool)
 	if !r.Requestable.IsUnknown() && !r.Requestable.IsNull() {
 		*requestable = r.Requestable.ValueBool()
 	} else {
 		requestable = nil
 	}
+	tagIds := make([]string, 0, len(r.TagIds))
+	for tagIdsIndex := range r.TagIds {
+		tagIds = append(tagIds, r.TagIds[tagIdsIndex].ValueString())
+	}
 	out := operations.GetGroupsRequest{
 		GroupIds:        groupIds,
 		GroupName:       groupName,
 		GroupTypeFilter: groupTypeFilter,
 		PageSize:        pageSize,
+		RemoteID:        remoteID,
 		Requestable:     requestable,
+		TagIds:          tagIds,
 	}
 
 	return &out, diags

@@ -38,6 +38,8 @@ func (e *DurationMinutes) UnmarshalJSON(data []byte) error {
 type CreateGroupUserRequestBody struct {
 	// The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used.
 	AccessLevelRemoteID *string `json:"access_level_remote_id,omitempty"`
+	// Record this Opal user as the actor of the membership add in the audit event instead of the caller. Only for service users an admin has allowed to act for users, in organizations with the feature enabled. The named user must be a person (not a service user) in the caller's organization and active in the identity provider. Authorization is unchanged: the caller still needs permission to edit assignments on the group. The named user's own permissions on the group are not evaluated.
+	ActingUserID *string `json:"acting_user_id,omitempty"`
 	// Must be set to 0. Any nonzerovalue in terraform does not make sense.
 	DurationMinutes *DurationMinutes `default:"0" json:"duration_minutes"`
 }
@@ -58,6 +60,13 @@ func (c *CreateGroupUserRequestBody) GetAccessLevelRemoteID() *string {
 		return nil
 	}
 	return c.AccessLevelRemoteID
+}
+
+func (c *CreateGroupUserRequestBody) GetActingUserID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ActingUserID
 }
 
 func (c *CreateGroupUserRequestBody) GetDurationMinutes() *DurationMinutes {

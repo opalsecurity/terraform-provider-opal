@@ -35,6 +35,8 @@ type GroupRemoteInfo struct {
 	JiraGroup                *ActiveDirectoryGroup  `tfsdk:"jira_group"`
 	LdapGroup                *ActiveDirectoryGroup  `tfsdk:"ldap_group"`
 	LinearTeam               *GrafanaTeam           `tfsdk:"linear_team"`
+	MiroTeam                 *GrafanaTeam           `tfsdk:"miro_team"`
+	MiroUserGroup            *MiroUserGroup         `tfsdk:"miro_user_group"`
 	OktaGroup                *ActiveDirectoryGroup  `tfsdk:"okta_group"`
 	OktaGroupRule            *OktaGroupRule         `tfsdk:"okta_group_rule"`
 	OneloginGroup            *ActiveDirectoryGroup  `tfsdk:"onelogin_group"`

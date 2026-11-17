@@ -7,13 +7,33 @@ import (
 	"net/http"
 )
 
+type DeleteGroupUserRequestBody struct {
+	// Record this Opal user as the actor of the membership removal in the audit event instead of the caller. Only for service users an admin has allowed to act for users, in organizations with the feature enabled. The named user must be a person (not a service user) in the caller's organization and active in the identity provider. Authorization is unchanged: the caller still needs permission to edit assignments on the group. The named user's own permissions on the group are not evaluated. Unknown body fields are rejected, so a misspelled field fails instead of removing access as the caller.
+	ActingUserID *string `json:"acting_user_id,omitempty"`
+}
+
+func (d *DeleteGroupUserRequestBody) GetActingUserID() *string {
+	if d == nil {
+		return nil
+	}
+	return d.ActingUserID
+}
+
 type DeleteGroupUserRequest struct {
+	RequestBody *DeleteGroupUserRequestBody `request:"mediaType=application/json"`
 	// The remote ID of the access level for which this user has direct access. If omitted, the default access level remote ID value (empty string) is assumed.
 	AccessLevelRemoteID *string `queryParam:"style=form,explode=true,name=access_level_remote_id"`
 	// The ID of the group.
 	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
 	// The ID of a user to remove from this group.
 	UserID string `pathParam:"style=simple,explode=false,name=user_id"`
+}
+
+func (d *DeleteGroupUserRequest) GetRequestBody() *DeleteGroupUserRequestBody {
+	if d == nil {
+		return nil
+	}
+	return d.RequestBody
 }
 
 func (d *DeleteGroupUserRequest) GetAccessLevelRemoteID() *string {
