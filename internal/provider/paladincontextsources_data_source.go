@@ -67,11 +67,11 @@ func (r *PaladinContextSourcesDataSource) Schema(ctx context.Context, req dataso
 						},
 						"remote_id": schema.StringAttribute{
 							Computed:    true,
-							Description: `The provider's identifier for the source. The Slack channel ID for a channel, or the Notion/Confluence page ID for a document.`,
+							Description: `The provider's identifier for the source. The Slack channel ID for a channel, or the Notion/Confluence page ID or numeric Freshservice article ID for a document.`,
 						},
 						"source_kind": schema.StringAttribute{
 							Computed:    true,
-							Description: `The kind of source a Paladin can read. A SLACK_CHANNEL is a Slack channel; a DOCUMENT is a Notion or Confluence page.`,
+							Description: `The kind of source a Paladin can read. A SLACK_CHANNEL is a Slack channel; a DOCUMENT is a Notion or Confluence page or a Freshservice knowledge base article.`,
 						},
 						"third_party_provider": schema.StringAttribute{
 							Computed:    true,

@@ -1286,6 +1286,32 @@ func (l *LinearProject) GetProjectID() string {
 	return l.ProjectID
 }
 
+// MiroBoard - Remote info for Miro Board.
+type MiroBoard struct {
+	// The board id of the Miro Board.
+	BoardID string `json:"board_id"`
+}
+
+func (m *MiroBoard) GetBoardID() string {
+	if m == nil {
+		return ""
+	}
+	return m.BoardID
+}
+
+// MiroOrganization - Remote info for Miro Organization.
+type MiroOrganization struct {
+	// The organization id of the Miro Organization.
+	OrganizationID string `json:"organization_id"`
+}
+
+func (m *MiroOrganization) GetOrganizationID() string {
+	if m == nil {
+		return ""
+	}
+	return m.OrganizationID
+}
+
 // NetsuiteRole - Remote info for NetSuite role.
 type NetsuiteRole struct {
 	// The id of the role.
@@ -1499,6 +1525,32 @@ func (s *SalesforceRole) GetRoleID() string {
 	return s.RoleID
 }
 
+// SlackOrganization - Remote info for Slack Enterprise Grid organization.
+type SlackOrganization struct {
+	// The ID of the Slack Enterprise Grid organization (enterprise ID).
+	OrganizationID string `json:"organization_id"`
+}
+
+func (s *SlackOrganization) GetOrganizationID() string {
+	if s == nil {
+		return ""
+	}
+	return s.OrganizationID
+}
+
+// SlackWorkspace - Remote info for Slack workspace.
+type SlackWorkspace struct {
+	// The ID of the Slack workspace (team ID).
+	WorkspaceID string `json:"workspace_id"`
+}
+
+func (s *SlackWorkspace) GetWorkspaceID() string {
+	if s == nil {
+		return ""
+	}
+	return s.WorkspaceID
+}
+
 // SnowflakeDatabase - Remote info for Snowflake database.
 type SnowflakeDatabase struct {
 	// The name of the database.
@@ -1589,6 +1641,32 @@ func (t *TeleportRole) GetRoleName() string {
 		return ""
 	}
 	return t.RoleName
+}
+
+// TrayOrganization - Remote info for Tray Organization.
+type TrayOrganization struct {
+	// The organization id of the Tray Organization.
+	OrganizationID string `json:"organization_id"`
+}
+
+func (t *TrayOrganization) GetOrganizationID() string {
+	if t == nil {
+		return ""
+	}
+	return t.OrganizationID
+}
+
+// TrayWorkspace - Remote info for Tray Workspace.
+type TrayWorkspace struct {
+	// The workspace id of the Tray Workspace.
+	WorkspaceID string `json:"workspace_id"`
+}
+
+func (t *TrayWorkspace) GetWorkspaceID() string {
+	if t == nil {
+		return ""
+	}
+	return t.WorkspaceID
 }
 
 // TwingateResource - Remote info for Twingate resource.
@@ -1847,6 +1925,10 @@ type ResourceRemoteInfo struct {
 	LinearOrganization *LinearOrganization `json:"linear_organization,omitempty"`
 	// Remote info for Linear project.
 	LinearProject *LinearProject `json:"linear_project,omitempty"`
+	// Remote info for Miro Board.
+	MiroBoard *MiroBoard `json:"miro_board,omitempty"`
+	// Remote info for Miro Organization.
+	MiroOrganization *MiroOrganization `json:"miro_organization,omitempty"`
 	// Remote info for NetSuite role.
 	NetsuiteRole *NetsuiteRole `json:"netsuite_role,omitempty"`
 	// Remote info for Okta directory app.
@@ -1877,6 +1959,10 @@ type ResourceRemoteInfo struct {
 	SalesforceProfile *SalesforceProfile `json:"salesforce_profile,omitempty"`
 	// Remote info for Salesforce role.
 	SalesforceRole *SalesforceRole `json:"salesforce_role,omitempty"`
+	// Remote info for Slack Enterprise Grid organization.
+	SlackOrganization *SlackOrganization `json:"slack_organization,omitempty"`
+	// Remote info for Slack workspace.
+	SlackWorkspace *SlackWorkspace `json:"slack_workspace,omitempty"`
 	// Remote info for Snowflake database.
 	SnowflakeDatabase *SnowflakeDatabase `json:"snowflake_database,omitempty"`
 	// Remote info for Snowflake schema.
@@ -1887,6 +1973,10 @@ type ResourceRemoteInfo struct {
 	TailscaleSSH *TailscaleSSH `json:"tailscale_ssh,omitempty"`
 	// Remote info for Teleport role.
 	TeleportRole *TeleportRole `json:"teleport_role,omitempty"`
+	// Remote info for Tray Organization.
+	TrayOrganization *TrayOrganization `json:"tray_organization,omitempty"`
+	// Remote info for Tray Workspace.
+	TrayWorkspace *TrayWorkspace `json:"tray_workspace,omitempty"`
 	// Remote info for Twingate resource.
 	TwingateResource *TwingateResource `json:"twingate_resource,omitempty"`
 	// Remote info for Vercel project.
@@ -2430,6 +2520,20 @@ func (r *ResourceRemoteInfo) GetLinearProject() *LinearProject {
 	return r.LinearProject
 }
 
+func (r *ResourceRemoteInfo) GetMiroBoard() *MiroBoard {
+	if r == nil {
+		return nil
+	}
+	return r.MiroBoard
+}
+
+func (r *ResourceRemoteInfo) GetMiroOrganization() *MiroOrganization {
+	if r == nil {
+		return nil
+	}
+	return r.MiroOrganization
+}
+
 func (r *ResourceRemoteInfo) GetNetsuiteRole() *NetsuiteRole {
 	if r == nil {
 		return nil
@@ -2535,6 +2639,20 @@ func (r *ResourceRemoteInfo) GetSalesforceRole() *SalesforceRole {
 	return r.SalesforceRole
 }
 
+func (r *ResourceRemoteInfo) GetSlackOrganization() *SlackOrganization {
+	if r == nil {
+		return nil
+	}
+	return r.SlackOrganization
+}
+
+func (r *ResourceRemoteInfo) GetSlackWorkspace() *SlackWorkspace {
+	if r == nil {
+		return nil
+	}
+	return r.SlackWorkspace
+}
+
 func (r *ResourceRemoteInfo) GetSnowflakeDatabase() *SnowflakeDatabase {
 	if r == nil {
 		return nil
@@ -2568,6 +2686,20 @@ func (r *ResourceRemoteInfo) GetTeleportRole() *TeleportRole {
 		return nil
 	}
 	return r.TeleportRole
+}
+
+func (r *ResourceRemoteInfo) GetTrayOrganization() *TrayOrganization {
+	if r == nil {
+		return nil
+	}
+	return r.TrayOrganization
+}
+
+func (r *ResourceRemoteInfo) GetTrayWorkspace() *TrayWorkspace {
+	if r == nil {
+		return nil
+	}
+	return r.TrayWorkspace
 }
 
 func (r *ResourceRemoteInfo) GetTwingateResource() *TwingateResource {

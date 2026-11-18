@@ -8,7 +8,7 @@ import (
 	"fmt"
 )
 
-// PaladinContextSourceKind - The kind of source a Paladin can read. A SLACK_CHANNEL is a Slack channel; a DOCUMENT is a Notion or Confluence page.
+// PaladinContextSourceKind - The kind of source a Paladin can read. A SLACK_CHANNEL is a Slack channel; a DOCUMENT is a Notion or Confluence page or a Freshservice knowledge base article.
 type PaladinContextSourceKind string
 
 const (

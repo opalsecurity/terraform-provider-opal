@@ -11,14 +11,18 @@ import (
 type GetGroupsRequest struct {
 	// The group ids to filter by.
 	GroupIds []string `queryParam:"style=form,explode=false,name=group_ids"`
-	// Group name.
+	// Filter groups by name. Matches against both `name` and `remote_name`. Matching is case-insensitive. Use `group_name_match` to choose the match type; when omitted, CONTAINS (substring) is used.
 	GroupName *string `queryParam:"style=form,explode=true,name=group_name"`
-	// The group type to filter by.
+	// The group type to filter by. Required when remote_id is provided.
 	GroupTypeFilter *shared.GroupTypeEnum `queryParam:"style=form,explode=true,name=group_type_filter"`
 	// Number of results to return per page. Default is 200.
 	PageSize *int64 `queryParam:"style=form,explode=true,name=page_size"`
+	// Filter groups by their remote id. Returns groups whose remote id matches the provided value exactly. Requires group_type_filter. Remote ids are only unique within a connection, so groups from different connections can share a remote id and more than one group may be returned. Unmanaged groups are not returned.
+	RemoteID *string `queryParam:"style=form,explode=true,name=remote_id"`
 	// If true, only return groups that allow access requests. Does not check whether the caller is permitted to request the group.
 	Requestable *bool `queryParam:"style=form,explode=true,name=requestable"`
+	// The IDs of the tags to filter by. Returns only groups that have any of these tags applied.
+	TagIds []string `queryParam:"style=form,explode=true,name=tag_ids"`
 }
 
 func (g *GetGroupsRequest) GetGroupIds() []string {
@@ -49,11 +53,25 @@ func (g *GetGroupsRequest) GetPageSize() *int64 {
 	return g.PageSize
 }
 
+func (g *GetGroupsRequest) GetRemoteID() *string {
+	if g == nil {
+		return nil
+	}
+	return g.RemoteID
+}
+
 func (g *GetGroupsRequest) GetRequestable() *bool {
 	if g == nil {
 		return nil
 	}
 	return g.Requestable
+}
+
+func (g *GetGroupsRequest) GetTagIds() []string {
+	if g == nil {
+		return nil
+	}
+	return g.TagIds
 }
 
 type GetGroupsResponse struct {

@@ -9,14 +9,21 @@ import (
 
 // # McpConfigReport Object
 // ### Description
-// The MCP servers configured in Claude Code on one machine.
+// The MCP servers configured in Claude Code on one machine, and what else its configuration
+// lets Claude Code reach: enabled plugins, skills, custom subagents and permission rules. Each of
+// those four lists is optional; a kit that does not send one leaves what Opal has of that kind as
+// it is, and an empty list says the machine has none. Each holds at most 200 entries.
 type McpConfigReport struct {
-	AdditionalProperties any `additionalProperties:"true" json:"-"`
+	AdditionalProperties any                   `additionalProperties:"true" json:"-"`
+	Permissions          []McpConfigPermission `json:"permissions,omitempty"`
+	Plugins              []McpConfigPlugin     `json:"plugins,omitempty"`
 	// # McpConfigReporter Object
 	// ### Description
 	// Who the reporting machine says it belongs to. Unverified, like `X-Opal-Actor`.
-	Reporter *McpConfigReporter `json:"reporter,omitempty"`
-	Servers  []McpConfigServer  `json:"servers"`
+	Reporter  *McpConfigReporter  `json:"reporter,omitempty"`
+	Servers   []McpConfigServer   `json:"servers"`
+	Skills    []McpConfigSkill    `json:"skills,omitempty"`
+	Subagents []McpConfigSubagent `json:"subagents,omitempty"`
 }
 
 func (m McpConfigReport) MarshalJSON() ([]byte, error) {
@@ -37,6 +44,20 @@ func (m *McpConfigReport) GetAdditionalProperties() any {
 	return m.AdditionalProperties
 }
 
+func (m *McpConfigReport) GetPermissions() []McpConfigPermission {
+	if m == nil {
+		return nil
+	}
+	return m.Permissions
+}
+
+func (m *McpConfigReport) GetPlugins() []McpConfigPlugin {
+	if m == nil {
+		return nil
+	}
+	return m.Plugins
+}
+
 func (m *McpConfigReport) GetReporter() *McpConfigReporter {
 	if m == nil {
 		return nil
@@ -49,4 +70,18 @@ func (m *McpConfigReport) GetServers() []McpConfigServer {
 		return []McpConfigServer{}
 	}
 	return m.Servers
+}
+
+func (m *McpConfigReport) GetSkills() []McpConfigSkill {
+	if m == nil {
+		return nil
+	}
+	return m.Skills
+}
+
+func (m *McpConfigReport) GetSubagents() []McpConfigSubagent {
+	if m == nil {
+		return nil
+	}
+	return m.Subagents
 }

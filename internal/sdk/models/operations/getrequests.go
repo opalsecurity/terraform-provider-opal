@@ -9,6 +9,8 @@ import (
 )
 
 type GetRequestsRequest struct {
+	// Filter requests by the ID of the app that a requested resource or group belongs to. Returns an empty page if the app does not exist or has no requests visible to the caller.
+	AppID *string `queryParam:"style=form,explode=true,name=app_id"`
 	// The pagination cursor value.
 	Cursor *string `queryParam:"style=form,explode=true,name=cursor"`
 	// An end date filter for the events.
@@ -27,6 +29,13 @@ type GetRequestsRequest struct {
 	StartDateFilter *string `queryParam:"style=form,explode=true,name=start_date_filter"`
 	// Filter requests by their target user ID.
 	TargetUserID *string `queryParam:"style=form,explode=true,name=target_user_id"`
+}
+
+func (g *GetRequestsRequest) GetAppID() *string {
+	if g == nil {
+		return nil
+	}
+	return g.AppID
 }
 
 func (g *GetRequestsRequest) GetCursor() *string {

@@ -6,5 +6,9 @@ data "opal_group_list" "my_group_list" {
   group_name        = "example-name"
   group_type_filter = "OPAL_GROUP"
   page_size         = 200
+  remote_id         = "...my_remote_id..."
   requestable       = true
+  tag_ids = [
+    "3c34a212-2dee-4019-8657-e4e961fa0e85"
+  ]
 }

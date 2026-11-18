@@ -62,6 +62,8 @@ const (
 	GroupTypeEnumAsanaTeam                GroupTypeEnum = "ASANA_TEAM"
 	GroupTypeEnumBitwardenGroup           GroupTypeEnum = "BITWARDEN_GROUP"
 	GroupTypeEnumCalendlyGroup            GroupTypeEnum = "CALENDLY_GROUP"
+	GroupTypeEnumMiroTeam                 GroupTypeEnum = "MIRO_TEAM"
+	GroupTypeEnumMiroUserGroup            GroupTypeEnum = "MIRO_USER_GROUP"
 	GroupTypeEnumOneloginRole             GroupTypeEnum = "ONELOGIN_ROLE"
 	GroupTypeEnumOneloginGroup            GroupTypeEnum = "ONELOGIN_GROUP"
 	GroupTypeEnumSquareLocation           GroupTypeEnum = "SQUARE_LOCATION"
@@ -178,6 +180,10 @@ func (e *GroupTypeEnum) UnmarshalJSON(data []byte) error {
 	case "BITWARDEN_GROUP":
 		fallthrough
 	case "CALENDLY_GROUP":
+		fallthrough
+	case "MIRO_TEAM":
+		fallthrough
+	case "MIRO_USER_GROUP":
 		fallthrough
 	case "ONELOGIN_ROLE":
 		fallthrough

@@ -427,6 +427,32 @@ func (l *LinearTeam) GetTeamID() string {
 	return l.TeamID
 }
 
+// MiroTeam - Remote info for Miro Team.
+type MiroTeam struct {
+	// The team id of the Miro Team.
+	TeamID string `json:"team_id"`
+}
+
+func (m *MiroTeam) GetTeamID() string {
+	if m == nil {
+		return ""
+	}
+	return m.TeamID
+}
+
+// MiroUserGroup - Remote info for Miro User Group.
+type MiroUserGroup struct {
+	// The user group id of the Miro User Group.
+	UserGroupID string `json:"user_group_id"`
+}
+
+func (m *MiroUserGroup) GetUserGroupID() string {
+	if m == nil {
+		return ""
+	}
+	return m.UserGroupID
+}
+
 // OktaGroup - Remote info for Okta Directory group.
 type OktaGroup struct {
 	// The id of the Okta Directory group.
@@ -790,6 +816,10 @@ type GroupRemoteInfo struct {
 	LdapGroup *LdapGroup `json:"ldap_group,omitempty"`
 	// Remote info for Linear team.
 	LinearTeam *LinearTeam `json:"linear_team,omitempty"`
+	// Remote info for Miro Team.
+	MiroTeam *MiroTeam `json:"miro_team,omitempty"`
+	// Remote info for Miro User Group.
+	MiroUserGroup *MiroUserGroup `json:"miro_user_group,omitempty"`
 	// Remote info for Okta Directory group.
 	OktaGroup *OktaGroup `json:"okta_group,omitempty"`
 	// Remote info for Okta Directory group rule.
@@ -1053,6 +1083,20 @@ func (g *GroupRemoteInfo) GetLinearTeam() *LinearTeam {
 		return nil
 	}
 	return g.LinearTeam
+}
+
+func (g *GroupRemoteInfo) GetMiroTeam() *MiroTeam {
+	if g == nil {
+		return nil
+	}
+	return g.MiroTeam
+}
+
+func (g *GroupRemoteInfo) GetMiroUserGroup() *MiroUserGroup {
+	if g == nil {
+		return nil
+	}
+	return g.MiroUserGroup
 }
 
 func (g *GroupRemoteInfo) GetOktaGroup() *OktaGroup {
