@@ -403,9 +403,12 @@ actions:
   - target: $["paths"]["/groups/{group_id}/configuration-template"]["get"]
     update:
       x-speakeasy-name-override: get_configuration_template
+  # Read comes from GET /groups/{id} (Group.configuration_template_id). Do not
+  # fold this GET into Group#read — keeping the property on the shared Group
+  # schema is what preserves it on opal_group_list items (Speakeasy advice).
   - target: $["paths"]["/groups/{group_id}/configuration-template"]["get"]
     update:
-      x-speakeasy-entity-operation: Group#read#5
+      x-speakeasy-ignore: true
   - target: $["paths"]["/groups/{group_id}/configuration-template"]["put"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
@@ -808,11 +811,10 @@ actions:
   - target: $["paths"]["/resources/{resource_id}/configuration-template"]["get"]
     update:
       x-speakeasy-name-override: get_configuration_template
+  # Read comes from GET /resources/{id}. See the groups-side comment.
   - target: $["paths"]["/resources/{resource_id}/configuration-template"]["get"]
     update:
-      x-speakeasy-entity-operation:
-        - Resource#get#3
-        - Resource#create#6
+      x-speakeasy-ignore: true
   - target: $["paths"]["/resources/{resource_id}/configuration-template"]["put"]["parameters"][0]
     update:
       x-speakeasy-name-override: id
@@ -1210,6 +1212,11 @@ actions:
   - target: $["components"]["schemas"]["AppsList"]
     update:
       x-speakeasy-entity: Apps
+  # Live prod App.visibility_group_ids is type:array without format:set; create/update
+  # shards use format:set. Align so regen does not fail on array-vs-set merge.
+  - target: $["components"]["schemas"]["App"]["properties"]["visibility_group_ids"]
+    update:
+      format: set
   - target: $["components"]["schemas"]["App"]["properties"]["app_id"]
     update:
       x-speakeasy-name-override: id
@@ -1484,20 +1491,46 @@ actions:
   - target: $["components"]["schemas"]["Group"]["properties"]["is_requestable"]
     update:
       x-speakeasy-ignore: true
-  # configuration_template_id is sourced from the dedicated sub-resource
-  # (GroupConfigurationTemplate) rather than the parent Group schema, so Speakeasy
-  # characterizes it as Optional+Computed instead of Computed-only — mirrors how
-  # the visibility attribute is bound (visibility is not a property of Group).
-  # The plan validator reference is applied on the sub-resource schema below.
-  # Note: this also drops the field from the SDK's shared.Group struct; in-repo
-  # consumers (the TF provider's Refresh path and the e2e fixtures) read it
-  # through shared.GroupConfigurationTemplate instead.
+  - target: $["components"]["schemas"]["CreateGroupInfo"]["properties"]
+    update:
+      configuration_template_id:
+        description: The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
+        example: 06851574-e50d-40ca-8c78-f72ae6ab4304
+        format: uuid
+        nullable: true
+        type: string
+        x-speakeasy-param-computed: false
+  - target: $["components"]["schemas"]["CreateResourceInfo"]["properties"]
+    update:
+      configuration_template_id:
+        description: The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
+        example: 06851574-e50d-40ca-8c78-f72ae6ab4304
+        format: uuid
+        nullable: true
+        type: string
+        x-speakeasy-param-computed: false
+  # Keep configuration_template_id on the shared Group schema so list data
+  # sources still expose it. Writes go through the sub-resource PUT (above).
+  # Speakeasy only marks the attribute Optional when it also appears on a
+  # create request schema, so CreateGroupInfo / CreateResourceInfo above
+  # surface the field (the SDK hook strips it from POST). Combined with
+  # x-speakeasy-param-computed: false, the attribute is optional-only — omitting
+  # it from HCL plans null and sends the sub-resource PUT (Ash, Nov 2026).
   - target: $["components"]["schemas"]["Group"]["properties"]["configuration_template_id"]
     update:
-      x-speakeasy-ignore: true
+      description: The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
+      x-speakeasy-param-computed: false
+      x-speakeasy-param-optional: true
   - target: $["components"]["schemas"]["GroupConfigurationTemplate"]["properties"]["configuration_template_id"]
     update:
       description: The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
+      x-speakeasy-param-computed: false
+      x-speakeasy-param-optional: true
+  # Speakeasy omits the key on unlink ({}). Drop required so the request schema
+  # allows that; the SDK hook rewrites {} to {"configuration_template_id":null}
+  # because the backend still requires the key.
+  - target: $["components"]["schemas"]["GroupConfigurationTemplate"]["required"]
+    remove: true
   - target: $["components"]["schemas"]["Group"]["properties"]["match_remote_description"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
@@ -2122,10 +2155,16 @@ actions:
   # See the groups-side comment above for the rationale.
   - target: $["components"]["schemas"]["Resource"]["properties"]["configuration_template_id"]
     update:
-      x-speakeasy-ignore: true
+      description: The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
+      x-speakeasy-param-computed: false
+      x-speakeasy-param-optional: true
   - target: $["components"]["schemas"]["ResourceConfigurationTemplate"]["properties"]["configuration_template_id"]
     update:
       description: The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
+      x-speakeasy-param-computed: false
+      x-speakeasy-param-optional: true
+  - target: $["components"]["schemas"]["ResourceConfigurationTemplate"]["required"]
+    remove: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["match_remote_description"]
     update:
       x-speakeasy-param-suppress-computed-diff: true

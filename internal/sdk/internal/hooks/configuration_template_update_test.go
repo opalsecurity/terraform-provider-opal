@@ -306,3 +306,101 @@ func TestConfigurationTemplateHookForwardsLinkRequestBody(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, body, got)
 }
+
+func TestConfigurationTemplateHookStripsCreateBody(t *testing.T) {
+	t.Parallel()
+
+	for _, tc := range []struct {
+		name        string
+		operationID string
+		in          string
+		want        string
+	}{
+		{
+			name:        "group create strips template id",
+			operationID: "createGroup",
+			in:          `{"name":"g","app_id":"a","group_type":"OPAL_GROUP","configuration_template_id":"t1"}`,
+			want:        `{"app_id":"a","group_type":"OPAL_GROUP","name":"g"}`,
+		},
+		{
+			name:        "resource create strips template id",
+			operationID: "createResource",
+			in:          `{"name":"r","app_id":"a","resource_type":"CUSTOM","configuration_template_id":"t1"}`,
+			want:        `{"app_id":"a","name":"r","resource_type":"CUSTOM"}`,
+		},
+		{
+			name:        "create without template id untouched",
+			operationID: "createGroup",
+			in:          `{"name":"g","app_id":"a","group_type":"OPAL_GROUP"}`,
+			want:        `{"name":"g","app_id":"a","group_type":"OPAL_GROUP"}`,
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			hook := &configurationTemplateUpdateHook{}
+			req, err := http.NewRequest(
+				http.MethodPost,
+				"https://example.com/v1/groups",
+				strings.NewReader(tc.in),
+			)
+			require.NoError(t, err)
+			out, err := hook.BeforeRequest(
+				BeforeRequestContext{HookContext: HookContext{OperationID: tc.operationID}},
+				req,
+			)
+			require.NoError(t, err)
+			got, err := io.ReadAll(out.Body)
+			require.NoError(t, err)
+			require.JSONEq(t, tc.want, string(got))
+		})
+	}
+}
+
+func TestConfigurationTemplateHookRewritesEmptyUnlinkBody(t *testing.T) {
+	t.Parallel()
+
+	for _, tc := range []struct {
+		name        string
+		operationID string
+		in          string
+		want        string
+	}{
+		{
+			name:        "empty object becomes null unlink",
+			operationID: "update_group_configuration_template",
+			in:          `{}`,
+			want:        `{"configuration_template_id":null}`,
+		},
+		{
+			name:        "explicit null left alone",
+			operationID: "update_resource_configuration_template",
+			in:          `{"configuration_template_id":null}`,
+			want:        `{"configuration_template_id":null}`,
+		},
+		{
+			name:        "uuid left alone",
+			operationID: "update_group_configuration_template",
+			in:          `{"configuration_template_id":"t1"}`,
+			want:        `{"configuration_template_id":"t1"}`,
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			hook := &configurationTemplateUpdateHook{}
+			req, err := http.NewRequest(
+				http.MethodPut,
+				"https://example.com/v1/groups/g1/configuration-template",
+				strings.NewReader(tc.in),
+			)
+			require.NoError(t, err)
+			out, err := hook.BeforeRequest(
+				BeforeRequestContext{HookContext: HookContext{OperationID: tc.operationID}},
+				req,
+			)
+			require.NoError(t, err)
+			got, err := io.ReadAll(out.Body)
+			require.NoError(t, err)
+			require.JSONEq(t, tc.want, string(got))
+		})
+	}
+}

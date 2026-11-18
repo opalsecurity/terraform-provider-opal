@@ -12302,11 +12302,12 @@ components:
           type: string
           x-speakeasy-ignore: true
         configuration_template_id:
-          description: The ID of the associated configuration template.
+          description: The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
-          x-speakeasy-ignore: true
+          x-speakeasy-param-computed: false
+          x-speakeasy-param-optional: true
         group_binding_id:
           description: The ID of the associated group binding.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -13313,8 +13314,6 @@ components:
           nullable: true
           type: string
       type: object
-      required:
-        - configuration_template_id
     ResourceConfigurationTemplate:
       description: |-
         A reference, by ID only, to the configuration template a resource is
@@ -13335,8 +13334,6 @@ components:
           nullable: true
           type: string
       type: object
-      required:
-        - configuration_template_id
     VisibilityInfo:
       description: Visibility infomation of an entity.
       example:
@@ -15560,6 +15557,13 @@ components:
           }
         app_id: f454d283-ca87-4a8a-bdbb-df212eca5353
       properties:
+        configuration_template_id:
+          description: The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
+          example: 06851574-e50d-40ca-8c78-f72ae6ab4304
+          format: uuid
+          nullable: true
+          type: string
+          x-speakeasy-param-computed: false
         name:
           description: The name of the remote resource.
           example: mongo-db-prod
@@ -15888,6 +15892,13 @@ components:
           { "okta_directory_group": { "group_id": "00g4bs66kwtpe1g12345" } }
         app_id: f454d283-ca87-4a8a-bdbb-df212eca5353
       properties:
+        configuration_template_id:
+          description: The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
+          example: 06851574-e50d-40ca-8c78-f72ae6ab4304
+          format: uuid
+          nullable: true
+          type: string
+          x-speakeasy-param-computed: false
         name:
           description: The name of the remote group.
           example: mongo-db-prod
@@ -16794,11 +16805,12 @@ components:
           type: string
           x-speakeasy-param-suppress-computed-diff: true
         configuration_template_id:
-          description: The ID of the associated configuration template.
+          description: The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
-          x-speakeasy-ignore: true
+          x-speakeasy-param-computed: false
+          x-speakeasy-param-optional: true
         request_configurations:
           type: array
           items:

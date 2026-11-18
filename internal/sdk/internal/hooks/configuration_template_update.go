@@ -22,6 +22,13 @@ import (
 //   - BeforeRequest strips every field outside the allowlist from the parent
 //     PUT of a linked entity. The backend rejects those fields while an entity
 //     is linked, and Terraform state still carries the pre-attach values.
+//   - BeforeRequest strips configuration_template_id from createGroup /
+//     createResource. The field is on CreateGroupInfo / CreateResourceInfo so
+//     Speakeasy marks the attribute Optional, but POST /groups rejects unknown
+//     fields; the real write is the sub-resource PUT that follows.
+//   - BeforeRequest rewrites an empty sub-resource PUT body ({}) to
+//     {"configuration_template_id": null}. Speakeasy omits the key on unlink;
+//     the backend requires the key and treats null as unlink.
 //   - the transport short-circuits the visibility / message-channel /
 //     on-call-schedule sibling PUTs for a linked entity, because the template
 //     owns those settings.
@@ -244,8 +251,19 @@ func (h *configurationTemplateUpdateHook) BeforeRequest(
 	hookCtx BeforeRequestContext,
 	req *http.Request,
 ) (*http.Request, error) {
+	if req.Body == nil {
+		return req, nil
+	}
+
+	switch hookCtx.OperationID {
+	case "createGroup", "createResource":
+		return stripCreateConfigurationTemplateID(req)
+	case "update_group_configuration_template", "update_resource_configuration_template":
+		return ensureConfigurationTemplateUnlinkBody(req)
+	}
+
 	operation, ok := configurationTemplateUpdateOperations[hookCtx.OperationID]
-	if !ok || req.Body == nil {
+	if !ok {
 		return req, nil
 	}
 
@@ -288,11 +306,69 @@ func (h *configurationTemplateUpdateHook) BeforeRequest(
 	if err != nil {
 		return req, fmt.Errorf("encode configuration template update request: %w", err)
 	}
+	return replaceRequestBody(req, body)
+}
+
+// stripCreateConfigurationTemplateID removes configuration_template_id from
+// POST /groups and POST /resources. Speakeasy puts the field on Create*Info so
+// the Terraform attribute is Optional; the backend create schemas reject it.
+func stripCreateConfigurationTemplateID(req *http.Request) (*http.Request, error) {
+	body, err := io.ReadAll(req.Body)
+	if err != nil {
+		return req, fmt.Errorf("read create request: %w", err)
+	}
+	if err := req.Body.Close(); err != nil {
+		return req, fmt.Errorf("close create request: %w", err)
+	}
+
+	var payload map[string]json.RawMessage
+	if err := json.Unmarshal(body, &payload); err != nil {
+		return req, fmt.Errorf("decode create request: %w", err)
+	}
+	if _, ok := payload["configuration_template_id"]; !ok {
+		req.Body = io.NopCloser(bytes.NewReader(body))
+		return req, nil
+	}
+	delete(payload, "configuration_template_id")
+	body, err = json.Marshal(payload)
+	if err != nil {
+		return req, fmt.Errorf("encode create request: %w", err)
+	}
+	return replaceRequestBody(req, body)
+}
+
+// ensureConfigurationTemplateUnlinkBody turns Speakeasy's empty unlink body
+// ({}) into the null the backend requires.
+func ensureConfigurationTemplateUnlinkBody(req *http.Request) (*http.Request, error) {
+	body, err := io.ReadAll(req.Body)
+	if err != nil {
+		return req, fmt.Errorf("read configuration template put: %w", err)
+	}
+	if err := req.Body.Close(); err != nil {
+		return req, fmt.Errorf("close configuration template put: %w", err)
+	}
+
+	var payload map[string]json.RawMessage
+	if err := json.Unmarshal(body, &payload); err != nil {
+		return req, fmt.Errorf("decode configuration template put: %w", err)
+	}
+	if _, ok := payload["configuration_template_id"]; ok {
+		req.Body = io.NopCloser(bytes.NewReader(body))
+		return req, nil
+	}
+	payload["configuration_template_id"] = json.RawMessage("null")
+	body, err = json.Marshal(payload)
+	if err != nil {
+		return req, fmt.Errorf("encode configuration template put: %w", err)
+	}
+	return replaceRequestBody(req, body)
+}
+
+func replaceRequestBody(req *http.Request, body []byte) (*http.Request, error) {
 	req.Body = io.NopCloser(bytes.NewReader(body))
 	req.ContentLength = int64(len(body))
 	req.GetBody = func() (io.ReadCloser, error) {
 		return io.NopCloser(bytes.NewReader(body)), nil
 	}
-
 	return req, nil
 }

@@ -63,7 +63,7 @@ func validateConfigurationTemplatePlan(
 		return
 	}
 
-	// Unlink: configuration_template_id is Optional+Computed, so omitting it (or
+	// Unlink: configuration_template_id is Optional (not Computed), so omitting it (or
 	// setting null) would otherwise keep the prior ID in the plan. The validators
 	// guarantee the user supplied their own configuration in that case, so a
 	// linked entity with no template in HCL is an unlink request.

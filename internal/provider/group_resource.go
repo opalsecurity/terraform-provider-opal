@@ -125,7 +125,6 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Description: `The ID of the app for the group. Requires replacement if changed.`,
 			},
 			"configuration_template_id": schema.StringAttribute{
-				Computed:    true,
 				Optional:    true,
 				Description: `The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.`,
 			},

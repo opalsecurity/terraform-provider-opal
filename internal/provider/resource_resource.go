@@ -117,7 +117,6 @@ func (r *ResourceResource) Schema(ctx context.Context, req resource.SchemaReques
 				Description: `The ID of the app for the resource. Requires replacement if changed.`,
 			},
 			"configuration_template_id": schema.StringAttribute{
-				Computed:    true,
 				Optional:    true,
 				Description: `The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.`,
 			},
