@@ -6,8 +6,8 @@ package shared
 // # AgentActivityContentReport Object
 // ### Description
 // What Opal's hook kit adds to an event when it collects conversation content. Its
-// presence means the sender collects content, like the `X-Opal-Content` header. The kit
-// has already masked secrets in the texts and cut them to its own limit.
+// presence, even as `{}`, means the sender collects content, like the `X-Opal-Content`
+// header. The kit has already masked secrets in the texts and cut them to its own limit.
 type AgentActivityContentReport struct {
 	// Every text the model wrote in the turn, read from the session's transcript (`Stop`, `SubagentStop`). Preferred over `last_assistant_message`, which holds only the final message.
 	AssistantText *string `json:"assistant_text,omitempty"`

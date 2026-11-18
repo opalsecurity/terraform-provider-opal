@@ -78,7 +78,7 @@ func (r *PaladinContextSourceResource) Schema(ctx context.Context, req resource.
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The provider's identifier for the source. The Slack channel ID for a channel, or the Notion/Confluence page ID for a document. Requires replacement if changed.`,
+				Description: `The provider's identifier for the source. The Slack channel ID for a channel, or the Notion/Confluence page ID or numeric Freshservice article ID for a document. Requires replacement if changed.`,
 			},
 			"source_kind": schema.StringAttribute{
 				Required: true,
@@ -86,7 +86,7 @@ func (r *PaladinContextSourceResource) Schema(ctx context.Context, req resource.
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The kind of source a Paladin can read. A SLACK_CHANNEL is a Slack channel; a DOCUMENT is a Notion or Confluence page. must be one of ["SLACK_CHANNEL", "DOCUMENT"]; Requires replacement if changed.`,
+				Description: `The kind of source a Paladin can read. A SLACK_CHANNEL is a Slack channel; a DOCUMENT is a Notion or Confluence page or a Freshservice knowledge base article. must be one of ["SLACK_CHANNEL", "DOCUMENT"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"SLACK_CHANNEL",
@@ -100,14 +100,7 @@ func (r *PaladinContextSourceResource) Schema(ctx context.Context, req resource.
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The integration a Paladin context source comes from. must be one of ["SLACK", "NOTION", "CONFLUENCE"]; Requires replacement if changed.`,
-				Validators: []validator.String{
-					stringvalidator.OneOf(
-						"SLACK",
-						"NOTION",
-						"CONFLUENCE",
-					),
-				},
+				Description: `The integration a Paladin context source comes from. possible known values include one of ["SLACK", "NOTION", "CONFLUENCE", "FRESH_SERVICE"]; Requires replacement if changed.`,
 			},
 			"url": schema.StringAttribute{
 				Computed: true,

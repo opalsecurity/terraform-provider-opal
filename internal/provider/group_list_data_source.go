@@ -37,8 +37,10 @@ type GroupListDataSourceModel struct {
 	GroupName       types.String    `queryParam:"style=form,explode=true,name=group_name" tfsdk:"group_name"`
 	GroupTypeFilter types.String    `queryParam:"style=form,explode=true,name=group_type_filter" tfsdk:"group_type_filter"`
 	PageSize        types.Int64     `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
+	RemoteID        types.String    `queryParam:"style=form,explode=true,name=remote_id" tfsdk:"remote_id"`
 	Requestable     types.Bool      `queryParam:"style=form,explode=true,name=requestable" tfsdk:"requestable"`
 	Results         []tfTypes.Group `tfsdk:"results"`
+	TagIds          []types.String  `queryParam:"style=form,explode=true,name=tag_ids" tfsdk:"tag_ids"`
 }
 
 // Metadata returns the data source type name.
@@ -59,11 +61,11 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 			},
 			"group_name": schema.StringAttribute{
 				Optional:    true,
-				Description: `Group name.`,
+				Description: `Filter groups by name. Matches against both ` + "`" + `name` + "`" + ` and ` + "`" + `remote_name` + "`" + `. Matching is case-insensitive. Use ` + "`" + `group_name_match` + "`" + ` to choose the match type; when omitted, CONTAINS (substring) is used.`,
 			},
 			"group_type_filter": schema.StringAttribute{
 				Optional:    true,
-				Description: `The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DATADOG_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "CURSOR_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP", "BOX_GROUP", "ACTIVECAMPAIGN_GROUP", "AHA_TEAM", "ASANA_TEAM", "BITWARDEN_GROUP", "CALENDLY_GROUP", "ONELOGIN_ROLE", "ONELOGIN_GROUP", "SQUARE_LOCATION", "SQUARE_JOB", "RIPPLING_TEAM", "RIPPLING_SUPERGROUP"]`,
+				Description: `The group type to filter by. Required when remote_id is provided. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DATADOG_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "CURSOR_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP", "BOX_GROUP", "ACTIVECAMPAIGN_GROUP", "AHA_TEAM", "ASANA_TEAM", "BITWARDEN_GROUP", "CALENDLY_GROUP", "MIRO_TEAM", "MIRO_USER_GROUP", "ONELOGIN_ROLE", "ONELOGIN_GROUP", "SQUARE_LOCATION", "SQUARE_JOB", "RIPPLING_TEAM", "RIPPLING_SUPERGROUP"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"ACTIVE_DIRECTORY_GROUP",
@@ -116,6 +118,8 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 						"ASANA_TEAM",
 						"BITWARDEN_GROUP",
 						"CALENDLY_GROUP",
+						"MIRO_TEAM",
+						"MIRO_USER_GROUP",
 						"ONELOGIN_ROLE",
 						"ONELOGIN_GROUP",
 						"SQUARE_LOCATION",
@@ -131,6 +135,10 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Validators: []validator.Int64{
 					int64validator.AtMost(1000),
 				},
+			},
+			"remote_id": schema.StringAttribute{
+				Optional:    true,
+				Description: `Filter groups by their remote id. Returns groups whose remote id matches the provided value exactly. Requires group_type_filter. Remote ids are only unique within a connection, so groups from different connections can share a remote id and more than one group may be returned. Unmanaged groups are not returned.`,
 			},
 			"requestable": schema.BoolAttribute{
 				Optional:    true,
@@ -203,6 +211,14 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 						"match_remote_name": schema.BoolAttribute{
 							Computed:    true,
 							Description: `A bool representing whether or not the group's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.`,
+						},
+						"max_direct_users_allowed": schema.Int64Attribute{
+							Computed:    true,
+							Description: `The maximum number of direct users allowed for this group at once. Set to null to remove the limit.`,
+						},
+						"max_users_exceeded_message": schema.StringAttribute{
+							Computed:    true,
+							Description: `Custom message shown to users when the maximum number of allowed users for this group has been reached.`,
 						},
 						"name": schema.StringAttribute{
 							Computed:    true,
@@ -529,6 +545,26 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 									},
 									Description: `Remote info for Linear team.`,
 								},
+								"miro_team": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"team_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The team id of the Miro Team.`,
+										},
+									},
+									Description: `Remote info for Miro Team.`,
+								},
+								"miro_user_group": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"user_group_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The user group id of the Miro User Group.`,
+										},
+									},
+									Description: `Remote info for Miro User Group.`,
+								},
 								"okta_group": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
@@ -798,6 +834,10 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 										},
 										Description: `The condition for the request configuration.`,
 									},
+									"disable_skip_level_escalation": schema.BoolAttribute{
+										Computed:    true,
+										Description: `When true, requesters cannot escalate requests to their skip-level manager. When any item in a request has this set to true, the escalation button is disabled and the action is blocked. Defaults to false.`,
+									},
 									"extensions_duration_in_minutes": schema.Int64Attribute{
 										Computed:    true,
 										Description: `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,
@@ -920,6 +960,11 @@ func (r *GroupListDataSource) Schema(ctx context.Context, req datasource.SchemaR
 						},
 					},
 				},
+			},
+			"tag_ids": schema.ListAttribute{
+				Optional:    true,
+				ElementType: types.StringType,
+				Description: `The IDs of the tags to filter by. Returns only groups that have any of these tags applied.`,
 			},
 		},
 	}

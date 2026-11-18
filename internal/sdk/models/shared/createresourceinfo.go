@@ -20,10 +20,14 @@ type CreateResourceInfo struct {
 	MatchRemoteDescription *bool `json:"match_remote_description,omitempty"`
 	// A bool representing whether or not the resource's name should be synced from the end system. When true, the name is overwritten with the remote name on each sync, so a `name` provided together with this field set to true will be replaced at the next sync. Defaults to false.
 	MatchRemoteName *bool `json:"match_remote_name,omitempty"`
+	// The maximum number of direct users allowed for this resource at once. Set to null to remove the limit.
+	MaxDirectUsersAllowed *int64 `json:"max_direct_users_allowed,omitempty"`
 	// The name of the remote resource.
 	Name string `json:"name"`
 	// Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields.
 	RemoteInfo *ResourceRemoteInfo `json:"remote_info,omitempty"`
+	// A bool representing whether or not a reason is required when forfeiting access to this resource.
+	RequiresForfeitReason *bool `json:"requires_forfeit_reason,omitempty"`
 	// The type of the resource.
 	ResourceType            ResourceTypeEnum     `json:"resource_type"`
 	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
@@ -64,6 +68,13 @@ func (c *CreateResourceInfo) GetMatchRemoteName() *bool {
 	return c.MatchRemoteName
 }
 
+func (c *CreateResourceInfo) GetMaxDirectUsersAllowed() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.MaxDirectUsersAllowed
+}
+
 func (c *CreateResourceInfo) GetName() string {
 	if c == nil {
 		return ""
@@ -76,6 +87,13 @@ func (c *CreateResourceInfo) GetRemoteInfo() *ResourceRemoteInfo {
 		return nil
 	}
 	return c.RemoteInfo
+}
+
+func (c *CreateResourceInfo) GetRequiresForfeitReason() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.RequiresForfeitReason
 }
 
 func (c *CreateResourceInfo) GetResourceType() ResourceTypeEnum {

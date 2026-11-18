@@ -32,6 +32,7 @@ type RequestsDataSource struct {
 
 // RequestsDataSourceModel describes the data model.
 type RequestsDataSourceModel struct {
+	AppID           types.String      `queryParam:"style=form,explode=true,name=app_id" tfsdk:"app_id"`
 	Cursor          types.String      `queryParam:"style=form,explode=true,name=cursor" tfsdk:"cursor"`
 	EndDateFilter   types.String      `queryParam:"style=form,explode=true,name=end_date_filter" tfsdk:"end_date_filter"`
 	GroupID         types.String      `queryParam:"style=form,explode=true,name=group_id" tfsdk:"group_id"`
@@ -55,6 +56,10 @@ func (r *RequestsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 		MarkdownDescription: "Requests DataSource",
 
 		Attributes: map[string]schema.Attribute{
+			"app_id": schema.StringAttribute{
+				Optional:    true,
+				Description: `Filter requests by the ID of the app that a requested resource or group belongs to. Returns an empty page if the app does not exist or has no requests visible to the caller.`,
+			},
 			"cursor": schema.StringAttribute{
 				Computed:    true,
 				Optional:    true,

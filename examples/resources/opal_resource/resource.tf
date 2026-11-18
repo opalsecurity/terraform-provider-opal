@@ -7,6 +7,8 @@ resource "opal_resource" "my_resource" {
   extensions_duration_in_minutes = 120
   match_remote_description       = false
   match_remote_name              = false
+  max_direct_users_allowed       = 10
+  max_users_exceeded_message     = "Contact your admin to request access."
   name                           = "mongo-db-prod"
   parent_resource_id             = "f454d283-ca67-4a8a-bdbb-df212eca5345"
   remote_info = {
@@ -269,6 +271,12 @@ resource "opal_resource" "my_resource" {
     linear_project = {
       project_id = "58ed91a7-1234-5678-9abc-def012345678"
     }
+    miro_board = {
+      board_id = "...my_board_id..."
+    }
+    miro_organization = {
+      organization_id = "...my_organization_id..."
+    }
     netsuite_role = {
       role_id = "123e4567-e89b-12d3-a456-426614174000"
     }
@@ -316,6 +324,12 @@ resource "opal_resource" "my_resource" {
     salesforce_role = {
       role_id = "0PS5Y090202wOV7WAM"
     }
+    slack_organization = {
+      organization_id = "E01234567"
+    }
+    slack_workspace = {
+      workspace_id = "T01234567"
+    }
     snowflake_database = {
       database_name = "mydatabase"
     }
@@ -333,6 +347,12 @@ resource "opal_resource" "my_resource" {
     }
     teleport_role = {
       role_name = "admin_role"
+    }
+    tray_organization = {
+      organization_id = "...my_organization_id..."
+    }
+    tray_workspace = {
+      workspace_id = "...my_workspace_id..."
     }
     twingate_resource = {
       resource_id = "UmVzb3VyY2U6MTIzNA=="
@@ -372,6 +392,7 @@ resource "opal_resource" "my_resource" {
           "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]
       }
+      disable_skip_level_escalation  = false
       extensions_duration_in_minutes = 120
       max_duration                   = 120
       priority                       = 1

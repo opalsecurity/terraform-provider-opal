@@ -13,8 +13,10 @@ resource "opal_group" "my_group" {
   initial_user_ids = [
     "28515a50-20b7-42a7-8085-0024077aef15"
   ]
-  match_remote_description = false
-  match_remote_name        = false
+  match_remote_description   = false
+  match_remote_name          = false
+  max_direct_users_allowed   = 10
+  max_users_exceeded_message = "Contact your admin to request access."
   message_channel_ids = [
     "01f0dea1-52d3-4b76-b362-1ee677e90fd2"
   ]
@@ -118,6 +120,12 @@ resource "opal_group" "my_group" {
     linear_team = {
       team_id = "8caed98e-1234-5678-9abc-def012345678"
     }
+    miro_team = {
+      team_id = "...my_team_id..."
+    }
+    miro_user_group = {
+      user_group_id = "...my_user_group_id..."
+    }
     okta_group = {
       group_id = "00gjs33pe8rtmRrp3rd6"
     }
@@ -201,6 +209,7 @@ resource "opal_group" "my_group" {
           "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]
       }
+      disable_skip_level_escalation  = false
       extensions_duration_in_minutes = 120
       max_duration                   = 120
       priority                       = 1
