@@ -13,6 +13,42 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
 )
 
+func (r *GroupResourceModel) RefreshFromOperationsGetGroupBreakGlassUsersResponseBody(ctx context.Context, resp *operations.GetGroupBreakGlassUsersResponseBody) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		if r.BreakGlassUsers == nil {
+			r.BreakGlassUsers = &tfTypes.GetGroupBreakGlassUsersResponseBody{}
+		}
+		r.BreakGlassUsers.BreakGlassUserIds = make([]types.String, 0, len(resp.BreakGlassUserIds))
+		for _, v := range resp.BreakGlassUserIds {
+			r.BreakGlassUsers.BreakGlassUserIds = append(r.BreakGlassUsers.BreakGlassUserIds, types.StringValue(v))
+		}
+		r.BreakGlassUsers.Users = []tfTypes.User{}
+
+		for _, usersItem := range resp.Users {
+			var users tfTypes.User
+
+			users.Email = types.StringValue(usersItem.Email)
+			users.FirstName = types.StringValue(usersItem.FirstName)
+			if usersItem.HrIdpStatus != nil {
+				users.HrIdpStatus = types.StringValue(string(*usersItem.HrIdpStatus))
+			} else {
+				users.HrIdpStatus = types.StringNull()
+			}
+			users.ID = types.StringValue(usersItem.ID)
+			users.LastName = types.StringValue(usersItem.LastName)
+			users.ManagerID = types.StringPointerValue(usersItem.ManagerID)
+			users.Name = types.StringValue(usersItem.Name)
+			users.Position = types.StringValue(usersItem.Position)
+
+			r.BreakGlassUsers.Users = append(r.BreakGlassUsers.Users, users)
+		}
+	}
+
+	return diags
+}
+
 func (r *GroupResourceModel) RefreshFromOperationsGetGroupMessageChannelsResponseBody(ctx context.Context, resp *operations.GetGroupMessageChannelsResponseBody) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -696,6 +732,19 @@ func (r *GroupResourceModel) ToOperationsDeleteGroupRequest(ctx context.Context)
 	return &out, diags
 }
 
+func (r *GroupResourceModel) ToOperationsGetGroupBreakGlassUsersRequest(ctx context.Context) (*operations.GetGroupBreakGlassUsersRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetGroupBreakGlassUsersRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
 func (r *GroupResourceModel) ToOperationsGetGroupMessageChannelsRequest(ctx context.Context) (*operations.GetGroupMessageChannelsRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -743,6 +792,27 @@ func (r *GroupResourceModel) ToOperationsGetGroupVisibilityRequest(ctx context.C
 
 	out := operations.GetGroupVisibilityRequest{
 		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupResourceModel) ToOperationsUpdateGroupBreakGlassUsersRequest(ctx context.Context) (*operations.UpdateGroupBreakGlassUsersRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	groupBreakGlassUserIDList, groupBreakGlassUserIDListDiags := r.ToSharedGroupBreakGlassUserIDList(ctx)
+	diags.Append(groupBreakGlassUserIDListDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.UpdateGroupBreakGlassUsersRequest{
+		GroupBreakGlassUserIDList: *groupBreakGlassUserIDList,
+		ID:                        id,
 	}
 
 	return &out, diags
@@ -1473,6 +1543,20 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		RequiresForfeitReason:     requiresForfeitReason,
 		RiskSensitivityOverride:   riskSensitivityOverride,
 		TeamID:                    teamId5,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupResourceModel) ToSharedGroupBreakGlassUserIDList(ctx context.Context) (*shared.GroupBreakGlassUserIDList, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	breakGlassUserIds := make([]string, 0, len(r.BreakGlassUserIds))
+	for breakGlassUserIdsIndex := range r.BreakGlassUserIds {
+		breakGlassUserIds = append(breakGlassUserIds, r.BreakGlassUserIds[breakGlassUserIdsIndex].ValueString())
+	}
+	out := shared.GroupBreakGlassUserIDList{
+		BreakGlassUserIds: breakGlassUserIds,
 	}
 
 	return &out, diags

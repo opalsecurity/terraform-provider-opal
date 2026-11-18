@@ -32,6 +32,7 @@ type GroupDataSource struct {
 type GroupDataSourceModel struct {
 	AdminOwnerID                types.String                                 `tfsdk:"admin_owner_id"`
 	AppID                       types.String                                 `tfsdk:"app_id"`
+	BreakGlassUsers             *tfTypes.GetGroupBreakGlassUsersResponseBody `tfsdk:"break_glass_users"`
 	ConfigurationTemplateID     types.String                                 `tfsdk:"configuration_template_id"`
 	CustomRequestNotification   types.String                                 `tfsdk:"custom_request_notification"`
 	Description                 types.String                                 `tfsdk:"description"`
@@ -77,6 +78,56 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			"app_id": schema.StringAttribute{
 				Computed:    true,
 				Description: `The ID of the group's app.`,
+			},
+			"break_glass_users": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"break_glass_user_ids": schema.SetAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+						Description: `Computed field that extracts user IDs from the users array`,
+					},
+					"users": schema.ListNestedAttribute{
+						Computed: true,
+						NestedObject: schema.NestedAttributeObject{
+							Attributes: map[string]schema.Attribute{
+								"email": schema.StringAttribute{
+									Computed:    true,
+									Description: `The email of the user.`,
+								},
+								"first_name": schema.StringAttribute{
+									Computed:    true,
+									Description: `The first name of the user.`,
+								},
+								"hr_idp_status": schema.StringAttribute{
+									Computed:    true,
+									Description: `User status pulled from an HR/IDP provider.`,
+								},
+								"id": schema.StringAttribute{
+									Computed:    true,
+									Description: `The ID of the user.`,
+								},
+								"last_name": schema.StringAttribute{
+									Computed:    true,
+									Description: `The last name of the user.`,
+								},
+								"manager_id": schema.StringAttribute{
+									Computed:    true,
+									Description: `The ID of the user's manager. Null if the user has no manager.`,
+								},
+								"name": schema.StringAttribute{
+									Computed:    true,
+									Description: `The full name of the user.`,
+								},
+								"position": schema.StringAttribute{
+									Computed:    true,
+									Description: `The user's position.`,
+								},
+							},
+						},
+					},
+				},
+				Description: `Break glass users returned by GET /groups/{id}/break-glass-users.`,
 			},
 			"configuration_template_id": schema.StringAttribute{
 				Computed:    true,
@@ -1122,6 +1173,37 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		return
 	}
 	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupVisibilityResponseBody(ctx, res3.Object)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request4, request4Diags := data.ToOperationsGetGroupBreakGlassUsersRequest(ctx)
+	resp.Diagnostics.Append(request4Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res4, err := r.client.Groups.GetBreakGlassUsers(ctx, *request4)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		if res4 != nil && res4.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res4.RawResponse))
+		}
+		return
+	}
+	if res4 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res4))
+		return
+	}
+	if res4.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res4.StatusCode), debugResponse(res4.RawResponse))
+		return
+	}
+	if !(res4.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res4.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupBreakGlassUsersResponseBody(ctx, res4.Object)...)
 
 	if resp.Diagnostics.HasError() {
 		return

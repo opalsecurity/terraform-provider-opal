@@ -13,6 +13,42 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
 )
 
+func (r *GroupDataSourceModel) RefreshFromOperationsGetGroupBreakGlassUsersResponseBody(ctx context.Context, resp *operations.GetGroupBreakGlassUsersResponseBody) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		if r.BreakGlassUsers == nil {
+			r.BreakGlassUsers = &tfTypes.GetGroupBreakGlassUsersResponseBody{}
+		}
+		r.BreakGlassUsers.BreakGlassUserIds = make([]types.String, 0, len(resp.BreakGlassUserIds))
+		for _, v := range resp.BreakGlassUserIds {
+			r.BreakGlassUsers.BreakGlassUserIds = append(r.BreakGlassUsers.BreakGlassUserIds, types.StringValue(v))
+		}
+		r.BreakGlassUsers.Users = []tfTypes.User{}
+
+		for _, usersItem := range resp.Users {
+			var users tfTypes.User
+
+			users.Email = types.StringValue(usersItem.Email)
+			users.FirstName = types.StringValue(usersItem.FirstName)
+			if usersItem.HrIdpStatus != nil {
+				users.HrIdpStatus = types.StringValue(string(*usersItem.HrIdpStatus))
+			} else {
+				users.HrIdpStatus = types.StringNull()
+			}
+			users.ID = types.StringValue(usersItem.ID)
+			users.LastName = types.StringValue(usersItem.LastName)
+			users.ManagerID = types.StringPointerValue(usersItem.ManagerID)
+			users.Name = types.StringValue(usersItem.Name)
+			users.Position = types.StringValue(usersItem.Position)
+
+			r.BreakGlassUsers.Users = append(r.BreakGlassUsers.Users, users)
+		}
+	}
+
+	return diags
+}
+
 func (r *GroupDataSourceModel) RefreshFromOperationsGetGroupMessageChannelsResponseBody(ctx context.Context, resp *operations.GetGroupMessageChannelsResponseBody) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -558,6 +594,19 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 	}
 
 	return diags
+}
+
+func (r *GroupDataSourceModel) ToOperationsGetGroupBreakGlassUsersRequest(ctx context.Context) (*operations.GetGroupBreakGlassUsersRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetGroupBreakGlassUsersRequest{
+		ID: id,
+	}
+
+	return &out, diags
 }
 
 func (r *GroupDataSourceModel) ToOperationsGetGroupMessageChannelsRequest(ctx context.Context) (*operations.GetGroupMessageChannelsRequest, diag.Diagnostics) {

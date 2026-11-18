@@ -10,14 +10,35 @@ import (
 
 type GetGroupBreakGlassUsersRequest struct {
 	// The ID of the group.
-	GroupID string `pathParam:"style=simple,explode=false,name=group_id"`
+	ID string `pathParam:"style=simple,explode=false,name=group_id"`
 }
 
-func (g *GetGroupBreakGlassUsersRequest) GetGroupID() string {
+func (g *GetGroupBreakGlassUsersRequest) GetID() string {
 	if g == nil {
 		return ""
 	}
-	return g.GroupID
+	return g.ID
+}
+
+// GetGroupBreakGlassUsersResponseBody - Break glass users returned by GET /groups/{id}/break-glass-users.
+type GetGroupBreakGlassUsersResponseBody struct {
+	// Computed field that extracts user IDs from the users array
+	BreakGlassUserIds []string      `json:"break_glass_user_ids,omitempty"`
+	Users             []shared.User `json:"users"`
+}
+
+func (g *GetGroupBreakGlassUsersResponseBody) GetBreakGlassUserIds() []string {
+	if g == nil {
+		return nil
+	}
+	return g.BreakGlassUserIds
+}
+
+func (g *GetGroupBreakGlassUsersResponseBody) GetUsers() []shared.User {
+	if g == nil {
+		return []shared.User{}
+	}
+	return g.Users
 }
 
 type GetGroupBreakGlassUsersResponse struct {
@@ -28,7 +49,7 @@ type GetGroupBreakGlassUsersResponse struct {
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
 	// The break glass users for the group.
-	UserList *shared.UserList
+	Object *GetGroupBreakGlassUsersResponseBody
 }
 
 func (g *GetGroupBreakGlassUsersResponse) GetContentType() string {
@@ -52,9 +73,9 @@ func (g *GetGroupBreakGlassUsersResponse) GetRawResponse() *http.Response {
 	return g.RawResponse
 }
 
-func (g *GetGroupBreakGlassUsersResponse) GetUserList() *shared.UserList {
+func (g *GetGroupBreakGlassUsersResponse) GetObject() *GetGroupBreakGlassUsersResponseBody {
 	if g == nil {
 		return nil
 	}
-	return g.UserList
+	return g.Object
 }

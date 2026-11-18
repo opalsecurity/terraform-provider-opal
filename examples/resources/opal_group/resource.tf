@@ -1,6 +1,9 @@
 resource "opal_group" "my_group" {
-  admin_owner_id                 = "7c86c85d-0651-43e2-a748-d69d658418e8"
-  app_id                         = "f454d283-ca87-4a8a-bdbb-df212eca5353"
+  admin_owner_id = "7c86c85d-0651-43e2-a748-d69d658418e8"
+  app_id         = "f454d283-ca87-4a8a-bdbb-df212eca5353"
+  break_glass_user_ids = [
+    "0116f339-4987-4ef1-8754-b67a7da75fb3"
+  ]
   configuration_template_id      = "06851574-e50d-40ca-8c78-f72ae6ab4304"
   custom_request_notification    = "Check your email to register your account."
   description                    = "Engineering team Okta group."
