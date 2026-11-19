@@ -149,6 +149,36 @@ actions:
   - target: $["paths"]["/configuration-templates/{configuration_template_id}"]["delete"]
     update:
       x-speakeasy-entity-operation: ConfigurationTemplate#delete
+  - target: $["paths"]["/request-templates"]["get"]
+    update:
+      x-speakeasy-name-override: get
+  - target: $["paths"]["/request-templates"]["get"]
+    update:
+      x-speakeasy-entity-operation: RequestTemplateList#get
+  - target: $["paths"]["/request-templates"]["post"]
+    update:
+      x-speakeasy-name-override: create
+  - target: $["paths"]["/request-templates"]["post"]
+    update:
+      x-speakeasy-entity-operation: RequestTemplate#create
+  - target: $["paths"]["/request-templates"]["put"]
+    update:
+      x-speakeasy-name-override: update
+  - target: $["paths"]["/request-templates"]["put"]
+    update:
+      x-speakeasy-entity-operation: RequestTemplate#update
+  - target: $["paths"]["/request-templates/{request_template_id}"]["get"]
+    update:
+      x-speakeasy-name-override: get_id
+  - target: $["paths"]["/request-templates/{request_template_id}"]["get"]
+    update:
+      x-speakeasy-entity-operation: RequestTemplate#read
+  - target: $["paths"]["/request-templates/{request_template_id}"]["delete"]
+    update:
+      x-speakeasy-name-override: delete
+  - target: $["paths"]["/request-templates/{request_template_id}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: RequestTemplate#delete
   - target: $["paths"]["/events"]["get"]["operationId"]
     update: getEvents
   - target: $["paths"]["/events"]["get"]["responses"]
@@ -1313,6 +1343,20 @@ actions:
   # so the managed resource uses PUT /apps/{id}/visibility (App#create#2 /
   # App#update#2) for drift. Resource Read still stitches GET visibility via
   # App#read#2 (resource-only; see apps/{app_id}/visibility get above).
+  #
+  # App#create merges POST /apps (App) with PUT visibility (AppVisibilityInfo).
+  # Both shards must mark visibility_group_ids as format: set or Speakeasy
+  # fails with "cannot reconcile between array and set" when regenerating
+  # against a newer Opal OpenAPI than app.opal.dev.
+  - target: $["components"]["schemas"]["App"]["properties"]["visibility_group_ids"]
+    update:
+      format: set
+  - target: $["components"]["schemas"]["App"]["properties"]["visibility_group_ids"]
+    update:
+      default: []
+  - target: $["components"]["schemas"]["App"]["properties"]["visibility_group_ids"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
   - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["visibility"]
     remove: true
   - target: $["components"]["schemas"]["CreateAppInfo"]["properties"]["visibility_group_ids"]
@@ -2479,6 +2523,24 @@ actions:
   - target: $["components"]["schemas"]["PaginatedConfigurationTemplateList"]
     update:
       x-speakeasy-entity: ConfigurationTemplateList
+  - target: $["components"]["schemas"]["CreateRequestTemplateInfo"]
+    update:
+      x-speakeasy-entity: RequestTemplate
+  - target: $["components"]["schemas"]["RequestTemplate"]["properties"]["request_template_id"]
+    update:
+      x-speakeasy-param-readonly: true
+  - target: $["components"]["schemas"]["RequestTemplate"]["properties"]["request_template_id"]
+    update:
+      x-speakeasy-param-suppress-computed-diff: true
+  - target: $["components"]["schemas"]["RequestTemplate"]
+    update:
+      x-speakeasy-entity: RequestTemplate
+  - target: $["components"]["schemas"]["UpdateRequestTemplateInfo"]
+    update:
+      x-speakeasy-entity: RequestTemplate
+  - target: $["components"]["schemas"]["PaginatedRequestTemplateList"]
+    update:
+      x-speakeasy-entity: RequestTemplateList
   - target: $["components"]["schemas"]["Bundle"]["properties"]["bundle_id"]
     update:
       x-speakeasy-param-suppress-computed-diff: true

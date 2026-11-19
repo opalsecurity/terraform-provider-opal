@@ -81,3 +81,16 @@ func testAccPreCheckCustomApp(t *testing.T) {
 		t.Fatal("OPAL_TEST_KNOWN_CUSTOM_APP_ID and OPAL_TEST_KNOWN_CUSTOM_APP_ADMIN_OWNER_ID must be set for this test")
 	}
 }
+
+
+// testAccPreCheckRequestTemplate only needs API credentials. Request templates
+// do not depend on apps, users, or GitHub inventory fixtures.
+func testAccPreCheckRequestTemplate(t *testing.T) {
+	t.Helper()
+	if os.Getenv("OPAL_TEST_TOKEN") == "" {
+		t.Fatal("OPAL_TEST_TOKEN must be set for acceptance tests")
+	}
+	if os.Getenv("OPAL_TEST_BASE_URL") == "" {
+		t.Fatal("OPAL_TEST_BASE_URL must be set for acceptance tests")
+	}
+}

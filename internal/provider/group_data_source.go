@@ -749,6 +749,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Twingate synced group.`,
 					},
+					"vault_identity_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the Vault identity group.`,
+							},
+						},
+						Description: `Remote info for Vault identity group.`,
+					},
 					"workday_user_security_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
