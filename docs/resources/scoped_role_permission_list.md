@@ -43,9 +43,9 @@ resource "opal_scoped_role_permission_list" "my_scopedrolepermissionlist" {
 Optional:
 
 - `allow_all` (Boolean) Not Null
-- `permission_name` (String) The name of the role permission. Not Null; must be one of ["READ", "READ_ASSIGNMENTS", "CREATE", "IMPORT", "EXPORT", "SYNC", "DELETE", "READ_SETTINGS", "EDIT_TAGS", "EDIT_SETTINGS", "EDIT_SYNC_SETTINGS", "EDIT_ASSIGNMENTS", "EDIT_REQUEST_CONFIGURATIONS", "EDIT_EVENT_STREAM", "ASSIGN_UAR_REVIEWERS", "SEND_REMINDERS", "STOP", "REQUEST_ON_BEHALF", "RESET_MFA"]
+- `permission_name` (String) The name of the role permission. Not Null; must be one of ["READ", "READ_ASSIGNMENTS", "CREATE", "IMPORT", "EXPORT", "SYNC", "DELETE", "READ_SETTINGS", "EDIT_TAGS", "EDIT_SETTINGS", "EDIT_SYNC_SETTINGS", "EDIT_ASSIGNMENTS", "EDIT_REQUEST_CONFIGURATIONS", "EDIT_EVENT_STREAM", "ASSIGN_UAR_REVIEWERS", "SEND_REMINDERS", "STOP", "REQUEST_ON_BEHALF", "RESET_MFA", "CHECK_VISIBILITY", "CHECK_REQUESTABILITY"]
 - `target_ids` (Set of String) The IDs of the entities that this permission applies to. If empty of missing, the permission will have untargeted scope. Default: []
-- `target_type` (String) The type of the target for the role permission. Not Null; must be one of ["RESOURCE", "CONNECTION", "GROUP", "BUNDLE", "USER", "ACCESS_REVIEW", "OWNER", "EVENT"]
+- `target_type` (String) The type of the target for the role permission. Not Null; must be one of ["RESOURCE", "CONNECTION", "GROUP", "BUNDLE", "USER", "ACCESS_REVIEW", "OWNER", "EVENT", "PALADIN_AGENT"]
 
 ## Import
 

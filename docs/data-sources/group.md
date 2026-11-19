@@ -23,7 +23,7 @@ data "opal_group" "my_group" {
 
 ### Required
 
-- `id` (String) The ID of the group whose configuration template link is being read.
+- `id` (String) The ID of the group.
 
 ### Read-Only
 
@@ -39,6 +39,8 @@ data "opal_group" "my_group" {
 - `last_successful_sync` (Attributes) Information about the last successful sync of this group. (see [below for nested schema](#nestedatt--last_successful_sync))
 - `match_remote_description` (Boolean) A bool representing whether or not the group's description is synced from the end system. When true, the description is overwritten with the remote description on each sync. Defaults to false.
 - `match_remote_name` (Boolean) A bool representing whether or not the group's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.
+- `max_direct_users_allowed` (Number) The maximum number of direct users allowed for this group at once. Set to null to remove the limit.
+- `max_users_exceeded_message` (String) Custom message shown to users when the maximum number of allowed users for this group has been reached.
 - `message_channels` (Attributes) The audit and reviewer message channels attached to the group. (see [below for nested schema](#nestedatt--message_channels))
 - `name` (String) The name of the group.
 - `on_call_schedules` (Attributes) The on call schedules attached to the group. (see [below for nested schema](#nestedatt--on_call_schedules))
@@ -138,6 +140,8 @@ Read-Only:
 - `jira_group` (Attributes) Remote info for Jira group. (see [below for nested schema](#nestedatt--remote_info--jira_group))
 - `ldap_group` (Attributes) Remote info for LDAP group. (see [below for nested schema](#nestedatt--remote_info--ldap_group))
 - `linear_team` (Attributes) Remote info for Linear team. (see [below for nested schema](#nestedatt--remote_info--linear_team))
+- `miro_team` (Attributes) Remote info for Miro Team. (see [below for nested schema](#nestedatt--remote_info--miro_team))
+- `miro_user_group` (Attributes) Remote info for Miro User Group. (see [below for nested schema](#nestedatt--remote_info--miro_user_group))
 - `okta_group` (Attributes) Remote info for Okta Directory group. (see [below for nested schema](#nestedatt--remote_info--okta_group))
 - `okta_group_rule` (Attributes) Remote info for Okta Directory group rule. (see [below for nested schema](#nestedatt--remote_info--okta_group_rule))
 - `onelogin_group` (Attributes) Remote info for OneLogin Group. (see [below for nested schema](#nestedatt--remote_info--onelogin_group))
@@ -145,6 +149,7 @@ Read-Only:
 - `pagerduty_on_call_schedule` (Attributes) Remote info for PagerDuty on-call schedule group. (see [below for nested schema](#nestedatt--remote_info--pagerduty_on_call_schedule))
 - `ramp_department` (Attributes) Remote info for Ramp department. (see [below for nested schema](#nestedatt--remote_info--ramp_department))
 - `ramp_location` (Attributes) Remote info for Ramp location. (see [below for nested schema](#nestedatt--remote_info--ramp_location))
+- `rippling_department` (Attributes) Remote info for Rippling department. (see [below for nested schema](#nestedatt--remote_info--rippling_department))
 - `rippling_supergroup` (Attributes) Remote info for Rippling supergroup. (see [below for nested schema](#nestedatt--remote_info--rippling_supergroup))
 - `rippling_team` (Attributes) Remote info for Rippling team. (see [below for nested schema](#nestedatt--remote_info--rippling_team))
 - `rootly_on_call_schedule` (Attributes) Remote info for Rootly on-call schedule group. (see [below for nested schema](#nestedatt--remote_info--rootly_on_call_schedule))
@@ -412,6 +417,22 @@ Read-Only:
 - `team_id` (String) The ID of the Linear team.
 
 
+<a id="nestedatt--remote_info--miro_team"></a>
+### Nested Schema for `remote_info.miro_team`
+
+Read-Only:
+
+- `team_id` (String) The team id of the Miro Team.
+
+
+<a id="nestedatt--remote_info--miro_user_group"></a>
+### Nested Schema for `remote_info.miro_user_group`
+
+Read-Only:
+
+- `user_group_id` (String) The user group id of the Miro User Group.
+
+
 <a id="nestedatt--remote_info--okta_group"></a>
 ### Nested Schema for `remote_info.okta_group`
 
@@ -466,6 +487,14 @@ Read-Only:
 Read-Only:
 
 - `location_id` (String) The ID of the Ramp location.
+
+
+<a id="nestedatt--remote_info--rippling_department"></a>
+### Nested Schema for `remote_info.rippling_department`
+
+Read-Only:
+
+- `department_id` (String) The ID of the Rippling department.
 
 
 <a id="nestedatt--remote_info--rippling_supergroup"></a>
@@ -605,6 +634,7 @@ Read-Only:
 - `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource.
 - `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource.
 - `condition` (Attributes) The condition for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--condition))
+- `disable_skip_level_escalation` (Boolean) When true, requesters cannot escalate requests to their skip-level manager. When any item in a request has this set to true, the escalation button is disabled and the action is blocked. Defaults to false.
 - `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.
 - `priority` (Number) The priority of the request configuration.

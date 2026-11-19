@@ -122,6 +122,8 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 		}
 		r.MatchRemoteDescription = types.BoolPointerValue(resp.MatchRemoteDescription)
 		r.MatchRemoteName = types.BoolPointerValue(resp.MatchRemoteName)
+		r.MaxDirectUsersAllowed = types.Int64PointerValue(resp.MaxDirectUsersAllowed)
+		r.MaxUsersExceededMessage = types.StringPointerValue(resp.MaxUsersExceededMessage)
 		r.Name = types.StringPointerValue(resp.Name)
 		if resp.RemoteInfo == nil {
 			r.RemoteInfo = nil
@@ -315,6 +317,18 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 				r.RemoteInfo.LinearTeam = &tfTypes.GrafanaTeam{}
 				r.RemoteInfo.LinearTeam.TeamID = types.StringValue(resp.RemoteInfo.LinearTeam.TeamID)
 			}
+			if resp.RemoteInfo.MiroTeam == nil {
+				r.RemoteInfo.MiroTeam = nil
+			} else {
+				r.RemoteInfo.MiroTeam = &tfTypes.GrafanaTeam{}
+				r.RemoteInfo.MiroTeam.TeamID = types.StringValue(resp.RemoteInfo.MiroTeam.TeamID)
+			}
+			if resp.RemoteInfo.MiroUserGroup == nil {
+				r.RemoteInfo.MiroUserGroup = nil
+			} else {
+				r.RemoteInfo.MiroUserGroup = &tfTypes.MiroUserGroup{}
+				r.RemoteInfo.MiroUserGroup.UserGroupID = types.StringValue(resp.RemoteInfo.MiroUserGroup.UserGroupID)
+			}
 			if resp.RemoteInfo.OktaGroup == nil {
 				r.RemoteInfo.OktaGroup = nil
 			} else {
@@ -356,6 +370,12 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 			} else {
 				r.RemoteInfo.RampLocation = &tfTypes.RampLocation{}
 				r.RemoteInfo.RampLocation.LocationID = types.StringValue(resp.RemoteInfo.RampLocation.LocationID)
+			}
+			if resp.RemoteInfo.RipplingDepartment == nil {
+				r.RemoteInfo.RipplingDepartment = nil
+			} else {
+				r.RemoteInfo.RipplingDepartment = &tfTypes.RampDepartment{}
+				r.RemoteInfo.RipplingDepartment.DepartmentID = types.StringValue(resp.RemoteInfo.RipplingDepartment.DepartmentID)
 			}
 			if resp.RemoteInfo.RipplingSupergroup == nil {
 				r.RemoteInfo.RipplingSupergroup = nil
@@ -476,6 +496,7 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 					requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 				}
 			}
+			requestConfigurations.DisableSkipLevelEscalation = types.BoolPointerValue(requestConfigurationsItem.DisableSkipLevelEscalation)
 			requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 			requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 			requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
@@ -545,16 +566,6 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 	return diags
 }
 
-func (r *GroupResourceModel) RefreshFromSharedGroupConfigurationTemplate(ctx context.Context, resp *shared.GroupConfigurationTemplate) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if resp != nil {
-		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
-	}
-
-	return diags
-}
-
 func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(ctx context.Context, resp *shared.UpdateGroupInfo) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -569,6 +580,8 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(ctx context.Contex
 	r.ID = types.StringValue(resp.ID)
 	r.MatchRemoteDescription = types.BoolPointerValue(resp.MatchRemoteDescription)
 	r.MatchRemoteName = types.BoolPointerValue(resp.MatchRemoteName)
+	r.MaxDirectUsersAllowed = types.Int64PointerValue(resp.MaxDirectUsersAllowed)
+	r.MaxUsersExceededMessage = types.StringPointerValue(resp.MaxUsersExceededMessage)
 	r.Name = types.StringPointerValue(resp.Name)
 	r.RequestConfigurations = []tfTypes.RequestConfiguration{}
 
@@ -591,6 +604,7 @@ func (r *GroupResourceModel) RefreshFromSharedUpdateGroupInfo(ctx context.Contex
 				requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 			}
 		}
+		requestConfigurations.DisableSkipLevelEscalation = types.BoolPointerValue(requestConfigurationsItem.DisableSkipLevelEscalation)
 		requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 		requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 		requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
@@ -681,19 +695,6 @@ func (r *GroupResourceModel) ToOperationsDeleteGroupRequest(ctx context.Context)
 	id = r.ID.ValueString()
 
 	out := operations.DeleteGroupRequest{
-		ID: id,
-	}
-
-	return &out, diags
-}
-
-func (r *GroupResourceModel) ToOperationsGetGroupConfigurationTemplateRequest(ctx context.Context) (*operations.GetGroupConfigurationTemplateRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.GetGroupConfigurationTemplateRequest{
 		ID: id,
 	}
 
@@ -882,6 +883,12 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		*matchRemoteName = r.MatchRemoteName.ValueBool()
 	} else {
 		matchRemoteName = nil
+	}
+	maxDirectUsersAllowed := new(int64)
+	if !r.MaxDirectUsersAllowed.IsUnknown() && !r.MaxDirectUsersAllowed.IsNull() {
+		*maxDirectUsersAllowed = r.MaxDirectUsersAllowed.ValueInt64()
+	} else {
+		maxDirectUsersAllowed = nil
 	}
 	var name string
 	name = r.Name.ValueString()
@@ -1181,6 +1188,24 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 				TeamID: teamId2,
 			}
 		}
+		var miroTeam *shared.MiroTeam
+		if r.RemoteInfo.MiroTeam != nil {
+			var teamId3 string
+			teamId3 = r.RemoteInfo.MiroTeam.TeamID.ValueString()
+
+			miroTeam = &shared.MiroTeam{
+				TeamID: teamId3,
+			}
+		}
+		var miroUserGroup *shared.MiroUserGroup
+		if r.RemoteInfo.MiroUserGroup != nil {
+			var userGroupID string
+			userGroupID = r.RemoteInfo.MiroUserGroup.UserGroupID.ValueString()
+
+			miroUserGroup = &shared.MiroUserGroup{
+				UserGroupID: userGroupID,
+			}
+		}
 		var oktaGroup *shared.OktaGroup
 		if r.RemoteInfo.OktaGroup != nil {
 			var groupId20 string
@@ -1244,6 +1269,15 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 				LocationID: locationID,
 			}
 		}
+		var ripplingDepartment *shared.RipplingDepartment
+		if r.RemoteInfo.RipplingDepartment != nil {
+			var departmentId1 string
+			departmentId1 = r.RemoteInfo.RipplingDepartment.DepartmentID.ValueString()
+
+			ripplingDepartment = &shared.RipplingDepartment{
+				DepartmentID: departmentId1,
+			}
+		}
 		var ripplingSupergroup *shared.RipplingSupergroup
 		if r.RemoteInfo.RipplingSupergroup != nil {
 			var supergroupID string
@@ -1255,11 +1289,11 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		}
 		var ripplingTeam *shared.RipplingTeam
 		if r.RemoteInfo.RipplingTeam != nil {
-			var teamId3 string
-			teamId3 = r.RemoteInfo.RipplingTeam.TeamID.ValueString()
+			var teamId4 string
+			teamId4 = r.RemoteInfo.RipplingTeam.TeamID.ValueString()
 
 			ripplingTeam = &shared.RipplingTeam{
-				TeamID: teamId3,
+				TeamID: teamId4,
 			}
 		}
 		var rootlyOnCallSchedule *shared.RootlyOnCallSchedule
@@ -1420,6 +1454,8 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 			JiraGroup:                jiraGroup,
 			LdapGroup:                ldapGroup,
 			LinearTeam:               linearTeam,
+			MiroTeam:                 miroTeam,
+			MiroUserGroup:            miroUserGroup,
 			OktaGroup:                oktaGroup,
 			OktaGroupRule:            oktaGroupRule,
 			OneloginGroup:            oneloginGroup,
@@ -1427,6 +1463,7 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 			PagerdutyOnCallSchedule:  pagerdutyOnCallSchedule,
 			RampDepartment:           rampDepartment,
 			RampLocation:             rampLocation,
+			RipplingDepartment:       ripplingDepartment,
 			RipplingSupergroup:       ripplingSupergroup,
 			RipplingTeam:             ripplingTeam,
 			RootlyOnCallSchedule:     rootlyOnCallSchedule,
@@ -1445,17 +1482,23 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 			ZoomGroup:                zoomGroup,
 		}
 	}
+	requiresForfeitReason := new(bool)
+	if !r.RequiresForfeitReason.IsUnknown() && !r.RequiresForfeitReason.IsNull() {
+		*requiresForfeitReason = r.RequiresForfeitReason.ValueBool()
+	} else {
+		requiresForfeitReason = nil
+	}
 	riskSensitivityOverride := new(shared.RiskSensitivityEnum)
 	if !r.RiskSensitivityOverride.IsUnknown() && !r.RiskSensitivityOverride.IsNull() {
 		*riskSensitivityOverride = shared.RiskSensitivityEnum(r.RiskSensitivityOverride.ValueString())
 	} else {
 		riskSensitivityOverride = nil
 	}
-	teamId4 := new(string)
+	teamId5 := new(string)
 	if !r.TeamID.IsUnknown() && !r.TeamID.IsNull() {
-		*teamId4 = r.TeamID.ValueString()
+		*teamId5 = r.TeamID.ValueString()
 	} else {
-		teamId4 = nil
+		teamId5 = nil
 	}
 	out := shared.CreateGroupInfo{
 		AppID:                     appID,
@@ -1467,10 +1510,12 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		InitialUserIds:            initialUserIds,
 		MatchRemoteDescription:    matchRemoteDescription,
 		MatchRemoteName:           matchRemoteName,
+		MaxDirectUsersAllowed:     maxDirectUsersAllowed,
 		Name:                      name,
 		RemoteInfo:                remoteInfo,
+		RequiresForfeitReason:     requiresForfeitReason,
 		RiskSensitivityOverride:   riskSensitivityOverride,
-		TeamID:                    teamId4,
+		TeamID:                    teamId5,
 	}
 
 	return &out, diags
@@ -1566,6 +1611,18 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 	} else {
 		matchRemoteName = nil
 	}
+	maxDirectUsersAllowed := new(int64)
+	if !r.MaxDirectUsersAllowed.IsUnknown() && !r.MaxDirectUsersAllowed.IsNull() {
+		*maxDirectUsersAllowed = r.MaxDirectUsersAllowed.ValueInt64()
+	} else {
+		maxDirectUsersAllowed = nil
+	}
+	maxUsersExceededMessage := new(string)
+	if !r.MaxUsersExceededMessage.IsUnknown() && !r.MaxUsersExceededMessage.IsNull() {
+		*maxUsersExceededMessage = r.MaxUsersExceededMessage.ValueString()
+	} else {
+		maxUsersExceededMessage = nil
+	}
 	name := new(string)
 	if !r.Name.IsUnknown() && !r.Name.IsNull() {
 		*name = r.Name.ValueString()
@@ -1601,6 +1658,12 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 				OpalScriptID:  opalScriptID,
 				RoleRemoteIds: roleRemoteIds,
 			}
+		}
+		disableSkipLevelEscalation := new(bool)
+		if !r.RequestConfigurations[requestConfigurationsIndex].DisableSkipLevelEscalation.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].DisableSkipLevelEscalation.IsNull() {
+			*disableSkipLevelEscalation = r.RequestConfigurations[requestConfigurationsIndex].DisableSkipLevelEscalation.ValueBool()
+		} else {
+			disableSkipLevelEscalation = nil
 		}
 		extensionsDurationInMinutes1 := new(int64)
 		if !r.RequestConfigurations[requestConfigurationsIndex].ExtensionsDurationInMinutes.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ExtensionsDurationInMinutes.IsNull() {
@@ -1706,6 +1769,7 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 			AllowRequests:               allowRequests,
 			AutoApproval:                autoApproval,
 			Condition:                   condition,
+			DisableSkipLevelEscalation:  disableSkipLevelEscalation,
 			ExtensionsDurationInMinutes: extensionsDurationInMinutes1,
 			MaxDuration:                 maxDuration,
 			Priority:                    priority,
@@ -1744,6 +1808,8 @@ func (r *GroupResourceModel) ToSharedUpdateGroupInfo(ctx context.Context) (*shar
 		ID:                          id,
 		MatchRemoteDescription:      matchRemoteDescription,
 		MatchRemoteName:             matchRemoteName,
+		MaxDirectUsersAllowed:       maxDirectUsersAllowed,
+		MaxUsersExceededMessage:     maxUsersExceededMessage,
 		Name:                        name,
 		RequestConfigurations:       requestConfigurations,
 		RequireMfaToApprove:         requireMfaToApprove,

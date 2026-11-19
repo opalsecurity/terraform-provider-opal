@@ -16,6 +16,7 @@ const (
 	OpalScriptTypeEnumRequestDelegationCondition    OpalScriptTypeEnum = "REQUEST_DELEGATION_CONDITION"
 	OpalScriptTypeEnumContextProvider               OpalScriptTypeEnum = "CONTEXT_PROVIDER"
 	OpalScriptTypeEnumRequestConfigurationCondition OpalScriptTypeEnum = "REQUEST_CONFIGURATION_CONDITION"
+	OpalScriptTypeEnumEventTrigger                  OpalScriptTypeEnum = "EVENT_TRIGGER"
 )
 
 func (e OpalScriptTypeEnum) ToPointer() *OpalScriptTypeEnum {
@@ -34,6 +35,8 @@ func (e *OpalScriptTypeEnum) UnmarshalJSON(data []byte) error {
 	case "CONTEXT_PROVIDER":
 		fallthrough
 	case "REQUEST_CONFIGURATION_CONDITION":
+		fallthrough
+	case "EVENT_TRIGGER":
 		*e = OpalScriptTypeEnum(v)
 		return nil
 	default:

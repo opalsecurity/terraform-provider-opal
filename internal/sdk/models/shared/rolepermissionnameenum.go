@@ -31,6 +31,8 @@ const (
 	RolePermissionNameEnumStop                      RolePermissionNameEnum = "STOP"
 	RolePermissionNameEnumRequestOnBehalf           RolePermissionNameEnum = "REQUEST_ON_BEHALF"
 	RolePermissionNameEnumResetMfa                  RolePermissionNameEnum = "RESET_MFA"
+	RolePermissionNameEnumCheckVisibility           RolePermissionNameEnum = "CHECK_VISIBILITY"
+	RolePermissionNameEnumCheckRequestability       RolePermissionNameEnum = "CHECK_REQUESTABILITY"
 )
 
 func (e RolePermissionNameEnum) ToPointer() *RolePermissionNameEnum {
@@ -79,6 +81,10 @@ func (e *RolePermissionNameEnum) UnmarshalJSON(data []byte) error {
 	case "REQUEST_ON_BEHALF":
 		fallthrough
 	case "RESET_MFA":
+		fallthrough
+	case "CHECK_VISIBILITY":
+		fallthrough
+	case "CHECK_REQUESTABILITY":
 		*e = RolePermissionNameEnum(v)
 		return nil
 	default:

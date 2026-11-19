@@ -37,6 +37,8 @@ func newAgentActivity(rootSDK *OpalAPI, sdkConfig config.SDKConfiguration, hooks
 // **Prototype (AG-336).** The AI security server endpoint for Anthropic Inference hooks. Anthropic POSTs each governed frame here and waits for an allow or deny verdict. Configure it in claude.ai with this URL and a custom `Authorization: Bearer <Opal API key>` request header.
 //
 // `tool_call` frames are evaluated against the organization's runtime policy rules. One verdict covers every tool call in the frame. Every other frame type, including `prompt`, is allowed without inspection. Any non-200 response is a webhook failure, so the organization's Anthropic failure-handling setting decides the outcome.
+//
+// Once the organization saves its Anthropic signing secret in Opal, a `tool_call` frame must carry a valid Standard Webhooks signature (`webhook-id`, `webhook-timestamp`, `webhook-signature`), or it is answered with a 401.
 func (s *AgentActivity) AnthropicInferenceHook(ctx context.Context, request map[string]any, opts ...operations.Option) (*operations.AnthropicInferenceHookResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -229,6 +231,224 @@ func (s *AgentActivity) AnthropicInferenceHook(ctx context.Context, request map[
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 401:
+		utils.DrainBody(httpRes)
+	case httpRes.StatusCode == 500:
+		utils.DrainBody(httpRes)
+	default:
+		rawBody, err := utils.ConsumeRawBody(httpRes)
+		if err != nil {
+			return nil, err
+		}
+		return nil, errors.NewSDKError("unknown status code returned", httpRes.StatusCode, string(rawBody), httpRes)
+	}
+
+	return res, nil
+
+}
+
+// CursorInferenceHook - Grok Bot inference hook verdict
+// **Prototype (AG-476).** The endpoint for a Cursor team's Grok Bot inference hooks. Each Cursor team posts to the URL of its own Cursor connection in Opal, so an organization with many Cursor teams gets one URL per team. Configure it in the Cursor dashboard with this URL and a custom `Authorization: Bearer <Opal API key>` request header.
+//
+// `tool_call` frames are evaluated against the organization's runtime policy rules. One verdict covers every tool call in the frame. Every other frame type, including `prompt`, is allowed without inspection. Any non-200 response is a webhook failure, so the team's failure mode in Cursor decides the outcome.
+//
+// A `tool_call` frame must carry a valid Standard Webhooks signature (`webhook-id`, `webhook-timestamp`, `webhook-signature`) made with the signing secret saved for the connection, or it is answered with a 401. A connection with no saved secret rejects every `tool_call` frame.
+func (s *AgentActivity) CursorInferenceHook(ctx context.Context, request operations.CursorInferenceHookRequest, opts ...operations.Option) (*operations.CursorInferenceHookResponse, error) {
+	o := operations.Options{}
+	supportedOptions := []string{
+		operations.SupportedOptionRetries,
+		operations.SupportedOptionTimeout,
+	}
+
+	for _, opt := range opts {
+		if err := opt(&o, supportedOptions...); err != nil {
+			return nil, fmt.Errorf("error applying option: %w", err)
+		}
+	}
+
+	var baseURL string
+	if o.ServerURL == nil {
+		baseURL = utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
+	} else {
+		baseURL = *o.ServerURL
+	}
+	opURL, err := utils.GenerateURL(ctx, baseURL, "/inference-hooks/cursor/{connection_id}", request, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error generating URL: %w", err)
+	}
+
+	hookCtx := hooks.HookContext{
+		SDK:              s.rootSDK,
+		SDKConfiguration: s.sdkConfiguration,
+		BaseURL:          baseURL,
+		Context:          ctx,
+		OperationID:      "cursorInferenceHook",
+		OAuth2Scopes:     nil,
+		SecuritySource:   s.sdkConfiguration.Security,
+	}
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "RequestBody", "json", `request:"mediaType=application/json"`)
+	if err != nil {
+		return nil, err
+	}
+
+	timeout := o.Timeout
+	if timeout == nil {
+		timeout = s.sdkConfiguration.Timeout
+	}
+
+	if timeout != nil {
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, *timeout)
+		defer cancel()
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "POST", opURL, bodyReader)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
+	if reqContentType != "" {
+		req.Header.Set("Content-Type", reqContentType)
+	}
+
+	if err := utils.PopulateSecurity(ctx, req, s.sdkConfiguration.Security); err != nil {
+		return nil, err
+	}
+
+	for k, v := range o.SetHeaders {
+		req.Header.Set(k, v)
+	}
+
+	globalRetryConfig := s.sdkConfiguration.RetryConfig
+	retryConfig := o.Retries
+	if retryConfig == nil {
+		if globalRetryConfig != nil {
+			retryConfig = globalRetryConfig
+		} else {
+			retryConfig = &retry.Config{
+				Strategy: "backoff", Backoff: &retry.BackoffStrategy{
+					InitialInterval: 1000,
+					MaxInterval:     60000,
+					Exponent:        1.5,
+					MaxElapsedTime:  3600000,
+				},
+				RetryConnectionErrors: true,
+			}
+		}
+	}
+
+	var httpRes *http.Response
+	if retryConfig != nil {
+		httpRes, err = utils.Retry(ctx, utils.Retries{
+			Config: retryConfig,
+			StatusCodes: []string{
+				"429",
+			},
+		}, func() (*http.Response, error) {
+			if req.Body != nil && req.Body != http.NoBody && req.GetBody != nil {
+				copyBody, err := req.GetBody()
+
+				if err != nil {
+					return nil, err
+				}
+
+				req.Body = copyBody
+			}
+
+			req, err = s.hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
+			if err != nil {
+				if retry.IsPermanentError(err) || retry.IsTemporaryError(err) {
+					return nil, err
+				}
+
+				return nil, retry.Permanent(err)
+			}
+
+			httpRes, err := s.sdkConfiguration.Client.Do(req)
+			if err != nil || httpRes == nil {
+				if err != nil {
+					err = fmt.Errorf("error sending request: %w", err)
+				} else {
+					err = fmt.Errorf("error sending request: no response")
+				}
+
+				_, err = s.hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
+			}
+			return httpRes, err
+		})
+
+		if err != nil {
+			return nil, err
+		} else {
+			httpRes, err = s.hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
+			if err != nil {
+				return nil, err
+			}
+		}
+	} else {
+		req, err = s.hooks.BeforeRequest(hooks.BeforeRequestContext{HookContext: hookCtx}, req)
+		if err != nil {
+			return nil, err
+		}
+
+		httpRes, err = s.sdkConfiguration.Client.Do(req)
+		if err != nil || httpRes == nil {
+			if err != nil {
+				err = fmt.Errorf("error sending request: %w", err)
+			} else {
+				err = fmt.Errorf("error sending request: no response")
+			}
+
+			_, err = s.hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, nil, err)
+			return nil, err
+		} else if utils.MatchStatusCodes([]string{}, httpRes.StatusCode) {
+			_httpRes, err := s.hooks.AfterError(hooks.AfterErrorContext{HookContext: hookCtx}, httpRes, nil)
+			if err != nil {
+				return nil, err
+			} else if _httpRes != nil {
+				httpRes = _httpRes
+			}
+		} else {
+			httpRes, err = s.hooks.AfterSuccess(hooks.AfterSuccessContext{HookContext: hookCtx}, httpRes)
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	res := &operations.CursorInferenceHookResponse{
+		StatusCode:  httpRes.StatusCode,
+		ContentType: httpRes.Header.Get("Content-Type"),
+		RawResponse: httpRes,
+	}
+
+	switch {
+	case httpRes.StatusCode == 200:
+		switch {
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+
+			var out shared.AnthropicInferenceHookVerdict
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
+				return nil, err
+			}
+
+			res.AnthropicInferenceHookVerdict = &out
+		default:
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
+		}
+	case httpRes.StatusCode == 401:
+		fallthrough
+	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	case httpRes.StatusCode == 500:
 		utils.DrainBody(httpRes)
 	default:
@@ -652,13 +872,17 @@ func (s *AgentActivity) GetAgentKillSwitch(ctx context.Context, opts ...operatio
 }
 
 // ReportAgentActivity - Report agent activity
-// **Prototype (AG-285).** Reports activity observed by an agent runtime on a developer's machine - today, Claude Code hook events.
+// Reports activity observed by an agent runtime on a developer's machine: Claude Code, Codex and Cursor hook events, or the same events from any other harness.
+//
+// A custom harness sends each event in Claude Code's hook shape (`AgentActivityEvent`): `opal_reported.client` with the harness's name, `hook_event_name`, and for a tool call `tool_name`, `tool_input` and `tool_use_id`, with `session_id` and `prompt_id` to group calls into sessions and turns. It authenticates with either the organization's agent hooks key plus an `X-Opal-Actor` header, which records the person but no agent, or the key of a service user linked to an agent Opal did not import from Anthropic, which puts the events on that agent. At ingest, a custom harness's events never land on a Claude agent or on a person's own agent. An event stored with no agent can still be attributed later to a Claude agent, when Claude Code's OpenTelemetry export reports the same `session_id`.
+//
+// Only a single raw `PreToolUse` payload that is not marked `delivered_late` can be answered with a decision. When the kill switch, a pause or a policy rule stops the call, the answer is Claude Code's hook output, still with a 200: `{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "deny", "permissionDecisionReason": "..."}}`. Otherwise the body is empty. A rule other than a pause stops a call only while the organization enforces rules and the client's Enforce switch is on; otherwise its verdict is only recorded. A pause and the kill switch stop a call whatever the Enforce switch says, though a pause only while the organization has agent activity insights turned on. A client whose Log and Enforce switches are both off gets none of this: Opal checks, stops and stores nothing it sends, and answers with a 200 that lets the call run. A rule that needs approval answers `ask` to Claude Code and `deny` to every other runtime. A harness that blocks some other way translates the answer itself. Every check fails open: policy rules get 1.5 seconds and a rule that times out or fails lets the call through, but the whole request can take a few seconds more (Opal's own hook waits 5 seconds), and an error in another check is a 500. So a sender should run the call when Opal times out, cannot be reached or answers with anything but a 2xx. A batch, a late copy and a prompt are stored but never answered.
 //
 // This is **telemetry from cooperating machines, not attestation**. Opal can only see what a configured, consenting client chooses to send, cannot verify that a fleet is configured at all, and has no way to detect a machine that is reporting nothing. Absence of activity for an agent therefore means "nothing was reported", never "the agent did nothing".
 //
-// The request body is either a batch envelope (`{"events": [...]}`), a bare JSON array of events, or a single raw Claude Code hook payload - the last so a hook can POST here directly with no relay in between.
+// The request body is either a batch envelope (`{"events": [...]}`), a bare JSON array of events, or a single raw hook payload - the last so a hook can POST here directly with no relay in between.
 //
-// The bearer token establishes the **organization** and nothing finer. No field in the payload is treated as an identity claim Opal trusts: the actor headers below are used for best-effort attribution and display only. Events that cannot be attributed to an agent are retained and surfaced as unattributed activity rather than dropped.
+// The bearer token establishes the **organization**, and some keys also name the agent: a service user's key the agent the service user is linked to, and a person's own hooks sign-in token that person and their own agent (for a custom harness, only the person). No field in the payload is treated as an identity claim Opal trusts: the actor headers below are used for best-effort attribution and display only. Events that cannot be attributed to an agent are retained and surfaced as unattributed activity rather than dropped.
 func (s *AgentActivity) ReportAgentActivity(ctx context.Context, request operations.ReportAgentActivityRequest, opts ...operations.Option) (*operations.ReportAgentActivityResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{

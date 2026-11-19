@@ -3,12 +3,12 @@
 page_title: "opal_app Resource - terraform-provider-opal"
 subcategory: ""
 description: |-
-  App Resource. Manages Push-only (CUSTOM) and Custom Connector (CUSTOM_CONNECTOR) apps, including visibility via the apps visibility sub-endpoint. For other app types, use the opal_app data source.
+  App Resource
 ---
 
 # opal_app (Resource)
 
-App Resource. Manages Push-only (`CUSTOM`) and Custom Connector (`CUSTOM_CONNECTOR`) apps, including visibility via the apps visibility sub-endpoint. For other app types, use the `opal_app` data source.
+App Resource
 
 ## Example Usage
 
@@ -31,8 +31,11 @@ resource "opal_app" "my_app" {
   }
   description       = "Bookkeeping app for internal tools."
   import_visibility = "GLOBAL"
-  name              = "My Custom Connector App"
+  name              = "My Push-only App"
   visibility        = "GLOBAL"
+  visibility_group_ids = [
+    "0ac67328-c5ec-4f7b-a4c6-2ce408cea5ee"
+  ]
 }
 ```
 

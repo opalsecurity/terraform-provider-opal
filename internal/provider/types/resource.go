@@ -19,6 +19,8 @@ type Resource struct {
 	LastSuccessfulSync          *LastSuccessfulSync             `tfsdk:"last_successful_sync"`
 	MatchRemoteDescription      types.Bool                      `tfsdk:"match_remote_description"`
 	MatchRemoteName             types.Bool                      `tfsdk:"match_remote_name"`
+	MaxDirectUsersAllowed       types.Int64                     `tfsdk:"max_direct_users_allowed"`
+	MaxUsersExceededMessage     types.String                    `tfsdk:"max_users_exceeded_message"`
 	Name                        types.String                    `tfsdk:"name"`
 	ParentResourceID            types.String                    `tfsdk:"parent_resource_id"`
 	RemoteInfo                  *ResourceRemoteInfo             `tfsdk:"remote_info"`

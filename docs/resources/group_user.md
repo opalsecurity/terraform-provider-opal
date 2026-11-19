@@ -15,6 +15,7 @@ GroupUser Resource
 ```terraform
 resource "opal_group_user" "my_groupuser" {
   access_level_remote_id = "arn:aws:iam::590304332660:role/AdministratorAccess"
+  acting_user_id         = "353599fb-d138-4a20-aa73-32552666635c"
   duration_minutes       = 0
   group_id               = "4baf8423-db0a-4037-a4cf-f79c60cb67a5"
   user_id                = "f92aa855-cea9-4814-b9d8-f2a60d3e4a06"
@@ -32,6 +33,7 @@ resource "opal_group_user" "my_groupuser" {
 ### Optional
 
 - `access_level_remote_id` (String) The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used. Requires replacement if changed.
+- `acting_user_id` (String) Record this Opal user as the actor of the membership add in the audit event instead of the caller. Only for service users an admin has allowed to act for users, in organizations with the feature enabled. The named user must be a person (not a service user) in the caller's organization and active in the identity provider. Authorization is unchanged: the caller still needs permission to edit assignments on the group. The named user's own permissions on the group are not evaluated. Requires replacement if changed.
 - `duration_minutes` (Number) Must be set to 0. Any nonzerovalue in terraform does not make sense. Default: 0; must be 0; Requires replacement if changed.
 
 ### Read-Only

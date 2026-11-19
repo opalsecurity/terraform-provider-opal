@@ -37,7 +37,7 @@ Read-Only:
 - `id` (String) The ID of the context source.
 - `name` (String) A human-readable name for the source.
 - `paladin_id` (String) The ID of the Paladin this source belongs to.
-- `remote_id` (String) The provider's identifier for the source. The Slack channel ID for a channel, or the Notion/Confluence page ID for a document.
-- `source_kind` (String) The kind of source a Paladin can read. A SLACK_CHANNEL is a Slack channel; a DOCUMENT is a Notion or Confluence page.
+- `remote_id` (String) The provider's identifier for the source. The Slack channel ID for a channel, or the Notion/Confluence page ID or numeric Freshservice article ID for a document.
+- `source_kind` (String) The kind of source a Paladin can read. A SLACK_CHANNEL is a Slack channel; a DOCUMENT is a Notion or Confluence page or a Freshservice knowledge base article.
 - `third_party_provider` (String) The integration a Paladin context source comes from.
 - `url` (String) A link to the source.

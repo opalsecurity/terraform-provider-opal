@@ -18,7 +18,7 @@ resource "opal_paladin_context_source" "my_paladincontextsource" {
   paladin_id           = "32acc112-21ff-4669-91c2-21e27683eaa1"
   remote_id            = "...my_remote_id..."
   source_kind          = "DOCUMENT"
-  third_party_provider = "CONFLUENCE"
+  third_party_provider = "FRESH_SERVICE"
   url                  = "...my_url..."
 }
 ```
@@ -29,9 +29,9 @@ resource "opal_paladin_context_source" "my_paladincontextsource" {
 ### Required
 
 - `paladin_id` (String) The ID of the Paladin. Requires replacement if changed.
-- `remote_id` (String) The provider's identifier for the source. The Slack channel ID for a channel, or the Notion/Confluence page ID for a document. Requires replacement if changed.
-- `source_kind` (String) The kind of source a Paladin can read. A SLACK_CHANNEL is a Slack channel; a DOCUMENT is a Notion or Confluence page. must be one of ["SLACK_CHANNEL", "DOCUMENT"]; Requires replacement if changed.
-- `third_party_provider` (String) The integration a Paladin context source comes from. must be one of ["SLACK", "NOTION", "CONFLUENCE"]; Requires replacement if changed.
+- `remote_id` (String) The provider's identifier for the source. The Slack channel ID for a channel, or the Notion/Confluence page ID or numeric Freshservice article ID for a document. Requires replacement if changed.
+- `source_kind` (String) The kind of source a Paladin can read. A SLACK_CHANNEL is a Slack channel; a DOCUMENT is a Notion or Confluence page or a Freshservice knowledge base article. must be one of ["SLACK_CHANNEL", "DOCUMENT"]; Requires replacement if changed.
+- `third_party_provider` (String) The integration a Paladin context source comes from. possible known values include one of ["SLACK", "NOTION", "CONFLUENCE", "FRESH_SERVICE"]; Requires replacement if changed.
 
 ### Optional
 

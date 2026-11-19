@@ -65,6 +65,7 @@ const (
 	ResourceTypeEnumDatadogRole                       ResourceTypeEnum = "DATADOG_ROLE"
 	ResourceTypeEnumOktaApp                           ResourceTypeEnum = "OKTA_APP"
 	ResourceTypeEnumOktaRole                          ResourceTypeEnum = "OKTA_ROLE"
+	ResourceTypeEnumOktaWorkloadPrincipal             ResourceTypeEnum = "OKTA_WORKLOAD_PRINCIPAL"
 	ResourceTypeEnumOpalRole                          ResourceTypeEnum = "OPAL_ROLE"
 	ResourceTypeEnumOpalScopedRole                    ResourceTypeEnum = "OPAL_SCOPED_ROLE"
 	ResourceTypeEnumPagerdutyRole                     ResourceTypeEnum = "PAGERDUTY_ROLE"
@@ -85,9 +86,14 @@ const (
 	ResourceTypeEnumCoupaRole                         ResourceTypeEnum = "COUPA_ROLE"
 	ResourceTypeEnumCursorOrganization                ResourceTypeEnum = "CURSOR_ORGANIZATION"
 	ResourceTypeEnumCursorOriginRepository            ResourceTypeEnum = "CURSOR_ORIGIN_REPOSITORY"
+	ResourceTypeEnumCursorUser                        ResourceTypeEnum = "CURSOR_USER"
+	ResourceTypeEnumCursorBot                         ResourceTypeEnum = "CURSOR_BOT"
 	ResourceTypeEnumOpenaiPlatformProject             ResourceTypeEnum = "OPENAI_PLATFORM_PROJECT"
 	ResourceTypeEnumOpenaiPlatformServiceAccount      ResourceTypeEnum = "OPENAI_PLATFORM_SERVICE_ACCOUNT"
+	ResourceTypeEnumOpenaiUser                        ResourceTypeEnum = "OPENAI_USER"
 	ResourceTypeEnumAnthropicWorkspace                ResourceTypeEnum = "ANTHROPIC_WORKSPACE"
+	ResourceTypeEnumAnthropicUser                     ResourceTypeEnum = "ANTHROPIC_USER"
+	ResourceTypeEnumAnthropicServiceAccount           ResourceTypeEnum = "ANTHROPIC_SERVICE_ACCOUNT"
 	ResourceTypeEnumGitHubOrg                         ResourceTypeEnum = "GIT_HUB_ORG"
 	ResourceTypeEnumOracleFusionRole                  ResourceTypeEnum = "ORACLE_FUSION_ROLE"
 	ResourceTypeEnumDevinOrganization                 ResourceTypeEnum = "DEVIN_ORGANIZATION"
@@ -130,12 +136,21 @@ const (
 	ResourceTypeEnumRipplingDepartment                ResourceTypeEnum = "RIPPLING_DEPARTMENT"
 	ResourceTypeEnumBoxEnterprise                     ResourceTypeEnum = "BOX_ENTERPRISE"
 	ResourceTypeEnumBoxFolder                         ResourceTypeEnum = "BOX_FOLDER"
+	ResourceTypeEnumSlackWorkspace                    ResourceTypeEnum = "SLACK_WORKSPACE"
+	ResourceTypeEnumSlackOrganization                 ResourceTypeEnum = "SLACK_ORGANIZATION"
 	ResourceTypeEnumAsanaWorkspace                    ResourceTypeEnum = "ASANA_WORKSPACE"
 	ResourceTypeEnumAsanaWorkspaceGuest               ResourceTypeEnum = "ASANA_WORKSPACE_GUEST"
 	ResourceTypeEnumBitwardenOrganization             ResourceTypeEnum = "BITWARDEN_ORGANIZATION"
 	ResourceTypeEnumCalendlyRole                      ResourceTypeEnum = "CALENDLY_ROLE"
 	ResourceTypeEnumCalendlyEventType                 ResourceTypeEnum = "CALENDLY_EVENT_TYPE"
+	ResourceTypeEnumMiroOrganization                  ResourceTypeEnum = "MIRO_ORGANIZATION"
+	ResourceTypeEnumMiroBoard                         ResourceTypeEnum = "MIRO_BOARD"
 	ResourceTypeEnumOneloginApp                       ResourceTypeEnum = "ONELOGIN_APP"
+	ResourceTypeEnumSupabaseOrganization              ResourceTypeEnum = "SUPABASE_ORGANIZATION"
+	ResourceTypeEnumSupabaseProject                   ResourceTypeEnum = "SUPABASE_PROJECT"
+	ResourceTypeEnumSupabaseProjectAuth               ResourceTypeEnum = "SUPABASE_PROJECT_AUTH"
+	ResourceTypeEnumTrayWorkspace                     ResourceTypeEnum = "TRAY_WORKSPACE"
+	ResourceTypeEnumTrayOrganization                  ResourceTypeEnum = "TRAY_ORGANIZATION"
 )
 
 func (e ResourceTypeEnum) ToPointer() *ResourceTypeEnum {
@@ -253,6 +268,8 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "OKTA_ROLE":
 		fallthrough
+	case "OKTA_WORKLOAD_PRINCIPAL":
+		fallthrough
 	case "OPAL_ROLE":
 		fallthrough
 	case "OPAL_SCOPED_ROLE":
@@ -293,11 +310,21 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "CURSOR_ORIGIN_REPOSITORY":
 		fallthrough
+	case "CURSOR_USER":
+		fallthrough
+	case "CURSOR_BOT":
+		fallthrough
 	case "OPENAI_PLATFORM_PROJECT":
 		fallthrough
 	case "OPENAI_PLATFORM_SERVICE_ACCOUNT":
 		fallthrough
+	case "OPENAI_USER":
+		fallthrough
 	case "ANTHROPIC_WORKSPACE":
+		fallthrough
+	case "ANTHROPIC_USER":
+		fallthrough
+	case "ANTHROPIC_SERVICE_ACCOUNT":
 		fallthrough
 	case "GIT_HUB_ORG":
 		fallthrough
@@ -383,6 +410,10 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "BOX_FOLDER":
 		fallthrough
+	case "SLACK_WORKSPACE":
+		fallthrough
+	case "SLACK_ORGANIZATION":
+		fallthrough
 	case "ASANA_WORKSPACE":
 		fallthrough
 	case "ASANA_WORKSPACE_GUEST":
@@ -393,7 +424,21 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "CALENDLY_EVENT_TYPE":
 		fallthrough
+	case "MIRO_ORGANIZATION":
+		fallthrough
+	case "MIRO_BOARD":
+		fallthrough
 	case "ONELOGIN_APP":
+		fallthrough
+	case "SUPABASE_ORGANIZATION":
+		fallthrough
+	case "SUPABASE_PROJECT":
+		fallthrough
+	case "SUPABASE_PROJECT_AUTH":
+		fallthrough
+	case "TRAY_WORKSPACE":
+		fallthrough
+	case "TRAY_ORGANIZATION":
 		*e = ResourceTypeEnum(v)
 		return nil
 	default:

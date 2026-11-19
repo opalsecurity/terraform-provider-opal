@@ -3,61 +3,35 @@
 
 package shared
 
-import (
-	"encoding/json"
-	"fmt"
-)
-
 // PaladinConnector - A connector a Paladin is allowed to use.
 type PaladinConnector string
 
 const (
-	PaladinConnectorNotion        PaladinConnector = "NOTION"
-	PaladinConnectorJira          PaladinConnector = "JIRA"
-	PaladinConnectorLinear        PaladinConnector = "LINEAR"
-	PaladinConnectorServiceNow    PaladinConnector = "SERVICE_NOW"
-	PaladinConnectorNotionTickets PaladinConnector = "NOTION_TICKETS"
-	PaladinConnectorFreshService  PaladinConnector = "FRESH_SERVICE"
-	PaladinConnectorShortcut      PaladinConnector = "SHORTCUT"
-	PaladinConnectorSlack         PaladinConnector = "SLACK"
-	PaladinConnectorPagerDuty     PaladinConnector = "PAGER_DUTY"
-	PaladinConnectorConfluence    PaladinConnector = "CONFLUENCE"
-	PaladinConnectorFleetDm       PaladinConnector = "FLEET_DM"
+	PaladinConnectorNotion                PaladinConnector = "NOTION"
+	PaladinConnectorJira                  PaladinConnector = "JIRA"
+	PaladinConnectorLinear                PaladinConnector = "LINEAR"
+	PaladinConnectorServiceNow            PaladinConnector = "SERVICE_NOW"
+	PaladinConnectorNotionTickets         PaladinConnector = "NOTION_TICKETS"
+	PaladinConnectorFreshService          PaladinConnector = "FRESH_SERVICE"
+	PaladinConnectorShortcut              PaladinConnector = "SHORTCUT"
+	PaladinConnectorSlack                 PaladinConnector = "SLACK"
+	PaladinConnectorPagerDuty             PaladinConnector = "PAGER_DUTY"
+	PaladinConnectorConfluence            PaladinConnector = "CONFLUENCE"
+	PaladinConnectorFleetDm               PaladinConnector = "FLEET_DM"
+	PaladinConnectorFreshServiceKnowledge PaladinConnector = "FRESH_SERVICE_KNOWLEDGE"
 )
 
 func (e PaladinConnector) ToPointer() *PaladinConnector {
 	return &e
 }
-func (e *PaladinConnector) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
+
+// IsExact returns true if the value matches a known enum value, false otherwise.
+func (e *PaladinConnector) IsExact() bool {
+	if e != nil {
+		switch *e {
+		case "NOTION", "JIRA", "LINEAR", "SERVICE_NOW", "NOTION_TICKETS", "FRESH_SERVICE", "SHORTCUT", "SLACK", "PAGER_DUTY", "CONFLUENCE", "FLEET_DM", "FRESH_SERVICE_KNOWLEDGE":
+			return true
+		}
 	}
-	switch v {
-	case "NOTION":
-		fallthrough
-	case "JIRA":
-		fallthrough
-	case "LINEAR":
-		fallthrough
-	case "SERVICE_NOW":
-		fallthrough
-	case "NOTION_TICKETS":
-		fallthrough
-	case "FRESH_SERVICE":
-		fallthrough
-	case "SHORTCUT":
-		fallthrough
-	case "SLACK":
-		fallthrough
-	case "PAGER_DUTY":
-		fallthrough
-	case "CONFLUENCE":
-		fallthrough
-	case "FLEET_DM":
-		*e = PaladinConnector(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PaladinConnector: %v", v)
-	}
+	return false
 }

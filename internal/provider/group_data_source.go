@@ -43,6 +43,8 @@ type GroupDataSourceModel struct {
 	LastSuccessfulSync          *tfTypes.LastSuccessfulSync                  `tfsdk:"last_successful_sync"`
 	MatchRemoteDescription      types.Bool                                   `tfsdk:"match_remote_description"`
 	MatchRemoteName             types.Bool                                   `tfsdk:"match_remote_name"`
+	MaxDirectUsersAllowed       types.Int64                                  `tfsdk:"max_direct_users_allowed"`
+	MaxUsersExceededMessage     types.String                                 `tfsdk:"max_users_exceeded_message"`
 	MessageChannels             *tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
 	Name                        types.String                                 `tfsdk:"name"`
 	OnCallSchedules             *tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"on_call_schedules"`
@@ -108,7 +110,7 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			},
 			"id": schema.StringAttribute{
 				Required:    true,
-				Description: `The ID of the group whose configuration template link is being read.`,
+				Description: `The ID of the group.`,
 			},
 			"last_successful_sync": schema.SingleNestedAttribute{
 				Computed: true,
@@ -131,6 +133,14 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			"match_remote_name": schema.BoolAttribute{
 				Computed:    true,
 				Description: `A bool representing whether or not the group's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.`,
+			},
+			"max_direct_users_allowed": schema.Int64Attribute{
+				Computed:    true,
+				Description: `The maximum number of direct users allowed for this group at once. Set to null to remove the limit.`,
+			},
+			"max_users_exceeded_message": schema.StringAttribute{
+				Computed:    true,
+				Description: `Custom message shown to users when the maximum number of allowed users for this group has been reached.`,
 			},
 			"message_channels": schema.SingleNestedAttribute{
 				Computed: true,
@@ -529,6 +539,26 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Linear team.`,
 					},
+					"miro_team": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"team_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The team id of the Miro Team.`,
+							},
+						},
+						Description: `Remote info for Miro Team.`,
+					},
+					"miro_user_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"user_group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The user group id of the Miro User Group.`,
+							},
+						},
+						Description: `Remote info for Miro User Group.`,
+					},
 					"okta_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -598,6 +628,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							},
 						},
 						Description: `Remote info for Ramp location.`,
+					},
+					"rippling_department": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"department_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Rippling department.`,
+							},
+						},
+						Description: `Remote info for Rippling department.`,
 					},
 					"rippling_supergroup": schema.SingleNestedAttribute{
 						Computed: true,
@@ -797,6 +837,10 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 								},
 							},
 							Description: `The condition for the request configuration.`,
+						},
+						"disable_skip_level_escalation": schema.BoolAttribute{
+							Computed:    true,
+							Description: `When true, requesters cannot escalate requests to their skip-level manager. When any item in a request has this set to true, the escalation button is disabled and the action is blocked. Defaults to false.`,
 						},
 						"extensions_duration_in_minutes": schema.Int64Attribute{
 							Computed:    true,
@@ -1088,37 +1132,6 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		return
 	}
 	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupVisibilityResponseBody(ctx, res3.Object)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	request4, request4Diags := data.ToOperationsGetGroupConfigurationTemplateRequest(ctx)
-	resp.Diagnostics.Append(request4Diags...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	res4, err := r.client.Groups.GetConfigurationTemplate(ctx, *request4)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
-		if res4 != nil && res4.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res4.RawResponse))
-		}
-		return
-	}
-	if res4 == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res4))
-		return
-	}
-	if res4.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res4.StatusCode), debugResponse(res4.RawResponse))
-		return
-	}
-	if !(res4.GroupConfigurationTemplate != nil) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res4.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromSharedGroupConfigurationTemplate(ctx, res4.GroupConfigurationTemplate)...)
 
 	if resp.Diagnostics.HasError() {
 		return

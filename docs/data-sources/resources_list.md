@@ -14,17 +14,22 @@ ResourcesList DataSource
 
 ```terraform
 data "opal_resources_list" "my_resources_list" {
-  ancestor_resource_id = ["4baf8423-db0a-4037-a4cf-f79c60cb67a5"]
-  cursor               = "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
-  page_size            = 200
-  parent_resource_id   = ["4baf8423-db0a-4037-a4cf-f79c60cb67a5"]
-  remote_id            = "...my_remote_id..."
+  ancestor_resource_id   = ["4baf8423-db0a-4037-a4cf-f79c60cb67a5"]
+  app_id                 = "f454d283-ca87-4a8a-bdbb-df212eca5353"
+  cursor                 = "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
+  page_size              = 200
+  parent_resource_id     = ["4baf8423-db0a-4037-a4cf-f79c60cb67a5"]
+  requestable_by_user_id = "29827fb8-f2dd-4e80-9576-28e31e9934ac"
   resource_ids = [
     "4baf8423-db0a-4037-a4cf-f79c60cb67a5",
     "1b978423-db0a-4037-a4cf-f79c60cb67b3",
   ]
   resource_name        = "example-name"
+  resource_name_match  = "ENDS_WITH"
   resource_type_filter = "AWS_IAM_ROLE"
+  tag_ids = [
+    "d65a0178-2679-4631-9aed-b1ad19ca8a12"
+  ]
 }
 ```
 
@@ -34,13 +39,21 @@ data "opal_resources_list" "my_resources_list" {
 ### Optional
 
 - `ancestor_resource_id` (String) The ancestor resource id to filter by. Returns all resources that are descendants of the specified resource.
+- `app_id` (String) Only return resources that belong to this app.
 - `cursor` (String) The pagination cursor value.
 - `page_size` (Number) Number of results to return per page. Default is 200.
 - `parent_resource_id` (String) The parent resource id to filter by.
-- `remote_id` (String) Filter resources by their remote id. This will return all resources that have a remote id that matches the provided remote id. Note that this requires resource_type_filter to be provided.
+- `requestable_by_user_id` (String) Only return resources this user can request at one or more access levels, using the same
+evaluation as `GET /resources/{resource_id}/requestable/users/{user_id}`. Filtering for
+another user requires an Opal admin or a custom role with the CHECK_REQUESTABILITY
+permission. The response is always filtered by the caller's own READ visibility, so a
+non-admin CHECK_REQUESTABILITY holder sees the intersection of items they can read and
+items the target user can request. Filtering for yourself needs no permission.
 - `resource_ids` (List of String) The resource ids to filter by.
-- `resource_name` (String) Resource name.
-- `resource_type_filter` (String) The resource type to filter by. Required when remote_id is provided. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AWS_AGENTCORE_GATEWAY", "AWS_AGENTCORE_GATEWAY_TARGET", "AWS_AGENTCORE_GATEWAY_TOOL", "MCP_SERVER", "MCP_TOOL", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GCP_BILLING_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "CURSOR_ORIGIN_REPOSITORY", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "CLICKHOUSE_CONSOLE_ROLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE", "LINEAR_ORGANIZATION", "LINEAR_PROJECT", "RAMP_FUND", "RAMP_ROLE", "WRIKE_USER_TYPE", "DATABRICKS_CATALOG", "DATABRICKS_SCHEMA", "DATABRICKS_VOLUME", "DATABRICKS_FUNCTION", "DATABRICKS_MODEL", "DATABRICKS_SERVICE", "DATABRICKS_MCP_SERVER", "VERCEL_ROLE", "VERCEL_PROJECT", "AXIOM_ROLE", "AXIOM_CUSTOM_ROLE", "RIPPLING_DEPARTMENT", "BOX_ENTERPRISE", "BOX_FOLDER", "ASANA_WORKSPACE", "ASANA_WORKSPACE_GUEST", "BITWARDEN_ORGANIZATION", "CALENDLY_ROLE", "CALENDLY_EVENT_TYPE", "ONELOGIN_APP"]
+- `resource_name` (String) Filter resources by name. Matches against `name`, `remote_name`, parent-name combinations, and `remote_id`. Matching is case-insensitive. Use `resource_name_match` to choose the match type; when omitted, CONTAINS (substring) is used.
+- `resource_name_match` (String) How to apply `resource_name`. Requires `resource_name` to be set. Defaults to CONTAINS when `resource_name` is provided without this parameter. EQUALS, STARTS_WITH, and ENDS_WITH match only the resource's own `name` and `remote_name`, not parent-name combinations or `remote_id`. must be one of ["CONTAINS", "EQUALS", "STARTS_WITH", "ENDS_WITH"]
+- `resource_type_filter` (String) The resource type to filter by. Required when remote_id is provided. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AWS_AGENTCORE_GATEWAY", "AWS_AGENTCORE_GATEWAY_TARGET", "AWS_AGENTCORE_GATEWAY_TOOL", "MCP_SERVER", "MCP_TOOL", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GCP_BILLING_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OKTA_WORKLOAD_PRINCIPAL", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "CURSOR_ORIGIN_REPOSITORY", "CURSOR_USER", "CURSOR_BOT", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "OPENAI_USER", "ANTHROPIC_WORKSPACE", "ANTHROPIC_USER", "ANTHROPIC_SERVICE_ACCOUNT", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "CLICKHOUSE_CONSOLE_ROLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE", "LINEAR_ORGANIZATION", "LINEAR_PROJECT", "RAMP_FUND", "RAMP_ROLE", "WRIKE_USER_TYPE", "DATABRICKS_CATALOG", "DATABRICKS_SCHEMA", "DATABRICKS_VOLUME", "DATABRICKS_FUNCTION", "DATABRICKS_MODEL", "DATABRICKS_SERVICE", "DATABRICKS_MCP_SERVER", "VERCEL_ROLE", "VERCEL_PROJECT", "AXIOM_ROLE", "AXIOM_CUSTOM_ROLE", "RIPPLING_DEPARTMENT", "BOX_ENTERPRISE", "BOX_FOLDER", "SLACK_WORKSPACE", "SLACK_ORGANIZATION", "ASANA_WORKSPACE", "ASANA_WORKSPACE_GUEST", "BITWARDEN_ORGANIZATION", "CALENDLY_ROLE", "CALENDLY_EVENT_TYPE", "MIRO_ORGANIZATION", "MIRO_BOARD", "ONELOGIN_APP", "SUPABASE_ORGANIZATION", "SUPABASE_PROJECT", "SUPABASE_PROJECT_AUTH", "TRAY_WORKSPACE", "TRAY_ORGANIZATION"]
+- `tag_ids` (List of String) The IDs of the tags to filter by. Returns only resources that have any of these tags applied.
 
 ### Read-Only
 
@@ -65,6 +78,8 @@ Read-Only:
 - `last_successful_sync` (Attributes) Information about the last successful sync of this resource. (see [below for nested schema](#nestedatt--results--last_successful_sync))
 - `match_remote_description` (Boolean) A bool representing whether or not the resource's description is synced from the end system. When true, the description is overwritten with the remote description on each sync. Defaults to false.
 - `match_remote_name` (Boolean) A bool representing whether or not the resource's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.
+- `max_direct_users_allowed` (Number) The maximum number of direct users allowed for this resource at once. Set to null to remove the limit.
+- `max_users_exceeded_message` (String) Custom message shown to users when the maximum number of allowed users for this resource has been reached.
 - `name` (String) The name of the resource.
 - `parent_resource_id` (String) The ID of the parent resource.
 - `remote_info` (Attributes) Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields. (see [below for nested schema](#nestedatt--results--remote_info))
@@ -166,6 +181,8 @@ Read-Only:
 - `ilevel_advanced_role` (Attributes) Remote info for iLevel Advanced role. (see [below for nested schema](#nestedatt--results--remote_info--ilevel_advanced_role))
 - `linear_organization` (Attributes) Remote info for Linear organization. (see [below for nested schema](#nestedatt--results--remote_info--linear_organization))
 - `linear_project` (Attributes) Remote info for Linear project. (see [below for nested schema](#nestedatt--results--remote_info--linear_project))
+- `miro_board` (Attributes) Remote info for Miro Board. (see [below for nested schema](#nestedatt--results--remote_info--miro_board))
+- `miro_organization` (Attributes) Remote info for Miro Organization. (see [below for nested schema](#nestedatt--results--remote_info--miro_organization))
 - `netsuite_role` (Attributes) Remote info for NetSuite role. (see [below for nested schema](#nestedatt--results--remote_info--netsuite_role))
 - `okta_app` (Attributes) Remote info for Okta directory app. (see [below for nested schema](#nestedatt--results--remote_info--okta_app))
 - `okta_custom_role` (Attributes) Remote info for Okta directory custom role. (see [below for nested schema](#nestedatt--results--remote_info--okta_custom_role))
@@ -181,11 +198,17 @@ Read-Only:
 - `salesforce_permission_set` (Attributes) Remote info for Salesforce permission set. (see [below for nested schema](#nestedatt--results--remote_info--salesforce_permission_set))
 - `salesforce_profile` (Attributes) Remote info for Salesforce profile. (see [below for nested schema](#nestedatt--results--remote_info--salesforce_profile))
 - `salesforce_role` (Attributes) Remote info for Salesforce role. (see [below for nested schema](#nestedatt--results--remote_info--salesforce_role))
+- `slack_organization` (Attributes) Remote info for Slack Enterprise Grid organization. (see [below for nested schema](#nestedatt--results--remote_info--slack_organization))
+- `slack_workspace` (Attributes) Remote info for Slack workspace. (see [below for nested schema](#nestedatt--results--remote_info--slack_workspace))
 - `snowflake_database` (Attributes) Remote info for Snowflake database. (see [below for nested schema](#nestedatt--results--remote_info--snowflake_database))
 - `snowflake_schema` (Attributes) Remote info for Snowflake schema. (see [below for nested schema](#nestedatt--results--remote_info--snowflake_schema))
 - `snowflake_table` (Attributes) Remote info for Snowflake table. (see [below for nested schema](#nestedatt--results--remote_info--snowflake_table))
+- `supabase_organization` (Attributes) Remote info for Supabase Organization. (see [below for nested schema](#nestedatt--results--remote_info--supabase_organization))
+- `supabase_project` (Attributes) Remote info for Supabase Project. (see [below for nested schema](#nestedatt--results--remote_info--supabase_project))
 - `tailscale_ssh` (Attributes) Remote info for Tailscale SSH tag. (see [below for nested schema](#nestedatt--results--remote_info--tailscale_ssh))
 - `teleport_role` (Attributes) Remote info for Teleport role. (see [below for nested schema](#nestedatt--results--remote_info--teleport_role))
+- `tray_organization` (Attributes) Remote info for Tray Organization. (see [below for nested schema](#nestedatt--results--remote_info--tray_organization))
+- `tray_workspace` (Attributes) Remote info for Tray Workspace. (see [below for nested schema](#nestedatt--results--remote_info--tray_workspace))
 - `twingate_resource` (Attributes) Remote info for Twingate resource. (see [below for nested schema](#nestedatt--results--remote_info--twingate_resource))
 - `vercel_project` (Attributes) Remote info for Vercel project. (see [below for nested schema](#nestedatt--results--remote_info--vercel_project))
 - `vercel_role` (Attributes) Remote info for Vercel team role. (see [below for nested schema](#nestedatt--results--remote_info--vercel_role))
@@ -829,6 +852,22 @@ Read-Only:
 - `project_id` (String) The ID of the Linear project.
 
 
+<a id="nestedatt--results--remote_info--miro_board"></a>
+### Nested Schema for `results.remote_info.miro_board`
+
+Read-Only:
+
+- `board_id` (String) The board id of the Miro Board.
+
+
+<a id="nestedatt--results--remote_info--miro_organization"></a>
+### Nested Schema for `results.remote_info.miro_organization`
+
+Read-Only:
+
+- `organization_id` (String) The organization id of the Miro Organization.
+
+
 <a id="nestedatt--results--remote_info--netsuite_role"></a>
 ### Nested Schema for `results.remote_info.netsuite_role`
 
@@ -951,6 +990,22 @@ Read-Only:
 - `role_id` (String) The id of the role.
 
 
+<a id="nestedatt--results--remote_info--slack_organization"></a>
+### Nested Schema for `results.remote_info.slack_organization`
+
+Read-Only:
+
+- `organization_id` (String) The ID of the Slack Enterprise Grid organization (enterprise ID).
+
+
+<a id="nestedatt--results--remote_info--slack_workspace"></a>
+### Nested Schema for `results.remote_info.slack_workspace`
+
+Read-Only:
+
+- `workspace_id` (String) The ID of the Slack workspace (team ID).
+
+
 <a id="nestedatt--results--remote_info--snowflake_database"></a>
 ### Nested Schema for `results.remote_info.snowflake_database`
 
@@ -978,6 +1033,22 @@ Read-Only:
 - `table_name` (String) The name of the table.
 
 
+<a id="nestedatt--results--remote_info--supabase_organization"></a>
+### Nested Schema for `results.remote_info.supabase_organization`
+
+Read-Only:
+
+- `organization_slug` (String) The organization slug of the Supabase Organization.
+
+
+<a id="nestedatt--results--remote_info--supabase_project"></a>
+### Nested Schema for `results.remote_info.supabase_project`
+
+Read-Only:
+
+- `project_ref` (String) The project ref of the Supabase Project.
+
+
 <a id="nestedatt--results--remote_info--tailscale_ssh"></a>
 ### Nested Schema for `results.remote_info.tailscale_ssh`
 
@@ -992,6 +1063,22 @@ Read-Only:
 Read-Only:
 
 - `role_name` (String) The name role.
+
+
+<a id="nestedatt--results--remote_info--tray_organization"></a>
+### Nested Schema for `results.remote_info.tray_organization`
+
+Read-Only:
+
+- `organization_id` (String) The organization id of the Tray Organization.
+
+
+<a id="nestedatt--results--remote_info--tray_workspace"></a>
+### Nested Schema for `results.remote_info.tray_workspace`
+
+Read-Only:
+
+- `workspace_id` (String) The workspace id of the Tray Workspace.
 
 
 <a id="nestedatt--results--remote_info--twingate_resource"></a>
@@ -1067,6 +1154,7 @@ Read-Only:
 - `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource.
 - `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource.
 - `condition` (Attributes) The condition for the request configuration. (see [below for nested schema](#nestedatt--results--request_configurations--condition))
+- `disable_skip_level_escalation` (Boolean) When true, requesters cannot escalate requests to their skip-level manager. When any item in a request has this set to true, the escalation button is disabled and the action is blocked. Defaults to false.
 - `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.
 - `priority` (Number) The priority of the request configuration.

@@ -13,6 +13,17 @@ type GetAppsRequest struct {
 	AppTypeFilter []shared.AppTypeEnum `queryParam:"style=form,explode=false,name=app_type_filter"`
 	// An owner ID to filter by.
 	OwnerFilter *string `queryParam:"style=form,explode=true,name=owner_filter"`
+	// Only return apps containing at least one resource or group this user can request, using
+	// the same evaluation as `GET /apps/{app_id}/requestable/users/{user_id}` (and matching
+	// `GET /resources?app_id=…&requestable_by_user_id=…` / the groups equivalent). Resources
+	// listed in the caller's OrgDisabledOpalRoles and linked (non-source) groups are
+	// excluded. Filtering for another user requires an Opal admin or a custom role with the
+	// CHECK_REQUESTABILITY permission. The response is always filtered by the caller's own
+	// READ visibility, so a non-admin CHECK_REQUESTABILITY holder sees the intersection of
+	// apps they can read and apps the target user can request something inside. Filtering
+	// for yourself needs no permission.
+	//
+	RequestableByUserID *string `queryParam:"style=form,explode=true,name=requestable_by_user_id"`
 }
 
 func (g *GetAppsRequest) GetAppTypeFilter() []shared.AppTypeEnum {
@@ -27,6 +38,13 @@ func (g *GetAppsRequest) GetOwnerFilter() *string {
 		return nil
 	}
 	return g.OwnerFilter
+}
+
+func (g *GetAppsRequest) GetRequestableByUserID() *string {
+	if g == nil {
+		return nil
+	}
+	return g.RequestableByUserID
 }
 
 type GetAppsResponse struct {

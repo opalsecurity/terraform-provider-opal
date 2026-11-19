@@ -14,9 +14,9 @@ type PaladinContextSource struct {
 	Name string `json:"name"`
 	// The ID of the Paladin this source belongs to.
 	PaladinID string `json:"paladin_id"`
-	// The provider's identifier for the source. The Slack channel ID for a channel, or the Notion/Confluence page ID for a document.
+	// The provider's identifier for the source. The Slack channel ID for a channel, or the Notion/Confluence page ID or numeric Freshservice article ID for a document.
 	RemoteID string `json:"remote_id"`
-	// The kind of source a Paladin can read. A SLACK_CHANNEL is a Slack channel; a DOCUMENT is a Notion or Confluence page.
+	// The kind of source a Paladin can read. A SLACK_CHANNEL is a Slack channel; a DOCUMENT is a Notion or Confluence page or a Freshservice knowledge base article.
 	SourceKind PaladinContextSourceKind `json:"source_kind"`
 	// The integration a Paladin context source comes from.
 	ThirdPartyProvider PaladinContextSourceProvider `json:"third_party_provider"`

@@ -11,6 +11,7 @@ type RequestConfiguration struct {
 	AllowRequests               types.Bool      `tfsdk:"allow_requests"`
 	AutoApproval                types.Bool      `tfsdk:"auto_approval"`
 	Condition                   *Condition      `tfsdk:"condition"`
+	DisableSkipLevelEscalation  types.Bool      `tfsdk:"disable_skip_level_escalation"`
 	ExtensionsDurationInMinutes types.Int64     `tfsdk:"extensions_duration_in_minutes"`
 	MaxDuration                 types.Int64     `tfsdk:"max_duration"`
 	Priority                    types.Int64     `tfsdk:"priority"`

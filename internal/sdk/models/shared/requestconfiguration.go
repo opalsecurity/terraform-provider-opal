@@ -62,6 +62,8 @@ type RequestConfiguration struct {
 	AutoApproval bool `json:"auto_approval"`
 	// The condition for the request configuration.
 	Condition *Condition `json:"condition,omitempty"`
+	// When true, requesters cannot escalate requests to their skip-level manager. When any item in a request has this set to true, the escalation button is disabled and the action is blocked. Defaults to false.
+	DisableSkipLevelEscalation *bool `json:"disable_skip_level_escalation,omitempty"`
 	// The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 	ExtensionsDurationInMinutes *int64 `json:"extensions_duration_in_minutes,omitempty"`
 	// The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.
@@ -101,6 +103,13 @@ func (r *RequestConfiguration) GetCondition() *Condition {
 		return nil
 	}
 	return r.Condition
+}
+
+func (r *RequestConfiguration) GetDisableSkipLevelEscalation() *bool {
+	if r == nil {
+		return nil
+	}
+	return r.DisableSkipLevelEscalation
 }
 
 func (r *RequestConfiguration) GetExtensionsDurationInMinutes() *int64 {

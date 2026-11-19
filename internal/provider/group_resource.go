@@ -71,6 +71,8 @@ type GroupResourceModel struct {
 	LastSuccessfulSync          *tfTypes.LastSuccessfulSync                  `tfsdk:"last_successful_sync"`
 	MatchRemoteDescription      types.Bool                                   `tfsdk:"match_remote_description"`
 	MatchRemoteName             types.Bool                                   `tfsdk:"match_remote_name"`
+	MaxDirectUsersAllowed       types.Int64                                  `tfsdk:"max_direct_users_allowed"`
+	MaxUsersExceededMessage     types.String                                 `tfsdk:"max_users_exceeded_message"`
 	MessageChannelIds           []types.String                               `tfsdk:"message_channel_ids"`
 	MessageChannels             *tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
 	Name                        types.String                                 `tfsdk:"name"`
@@ -87,6 +89,7 @@ type GroupResourceModel struct {
 	Visibility                  types.String                                 `tfsdk:"visibility"`
 	VisibilityGroupIds          []types.String                               `tfsdk:"visibility_group_ids"`
 }
+
 
 // isOnCallScheduleGroupType returns true for group types that are synced from an external
 // on-call schedule provider (PagerDuty, Incident.io, Rootly). These groups cannot have
@@ -178,7 +181,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DATADOG_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "CURSOR_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP", "BOX_GROUP", "ACTIVECAMPAIGN_GROUP", "AHA_TEAM", "ASANA_TEAM", "BITWARDEN_GROUP", "CALENDLY_GROUP", "ONELOGIN_ROLE", "ONELOGIN_GROUP", "SQUARE_LOCATION", "SQUARE_JOB", "RIPPLING_TEAM", "RIPPLING_SUPERGROUP"]; Requires replacement if changed.`,
+				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DATADOG_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "CURSOR_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP", "BOX_GROUP", "ACTIVECAMPAIGN_GROUP", "AHA_TEAM", "ASANA_TEAM", "BITWARDEN_GROUP", "CALENDLY_GROUP", "MIRO_TEAM", "MIRO_USER_GROUP", "ONELOGIN_ROLE", "ONELOGIN_GROUP", "SQUARE_LOCATION", "SQUARE_JOB", "RIPPLING_DEPARTMENT", "RIPPLING_TEAM", "RIPPLING_SUPERGROUP"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"ACTIVE_DIRECTORY_GROUP",
@@ -231,10 +234,13 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						"ASANA_TEAM",
 						"BITWARDEN_GROUP",
 						"CALENDLY_GROUP",
+						"MIRO_TEAM",
+						"MIRO_USER_GROUP",
 						"ONELOGIN_ROLE",
 						"ONELOGIN_GROUP",
 						"SQUARE_LOCATION",
 						"SQUARE_JOB",
+						"RIPPLING_DEPARTMENT",
 						"RIPPLING_TEAM",
 						"RIPPLING_SUPERGROUP",
 					),
@@ -300,6 +306,16 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
 				},
 				Description: `A bool representing whether or not the group's name should be synced from the end system. When true, the name is overwritten with the remote name on each sync, so a ` + "`" + `name` + "`" + ` provided together with this field set to true will be replaced at the next sync. If not provided, the current value is left unchanged.`,
+			},
+			"max_direct_users_allowed": schema.Int64Attribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `The maximum number of direct users allowed for this group at once. Set to null to remove the limit.`,
+			},
+			"max_users_exceeded_message": schema.StringAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `Custom message shown to users when the maximum number of allowed users for this group has been reached. Set to null to clear.`,
 			},
 			"message_channel_ids": schema.SetAttribute{
 				Computed:    true,
@@ -1181,6 +1197,52 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						},
 						Description: `Remote info for Linear team. Requires replacement if changed.`,
 					},
+					"miro_team": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"team_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The team id of the Miro Team. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Miro Team. Requires replacement if changed.`,
+					},
+					"miro_user_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"user_group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The user group id of the Miro User Group. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Miro User Group. Requires replacement if changed.`,
+					},
 					"okta_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -1341,6 +1403,29 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							},
 						},
 						Description: `Remote info for Ramp location. Requires replacement if changed.`,
+					},
+					"rippling_department": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"department_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The ID of the Rippling department. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Rippling department. Requires replacement if changed.`,
 					},
 					"rippling_supergroup": schema.SingleNestedAttribute{
 						Computed: true,
@@ -1803,6 +1888,14 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							},
 							Description: `The condition for the request configuration.`,
 						},
+						"disable_skip_level_escalation": schema.BoolAttribute{
+							Computed: true,
+							Optional: true,
+							PlanModifiers: []planmodifier.Bool{
+								speakeasy_boolplanmodifier.SuppressDiff(speakeasy_boolplanmodifier.ExplicitSuppress),
+							},
+							Description: `When true, requesters cannot escalate requests to their skip-level manager. When any item in a request has this set to true, the escalation button is disabled and the action is blocked. Defaults to false.`,
+						},
 						"extensions_duration_in_minutes": schema.Int64Attribute{
 							Computed: true,
 							Optional: true,
@@ -2229,7 +2322,7 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	// ROOTLY_ON_CALL_SCHEDULE) are synced from their respective providers and cannot have
 	// on-call schedules assigned to them via the API.
 	if !isOnCallScheduleGroupType(data.GroupType.ValueString()) {
-		request3, request3Diags := data.ToOperationsUpdateGroupOnCallSchedulesRequest(ctx)
+	request3, request3Diags := data.ToOperationsUpdateGroupOnCallSchedulesRequest(ctx)
 		resp.Diagnostics.Append(request3Diags...)
 
 		if resp.Diagnostics.HasError() {
@@ -2462,43 +2555,6 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request10, request10Diags := data.ToOperationsGetGroupConfigurationTemplateRequest(ctx)
-	resp.Diagnostics.Append(request10Diags...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	res10, err := r.client.Groups.GetConfigurationTemplate(ctx, *request10)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
-		if res10 != nil && res10.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res10.RawResponse))
-		}
-		return
-	}
-	if res10 == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res10))
-		return
-	}
-	if res10.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res10.StatusCode), debugResponse(res10.RawResponse))
-		return
-	}
-	if !(res10.GroupConfigurationTemplate != nil) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res10.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromSharedGroupConfigurationTemplate(ctx, res10.GroupConfigurationTemplate)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -2662,41 +2718,6 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request4, request4Diags := data.ToOperationsGetGroupConfigurationTemplateRequest(ctx)
-	resp.Diagnostics.Append(request4Diags...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	res4, err := r.client.Groups.GetConfigurationTemplate(ctx, *request4)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
-		if res4 != nil && res4.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res4.RawResponse))
-		}
-		return
-	}
-	if res4 == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res4))
-		return
-	}
-	if res4.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
-	if res4.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res4.StatusCode), debugResponse(res4.RawResponse))
-		return
-	}
-	if !(res4.GroupConfigurationTemplate != nil) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res4.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromSharedGroupConfigurationTemplate(ctx, res4.GroupConfigurationTemplate)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -2813,7 +2834,7 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	// ROOTLY_ON_CALL_SCHEDULE) are synced from their respective providers and cannot have
 	// on-call schedules assigned to them via the API.
 	if !isOnCallScheduleGroupType(data.GroupType.ValueString()) {
-		request3, request3Diags := data.ToOperationsUpdateGroupOnCallSchedulesRequest(ctx)
+	request3, request3Diags := data.ToOperationsUpdateGroupOnCallSchedulesRequest(ctx)
 		resp.Diagnostics.Append(request3Diags...)
 
 		if resp.Diagnostics.HasError() {
@@ -3008,43 +3029,6 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		return
 	}
 	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupVisibilityResponseBody(ctx, res8.Object)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
-	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	request9, request9Diags := data.ToOperationsGetGroupConfigurationTemplateRequest(ctx)
-	resp.Diagnostics.Append(request9Diags...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-	res9, err := r.client.Groups.GetConfigurationTemplate(ctx, *request9)
-	if err != nil {
-		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
-		if res9 != nil && res9.RawResponse != nil {
-			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res9.RawResponse))
-		}
-		return
-	}
-	if res9 == nil {
-		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res9))
-		return
-	}
-	if res9.StatusCode != 200 {
-		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res9.StatusCode), debugResponse(res9.RawResponse))
-		return
-	}
-	if !(res9.GroupConfigurationTemplate != nil) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res9.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromSharedGroupConfigurationTemplate(ctx, res9.GroupConfigurationTemplate)...)
 
 	if resp.Diagnostics.HasError() {
 		return

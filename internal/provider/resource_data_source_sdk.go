@@ -37,6 +37,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			r.AncestorResourceIds = append(r.AncestorResourceIds, types.StringValue(v))
 		}
 		r.AppID = types.StringPointerValue(resp.AppID)
+		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.DescendantResourceIds = make([]types.String, 0, len(resp.DescendantResourceIds))
 		for _, v := range resp.DescendantResourceIds {
@@ -54,6 +55,8 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 		}
 		r.MatchRemoteDescription = types.BoolPointerValue(resp.MatchRemoteDescription)
 		r.MatchRemoteName = types.BoolPointerValue(resp.MatchRemoteName)
+		r.MaxDirectUsersAllowed = types.Int64PointerValue(resp.MaxDirectUsersAllowed)
+		r.MaxUsersExceededMessage = types.StringPointerValue(resp.MaxUsersExceededMessage)
 		r.Name = types.StringPointerValue(resp.Name)
 		r.ParentResourceID = types.StringPointerValue(resp.ParentResourceID)
 		if resp.RemoteInfo == nil {
@@ -544,6 +547,18 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.LinearProject = &tfTypes.GcpProject{}
 				r.RemoteInfo.LinearProject.ProjectID = types.StringValue(resp.RemoteInfo.LinearProject.ProjectID)
 			}
+			if resp.RemoteInfo.MiroBoard == nil {
+				r.RemoteInfo.MiroBoard = nil
+			} else {
+				r.RemoteInfo.MiroBoard = &tfTypes.MiroBoard{}
+				r.RemoteInfo.MiroBoard.BoardID = types.StringValue(resp.RemoteInfo.MiroBoard.BoardID)
+			}
+			if resp.RemoteInfo.MiroOrganization == nil {
+				r.RemoteInfo.MiroOrganization = nil
+			} else {
+				r.RemoteInfo.MiroOrganization = &tfTypes.ZendeskOrganization{}
+				r.RemoteInfo.MiroOrganization.OrganizationID = types.StringValue(resp.RemoteInfo.MiroOrganization.OrganizationID)
+			}
 			if resp.RemoteInfo.NetsuiteRole == nil {
 				r.RemoteInfo.NetsuiteRole = nil
 			} else {
@@ -636,6 +651,18 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.SalesforceRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.SalesforceRole.RoleID = types.StringValue(resp.RemoteInfo.SalesforceRole.RoleID)
 			}
+			if resp.RemoteInfo.SlackOrganization == nil {
+				r.RemoteInfo.SlackOrganization = nil
+			} else {
+				r.RemoteInfo.SlackOrganization = &tfTypes.ZendeskOrganization{}
+				r.RemoteInfo.SlackOrganization.OrganizationID = types.StringValue(resp.RemoteInfo.SlackOrganization.OrganizationID)
+			}
+			if resp.RemoteInfo.SlackWorkspace == nil {
+				r.RemoteInfo.SlackWorkspace = nil
+			} else {
+				r.RemoteInfo.SlackWorkspace = &tfTypes.AnthropicWorkspace{}
+				r.RemoteInfo.SlackWorkspace.WorkspaceID = types.StringValue(resp.RemoteInfo.SlackWorkspace.WorkspaceID)
+			}
 			if resp.RemoteInfo.SnowflakeDatabase == nil {
 				r.RemoteInfo.SnowflakeDatabase = nil
 			} else {
@@ -657,6 +684,18 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 				r.RemoteInfo.SnowflakeTable.SchemaName = types.StringValue(resp.RemoteInfo.SnowflakeTable.SchemaName)
 				r.RemoteInfo.SnowflakeTable.TableName = types.StringValue(resp.RemoteInfo.SnowflakeTable.TableName)
 			}
+			if resp.RemoteInfo.SupabaseOrganization == nil {
+				r.RemoteInfo.SupabaseOrganization = nil
+			} else {
+				r.RemoteInfo.SupabaseOrganization = &tfTypes.SupabaseOrganization{}
+				r.RemoteInfo.SupabaseOrganization.OrganizationSlug = types.StringValue(resp.RemoteInfo.SupabaseOrganization.OrganizationSlug)
+			}
+			if resp.RemoteInfo.SupabaseProject == nil {
+				r.RemoteInfo.SupabaseProject = nil
+			} else {
+				r.RemoteInfo.SupabaseProject = &tfTypes.SupabaseProject{}
+				r.RemoteInfo.SupabaseProject.ProjectRef = types.StringValue(resp.RemoteInfo.SupabaseProject.ProjectRef)
+			}
 			if resp.RemoteInfo.TailscaleSSH == nil {
 				r.RemoteInfo.TailscaleSSH = nil
 			} else {
@@ -668,6 +707,18 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			} else {
 				r.RemoteInfo.TeleportRole = &tfTypes.IlevelAdvancedRole{}
 				r.RemoteInfo.TeleportRole.RoleName = types.StringValue(resp.RemoteInfo.TeleportRole.RoleName)
+			}
+			if resp.RemoteInfo.TrayOrganization == nil {
+				r.RemoteInfo.TrayOrganization = nil
+			} else {
+				r.RemoteInfo.TrayOrganization = &tfTypes.ZendeskOrganization{}
+				r.RemoteInfo.TrayOrganization.OrganizationID = types.StringValue(resp.RemoteInfo.TrayOrganization.OrganizationID)
+			}
+			if resp.RemoteInfo.TrayWorkspace == nil {
+				r.RemoteInfo.TrayWorkspace = nil
+			} else {
+				r.RemoteInfo.TrayWorkspace = &tfTypes.AnthropicWorkspace{}
+				r.RemoteInfo.TrayWorkspace.WorkspaceID = types.StringValue(resp.RemoteInfo.TrayWorkspace.WorkspaceID)
 			}
 			if resp.RemoteInfo.TwingateResource == nil {
 				r.RemoteInfo.TwingateResource = nil
@@ -739,6 +790,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 					requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 				}
 			}
+			requestConfigurations.DisableSkipLevelEscalation = types.BoolPointerValue(requestConfigurationsItem.DisableSkipLevelEscalation)
 			requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 			requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 			requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
@@ -825,29 +877,6 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 	}
 
 	return diags
-}
-
-func (r *ResourceDataSourceModel) RefreshFromSharedResourceConfigurationTemplate(ctx context.Context, resp *shared.ResourceConfigurationTemplate) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if resp != nil {
-		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
-	}
-
-	return diags
-}
-
-func (r *ResourceDataSourceModel) ToOperationsGetResourceConfigurationTemplateRequest(ctx context.Context) (*operations.GetResourceConfigurationTemplateRequest, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	var id string
-	id = r.ID.ValueString()
-
-	out := operations.GetResourceConfigurationTemplateRequest{
-		ID: id,
-	}
-
-	return &out, diags
 }
 
 func (r *ResourceDataSourceModel) ToOperationsGetResourceIDRequest(ctx context.Context) (*operations.GetResourceIDRequest, diag.Diagnostics) {

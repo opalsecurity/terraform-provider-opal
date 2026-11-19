@@ -132,6 +132,12 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 				RoleRemoteIds: roleRemoteIds,
 			}
 		}
+		disableSkipLevelEscalation := new(bool)
+		if !r.RequestConfigurations[requestConfigurationsIndex].DisableSkipLevelEscalation.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].DisableSkipLevelEscalation.IsNull() {
+			*disableSkipLevelEscalation = r.RequestConfigurations[requestConfigurationsIndex].DisableSkipLevelEscalation.ValueBool()
+		} else {
+			disableSkipLevelEscalation = nil
+		}
 		extensionsDurationInMinutes := new(int64)
 		if !r.RequestConfigurations[requestConfigurationsIndex].ExtensionsDurationInMinutes.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ExtensionsDurationInMinutes.IsNull() {
 			*extensionsDurationInMinutes = r.RequestConfigurations[requestConfigurationsIndex].ExtensionsDurationInMinutes.ValueInt64()
@@ -236,6 +242,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 			AllowRequests:               allowRequests,
 			AutoApproval:                autoApproval,
 			Condition:                   condition,
+			DisableSkipLevelEscalation:  disableSkipLevelEscalation,
 			ExtensionsDurationInMinutes: extensionsDurationInMinutes,
 			MaxDuration:                 maxDuration,
 			Priority:                    priority,
@@ -382,6 +389,12 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 				RoleRemoteIds: roleRemoteIds,
 			}
 		}
+		disableSkipLevelEscalation := new(bool)
+		if !r.RequestConfigurations[requestConfigurationsIndex].DisableSkipLevelEscalation.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].DisableSkipLevelEscalation.IsNull() {
+			*disableSkipLevelEscalation = r.RequestConfigurations[requestConfigurationsIndex].DisableSkipLevelEscalation.ValueBool()
+		} else {
+			disableSkipLevelEscalation = nil
+		}
 		extensionsDurationInMinutes := new(int64)
 		if !r.RequestConfigurations[requestConfigurationsIndex].ExtensionsDurationInMinutes.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].ExtensionsDurationInMinutes.IsNull() {
 			*extensionsDurationInMinutes = r.RequestConfigurations[requestConfigurationsIndex].ExtensionsDurationInMinutes.ValueInt64()
@@ -486,6 +499,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 			AllowRequests:               allowRequests,
 			AutoApproval:                autoApproval,
 			Condition:                   condition,
+			DisableSkipLevelEscalation:  disableSkipLevelEscalation,
 			ExtensionsDurationInMinutes: extensionsDurationInMinutes,
 			MaxDuration:                 maxDuration,
 			Priority:                    priority,

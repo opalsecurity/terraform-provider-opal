@@ -75,8 +75,11 @@ const (
 	AppTypeEnumAsana           AppTypeEnum = "ASANA"
 	AppTypeEnumBitwarden       AppTypeEnum = "BITWARDEN"
 	AppTypeEnumCalendly        AppTypeEnum = "CALENDLY"
+	AppTypeEnumMiro            AppTypeEnum = "MIRO"
 	AppTypeEnumOnelogin        AppTypeEnum = "ONELOGIN"
 	AppTypeEnumSquare          AppTypeEnum = "SQUARE"
+	AppTypeEnumSupabase        AppTypeEnum = "SUPABASE"
+	AppTypeEnumTray            AppTypeEnum = "TRAY"
 	AppTypeEnumRippling        AppTypeEnum = "RIPPLING"
 )
 
@@ -215,9 +218,15 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 		fallthrough
 	case "CALENDLY":
 		fallthrough
+	case "MIRO":
+		fallthrough
 	case "ONELOGIN":
 		fallthrough
 	case "SQUARE":
+		fallthrough
+	case "SUPABASE":
+		fallthrough
+	case "TRAY":
 		fallthrough
 	case "RIPPLING":
 		*e = AppTypeEnum(v)
