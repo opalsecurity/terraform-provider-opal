@@ -7,7 +7,7 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
 )
 
-// GroupBreakGlassUserIDList - A list of break glass user IDs to set on a group.
+// GroupBreakGlassUserIDList - A list of break glass user IDs for a group.
 type GroupBreakGlassUserIDList struct {
 	BreakGlassUserIds []string `json:"user_ids"`
 }

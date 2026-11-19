@@ -17,32 +17,9 @@ func (r *GroupDataSourceModel) RefreshFromOperationsGetGroupBreakGlassUsersRespo
 	var diags diag.Diagnostics
 
 	if resp != nil {
-		if r.BreakGlassUsers == nil {
-			r.BreakGlassUsers = &tfTypes.GetGroupBreakGlassUsersResponseBody{}
-		}
-		r.BreakGlassUsers.BreakGlassUserIds = make([]types.String, 0, len(resp.BreakGlassUserIds))
+		r.BreakGlassUserIds = make([]types.String, 0, len(resp.BreakGlassUserIds))
 		for _, v := range resp.BreakGlassUserIds {
-			r.BreakGlassUsers.BreakGlassUserIds = append(r.BreakGlassUsers.BreakGlassUserIds, types.StringValue(v))
-		}
-		r.BreakGlassUsers.Users = []tfTypes.User{}
-
-		for _, usersItem := range resp.Users {
-			var users tfTypes.User
-
-			users.Email = types.StringValue(usersItem.Email)
-			users.FirstName = types.StringValue(usersItem.FirstName)
-			if usersItem.HrIdpStatus != nil {
-				users.HrIdpStatus = types.StringValue(string(*usersItem.HrIdpStatus))
-			} else {
-				users.HrIdpStatus = types.StringNull()
-			}
-			users.ID = types.StringValue(usersItem.ID)
-			users.LastName = types.StringValue(usersItem.LastName)
-			users.ManagerID = types.StringPointerValue(usersItem.ManagerID)
-			users.Name = types.StringValue(usersItem.Name)
-			users.Position = types.StringValue(usersItem.Position)
-
-			r.BreakGlassUsers.Users = append(r.BreakGlassUsers.Users, users)
+			r.BreakGlassUserIds = append(r.BreakGlassUserIds, types.StringValue(v))
 		}
 	}
 

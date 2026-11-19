@@ -4,7 +4,7 @@
 package operations
 
 import (
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
 	"net/http"
 )
 
@@ -20,11 +20,20 @@ func (g *GetGroupBreakGlassUsersRequest) GetID() string {
 	return g.ID
 }
 
-// GetGroupBreakGlassUsersResponseBody - Break glass users returned by GET /groups/{id}/break-glass-users.
+// GetGroupBreakGlassUsersResponseBody - A list of break glass user IDs for a group.
 type GetGroupBreakGlassUsersResponseBody struct {
-	// Computed field that extracts user IDs from the users array
-	BreakGlassUserIds []string      `json:"break_glass_user_ids,omitempty"`
-	Users             []shared.User `json:"users"`
+	BreakGlassUserIds []string `json:"user_ids"`
+}
+
+func (g GetGroupBreakGlassUsersResponseBody) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(g, "", false)
+}
+
+func (g *GetGroupBreakGlassUsersResponseBody) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &g, "", false, nil); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (g *GetGroupBreakGlassUsersResponseBody) GetBreakGlassUserIds() []string {
@@ -34,13 +43,6 @@ func (g *GetGroupBreakGlassUsersResponseBody) GetBreakGlassUserIds() []string {
 	return g.BreakGlassUserIds
 }
 
-func (g *GetGroupBreakGlassUsersResponseBody) GetUsers() []shared.User {
-	if g == nil {
-		return []shared.User{}
-	}
-	return g.Users
-}
-
 type GetGroupBreakGlassUsersResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
@@ -48,7 +50,7 @@ type GetGroupBreakGlassUsersResponse struct {
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	// The break glass users for the group.
+	// The break glass user IDs for the group.
 	Object *GetGroupBreakGlassUsersResponseBody
 }
 

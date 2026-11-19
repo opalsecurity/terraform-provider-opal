@@ -1424,7 +1424,7 @@ func (s *Groups) GetGroup(ctx context.Context, request operations.GetGroupReques
 
 }
 
-// GetBreakGlassUsers - Gets the list of break glass users for a group.
+// GetBreakGlassUsers - Gets the break glass user IDs for a group. Deleted users linked on the configuration are omitted so a GET→PUT round-trip is a no-op.
 func (s *Groups) GetBreakGlassUsers(ctx context.Context, request operations.GetGroupBreakGlassUsersRequest, opts ...operations.Option) (*operations.GetGroupBreakGlassUsersResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{

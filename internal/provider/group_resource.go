@@ -60,7 +60,6 @@ type GroupResourceModel struct {
 	AdminOwnerID                types.String                                 `tfsdk:"admin_owner_id"`
 	AppID                       types.String                                 `tfsdk:"app_id"`
 	BreakGlassUserIds           []types.String                               `tfsdk:"break_glass_user_ids"`
-	BreakGlassUsers             *tfTypes.GetGroupBreakGlassUsersResponseBody `tfsdk:"break_glass_users"`
 	ConfigurationTemplateID     types.String                                 `tfsdk:"configuration_template_id"`
 	CustomRequestNotification   types.String                                 `tfsdk:"custom_request_notification"`
 	Description                 types.String                                 `tfsdk:"description"`
@@ -124,92 +123,6 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 				ElementType: types.StringType,
 				Description: `Default: []`,
-			},
-			"break_glass_users": schema.SingleNestedAttribute{
-				Computed: true,
-				PlanModifiers: []planmodifier.Object{
-					speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
-				},
-				Attributes: map[string]schema.Attribute{
-					"break_glass_user_ids": schema.SetAttribute{
-						Computed: true,
-						PlanModifiers: []planmodifier.Set{
-							speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
-						},
-						ElementType: types.StringType,
-						Description: `Computed field that extracts user IDs from the users array`,
-					},
-					"users": schema.ListNestedAttribute{
-						Computed: true,
-						PlanModifiers: []planmodifier.List{
-							speakeasy_listplanmodifier.SuppressDiff(speakeasy_listplanmodifier.ExplicitSuppress),
-						},
-						NestedObject: schema.NestedAttributeObject{
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
-							},
-							Attributes: map[string]schema.Attribute{
-								"email": schema.StringAttribute{
-									Computed: true,
-									PlanModifiers: []planmodifier.String{
-										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-									},
-									Description: `The email of the user.`,
-								},
-								"first_name": schema.StringAttribute{
-									Computed: true,
-									PlanModifiers: []planmodifier.String{
-										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-									},
-									Description: `The first name of the user.`,
-								},
-								"hr_idp_status": schema.StringAttribute{
-									Computed: true,
-									PlanModifiers: []planmodifier.String{
-										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-									},
-									Description: `User status pulled from an HR/IDP provider.`,
-								},
-								"id": schema.StringAttribute{
-									Computed: true,
-									PlanModifiers: []planmodifier.String{
-										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-									},
-									Description: `The ID of the user.`,
-								},
-								"last_name": schema.StringAttribute{
-									Computed: true,
-									PlanModifiers: []planmodifier.String{
-										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-									},
-									Description: `The last name of the user.`,
-								},
-								"manager_id": schema.StringAttribute{
-									Computed: true,
-									PlanModifiers: []planmodifier.String{
-										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-									},
-									Description: `The ID of the user's manager. Null if the user has no manager.`,
-								},
-								"name": schema.StringAttribute{
-									Computed: true,
-									PlanModifiers: []planmodifier.String{
-										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-									},
-									Description: `The full name of the user.`,
-								},
-								"position": schema.StringAttribute{
-									Computed: true,
-									PlanModifiers: []planmodifier.String{
-										speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-									},
-									Description: `The user's position.`,
-								},
-							},
-						},
-					},
-				},
-				Description: `Break glass users returned by GET /groups/{id}/break-glass-users.`,
 			},
 			"configuration_template_id": schema.StringAttribute{
 				Computed:           true,

@@ -32,7 +32,7 @@ type GroupDataSource struct {
 type GroupDataSourceModel struct {
 	AdminOwnerID                types.String                                 `tfsdk:"admin_owner_id"`
 	AppID                       types.String                                 `tfsdk:"app_id"`
-	BreakGlassUsers             *tfTypes.GetGroupBreakGlassUsersResponseBody `tfsdk:"break_glass_users"`
+	BreakGlassUserIds           []types.String                               `tfsdk:"break_glass_user_ids"`
 	ConfigurationTemplateID     types.String                                 `tfsdk:"configuration_template_id"`
 	CustomRequestNotification   types.String                                 `tfsdk:"custom_request_notification"`
 	Description                 types.String                                 `tfsdk:"description"`
@@ -79,55 +79,9 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Computed:    true,
 				Description: `The ID of the group's app.`,
 			},
-			"break_glass_users": schema.SingleNestedAttribute{
-				Computed: true,
-				Attributes: map[string]schema.Attribute{
-					"break_glass_user_ids": schema.SetAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-						Description: `Computed field that extracts user IDs from the users array`,
-					},
-					"users": schema.ListNestedAttribute{
-						Computed: true,
-						NestedObject: schema.NestedAttributeObject{
-							Attributes: map[string]schema.Attribute{
-								"email": schema.StringAttribute{
-									Computed:    true,
-									Description: `The email of the user.`,
-								},
-								"first_name": schema.StringAttribute{
-									Computed:    true,
-									Description: `The first name of the user.`,
-								},
-								"hr_idp_status": schema.StringAttribute{
-									Computed:    true,
-									Description: `User status pulled from an HR/IDP provider.`,
-								},
-								"id": schema.StringAttribute{
-									Computed:    true,
-									Description: `The ID of the user.`,
-								},
-								"last_name": schema.StringAttribute{
-									Computed:    true,
-									Description: `The last name of the user.`,
-								},
-								"manager_id": schema.StringAttribute{
-									Computed:    true,
-									Description: `The ID of the user's manager. Null if the user has no manager.`,
-								},
-								"name": schema.StringAttribute{
-									Computed:    true,
-									Description: `The full name of the user.`,
-								},
-								"position": schema.StringAttribute{
-									Computed:    true,
-									Description: `The user's position.`,
-								},
-							},
-						},
-					},
-				},
-				Description: `Break glass users returned by GET /groups/{id}/break-glass-users.`,
+			"break_glass_user_ids": schema.SetAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
 			},
 			"configuration_template_id": schema.StringAttribute{
 				Computed:    true,
