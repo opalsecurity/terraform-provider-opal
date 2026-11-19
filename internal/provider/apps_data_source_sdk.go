@@ -95,9 +95,16 @@ func (r *AppsDataSourceModel) ToOperationsGetAppsRequest(ctx context.Context) (*
 	} else {
 		ownerFilter = nil
 	}
+	requestableByUserID := new(string)
+	if !r.RequestableByUserID.IsUnknown() && !r.RequestableByUserID.IsNull() {
+		*requestableByUserID = r.RequestableByUserID.ValueString()
+	} else {
+		requestableByUserID = nil
+	}
 	out := operations.GetAppsRequest{
-		AppTypeFilter: appTypeFilter,
-		OwnerFilter:   ownerFilter,
+		AppTypeFilter:       appTypeFilter,
+		OwnerFilter:         ownerFilter,
+		RequestableByUserID: requestableByUserID,
 	}
 
 	return &out, diags

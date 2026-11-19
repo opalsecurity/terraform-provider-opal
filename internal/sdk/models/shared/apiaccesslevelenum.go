@@ -8,13 +8,15 @@ import (
 	"fmt"
 )
 
-// APIAccessLevelEnum - The access level of an API token. AGENT_HOOKS tokens are made only by the Claude Code hook kit's browser sign-in and can only report agent activity; they cannot be created through this API.
+// APIAccessLevelEnum - The access level of an API token. AGENT_HOOKS tokens are made only by the Claude Code hook kit's browser sign-in and can only report agent activity. INFERENCE_HOOK tokens are made only on the Inference hooks setup page and can only call the inference hook endpoints. AGENT_GATEWAY tokens are made only by Setup > LiteLLM and can only reach one LiteLLM gateway's routes. None of these can be created through this API.
 type APIAccessLevelEnum string
 
 const (
-	APIAccessLevelEnumReadOnly   APIAccessLevelEnum = "READ_ONLY"
-	APIAccessLevelEnumFullAccess APIAccessLevelEnum = "FULL_ACCESS"
-	APIAccessLevelEnumAgentHooks APIAccessLevelEnum = "AGENT_HOOKS"
+	APIAccessLevelEnumReadOnly      APIAccessLevelEnum = "READ_ONLY"
+	APIAccessLevelEnumFullAccess    APIAccessLevelEnum = "FULL_ACCESS"
+	APIAccessLevelEnumAgentHooks    APIAccessLevelEnum = "AGENT_HOOKS"
+	APIAccessLevelEnumInferenceHook APIAccessLevelEnum = "INFERENCE_HOOK"
+	APIAccessLevelEnumAgentGateway  APIAccessLevelEnum = "AGENT_GATEWAY"
 )
 
 func (e APIAccessLevelEnum) ToPointer() *APIAccessLevelEnum {
@@ -31,6 +33,10 @@ func (e *APIAccessLevelEnum) UnmarshalJSON(data []byte) error {
 	case "FULL_ACCESS":
 		fallthrough
 	case "AGENT_HOOKS":
+		fallthrough
+	case "INFERENCE_HOOK":
+		fallthrough
+	case "AGENT_GATEWAY":
 		*e = APIAccessLevelEnum(v)
 		return nil
 	default:

@@ -11,11 +11,8 @@ package shared
 // indicates that the resource is not linked to a configuration template
 // and uses its own private configuration.
 type ResourceConfigurationTemplate struct {
-	// The ID of the configuration template that the resource is linked
-	// to, or `null` if the resource is not linked to a configuration
-	// template. Only the ID is exposed here; the template's own fields
-	// are managed through the `/configuration-templates` endpoints.
-	ConfigurationTemplateID *string `json:"configuration_template_id"`
+	// The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
+	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
 }
 
 func (r *ResourceConfigurationTemplate) GetConfigurationTemplateID() *string {

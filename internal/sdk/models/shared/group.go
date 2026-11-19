@@ -132,7 +132,7 @@ type Group struct {
 	AdminOwnerID *string `json:"admin_owner_id,omitempty"`
 	// The ID of the group's app.
 	AppID *string `json:"app_id,omitempty"`
-	// The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+	// The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
 	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
 	// Custom request notification sent to the requester when the request is approved.
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
@@ -156,6 +156,10 @@ type Group struct {
 	MatchRemoteDescription *bool `json:"match_remote_description,omitempty"`
 	// A bool representing whether or not the group's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.
 	MatchRemoteName *bool `json:"match_remote_name,omitempty"`
+	// The maximum number of direct users allowed for this group at once. Set to null to remove the limit.
+	MaxDirectUsersAllowed *int64 `json:"max_direct_users_allowed,omitempty"`
+	// Custom message shown to users when the maximum number of allowed users for this group has been reached.
+	MaxUsersExceededMessage *string `json:"max_users_exceeded_message,omitempty"`
 	// The name of the group.
 	Name *string `json:"name,omitempty"`
 	// Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided.
@@ -273,6 +277,20 @@ func (g *Group) GetMatchRemoteName() *bool {
 		return nil
 	}
 	return g.MatchRemoteName
+}
+
+func (g *Group) GetMaxDirectUsersAllowed() *int64 {
+	if g == nil {
+		return nil
+	}
+	return g.MaxDirectUsersAllowed
+}
+
+func (g *Group) GetMaxUsersExceededMessage() *string {
+	if g == nil {
+		return nil
+	}
+	return g.MaxUsersExceededMessage
 }
 
 func (g *Group) GetName() *string {

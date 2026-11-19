@@ -33,17 +33,20 @@ type ResourcesListDataSource struct {
 
 // ResourcesListDataSourceModel describes the data model.
 type ResourcesListDataSourceModel struct {
-	AncestorResourceID types.String       `queryParam:"style=form,explode=false,name=ancestor_resource_id" tfsdk:"ancestor_resource_id"`
-	Cursor             types.String       `queryParam:"style=form,explode=true,name=cursor" tfsdk:"cursor"`
-	Next               types.String       `tfsdk:"next"`
-	PageSize           types.Int64        `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
-	ParentResourceID   types.String       `queryParam:"style=form,explode=false,name=parent_resource_id" tfsdk:"parent_resource_id"`
-	Previous           types.String       `tfsdk:"previous"`
-	RemoteID           types.String       `queryParam:"style=form,explode=true,name=remote_id" tfsdk:"remote_id"`
-	ResourceIds        []types.String     `queryParam:"style=form,explode=false,name=resource_ids" tfsdk:"resource_ids"`
-	ResourceName       types.String       `queryParam:"style=form,explode=true,name=resource_name" tfsdk:"resource_name"`
-	ResourceTypeFilter types.String       `queryParam:"style=form,explode=true,name=resource_type_filter" tfsdk:"resource_type_filter"`
-	Results            []tfTypes.Resource `tfsdk:"results"`
+	AncestorResourceID  types.String       `queryParam:"style=form,explode=false,name=ancestor_resource_id" tfsdk:"ancestor_resource_id"`
+	AppID               types.String       `queryParam:"style=form,explode=true,name=app_id" tfsdk:"app_id"`
+	Cursor              types.String       `queryParam:"style=form,explode=true,name=cursor" tfsdk:"cursor"`
+	Next                types.String       `tfsdk:"next"`
+	PageSize            types.Int64        `queryParam:"style=form,explode=true,name=page_size" tfsdk:"page_size"`
+	ParentResourceID    types.String       `queryParam:"style=form,explode=false,name=parent_resource_id" tfsdk:"parent_resource_id"`
+	Previous            types.String       `tfsdk:"previous"`
+	RequestableByUserID types.String       `queryParam:"style=form,explode=true,name=requestable_by_user_id" tfsdk:"requestable_by_user_id"`
+	ResourceIds         []types.String     `queryParam:"style=form,explode=false,name=resource_ids" tfsdk:"resource_ids"`
+	ResourceName        types.String       `queryParam:"style=form,explode=true,name=resource_name" tfsdk:"resource_name"`
+	ResourceNameMatch   types.String       `queryParam:"style=form,explode=true,name=resource_name_match" tfsdk:"resource_name_match"`
+	ResourceTypeFilter  types.String       `queryParam:"style=form,explode=true,name=resource_type_filter" tfsdk:"resource_type_filter"`
+	Results             []tfTypes.Resource `tfsdk:"results"`
+	TagIds              []types.String     `queryParam:"style=form,explode=true,name=tag_ids" tfsdk:"tag_ids"`
 }
 
 // Metadata returns the data source type name.
@@ -60,6 +63,10 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 			"ancestor_resource_id": schema.StringAttribute{
 				Optional:    true,
 				Description: `The ancestor resource id to filter by. Returns all resources that are descendants of the specified resource.`,
+			},
+			"app_id": schema.StringAttribute{
+				Optional:    true,
+				Description: `Only return resources that belong to this app.`,
 			},
 			"cursor": schema.StringAttribute{
 				Optional:    true,
@@ -84,9 +91,14 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 				Computed:    true,
 				Description: `The cursor used to obtain the current result page.`,
 			},
-			"remote_id": schema.StringAttribute{
-				Optional:    true,
-				Description: `Filter resources by their remote id. This will return all resources that have a remote id that matches the provided remote id. Note that this requires resource_type_filter to be provided.`,
+			"requestable_by_user_id": schema.StringAttribute{
+				Optional: true,
+				MarkdownDescription: `Only return resources this user can request at one or more access levels, using the same` + "\n" +
+					`evaluation as ` + "`" + `GET /resources/{resource_id}/requestable/users/{user_id}` + "`" + `. Filtering for` + "\n" +
+					`another user requires an Opal admin or a custom role with the CHECK_REQUESTABILITY` + "\n" +
+					`permission. The response is always filtered by the caller's own READ visibility, so a` + "\n" +
+					`non-admin CHECK_REQUESTABILITY holder sees the intersection of items they can read and` + "\n" +
+					`items the target user can request. Filtering for yourself needs no permission.`,
 			},
 			"resource_ids": schema.ListAttribute{
 				Optional:    true,
@@ -95,11 +107,23 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 			},
 			"resource_name": schema.StringAttribute{
 				Optional:    true,
-				Description: `Resource name.`,
+				Description: `Filter resources by name. Matches against ` + "`" + `name` + "`" + `, ` + "`" + `remote_name` + "`" + `, parent-name combinations, and ` + "`" + `remote_id` + "`" + `. Matching is case-insensitive. Use ` + "`" + `resource_name_match` + "`" + ` to choose the match type; when omitted, CONTAINS (substring) is used.`,
+			},
+			"resource_name_match": schema.StringAttribute{
+				Optional:    true,
+				Description: `How to apply ` + "`" + `resource_name` + "`" + `. Requires ` + "`" + `resource_name` + "`" + ` to be set. Defaults to CONTAINS when ` + "`" + `resource_name` + "`" + ` is provided without this parameter. EQUALS, STARTS_WITH, and ENDS_WITH match only the resource's own ` + "`" + `name` + "`" + ` and ` + "`" + `remote_name` + "`" + `, not parent-name combinations or ` + "`" + `remote_id` + "`" + `. must be one of ["CONTAINS", "EQUALS", "STARTS_WITH", "ENDS_WITH"]`,
+				Validators: []validator.String{
+					stringvalidator.OneOf(
+						"CONTAINS",
+						"EQUALS",
+						"STARTS_WITH",
+						"ENDS_WITH",
+					),
+				},
 			},
 			"resource_type_filter": schema.StringAttribute{
 				Optional:    true,
-				Description: `The resource type to filter by. Required when remote_id is provided. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AWS_AGENTCORE_GATEWAY", "AWS_AGENTCORE_GATEWAY_TARGET", "AWS_AGENTCORE_GATEWAY_TOOL", "MCP_SERVER", "MCP_TOOL", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GCP_BILLING_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "CURSOR_ORIGIN_REPOSITORY", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "ANTHROPIC_WORKSPACE", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "CLICKHOUSE_CONSOLE_ROLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE", "LINEAR_ORGANIZATION", "LINEAR_PROJECT", "RAMP_FUND", "RAMP_ROLE", "WRIKE_USER_TYPE", "DATABRICKS_CATALOG", "DATABRICKS_SCHEMA", "DATABRICKS_VOLUME", "DATABRICKS_FUNCTION", "DATABRICKS_MODEL", "DATABRICKS_SERVICE", "DATABRICKS_MCP_SERVER", "VERCEL_ROLE", "VERCEL_PROJECT", "AXIOM_ROLE", "AXIOM_CUSTOM_ROLE", "RIPPLING_DEPARTMENT", "BOX_ENTERPRISE", "BOX_FOLDER", "ASANA_WORKSPACE", "ASANA_WORKSPACE_GUEST", "BITWARDEN_ORGANIZATION", "CALENDLY_ROLE", "CALENDLY_EVENT_TYPE", "ONELOGIN_APP"]`,
+				Description: `The resource type to filter by. Required when remote_id is provided. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AWS_AGENTCORE_GATEWAY", "AWS_AGENTCORE_GATEWAY_TARGET", "AWS_AGENTCORE_GATEWAY_TOOL", "MCP_SERVER", "MCP_TOOL", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GCP_BILLING_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OKTA_WORKLOAD_PRINCIPAL", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "CURSOR_ORIGIN_REPOSITORY", "CURSOR_USER", "CURSOR_BOT", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "OPENAI_USER", "ANTHROPIC_WORKSPACE", "ANTHROPIC_USER", "ANTHROPIC_SERVICE_ACCOUNT", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "CLICKHOUSE_CONSOLE_ROLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE", "LINEAR_ORGANIZATION", "LINEAR_PROJECT", "RAMP_FUND", "RAMP_ROLE", "WRIKE_USER_TYPE", "DATABRICKS_CATALOG", "DATABRICKS_SCHEMA", "DATABRICKS_VOLUME", "DATABRICKS_FUNCTION", "DATABRICKS_MODEL", "DATABRICKS_SERVICE", "DATABRICKS_MCP_SERVER", "VERCEL_ROLE", "VERCEL_PROJECT", "AXIOM_ROLE", "AXIOM_CUSTOM_ROLE", "RIPPLING_DEPARTMENT", "BOX_ENTERPRISE", "BOX_FOLDER", "SLACK_WORKSPACE", "SLACK_ORGANIZATION", "ASANA_WORKSPACE", "ASANA_WORKSPACE_GUEST", "BITWARDEN_ORGANIZATION", "CALENDLY_ROLE", "CALENDLY_EVENT_TYPE", "MIRO_ORGANIZATION", "MIRO_BOARD", "ONELOGIN_APP", "SUPABASE_ORGANIZATION", "SUPABASE_PROJECT", "SUPABASE_PROJECT_AUTH", "TRAY_WORKSPACE", "TRAY_ORGANIZATION"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"AWS_IAM_ROLE",
@@ -155,6 +179,7 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 						"DATADOG_ROLE",
 						"OKTA_APP",
 						"OKTA_ROLE",
+						"OKTA_WORKLOAD_PRINCIPAL",
 						"OPAL_ROLE",
 						"OPAL_SCOPED_ROLE",
 						"PAGERDUTY_ROLE",
@@ -175,9 +200,14 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 						"COUPA_ROLE",
 						"CURSOR_ORGANIZATION",
 						"CURSOR_ORIGIN_REPOSITORY",
+						"CURSOR_USER",
+						"CURSOR_BOT",
 						"OPENAI_PLATFORM_PROJECT",
 						"OPENAI_PLATFORM_SERVICE_ACCOUNT",
+						"OPENAI_USER",
 						"ANTHROPIC_WORKSPACE",
+						"ANTHROPIC_USER",
+						"ANTHROPIC_SERVICE_ACCOUNT",
 						"GIT_HUB_ORG",
 						"ORACLE_FUSION_ROLE",
 						"DEVIN_ORGANIZATION",
@@ -220,12 +250,21 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 						"RIPPLING_DEPARTMENT",
 						"BOX_ENTERPRISE",
 						"BOX_FOLDER",
+						"SLACK_WORKSPACE",
+						"SLACK_ORGANIZATION",
 						"ASANA_WORKSPACE",
 						"ASANA_WORKSPACE_GUEST",
 						"BITWARDEN_ORGANIZATION",
 						"CALENDLY_ROLE",
 						"CALENDLY_EVENT_TYPE",
+						"MIRO_ORGANIZATION",
+						"MIRO_BOARD",
 						"ONELOGIN_APP",
+						"SUPABASE_ORGANIZATION",
+						"SUPABASE_PROJECT",
+						"SUPABASE_PROJECT_AUTH",
+						"TRAY_WORKSPACE",
+						"TRAY_ORGANIZATION",
 					),
 				},
 			},
@@ -248,7 +287,7 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 						},
 						"configuration_template_id": schema.StringAttribute{
 							Computed:    true,
-							Description: `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
+							Description: `The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.`,
 						},
 						"custom_request_notification": schema.StringAttribute{
 							Computed:    true,
@@ -293,6 +332,14 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 						"match_remote_name": schema.BoolAttribute{
 							Computed:    true,
 							Description: `A bool representing whether or not the resource's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.`,
+						},
+						"max_direct_users_allowed": schema.Int64Attribute{
+							Computed:    true,
+							Description: `The maximum number of direct users allowed for this resource at once. Set to null to remove the limit.`,
+						},
+						"max_users_exceeded_message": schema.StringAttribute{
+							Computed:    true,
+							Description: `Custom message shown to users when the maximum number of allowed users for this resource has been reached.`,
 						},
 						"name": schema.StringAttribute{
 							Computed:    true,
@@ -1191,6 +1238,26 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 									},
 									Description: `Remote info for Linear project.`,
 								},
+								"miro_board": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"board_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The board id of the Miro Board.`,
+										},
+									},
+									Description: `Remote info for Miro Board.`,
+								},
+								"miro_organization": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"organization_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The organization id of the Miro Organization.`,
+										},
+									},
+									Description: `Remote info for Miro Organization.`,
+								},
 								"netsuite_role": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
@@ -1349,6 +1416,26 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 									},
 									Description: `Remote info for Salesforce role.`,
 								},
+								"slack_organization": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"organization_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The ID of the Slack Enterprise Grid organization (enterprise ID).`,
+										},
+									},
+									Description: `Remote info for Slack Enterprise Grid organization.`,
+								},
+								"slack_workspace": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"workspace_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The ID of the Slack workspace (team ID).`,
+										},
+									},
+									Description: `Remote info for Slack workspace.`,
+								},
 								"snowflake_database": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
@@ -1391,6 +1478,26 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 									},
 									Description: `Remote info for Snowflake table.`,
 								},
+								"supabase_organization": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"organization_slug": schema.StringAttribute{
+											Computed:    true,
+											Description: `The organization slug of the Supabase Organization.`,
+										},
+									},
+									Description: `Remote info for Supabase Organization.`,
+								},
+								"supabase_project": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"project_ref": schema.StringAttribute{
+											Computed:    true,
+											Description: `The project ref of the Supabase Project.`,
+										},
+									},
+									Description: `Remote info for Supabase Project.`,
+								},
 								"tailscale_ssh": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
@@ -1410,6 +1517,26 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 										},
 									},
 									Description: `Remote info for Teleport role.`,
+								},
+								"tray_organization": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"organization_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The organization id of the Tray Organization.`,
+										},
+									},
+									Description: `Remote info for Tray Organization.`,
+								},
+								"tray_workspace": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"workspace_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The workspace id of the Tray Workspace.`,
+										},
+									},
+									Description: `Remote info for Tray Workspace.`,
 								},
 								"twingate_resource": schema.SingleNestedAttribute{
 									Computed: true,
@@ -1525,6 +1652,10 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 											},
 										},
 										Description: `The condition for the request configuration.`,
+									},
+									"disable_skip_level_escalation": schema.BoolAttribute{
+										Computed:    true,
+										Description: `When true, requesters cannot escalate requests to their skip-level manager. When any item in a request has this set to true, the escalation button is disabled and the action is blocked. Defaults to false.`,
 									},
 									"extensions_duration_in_minutes": schema.Int64Attribute{
 										Computed:    true,
@@ -1675,6 +1806,11 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 						},
 					},
 				},
+			},
+			"tag_ids": schema.ListAttribute{
+				Optional:    true,
+				ElementType: types.StringType,
+				Description: `The IDs of the tags to filter by. Returns only resources that have any of these tags applied.`,
 			},
 		},
 	}

@@ -122,6 +122,8 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 		}
 		r.MatchRemoteDescription = types.BoolPointerValue(resp.MatchRemoteDescription)
 		r.MatchRemoteName = types.BoolPointerValue(resp.MatchRemoteName)
+		r.MaxDirectUsersAllowed = types.Int64PointerValue(resp.MaxDirectUsersAllowed)
+		r.MaxUsersExceededMessage = types.StringPointerValue(resp.MaxUsersExceededMessage)
 		r.Name = types.StringPointerValue(resp.Name)
 		if resp.RemoteInfo == nil {
 			r.RemoteInfo = nil
@@ -315,6 +317,18 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.LinearTeam = &tfTypes.GrafanaTeam{}
 				r.RemoteInfo.LinearTeam.TeamID = types.StringValue(resp.RemoteInfo.LinearTeam.TeamID)
 			}
+			if resp.RemoteInfo.MiroTeam == nil {
+				r.RemoteInfo.MiroTeam = nil
+			} else {
+				r.RemoteInfo.MiroTeam = &tfTypes.GrafanaTeam{}
+				r.RemoteInfo.MiroTeam.TeamID = types.StringValue(resp.RemoteInfo.MiroTeam.TeamID)
+			}
+			if resp.RemoteInfo.MiroUserGroup == nil {
+				r.RemoteInfo.MiroUserGroup = nil
+			} else {
+				r.RemoteInfo.MiroUserGroup = &tfTypes.MiroUserGroup{}
+				r.RemoteInfo.MiroUserGroup.UserGroupID = types.StringValue(resp.RemoteInfo.MiroUserGroup.UserGroupID)
+			}
 			if resp.RemoteInfo.OktaGroup == nil {
 				r.RemoteInfo.OktaGroup = nil
 			} else {
@@ -356,6 +370,12 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			} else {
 				r.RemoteInfo.RampLocation = &tfTypes.RampLocation{}
 				r.RemoteInfo.RampLocation.LocationID = types.StringValue(resp.RemoteInfo.RampLocation.LocationID)
+			}
+			if resp.RemoteInfo.RipplingDepartment == nil {
+				r.RemoteInfo.RipplingDepartment = nil
+			} else {
+				r.RemoteInfo.RipplingDepartment = &tfTypes.RampDepartment{}
+				r.RemoteInfo.RipplingDepartment.DepartmentID = types.StringValue(resp.RemoteInfo.RipplingDepartment.DepartmentID)
 			}
 			if resp.RemoteInfo.RipplingSupergroup == nil {
 				r.RemoteInfo.RipplingSupergroup = nil
@@ -476,6 +496,7 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 					requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 				}
 			}
+			requestConfigurations.DisableSkipLevelEscalation = types.BoolPointerValue(requestConfigurationsItem.DisableSkipLevelEscalation)
 			requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 			requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 			requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)

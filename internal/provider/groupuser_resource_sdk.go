@@ -76,6 +76,12 @@ func (r *GroupUserResourceModel) ToOperationsCreateGroupUserRequestBody(ctx cont
 	} else {
 		accessLevelRemoteID = nil
 	}
+	actingUserID := new(string)
+	if !r.ActingUserID.IsUnknown() && !r.ActingUserID.IsNull() {
+		*actingUserID = r.ActingUserID.ValueString()
+	} else {
+		actingUserID = nil
+	}
 	durationMinutes := new(operations.DurationMinutes)
 	if !r.DurationMinutes.IsUnknown() && !r.DurationMinutes.IsNull() {
 		*durationMinutes = operations.DurationMinutes(r.DurationMinutes.ValueInt64())
@@ -84,6 +90,7 @@ func (r *GroupUserResourceModel) ToOperationsCreateGroupUserRequestBody(ctx cont
 	}
 	out := operations.CreateGroupUserRequestBody{
 		AccessLevelRemoteID: accessLevelRemoteID,
+		ActingUserID:        actingUserID,
 		DurationMinutes:     durationMinutes,
 	}
 
@@ -92,6 +99,13 @@ func (r *GroupUserResourceModel) ToOperationsCreateGroupUserRequestBody(ctx cont
 
 func (r *GroupUserResourceModel) ToOperationsDeleteGroupUserRequest(ctx context.Context) (*operations.DeleteGroupUserRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
+
+	requestBody, requestBodyDiags := r.ToOperationsDeleteGroupUserRequestBody(ctx)
+	diags.Append(requestBodyDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
 
 	accessLevelRemoteID := new(string)
 	if !r.AccessLevelRemoteID.IsUnknown() && !r.AccessLevelRemoteID.IsNull() {
@@ -106,9 +120,26 @@ func (r *GroupUserResourceModel) ToOperationsDeleteGroupUserRequest(ctx context.
 	userID = r.UserID.ValueString()
 
 	out := operations.DeleteGroupUserRequest{
+		RequestBody:         requestBody,
 		AccessLevelRemoteID: accessLevelRemoteID,
 		GroupID:             groupID,
 		UserID:              userID,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupUserResourceModel) ToOperationsDeleteGroupUserRequestBody(ctx context.Context) (*operations.DeleteGroupUserRequestBody, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	actingUserID := new(string)
+	if !r.ActingUserID.IsUnknown() && !r.ActingUserID.IsNull() {
+		*actingUserID = r.ActingUserID.ValueString()
+	} else {
+		actingUserID = nil
+	}
+	out := operations.DeleteGroupUserRequestBody{
+		ActingUserID: actingUserID,
 	}
 
 	return &out, diags

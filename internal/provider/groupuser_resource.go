@@ -39,6 +39,7 @@ type GroupUserResource struct {
 type GroupUserResourceModel struct {
 	AccessLevel         *tfTypes.ResourceAccessLevel `tfsdk:"access_level"`
 	AccessLevelRemoteID types.String                 `tfsdk:"access_level_remote_id"`
+	ActingUserID        types.String                 `tfsdk:"acting_user_id"`
 	Description         types.String                 `tfsdk:"description"`
 	DurationMinutes     types.Int64                  `tfsdk:"duration_minutes"`
 	Email               types.String                 `tfsdk:"email"`
@@ -84,6 +85,13 @@ func (r *GroupUserResource) Schema(ctx context.Context, req resource.SchemaReque
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 				},
 				Description: `The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used. Requires replacement if changed.`,
+			},
+			"acting_user_id": schema.StringAttribute{
+				Optional: true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplaceIfConfigured(),
+				},
+				Description: `Record this Opal user as the actor of the membership add in the audit event instead of the caller. Only for service users an admin has allowed to act for users, in organizations with the feature enabled. The named user must be a person (not a service user) in the caller's organization and active in the identity provider. Authorization is unchanged: the caller still needs permission to edit assignments on the group. The named user's own permissions on the group are not evaluated. Requires replacement if changed.`,
 			},
 			"description": schema.StringAttribute{
 				Computed:    true,

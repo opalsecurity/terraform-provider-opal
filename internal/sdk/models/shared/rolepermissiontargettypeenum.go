@@ -20,6 +20,7 @@ const (
 	RolePermissionTargetTypeEnumAccessReview RolePermissionTargetTypeEnum = "ACCESS_REVIEW"
 	RolePermissionTargetTypeEnumOwner        RolePermissionTargetTypeEnum = "OWNER"
 	RolePermissionTargetTypeEnumEvent        RolePermissionTargetTypeEnum = "EVENT"
+	RolePermissionTargetTypeEnumPaladinAgent RolePermissionTargetTypeEnum = "PALADIN_AGENT"
 )
 
 func (e RolePermissionTargetTypeEnum) ToPointer() *RolePermissionTargetTypeEnum {
@@ -46,6 +47,8 @@ func (e *RolePermissionTargetTypeEnum) UnmarshalJSON(data []byte) error {
 	case "OWNER":
 		fallthrough
 	case "EVENT":
+		fallthrough
+	case "PALADIN_AGENT":
 		*e = RolePermissionTargetTypeEnum(v)
 		return nil
 	default:

@@ -31,9 +31,10 @@ type AppsDataSource struct {
 
 // AppsDataSourceModel describes the data model.
 type AppsDataSourceModel struct {
-	Apps          []tfTypes.App  `tfsdk:"apps"`
-	AppTypeFilter []types.String `queryParam:"style=form,explode=false,name=app_type_filter" tfsdk:"app_type_filter"`
-	OwnerFilter   types.String   `queryParam:"style=form,explode=true,name=owner_filter" tfsdk:"owner_filter"`
+	Apps                []tfTypes.App  `tfsdk:"apps"`
+	AppTypeFilter       []types.String `queryParam:"style=form,explode=false,name=app_type_filter" tfsdk:"app_type_filter"`
+	OwnerFilter         types.String   `queryParam:"style=form,explode=true,name=owner_filter" tfsdk:"owner_filter"`
+	RequestableByUserID types.String   `queryParam:"style=form,explode=true,name=requestable_by_user_id" tfsdk:"requestable_by_user_id"`
 }
 
 // Metadata returns the data source type name.
@@ -182,6 +183,18 @@ func (r *AppsDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 			"owner_filter": schema.StringAttribute{
 				Optional:    true,
 				Description: `An owner ID to filter by.`,
+			},
+			"requestable_by_user_id": schema.StringAttribute{
+				Optional: true,
+				MarkdownDescription: `Only return apps containing at least one resource or group this user can request, using` + "\n" +
+					`the same evaluation as ` + "`" + `GET /apps/{app_id}/requestable/users/{user_id}` + "`" + ` (and matching` + "\n" +
+					`` + "`" + `GET /resources?app_id=…&requestable_by_user_id=…` + "`" + ` / the groups equivalent). Resources` + "\n" +
+					`listed in the caller's OrgDisabledOpalRoles and linked (non-source) groups are` + "\n" +
+					`excluded. Filtering for another user requires an Opal admin or a custom role with the` + "\n" +
+					`CHECK_REQUESTABILITY permission. The response is always filtered by the caller's own` + "\n" +
+					`READ visibility, so a non-admin CHECK_REQUESTABILITY holder sees the intersection of` + "\n" +
+					`apps they can read and apps the target user can request something inside. Filtering` + "\n" +
+					`for yourself needs no permission.`,
 			},
 		},
 	}

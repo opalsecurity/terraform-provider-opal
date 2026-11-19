@@ -11,7 +11,7 @@ import (
 type UpdateResourceConfigurationTemplateRequest struct {
 	ResourceConfigurationTemplate shared.ResourceConfigurationTemplate `request:"mediaType=application/json"`
 	// The ID of the resource whose configuration template link is being set.
-	ResourceID string `pathParam:"style=simple,explode=false,name=resource_id"`
+	ID string `pathParam:"style=simple,explode=false,name=resource_id"`
 }
 
 func (u *UpdateResourceConfigurationTemplateRequest) GetResourceConfigurationTemplate() shared.ResourceConfigurationTemplate {
@@ -21,18 +21,16 @@ func (u *UpdateResourceConfigurationTemplateRequest) GetResourceConfigurationTem
 	return u.ResourceConfigurationTemplate
 }
 
-func (u *UpdateResourceConfigurationTemplateRequest) GetResourceID() string {
+func (u *UpdateResourceConfigurationTemplateRequest) GetID() string {
 	if u == nil {
 		return ""
 	}
-	return u.ResourceID
+	return u.ID
 }
 
 type UpdateResourceConfigurationTemplateResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
-	// The ID of the configuration template now linked to the resource, or `null` if the resource was detached.
-	ResourceConfigurationTemplate *shared.ResourceConfigurationTemplate
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
@@ -44,13 +42,6 @@ func (u *UpdateResourceConfigurationTemplateResponse) GetContentType() string {
 		return ""
 	}
 	return u.ContentType
-}
-
-func (u *UpdateResourceConfigurationTemplateResponse) GetResourceConfigurationTemplate() *shared.ResourceConfigurationTemplate {
-	if u == nil {
-		return nil
-	}
-	return u.ResourceConfigurationTemplate
 }
 
 func (u *UpdateResourceConfigurationTemplateResponse) GetStatusCode() int {

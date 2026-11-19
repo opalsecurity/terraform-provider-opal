@@ -11,20 +11,32 @@ import (
 type GetResourcesRequest struct {
 	// The ancestor resource id to filter by. Returns all resources that are descendants of the specified resource.
 	AncestorResourceID *string `queryParam:"style=form,explode=false,name=ancestor_resource_id"`
+	// Only return resources that belong to this app.
+	AppID *string `queryParam:"style=form,explode=true,name=app_id"`
 	// The pagination cursor value.
 	Cursor *string `queryParam:"style=form,explode=true,name=cursor"`
 	// Number of results to return per page. Default is 200.
 	PageSize *int64 `queryParam:"style=form,explode=true,name=page_size"`
 	// The parent resource id to filter by.
 	ParentResourceID *string `queryParam:"style=form,explode=false,name=parent_resource_id"`
-	// Filter resources by their remote id. This will return all resources that have a remote id that matches the provided remote id. Note that this requires resource_type_filter to be provided.
-	RemoteID *string `queryParam:"style=form,explode=true,name=remote_id"`
+	// Only return resources this user can request at one or more access levels, using the same
+	// evaluation as `GET /resources/{resource_id}/requestable/users/{user_id}`. Filtering for
+	// another user requires an Opal admin or a custom role with the CHECK_REQUESTABILITY
+	// permission. The response is always filtered by the caller's own READ visibility, so a
+	// non-admin CHECK_REQUESTABILITY holder sees the intersection of items they can read and
+	// items the target user can request. Filtering for yourself needs no permission.
+	//
+	RequestableByUserID *string `queryParam:"style=form,explode=true,name=requestable_by_user_id"`
 	// The resource ids to filter by.
 	ResourceIds []string `queryParam:"style=form,explode=false,name=resource_ids"`
-	// Resource name.
+	// Filter resources by name. Matches against `name`, `remote_name`, parent-name combinations, and `remote_id`. Matching is case-insensitive. Use `resource_name_match` to choose the match type; when omitted, CONTAINS (substring) is used.
 	ResourceName *string `queryParam:"style=form,explode=true,name=resource_name"`
+	// How to apply `resource_name`. Requires `resource_name` to be set. Defaults to CONTAINS when `resource_name` is provided without this parameter. EQUALS, STARTS_WITH, and ENDS_WITH match only the resource's own `name` and `remote_name`, not parent-name combinations or `remote_id`.
+	ResourceNameMatch *shared.NameMatchType `queryParam:"style=form,explode=true,name=resource_name_match"`
 	// The resource type to filter by. Required when remote_id is provided.
 	ResourceTypeFilter *shared.ResourceTypeEnum `queryParam:"style=form,explode=true,name=resource_type_filter"`
+	// The IDs of the tags to filter by. Returns only resources that have any of these tags applied.
+	TagIds []string `queryParam:"style=form,explode=true,name=tag_ids"`
 }
 
 func (g *GetResourcesRequest) GetAncestorResourceID() *string {
@@ -32,6 +44,13 @@ func (g *GetResourcesRequest) GetAncestorResourceID() *string {
 		return nil
 	}
 	return g.AncestorResourceID
+}
+
+func (g *GetResourcesRequest) GetAppID() *string {
+	if g == nil {
+		return nil
+	}
+	return g.AppID
 }
 
 func (g *GetResourcesRequest) GetCursor() *string {
@@ -55,11 +74,11 @@ func (g *GetResourcesRequest) GetParentResourceID() *string {
 	return g.ParentResourceID
 }
 
-func (g *GetResourcesRequest) GetRemoteID() *string {
+func (g *GetResourcesRequest) GetRequestableByUserID() *string {
 	if g == nil {
 		return nil
 	}
-	return g.RemoteID
+	return g.RequestableByUserID
 }
 
 func (g *GetResourcesRequest) GetResourceIds() []string {
@@ -76,11 +95,25 @@ func (g *GetResourcesRequest) GetResourceName() *string {
 	return g.ResourceName
 }
 
+func (g *GetResourcesRequest) GetResourceNameMatch() *shared.NameMatchType {
+	if g == nil {
+		return nil
+	}
+	return g.ResourceNameMatch
+}
+
 func (g *GetResourcesRequest) GetResourceTypeFilter() *shared.ResourceTypeEnum {
 	if g == nil {
 		return nil
 	}
 	return g.ResourceTypeFilter
+}
+
+func (g *GetResourcesRequest) GetTagIds() []string {
+	if g == nil {
+		return nil
+	}
+	return g.TagIds
 }
 
 type GetResourcesResponse struct {
