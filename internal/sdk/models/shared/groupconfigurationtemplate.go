@@ -12,7 +12,7 @@ package shared
 // and uses its own private configuration.
 type GroupConfigurationTemplate struct {
 	// The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
-	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
+	ConfigurationTemplateID *string `json:"configuration_template_id"`
 }
 
 func (g *GroupConfigurationTemplate) GetConfigurationTemplateID() *string {
