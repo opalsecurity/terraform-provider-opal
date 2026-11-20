@@ -12,6 +12,8 @@ package shared
 type CreateGroupInfo struct {
 	// The ID of the app for the group.
 	AppID string `json:"app_id"`
+	// The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
+	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
 	// Custom request notification sent upon request approval.
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// A description of the remote group.
@@ -26,10 +28,14 @@ type CreateGroupInfo struct {
 	MatchRemoteDescription *bool `json:"match_remote_description,omitempty"`
 	// A bool representing whether or not the group's name should be synced from the end system. When true, the name is overwritten with the remote name on each sync, so a `name` provided together with this field set to true will be replaced at the next sync. Defaults to false.
 	MatchRemoteName *bool `json:"match_remote_name,omitempty"`
+	// The maximum number of direct users allowed for this group at once. Set to null to remove the limit.
+	MaxDirectUsersAllowed *int64 `json:"max_direct_users_allowed,omitempty"`
 	// The name of the remote group.
 	Name string `json:"name"`
 	// Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided.
-	RemoteInfo              *GroupRemoteInfo     `json:"remote_info,omitempty"`
+	RemoteInfo *GroupRemoteInfo `json:"remote_info,omitempty"`
+	// A bool representing whether or not a reason is required when forfeiting access to this group.
+	RequiresForfeitReason   *bool                `json:"requires_forfeit_reason,omitempty"`
 	RiskSensitivityOverride *RiskSensitivityEnum `json:"risk_sensitivity_override,omitempty"`
 	// Slack workspace ID. Required when the Slack connection spans multiple workspaces.
 	TeamID *string `json:"team_id,omitempty"`
@@ -40,6 +46,13 @@ func (c *CreateGroupInfo) GetAppID() string {
 		return ""
 	}
 	return c.AppID
+}
+
+func (c *CreateGroupInfo) GetConfigurationTemplateID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ConfigurationTemplateID
 }
 
 func (c *CreateGroupInfo) GetCustomRequestNotification() *string {
@@ -91,6 +104,13 @@ func (c *CreateGroupInfo) GetMatchRemoteName() *bool {
 	return c.MatchRemoteName
 }
 
+func (c *CreateGroupInfo) GetMaxDirectUsersAllowed() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.MaxDirectUsersAllowed
+}
+
 func (c *CreateGroupInfo) GetName() string {
 	if c == nil {
 		return ""
@@ -103,6 +123,13 @@ func (c *CreateGroupInfo) GetRemoteInfo() *GroupRemoteInfo {
 		return nil
 	}
 	return c.RemoteInfo
+}
+
+func (c *CreateGroupInfo) GetRequiresForfeitReason() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.RequiresForfeitReason
 }
 
 func (c *CreateGroupInfo) GetRiskSensitivityOverride() *RiskSensitivityEnum {

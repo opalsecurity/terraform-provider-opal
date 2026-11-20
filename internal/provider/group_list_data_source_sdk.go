@@ -24,7 +24,6 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 
 			results.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
 			results.AppID = types.StringPointerValue(resultsItem.AppID)
-			results.ConfigurationTemplateID = types.StringPointerValue(resultsItem.ConfigurationTemplateID)
 			results.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
 			results.Description = types.StringPointerValue(resultsItem.Description)
 			results.ExtensionsDurationInMinutes = types.Int64PointerValue(resultsItem.ExtensionsDurationInMinutes)
@@ -48,6 +47,8 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 			}
 			results.MatchRemoteDescription = types.BoolPointerValue(resultsItem.MatchRemoteDescription)
 			results.MatchRemoteName = types.BoolPointerValue(resultsItem.MatchRemoteName)
+			results.MaxDirectUsersAllowed = types.Int64PointerValue(resultsItem.MaxDirectUsersAllowed)
+			results.MaxUsersExceededMessage = types.StringPointerValue(resultsItem.MaxUsersExceededMessage)
 			results.Name = types.StringPointerValue(resultsItem.Name)
 			if resultsItem.RemoteInfo == nil {
 				results.RemoteInfo = nil
@@ -241,6 +242,18 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.LinearTeam = &tfTypes.GrafanaTeam{}
 					results.RemoteInfo.LinearTeam.TeamID = types.StringValue(resultsItem.RemoteInfo.LinearTeam.TeamID)
 				}
+				if resultsItem.RemoteInfo.MiroTeam == nil {
+					results.RemoteInfo.MiroTeam = nil
+				} else {
+					results.RemoteInfo.MiroTeam = &tfTypes.GrafanaTeam{}
+					results.RemoteInfo.MiroTeam.TeamID = types.StringValue(resultsItem.RemoteInfo.MiroTeam.TeamID)
+				}
+				if resultsItem.RemoteInfo.MiroUserGroup == nil {
+					results.RemoteInfo.MiroUserGroup = nil
+				} else {
+					results.RemoteInfo.MiroUserGroup = &tfTypes.MiroUserGroup{}
+					results.RemoteInfo.MiroUserGroup.UserGroupID = types.StringValue(resultsItem.RemoteInfo.MiroUserGroup.UserGroupID)
+				}
 				if resultsItem.RemoteInfo.OktaGroup == nil {
 					results.RemoteInfo.OktaGroup = nil
 				} else {
@@ -282,6 +295,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 				} else {
 					results.RemoteInfo.RampLocation = &tfTypes.RampLocation{}
 					results.RemoteInfo.RampLocation.LocationID = types.StringValue(resultsItem.RemoteInfo.RampLocation.LocationID)
+				}
+				if resultsItem.RemoteInfo.RipplingDepartment == nil {
+					results.RemoteInfo.RipplingDepartment = nil
+				} else {
+					results.RemoteInfo.RipplingDepartment = &tfTypes.RampDepartment{}
+					results.RemoteInfo.RipplingDepartment.DepartmentID = types.StringValue(resultsItem.RemoteInfo.RipplingDepartment.DepartmentID)
 				}
 				if resultsItem.RemoteInfo.RipplingSupergroup == nil {
 					results.RemoteInfo.RipplingSupergroup = nil
@@ -402,6 +421,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 						requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 					}
 				}
+				requestConfigurations.DisableSkipLevelEscalation = types.BoolPointerValue(requestConfigurationsItem.DisableSkipLevelEscalation)
 				requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 				requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
 				requestConfigurations.Priority = types.Int64Value(requestConfigurationsItem.Priority)
@@ -477,6 +497,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 func (r *GroupListDataSourceModel) ToOperationsGetGroupsRequest(ctx context.Context) (*operations.GetGroupsRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	appID := new(string)
+	if !r.AppID.IsUnknown() && !r.AppID.IsNull() {
+		*appID = r.AppID.ValueString()
+	} else {
+		appID = nil
+	}
 	groupIds := make([]string, 0, len(r.GroupIds))
 	for groupIdsIndex := range r.GroupIds {
 		groupIds = append(groupIds, r.GroupIds[groupIdsIndex].ValueString())
@@ -499,18 +525,38 @@ func (r *GroupListDataSourceModel) ToOperationsGetGroupsRequest(ctx context.Cont
 	} else {
 		pageSize = nil
 	}
+	remoteID := new(string)
+	if !r.RemoteID.IsUnknown() && !r.RemoteID.IsNull() {
+		*remoteID = r.RemoteID.ValueString()
+	} else {
+		remoteID = nil
+	}
 	requestable := new(bool)
 	if !r.Requestable.IsUnknown() && !r.Requestable.IsNull() {
 		*requestable = r.Requestable.ValueBool()
 	} else {
 		requestable = nil
 	}
+	requestableByUserID := new(string)
+	if !r.RequestableByUserID.IsUnknown() && !r.RequestableByUserID.IsNull() {
+		*requestableByUserID = r.RequestableByUserID.ValueString()
+	} else {
+		requestableByUserID = nil
+	}
+	tagIds := make([]string, 0, len(r.TagIds))
+	for tagIdsIndex := range r.TagIds {
+		tagIds = append(tagIds, r.TagIds[tagIdsIndex].ValueString())
+	}
 	out := operations.GetGroupsRequest{
-		GroupIds:        groupIds,
-		GroupName:       groupName,
-		GroupTypeFilter: groupTypeFilter,
-		PageSize:        pageSize,
-		Requestable:     requestable,
+		AppID:               appID,
+		GroupIds:            groupIds,
+		GroupName:           groupName,
+		GroupTypeFilter:     groupTypeFilter,
+		PageSize:            pageSize,
+		RemoteID:            remoteID,
+		Requestable:         requestable,
+		RequestableByUserID: requestableByUserID,
+		TagIds:              tagIds,
 	}
 
 	return &out, diags

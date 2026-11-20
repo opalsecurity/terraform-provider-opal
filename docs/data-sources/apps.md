@@ -18,7 +18,8 @@ data "opal_apps" "my_apps" {
     "OKTA_DIRECTORY",
     "GIT_HUB",
   ]
-  owner_filter = "29827fb8-f2dd-4e80-9576-28e31e9934ac"
+  owner_filter           = "29827fb8-f2dd-4e80-9576-28e31e9934ac"
+  requestable_by_user_id = "29827fb8-f2dd-4e80-9576-28e31e9934ac"
 }
 ```
 
@@ -29,6 +30,15 @@ data "opal_apps" "my_apps" {
 
 - `app_type_filter` (List of String) A list of app types to filter by.
 - `owner_filter` (String) An owner ID to filter by.
+- `requestable_by_user_id` (String) Only return apps containing at least one resource or group this user can request, using
+the same evaluation as `GET /apps/{app_id}/requestable/users/{user_id}` (and matching
+`GET /resources?app_id=…&requestable_by_user_id=…` / the groups equivalent). Resources
+listed in the caller's OrgDisabledOpalRoles and linked (non-source) groups are
+excluded. Filtering for another user requires an Opal admin or a custom role with the
+CHECK_REQUESTABILITY permission. The response is always filtered by the caller's own
+READ visibility, so a non-admin CHECK_REQUESTABILITY holder sees the intersection of
+apps they can read and apps the target user can request something inside. Filtering
+for yourself needs no permission.
 
 ### Read-Only
 

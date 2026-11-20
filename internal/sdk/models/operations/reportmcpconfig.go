@@ -12,6 +12,8 @@ type ReportMcpConfigRequest struct {
 	McpConfigReport shared.McpConfigReport `request:"mediaType=application/json"`
 	// The identity the reporting client claims - an email, or an operating-system user name. **Unverified**, used the same way as on `/agent-activity`.
 	XOpalActor *string `header:"style=simple,explode=false,name=X-Opal-Actor"`
+	// The name of the machine that sent the report, as that machine reports it (`hostname -s`). **Unverified.** A server this machine listed before and this report leaves out is marked removed for the reporting person, unless another of their machines still lists it. Omitting it is valid: the reports without one count as one machine.
+	XOpalHost *string `header:"style=simple,explode=false,name=X-Opal-Host"`
 }
 
 func (r *ReportMcpConfigRequest) GetMcpConfigReport() shared.McpConfigReport {
@@ -26,6 +28,13 @@ func (r *ReportMcpConfigRequest) GetXOpalActor() *string {
 		return nil
 	}
 	return r.XOpalActor
+}
+
+func (r *ReportMcpConfigRequest) GetXOpalHost() *string {
+	if r == nil {
+		return nil
+	}
+	return r.XOpalHost
 }
 
 type ReportMcpConfigResponse struct {

@@ -104,7 +104,9 @@ func (e *EntityType) UnmarshalJSON(data []byte) error {
 	}
 }
 
-// PrincipalType - Principal entity type. Null if the RA is missing.
+// PrincipalType - Principal entity type on the role assignment (USER, GROUP, or
+// RESOURCE). Null if the RA is missing. Distinct from
+// `principal_user_kind`, which further classifies USER principals.
 type PrincipalType string
 
 const (
@@ -134,6 +136,39 @@ func (e *PrincipalType) UnmarshalJSON(data []byte) error {
 	}
 }
 
+// PrincipalUserKind - When `principal_type` is USER, further classifies the identity for
+// access-review analytics: HUMAN (regular user), SERVICE_ACCOUNT, or
+// AGENTIC (rows in service_user_configurations). Null when
+// `principal_type` is not USER or the role assignment is missing.
+type PrincipalUserKind string
+
+const (
+	PrincipalUserKindHuman          PrincipalUserKind = "HUMAN"
+	PrincipalUserKindServiceAccount PrincipalUserKind = "SERVICE_ACCOUNT"
+	PrincipalUserKindAgentic        PrincipalUserKind = "AGENTIC"
+)
+
+func (e PrincipalUserKind) ToPointer() *PrincipalUserKind {
+	return &e
+}
+func (e *PrincipalUserKind) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "HUMAN":
+		fallthrough
+	case "SERVICE_ACCOUNT":
+		fallthrough
+	case "AGENTIC":
+		*e = PrincipalUserKind(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for PrincipalUserKind: %v", v)
+	}
+}
+
 // CampaignItem - A campaign review item — one direct access edge under review, matching
 // a row on the admin Reviews tab.
 type CampaignItem struct {
@@ -151,14 +186,38 @@ type CampaignItem struct {
 	CreatedAt time.Time `json:"created_at"`
 	// Entitlement entity ID. Null if the RA is missing.
 	EntityID *string `json:"entity_id,omitempty"`
+	// Denormalized display name of the entitlement entity (resource or
+	// group). Null when the entity row cannot be loaded or the role
+	// assignment is missing.
+	//
+	EntityName *string `json:"entity_name,omitempty"`
 	// Entitlement entity type. Null if the RA is missing.
 	EntityType *EntityType `json:"entity_type,omitempty"`
 	// True when the underlying role assignment is soft-deleted.
 	IsTargetDeleted bool `json:"is_target_deleted"`
+	// Denormalized email of the principal when `principal_type` is USER.
+	// Null for non-USER principals, missing RAs, or when the user row
+	// cannot be loaded.
+	//
+	PrincipalEmail *string `json:"principal_email,omitempty"`
 	// Principal ID from the role assignment. Null if the RA is missing.
 	PrincipalID *string `json:"principal_id,omitempty"`
-	// Principal entity type. Null if the RA is missing.
+	// Denormalized display name of the principal: user full name, group
+	// name, or resource name. Null when the principal row cannot be loaded
+	// or the role assignment is missing.
+	//
+	PrincipalName *string `json:"principal_name,omitempty"`
+	// Principal entity type on the role assignment (USER, GROUP, or
+	// RESOURCE). Null if the RA is missing. Distinct from
+	// `principal_user_kind`, which further classifies USER principals.
+	//
 	PrincipalType *PrincipalType `json:"principal_type,omitempty"`
+	// When `principal_type` is USER, further classifies the identity for
+	// access-review analytics: HUMAN (regular user), SERVICE_ACCOUNT, or
+	// AGENTIC (rows in service_user_configurations). Null when
+	// `principal_type` is not USER or the role assignment is missing.
+	//
+	PrincipalUserKind *PrincipalUserKind `json:"principal_user_kind,omitempty"`
 	// Reviewer assignments and decisions for this item.
 	Reviews []CampaignItemReview `json:"reviews"`
 	// The role assignment ID this item reviews (`target_id` when
@@ -234,6 +293,13 @@ func (c *CampaignItem) GetEntityID() *string {
 	return c.EntityID
 }
 
+func (c *CampaignItem) GetEntityName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.EntityName
+}
+
 func (c *CampaignItem) GetEntityType() *EntityType {
 	if c == nil {
 		return nil
@@ -248,6 +314,13 @@ func (c *CampaignItem) GetIsTargetDeleted() bool {
 	return c.IsTargetDeleted
 }
 
+func (c *CampaignItem) GetPrincipalEmail() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PrincipalEmail
+}
+
 func (c *CampaignItem) GetPrincipalID() *string {
 	if c == nil {
 		return nil
@@ -255,11 +328,25 @@ func (c *CampaignItem) GetPrincipalID() *string {
 	return c.PrincipalID
 }
 
+func (c *CampaignItem) GetPrincipalName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PrincipalName
+}
+
 func (c *CampaignItem) GetPrincipalType() *PrincipalType {
 	if c == nil {
 		return nil
 	}
 	return c.PrincipalType
+}
+
+func (c *CampaignItem) GetPrincipalUserKind() *PrincipalUserKind {
+	if c == nil {
+		return nil
+	}
+	return c.PrincipalUserKind
 }
 
 func (c *CampaignItem) GetReviews() []CampaignItemReview {

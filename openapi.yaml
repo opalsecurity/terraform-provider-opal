@@ -74,20 +74,26 @@ paths:
     post:
       summary: Report agent activity
       description: >-
-        **Prototype (AG-285).** Reports activity observed by an agent runtime on a developer's machine - today, Claude Code hook events.
+        Reports activity observed by an agent runtime on a developer's machine: Claude Code, Codex and Cursor hook events, or the same events from any other harness.
+
+
+        A custom harness sends each event in Claude Code's hook shape (`AgentActivityEvent`): `opal_reported.client` with the harness's name, `hook_event_name`, and for a tool call `tool_name`, `tool_input` and `tool_use_id`, with `session_id` and `prompt_id` to group calls into sessions and turns. It authenticates with either the organization's agent hooks key plus an `X-Opal-Actor` header, which records the person but no agent, or the key of a service user linked to an agent Opal did not import from Anthropic, which puts the events on that agent. At ingest, a custom harness's events never land on a Claude agent or on a person's own agent. An event stored with no agent can still be attributed later to a Claude agent, when Claude Code's OpenTelemetry export reports the same `session_id`.
+
+
+        Only a single raw `PreToolUse` payload that is not marked `delivered_late` can be answered with a decision. When the kill switch, a pause or a policy rule stops the call, the answer is Claude Code's hook output, still with a 200: `{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "deny", "permissionDecisionReason": "..."}}`. Otherwise the body is empty. A rule other than a pause stops a call only while the organization enforces rules and the client's Enforce switch is on; otherwise its verdict is only recorded. A pause and the kill switch stop a call whatever the Enforce switch says, though a pause only while the organization has agent activity insights turned on. A client whose Log and Enforce switches are both off gets none of this: Opal checks, stops and stores nothing it sends, and answers with a 200 that lets the call run. A rule that needs approval answers `ask` to Claude Code and `deny` to every other runtime. A harness that blocks some other way translates the answer itself. Every check fails open: policy rules get 1.5 seconds and a rule that times out or fails lets the call through, but the whole request can take a few seconds more (Opal's own hook waits 5 seconds), and an error in another check is a 500. So a sender should run the call when Opal times out, cannot be reached or answers with anything but a 2xx. A batch, a late copy and a prompt are stored but never answered.
 
 
         This is **telemetry from cooperating machines, not attestation**. Opal can only see what a configured, consenting client chooses to send, cannot verify that a fleet is configured at all, and has no way to detect a machine that is reporting nothing. Absence of activity for an agent therefore means "nothing was reported", never "the agent did nothing".
 
 
-        The request body is either a batch envelope (`{"events": [...]}`), a bare JSON array of events, or a single raw Claude Code hook payload - the last so a hook can POST here directly with no relay in between.
+        The request body is either a batch envelope (`{"events": [...]}`), a bare JSON array of events, or a single raw hook payload - the last so a hook can POST here directly with no relay in between.
 
 
-        The bearer token establishes the **organization** and nothing finer. No field in the payload is treated as an identity claim Opal trusts: the actor headers below are used for best-effort attribution and display only. Events that cannot be attributed to an agent are retained and surfaced as unattributed activity rather than dropped.
+        The bearer token establishes the **organization**, and some keys also name the agent: a service user's key the agent the service user is linked to, and a person's own hooks sign-in token that person and their own agent (for a custom harness, only the person). No field in the payload is treated as an identity claim Opal trusts: the actor headers below are used for best-effort attribution and display only. Events that cannot be attributed to an agent are retained and surfaced as unattributed activity rather than dropped.
       operationId: reportAgentActivity
       parameters:
         - description: >-
-            The identity the reporting client claims this activity belongs to - an email or an Anthropic user id. **Unverified**: a Claude Code hook payload contains no user identity, so this has to be injected by whoever deploys the hook (via the http handler's `headers` map and `allowedEnvVars` interpolation), and whoever controls the machine controls the header. Used only when the API key itself does not identify a developer. When the email belongs to a person in the organization, that person is recorded as who the activity was reported for (always as a claim), and the activity is attributed to the one Claude agent they own, if they own exactly one. The API key's own email is never treated this way: a key belongs to whoever created it, which with a shared key is not who is at the keyboard. Omitting it is valid. When an event's `opal_reported` object carries other emails, Opal also tries them, in the order `configured_email`, `claude_account_email`, `git_email`, after this header and skipping any that repeat it. The first one that resolves to an agent wins.
+            The identity the reporting client claims this activity belongs to - an email or an Anthropic user id. **Unverified**: a Claude Code hook payload contains no user identity, so this has to be injected by whoever deploys the hook (via the http handler's `headers` map and `allowedEnvVars` interpolation), and whoever controls the machine controls the header. Used only when the API key itself does not identify a developer. When the email belongs to a person in the organization, that person is recorded as who the activity was reported for (always as a claim). A Claude Code or Cowork event is also attributed to the one Claude agent they own, if they own exactly one, and a Codex, ChatGPT or Cursor event to their agent for that runtime. An event from any other client, a custom harness included, records the person but none of their agents. The API key's own email is never treated this way: a key belongs to whoever created it, which with a shared key is not who is at the keyboard. Omitting it is valid. When an event's `opal_reported` object carries other emails, Opal also tries them, in the order `cursor_account_email`, `configured_email`, `claude_account_email`, `codex_account_email`, `chatgpt_account_email`, `git_email`, after this header and skipping any that repeat it. The first one that resolves to an agent wins.
           explode: false
           in: header
           name: X-Opal-Actor
@@ -105,7 +111,7 @@ paths:
             type: string
           style: simple
         - description: >-
-            `1` when the sender collects conversation content: the prompt of a `UserPromptSubmit` event, the `tool_response` of a `PostToolUse` event and the `last_assistant_message` of a `Stop` or `SubagentStop` event. Without it (or an event's own `opal_content`) those fields are read and discarded, as before. An `http` hook sets it in its `headers` map, because it cannot change the payload. Opal stores the content only when the organization stores content as well.
+            `1` when the sender collects conversation content: the prompt of a `UserPromptSubmit` event, the `tool_response` of a `PostToolUse` event and the `last_assistant_message` of a `Stop` or `SubagentStop` event. Without it (or an event's own `opal_content`) those fields are read and discarded, as before. An `http` hook sets it in its `headers` map, because it cannot change the payload. Opal stores the content only when the organization stores content as well, the client's conversation content setting is not Never and its Log switch is on. When Opal cannot read the client settings it stores no content.
           explode: false
           in: header
           name: X-Opal-Content
@@ -126,9 +132,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/AgentActivityIngestResult"
           description: >-
-            A per-batch accounting of what was accepted, stored, and attributed. An organization that has agent activity turned off gets a 200 with an empty body for every body shape, so a sender does not keep the events and try again.
+            For a batch, a per-batch accounting of what was accepted, stored, and attributed. A single raw payload gets an empty body, or the hook output described above. A 200 does not mean the events were stored. An organization that has agent activity turned off (a retention of 0 days) gets a 200 with an empty body for every body shape, so a sender does not keep the events and try again. A client whose Log and Enforce switches are both off also gets a 200, and nothing it sends is checked, stopped or stored. A client with only Enforce on gets a 200 too, and only a checked `PreToolUse` that a rule, a pause or the kill switch flagged, held or blocked (including a verdict Opal only recorded) and a prompt the kit flagged are stored; a batch's other events are dropped and not counted in `received`. A batch's `stored` count is the way to check a new setup.
         "400":
-          description: The body was unparseable, empty, or carried more events than one request may.
+          description: >-
+            The body was unparseable or empty, or an event had no `hook_event_name` (or only whitespace), a `timestamp` that is not RFC 3339, or a field of the wrong JSON type (every field but `tool_input` must have its documented type). The whole request is rejected, even for an organization that has agent activity turned off. A request that carried more events than one request may is rejected too, but only once agent activity is on: an organization that has it turned off gets its usual empty 200.
         "413":
           description: The request body exceeded the maximum accepted size.
       security:
@@ -182,6 +189,15 @@ paths:
           schema:
             type: string
           style: simple
+        - description: >-
+            The name of the machine that sent the report, as that machine reports it (`hostname -s`). **Unverified.** A server this machine listed before and this report leaves out is marked removed for the reporting person, unless another of their machines still lists it. Omitting it is valid: the reports without one count as one machine.
+          explode: false
+          in: header
+          name: X-Opal-Host
+          required: false
+          schema:
+            type: string
+          style: simple
       requestBody:
         content:
           application/json:
@@ -213,6 +229,9 @@ paths:
 
 
         `tool_call` frames are evaluated against the organization's runtime policy rules. One verdict covers every tool call in the frame. Every other frame type, including `prompt`, is allowed without inspection. Any non-200 response is a webhook failure, so the organization's Anthropic failure-handling setting decides the outcome.
+
+
+        Once the organization saves its Anthropic signing secret in Opal, a `tool_call` frame must carry a valid Standard Webhooks signature (`webhook-id`, `webhook-timestamp`, `webhook-signature`), or it is answered with a 401.
       operationId: anthropicInferenceHook
       requestBody:
         content:
@@ -228,8 +247,54 @@ paths:
               schema:
                 $ref: "#/components/schemas/AnthropicInferenceHookVerdict"
           description: The verdict for the frame.
+        "401":
+          description: The frame is unsigned or its signature does not verify. Anthropic applies the organization's failure handling.
         "500":
           description: The frame could not be evaluated. Anthropic applies the organization's failure handling.
+      security:
+        - BearerAuth: []
+      tags:
+        - agent-activity
+  /inference-hooks/cursor/{connection_id}:
+    post:
+      summary: Grok Bot inference hook verdict
+      description: >-
+        **Prototype (AG-476).** The endpoint for a Cursor team's Grok Bot inference hooks. Each Cursor team posts to the URL of its own Cursor connection in Opal, so an organization with many Cursor teams gets one URL per team. Configure it in the Cursor dashboard with this URL and a custom `Authorization: Bearer <Opal API key>` request header.
+
+
+        `tool_call` frames are evaluated against the organization's runtime policy rules. One verdict covers every tool call in the frame. Every other frame type, including `prompt`, is allowed without inspection. Any non-200 response is a webhook failure, so the team's failure mode in Cursor decides the outcome.
+
+
+        A `tool_call` frame must carry a valid Standard Webhooks signature (`webhook-id`, `webhook-timestamp`, `webhook-signature`) made with the signing secret saved for the connection, or it is answered with a 401. A connection with no saved secret rejects every `tool_call` frame.
+      operationId: cursorInferenceHook
+      parameters:
+        - description: The ID of the Cursor connection whose team sends the frames.
+          in: path
+          name: connection_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnthropicInferenceHookVerdict"
+          description: The verdict for the frame.
+        "401":
+          description: The frame is unsigned, the connection has no signing secret, or the signature does not verify. Cursor applies the team's failure mode.
+        "404":
+          description: The organization has no live Cursor connection with this ID.
+        "500":
+          description: The frame could not be evaluated. Cursor applies the team's failure mode.
       security:
         - BearerAuth: []
       tags:
@@ -320,6 +385,25 @@ paths:
             format: uuid
             type: string
           style: form
+        - description: |
+            Only return apps containing at least one resource or group this user can request, using
+            the same evaluation as `GET /apps/{app_id}/requestable/users/{user_id}` (and matching
+            `GET /resources?app_id=…&requestable_by_user_id=…` / the groups equivalent). Resources
+            listed in the caller's OrgDisabledOpalRoles and linked (non-source) groups are
+            excluded. Filtering for another user requires an Opal admin or a custom role with the
+            CHECK_REQUESTABILITY permission. The response is always filtered by the caller's own
+            READ visibility, so a non-admin CHECK_REQUESTABILITY holder sees the intersection of
+            apps they can read and apps the target user can request something inside. Filtering
+            for yourself needs no permission.
+          example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+          explode: true
+          in: query
+          name: requestable_by_user_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
       responses:
         "200":
           content:
@@ -327,6 +411,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/AppsList"
           description: A list of apps for your organization.
+        "403":
+          description: requestable_by_user_id is another user and the caller is not an Opal admin or holder of the CHECK_REQUESTABILITY permission.
         "404":
           description: Not Found
       security:
@@ -364,6 +450,46 @@ paths:
       tags:
         - apps
       x-speakeasy-entity-operation: App#create
+  /apps/{app_id}/visible/users/{user_id}:
+    get:
+      description: Checks whether a user can see this app, as shown in the Opal UI for that user. Checking another user requires an Opal admin or a custom role with the CHECK_VISIBILITY permission; a caller can always check their own visibility, in which case an entity they cannot see is reported as not found.
+      operationId: get_app_visible_to_user
+      parameters:
+        - description: The ID of the app.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: app_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the user whose visibility is being checked.
+          example: f92aa855-cea9-4814-b9d8-f2a60d3e4a06
+          explode: false
+          in: path
+          name: user_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserVisibilityCheck"
+          description: Whether the user can see this app, and why.
+        "403":
+          description: The caller is checking another user and is not an Opal admin or holder of the CHECK_VISIBILITY permission.
+        "404":
+          description: The app or the user was not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - apps
   /apps/{app_id}:
     get:
       summary: Get app by ID
@@ -566,6 +692,67 @@ paths:
       x-speakeasy-entity-operation:
         - App#create#2
         - App#update#2
+  /apps/{app_id}/requestable/users/{user_id}:
+    get:
+      description: |
+        Checks whether a user can request any resource or group inside this app, matching the App
+        dropdown on Opal's Access Request page. `app_id` may be a connection (native app) or an IDP
+        resource app (for example an Okta app). Apps are not requested directly, so the response
+        has no `access_levels`. Checking another user (or a requester other than the caller)
+        requires an Opal admin or a custom role with the CHECK_REQUESTABILITY permission; a caller
+        can always check their own requestability, in which case an app they cannot read is
+        reported as not found. Requestability does not factor visibility.
+      operationId: get_app_requestable_to_user
+      parameters:
+        - description: The ID of the app (connection ID or IDP resource-app ID).
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: false
+          in: path
+          name: app_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the user the access would be for.
+          example: f92aa855-cea9-4814-b9d8-f2a60d3e4a06
+          explode: false
+          in: path
+          name: user_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: |
+            Optional ID of the person filling in the form when different from user_id. Adds the
+            on-behalf check evaluated as that requester, following EnforceRequestOnBehalfOfUser.
+          example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+          explode: true
+          in: query
+          name: requester_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserRequestabilityCheck"
+          description: Whether the user can request anything in this app, and why.
+        "400":
+          description: Malformed UUID.
+        "403":
+          description: The caller is checking another user (or requester) and is not an Opal admin or holder of the CHECK_REQUESTABILITY permission.
+        "404":
+          description: The app, user_id or requester_id was not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - apps
   /bundles:
     get:
       summary: Get bundles
@@ -2017,7 +2204,8 @@ paths:
             type: integer
             maximum: 1000
           style: form
-        - description: The group type to filter by.
+        - description: >-
+            The group type to filter by. Required when remote_id is provided.
           example: OPAL_GROUP
           explode: true
           in: query
@@ -2041,11 +2229,31 @@ paths:
               type: string
             type: array
           style: form
-        - description: Group name.
+        - description: >-
+            Filter groups by name. Matches against both `name` and `remote_name`. Matching is case-insensitive. Use `group_name_match` to choose the match type; when omitted, CONTAINS (substring) is used.
           example: example-name
           explode: true
           in: query
           name: group_name
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: >-
+            How to apply `group_name`. Requires `group_name` to be set. Defaults to CONTAINS when `group_name` is provided without this parameter.
+          explode: true
+          in: query
+          name: group_name_match
+          required: false
+          schema:
+            $ref: "#/components/schemas/NameMatchType"
+          style: form
+          x-speakeasy-ignore: true
+        - description: >-
+            Filter groups by their remote id. Returns groups whose remote id matches the provided value exactly. Requires group_type_filter. Remote ids are only unique within a connection, so groups from different connections can share a remote id and more than one group may be returned. Unmanaged groups are not returned.
+          explode: true
+          in: query
+          name: remote_id
           required: false
           schema:
             type: string
@@ -2059,7 +2267,6 @@ paths:
             items:
               format: uuid
               type: string
-          x-speakeasy-ignore: true
         - description: If true, only return groups that allow access requests. Does not check whether the caller is permitted to request the group.
           example: true
           explode: true
@@ -2069,6 +2276,32 @@ paths:
           schema:
             type: boolean
           style: form
+        - description: Only return groups that belong to this app.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          explode: true
+          in: query
+          name: app_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
+        - description: |
+            Only return groups this user can request at one or more access levels, using the same
+            evaluation as `GET /groups/{group_id}/requestable/users/{user_id}`. Filtering for
+            another user requires an Opal admin or a custom role with the CHECK_REQUESTABILITY
+            permission. The response is always filtered by the caller's own READ visibility, so a
+            non-admin CHECK_REQUESTABILITY holder sees the intersection of groups they can read
+            and groups the target user can request. Filtering for yourself needs no permission.
+          example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+          explode: true
+          in: query
+          name: requestable_by_user_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
       responses:
         "200":
           content:
@@ -2076,6 +2309,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/PaginatedGroupsList"
           description: One page worth groups associated with your organization.
+        "403":
+          description: requestable_by_user_id is another user and the caller is not an Opal admin or holder of the CHECK_REQUESTABILITY permission.
         "404":
           description: Not Found
       security:
@@ -2109,7 +2344,9 @@ paths:
       x-speakeasy-name-override: update
       x-speakeasy-entity-operation:
         - Group#create#2
-        - Group#update
+        # Runs after configuration-template on Update so unlink/fork happens
+        # before this parent PUT carries own-config fields.
+        - Group#update#2
     post:
       description: Creates a group. See [here](https://docs.opal.dev/reference/end-system-objects) for details about importing groups.
       operationId: createGroup
@@ -2218,21 +2455,25 @@ paths:
             format: uuid
             type: string
           style: simple
+          x-speakeasy-name-override: id
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GroupConfigurationTemplate"
+                allOf:
+                  - $ref: "#/components/schemas/GroupConfigurationTemplate"
           description: The ID of the configuration template currently linked to the group, or `null` if the group uses its own private configuration.
         "403":
           description: The caller is not authorized to view this group.
         "404":
-          description: The group was not found.
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
         - groups
+      x-speakeasy-name-override: get_configuration_template
+      x-speakeasy-ignore: true
     put:
       summary: Set the ID of the configuration template linked to a group
       description: |
@@ -2275,6 +2516,7 @@ paths:
             format: uuid
             type: string
           style: simple
+          x-speakeasy-name-override: id
       requestBody:
         required: true
         content:
@@ -2285,8 +2527,7 @@ paths:
         "200":
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/GroupConfigurationTemplate"
+              x-speakeasy-ignore: true
           description: The ID of the configuration template now linked to the group, or `null` if the group was detached.
         "400":
           description: The request body was malformed, the required `configuration_template_id` field was omitted, or the target `configuration_template_id` does not reference a configuration template.
@@ -2298,6 +2539,12 @@ paths:
         - BearerAuth: []
       tags:
         - groups
+      x-speakeasy-name-override: update_configuration_template
+      # Update: run first (unnumbered) so unlink/attach/repoint precedes PUT /groups.
+      # Create: keep last (#6) so own-config create is unchanged.
+      x-speakeasy-entity-operation:
+        - Group#create#6
+        - Group#update
   /groups/{group_id}/message-channels:
     get:
       description: Gets the list of audit and reviewer message channels attached to a group.
@@ -2366,7 +2613,7 @@ paths:
       x-speakeasy-name-override: update_message_channels
       x-speakeasy-entity-operation:
         - Group#create#3
-        - Group#update#2
+        - Group#update#3
   /groups/{group_id}/on-call-schedules:
     get:
       description: Gets the list of on call schedules attached to a group.
@@ -2435,7 +2682,7 @@ paths:
       x-speakeasy-name-override: update_on_call_schedules
       x-speakeasy-entity-operation:
         - Group#create#4
-        - Group#update#3
+        - Group#update#4
   /groups/{group_id}/access_levels:
     get:
       summary: Get group access levels
@@ -2804,7 +3051,152 @@ paths:
       x-speakeasy-name-override: update_visibility
       x-speakeasy-entity-operation:
         - Group#create#5
-        - Group#update#4
+        - Group#update#5
+  /groups/{group_id}/requestable/users/{user_id}:
+    get:
+      description: |
+        Checks whether a user can request this group, and at which access levels, using the same
+        request-configuration selection as Opal's Access Request page and `POST /requests`. Checking
+        another user (or a requester other than the caller) requires an Opal admin or a custom role
+        with the CHECK_REQUESTABILITY permission; a caller can always check their own requestability,
+        in which case a group they cannot read is reported as not found. Linked (non-source) groups
+        return requestable false with LINKED_GROUP_NOT_REQUESTABLE. Requestability does not factor
+        visibility.
+      operationId: get_group_requestable_to_user
+      parameters:
+        - description: The ID of the group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the user the access would be for.
+          example: f92aa855-cea9-4814-b9d8-f2a60d3e4a06
+          explode: false
+          in: path
+          name: user_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: |
+            Optional access level remote ID to check a single level. Must be an access level of the
+            group. Omit for groups without access levels.
+          explode: true
+          in: query
+          name: access_level_remote_id
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: |
+            Optional ID of the person filling in the form when different from user_id. Adds the
+            on-behalf check evaluated as that requester, following EnforceRequestOnBehalfOfUser.
+          example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+          explode: true
+          in: query
+          name: requester_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserRequestabilityCheck"
+          description: Whether the user can request this group, and why.
+        "400":
+          description: Malformed UUID or invalid access_level_remote_id.
+        "403":
+          description: The caller is checking another user (or requester) and is not an Opal admin or holder of the CHECK_REQUESTABILITY permission.
+        "404":
+          description: The group, user_id or requester_id was not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
+  /groups/requestable/check:
+    post:
+      summary: Check requestability of many groups
+      description: |
+        Checks whether a user can request each of up to 100 groups, with the same evaluation and
+        permission rule as `GET /groups/{group_id}/requestable/users/{user_id}`. Duplicate IDs are
+        dropped and results keep the order of first appearance. A group that does not exist in your
+        organization (or, on a self-check without CHECK_REQUESTABILITY, that you cannot read) is
+        returned with `requestable: false` and reason `NOT_FOUND`. This is a read-only evaluation:
+        read-only API tokens may call it even though the method is POST.
+      operationId: check_groups_requestable
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BatchRequestabilityCheckRequest"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BatchRequestabilityCheckResponse"
+          description: Requestability of each group, in request order.
+        "400":
+          description: Malformed body, empty ids, or more than 100 ids.
+        "403":
+          description: The caller is checking another user (or requester) and is not an Opal admin or holder of the CHECK_REQUESTABILITY permission.
+        "404":
+          description: The user_id or requester_id was not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
+  /groups/{group_id}/visible/users/{user_id}:
+    get:
+      description: Checks whether a user can see this group, as shown in the Opal UI for that user. Checking another user requires an Opal admin or a custom role with the CHECK_VISIBILITY permission; a caller can always check their own visibility, in which case an entity they cannot see is reported as not found.
+      operationId: get_group_visible_to_user
+      parameters:
+        - description: The ID of the group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the user whose visibility is being checked.
+          example: f92aa855-cea9-4814-b9d8-f2a60d3e4a06
+          explode: false
+          in: path
+          name: user_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserVisibilityCheck"
+          description: Whether the user can see this group, and why.
+        "403":
+          description: The caller is checking another user and is not an Opal admin or holder of the CHECK_VISIBILITY permission.
+        "404":
+          description: The group or the user was not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
   /groups/{group_id}/reviewers:
     get:
       deprecated: true
@@ -3069,6 +3461,11 @@ paths:
                   description: The updated remote ID of the access level granted to this user.
                   type: string
                   example: arn:aws:iam::590304332660:role/ReadOnlyAccess
+                acting_user_id:
+                  type: string
+                  format: uuid
+                  description: >-
+                    Record this Opal user as the actor of the membership change in the audit event instead of the caller. Only for service users an admin has allowed to act for users, in organizations with the feature enabled. The named user must be a person (not a service user) in the caller's organization and active in the identity provider. Authorization is unchanged: the caller still needs permission to edit assignments on the group. The named user's own permissions on the group are not evaluated.
               required:
                 - duration_minutes
       responses:
@@ -3078,6 +3475,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GroupUser"
+        "400":
+          description: >-
+            The request body is invalid, or `acting_user_id` names a system or service user, or a user who is not active in the identity provider.
+        "403":
+          description: >-
+            The caller is not allowed to edit assignments on this group, or is not allowed to act for users.
+        "404":
+          description: The group, member, or user named by `acting_user_id` was not found.
       security:
         - BearerAuth: []
       tags:
@@ -3136,6 +3541,11 @@ paths:
                   description: The remote ID of the access level to grant to this user. If omitted, the default access level remote ID value (empty string) is used.
                   example: arn:aws:iam::590304332660:role/AdministratorAccess
                   type: string
+                acting_user_id:
+                  type: string
+                  format: uuid
+                  description: >-
+                    Record this Opal user as the actor of the membership add in the audit event instead of the caller. Only for service users an admin has allowed to act for users, in organizations with the feature enabled. The named user must be a person (not a service user) in the caller's organization and active in the identity provider. Authorization is unchanged: the caller still needs permission to edit assignments on the group. The named user's own permissions on the group are not evaluated.
               required:
                 - duration_minutes
               type: object
@@ -3146,6 +3556,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/GroupUser"
           description: The GroupUser that was created.
+        "400":
+          description: >-
+            The request body is invalid, or `acting_user_id` names a system or service user, or a user who is not active in the identity provider.
+        "403":
+          description: >-
+            The caller is not allowed to edit assignments on this group, or is not allowed to act for users.
+        "404":
+          description: The group, user, or user named by `acting_user_id` was not found.
       security:
         - BearerAuth: []
       tags:
@@ -3185,9 +3603,29 @@ paths:
           schema:
             type: string
           style: form
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                acting_user_id:
+                  type: string
+                  format: uuid
+                  description: >-
+                    Record this Opal user as the actor of the membership removal in the audit event instead of the caller. Only for service users an admin has allowed to act for users, in organizations with the feature enabled. The named user must be a person (not a service user) in the caller's organization and active in the identity provider. Authorization is unchanged: the caller still needs permission to edit assignments on the group. The named user's own permissions on the group are not evaluated. Unknown body fields are rejected, so a misspelled field fails instead of removing access as the caller.
       responses:
         "200":
           description: This user's access was successfully removed from this group.
+        "400":
+          description: >-
+            The request body is invalid, or `acting_user_id` names a system or service user, or a user who is not active in the identity provider.
+        "403":
+          description: >-
+            The caller is not allowed to edit assignments on this group, or is not allowed to act for users.
+        "404":
+          description: The group, user, or user named by `acting_user_id` was not found.
       security:
         - BearerAuth: []
       tags:
@@ -4117,6 +4555,16 @@ paths:
             format: uuid
             type: string
           style: form
+        - description: >-
+            Filter requests by the ID of the app that a requested resource or group belongs to. Returns an empty page if the app does not exist or has no requests visible to the caller.
+          example: 37cb7e41-12ba-46da-92ff-030abe0450b1
+          in: query
+          name: app_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
         - description: The pagination cursor value.
           example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
           explode: true
@@ -4856,7 +5304,8 @@ paths:
               type: string
             type: array
           style: form
-        - description: Resource name.
+        - description: >-
+            Filter resources by name. Matches against `name`, `remote_name`, parent-name combinations, and `remote_id`. Matching is case-insensitive. Use `resource_name_match` to choose the match type; when omitted, CONTAINS (substring) is used.
           example: example-name
           explode: true
           in: query
@@ -4864,6 +5313,15 @@ paths:
           required: false
           schema:
             type: string
+          style: form
+        - description: >-
+            How to apply `resource_name`. Requires `resource_name` to be set. Defaults to CONTAINS when `resource_name` is provided without this parameter. EQUALS, STARTS_WITH, and ENDS_WITH match only the resource's own `name` and `remote_name`, not parent-name combinations or `remote_id`.
+          explode: true
+          in: query
+          name: resource_name_match
+          required: false
+          schema:
+            $ref: "#/components/schemas/NameMatchType"
           style: form
         - description: The parent resource id to filter by.
           example:
@@ -4894,6 +5352,7 @@ paths:
           schema:
             type: string
           style: form
+          x-speakeasy-ignore: true
         - description: The IDs of the tags to filter by. Returns only resources that have any of these tags applied.
           in: query
           name: tag_ids
@@ -4904,7 +5363,32 @@ paths:
               format: uuid
               type: string
           style: form
-          x-speakeasy-ignore: true
+        - description: Only return resources that belong to this app.
+          example: f454d283-ca87-4a8a-bdbb-df212eca5353
+          explode: true
+          in: query
+          name: app_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
+        - description: |
+            Only return resources this user can request at one or more access levels, using the same
+            evaluation as `GET /resources/{resource_id}/requestable/users/{user_id}`. Filtering for
+            another user requires an Opal admin or a custom role with the CHECK_REQUESTABILITY
+            permission. The response is always filtered by the caller's own READ visibility, so a
+            non-admin CHECK_REQUESTABILITY holder sees the intersection of items they can read and
+            items the target user can request. Filtering for yourself needs no permission.
+          example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+          explode: true
+          in: query
+          name: requestable_by_user_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
       responses:
         "200":
           content:
@@ -4912,6 +5396,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/PaginatedResourcesList"
           description: One page worth resources associated with your organization.
+        "403":
+          description: requestable_by_user_id is another user and the caller is not an Opal admin or holder of the CHECK_REQUESTABILITY permission.
         "404":
           description: Not Found
       security:
@@ -4943,7 +5429,8 @@ paths:
         - resources
       x-speakeasy-name-override: update
       x-speakeasy-entity-operation:
-        - Resource#update
+        # Runs after configuration-template on Update (see groups-side comment).
+        - Resource#update#2
         - Resource#create#2
     post:
       description: Creates a resource. See [here](https://docs.opal.dev/reference/end-system-objects) for details about importing resources.
@@ -5052,21 +5539,25 @@ paths:
             format: uuid
             type: string
           style: simple
+          x-speakeasy-name-override: id
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResourceConfigurationTemplate"
+                allOf:
+                  - $ref: "#/components/schemas/ResourceConfigurationTemplate"
           description: The ID of the configuration template currently linked to the resource, or `null` if the resource uses its own private configuration.
         "403":
           description: The caller is not authorized to view this resource.
         "404":
-          description: The resource was not found.
+          description: Not Found
       security:
         - BearerAuth: []
       tags:
         - resources
+      x-speakeasy-name-override: get_configuration_template
+      x-speakeasy-ignore: true
     put:
       summary: Set the ID of the configuration template linked to a resource
       description: |
@@ -5109,6 +5600,7 @@ paths:
             format: uuid
             type: string
           style: simple
+          x-speakeasy-name-override: id
       requestBody:
         required: true
         content:
@@ -5119,8 +5611,7 @@ paths:
         "200":
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/ResourceConfigurationTemplate"
+              x-speakeasy-ignore: true
           description: The ID of the configuration template now linked to the resource, or `null` if the resource was detached.
         "400":
           description: The request body was malformed, the required `configuration_template_id` field was omitted, or the target `configuration_template_id` does not reference a configuration template.
@@ -5132,6 +5623,11 @@ paths:
         - BearerAuth: []
       tags:
         - resources
+      x-speakeasy-name-override: update_configuration_template
+      # Update: run first; Create: keep before the post-create GET (#6).
+      x-speakeasy-entity-operation:
+        - Resource#create#5
+        - Resource#update
   /resources/{resource_id}/message-channels:
     get:
       description: Gets the list of audit message channels attached to a resource.
@@ -5270,7 +5766,151 @@ paths:
       x-speakeasy-name-override: update_visibility
       x-speakeasy-entity-operation:
         - Resource#create#3
-        - Resource#update#2
+        - Resource#update#3
+  /resources/{resource_id}/requestable/users/{user_id}:
+    get:
+      description: |
+        Checks whether a user can request this resource, and at which access levels, using the same
+        request-configuration selection as Opal's Access Request page and `POST /requests`. Checking
+        another user (or a requester other than the caller) requires an Opal admin or a custom role
+        with the CHECK_REQUESTABILITY permission; a caller can always check their own requestability,
+        in which case a resource they cannot read is reported as not found. Requestability does not
+        factor visibility.
+      operationId: get_resource_requestable_to_user
+      parameters:
+        - description: The ID of the resource.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: resource_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the user the access would be for.
+          example: f92aa855-cea9-4814-b9d8-f2a60d3e4a06
+          explode: false
+          in: path
+          name: user_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: |
+            Optional access level remote ID to check a single level. Must be an access level of the
+            resource. Omit for resources without access levels.
+          explode: true
+          in: query
+          name: access_level_remote_id
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: |
+            Optional ID of the person filling in the form when different from user_id. Adds the
+            on-behalf check evaluated as that requester, following EnforceRequestOnBehalfOfUser.
+          example: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+          explode: true
+          in: query
+          name: requester_id
+          required: false
+          schema:
+            format: uuid
+            type: string
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserRequestabilityCheck"
+          description: Whether the user can request this resource, and why.
+        "400":
+          description: Malformed UUID or invalid access_level_remote_id.
+        "403":
+          description: The caller is checking another user (or requester) and is not an Opal admin or holder of the CHECK_REQUESTABILITY permission.
+        "404":
+          description: The resource, user_id or requester_id was not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - resources
+  /resources/requestable/check:
+    post:
+      summary: Check requestability of many resources
+      description: |
+        Checks whether a user can request each of up to 100 resources, with the same evaluation and
+        permission rule as `GET /resources/{resource_id}/requestable/users/{user_id}`. Duplicate IDs
+        are dropped and results keep the order of first appearance. A resource that does not exist
+        in your organization (or, on a self-check without CHECK_REQUESTABILITY, that you cannot
+        read) is returned with `requestable: false` and reason `NOT_FOUND`. This is a read-only
+        evaluation: read-only API tokens may call it even though the method is POST.
+      operationId: check_resources_requestable
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BatchRequestabilityCheckRequest"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BatchRequestabilityCheckResponse"
+          description: Requestability of each resource, in request order.
+        "400":
+          description: Malformed body, empty ids, or more than 100 ids.
+        "403":
+          description: The caller is checking another user (or requester) and is not an Opal admin or holder of the CHECK_REQUESTABILITY permission.
+        "404":
+          description: The user_id or requester_id was not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - resources
+  /resources/{resource_id}/visible/users/{user_id}:
+    get:
+      description: Checks whether a user can see this resource, as shown in the Opal UI for that user. Checking another user requires an Opal admin or a custom role with the CHECK_VISIBILITY permission; a caller can always check their own visibility, in which case an entity they cannot see is reported as not found.
+      operationId: get_resource_visible_to_user
+      parameters:
+        - description: The ID of the resource.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: resource_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the user whose visibility is being checked.
+          example: f92aa855-cea9-4814-b9d8-f2a60d3e4a06
+          explode: false
+          in: path
+          name: user_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserVisibilityCheck"
+          description: Whether the user can see this resource, and why.
+        "403":
+          description: The caller is checking another user and is not an Opal admin or holder of the CHECK_VISIBILITY permission.
+        "404":
+          description: The resource or the user was not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - resources
   /resources/{resource_id}/reviewers:
     get:
       description: Gets the list of owner IDs of the reviewers for a resource.
@@ -6567,6 +7207,84 @@ paths:
         - BearerAuth: []
       tags:
         - users
+  /users/{user_id}/access:
+    get:
+      summary: Get a user's access
+      description: |
+        Returns all of the resources and groups the user has access to, in a single list. All
+        results are returned unless `page_size` is set, in which case the list is paginated.
+        Includes access the user has directly and access they have indirectly (for example, through
+        group membership or nested groups). Use `has_direct_access` and `num_access_paths` to tell
+        them apart.
+
+        Each row is one (resource or group, access level) pair. Only assignments the caller is
+        allowed to read are returned, so the list can be empty or partial for a caller without
+        permission to read assignments on the user's resources and groups. Results are ordered by
+        entity ID; the order is stable across pages but has no other meaning.
+      operationId: get_user_access
+      parameters:
+        - description: The ID of the user whose access to return.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          name: user_id
+          in: path
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The `next` cursor from a previous response. Resumes the list at that point.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          explode: true
+          in: query
+          name: cursor
+          required: false
+          schema:
+            type: string
+          style: form
+        - description: |
+            Number of results to return per page. Maximum is 1000. If omitted, all results are
+            returned in a single response and `next` is null.
+          example: 200
+          explode: true
+          in: query
+          name: page_size
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+          style: form
+        - description: Only return access to this type of entity. Omit to return both resources and groups.
+          explode: true
+          in: query
+          name: entity_type
+          required: false
+          schema:
+            $ref: "#/components/schemas/UserAccessEntityTypeEnum"
+          style: form
+        - description: Include the user's access to unmanaged resources.
+          example: false
+          explode: true
+          in: query
+          name: include_unmanaged
+          required: false
+          schema:
+            type: boolean
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserAccessList"
+          description: The resources and groups the user has access to.
+        "400":
+          description: The cursor, `entity_type`, or `user_id` is invalid.
+        "404":
+          description: The user was not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - users
   /users/{user_id}/mfa/reset:
     post:
       summary: Reset a user's Opal MFA
@@ -7811,8 +8529,9 @@ components:
       description: |-
         # AgentActivityEvent Object
         ### Description
-        One activity event reported by an agent runtime. Today this is a Claude Code hook
-        payload, posted either by the hook itself or by a relay that batches them.
+        One activity event reported by an agent runtime: a Claude Code or Codex hook payload,
+        a Cursor hook payload the Opal kit rewrote into the same shape, or the same shape sent
+        by a custom harness, posted either by the hook itself or by a relay that batches them.
 
         Only the fields below are read; everything else in the payload is parsed and
         **discarded**, never persisted. That includes `transcript_path` / `scratchpad_dir`
@@ -7821,7 +8540,9 @@ components:
 
         `prompt`, `tool_response` and `last_assistant_message` (the conversation content) are
         stored only when the sender collects them (`opal_content` on the event, or the
-        `X-Opal-Content` header) and the organization stores content. Secrets in the shapes
+        `X-Opal-Content` header), the organization stores content, the client's conversation
+        content setting is not Never, its Log switch is on, and Opal could read the client
+        settings. Secrets in the shapes
         Opal recognizes are masked and each text is cut to the organization's limit before
         it is written. Otherwise they are discarded too.
 
@@ -7831,7 +8552,8 @@ components:
         family or a web domain refers to something that exists only inside `tool_input`.
       properties:
         hook_event_name:
-          description: Which hook fired, e.g. `PostToolUse`, `PreToolUse`, `PermissionDenied`. Required; an event with no name cannot be interpreted and is rejected.
+          description: >-
+            Which hook fired. A tool call: `PreToolUse`, `PostToolUse` or `PostToolUseFailure`. A prompt: `UserPromptSubmit`, with `prompt`. The end of a turn: `Stop` or `SubagentStop`, with `last_assistant_message`. `PermissionDenied` and any other name are stored as sent (cut to 128 bytes), but have no kind, so a list filtered by kind leaves them out. Names are case-sensitive: send them exactly as written here (`PreToolUse`, not `preToolUse`), or the event is stored but never checked. Only a single raw `PreToolUse` that is not marked `delivered_late` is answered with a decision. Required; an event with no name cannot be interpreted and the whole request is rejected.
           type: string
         tool_input:
           description: |-
@@ -7846,6 +8568,9 @@ components:
             Capped before storage. A capped payload is no longer valid JSON, so the row
             records that it was capped rather than leaving each reader to discover it by
             failing to parse.
+
+            A value that is not an object (Codex sends a string when a model's function
+            arguments are not valid JSON) is stored as `{"raw": <value>}` rather than rejected.
           type: object
           additionalProperties: true
         session_id:
@@ -7854,12 +8579,31 @@ components:
         prompt_id:
           description: Groups every tool call made under one user instruction, so a run can be read back as the instruction that caused it rather than as unrelated rows.
           type: string
+        turn_id:
+          description: >-
+            Codex's id for one user turn. Codex sends no `prompt_id`, so for a Codex event this is stored as the prompt id. Together with `model`, and with no `prompt_id`, it also marks an event as coming from Codex when `opal_reported.client` is absent.
+          type: string
+        model:
+          description: >-
+            The model the runtime was using, as Codex reports it. Read to tell Codex from Claude Code. Stored only for Codex's `PostModelRequest`, in the row's details, with the request's `status` (`completed`, `failed` or `cancelled`), its `error` (redacted and cut to 1,000 characters) and its `token_usage` counts, all three read from the event's other fields whatever their type.
+          type: string
+        cursor_version:
+          description: >-
+            The Cursor version, which Cursor adds to every hook input. Read only to mark an event as coming from Cursor when `opal_reported.client` is absent; not stored. A Cursor tool-call event named `preToolUse`, `postToolUse` or `postToolUseFailure` is stored under the Claude Code name for the same event.
+          type: string
+        delivered_late:
+          description: >-
+            Set on a `PreToolUse` or `PermissionRequest` that the sender sends again, with the same `tool_use_id` (or, without one, the same `session_id` and `opal_event_id`), after its live check failed (it timed out, or Opal could not be reached or answered with a server error). The client did not wait for Opal's answer, so the call already ran: the event is a record of it, never a check, and is never answered with a decision. When a row for the same call is already stored, the event is merged into it: the row keeps its verdict, is marked as delivered late, and takes any field it lacks from the event. A block, hold or deny on such a row was not applied. Otherwise the event is stored as an unchecked record, marked as delivered late.
+          type: boolean
         agent_id:
           description: Set only when the call came from an autonomous subagent rather than the session a person is typing into. Stored as `subagent_id` - Opal's own `agent_id` already means something else.
           type: string
         agent_type:
           description: The subagent's type, e.g. `general-purpose`. Set alongside `agent_id`.
           type: string
+        spawned_agent_id:
+          description: >-
+            On the `PostToolUse` of a call that started a subagent (Claude Code's `Agent` tool, or `Task`, its older name; a call with any other `tool_name` is ignored), the subagent's id: the `agentId` of the call's `tool_response`, which every event inside that subagent sends as `agent_id`. Opal's hook kit sends it even when it sends no conversation content: it is the one value of `tool_response` the kit keeps. When it is absent, Opal reads `tool_response.agentId` itself, which is how Claude Code's HTTP hook reports it. Stored with the call as `spawned_subagent_id`, and only when it is 1 to 128 letters, digits, dashes and underscores; any other value is ignored and never rejects the event. Read whatever its type, like `prompt`.
         permission_mode:
           description: The session's permission mode, e.g. `default`, `acceptEdits`, `bypassPermissions`. A session running `bypassPermissions` had no approval gate in front of any tool call it made.
           type: string
@@ -7885,22 +8629,28 @@ components:
 
             An MCP tool is named `mcp__<server>__<tool>`. The whole string is stored as sent,
             and the server and the tool are also stored in their own fields (see `mcp_server`).
+
+            Use the canonical names: `Bash` with `command`, `Read`, `Edit` or `Write` with
+            `file_path`, `WebFetch` with `url`. Tool patterns in rules ignore case, but Opal
+            works out a call's target only for MCP tools and a fixed list of exact,
+            case-sensitive built-in names such as these, and the recommended shell rules match only a tool named `Bash` or `Shell`
+            (in any case).
           type: string
         mcp_server:
           $ref: "#/components/schemas/AgentActivityMcpServer"
         opal_mcp_server:
           $ref: "#/components/schemas/AgentActivityOpalMcpServer"
         tool_use_id:
-          description: The tool invocation's id, used together with `hook_event_name` to deduplicate a retried delivery. Absent on events that carry none, which are stored at-least-once unless they carry `opal_event_id`.
+          description: The tool invocation's id. It pairs a call's `PreToolUse` and `PostToolUse`, merges a late copy into the call's row, and with `hook_event_name` deduplicates a retried delivery. It must be unique across the organization, not just within a session (a UUID or a provider-issued id), because Opal matches it across every session and a reused id merges a new call into an old one. Absent on events that carry none, which are stored at-least-once unless they are a prompt or the end of a turn with `session_id` and `prompt_id`, or carry `opal_event_id`.
           type: string
         opal_event_id:
-          description: An id Opal's hook kit gives each event it holds for sending, so that a retried delivery of an event without a `tool_use_id` (a prompt, the end of a turn) is stored once. Used only for an event that has no `tool_use_id` and is not a tool-call event, and only when it is 8 to 64 letters, digits and dashes; otherwise ignored.
+          description: An id the sender gives each event it holds for sending, used only for an event with no `tool_use_id`, and only when it is 8 to 64 letters, digits and dashes; otherwise ignored. A retried delivery or a late copy with the same id is stored once. A `PreToolUse`, `PostToolUse` or `PostToolUseFailure` is matched within its `session_id` and needs one. Any other event is matched across the whole organization, so its id must be unique there (a UUID). A prompt or the end of a turn that has `session_id` and `prompt_id` is keyed on those, and this id is ignored. It does not pair a call's `PreToolUse` and `PostToolUse`; only `tool_use_id` does.
           type: string
         cwd:
           description: The working directory the agent was operating in.
           type: string
         timestamp:
-          description: When the client says the event occurred (RFC 3339). Clamped server-side to a window around receipt, because a client-controlled sort key is otherwise a way to pin rows to the top of every list. Defaults to receipt time when absent or unparseable.
+          description: When the client says the event occurred, in RFC 3339 (`2026-11-13T18:04:05Z`) only; any other value rejects the whole request with a 400. A time more than 30 days old or more than 5 minutes ahead is replaced with the time Opal received the event, because a client-controlled sort key is otherwise a way to pin rows to the top of every list. Defaults to receipt time when absent.
           format: date-time
           type: string
         prompt:
@@ -7920,17 +8670,45 @@ components:
             Read whatever its type, like `prompt`.
         opal_content:
           $ref: "#/components/schemas/AgentActivityContentReport"
+        opal_prompt_check:
+          $ref: "#/components/schemas/AgentActivityPromptCheck"
       required:
         - hook_event_name
       type: object
       additionalProperties: true
+    AgentActivityPromptCheck:
+      description: |-
+        # AgentActivityPromptCheck Object
+        ### Description
+        What Opal's hook kit found when it looked for secrets in a prompt on the machine, before the
+        prompt went on (`UserPromptSubmit`). Sent only for a prompt it found a secret in. The prompt's
+        text is sent with it only when the sender collects conversation content, already masked.
+
+        Read only on a `UserPromptSubmit` event. The prompt's row is stored with the outcome as its
+        decision (`FLAGGED` or `BLOCKED`) and the kinds as its reason, and the activity list shows it.
+        A client whose mode records only what Opal acted on (Enforce only) has these prompts stored
+        and its other prompts dropped. An outcome other than the two below, or no kind Opal can
+        read, is ignored, and the prompt is stored as any other.
+
+        Reserved for Opal's hook kits. Opal takes the outcome on the sender's word alone, so a
+        custom harness must not send it.
+      properties:
+        outcome:
+          description: "`blocked` when the kit stopped the prompt before it reached the model, `flagged` when it let the prompt go on."
+          type: string
+        kinds:
+          description: The kinds of secret found, as Opal's redaction names them (`github_token`, `aws_access_key_id`, `env_secret`, ...). Never the secret itself.
+          items:
+            type: string
+          type: array
+      type: object
     AgentActivityContentReport:
       description: |-
         # AgentActivityContentReport Object
         ### Description
         What Opal's hook kit adds to an event when it collects conversation content. Its
-        presence means the sender collects content, like the `X-Opal-Content` header. The kit
-        has already masked secrets in the texts and cut them to its own limit.
+        presence, even as `{}`, means the sender collects content, like the `X-Opal-Content`
+        header. The kit has already masked secrets in the texts and cut them to its own limit.
       properties:
         assistant_text:
           description: Every text the model wrote in the turn, read from the session's transcript (`Stop`, `SubagentStop`). Preferred over `last_assistant_message`, which holds only the final message.
@@ -8004,6 +8782,24 @@ components:
         claude_account_email:
           description: The email of the account Claude Code is signed in with.
           type: string
+        codex_account_email:
+          description: The email of the ChatGPT account Codex is signed in with.
+          type: string
+        codex_auth_mode:
+          description: >-
+            How Codex is signed in, from `auth_mode` in its `auth.json`: `chatgpt` for a ChatGPT sign-in, `apikey` for an API key. In an organization that has turned on person agents, a Codex call from a person who owns no OpenAI agent creates "<Name>'s ChatGPT" for a ChatGPT sign-in and "<Name>'s OpenAI" for an API key. Without it, no agent is created.
+          type: string
+        chatgpt_account_email:
+          description: The email of the ChatGPT account the sending runtime is signed in with.
+          type: string
+        cursor_account_email:
+          description: >-
+            The email of the account Cursor is signed in with, from the `user_email` of Cursor's hook input. Tried before the other emails here.
+          type: string
+        client:
+          description: >-
+            Which agent runtime sent the event: `claude_code`, `codex`, `cursor`, `cowork`, `openai_agents_python`, `openai_agents_js`, `chatgpt` or `chatgpt_workspace_agent`, or the name of a custom harness. The value is trimmed and lower-cased. A custom name must match `^[a-z0-9][a-z0-9_-]{0,63}$` and, once its `_` and `-` are removed, must not equal a built-in name, or an inference application name such as `claude-ai`, with its `_` and `-` removed (so `claude-code` and `co-work` are refused); any other value is stored as `unknown`. An admin registers a harness in Opal, under Agent Center > Setup, and an organization can register up to 100. Policy rules match a custom harness the organization registered by its name with `_` replaced by `-` (`my_harness` as `my-harness`), and an unregistered one, or any custom harness while Opal cannot read the organization's client settings, as the application `unknown`. When absent, an event carrying `cursor_version` is Cursor, one carrying `turn_id` and `model` and no `prompt_id` is Codex, and anything else is Claude Code.
+          type: string
         git_email:
           description: The machine's global `git config user.email`.
           type: string
@@ -8045,7 +8841,10 @@ components:
       description: |-
         # McpConfigReport Object
         ### Description
-        The MCP servers configured in Claude Code on one machine.
+        The MCP servers configured in Claude Code on one machine, and what else its configuration
+        lets Claude Code reach: enabled plugins, skills, custom subagents and permission rules. Each of
+        those four lists is optional; a kit that does not send one leaves what Opal has of that kind as
+        it is, and an empty list says the machine has none. Each holds at most 200 entries.
       properties:
         servers:
           items:
@@ -8053,8 +8852,101 @@ components:
           type: array
         reporter:
           $ref: "#/components/schemas/McpConfigReporter"
+        plugins:
+          items:
+            $ref: "#/components/schemas/McpConfigPlugin"
+          type: array
+        skills:
+          items:
+            $ref: "#/components/schemas/McpConfigSkill"
+          type: array
+        subagents:
+          items:
+            $ref: "#/components/schemas/McpConfigSubagent"
+          type: array
+        permissions:
+          items:
+            $ref: "#/components/schemas/McpConfigPermission"
+          type: array
       required:
         - servers
+      type: object
+      additionalProperties: true
+    McpConfigPlugin:
+      description: |-
+        # McpConfigPlugin Object
+        ### Description
+        A Claude Code plugin the machine's settings enable.
+      properties:
+        name:
+          type: string
+        marketplace:
+          type: string
+        version:
+          description: The installed version, when the kit could read it.
+          type: string
+        scope:
+          description: "The settings source that enables it: `managed`, `user`, `project` or `local`."
+          type: string
+      required:
+        - name
+      type: object
+      additionalProperties: true
+    McpConfigSkill:
+      description: |-
+        # McpConfigSkill Object
+        ### Description
+        A skill (or legacy command) Claude Code loads on the machine. A plugin's is named
+        `<plugin>:<name>`. Only its name is sent, never the file.
+      properties:
+        name:
+          type: string
+        source:
+          description: "`user`, `project`, `plugin` or `managed`."
+          type: string
+      required:
+        - name
+      type: object
+      additionalProperties: true
+    McpConfigSubagent:
+      description: |-
+        # McpConfigSubagent Object
+        ### Description
+        A custom subagent defined on the machine. A plugin's is named `<plugin>:<name>`.
+      properties:
+        name:
+          type: string
+        scope:
+          description: "`user`, `project`, `plugin` or `managed`."
+          type: string
+        tools:
+          description: The tools its file lists. Absent when the file lists none, which lets the subagent use every tool of the session, MCP tools included.
+          items:
+            type: string
+          type: array
+      required:
+        - name
+      type: object
+      additionalProperties: true
+    McpConfigPermission:
+      description: |-
+        # McpConfigPermission Object
+        ### Description
+        One permission rule or default mode of one settings source. The kit masks secrets in a
+        rule with the same redaction it uses for conversation content, and Opal masks it again.
+      properties:
+        source:
+          description: "`managed`, `user`, `project` or `local`."
+          type: string
+        kind:
+          description: "`allow`, `ask`, `deny` or `default_mode`."
+          type: string
+        value:
+          description: The rule, such as `Bash(npm run test *)`, or the mode, such as `acceptEdits`.
+          type: string
+      required:
+        - kind
+        - value
       type: object
       additionalProperties: true
     McpConfigReporter:
@@ -8208,6 +9100,11 @@ components:
         cache_seconds:
           description: How long these settings may be kept before asking again.
           type: integer
+        clients:
+          additionalProperties:
+            $ref: '#/components/schemas/AgentActivityClientSetting'
+          description: What the organization chose on the Setup tab for each client that runs the hook, keyed by client (claude_code, codex, cursor). A client that is not listed keeps the defaults.
+          type: object
       required:
         - batch_wait_seconds
         - max_events_per_request
@@ -8215,6 +9112,32 @@ components:
         - max_requests_per_second
         - burst_requests
         - cache_seconds
+        - clients
+      type: object
+    AgentActivityClientSetting:
+      description: |-
+        # AgentActivityClientSetting Object
+        ### Description
+        What the organization chose for one client that runs the hook.
+      properties:
+        reports_tool_calls:
+          description: Whether the client reports tool calls. When false its hook sends nothing and lets every tool call run, and Opal stores nothing the client still sends.
+          type: boolean
+        conversation_content:
+          description: Who decides whether the client's conversation content (prompts, what each tool returned, the model's replies) is sent and stored. `always` sends it from every machine; `never` sends none, even from a machine installed with --content, and Opal stores none; `person_decides` leaves it to whether the machine was installed with --content. For codex it is the prompts and replies the Codex hooks send, unless the Codex kit was rendered with --no-prompts. Absent for a client that sends no conversation content.
+          enum:
+            - always
+            - never
+            - person_decides
+          type: string
+        prompt_secrets:
+          description: What the client's hook does with a prompt it finds a secret in, on the machine, before the prompt goes on. `block` (the client's mode enforces and the organization enforces client policy) stops a prompt that holds a credential recognized by its shape, and flags one that holds only a secret recognized by its name. `flag` (any other mode that reports) lets the prompt go on. Either way the hook reports the prompt with `opal_prompt_check`. Absent for a client that reports nothing (Off), and from an Opal that predates the check; the hook then does not look.
+          enum:
+            - block
+            - flag
+          type: string
+      required:
+        - reports_tool_calls
       type: object
     AgentKillSwitch:
       description: |-
@@ -8768,6 +9691,15 @@ components:
         - STARTS_WITH
         - ENDS_WITH
         - REGEX
+    NameMatchType:
+      type: string
+      description: >-
+        How to match a free-text name filter on list endpoints. All match types are case-insensitive. When omitted, CONTAINS is used. REGEX is not supported here — use POST /queries/run for regular-expression matching.
+      enum:
+        - CONTAINS
+        - EQUALS
+        - STARTS_WITH
+        - ENDS_WITH
     PaginatedAssignedRequestList:
       type: object
       required:
@@ -9529,6 +10461,18 @@ components:
         - ROLE_ASSIGNMENT
       example: ROLE_ASSIGNMENT
       type: string
+    CampaignItemPrincipalUserKindEnum:
+      description: |
+        Further classification of a USER principal on a campaign item (orthogonal
+        to `principal_type`, which is the role-assignment entity type
+        USER|GROUP|RESOURCE). HUMAN is a regular user; SERVICE_ACCOUNT and
+        AGENTIC are non-human identities backed by service_user_configurations.
+      enum:
+        - HUMAN
+        - SERVICE_ACCOUNT
+        - AGENTIC
+      example: HUMAN
+      type: string
     CampaignItemReview:
       description: A single reviewer's assignment and decision for a campaign item.
       properties:
@@ -9543,6 +10487,18 @@ components:
         reviewer_user_id:
           description: The ID of the assigned reviewer.
           format: uuid
+          type: string
+        reviewer_full_name:
+          description: |
+            Denormalized display name of the assigned reviewer. Null when the
+            reviewer user row cannot be loaded.
+          nullable: true
+          type: string
+        reviewer_email:
+          description: |
+            Denormalized email of the assigned reviewer. Null when the reviewer
+            user row cannot be loaded.
+          nullable: true
           type: string
         assignment_source:
           $ref: "#/components/schemas/CampaignItemReviewerAssignmentSourceEnum"
@@ -9638,10 +10594,36 @@ components:
           nullable: true
           type: string
         principal_type:
-          description: Principal entity type. Null if the RA is missing.
+          description: |
+            Principal entity type on the role assignment (USER, GROUP, or
+            RESOURCE). Null if the RA is missing. Distinct from
+            `principal_user_kind`, which further classifies USER principals.
           allOf:
             - $ref: "#/components/schemas/EntityTypeEnum"
           nullable: true
+        principal_user_kind:
+          description: |
+            When `principal_type` is USER, further classifies the identity for
+            access-review analytics: HUMAN (regular user), SERVICE_ACCOUNT, or
+            AGENTIC (rows in service_user_configurations). Null when
+            `principal_type` is not USER or the role assignment is missing.
+          allOf:
+            - $ref: "#/components/schemas/CampaignItemPrincipalUserKindEnum"
+          nullable: true
+        principal_name:
+          description: |
+            Denormalized display name of the principal: user full name, group
+            name, or resource name. Null when the principal row cannot be loaded
+            or the role assignment is missing.
+          nullable: true
+          type: string
+        principal_email:
+          description: |
+            Denormalized email of the principal when `principal_type` is USER.
+            Null for non-USER principals, missing RAs, or when the user row
+            cannot be loaded.
+          nullable: true
+          type: string
         entity_id:
           description: Entitlement entity ID. Null if the RA is missing.
           format: uuid
@@ -9652,6 +10634,13 @@ components:
           allOf:
             - $ref: "#/components/schemas/EntityTypeEnum"
           nullable: true
+        entity_name:
+          description: |
+            Denormalized display name of the entitlement entity (resource or
+            group). Null when the entity row cannot be loaded or the role
+            assignment is missing.
+          nullable: true
+          type: string
         access_level:
           description: Access level on the role assignment, if any.
           allOf:
@@ -10044,7 +11033,6 @@ components:
           example: OKTA_DIRECTORY
           type: string
         visibility:
-          description: The visibility level of the entity.
           $ref: "#/components/schemas/VisibilityTypeEnum"
         visibility_group_ids:
           description: |-
@@ -10056,7 +11044,8 @@ components:
           type: array
           format: set
         import_visibility:
-          description: The visibility level of the entity.
+          description: |-
+            The visibility level of items imported from this app.
           $ref: "#/components/schemas/VisibilityTypeEnum"
         validations:
           description: Validation checks of an apps' configuration and permissions.
@@ -10352,8 +11341,11 @@ components:
         - ASANA
         - BITWARDEN
         - CALENDLY
+        - MIRO
         - ONELOGIN
         - SQUARE
+        - SUPABASE
+        - TRAY
         # GENERATED:END connection-type-enum
         - RIPPLING
       example: OKTA_DIRECTORY
@@ -11339,6 +12331,7 @@ components:
         - REQUEST_DELEGATION_CONDITION
         - CONTEXT_PROVIDER
         - REQUEST_CONFIGURATION_CONDITION
+        - EVENT_TRIGGER
       example: REQUEST_REVIEW
       type: string
     OpalScript:
@@ -11528,9 +12521,12 @@ components:
         - PAGER_DUTY
         - CONFLUENCE
         - FLEET_DM
+        - FRESH_SERVICE_KNOWLEDGE
       type: string
+      # New connectors get added over time; generated clients should accept values they don't know.
+      x-speakeasy-unknown-values: allow
     PaladinContextSourceKind:
-      description: The kind of source a Paladin can read. A SLACK_CHANNEL is a Slack channel; a DOCUMENT is a Notion or Confluence page.
+      description: The kind of source a Paladin can read. A SLACK_CHANNEL is a Slack channel; a DOCUMENT is a Notion or Confluence page or a Freshservice knowledge base article.
       enum:
         - SLACK_CHANNEL
         - DOCUMENT
@@ -11541,7 +12537,10 @@ components:
         - SLACK
         - NOTION
         - CONFLUENCE
+        - FRESH_SERVICE
       type: string
+      # New providers get added over time; generated clients should accept values they don't know.
+      x-speakeasy-unknown-values: allow
     PaladinContextSource:
       description: |-
         # PaladinContextSource Object
@@ -11570,7 +12569,7 @@ components:
         third_party_provider:
           $ref: "#/components/schemas/PaladinContextSourceProvider"
         remote_id:
-          description: The provider's identifier for the source. The Slack channel ID for a channel, or the Notion/Confluence page ID for a document.
+          description: The provider's identifier for the source. The Slack channel ID for a channel, or the Notion/Confluence page ID or numeric Freshservice article ID for a document.
           type: string
         name:
           description: A human-readable name for the source.
@@ -11615,7 +12614,7 @@ components:
         third_party_provider:
           $ref: "#/components/schemas/PaladinContextSourceProvider"
         remote_id:
-          description: The provider's identifier for the source. The Slack channel ID for a channel, or the Notion/Confluence page ID for a document.
+          description: The provider's identifier for the source. The Slack channel ID for a channel, or the Notion/Confluence page ID or numeric Freshservice article ID for a document.
           type: string
         name:
           description: An optional human-readable name for the source.
@@ -12278,11 +13277,12 @@ components:
           type: string
           x-speakeasy-ignore: true
         configuration_template_id:
-          description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+          description: The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
-          x-speakeasy-plan-validators: GroupConfigurationTemplateID
+          x-speakeasy-param-computed: false
+          x-speakeasy-param-optional: true
         group_binding_id:
           description: The ID of the associated group binding.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -12290,9 +13290,10 @@ components:
           type: string
           x-speakeasy-param-suppress-computed-diff: true # there's no way to set this through this resource in tf
         is_requestable:
-          description: A bool representing whether or not to allow access requests to this group.
+          description: A bool representing whether or not to allow access requests to this group. Deprecated in favor of `request_configurations`.
           example: False
           type: boolean
+          deprecated: true
           x-speakeasy-ignore: true
         request_configurations:
           description: A list of request configurations for this group.
@@ -12326,6 +13327,16 @@ components:
           maxLength: 800
           nullable: true
           example: "Check your email to register your account."
+        max_direct_users_allowed:
+          description: The maximum number of direct users allowed for this group at once. Set to null to remove the limit.
+          type: integer
+          nullable: true
+          example: 10
+        max_users_exceeded_message:
+          description: Custom message shown to users when the maximum number of allowed users for this group has been reached.
+          type: string
+          nullable: true
+          example: "Contact your admin to request access."
         risk_sensitivity:
           description: The risk sensitivity level for the group. When an override is set, this field will match that.
           readOnly: true
@@ -12492,6 +13503,117 @@ components:
         - description
       type: object
       x-speakeasy-entity: GroupUser
+    UserAccessEntityTypeEnum:
+      description: The type of entity a user has access to.
+      enum:
+        - GROUP
+        - RESOURCE
+      example: RESOURCE
+      type: string
+    UserAccessLevel:
+      description: |-
+        The level of access the user has to a resource or group. The "default" access level is an object whose fields
+        are all empty strings.
+      example:
+        access_level_name: Developer
+        access_level_remote_id: "20"
+      properties:
+        access_level_name:
+          description: The human-readable name of the access level.
+          example: Developer
+          type: string
+        access_level_remote_id:
+          description: The machine-readable identifier of the access level.
+          example: "20"
+          type: string
+      required:
+        - access_level_name
+        - access_level_remote_id
+      type: object
+    UserAccess:
+      description: |-
+        # User Access Object
+        ### Description
+        The `UserAccess` object represents a user's access to a single resource or group at one access level, either
+        directly or indirectly (for example, through group membership).
+
+        ### Usage Example
+        Fetch from the `GET /users/{user_id}/access` endpoint.
+      example:
+        entity_type: RESOURCE
+        entity_id: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+        entity_name: AdministratorAccess
+        description: Full access to all resources and settings.
+        access_level:
+          access_level_name: AdminRole
+          access_level_remote_id: arn:aws:iam::590304332660:role/AdministratorAccess
+        expiration_date: 2022-01-23T04:56:07Z
+        has_direct_access: false
+        num_access_paths: 2
+      properties:
+        entity_type:
+          $ref: "#/components/schemas/UserAccessEntityTypeEnum"
+        entity_id:
+          description: The ID of the resource or group.
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          format: uuid
+          type: string
+        entity_name:
+          description: The name of the resource or group.
+          example: AdministratorAccess
+          type: string
+        description:
+          description: The description of the resource or group.
+          example: Full access to all resources and settings.
+          type: string
+        access_level:
+          $ref: "#/components/schemas/UserAccessLevel"
+        expiration_date:
+          description: The day and time the user's access will expire. If the user has more than one way to access the entity, this is the latest expiration. Null if the access does not expire.
+          example: 2022-01-23T04:56:07Z
+          format: date-time
+          nullable: true
+          type: string
+        has_direct_access:
+          description: The user has direct access to this entity (vs. indirectly, like through a group).
+          example: true
+          type: boolean
+        num_access_paths:
+          description: The number of ways in which the user has access to this entity (directly and indirectly).
+          example: 2
+          format: int32
+          type: integer
+        propagation_status:
+          $ref: "#/components/schemas/PropagationStatus"
+      required:
+        - entity_type
+        - entity_id
+        - entity_name
+        - description
+        - access_level
+        - has_direct_access
+        - num_access_paths
+      type: object
+    UserAccessList:
+      description: A user's access to resources and groups, or one page of it if `page_size` was set.
+      properties:
+        results:
+          items:
+            $ref: "#/components/schemas/UserAccess"
+          type: array
+        next:
+          description: The cursor with which to continue pagination if additional result pages exist.
+          example: cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw
+          nullable: true
+          type: string
+        previous:
+          description: The cursor used to obtain the current result page.
+          example: cj1sZXdwd2VycWVtY29zZnNkc2NzUWxNMEUxTXk0ME16UXpNallsTWtJ
+          nullable: true
+          type: string
+      required:
+        - results
+      type: object
     PropagationStatus:
       description: The state of whether the push action was propagated to the remote system. If this is null, the access was synced from the remote system.
       properties:
@@ -12641,7 +13763,14 @@ components:
           x-speakeasy-ignore: true
         configuration_template_id:
           description: |-
-            The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+            Deprecated. Use `PUT /groups/{group_id}/configuration-template`
+            instead; that endpoint exposes attach, re-point, and detach as a
+            single idempotent REST sub-resource and is the Terraform-friendly
+            surface for managing this linkage. This field remains honored on
+            the main PUT for now: set to a UUID to attach or re-point, set to
+            `null` to unlink (forks the template into a private configuration
+            that preserves the current settings), omit to leave linkage
+            unchanged. Scheduled for removal in a future major version.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           nullable: true
@@ -12651,7 +13780,7 @@ components:
           # the field (no change) instead of marshaling JSON null (unlink).
           x-oapi-codegen-extra-tags:
             json: configuration_template_id,omitempty
-          x-speakeasy-plan-validators: GroupConfigurationTemplateID
+          x-speakeasy-ignore: true
         request_template_id:
           description: The ID of the associated request template. Deprecated in favor of `request_configurations`.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -12731,6 +13860,16 @@ components:
           maxLength: 800
           nullable: true
           example: "Check your email to register your account."
+        max_direct_users_allowed:
+          description: The maximum number of direct users allowed for this group at once. Set to null to remove the limit.
+          type: integer
+          nullable: true
+          example: 10
+        max_users_exceeded_message:
+          description: Custom message shown to users when the maximum number of allowed users for this group has been reached. Set to null to clear.
+          type: string
+          nullable: true
+          example: "Contact your admin to request access."
         risk_sensitivity_override:
           allOf:
             - $ref: "#/components/schemas/RiskSensitivityEnum"
@@ -12800,11 +13939,14 @@ components:
         - ASANA_TEAM
         - BITWARDEN_GROUP
         - CALENDLY_GROUP
+        - MIRO_TEAM
+        - MIRO_USER_GROUP
         - ONELOGIN_ROLE
         - ONELOGIN_GROUP
         - SQUARE_LOCATION
         - SQUARE_JOB
         # GENERATED:END group-type-enum
+        - RIPPLING_DEPARTMENT
         - RIPPLING_TEAM
         - RIPPLING_SUPERGROUP
       example: OPAL_GROUP
@@ -12865,6 +14007,7 @@ components:
         - DATADOG_ROLE
         - OKTA_APP
         - OKTA_ROLE
+        - OKTA_WORKLOAD_PRINCIPAL
         - OPAL_ROLE
         - OPAL_SCOPED_ROLE
         - PAGERDUTY_ROLE
@@ -12885,9 +14028,14 @@ components:
         - COUPA_ROLE
         - CURSOR_ORGANIZATION
         - CURSOR_ORIGIN_REPOSITORY
+        - CURSOR_USER
+        - CURSOR_BOT
         - OPENAI_PLATFORM_PROJECT
         - OPENAI_PLATFORM_SERVICE_ACCOUNT
+        - OPENAI_USER
         - ANTHROPIC_WORKSPACE
+        - ANTHROPIC_USER
+        - ANTHROPIC_SERVICE_ACCOUNT
         - GIT_HUB_ORG
         - ORACLE_FUSION_ROLE
         - DEVIN_ORGANIZATION
@@ -12930,13 +14078,22 @@ components:
         - RIPPLING_DEPARTMENT
         - BOX_ENTERPRISE
         - BOX_FOLDER
+        - SLACK_WORKSPACE
+        - SLACK_ORGANIZATION
         # GENERATED:BEGIN resource-type-enum
         - ASANA_WORKSPACE
         - ASANA_WORKSPACE_GUEST
         - BITWARDEN_ORGANIZATION
         - CALENDLY_ROLE
         - CALENDLY_EVENT_TYPE
+        - MIRO_ORGANIZATION
+        - MIRO_BOARD
         - ONELOGIN_APP
+        - SUPABASE_ORGANIZATION
+        - SUPABASE_PROJECT
+        - SUPABASE_PROJECT_AUTH
+        - TRAY_WORKSPACE
+        - TRAY_ORGANIZATION
         # GENERATED:END resource-type-enum
       example: AWS_IAM_ROLE
       type: string
@@ -13070,6 +14227,8 @@ components:
         - STOP
         - REQUEST_ON_BEHALF
         - RESET_MFA
+        - CHECK_VISIBILITY
+        - CHECK_REQUESTABILITY
       example: READ
       type: string
     RolePermissionTargetTypeEnum:
@@ -13083,6 +14242,7 @@ components:
         - ACCESS_REVIEW
         - OWNER
         - EVENT
+        - PALADIN_AGENT
       example: RESOURCE
       type: string
     UpdateGroupResourcesInfo:
@@ -13276,14 +14436,13 @@ components:
       properties:
         configuration_template_id:
           description: |-
-            The ID of the configuration template that the group is linked to,
-            or `null` if the group is not linked to a configuration template.
-            Only the ID is exposed here; the template's own fields are managed
-            through the `/configuration-templates` endpoints.
+            The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           nullable: true
           type: string
+          x-speakeasy-param-computed: false
+          x-speakeasy-param-optional: true
       type: object
       required:
         - configuration_template_id
@@ -13301,14 +14460,13 @@ components:
       properties:
         configuration_template_id:
           description: |-
-            The ID of the configuration template that the resource is linked
-            to, or `null` if the resource is not linked to a configuration
-            template. Only the ID is exposed here; the template's own fields
-            are managed through the `/configuration-templates` endpoints.
+            The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           nullable: true
           type: string
+          x-speakeasy-param-computed: false
+          x-speakeasy-param-optional: true
       type: object
       required:
         - configuration_template_id
@@ -13339,6 +14497,162 @@ components:
         - BundleVisibility
       x-speakeasy-plan-validators:
         - VisibilityInfo
+    RequestabilityReasonEnum:
+      description: |-
+        Why an asset is or is not requestable for a user. Reasons are evaluated in order; the first
+        that applies is returned. REQUESTABLE means at least one access level can be requested.
+      enum:
+        - ASSET_DELETED
+        - REQUESTER_CANNOT_REQUEST_FOR_USER
+        - UNSUPPORTED_ASSET_TYPE
+        - LINKED_GROUP_NOT_REQUESTABLE
+        - CONDITION_SCRIPT_FAILED
+        - REQUESTS_DISABLED
+        - NO_REQUESTABLE_ACCESS_LEVEL
+        - NO_REQUESTABLE_ITEMS
+        - NOT_FOUND
+        - REQUESTABLE
+      example: REQUESTABLE
+      type: string
+    RequestableAccessLevel:
+      description: Requestability of a single access level.
+      properties:
+        access_level_remote_id:
+          description: The remote ID of the access level. Empty for assets without access levels.
+          type: string
+        access_level_name:
+          description: The human-readable name of the access level.
+          type: string
+        requestable:
+          type: boolean
+        reason:
+          description: Present when the access level is not requestable.
+          $ref: "#/components/schemas/RequestabilityReasonEnum"
+      type: object
+      required:
+        - access_level_remote_id
+        - requestable
+    UserRequestabilityCheck:
+      description: Whether an asset is requestable for a user, and why.
+      example:
+        resource_id: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+        user_id: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+        requestable: true
+        reason: REQUESTABLE
+        access_levels:
+          - access_level_remote_id: read
+            access_level_name: Read
+            requestable: true
+      properties:
+        resource_id:
+          description: The ID of the resource that was checked. Set for resource checks.
+          format: uuid
+          type: string
+        group_id:
+          description: The ID of the group that was checked. Set for group checks.
+          format: uuid
+          type: string
+        app_id:
+          description: The ID of the app that was checked. Set for app checks.
+          format: uuid
+          type: string
+        user_id:
+          description: The ID of the user that was checked.
+          format: uuid
+          type: string
+        requestable:
+          type: boolean
+        reason:
+          $ref: "#/components/schemas/RequestabilityReasonEnum"
+        access_levels:
+          description: Per-access-level requestability. Omitted for apps; empty remote ID for assets without levels.
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestableAccessLevel"
+      type: object
+      required:
+        - user_id
+        - requestable
+        - reason
+    BatchRequestabilityCheckRequest:
+      description: The user and assets to check.
+      example:
+        user_id: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+        ids:
+          - 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          - 1b978423-db0a-4037-a4cf-f79c60cb67b3
+      properties:
+        user_id:
+          description: The ID of the user the access would be for.
+          format: uuid
+          type: string
+        requester_id:
+          description: |
+            Optional ID of the person filling in the form when different from user_id. Adds the
+            on-behalf check evaluated as that requester, following EnforceRequestOnBehalfOfUser.
+          format: uuid
+          type: string
+        ids:
+          description: The asset IDs to check. Duplicates are dropped.
+          type: array
+          minItems: 1
+          maxItems: 100
+          items:
+            format: uuid
+            type: string
+      type: object
+      required:
+        - user_id
+        - ids
+    BatchRequestabilityCheckResult:
+      description: Whether one asset is requestable for the user, and why.
+      properties:
+        id:
+          description: The ID of the asset that was checked.
+          format: uuid
+          type: string
+        requestable:
+          type: boolean
+        reason:
+          $ref: "#/components/schemas/RequestabilityReasonEnum"
+        access_levels:
+          description: Per-access-level requestability. Omitted when reason is NOT_FOUND.
+          type: array
+          items:
+            $ref: "#/components/schemas/RequestableAccessLevel"
+      type: object
+      required:
+        - id
+        - requestable
+        - reason
+    BatchRequestabilityCheckResponse:
+      description: Requestability of each asset, in request order.
+      example:
+        user_id: 29827fb8-f2dd-4e80-9576-28e31e9934ac
+        results:
+          - id: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+            requestable: true
+            reason: REQUESTABLE
+            access_levels:
+              - access_level_remote_id: read
+                access_level_name: Read
+                requestable: true
+          - id: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+            requestable: false
+            reason: NOT_FOUND
+      properties:
+        user_id:
+          description: The ID of the user that was checked.
+          format: uuid
+          type: string
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/BatchRequestabilityCheckResult"
+      type: object
+      required:
+        - user_id
+        - results
     AppVisibilityInfo:
       description: |-
         Visibility information for an app. Mirrors `VisibilityInfo` but adds
@@ -13374,6 +14688,39 @@ components:
       required:
         - visibility
       x-speakeasy-entity: AppVisibility
+    VisibilityReasonEnum:
+      description: |-
+        Why an entity is or is not visible to a user. ADMIN covers admins, read-only admins and auditors. GLOBAL
+        also covers the global requester role. NOT_IN_VISIBILITY_GROUP, NOT_IN_APP_VISIBILITY_GROUP,
+        NOT_IN_PARENT_VISIBILITY_GROUP, ASSET_DELETED and DIRECTORY_APP_HIDDEN mean the entity is not visible.
+      enum:
+        - GLOBAL
+        - VISIBILITY_GROUP
+        - OWNER
+        - ADMIN
+        - HAS_ACCESS
+        - CUSTOM_ROLE
+        - NOT_IN_VISIBILITY_GROUP
+        - NOT_IN_APP_VISIBILITY_GROUP
+        - NOT_IN_PARENT_VISIBILITY_GROUP
+        - ASSET_DELETED
+        - DIRECTORY_APP_HIDDEN
+      example: GLOBAL
+      type: string
+    UserVisibilityCheck:
+      description: Whether an entity is visible to a user, and why.
+      example:
+        visible: true
+        reason: GLOBAL
+      properties:
+        visible:
+          type: boolean
+        reason:
+          $ref: "#/components/schemas/VisibilityReasonEnum"
+      type: object
+      required:
+        - visible
+        - reason
     MessageChannelIDList:
       description: A list of message channel IDs.
       example:
@@ -14189,6 +15536,24 @@ components:
           type: object
           required:
             - group_id
+        miro_team:
+          description: Remote info for Miro Team.
+          properties:
+            team_id:
+              description: The team id of the Miro Team.
+              type: string
+          type: object
+          required:
+            - team_id
+        miro_user_group:
+          description: Remote info for Miro User Group.
+          properties:
+            user_group_id:
+              description: The user group id of the Miro User Group.
+              type: string
+          type: object
+          required:
+            - user_group_id
         onelogin_role:
           description: Remote info for OneLogin Role.
           properties:
@@ -14226,6 +15591,16 @@ components:
           required:
             - group_id
         # GENERATED:END group-remote-info-properties
+        rippling_department:
+          description: Remote info for Rippling department.
+          properties:
+            department_id:
+              description: The ID of the Rippling department.
+              example: 8caed98e-1234-5678-9abc-def012345678
+              type: string
+          type: object
+          required:
+            - department_id
         rippling_team:
           description: Remote info for Rippling team.
           properties:
@@ -15076,6 +16451,16 @@ components:
           type: object
           required:
             - workspace_id
+        slack_organization:
+          description: Remote info for Slack Enterprise Grid organization.
+          properties:
+            organization_id:
+              description: The ID of the Slack Enterprise Grid organization (enterprise ID).
+              example: E01234567
+              type: string
+          type: object
+          required:
+            - organization_id
         oracle_fusion_role:
           description: Remote info for Oracle Fusion role.
           properties:
@@ -15487,6 +16872,24 @@ components:
           type: object
           required:
             - resource_id
+        miro_organization:
+          description: Remote info for Miro Organization.
+          properties:
+            organization_id:
+              description: The organization id of the Miro Organization.
+              type: string
+          type: object
+          required:
+            - organization_id
+        miro_board:
+          description: Remote info for Miro Board.
+          properties:
+            board_id:
+              description: The board id of the Miro Board.
+              type: string
+          type: object
+          required:
+            - board_id
         onelogin_app:
           description: Remote info for OneLogin App.
           properties:
@@ -15496,6 +16899,42 @@ components:
           type: object
           required:
             - resource_id
+        supabase_organization:
+          description: Remote info for Supabase Organization.
+          properties:
+            organization_slug:
+              description: The organization slug of the Supabase Organization.
+              type: string
+          type: object
+          required:
+            - organization_slug
+        supabase_project:
+          description: Remote info for Supabase Project.
+          properties:
+            project_ref:
+              description: The project ref of the Supabase Project.
+              type: string
+          type: object
+          required:
+            - project_ref
+        tray_workspace:
+          description: Remote info for Tray Workspace.
+          properties:
+            workspace_id:
+              description: The workspace id of the Tray Workspace.
+              type: string
+          type: object
+          required:
+            - workspace_id
+        tray_organization:
+          description: Remote info for Tray Organization.
+          properties:
+            organization_id:
+              description: The organization id of the Tray Organization.
+              type: string
+          type: object
+          required:
+            - organization_id
         # GENERATED:END resource-remote-info-properties
         rippling_department:
           description: Remote info for Rippling department.
@@ -15507,6 +16946,16 @@ components:
           type: object
           required:
             - department_id
+        slack_workspace:
+          description: Remote info for Slack workspace.
+          properties:
+            workspace_id:
+              description: The ID of the Slack workspace (team ID).
+              example: T01234567
+              type: string
+          type: object
+          required:
+            - workspace_id
       type: object
     RiskSensitivityEnum:
       type: string
@@ -15801,6 +17250,11 @@ components:
           maxLength: 800
           nullable: true
           example: "Check your email to register your account."
+        max_direct_users_allowed:
+          description: The maximum number of direct users allowed for this resource at once. Set to null to remove the limit.
+          type: integer
+          nullable: true
+          example: 10
         risk_sensitivity_override:
           allOf:
             - $ref: "#/components/schemas/RiskSensitivityEnum"
@@ -15812,6 +17266,17 @@ components:
           description: A bool representing whether or not the resource's description should be synced from the end system. When true, the description is overwritten with the remote description on each sync, so a `description` provided together with this field set to true will be replaced at the next sync. Defaults to false.
           example: False
           type: boolean
+        requires_forfeit_reason:
+          description: A bool representing whether or not a reason is required when forfeiting access to this resource.
+          example: False
+          type: boolean
+        configuration_template_id:
+          description: The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
+          example: 06851574-e50d-40ca-8c78-f72ae6ab4304
+          format: uuid
+          nullable: true
+          type: string
+          x-speakeasy-param-computed: false
       required:
         - name
         - resource_type
@@ -15991,6 +17456,11 @@ components:
           nullable: true
           example: "Check your email to register your account."
           x-speakeasy-param-suppress-computed-diff: true
+        max_direct_users_allowed:
+          description: The maximum number of direct users allowed for this group at once. Set to null to remove the limit.
+          type: integer
+          nullable: true
+          example: 10
         risk_sensitivity_override:
           allOf:
             - $ref: "#/components/schemas/RiskSensitivityEnum"
@@ -16000,6 +17470,10 @@ components:
           type: boolean
         match_remote_description:
           description: A bool representing whether or not the group's description should be synced from the end system. When true, the description is overwritten with the remote description on each sync, so a `description` provided together with this field set to true will be replaced at the next sync. Defaults to false.
+          example: False
+          type: boolean
+        requires_forfeit_reason:
+          description: A bool representing whether or not a reason is required when forfeiting access to this group.
           example: False
           type: boolean
         handle:
@@ -16016,6 +17490,13 @@ components:
           items:
             format: uuid
             type: string
+        configuration_template_id:
+          description: The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
+          example: 06851574-e50d-40ca-8c78-f72ae6ab4304
+          format: uuid
+          nullable: true
+          type: string
+          x-speakeasy-param-computed: false
       required:
         - name
         - group_type
@@ -16758,9 +18239,10 @@ components:
           type: string
           x-speakeasy-ignore: true
         is_requestable:
-          description: A bool representing whether or not to allow access requests to this resource.
+          description: A bool representing whether or not to allow access requests to this resource. Deprecated in favor of `request_configurations`.
           example: False
           type: boolean
+          deprecated: true
           x-speakeasy-ignore: true
         parent_resource_id:
           description: The ID of the parent resource.
@@ -16769,11 +18251,12 @@ components:
           type: string
           x-speakeasy-param-suppress-computed-diff: true
         configuration_template_id:
-          description: The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+          description: The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           type: string
-          x-speakeasy-plan-validators: ResourceConfigurationTemplateID
+          x-speakeasy-param-computed: false
+          x-speakeasy-param-optional: true
         request_configurations:
           type: array
           items:
@@ -16795,6 +18278,16 @@ components:
           maxLength: 800
           nullable: true
           x-speakeasy-param-suppress-computed-diff: true
+        max_direct_users_allowed:
+          description: The maximum number of direct users allowed for this resource at once. Set to null to remove the limit.
+          type: integer
+          nullable: true
+          example: 10
+        max_users_exceeded_message:
+          description: Custom message shown to users when the maximum number of allowed users for this resource has been reached.
+          type: string
+          nullable: true
+          example: "Contact your admin to request access."
         risk_sensitivity:
           description: The risk sensitivity level for the resource. When an override is set, this field will match that.
           readOnly: true
@@ -16999,6 +18492,16 @@ components:
           maxLength: 800
           nullable: true
           example: "Check your email to register your account."
+        max_direct_users_allowed:
+          description: The maximum number of direct users allowed for this resource at once. Set to null to remove the limit.
+          type: integer
+          nullable: true
+          example: 10
+        max_users_exceeded_message:
+          description: Custom message shown to users when the maximum number of allowed users for this resource has been reached. Set to null to clear.
+          type: string
+          nullable: true
+          example: "Contact your admin to request access."
         risk_sensitivity_override:
           allOf:
             - $ref: "#/components/schemas/RiskSensitivityEnum"
@@ -17012,7 +18515,14 @@ components:
           type: boolean
         configuration_template_id:
           description: |-
-            The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+            Deprecated. Use `PUT /resources/{resource_id}/configuration-template`
+            instead; that endpoint exposes attach, re-point, and detach as a
+            single idempotent REST sub-resource and is the Terraform-friendly
+            surface for managing this linkage. This field remains honored on
+            the main PUT for now: set to a UUID to attach or re-point, set to
+            `null` to unlink (forks the template into a private configuration
+            that preserves the current settings), omit to leave linkage
+            unchanged. Scheduled for removal in a future major version.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
           format: uuid
           nullable: true
@@ -17022,7 +18532,7 @@ components:
           # the field (no change) instead of marshaling JSON null (unlink).
           x-oapi-codegen-extra-tags:
             json: configuration_template_id,omitempty
-          x-speakeasy-plan-validators: ResourceConfigurationTemplateID
+          x-speakeasy-ignore: true
         request_template_id:
           description: The ID of the associated request template. Deprecated in favor of `request_configurations`.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -17906,6 +19416,10 @@ components:
           type: integer
           example: 120
           x-speakeasy-param-suppress-computed-diff: true
+        disable_skip_level_escalation:
+          description: When true, requesters cannot escalate requests to their skip-level manager. When any item in a request has this set to true, the escalation button is disabled and the action is blocked. Defaults to false.
+          type: boolean
+          example: false
         request_template_id:
           description: The ID of the associated request template.
           example: 06851574-e50d-40ca-8c78-f72ae6ab4304
@@ -18974,11 +20488,13 @@ components:
         - reason
       x-speakeasy-entity: Delegation
     ApiAccessLevelEnum:
-      description: The access level of an API token. AGENT_HOOKS tokens are made only by the Claude Code hook kit's browser sign-in and can only report agent activity; they cannot be created through this API.
+      description: The access level of an API token. AGENT_HOOKS tokens are made only by the Claude Code hook kit's browser sign-in and can only report agent activity. INFERENCE_HOOK tokens are made only on the Inference hooks setup page and can only call the inference hook endpoints. AGENT_GATEWAY tokens are made only by Setup > LiteLLM and can only reach one LiteLLM gateway's routes. None of these can be created through this API.
       enum:
         - READ_ONLY
         - FULL_ACCESS
         - AGENT_HOOKS
+        - INFERENCE_HOOK
+        - AGENT_GATEWAY
       type: string
     EventStreamConnectionTypeEnum:
       description: The type of event stream connection.

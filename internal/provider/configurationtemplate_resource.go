@@ -158,6 +158,10 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 							},
 							Description: `The condition for the request configuration.`,
 						},
+						"disable_skip_level_escalation": schema.BoolAttribute{
+							Optional:    true,
+							Description: `When true, requesters cannot escalate requests to their skip-level manager. When any item in a request has this set to true, the escalation button is disabled and the action is blocked. Defaults to false.`,
+						},
 						"extensions_duration_in_minutes": schema.Int64Attribute{
 							Optional:    true,
 							Description: `The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.`,

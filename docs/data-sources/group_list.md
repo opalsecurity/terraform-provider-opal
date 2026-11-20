@@ -14,14 +14,20 @@ GroupList DataSource
 
 ```terraform
 data "opal_group_list" "my_group_list" {
+  app_id = "f454d283-ca87-4a8a-bdbb-df212eca5353"
   group_ids = [
     "4baf8423-db0a-4037-a4cf-f79c60cb67a5",
     "1b978423-db0a-4037-a4cf-f79c60cb67b3",
   ]
-  group_name        = "example-name"
-  group_type_filter = "OPAL_GROUP"
-  page_size         = 200
-  requestable       = true
+  group_name             = "example-name"
+  group_type_filter      = "OPAL_GROUP"
+  page_size              = 200
+  remote_id              = "...my_remote_id..."
+  requestable            = true
+  requestable_by_user_id = "29827fb8-f2dd-4e80-9576-28e31e9934ac"
+  tag_ids = [
+    "3c34a212-2dee-4019-8657-e4e961fa0e85"
+  ]
 }
 ```
 
@@ -30,11 +36,20 @@ data "opal_group_list" "my_group_list" {
 
 ### Optional
 
+- `app_id` (String) Only return groups that belong to this app.
 - `group_ids` (List of String) The group ids to filter by.
-- `group_name` (String) Group name.
-- `group_type_filter` (String) The group type to filter by. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DATADOG_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "CURSOR_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP", "BOX_GROUP", "ACTIVECAMPAIGN_GROUP", "AHA_TEAM", "ASANA_TEAM", "BITWARDEN_GROUP", "CALENDLY_GROUP", "ONELOGIN_ROLE", "ONELOGIN_GROUP", "SQUARE_LOCATION", "SQUARE_JOB", "RIPPLING_TEAM", "RIPPLING_SUPERGROUP"]
+- `group_name` (String) Filter groups by name. Matches against both `name` and `remote_name`. Matching is case-insensitive. Use `group_name_match` to choose the match type; when omitted, CONTAINS (substring) is used.
+- `group_type_filter` (String) The group type to filter by. Required when remote_id is provided. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DATADOG_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "CURSOR_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP", "BOX_GROUP", "ACTIVECAMPAIGN_GROUP", "AHA_TEAM", "ASANA_TEAM", "BITWARDEN_GROUP", "CALENDLY_GROUP", "MIRO_TEAM", "MIRO_USER_GROUP", "ONELOGIN_ROLE", "ONELOGIN_GROUP", "SQUARE_LOCATION", "SQUARE_JOB", "RIPPLING_DEPARTMENT", "RIPPLING_TEAM", "RIPPLING_SUPERGROUP"]
 - `page_size` (Number) Number of results to return per page. Default is 200.
+- `remote_id` (String) Filter groups by their remote id. Returns groups whose remote id matches the provided value exactly. Requires group_type_filter. Remote ids are only unique within a connection, so groups from different connections can share a remote id and more than one group may be returned. Unmanaged groups are not returned.
 - `requestable` (Boolean) If true, only return groups that allow access requests. Does not check whether the caller is permitted to request the group.
+- `requestable_by_user_id` (String) Only return groups this user can request at one or more access levels, using the same
+evaluation as `GET /groups/{group_id}/requestable/users/{user_id}`. Filtering for
+another user requires an Opal admin or a custom role with the CHECK_REQUESTABILITY
+permission. The response is always filtered by the caller's own READ visibility, so a
+non-admin CHECK_REQUESTABILITY holder sees the intersection of groups they can read
+and groups the target user can request. Filtering for yourself needs no permission.
+- `tag_ids` (List of String) The IDs of the tags to filter by. Returns only groups that have any of these tags applied.
 
 ### Read-Only
 
@@ -47,7 +62,7 @@ Read-Only:
 
 - `admin_owner_id` (String) The ID of the owner of the group.
 - `app_id` (String) The ID of the group's app.
-- `configuration_template_id` (String) The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+- `configuration_template_id` (String) The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
 - `custom_request_notification` (String) Custom request notification sent to the requester when the request is approved.
 - `description` (String) A description of the group.
 - `extensions_duration_in_minutes` (Number, Deprecated) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
@@ -58,6 +73,8 @@ Read-Only:
 - `last_successful_sync` (Attributes) Information about the last successful sync of this group. (see [below for nested schema](#nestedatt--results--last_successful_sync))
 - `match_remote_description` (Boolean) A bool representing whether or not the group's description is synced from the end system. When true, the description is overwritten with the remote description on each sync. Defaults to false.
 - `match_remote_name` (Boolean) A bool representing whether or not the group's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.
+- `max_direct_users_allowed` (Number) The maximum number of direct users allowed for this group at once. Set to null to remove the limit.
+- `max_users_exceeded_message` (String) Custom message shown to users when the maximum number of allowed users for this group has been reached.
 - `name` (String) The name of the group.
 - `remote_info` (Attributes) Information that defines the remote group. This replaces the deprecated remote_id and metadata fields. If remote_info is provided, a group will be imported into Opal. For group types that support group creation through Opal, a new group will be created if remote_info is not provided. (see [below for nested schema](#nestedatt--results--remote_info))
 - `remote_name` (String) The name of the remote.
@@ -112,6 +129,8 @@ Read-Only:
 - `jira_group` (Attributes) Remote info for Jira group. (see [below for nested schema](#nestedatt--results--remote_info--jira_group))
 - `ldap_group` (Attributes) Remote info for LDAP group. (see [below for nested schema](#nestedatt--results--remote_info--ldap_group))
 - `linear_team` (Attributes) Remote info for Linear team. (see [below for nested schema](#nestedatt--results--remote_info--linear_team))
+- `miro_team` (Attributes) Remote info for Miro Team. (see [below for nested schema](#nestedatt--results--remote_info--miro_team))
+- `miro_user_group` (Attributes) Remote info for Miro User Group. (see [below for nested schema](#nestedatt--results--remote_info--miro_user_group))
 - `okta_group` (Attributes) Remote info for Okta Directory group. (see [below for nested schema](#nestedatt--results--remote_info--okta_group))
 - `okta_group_rule` (Attributes) Remote info for Okta Directory group rule. (see [below for nested schema](#nestedatt--results--remote_info--okta_group_rule))
 - `onelogin_group` (Attributes) Remote info for OneLogin Group. (see [below for nested schema](#nestedatt--results--remote_info--onelogin_group))
@@ -119,6 +138,7 @@ Read-Only:
 - `pagerduty_on_call_schedule` (Attributes) Remote info for PagerDuty on-call schedule group. (see [below for nested schema](#nestedatt--results--remote_info--pagerduty_on_call_schedule))
 - `ramp_department` (Attributes) Remote info for Ramp department. (see [below for nested schema](#nestedatt--results--remote_info--ramp_department))
 - `ramp_location` (Attributes) Remote info for Ramp location. (see [below for nested schema](#nestedatt--results--remote_info--ramp_location))
+- `rippling_department` (Attributes) Remote info for Rippling department. (see [below for nested schema](#nestedatt--results--remote_info--rippling_department))
 - `rippling_supergroup` (Attributes) Remote info for Rippling supergroup. (see [below for nested schema](#nestedatt--results--remote_info--rippling_supergroup))
 - `rippling_team` (Attributes) Remote info for Rippling team. (see [below for nested schema](#nestedatt--results--remote_info--rippling_team))
 - `rootly_on_call_schedule` (Attributes) Remote info for Rootly on-call schedule group. (see [below for nested schema](#nestedatt--results--remote_info--rootly_on_call_schedule))
@@ -386,6 +406,22 @@ Read-Only:
 - `team_id` (String) The ID of the Linear team.
 
 
+<a id="nestedatt--results--remote_info--miro_team"></a>
+### Nested Schema for `results.remote_info.miro_team`
+
+Read-Only:
+
+- `team_id` (String) The team id of the Miro Team.
+
+
+<a id="nestedatt--results--remote_info--miro_user_group"></a>
+### Nested Schema for `results.remote_info.miro_user_group`
+
+Read-Only:
+
+- `user_group_id` (String) The user group id of the Miro User Group.
+
+
 <a id="nestedatt--results--remote_info--okta_group"></a>
 ### Nested Schema for `results.remote_info.okta_group`
 
@@ -440,6 +476,14 @@ Read-Only:
 Read-Only:
 
 - `location_id` (String) The ID of the Ramp location.
+
+
+<a id="nestedatt--results--remote_info--rippling_department"></a>
+### Nested Schema for `results.remote_info.rippling_department`
+
+Read-Only:
+
+- `department_id` (String) The ID of the Rippling department.
 
 
 <a id="nestedatt--results--remote_info--rippling_supergroup"></a>
@@ -579,6 +623,7 @@ Read-Only:
 - `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource.
 - `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource.
 - `condition` (Attributes) The condition for the request configuration. (see [below for nested schema](#nestedatt--results--request_configurations--condition))
+- `disable_skip_level_escalation` (Boolean) When true, requesters cannot escalate requests to their skip-level manager. When any item in a request has this set to true, the escalation button is disabled and the action is blocked. Defaults to false.
 - `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.
 - `priority` (Number) The priority of the request configuration.

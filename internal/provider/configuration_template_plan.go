@@ -17,8 +17,8 @@ var (
 )
 
 // message_channel_ids and on_call_schedule_ids live in schemas shared with
-// other entities, so they cannot be added to GroupConfigurationTemplateID
-// without leaking the conflict. Visibility and visibility_group_ids are
+// other entities, so they cannot be added to the conflict list in
+// configuration_template_validate.go without leaking the conflict. Visibility and visibility_group_ids are
 // enforced there instead.
 var groupConfigurationTemplateLinkedOnlyUpdates = []string{
 	"message_channel_ids",
@@ -61,6 +61,26 @@ func validateConfigurationTemplatePlan(
 	if err != nil {
 		resp.Diagnostics.AddError("Unable to inspect planned state", err.Error())
 		return
+	}
+
+	// Unlink: configuration_template_id is Optional (not Computed), so omitting it (or
+	// setting null) would otherwise keep the prior ID in the plan. The validators
+	// guarantee the user supplied their own configuration in that case, so a
+	// linked entity with no template in HCL is an unlink request.
+	if !req.State.Raw.IsNull() && attributeOmitted(config, "configuration_template_id") {
+		if state, err := terraformObjectValues(
+			req.State.Raw,
+		); err == nil &&
+			stateHasLinkedTemplate(state) {
+			resp.Diagnostics.Append(
+				resp.Plan.SetAttribute(
+					ctx,
+					path.Root("configuration_template_id"),
+					types.StringNull(),
+				)...,
+			)
+			return
+		}
 	}
 
 	// Template may be unknown at first plan when created in the same apply
@@ -144,7 +164,7 @@ func markTemplateGovernedVisibilityUnknown(
 
 // preserveTemplateGovernedVisibility keeps prior visibility fields in the plan
 // when the template already governs them. Refresh populates those attributes
-// from GET /visibility, but they are omitted in HCL (ConflictsWith / ExactlyOneOf).
+// from GET /visibility, but they are omitted in HCL (see configuration_template_validate.go).
 func preserveTemplateGovernedVisibility(
 	ctx context.Context,
 	config map[string]tftypes.Value,

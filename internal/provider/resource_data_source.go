@@ -42,6 +42,8 @@ type ResourceDataSourceModel struct {
 	LastSuccessfulSync          *tfTypes.LastSuccessfulSync             `tfsdk:"last_successful_sync"`
 	MatchRemoteDescription      types.Bool                              `tfsdk:"match_remote_description"`
 	MatchRemoteName             types.Bool                              `tfsdk:"match_remote_name"`
+	MaxDirectUsersAllowed       types.Int64                             `tfsdk:"max_direct_users_allowed"`
+	MaxUsersExceededMessage     types.String                            `tfsdk:"max_users_exceeded_message"`
 	Name                        types.String                            `tfsdk:"name"`
 	ParentResourceID            types.String                            `tfsdk:"parent_resource_id"`
 	RemoteInfo                  *tfTypes.ResourceRemoteInfo             `tfsdk:"remote_info"`
@@ -83,7 +85,7 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			},
 			"configuration_template_id": schema.StringAttribute{
 				Computed:    true,
-				Description: `The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.`,
+				Description: `The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.`,
 			},
 			"custom_request_notification": schema.StringAttribute{
 				Computed:    true,
@@ -128,6 +130,14 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"match_remote_name": schema.BoolAttribute{
 				Computed:    true,
 				Description: `A bool representing whether or not the resource's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.`,
+			},
+			"max_direct_users_allowed": schema.Int64Attribute{
+				Computed:    true,
+				Description: `The maximum number of direct users allowed for this resource at once. Set to null to remove the limit.`,
+			},
+			"max_users_exceeded_message": schema.StringAttribute{
+				Computed:    true,
+				Description: `Custom message shown to users when the maximum number of allowed users for this resource has been reached.`,
 			},
 			"name": schema.StringAttribute{
 				Computed:    true,
@@ -1026,6 +1036,26 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Linear project.`,
 					},
+					"miro_board": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"board_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The board id of the Miro Board.`,
+							},
+						},
+						Description: `Remote info for Miro Board.`,
+					},
+					"miro_organization": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"organization_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The organization id of the Miro Organization.`,
+							},
+						},
+						Description: `Remote info for Miro Organization.`,
+					},
 					"netsuite_role": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -1184,6 +1214,26 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Salesforce role.`,
 					},
+					"slack_organization": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"organization_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Slack Enterprise Grid organization (enterprise ID).`,
+							},
+						},
+						Description: `Remote info for Slack Enterprise Grid organization.`,
+					},
+					"slack_workspace": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"workspace_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The ID of the Slack workspace (team ID).`,
+							},
+						},
+						Description: `Remote info for Slack workspace.`,
+					},
 					"snowflake_database": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -1226,6 +1276,26 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						},
 						Description: `Remote info for Snowflake table.`,
 					},
+					"supabase_organization": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"organization_slug": schema.StringAttribute{
+								Computed:    true,
+								Description: `The organization slug of the Supabase Organization.`,
+							},
+						},
+						Description: `Remote info for Supabase Organization.`,
+					},
+					"supabase_project": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"project_ref": schema.StringAttribute{
+								Computed:    true,
+								Description: `The project ref of the Supabase Project.`,
+							},
+						},
+						Description: `Remote info for Supabase Project.`,
+					},
 					"tailscale_ssh": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -1245,6 +1315,26 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for Teleport role.`,
+					},
+					"tray_organization": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"organization_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The organization id of the Tray Organization.`,
+							},
+						},
+						Description: `Remote info for Tray Organization.`,
+					},
+					"tray_workspace": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"workspace_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The workspace id of the Tray Workspace.`,
+							},
+						},
+						Description: `Remote info for Tray Workspace.`,
 					},
 					"twingate_resource": schema.SingleNestedAttribute{
 						Computed: true,
@@ -1360,6 +1450,10 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 								},
 							},
 							Description: `The condition for the request configuration.`,
+						},
+						"disable_skip_level_escalation": schema.BoolAttribute{
+							Computed:    true,
+							Description: `When true, requesters cannot escalate requests to their skip-level manager. When any item in a request has this set to true, the escalation button is disabled and the action is blocked. Defaults to false.`,
 						},
 						"extensions_duration_in_minutes": schema.Int64Attribute{
 							Computed:    true,

@@ -30,7 +30,7 @@ data "opal_resource" "my_resource" {
 - `admin_owner_id` (String) The ID of the owner of the resource.
 - `ancestor_resource_ids` (List of String) List of resource IDs that are ancestors of this resource.
 - `app_id` (String) The ID of the app.
-- `configuration_template_id` (String) The ID of the associated configuration template. Note - Once set, you can only unlink or edit the template through the Opal UI.
+- `configuration_template_id` (String) The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
 - `custom_request_notification` (String) Custom request notification sent upon request approval.
 - `descendant_resource_ids` (List of String) List of resource IDs that are descendants of this resource.
 - `description` (String) A description of the resource.
@@ -38,6 +38,8 @@ data "opal_resource" "my_resource" {
 - `last_successful_sync` (Attributes) Information about the last successful sync of this resource. (see [below for nested schema](#nestedatt--last_successful_sync))
 - `match_remote_description` (Boolean) A bool representing whether or not the resource's description is synced from the end system. When true, the description is overwritten with the remote description on each sync. Defaults to false.
 - `match_remote_name` (Boolean) A bool representing whether or not the resource's name is synced from the end system. When true, the name is overwritten with the remote name on each sync. Defaults to false.
+- `max_direct_users_allowed` (Number) The maximum number of direct users allowed for this resource at once. Set to null to remove the limit.
+- `max_users_exceeded_message` (String) Custom message shown to users when the maximum number of allowed users for this resource has been reached.
 - `name` (String) The name of the resource.
 - `parent_resource_id` (String) The ID of the parent resource.
 - `remote_info` (Attributes) Information that defines the remote resource. This replaces the deprecated remote_id and metadata fields. (see [below for nested schema](#nestedatt--remote_info))
@@ -141,6 +143,8 @@ Read-Only:
 - `ilevel_advanced_role` (Attributes) Remote info for iLevel Advanced role. (see [below for nested schema](#nestedatt--remote_info--ilevel_advanced_role))
 - `linear_organization` (Attributes) Remote info for Linear organization. (see [below for nested schema](#nestedatt--remote_info--linear_organization))
 - `linear_project` (Attributes) Remote info for Linear project. (see [below for nested schema](#nestedatt--remote_info--linear_project))
+- `miro_board` (Attributes) Remote info for Miro Board. (see [below for nested schema](#nestedatt--remote_info--miro_board))
+- `miro_organization` (Attributes) Remote info for Miro Organization. (see [below for nested schema](#nestedatt--remote_info--miro_organization))
 - `netsuite_role` (Attributes) Remote info for NetSuite role. (see [below for nested schema](#nestedatt--remote_info--netsuite_role))
 - `okta_app` (Attributes) Remote info for Okta directory app. (see [below for nested schema](#nestedatt--remote_info--okta_app))
 - `okta_custom_role` (Attributes) Remote info for Okta directory custom role. (see [below for nested schema](#nestedatt--remote_info--okta_custom_role))
@@ -156,11 +160,17 @@ Read-Only:
 - `salesforce_permission_set` (Attributes) Remote info for Salesforce permission set. (see [below for nested schema](#nestedatt--remote_info--salesforce_permission_set))
 - `salesforce_profile` (Attributes) Remote info for Salesforce profile. (see [below for nested schema](#nestedatt--remote_info--salesforce_profile))
 - `salesforce_role` (Attributes) Remote info for Salesforce role. (see [below for nested schema](#nestedatt--remote_info--salesforce_role))
+- `slack_organization` (Attributes) Remote info for Slack Enterprise Grid organization. (see [below for nested schema](#nestedatt--remote_info--slack_organization))
+- `slack_workspace` (Attributes) Remote info for Slack workspace. (see [below for nested schema](#nestedatt--remote_info--slack_workspace))
 - `snowflake_database` (Attributes) Remote info for Snowflake database. (see [below for nested schema](#nestedatt--remote_info--snowflake_database))
 - `snowflake_schema` (Attributes) Remote info for Snowflake schema. (see [below for nested schema](#nestedatt--remote_info--snowflake_schema))
 - `snowflake_table` (Attributes) Remote info for Snowflake table. (see [below for nested schema](#nestedatt--remote_info--snowflake_table))
+- `supabase_organization` (Attributes) Remote info for Supabase Organization. (see [below for nested schema](#nestedatt--remote_info--supabase_organization))
+- `supabase_project` (Attributes) Remote info for Supabase Project. (see [below for nested schema](#nestedatt--remote_info--supabase_project))
 - `tailscale_ssh` (Attributes) Remote info for Tailscale SSH tag. (see [below for nested schema](#nestedatt--remote_info--tailscale_ssh))
 - `teleport_role` (Attributes) Remote info for Teleport role. (see [below for nested schema](#nestedatt--remote_info--teleport_role))
+- `tray_organization` (Attributes) Remote info for Tray Organization. (see [below for nested schema](#nestedatt--remote_info--tray_organization))
+- `tray_workspace` (Attributes) Remote info for Tray Workspace. (see [below for nested schema](#nestedatt--remote_info--tray_workspace))
 - `twingate_resource` (Attributes) Remote info for Twingate resource. (see [below for nested schema](#nestedatt--remote_info--twingate_resource))
 - `vercel_project` (Attributes) Remote info for Vercel project. (see [below for nested schema](#nestedatt--remote_info--vercel_project))
 - `vercel_role` (Attributes) Remote info for Vercel team role. (see [below for nested schema](#nestedatt--remote_info--vercel_role))
@@ -804,6 +814,22 @@ Read-Only:
 - `project_id` (String) The ID of the Linear project.
 
 
+<a id="nestedatt--remote_info--miro_board"></a>
+### Nested Schema for `remote_info.miro_board`
+
+Read-Only:
+
+- `board_id` (String) The board id of the Miro Board.
+
+
+<a id="nestedatt--remote_info--miro_organization"></a>
+### Nested Schema for `remote_info.miro_organization`
+
+Read-Only:
+
+- `organization_id` (String) The organization id of the Miro Organization.
+
+
 <a id="nestedatt--remote_info--netsuite_role"></a>
 ### Nested Schema for `remote_info.netsuite_role`
 
@@ -926,6 +952,22 @@ Read-Only:
 - `role_id` (String) The id of the role.
 
 
+<a id="nestedatt--remote_info--slack_organization"></a>
+### Nested Schema for `remote_info.slack_organization`
+
+Read-Only:
+
+- `organization_id` (String) The ID of the Slack Enterprise Grid organization (enterprise ID).
+
+
+<a id="nestedatt--remote_info--slack_workspace"></a>
+### Nested Schema for `remote_info.slack_workspace`
+
+Read-Only:
+
+- `workspace_id` (String) The ID of the Slack workspace (team ID).
+
+
 <a id="nestedatt--remote_info--snowflake_database"></a>
 ### Nested Schema for `remote_info.snowflake_database`
 
@@ -953,6 +995,22 @@ Read-Only:
 - `table_name` (String) The name of the table.
 
 
+<a id="nestedatt--remote_info--supabase_organization"></a>
+### Nested Schema for `remote_info.supabase_organization`
+
+Read-Only:
+
+- `organization_slug` (String) The organization slug of the Supabase Organization.
+
+
+<a id="nestedatt--remote_info--supabase_project"></a>
+### Nested Schema for `remote_info.supabase_project`
+
+Read-Only:
+
+- `project_ref` (String) The project ref of the Supabase Project.
+
+
 <a id="nestedatt--remote_info--tailscale_ssh"></a>
 ### Nested Schema for `remote_info.tailscale_ssh`
 
@@ -967,6 +1025,22 @@ Read-Only:
 Read-Only:
 
 - `role_name` (String) The name role.
+
+
+<a id="nestedatt--remote_info--tray_organization"></a>
+### Nested Schema for `remote_info.tray_organization`
+
+Read-Only:
+
+- `organization_id` (String) The organization id of the Tray Organization.
+
+
+<a id="nestedatt--remote_info--tray_workspace"></a>
+### Nested Schema for `remote_info.tray_workspace`
+
+Read-Only:
+
+- `workspace_id` (String) The workspace id of the Tray Workspace.
 
 
 <a id="nestedatt--remote_info--twingate_resource"></a>
@@ -1042,6 +1116,7 @@ Read-Only:
 - `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource.
 - `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource.
 - `condition` (Attributes) The condition for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--condition))
+- `disable_skip_level_escalation` (Boolean) When true, requesters cannot escalate requests to their skip-level manager. When any item in a request has this set to true, the escalation button is disabled and the action is blocked. Defaults to false.
 - `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.
 - `priority` (Number) The priority of the request configuration.

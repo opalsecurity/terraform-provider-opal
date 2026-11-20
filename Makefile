@@ -8,6 +8,12 @@ docs:
 testacc:
 	TF_ACC=1 go test -v ./...
 
+# Live-backend e2e tests. Gated by the `e2e` build tag; see internal/e2e/README.md
+# for configuration (OPAL_E2E_TOKEN, OPAL_E2E_BASE_URL, OPAL_E2E_RESOURCE_APP_ID,
+# OPAL_E2E_GROUP_APP_ID, OPAL_E2E_ADMIN_OWNER_ID).
+e2e:
+	go test -tags=e2e -v -count=1 ./internal/e2e/...
+
 speakeasy: check-speakeasy openapi.yaml
 	speakeasy generate sdk --lang terraform -o . -s ./openapi.yaml
 

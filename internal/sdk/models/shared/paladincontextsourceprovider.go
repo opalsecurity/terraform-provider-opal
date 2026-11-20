@@ -3,37 +3,27 @@
 
 package shared
 
-import (
-	"encoding/json"
-	"fmt"
-)
-
 // PaladinContextSourceProvider - The integration a Paladin context source comes from.
 type PaladinContextSourceProvider string
 
 const (
-	PaladinContextSourceProviderSlack      PaladinContextSourceProvider = "SLACK"
-	PaladinContextSourceProviderNotion     PaladinContextSourceProvider = "NOTION"
-	PaladinContextSourceProviderConfluence PaladinContextSourceProvider = "CONFLUENCE"
+	PaladinContextSourceProviderSlack        PaladinContextSourceProvider = "SLACK"
+	PaladinContextSourceProviderNotion       PaladinContextSourceProvider = "NOTION"
+	PaladinContextSourceProviderConfluence   PaladinContextSourceProvider = "CONFLUENCE"
+	PaladinContextSourceProviderFreshService PaladinContextSourceProvider = "FRESH_SERVICE"
 )
 
 func (e PaladinContextSourceProvider) ToPointer() *PaladinContextSourceProvider {
 	return &e
 }
-func (e *PaladinContextSourceProvider) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
+
+// IsExact returns true if the value matches a known enum value, false otherwise.
+func (e *PaladinContextSourceProvider) IsExact() bool {
+	if e != nil {
+		switch *e {
+		case "SLACK", "NOTION", "CONFLUENCE", "FRESH_SERVICE":
+			return true
+		}
 	}
-	switch v {
-	case "SLACK":
-		fallthrough
-	case "NOTION":
-		fallthrough
-	case "CONFLUENCE":
-		*e = PaladinContextSourceProvider(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for PaladinContextSourceProvider: %v", v)
-	}
+	return false
 }

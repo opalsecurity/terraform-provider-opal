@@ -35,6 +35,8 @@ type GroupRemoteInfo struct {
 	JiraGroup                *ActiveDirectoryGroup  `tfsdk:"jira_group"`
 	LdapGroup                *ActiveDirectoryGroup  `tfsdk:"ldap_group"`
 	LinearTeam               *GrafanaTeam           `tfsdk:"linear_team"`
+	MiroTeam                 *GrafanaTeam           `tfsdk:"miro_team"`
+	MiroUserGroup            *MiroUserGroup         `tfsdk:"miro_user_group"`
 	OktaGroup                *ActiveDirectoryGroup  `tfsdk:"okta_group"`
 	OktaGroupRule            *OktaGroupRule         `tfsdk:"okta_group_rule"`
 	OneloginGroup            *ActiveDirectoryGroup  `tfsdk:"onelogin_group"`
@@ -42,6 +44,7 @@ type GroupRemoteInfo struct {
 	PagerdutyOnCallSchedule  *DatadogOnCallSchedule `tfsdk:"pagerduty_on_call_schedule"`
 	RampDepartment           *RampDepartment        `tfsdk:"ramp_department"`
 	RampLocation             *RampLocation          `tfsdk:"ramp_location"`
+	RipplingDepartment       *RampDepartment        `tfsdk:"rippling_department"`
 	RipplingSupergroup       *RipplingSupergroup    `tfsdk:"rippling_supergroup"`
 	RipplingTeam             *GrafanaTeam           `tfsdk:"rippling_team"`
 	RootlyOnCallSchedule     *DatadogOnCallSchedule `tfsdk:"rootly_on_call_schedule"`

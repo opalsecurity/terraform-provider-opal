@@ -153,6 +153,8 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"last_successful_sync": lastSuccessfulSyncType,
 			"configuration_template_id": tftypes.String,
 			"requires_forfeit_reason": tftypes.Bool,
+			"max_direct_users_allowed": tftypes.Number,
+			"max_users_exceeded_message": tftypes.String,
 			// Slack user-group fields added after v0 (SDK gen); unset until refresh/create.
 			"handle":           tftypes.String,
 			"initial_user_ids": tftypes.List{ElementType: tftypes.String},
@@ -321,6 +323,8 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"last_successful_sync": tftypes.NewValue(lastSuccessfulSyncType, nil), // read only field to be filled in by refresh
 			"configuration_template_id": tftypes.NewValue(tftypes.String, nil), // added after v0; unset until refresh
 			"requires_forfeit_reason": tftypes.NewValue(tftypes.Bool, nil),     // added after v0; unset until refresh
+			"max_direct_users_allowed": tftypes.NewValue(tftypes.Number, nil),  // added after v0; unset until refresh
+			"max_users_exceeded_message": tftypes.NewValue(tftypes.String, nil), // added after v0; unset until refresh
 			"handle":           tftypes.NewValue(tftypes.String, nil),                                            // added after v0; unset until refresh
 			"initial_user_ids": tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, nil),                 // added after v0; unset until refresh
 			"team_id":          tftypes.NewValue(tftypes.String, nil),                                            // added after v0; unset until refresh

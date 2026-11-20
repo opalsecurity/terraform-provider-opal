@@ -14,6 +14,7 @@ Requests DataSource
 
 ```terraform
 data "opal_requests" "my_requests" {
+  app_id            = "37cb7e41-12ba-46da-92ff-030abe0450b1"
   cursor            = "cD0yMDIxLTAxLTA2KzAzJTNBMjQlM0E1My40MzQzMjYlMkIwMCUzQTAw"
   end_date_filter   = "...my_end_date_filter..."
   group_id          = "37cb7e41-12ba-46da-92ff-030abe0450b1"
@@ -31,6 +32,7 @@ data "opal_requests" "my_requests" {
 
 ### Optional
 
+- `app_id` (String) Filter requests by the ID of the app that a requested resource or group belongs to. Returns an empty page if the app does not exist or has no requests visible to the caller.
 - `cursor` (String) The cursor to use in the next request to get the next page of results.
 - `end_date_filter` (String) An end date filter for the events.
 - `group_id` (String) Filter requests by the group ID that was requested.
