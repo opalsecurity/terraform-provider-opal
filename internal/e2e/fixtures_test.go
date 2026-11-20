@@ -5,6 +5,7 @@ package e2e
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -251,24 +252,23 @@ func putResourceLink(
 	return resp
 }
 
-// getResourceLink is a thin wrapper around GetResourceConfigurationTemplate.
-func getResourceLink(
-	t *testing.T,
-	ctx context.Context,
-	client *sdk.OpalAPI,
-	resourceID string,
-) *operations.GetResourceConfigurationTemplateResponse {
+// configurationTemplateLinkBody is the JSON body of GET
+// /{groups|resources}/{id}/configuration-template. The generated SDK does
+// not expose that GET (overlay x-speakeasy-ignore so Terraform reads the
+// link from the parent Group/Resource), so e2e hits it over raw HTTP.
+type configurationTemplateLinkBody struct {
+	ConfigurationTemplateID *string `json:"configuration_template_id"`
+}
+
+type configurationTemplateLinkGET struct {
+	StatusCode int
+	Link       *configurationTemplateLinkBody
+}
+
+// getResourceLink GETs /resources/{id}/configuration-template over raw HTTP.
+func getResourceLink(t *testing.T, e env, resourceID string) configurationTemplateLinkGET {
 	t.Helper()
-	resp, err := client.Resources.GetConfigurationTemplate(
-		ctx,
-		operations.GetResourceConfigurationTemplateRequest{
-			ID: resourceID,
-		},
-	)
-	if err != nil {
-		t.Fatalf("GET resources/{id}/configuration-template: %v", err)
-	}
-	return resp
+	return getConfigurationTemplateLink(t, e, "resources/"+resourceID+"/configuration-template")
 }
 
 // rawPutResourceLink bypasses the SDK and sends an arbitrary request body.
@@ -306,30 +306,49 @@ func putGroupLink(
 	return resp
 }
 
-// getGroupLink is a thin wrapper around GetGroupConfigurationTemplate.
-func getGroupLink(
-	t *testing.T,
-	ctx context.Context,
-	client *sdk.OpalAPI,
-	groupID string,
-) *operations.GetGroupConfigurationTemplateResponse {
+// getGroupLink GETs /groups/{id}/configuration-template over raw HTTP.
+func getGroupLink(t *testing.T, e env, groupID string) configurationTemplateLinkGET {
 	t.Helper()
-	resp, err := client.Groups.GetConfigurationTemplate(
-		ctx,
-		operations.GetGroupConfigurationTemplateRequest{
-			ID: groupID,
-		},
-	)
-	if err != nil {
-		t.Fatalf("GET groups/{id}/configuration-template: %v", err)
-	}
-	return resp
+	return getConfigurationTemplateLink(t, e, "groups/"+groupID+"/configuration-template")
 }
 
 // rawPutGroupLink is the groups-side equivalent of rawPutResourceLink.
 func rawPutGroupLink(t *testing.T, e env, groupID, body string) *http.Response {
 	t.Helper()
 	return rawPutLink(t, e, "groups/"+groupID+"/configuration-template", body)
+}
+
+// getConfigurationTemplateLink GETs a configuration-template sub-resource and
+// decodes the body. GroupConfigurationTemplate and ResourceConfigurationTemplate
+// share the same JSON shape, so one decode type covers both.
+func getConfigurationTemplateLink(t *testing.T, e env, path string) configurationTemplateLinkGET {
+	t.Helper()
+	req, err := http.NewRequest(http.MethodGet, e.BaseURL+"/"+path, nil)
+	if err != nil {
+		t.Fatalf("build raw GET: %v", err)
+	}
+	req.Header.Set("Authorization", "Bearer "+e.Token)
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Fatalf("raw GET %s: %v", path, err)
+	}
+	defer resp.Body.Close()
+
+	out := configurationTemplateLinkGET{StatusCode: resp.StatusCode}
+	if resp.StatusCode != http.StatusOK {
+		return out
+	}
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		t.Fatalf("read GET %s body: %v", path, err)
+	}
+	var link configurationTemplateLinkBody
+	if err := json.Unmarshal(body, &link); err != nil {
+		t.Fatalf("decode GET %s body: %v\nbody=%s", path, err, body)
+	}
+	out.Link = &link
+	return out
 }
 
 // rawPutLink is the shared transport used by the two typed-SDK bypass helpers
@@ -374,48 +393,40 @@ func readBody(t *testing.T, resp *http.Response) string {
 // visibility sub-resource precedent in terraform_overlay.yaml).
 func assertGroupLinkedTo(
 	t *testing.T,
-	ctx context.Context,
-	client *sdk.OpalAPI,
+	e env,
 	groupID string,
 	wantTemplateID *string,
 	label string,
 ) {
 	t.Helper()
-	got := getGroupLink(t, ctx, client, groupID)
-	if got.StatusCode != http.StatusOK {
-		t.Fatalf("%s: GET status=%d", label, got.StatusCode)
-	}
-	var gotID *string
-	if got.GroupConfigurationTemplate != nil {
-		gotID = got.GroupConfigurationTemplate.ConfigurationTemplateID
-	}
-	if !stringPtrEqual(gotID, wantTemplateID) {
-		t.Fatalf(
-			"%s: GET template id = %s, want %s",
-			label,
-			stringPtrDisplay(gotID),
-			stringPtrDisplay(wantTemplateID),
-		)
-	}
+	assertLinkedTo(t, getGroupLink(t, e, groupID), wantTemplateID, label)
 }
 
 // assertResourceLinkedTo mirrors assertGroupLinkedTo for the resources side.
 func assertResourceLinkedTo(
 	t *testing.T,
-	ctx context.Context,
-	client *sdk.OpalAPI,
+	e env,
 	resourceID string,
 	wantTemplateID *string,
 	label string,
 ) {
 	t.Helper()
-	got := getResourceLink(t, ctx, client, resourceID)
+	assertLinkedTo(t, getResourceLink(t, e, resourceID), wantTemplateID, label)
+}
+
+func assertLinkedTo(
+	t *testing.T,
+	got configurationTemplateLinkGET,
+	wantTemplateID *string,
+	label string,
+) {
+	t.Helper()
 	if got.StatusCode != http.StatusOK {
 		t.Fatalf("%s: GET status=%d", label, got.StatusCode)
 	}
 	var gotID *string
-	if got.ResourceConfigurationTemplate != nil {
-		gotID = got.ResourceConfigurationTemplate.ConfigurationTemplateID
+	if got.Link != nil {
+		gotID = got.Link.ConfigurationTemplateID
 	}
 	if !stringPtrEqual(gotID, wantTemplateID) {
 		t.Fatalf(

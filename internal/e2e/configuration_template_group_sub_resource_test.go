@@ -48,18 +48,14 @@ func TestE2EGroupConfigurationTemplate(t *testing.T) {
 			t.Fatalf("seed attach: status=%d", putResp.StatusCode)
 		}
 
-		resp := getGroupLink(t, ctx, client, groupID)
+		resp := getGroupLink(t, e, groupID)
 		if resp.StatusCode != http.StatusOK {
 			t.Fatalf("GET status=%d", resp.StatusCode)
 		}
-		if resp.GroupConfigurationTemplate == nil ||
-			resp.GroupConfigurationTemplate.ConfigurationTemplateID == nil {
-			t.Fatalf(
-				"GET body: expected linked template, got %+v",
-				resp.GroupConfigurationTemplate,
-			)
+		if resp.Link == nil || resp.Link.ConfigurationTemplateID == nil {
+			t.Fatalf("GET body: expected linked template, got %+v", resp.Link)
 		}
-		if got := *resp.GroupConfigurationTemplate.ConfigurationTemplateID; got != templateID {
+		if got := *resp.Link.ConfigurationTemplateID; got != templateID {
 			t.Fatalf("GET body: template id = %s, want %s", got, templateID)
 		}
 	})
@@ -68,24 +64,24 @@ func TestE2EGroupConfigurationTemplate(t *testing.T) {
 		t.Parallel()
 		groupID := createGroup(t, ctx, client, e, "get-unlinked")
 
-		resp := getGroupLink(t, ctx, client, groupID)
+		resp := getGroupLink(t, e, groupID)
 		if resp.StatusCode != http.StatusOK {
 			t.Fatalf("GET status=%d", resp.StatusCode)
 		}
-		if resp.GroupConfigurationTemplate == nil {
+		if resp.Link == nil {
 			t.Fatalf("GET body: expected present body with null id, got nil")
 		}
-		if resp.GroupConfigurationTemplate.ConfigurationTemplateID != nil {
+		if resp.Link.ConfigurationTemplateID != nil {
 			t.Fatalf(
 				"GET body: expected null template id, got %q",
-				*resp.GroupConfigurationTemplate.ConfigurationTemplateID,
+				*resp.Link.ConfigurationTemplateID,
 			)
 		}
 	})
 
 	t.Run("get_404_for_nonexistent_group", func(t *testing.T) {
 		t.Parallel()
-		resp := getGroupLink(t, ctx, client, uuid.NewString())
+		resp := getGroupLink(t, e, uuid.NewString())
 		if resp.StatusCode != http.StatusNotFound {
 			t.Fatalf("GET status=%d, want 404", resp.StatusCode)
 		}
@@ -103,7 +99,7 @@ func TestE2EGroupConfigurationTemplate(t *testing.T) {
 			t.Fatalf("PUT status=%d", resp.StatusCode)
 		}
 		// PUT no longer returns a body (x-speakeasy-ignore'd); verify via GET.
-		assertGroupLinkedTo(t, ctx, client, groupID, strPtr(templateID), "attach")
+		assertGroupLinkedTo(t, e, groupID, strPtr(templateID), "attach")
 	})
 
 	t.Run("put_unlink_forks_template_and_preserves_request_configurations", func(t *testing.T) {
@@ -121,7 +117,7 @@ func TestE2EGroupConfigurationTemplate(t *testing.T) {
 			t.Fatalf("unlink status=%d", resp.StatusCode)
 		}
 		// PUT no longer returns a body (x-speakeasy-ignore'd); verify via GET.
-		assertGroupLinkedTo(t, ctx, client, groupID, nil, "unlink")
+		assertGroupLinkedTo(t, e, groupID, nil, "unlink")
 
 		// Read via main GET /groups/{id} to confirm the forked private
 		// configuration still carries the request configurations the template
@@ -167,7 +163,7 @@ func TestE2EGroupConfigurationTemplate(t *testing.T) {
 			t.Fatalf("repoint status=%d", resp.StatusCode)
 		}
 		// PUT no longer returns a body (x-speakeasy-ignore'd); verify via GET.
-		assertGroupLinkedTo(t, ctx, client, groupID, strPtr(templateB), "repoint")
+		assertGroupLinkedTo(t, e, groupID, strPtr(templateB), "repoint")
 	})
 
 	t.Run("put_noop_when_null_to_null", func(t *testing.T) {
@@ -179,7 +175,7 @@ func TestE2EGroupConfigurationTemplate(t *testing.T) {
 		if resp.StatusCode != http.StatusOK {
 			t.Fatalf("null->null status=%d", resp.StatusCode)
 		}
-		assertGroupLinkedTo(t, ctx, client, groupID, nil, "null->null")
+		assertGroupLinkedTo(t, e, groupID, nil, "null->null")
 	})
 
 	t.Run("put_noop_when_already_linked_to_same_template", func(t *testing.T) {
@@ -200,7 +196,7 @@ func TestE2EGroupConfigurationTemplate(t *testing.T) {
 		if resp.StatusCode != http.StatusOK {
 			t.Fatalf("same-template status=%d", resp.StatusCode)
 		}
-		assertGroupLinkedTo(t, ctx, client, groupID, strPtr(templateID), "same-template")
+		assertGroupLinkedTo(t, e, groupID, strPtr(templateID), "same-template")
 	})
 
 	// -------------------- PUT: validation / error cases ---------------------

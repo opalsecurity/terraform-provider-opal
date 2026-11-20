@@ -47,18 +47,14 @@ func TestE2EResourceConfigurationTemplate(t *testing.T) {
 			t.Fatalf("seed attach: status=%d", putResp.StatusCode)
 		}
 
-		resp := getResourceLink(t, ctx, client, resourceID)
+		resp := getResourceLink(t, e, resourceID)
 		if resp.StatusCode != http.StatusOK {
 			t.Fatalf("GET status=%d", resp.StatusCode)
 		}
-		if resp.ResourceConfigurationTemplate == nil ||
-			resp.ResourceConfigurationTemplate.ConfigurationTemplateID == nil {
-			t.Fatalf(
-				"GET body: expected linked template, got %+v",
-				resp.ResourceConfigurationTemplate,
-			)
+		if resp.Link == nil || resp.Link.ConfigurationTemplateID == nil {
+			t.Fatalf("GET body: expected linked template, got %+v", resp.Link)
 		}
-		if got := *resp.ResourceConfigurationTemplate.ConfigurationTemplateID; got != templateID {
+		if got := *resp.Link.ConfigurationTemplateID; got != templateID {
 			t.Fatalf("GET body: template id = %s, want %s", got, templateID)
 		}
 	})
@@ -67,24 +63,24 @@ func TestE2EResourceConfigurationTemplate(t *testing.T) {
 		t.Parallel()
 		resourceID := createResource(t, ctx, client, e, "get-unlinked")
 
-		resp := getResourceLink(t, ctx, client, resourceID)
+		resp := getResourceLink(t, e, resourceID)
 		if resp.StatusCode != http.StatusOK {
 			t.Fatalf("GET status=%d", resp.StatusCode)
 		}
-		if resp.ResourceConfigurationTemplate == nil {
+		if resp.Link == nil {
 			t.Fatalf("GET body: expected present body with null id, got nil")
 		}
-		if resp.ResourceConfigurationTemplate.ConfigurationTemplateID != nil {
+		if resp.Link.ConfigurationTemplateID != nil {
 			t.Fatalf(
 				"GET body: expected null template id, got %q",
-				*resp.ResourceConfigurationTemplate.ConfigurationTemplateID,
+				*resp.Link.ConfigurationTemplateID,
 			)
 		}
 	})
 
 	t.Run("get_404_for_nonexistent_resource", func(t *testing.T) {
 		t.Parallel()
-		resp := getResourceLink(t, ctx, client, uuid.NewString())
+		resp := getResourceLink(t, e, uuid.NewString())
 		if resp.StatusCode != http.StatusNotFound {
 			t.Fatalf("GET status=%d, want 404", resp.StatusCode)
 		}
@@ -102,7 +98,7 @@ func TestE2EResourceConfigurationTemplate(t *testing.T) {
 			t.Fatalf("PUT status=%d", resp.StatusCode)
 		}
 		// PUT no longer returns a body (x-speakeasy-ignore'd); verify via GET.
-		assertResourceLinkedTo(t, ctx, client, resourceID, strPtr(templateID), "attach")
+		assertResourceLinkedTo(t, e, resourceID, strPtr(templateID), "attach")
 	})
 
 	t.Run("put_unlink_forks_template_and_preserves_request_configurations", func(t *testing.T) {
@@ -120,7 +116,7 @@ func TestE2EResourceConfigurationTemplate(t *testing.T) {
 			t.Fatalf("unlink status=%d", resp.StatusCode)
 		}
 		// PUT no longer returns a body (x-speakeasy-ignore'd); verify via GET.
-		assertResourceLinkedTo(t, ctx, client, resourceID, nil, "unlink")
+		assertResourceLinkedTo(t, e, resourceID, nil, "unlink")
 
 		// Read via main GET /resources/{id} to confirm the forked private
 		// configuration still carries the request configurations the template
@@ -165,7 +161,7 @@ func TestE2EResourceConfigurationTemplate(t *testing.T) {
 		if resp.StatusCode != http.StatusOK {
 			t.Fatalf("repoint status=%d", resp.StatusCode)
 		}
-		assertResourceLinkedTo(t, ctx, client, resourceID, strPtr(templateB), "repoint")
+		assertResourceLinkedTo(t, e, resourceID, strPtr(templateB), "repoint")
 	})
 
 	t.Run("put_noop_when_null_to_null", func(t *testing.T) {
@@ -177,7 +173,7 @@ func TestE2EResourceConfigurationTemplate(t *testing.T) {
 		if resp.StatusCode != http.StatusOK {
 			t.Fatalf("null->null status=%d", resp.StatusCode)
 		}
-		assertResourceLinkedTo(t, ctx, client, resourceID, nil, "null->null")
+		assertResourceLinkedTo(t, e, resourceID, nil, "null->null")
 	})
 
 	t.Run("put_noop_when_already_linked_to_same_template", func(t *testing.T) {
@@ -198,7 +194,7 @@ func TestE2EResourceConfigurationTemplate(t *testing.T) {
 		if resp.StatusCode != http.StatusOK {
 			t.Fatalf("same-template status=%d", resp.StatusCode)
 		}
-		assertResourceLinkedTo(t, ctx, client, resourceID, strPtr(templateID), "same-template")
+		assertResourceLinkedTo(t, e, resourceID, strPtr(templateID), "same-template")
 	})
 
 	// -------------------- PUT: validation / error cases ---------------------
