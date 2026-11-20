@@ -3,12 +3,12 @@
 page_title: "opal_app_visibility Data Source - terraform-provider-opal"
 subcategory: ""
 description: |-
-  AppVisibility DataSource
+  AppVisibility DataSource. Reads visibility via GET /apps/{id}/visibility, which only supports CUSTOM and CUSTOM_CONNECTOR apps. For other app types, read visibility / visibility_group_ids / import_visibility from the opal_app data source instead.
 ---
 
 # opal_app_visibility (Data Source)
 
-AppVisibility DataSource
+AppVisibility DataSource. Reads visibility via `GET /apps/{id}/visibility`, which only supports `CUSTOM` and `CUSTOM_CONNECTOR` apps. For other app types, read `visibility` / `visibility_group_ids` / `import_visibility` from the `opal_app` data source instead.
 
 ## Example Usage
 

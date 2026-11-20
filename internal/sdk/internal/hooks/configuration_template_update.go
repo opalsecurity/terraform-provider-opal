@@ -26,9 +26,6 @@ import (
 //     createResource. The field is on CreateGroupInfo / CreateResourceInfo so
 //     Speakeasy marks the attribute Optional, but POST /groups rejects unknown
 //     fields; the real write is the sub-resource PUT that follows.
-//   - BeforeRequest rewrites an empty sub-resource PUT body ({}) to
-//     {"configuration_template_id": null}. Speakeasy omits the key on unlink;
-//     the backend requires the key and treats null as unlink.
 //   - the transport short-circuits the visibility / message-channel /
 //     on-call-schedule sibling PUTs for a linked entity, because the template
 //     owns those settings.
@@ -255,11 +252,8 @@ func (h *configurationTemplateUpdateHook) BeforeRequest(
 		return req, nil
 	}
 
-	switch hookCtx.OperationID {
-	case "createGroup", "createResource":
+	if hookCtx.OperationID == "createGroup" || hookCtx.OperationID == "createResource" {
 		return stripCreateConfigurationTemplateID(req)
-	case "update_group_configuration_template", "update_resource_configuration_template":
-		return ensureConfigurationTemplateUnlinkBody(req)
 	}
 
 	operation, ok := configurationTemplateUpdateOperations[hookCtx.OperationID]
@@ -333,33 +327,6 @@ func stripCreateConfigurationTemplateID(req *http.Request) (*http.Request, error
 	body, err = json.Marshal(payload)
 	if err != nil {
 		return req, fmt.Errorf("encode create request: %w", err)
-	}
-	return replaceRequestBody(req, body)
-}
-
-// ensureConfigurationTemplateUnlinkBody turns Speakeasy's empty unlink body
-// ({}) into the null the backend requires.
-func ensureConfigurationTemplateUnlinkBody(req *http.Request) (*http.Request, error) {
-	body, err := io.ReadAll(req.Body)
-	if err != nil {
-		return req, fmt.Errorf("read configuration template put: %w", err)
-	}
-	if err := req.Body.Close(); err != nil {
-		return req, fmt.Errorf("close configuration template put: %w", err)
-	}
-
-	var payload map[string]json.RawMessage
-	if err := json.Unmarshal(body, &payload); err != nil {
-		return req, fmt.Errorf("decode configuration template put: %w", err)
-	}
-	if _, ok := payload["configuration_template_id"]; ok {
-		req.Body = io.NopCloser(bytes.NewReader(body))
-		return req, nil
-	}
-	payload["configuration_template_id"] = json.RawMessage("null")
-	body, err = json.Marshal(payload)
-	if err != nil {
-		return req, fmt.Errorf("encode configuration template put: %w", err)
 	}
 	return replaceRequestBody(req, body)
 }

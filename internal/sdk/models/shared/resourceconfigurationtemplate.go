@@ -11,7 +11,7 @@ package shared
 // and uses its own private configuration.
 type ResourceConfigurationTemplate struct {
 	// The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
-	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
+	ConfigurationTemplateID *string `json:"configuration_template_id"`
 }
 
 func (r *ResourceConfigurationTemplate) GetConfigurationTemplateID() *string {

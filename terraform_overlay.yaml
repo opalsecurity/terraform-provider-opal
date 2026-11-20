@@ -1526,11 +1526,6 @@ actions:
       description: The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
       x-speakeasy-param-computed: false
       x-speakeasy-param-optional: true
-  # Speakeasy omits the key on unlink ({}). Drop required so the request schema
-  # allows that; the SDK hook rewrites {} to {"configuration_template_id":null}
-  # because the backend still requires the key.
-  - target: $["components"]["schemas"]["GroupConfigurationTemplate"]["required"]
-    remove: true
   - target: $["components"]["schemas"]["Group"]["properties"]["match_remote_description"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
@@ -2163,8 +2158,6 @@ actions:
       description: The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
       x-speakeasy-param-computed: false
       x-speakeasy-param-optional: true
-  - target: $["components"]["schemas"]["ResourceConfigurationTemplate"]["required"]
-    remove: true
   - target: $["components"]["schemas"]["Resource"]["properties"]["match_remote_description"]
     update:
       x-speakeasy-param-suppress-computed-diff: true
