@@ -62,6 +62,8 @@ type OpalAPI struct {
 	AgentActivity *AgentActivity
 	// Operations related to apps
 	Apps *Apps
+	// Operations related to the user attributes Opal imports from identity providers and HRIS apps
+	IdpUserAttributeMappings *IdpUserAttributeMappings
 	// Operations related to bundles
 	Bundles *Bundles
 	// Operations related to access review campaigns
@@ -189,10 +191,10 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *OpalAPI {
 	sdk := &OpalAPI{
-		SDKVersion: "3.11.12",
+		SDKVersion: "3.11.13",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:         "speakeasy-sdk/terraform 3.11.12 2.968.1 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
-			SDKVersion:        "3.11.12",
+			UserAgent:         "speakeasy-sdk/terraform 3.11.13 2.968.1 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
+			SDKVersion:        "3.11.13",
 			GenVersion:        "2.968.1",
 			OpenAPIDocVersion: "1.0",
 			ServerList:        ServerList,
@@ -218,6 +220,7 @@ func New(opts ...SDKOption) *OpalAPI {
 	sdk.AccessRules = newAccessRules(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.AgentActivity = newAgentActivity(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Apps = newApps(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.IdpUserAttributeMappings = newIdpUserAttributeMappings(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Bundles = newBundles(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Campaigns = newCampaigns(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.ConfigurationTemplates = newConfigurationTemplates(sdk, sdk.sdkConfiguration, sdk.hooks)

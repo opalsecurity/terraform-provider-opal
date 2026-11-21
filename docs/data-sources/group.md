@@ -161,6 +161,7 @@ Read-Only:
 - `tailscale_group` (Attributes) Remote info for Tailscale group. (see [below for nested schema](#nestedatt--remote_info--tailscale_group))
 - `twingate_group` (Attributes) Remote info for Twingate group. (see [below for nested schema](#nestedatt--remote_info--twingate_group))
 - `twingate_group_synced` (Attributes) Remote info for Twingate synced group. (see [below for nested schema](#nestedatt--remote_info--twingate_group_synced))
+- `vault_identity_group` (Attributes) Remote info for Vault identity group. (see [below for nested schema](#nestedatt--remote_info--vault_identity_group))
 - `workday_user_security_group` (Attributes) Remote info for Workday User Security group. (see [below for nested schema](#nestedatt--remote_info--workday_user_security_group))
 - `wrike_group` (Attributes) Remote info for Wrike group. (see [below for nested schema](#nestedatt--remote_info--wrike_group))
 - `zendesk_group` (Attributes) Remote info for Zendesk group. (see [below for nested schema](#nestedatt--remote_info--zendesk_group))
@@ -583,6 +584,14 @@ Read-Only:
 Read-Only:
 
 - `group_id` (String) The id of the Twingate synced group.
+
+
+<a id="nestedatt--remote_info--vault_identity_group"></a>
+### Nested Schema for `remote_info.vault_identity_group`
+
+Read-Only:
+
+- `group_id` (String) The id of the Vault identity group.
 
 
 <a id="nestedatt--remote_info--workday_user_security_group"></a>
