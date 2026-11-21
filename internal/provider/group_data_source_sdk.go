@@ -443,6 +443,12 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.TwingateGroupSynced = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.TwingateGroupSynced.GroupID = types.StringValue(resp.RemoteInfo.TwingateGroupSynced.GroupID)
 			}
+			if resp.RemoteInfo.VaultIdentityGroup == nil {
+				r.RemoteInfo.VaultIdentityGroup = nil
+			} else {
+				r.RemoteInfo.VaultIdentityGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.VaultIdentityGroup.GroupID = types.StringValue(resp.RemoteInfo.VaultIdentityGroup.GroupID)
+			}
 			if resp.RemoteInfo.WorkdayUserSecurityGroup == nil {
 				r.RemoteInfo.WorkdayUserSecurityGroup = nil
 			} else {
