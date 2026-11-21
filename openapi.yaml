@@ -37,6 +37,8 @@ tags:
     description: Operations related to group bindings
   - name: idp-group-mappings
     description: Operations related to IDP group mappings
+  - name: idp-user-attribute-mappings
+    description: Operations related to the user attributes Opal imports from identity providers and HRIS apps
   - name: message-channels
     description: Operations related to message channels
   - name: non-human-identities
@@ -595,6 +597,163 @@ paths:
       tags:
         - apps
       x-speakeasy-entity-operation: App#delete
+  /apps/{app_id}/user-attribute-mappings:
+    get:
+      summary: List IDP user attribute mappings
+      description: |-
+        Returns the `IdpUserAttributeMapping` objects of an identity provider or HRIS app.
+        Each mapping tells Opal which attribute to import from the app on sync and which
+        Opal user field to store it in.
+      operationId: getIdpUserAttributeMappings
+      parameters:
+        - description: The ID of the identity provider or HRIS app.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: false
+          in: path
+          name: app_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IdpUserAttributeMappingList"
+          description: The user attribute mappings of the app.
+        "404":
+          description: The app does not exist or is not an identity provider or HRIS app.
+      security:
+        - BearerAuth: []
+      tags:
+        - idp-user-attribute-mappings
+    post:
+      summary: Create IDP user attribute mapping
+      description: |-
+        Creates an `IdpUserAttributeMapping` for an identity provider or HRIS app.
+        Requires an admin token. The mapping takes effect on the app's next sync.
+      operationId: createIdpUserAttributeMapping
+      parameters:
+        - description: The ID of the identity provider or HRIS app.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: false
+          in: path
+          name: app_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateIdpUserAttributeMappingInfo"
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IdpUserAttributeMapping"
+          description: The created user attribute mapping.
+        "400":
+          description: |-
+            The request body is invalid, for example `key` is blank after trimming
+            whitespace or longer than 255 characters.
+        "403":
+          description: The caller is not an admin.
+        "404":
+          description: The app does not exist or is not an identity provider or HRIS app.
+        "409":
+          description: |-
+            The mapping already exists, or the app already maps another attribute to a
+            `use_as` that allows only one mapping (every value except `CUSTOM` and
+            `SECONDARY_EMAIL`).
+      security:
+        - BearerAuth: []
+      tags:
+        - idp-user-attribute-mappings
+  /apps/{app_id}/user-attribute-mappings/{mapping_id}:
+    get:
+      summary: Get IDP user attribute mapping
+      description: Returns an `IdpUserAttributeMapping`.
+      operationId: getIdpUserAttributeMapping
+      parameters:
+        - description: The ID of the identity provider or HRIS app.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: false
+          in: path
+          name: app_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the user attribute mapping.
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          explode: false
+          in: path
+          name: mapping_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IdpUserAttributeMapping"
+          description: The requested user attribute mapping.
+        "404":
+          description: The app or the mapping does not exist.
+      security:
+        - BearerAuth: []
+      tags:
+        - idp-user-attribute-mappings
+    delete:
+      summary: Delete IDP user attribute mapping
+      description: |-
+        Deletes an `IdpUserAttributeMapping`. Requires an admin token. This also removes
+        every user tag this app imported whose tag key equals the mapping's `key`,
+        whatever the mapping's `use_as`.
+      operationId: deleteIdpUserAttributeMapping
+      parameters:
+        - description: The ID of the identity provider or HRIS app.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: false
+          in: path
+          name: app_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the user attribute mapping.
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          explode: false
+          in: path
+          name: mapping_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "204":
+          description: The user attribute mapping was deleted.
+        "403":
+          description: The caller is not an admin.
+        "404":
+          description: The app or the mapping does not exist.
+      security:
+        - BearerAuth: []
+      tags:
+        - idp-user-attribute-mappings
   /apps/{app_id}/visibility:
     get:
       summary: Get app visibility
@@ -13933,6 +14092,7 @@ components:
         - WRIKE_GROUP
         - AXIOM_GROUP
         - BOX_GROUP
+        - VAULT_IDENTITY_GROUP
         # GENERATED:BEGIN group-type-enum
         - ACTIVECAMPAIGN_GROUP
         - AHA_TEAM
@@ -14309,6 +14469,83 @@ components:
       type: object
       required:
         - mappings
+    IdpUserAttributeUseAsEnum:
+      description: The Opal user field an imported IDP or HRIS attribute is stored in.
+      enum:
+        - CUSTOM
+        - EMAIL
+        - FIRST_NAME
+        - LAST_NAME
+        - PROFILE_URL
+        - TITLE
+        - TEAM
+        - MANAGER_EMAIL
+        - SECONDARY_EMAIL
+        - GITHUB_USERNAME
+        - TELEPORT_USERNAME
+      example: MANAGER_EMAIL
+      type: string
+    IdpUserAttributeMapping:
+      description: |-
+        # IdpUserAttributeMapping Object
+        ### Description
+        An attribute Opal imports from an identity provider or HRIS app, and the Opal
+        user field it is stored in. A `CUSTOM` mapping is imported as a user tag.
+      example:
+        id: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+        app_id: 32acc112-21ff-4669-91c2-21e27683eaa1
+        key: managerEmail
+        use_as: MANAGER_EMAIL
+      properties:
+        id:
+          description: The ID of the mapping.
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          format: uuid
+          type: string
+        app_id:
+          description: The ID of the identity provider or HRIS app.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          format: uuid
+          type: string
+        key:
+          description: The attribute key in the identity provider or HRIS.
+          example: managerEmail
+          type: string
+        use_as:
+          $ref: "#/components/schemas/IdpUserAttributeUseAsEnum"
+      required:
+        - id
+        - app_id
+        - key
+        - use_as
+      type: object
+    IdpUserAttributeMappingList:
+      properties:
+        mappings:
+          items:
+            $ref: "#/components/schemas/IdpUserAttributeMapping"
+          type: array
+      required:
+        - mappings
+      type: object
+    CreateIdpUserAttributeMappingInfo:
+      description: Information needed to create an `IdpUserAttributeMapping`.
+      example:
+        key: managerEmail
+        use_as: MANAGER_EMAIL
+      properties:
+        key:
+          description: The attribute key in the identity provider or HRIS.
+          example: managerEmail
+          minLength: 1
+          maxLength: 255
+          type: string
+        use_as:
+          $ref: "#/components/schemas/IdpUserAttributeUseAsEnum"
+      required:
+        - key
+        - use_as
+      type: object
     ResourceWithAccessLevel:
       description: Information about a resource and corresponding access level
       example:
@@ -15483,6 +15720,15 @@ components:
           properties:
             group_id:
               description: The group id of the Box Group.
+              type: string
+          type: object
+          required:
+            - group_id
+        vault_identity_group:
+          description: Remote info for Vault identity group.
+          properties:
+            group_id:
+              description: The id of the Vault identity group.
               type: string
           type: object
           required:

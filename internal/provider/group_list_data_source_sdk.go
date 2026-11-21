@@ -368,6 +368,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.TwingateGroupSynced = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.TwingateGroupSynced.GroupID = types.StringValue(resultsItem.RemoteInfo.TwingateGroupSynced.GroupID)
 				}
+				if resultsItem.RemoteInfo.VaultIdentityGroup == nil {
+					results.RemoteInfo.VaultIdentityGroup = nil
+				} else {
+					results.RemoteInfo.VaultIdentityGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.VaultIdentityGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.VaultIdentityGroup.GroupID)
+				}
 				if resultsItem.RemoteInfo.WorkdayUserSecurityGroup == nil {
 					results.RemoteInfo.WorkdayUserSecurityGroup = nil
 				} else {
