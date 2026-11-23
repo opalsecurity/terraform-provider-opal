@@ -931,7 +931,7 @@ Optional:
 
 Read-Only:
 
-- `break_glass_user_ids` (Set of String) Default: []
+- `break_glass_user_ids` (Set of String)
 
 
 <a id="nestedatt--custom_attributes"></a>

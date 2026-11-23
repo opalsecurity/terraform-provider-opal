@@ -146,12 +146,10 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Attributes: map[string]schema.Attribute{
 					"break_glass_user_ids": schema.SetAttribute{
 						Computed: true,
-						Default:  setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
 						PlanModifiers: []planmodifier.Set{
 							speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
 						},
 						ElementType: types.StringType,
-						Description: `Default: []`,
 					},
 				},
 				Description: `A list of break glass user IDs for a group.`,

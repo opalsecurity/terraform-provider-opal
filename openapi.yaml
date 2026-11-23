@@ -2853,7 +2853,10 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: "#/components/schemas/BreakGlassUserIDList"
+                  # Read schema (no default) — mirrors MessageChannelList vs MessageChannelIDList.
+                  # Reusing the write schema's default: [] on this computed wrap caused perpetual
+                  # in-place updates after the first break_glass_user_ids change.
+                  - $ref: "#/components/schemas/BreakGlassUsers"
                   - x-speakeasy-wrapped-attribute: "break_glass_users"
                   - x-speakeasy-param-suppress-computed-diff: true
           description: The break glass user IDs for the group.
@@ -22111,6 +22114,25 @@ components:
           type: array
           format: set
           default: []
+          x-speakeasy-name-override: break_glass_user_ids
+      type: object
+      required:
+        - user_ids
+      x-speakeasy-entity:
+        - GroupBreakGlassUsers
+    BreakGlassUsers:
+      description: A list of break glass user IDs for a group.
+      example:
+        user_ids:
+          - 7870617d-e72a-47f5-a84c-693817ab4567
+          - 1520617d-e72a-47f5-a84c-693817ab48ad2
+      properties:
+        user_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          format: set
           x-speakeasy-name-override: break_glass_user_ids
       type: object
       required:
