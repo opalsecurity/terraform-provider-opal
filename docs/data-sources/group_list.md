@@ -39,7 +39,7 @@ data "opal_group_list" "my_group_list" {
 - `app_id` (String) Only return groups that belong to this app.
 - `group_ids` (List of String) The group ids to filter by.
 - `group_name` (String) Filter groups by name. Matches against both `name` and `remote_name`. Matching is case-insensitive. Use `group_name_match` to choose the match type; when omitted, CONTAINS (substring) is used.
-- `group_type_filter` (String) The group type to filter by. Required when remote_id is provided. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DATADOG_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "CURSOR_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP", "BOX_GROUP", "ACTIVECAMPAIGN_GROUP", "AHA_TEAM", "ASANA_TEAM", "BITWARDEN_GROUP", "CALENDLY_GROUP", "MIRO_TEAM", "MIRO_USER_GROUP", "ONELOGIN_ROLE", "ONELOGIN_GROUP", "SQUARE_LOCATION", "SQUARE_JOB", "RIPPLING_DEPARTMENT", "RIPPLING_TEAM", "RIPPLING_SUPERGROUP"]
+- `group_type_filter` (String) The group type to filter by. Required when remote_id is provided. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DATADOG_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "CURSOR_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP", "BOX_GROUP", "VAULT_IDENTITY_GROUP", "ACTIVECAMPAIGN_GROUP", "AHA_TEAM", "ASANA_TEAM", "BITWARDEN_GROUP", "CALENDLY_GROUP", "MIRO_TEAM", "MIRO_USER_GROUP", "ONELOGIN_ROLE", "ONELOGIN_GROUP", "SQUARE_LOCATION", "SQUARE_JOB", "RIPPLING_DEPARTMENT", "RIPPLING_TEAM", "RIPPLING_SUPERGROUP"]
 - `page_size` (Number) Number of results to return per page. Default is 200.
 - `remote_id` (String) Filter groups by their remote id. Returns groups whose remote id matches the provided value exactly. Requires group_type_filter. Remote ids are only unique within a connection, so groups from different connections can share a remote id and more than one group may be returned. Unmanaged groups are not returned.
 - `requestable` (Boolean) If true, only return groups that allow access requests. Does not check whether the caller is permitted to request the group.
@@ -150,6 +150,7 @@ Read-Only:
 - `tailscale_group` (Attributes) Remote info for Tailscale group. (see [below for nested schema](#nestedatt--results--remote_info--tailscale_group))
 - `twingate_group` (Attributes) Remote info for Twingate group. (see [below for nested schema](#nestedatt--results--remote_info--twingate_group))
 - `twingate_group_synced` (Attributes) Remote info for Twingate synced group. (see [below for nested schema](#nestedatt--results--remote_info--twingate_group_synced))
+- `vault_identity_group` (Attributes) Remote info for Vault identity group. (see [below for nested schema](#nestedatt--results--remote_info--vault_identity_group))
 - `workday_user_security_group` (Attributes) Remote info for Workday User Security group. (see [below for nested schema](#nestedatt--results--remote_info--workday_user_security_group))
 - `wrike_group` (Attributes) Remote info for Wrike group. (see [below for nested schema](#nestedatt--results--remote_info--wrike_group))
 - `zendesk_group` (Attributes) Remote info for Zendesk group. (see [below for nested schema](#nestedatt--results--remote_info--zendesk_group))
@@ -572,6 +573,14 @@ Read-Only:
 Read-Only:
 
 - `group_id` (String) The id of the Twingate synced group.
+
+
+<a id="nestedatt--results--remote_info--vault_identity_group"></a>
+### Nested Schema for `results.remote_info.vault_identity_group`
+
+Read-Only:
+
+- `group_id` (String) The id of the Vault identity group.
 
 
 <a id="nestedatt--results--remote_info--workday_user_security_group"></a>
