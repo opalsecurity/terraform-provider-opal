@@ -4,7 +4,6 @@
 package operations
 
 import (
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
 	"net/http"
 )
 
@@ -25,20 +24,9 @@ type GetGroupBreakGlassUsersResponseBody struct {
 	BreakGlassUserIds []string `json:"user_ids"`
 }
 
-func (g GetGroupBreakGlassUsersResponseBody) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(g, "", false)
-}
-
-func (g *GetGroupBreakGlassUsersResponseBody) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &g, "", false, nil); err != nil {
-		return err
-	}
-	return nil
-}
-
 func (g *GetGroupBreakGlassUsersResponseBody) GetBreakGlassUserIds() []string {
 	if g == nil {
-		return nil
+		return []string{}
 	}
 	return g.BreakGlassUserIds
 }
