@@ -501,6 +501,7 @@ resource "opal_resource" "my_resource" {
 ### Read-Only
 
 - `ancestor_resource_ids` (List of String) List of resource IDs that are ancestors of this resource.
+- `custom_attributes` (Attributes List) The custom attributes set on this resource. (see [below for nested schema](#nestedatt--custom_attributes))
 - `descendant_resource_ids` (List of String) List of resource IDs that are descendants of this resource.
 - `id` (String) The ID of the resource whose configuration template link is being set.
 - `last_successful_sync` (Attributes) Information about the last successful sync of this resource. (see [below for nested schema](#nestedatt--last_successful_sync))
@@ -1627,6 +1628,16 @@ Optional:
 - `enabled_on_revocation` (Boolean) Not Null
 - `ticket_project_id` (String)
 - `ticket_provider` (String) The third party ticketing platform provider. must be one of ["JIRA", "LINEAR", "SERVICE_NOW"]
+
+
+<a id="nestedatt--custom_attributes"></a>
+### Nested Schema for `custom_attributes`
+
+Read-Only:
+
+- `key` (String) The name of the custom attribute.
+- `value_type` (String) The type of value stored in a custom attribute.
+- `values` (List of String) The attribute's value(s), encoded as strings.
 
 
 <a id="nestedatt--last_successful_sync"></a>

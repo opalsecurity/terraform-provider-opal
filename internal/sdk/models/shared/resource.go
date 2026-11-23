@@ -135,6 +135,8 @@ type Resource struct {
 	AppID *string `json:"app_id,omitempty"`
 	// The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
 	ConfigurationTemplateID *string `json:"configuration_template_id,omitempty"`
+	// The custom attributes set on this resource.
+	CustomAttributes []CustomAttribute `json:"custom_attributes,omitempty"`
 	// Custom request notification sent upon request approval.
 	CustomRequestNotification *string `json:"custom_request_notification,omitempty"`
 	// List of resource IDs that are descendants of this resource.
@@ -217,6 +219,13 @@ func (r *Resource) GetConfigurationTemplateID() *string {
 		return nil
 	}
 	return r.ConfigurationTemplateID
+}
+
+func (r *Resource) GetCustomAttributes() []CustomAttribute {
+	if r == nil {
+		return nil
+	}
+	return r.CustomAttributes
 }
 
 func (r *Resource) GetCustomRequestNotification() *string {

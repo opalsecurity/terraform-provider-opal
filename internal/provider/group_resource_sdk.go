@@ -13,6 +13,22 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
 )
 
+func (r *GroupResourceModel) RefreshFromOperationsGetGroupBreakGlassUsersResponseBody(ctx context.Context, resp *operations.GetGroupBreakGlassUsersResponseBody) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		if r.BreakGlassUsers == nil {
+			r.BreakGlassUsers = &tfTypes.GetGroupBreakGlassUsersResponseBody{}
+		}
+		r.BreakGlassUsers.BreakGlassUserIds = make([]types.String, 0, len(resp.BreakGlassUserIds))
+		for _, v := range resp.BreakGlassUserIds {
+			r.BreakGlassUsers.BreakGlassUserIds = append(r.BreakGlassUsers.BreakGlassUserIds, types.StringValue(v))
+		}
+	}
+
+	return diags
+}
+
 func (r *GroupResourceModel) RefreshFromOperationsGetGroupMessageChannelsResponseBody(ctx context.Context, resp *operations.GetGroupMessageChannelsResponseBody) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -99,6 +115,20 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 		r.AppID = types.StringPointerValue(resp.AppID)
 		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
+		r.CustomAttributes = []tfTypes.CustomAttribute{}
+
+		for _, customAttributesItem := range resp.CustomAttributes {
+			var customAttributes tfTypes.CustomAttribute
+
+			customAttributes.Key = types.StringValue(customAttributesItem.Key)
+			customAttributes.ValueType = types.StringValue(string(customAttributesItem.ValueType))
+			customAttributes.Values = make([]types.String, 0, len(customAttributesItem.Values))
+			for _, v := range customAttributesItem.Values {
+				customAttributes.Values = append(customAttributes.Values, types.StringValue(v))
+			}
+
+			r.CustomAttributes = append(r.CustomAttributes, customAttributes)
+		}
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.Description = types.StringPointerValue(resp.Description)
 		r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)
@@ -125,6 +155,10 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 		r.MaxDirectUsersAllowed = types.Int64PointerValue(resp.MaxDirectUsersAllowed)
 		r.MaxUsersExceededMessage = types.StringPointerValue(resp.MaxUsersExceededMessage)
 		r.Name = types.StringPointerValue(resp.Name)
+		r.PushedToAppIds = make([]types.String, 0, len(resp.PushedToAppIds))
+		for _, v := range resp.PushedToAppIds {
+			r.PushedToAppIds = append(r.PushedToAppIds, types.StringValue(v))
+		}
 		if resp.RemoteInfo == nil {
 			r.RemoteInfo = nil
 		} else {
@@ -443,6 +477,12 @@ func (r *GroupResourceModel) RefreshFromSharedGroup(ctx context.Context, resp *s
 				r.RemoteInfo.TwingateGroupSynced = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.TwingateGroupSynced.GroupID = types.StringValue(resp.RemoteInfo.TwingateGroupSynced.GroupID)
 			}
+			if resp.RemoteInfo.VaultIdentityGroup == nil {
+				r.RemoteInfo.VaultIdentityGroup = nil
+			} else {
+				r.RemoteInfo.VaultIdentityGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.VaultIdentityGroup.GroupID = types.StringValue(resp.RemoteInfo.VaultIdentityGroup.GroupID)
+			}
 			if resp.RemoteInfo.WorkdayUserSecurityGroup == nil {
 				r.RemoteInfo.WorkdayUserSecurityGroup = nil
 			} else {
@@ -701,6 +741,19 @@ func (r *GroupResourceModel) ToOperationsDeleteGroupRequest(ctx context.Context)
 	return &out, diags
 }
 
+func (r *GroupResourceModel) ToOperationsGetGroupBreakGlassUsersRequest(ctx context.Context) (*operations.GetGroupBreakGlassUsersRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetGroupBreakGlassUsersRequest{
+		ID: id,
+	}
+
+	return &out, diags
+}
+
 func (r *GroupResourceModel) ToOperationsGetGroupMessageChannelsRequest(ctx context.Context) (*operations.GetGroupMessageChannelsRequest, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
@@ -748,6 +801,27 @@ func (r *GroupResourceModel) ToOperationsGetGroupVisibilityRequest(ctx context.C
 
 	out := operations.GetGroupVisibilityRequest{
 		ID: id,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupResourceModel) ToOperationsUpdateGroupBreakGlassUsersRequest(ctx context.Context) (*operations.UpdateGroupBreakGlassUsersRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	breakGlassUserIDList, breakGlassUserIDListDiags := r.ToSharedBreakGlassUserIDList(ctx)
+	diags.Append(breakGlassUserIDListDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.UpdateGroupBreakGlassUsersRequest{
+		BreakGlassUserIDList: *breakGlassUserIDList,
+		ID:                   id,
 	}
 
 	return &out, diags
@@ -832,6 +906,20 @@ func (r *GroupResourceModel) ToOperationsUpdateGroupVisibilityRequest(ctx contex
 	out := operations.UpdateGroupVisibilityRequest{
 		UpdateVisibilityInfo: *updateVisibilityInfo,
 		ID:                   id,
+	}
+
+	return &out, diags
+}
+
+func (r *GroupResourceModel) ToSharedBreakGlassUserIDList(ctx context.Context) (*shared.BreakGlassUserIDList, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	breakGlassUserIds := make([]string, 0, len(r.BreakGlassUserIds))
+	for breakGlassUserIdsIndex := range r.BreakGlassUserIds {
+		breakGlassUserIds = append(breakGlassUserIds, r.BreakGlassUserIds[breakGlassUserIdsIndex].ValueString())
+	}
+	out := shared.BreakGlassUserIDList{
+		BreakGlassUserIds: breakGlassUserIds,
 	}
 
 	return &out, diags
@@ -1377,31 +1465,40 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 				GroupID: groupId29,
 			}
 		}
+		var vaultIdentityGroup *shared.VaultIdentityGroup
+		if r.RemoteInfo.VaultIdentityGroup != nil {
+			var groupId30 string
+			groupId30 = r.RemoteInfo.VaultIdentityGroup.GroupID.ValueString()
+
+			vaultIdentityGroup = &shared.VaultIdentityGroup{
+				GroupID: groupId30,
+			}
+		}
 		var workdayUserSecurityGroup *shared.WorkdayUserSecurityGroup
 		if r.RemoteInfo.WorkdayUserSecurityGroup != nil {
-			var groupId30 string
-			groupId30 = r.RemoteInfo.WorkdayUserSecurityGroup.GroupID.ValueString()
+			var groupId31 string
+			groupId31 = r.RemoteInfo.WorkdayUserSecurityGroup.GroupID.ValueString()
 
 			workdayUserSecurityGroup = &shared.WorkdayUserSecurityGroup{
-				GroupID: groupId30,
+				GroupID: groupId31,
 			}
 		}
 		var wrikeGroup *shared.WrikeGroup
 		if r.RemoteInfo.WrikeGroup != nil {
-			var groupId31 string
-			groupId31 = r.RemoteInfo.WrikeGroup.GroupID.ValueString()
+			var groupId32 string
+			groupId32 = r.RemoteInfo.WrikeGroup.GroupID.ValueString()
 
 			wrikeGroup = &shared.WrikeGroup{
-				GroupID: groupId31,
+				GroupID: groupId32,
 			}
 		}
 		var zendeskGroup *shared.ZendeskGroup
 		if r.RemoteInfo.ZendeskGroup != nil {
-			var groupId32 string
-			groupId32 = r.RemoteInfo.ZendeskGroup.GroupID.ValueString()
+			var groupId33 string
+			groupId33 = r.RemoteInfo.ZendeskGroup.GroupID.ValueString()
 
 			zendeskGroup = &shared.ZendeskGroup{
-				GroupID: groupId32,
+				GroupID: groupId33,
 			}
 		}
 		var zendeskOrganization *shared.ZendeskOrganization
@@ -1415,11 +1512,11 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 		}
 		var zoomGroup *shared.ZoomGroup
 		if r.RemoteInfo.ZoomGroup != nil {
-			var groupId33 string
-			groupId33 = r.RemoteInfo.ZoomGroup.GroupID.ValueString()
+			var groupId34 string
+			groupId34 = r.RemoteInfo.ZoomGroup.GroupID.ValueString()
 
 			zoomGroup = &shared.ZoomGroup{
-				GroupID: groupId33,
+				GroupID: groupId34,
 			}
 		}
 		remoteInfo = &shared.GroupRemoteInfo{
@@ -1475,6 +1572,7 @@ func (r *GroupResourceModel) ToSharedCreateGroupInfo(ctx context.Context) (*shar
 			TailscaleGroup:           tailscaleGroup,
 			TwingateGroup:            twingateGroup,
 			TwingateGroupSynced:      twingateGroupSynced,
+			VaultIdentityGroup:       vaultIdentityGroup,
 			WorkdayUserSecurityGroup: workdayUserSecurityGroup,
 			WrikeGroup:               wrikeGroup,
 			ZendeskGroup:             zendeskGroup,

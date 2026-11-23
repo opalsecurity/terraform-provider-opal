@@ -58,7 +58,10 @@ type GroupResource struct {
 type GroupResourceModel struct {
 	AdminOwnerID                types.String                                 `tfsdk:"admin_owner_id"`
 	AppID                       types.String                                 `tfsdk:"app_id"`
+	BreakGlassUserIds           []types.String                               `tfsdk:"break_glass_user_ids"`
+	BreakGlassUsers             *tfTypes.GetGroupBreakGlassUsersResponseBody `tfsdk:"break_glass_users"`
 	ConfigurationTemplateID     types.String                                 `tfsdk:"configuration_template_id"`
+	CustomAttributes            []tfTypes.CustomAttribute                    `tfsdk:"custom_attributes"`
 	CustomRequestNotification   types.String                                 `tfsdk:"custom_request_notification"`
 	Description                 types.String                                 `tfsdk:"description"`
 	ExtensionsDurationInMinutes types.Int64                                  `tfsdk:"extensions_duration_in_minutes"`
@@ -78,6 +81,7 @@ type GroupResourceModel struct {
 	Name                        types.String                                 `tfsdk:"name"`
 	OnCallScheduleIds           []types.String                               `tfsdk:"on_call_schedule_ids"`
 	OnCallSchedules             *tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"on_call_schedules"`
+	PushedToAppIds              []types.String                               `tfsdk:"pushed_to_app_ids"`
 	RemoteInfo                  *tfTypes.GroupRemoteInfo                     `tfsdk:"remote_info"`
 	RemoteName                  types.String                                 `tfsdk:"remote_name"`
 	RequestConfigurations       []tfTypes.RequestConfiguration               `tfsdk:"request_configurations"`
@@ -127,9 +131,55 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 				Description: `The ID of the app for the group. Requires replacement if changed.`,
 			},
+			"break_glass_user_ids": schema.SetAttribute{
+				Computed:    true,
+				Optional:    true,
+				Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
+				ElementType: types.StringType,
+				Description: `Default: []`,
+			},
+			"break_glass_users": schema.SingleNestedAttribute{
+				Computed: true,
+				PlanModifiers: []planmodifier.Object{
+					speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+				},
+				Attributes: map[string]schema.Attribute{
+					"break_glass_user_ids": schema.SetAttribute{
+						Computed: true,
+						Default:  setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
+						PlanModifiers: []planmodifier.Set{
+							speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
+						},
+						ElementType: types.StringType,
+						Description: `Default: []`,
+					},
+				},
+				Description: `A list of break glass user IDs for a group.`,
+			},
 			"configuration_template_id": schema.StringAttribute{
 				Optional:    true,
 				Description: `The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.`,
+			},
+			"custom_attributes": schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"key": schema.StringAttribute{
+							Computed:    true,
+							Description: `The name of the custom attribute.`,
+						},
+						"value_type": schema.StringAttribute{
+							Computed:    true,
+							Description: `The type of value stored in a custom attribute.`,
+						},
+						"values": schema.ListAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
+							Description: `The attribute's value(s), encoded as strings.`,
+						},
+					},
+				},
+				Description: `The custom attributes set on this group.`,
 			},
 			"custom_request_notification": schema.StringAttribute{
 				Computed: true,
@@ -181,7 +231,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					stringplanmodifier.RequiresReplaceIfConfigured(),
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DATADOG_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "CURSOR_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP", "BOX_GROUP", "ACTIVECAMPAIGN_GROUP", "AHA_TEAM", "ASANA_TEAM", "BITWARDEN_GROUP", "CALENDLY_GROUP", "MIRO_TEAM", "MIRO_USER_GROUP", "ONELOGIN_ROLE", "ONELOGIN_GROUP", "SQUARE_LOCATION", "SQUARE_JOB", "RIPPLING_DEPARTMENT", "RIPPLING_TEAM", "RIPPLING_SUPERGROUP"]; Requires replacement if changed.`,
+				Description: `The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DATADOG_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "CURSOR_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP", "BOX_GROUP", "VAULT_IDENTITY_GROUP", "ACTIVECAMPAIGN_GROUP", "AHA_TEAM", "ASANA_TEAM", "BITWARDEN_GROUP", "CALENDLY_GROUP", "MIRO_TEAM", "MIRO_USER_GROUP", "ONELOGIN_ROLE", "ONELOGIN_GROUP", "SQUARE_LOCATION", "SQUARE_JOB", "RIPPLING_DEPARTMENT", "RIPPLING_TEAM", "RIPPLING_SUPERGROUP"]; Requires replacement if changed.`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"ACTIVE_DIRECTORY_GROUP",
@@ -229,6 +279,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						"WRIKE_GROUP",
 						"AXIOM_GROUP",
 						"BOX_GROUP",
+						"VAULT_IDENTITY_GROUP",
 						"ACTIVECAMPAIGN_GROUP",
 						"AHA_TEAM",
 						"ASANA_TEAM",
@@ -258,7 +309,7 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				PlanModifiers: []planmodifier.String{
 					speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
 				},
-				Description: `The ID of the group whose configuration template link is being set.`,
+				Description: `The ID of the group.`,
 			},
 			"initial_user_ids": schema.ListAttribute{
 				Optional: true,
@@ -457,6 +508,11 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					},
 				},
 				Description: `The on call schedules attached to the group.`,
+			},
+			"pushed_to_app_ids": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
+				Description: `The IDs of the Okta apps that Okta pushes this group into (Okta Group Push).`,
 			},
 			"remote_info": schema.SingleNestedAttribute{
 				Computed: true,
@@ -1680,6 +1736,29 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						},
 						Description: `Remote info for Twingate synced group. Requires replacement if changed.`,
 					},
+					"vault_identity_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							objectplanmodifier.RequiresReplaceIfConfigured(),
+							speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
+						},
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+								PlanModifiers: []planmodifier.String{
+									stringplanmodifier.RequiresReplaceIfConfigured(),
+									speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
+								},
+								Description: `The id of the Vault identity group. Not Null; Requires replacement if changed.`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+								},
+							},
+						},
+						Description: `Remote info for Vault identity group. Requires replacement if changed.`,
+					},
 					"workday_user_security_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Optional: true,
@@ -2407,13 +2486,13 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request6, request6Diags := data.ToOperationsGetGroupRequest(ctx)
+	request6, request6Diags := data.ToOperationsUpdateGroupBreakGlassUsersRequest(ctx)
 	resp.Diagnostics.Append(request6Diags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res6, err := r.client.Groups.GetGroup(ctx, *request6)
+	res6, err := r.client.Groups.UpdateBreakGlassUsers(ctx, *request6)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res6 != nil && res6.RawResponse != nil {
@@ -2429,28 +2508,19 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res6.StatusCode), debugResponse(res6.RawResponse))
 		return
 	}
-	if !(res6.Group != nil) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res6.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromSharedGroup(ctx, res6.Group)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
 
 	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request7, request7Diags := data.ToOperationsGetGroupMessageChannelsRequest(ctx)
+	request7, request7Diags := data.ToOperationsGetGroupRequest(ctx)
 	resp.Diagnostics.Append(request7Diags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res7, err := r.client.Groups.GetMessageChannels(ctx, *request7)
+	res7, err := r.client.Groups.GetGroup(ctx, *request7)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res7 != nil && res7.RawResponse != nil {
@@ -2466,11 +2536,11 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res7.StatusCode), debugResponse(res7.RawResponse))
 		return
 	}
-	if !(res7.Object != nil) {
+	if !(res7.Group != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res7.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupMessageChannelsResponseBody(ctx, res7.Object)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedGroup(ctx, res7.Group)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -2481,13 +2551,13 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request8, request8Diags := data.ToOperationsGetGroupOnCallSchedulesRequest(ctx)
+	request8, request8Diags := data.ToOperationsGetGroupMessageChannelsRequest(ctx)
 	resp.Diagnostics.Append(request8Diags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res8, err := r.client.Groups.GetOnCallSchedules(ctx, *request8)
+	res8, err := r.client.Groups.GetMessageChannels(ctx, *request8)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res8 != nil && res8.RawResponse != nil {
@@ -2507,7 +2577,7 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res8.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupOnCallSchedulesResponseBody(ctx, res8.Object)...)
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupMessageChannelsResponseBody(ctx, res8.Object)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -2518,13 +2588,13 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request9, request9Diags := data.ToOperationsGetGroupVisibilityRequest(ctx)
+	request9, request9Diags := data.ToOperationsGetGroupOnCallSchedulesRequest(ctx)
 	resp.Diagnostics.Append(request9Diags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res9, err := r.client.Groups.GetVisibility(ctx, *request9)
+	res9, err := r.client.Groups.GetOnCallSchedules(ctx, *request9)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res9 != nil && res9.RawResponse != nil {
@@ -2544,7 +2614,81 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res9.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupVisibilityResponseBody(ctx, res9.Object)...)
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupOnCallSchedulesResponseBody(ctx, res9.Object)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request10, request10Diags := data.ToOperationsGetGroupVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request10Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res10, err := r.client.Groups.GetVisibility(ctx, *request10)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		if res10 != nil && res10.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res10.RawResponse))
+		}
+		return
+	}
+	if res10 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res10))
+		return
+	}
+	if res10.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res10.StatusCode), debugResponse(res10.RawResponse))
+		return
+	}
+	if !(res10.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res10.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupVisibilityResponseBody(ctx, res10.Object)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request11, request11Diags := data.ToOperationsGetGroupBreakGlassUsersRequest(ctx)
+	resp.Diagnostics.Append(request11Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res11, err := r.client.Groups.GetBreakGlassUsers(ctx, *request11)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		if res11 != nil && res11.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res11.RawResponse))
+		}
+		return
+	}
+	if res11 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res11))
+		return
+	}
+	if res11.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res11.StatusCode), debugResponse(res11.RawResponse))
+		return
+	}
+	if !(res11.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res11.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupBreakGlassUsersResponseBody(ctx, res11.Object)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -2714,6 +2858,41 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		return
 	}
 	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupVisibilityResponseBody(ctx, res3.Object)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request4, request4Diags := data.ToOperationsGetGroupBreakGlassUsersRequest(ctx)
+	resp.Diagnostics.Append(request4Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res4, err := r.client.Groups.GetBreakGlassUsers(ctx, *request4)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		if res4 != nil && res4.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res4.RawResponse))
+		}
+		return
+	}
+	if res4 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res4))
+		return
+	}
+	if res4.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
+		return
+	}
+	if res4.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res4.StatusCode), debugResponse(res4.RawResponse))
+		return
+	}
+	if !(res4.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res4.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupBreakGlassUsersResponseBody(ctx, res4.Object)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -2891,13 +3070,13 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request5, request5Diags := data.ToOperationsGetGroupRequest(ctx)
+	request5, request5Diags := data.ToOperationsUpdateGroupBreakGlassUsersRequest(ctx)
 	resp.Diagnostics.Append(request5Diags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res5, err := r.client.Groups.GetGroup(ctx, *request5)
+	res5, err := r.client.Groups.UpdateBreakGlassUsers(ctx, *request5)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res5 != nil && res5.RawResponse != nil {
@@ -2913,28 +3092,19 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res5.StatusCode), debugResponse(res5.RawResponse))
 		return
 	}
-	if !(res5.Group != nil) {
-		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res5.RawResponse))
-		return
-	}
-	resp.Diagnostics.Append(data.RefreshFromSharedGroup(ctx, res5.Group)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
 
 	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request6, request6Diags := data.ToOperationsGetGroupMessageChannelsRequest(ctx)
+	request6, request6Diags := data.ToOperationsGetGroupRequest(ctx)
 	resp.Diagnostics.Append(request6Diags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res6, err := r.client.Groups.GetMessageChannels(ctx, *request6)
+	res6, err := r.client.Groups.GetGroup(ctx, *request6)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res6 != nil && res6.RawResponse != nil {
@@ -2950,11 +3120,11 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res6.StatusCode), debugResponse(res6.RawResponse))
 		return
 	}
-	if !(res6.Object != nil) {
+	if !(res6.Group != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res6.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupMessageChannelsResponseBody(ctx, res6.Object)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedGroup(ctx, res6.Group)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -2965,13 +3135,13 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request7, request7Diags := data.ToOperationsGetGroupOnCallSchedulesRequest(ctx)
+	request7, request7Diags := data.ToOperationsGetGroupMessageChannelsRequest(ctx)
 	resp.Diagnostics.Append(request7Diags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res7, err := r.client.Groups.GetOnCallSchedules(ctx, *request7)
+	res7, err := r.client.Groups.GetMessageChannels(ctx, *request7)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res7 != nil && res7.RawResponse != nil {
@@ -2991,7 +3161,7 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res7.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupOnCallSchedulesResponseBody(ctx, res7.Object)...)
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupMessageChannelsResponseBody(ctx, res7.Object)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -3002,13 +3172,13 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	request8, request8Diags := data.ToOperationsGetGroupVisibilityRequest(ctx)
+	request8, request8Diags := data.ToOperationsGetGroupOnCallSchedulesRequest(ctx)
 	resp.Diagnostics.Append(request8Diags...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	res8, err := r.client.Groups.GetVisibility(ctx, *request8)
+	res8, err := r.client.Groups.GetOnCallSchedules(ctx, *request8)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
 		if res8 != nil && res8.RawResponse != nil {
@@ -3028,7 +3198,81 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res8.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupVisibilityResponseBody(ctx, res8.Object)...)
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupOnCallSchedulesResponseBody(ctx, res8.Object)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request9, request9Diags := data.ToOperationsGetGroupVisibilityRequest(ctx)
+	resp.Diagnostics.Append(request9Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res9, err := r.client.Groups.GetVisibility(ctx, *request9)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		if res9 != nil && res9.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res9.RawResponse))
+		}
+		return
+	}
+	if res9 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res9))
+		return
+	}
+	if res9.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res9.StatusCode), debugResponse(res9.RawResponse))
+		return
+	}
+	if !(res9.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res9.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupVisibilityResponseBody(ctx, res9.Object)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	request10, request10Diags := data.ToOperationsGetGroupBreakGlassUsersRequest(ctx)
+	resp.Diagnostics.Append(request10Diags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res10, err := r.client.Groups.GetBreakGlassUsers(ctx, *request10)
+	if err != nil {
+		resp.Diagnostics.AddError("failure to invoke API", redactSensitiveValues(ctx, err.Error()))
+		if res10 != nil && res10.RawResponse != nil {
+			resp.Diagnostics.AddError("unexpected http request/response", debugResponse(res10.RawResponse))
+		}
+		return
+	}
+	if res10 == nil {
+		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res10))
+		return
+	}
+	if res10.StatusCode != 200 {
+		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res10.StatusCode), debugResponse(res10.RawResponse))
+		return
+	}
+	if !(res10.Object != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res10.RawResponse))
+		return
+	}
+	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupBreakGlassUsersResponseBody(ctx, res10.Object)...)
 
 	if resp.Diagnostics.HasError() {
 		return

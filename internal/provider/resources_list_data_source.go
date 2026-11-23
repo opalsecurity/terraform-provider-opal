@@ -289,6 +289,27 @@ func (r *ResourcesListDataSource) Schema(ctx context.Context, req datasource.Sch
 							Computed:    true,
 							Description: `The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.`,
 						},
+						"custom_attributes": schema.ListNestedAttribute{
+							Computed: true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"key": schema.StringAttribute{
+										Computed:    true,
+										Description: `The name of the custom attribute.`,
+									},
+									"value_type": schema.StringAttribute{
+										Computed:    true,
+										Description: `The type of value stored in a custom attribute.`,
+									},
+									"values": schema.ListAttribute{
+										Computed:    true,
+										ElementType: types.StringType,
+										Description: `The attribute's value(s), encoded as strings.`,
+									},
+								},
+							},
+							Description: `The custom attributes set on this resource.`,
+						},
 						"custom_request_notification": schema.StringAttribute{
 							Computed:    true,
 							Description: `Custom request notification sent upon request approval.`,

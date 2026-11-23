@@ -13,6 +13,22 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
 )
 
+func (r *GroupDataSourceModel) RefreshFromOperationsGetGroupBreakGlassUsersResponseBody(ctx context.Context, resp *operations.GetGroupBreakGlassUsersResponseBody) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		if r.BreakGlassUsers == nil {
+			r.BreakGlassUsers = &tfTypes.GetGroupBreakGlassUsersResponseBody{}
+		}
+		r.BreakGlassUsers.BreakGlassUserIds = make([]types.String, 0, len(resp.BreakGlassUserIds))
+		for _, v := range resp.BreakGlassUserIds {
+			r.BreakGlassUsers.BreakGlassUserIds = append(r.BreakGlassUsers.BreakGlassUserIds, types.StringValue(v))
+		}
+	}
+
+	return diags
+}
+
 func (r *GroupDataSourceModel) RefreshFromOperationsGetGroupMessageChannelsResponseBody(ctx context.Context, resp *operations.GetGroupMessageChannelsResponseBody) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -99,6 +115,20 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 		r.AppID = types.StringPointerValue(resp.AppID)
 		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
+		r.CustomAttributes = []tfTypes.CustomAttribute{}
+
+		for _, customAttributesItem := range resp.CustomAttributes {
+			var customAttributes tfTypes.CustomAttribute
+
+			customAttributes.Key = types.StringValue(customAttributesItem.Key)
+			customAttributes.ValueType = types.StringValue(string(customAttributesItem.ValueType))
+			customAttributes.Values = make([]types.String, 0, len(customAttributesItem.Values))
+			for _, v := range customAttributesItem.Values {
+				customAttributes.Values = append(customAttributes.Values, types.StringValue(v))
+			}
+
+			r.CustomAttributes = append(r.CustomAttributes, customAttributes)
+		}
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.Description = types.StringPointerValue(resp.Description)
 		r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)
@@ -125,6 +155,10 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 		r.MaxDirectUsersAllowed = types.Int64PointerValue(resp.MaxDirectUsersAllowed)
 		r.MaxUsersExceededMessage = types.StringPointerValue(resp.MaxUsersExceededMessage)
 		r.Name = types.StringPointerValue(resp.Name)
+		r.PushedToAppIds = make([]types.String, 0, len(resp.PushedToAppIds))
+		for _, v := range resp.PushedToAppIds {
+			r.PushedToAppIds = append(r.PushedToAppIds, types.StringValue(v))
+		}
 		if resp.RemoteInfo == nil {
 			r.RemoteInfo = nil
 		} else {
@@ -443,6 +477,12 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 				r.RemoteInfo.TwingateGroupSynced = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.TwingateGroupSynced.GroupID = types.StringValue(resp.RemoteInfo.TwingateGroupSynced.GroupID)
 			}
+			if resp.RemoteInfo.VaultIdentityGroup == nil {
+				r.RemoteInfo.VaultIdentityGroup = nil
+			} else {
+				r.RemoteInfo.VaultIdentityGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.VaultIdentityGroup.GroupID = types.StringValue(resp.RemoteInfo.VaultIdentityGroup.GroupID)
+			}
 			if resp.RemoteInfo.WorkdayUserSecurityGroup == nil {
 				r.RemoteInfo.WorkdayUserSecurityGroup = nil
 			} else {
@@ -564,6 +604,19 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 	}
 
 	return diags
+}
+
+func (r *GroupDataSourceModel) ToOperationsGetGroupBreakGlassUsersRequest(ctx context.Context) (*operations.GetGroupBreakGlassUsersRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var id string
+	id = r.ID.ValueString()
+
+	out := operations.GetGroupBreakGlassUsersRequest{
+		ID: id,
+	}
+
+	return &out, diags
 }
 
 func (r *GroupDataSourceModel) ToOperationsGetGroupMessageChannelsRequest(ctx context.Context) (*operations.GetGroupMessageChannelsRequest, diag.Diagnostics) {
