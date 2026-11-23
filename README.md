@@ -31,7 +31,7 @@ terraform {
   required_providers {
     opal = {
       source  = "opalsecurity/opal"
-      version = "3.11.13"
+      version = "3.11.15"
     }
   }
 }
@@ -59,6 +59,8 @@ Available configuration:
 |---|---|
 | `bearer_auth` | HTTP Bearer. Configurable via environment variable `OPAL_AUTH_TOKEN`. |
 <!-- End Authentication [security] -->
+
+`opal_group` settings sub-reads (message channels, on-call schedules, break-glass users, etc.) require `READ_SETTINGS` on the group; applying those fields requires `EDIT_SETTINGS`. A token that can read the group but lacks `READ_SETTINGS` may see 404s on those sub-routes and drop the resource from state on refresh.
 
 <!-- Start Available Resources and Data Sources [operations] -->
 ## Available Resources and Data Sources

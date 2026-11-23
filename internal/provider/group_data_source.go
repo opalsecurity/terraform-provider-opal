@@ -32,7 +32,7 @@ type GroupDataSource struct {
 type GroupDataSourceModel struct {
 	AdminOwnerID                types.String                                 `tfsdk:"admin_owner_id"`
 	AppID                       types.String                                 `tfsdk:"app_id"`
-	BreakGlassUsers             *tfTypes.GetGroupBreakGlassUsersResponseBody `tfsdk:"break_glass_users"`
+	BreakGlassUserIds           []types.String                               `tfsdk:"break_glass_user_ids"`
 	ConfigurationTemplateID     types.String                                 `tfsdk:"configuration_template_id"`
 	CustomAttributes            []tfTypes.CustomAttribute                    `tfsdk:"custom_attributes"`
 	CustomRequestNotification   types.String                                 `tfsdk:"custom_request_notification"`
@@ -81,15 +81,9 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Computed:    true,
 				Description: `The ID of the group's app.`,
 			},
-			"break_glass_users": schema.SingleNestedAttribute{
-				Computed: true,
-				Attributes: map[string]schema.Attribute{
-					"break_glass_user_ids": schema.SetAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-				},
-				Description: `A list of break glass user IDs for a group.`,
+			"break_glass_user_ids": schema.SetAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
 			},
 			"configuration_template_id": schema.StringAttribute{
 				Computed:    true,
@@ -1207,11 +1201,11 @@ func (r *GroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res4.StatusCode), debugResponse(res4.RawResponse))
 		return
 	}
-	if !(res4.Object != nil) {
+	if !(res4.BreakGlassUserIDList != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res4.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupBreakGlassUsersResponseBody(ctx, res4.Object)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedBreakGlassUserIDList(ctx, res4.BreakGlassUserIDList)...)
 
 	if resp.Diagnostics.HasError() {
 		return

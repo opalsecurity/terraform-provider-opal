@@ -292,7 +292,7 @@ resource "opal_group" "my_group" {
 ### Optional
 
 - `admin_owner_id` (String) The ID of the owner of the group.
-- `break_glass_user_ids` (Set of String) Default: []
+- `break_glass_user_ids` (Set of String)
 - `configuration_template_id` (String) The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
 - `custom_request_notification` (String) Custom request notification sent to the requester when the request is approved.
 - `description` (String) A description of the group.
@@ -317,7 +317,6 @@ resource "opal_group" "my_group" {
 
 ### Read-Only
 
-- `break_glass_users` (Attributes) A list of break glass user IDs for a group. (see [below for nested schema](#nestedatt--break_glass_users))
 - `custom_attributes` (Attributes List) The custom attributes set on this group. (see [below for nested schema](#nestedatt--custom_attributes))
 - `group_binding_id` (String) The ID of the associated group binding.
 - `id` (String) The ID of the group.
@@ -924,14 +923,6 @@ Optional:
 - `user_ids` (Set of String) The users to escalate to. The stage's own service_user_ids are added automatically and must not be repeated here.
 
 
-
-
-<a id="nestedatt--break_glass_users"></a>
-### Nested Schema for `break_glass_users`
-
-Read-Only:
-
-- `break_glass_user_ids` (Set of String)
 
 
 <a id="nestedatt--custom_attributes"></a>

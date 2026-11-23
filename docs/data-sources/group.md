@@ -29,7 +29,7 @@ data "opal_group" "my_group" {
 
 - `admin_owner_id` (String) The ID of the owner of the group.
 - `app_id` (String) The ID of the group's app.
-- `break_glass_users` (Attributes) A list of break glass user IDs for a group. (see [below for nested schema](#nestedatt--break_glass_users))
+- `break_glass_user_ids` (Set of String)
 - `configuration_template_id` (String) The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
 - `custom_attributes` (Attributes List) The custom attributes set on this group. (see [below for nested schema](#nestedatt--custom_attributes))
 - `custom_request_notification` (String) Custom request notification sent to the requester when the request is approved.
@@ -56,14 +56,6 @@ data "opal_group" "my_group" {
 - `risk_sensitivity_override` (String) Indicates the level of potential impact misuse or unauthorized access may incur.
 - `visibility` (String) The visibility level of the entity.
 - `visibility_group_ids` (Set of String)
-
-<a id="nestedatt--break_glass_users"></a>
-### Nested Schema for `break_glass_users`
-
-Read-Only:
-
-- `break_glass_user_ids` (Set of String)
-
 
 <a id="nestedatt--custom_attributes"></a>
 ### Nested Schema for `custom_attributes`

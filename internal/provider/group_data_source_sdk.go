@@ -13,22 +13,6 @@ import (
 	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
 )
 
-func (r *GroupDataSourceModel) RefreshFromOperationsGetGroupBreakGlassUsersResponseBody(ctx context.Context, resp *operations.GetGroupBreakGlassUsersResponseBody) diag.Diagnostics {
-	var diags diag.Diagnostics
-
-	if resp != nil {
-		if r.BreakGlassUsers == nil {
-			r.BreakGlassUsers = &tfTypes.GetGroupBreakGlassUsersResponseBody{}
-		}
-		r.BreakGlassUsers.BreakGlassUserIds = make([]types.String, 0, len(resp.BreakGlassUserIds))
-		for _, v := range resp.BreakGlassUserIds {
-			r.BreakGlassUsers.BreakGlassUserIds = append(r.BreakGlassUsers.BreakGlassUserIds, types.StringValue(v))
-		}
-	}
-
-	return diags
-}
-
 func (r *GroupDataSourceModel) RefreshFromOperationsGetGroupMessageChannelsResponseBody(ctx context.Context, resp *operations.GetGroupMessageChannelsResponseBody) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -102,6 +86,19 @@ func (r *GroupDataSourceModel) RefreshFromOperationsGetGroupVisibilityResponseBo
 		r.VisibilityGroupIds = make([]types.String, 0, len(resp.VisibilityGroupIds))
 		for _, v := range resp.VisibilityGroupIds {
 			r.VisibilityGroupIds = append(r.VisibilityGroupIds, types.StringValue(v))
+		}
+	}
+
+	return diags
+}
+
+func (r *GroupDataSourceModel) RefreshFromSharedBreakGlassUserIDList(ctx context.Context, resp *shared.BreakGlassUserIDList) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.BreakGlassUserIds = make([]types.String, 0, len(resp.BreakGlassUserIds))
+		for _, v := range resp.BreakGlassUserIds {
+			r.BreakGlassUserIds = append(r.BreakGlassUserIds, types.StringValue(v))
 		}
 	}
 

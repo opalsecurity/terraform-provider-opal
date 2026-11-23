@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.11.16
+ - Adds `break_glass_user_ids` on `opal_group` (and the group data source) so Terraform can manage group break-glass users via `GET`/`PUT /groups/{id}/break-glass-users`. One Terraform attribute is written by PUT and refreshed by GET (no nested wrap, no `default: []`), so omitting the field does not clear remote users and out-of-band UI changes show up in the next plan.
+ - **Requires** an Opal API that serves those break-glass endpoints (present on current SaaS; on-prem / airgapped hosts must be past that cut before upgrading the provider).
+ - The API token used by Terraform needs `READ_SETTINGS` on the group for plan/refresh and `EDIT_SETTINGS` to apply break-glass changes. Without `READ_SETTINGS`, the break-glass sub-read returns 404 (same anti-enumeration pattern as message channels / on-call) and the provider can drop the group from state.
+ - Regenerates the provider SDK from the current OpenAPI (includes unrelated API surface accumulated since v3.11.12 such as custom attributes and related types). Version jumps past unused intermediate tags from Speakeasy’s automatic bumping.
+
 ## v3.7.5
  - Fixes `max_duration = -1` on `request_configurations` showing as permanent drift
 
