@@ -59,7 +59,6 @@ type GroupResourceModel struct {
 	AdminOwnerID                types.String                                 `tfsdk:"admin_owner_id"`
 	AppID                       types.String                                 `tfsdk:"app_id"`
 	BreakGlassUserIds           []types.String                               `tfsdk:"break_glass_user_ids"`
-	BreakGlassUsers             *tfTypes.GetGroupBreakGlassUsersResponseBody `tfsdk:"break_glass_users"`
 	ConfigurationTemplateID     types.String                                 `tfsdk:"configuration_template_id"`
 	CustomAttributes            []tfTypes.CustomAttribute                    `tfsdk:"custom_attributes"`
 	CustomRequestNotification   types.String                                 `tfsdk:"custom_request_notification"`
@@ -120,27 +119,8 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Description: `The ID of the app for the group. Requires replacement if changed.`,
 			},
 			"break_glass_user_ids": schema.SetAttribute{
-				Computed:    true,
-				Optional:    true,
-				Default:     setdefault.StaticValue(types.SetValueMust(types.StringType, []attr.Value{})),
+				Required:    true,
 				ElementType: types.StringType,
-				Description: `Default: []`,
-			},
-			"break_glass_users": schema.SingleNestedAttribute{
-				Computed: true,
-				PlanModifiers: []planmodifier.Object{
-					speakeasy_objectplanmodifier.SuppressDiff(speakeasy_objectplanmodifier.ExplicitSuppress),
-				},
-				Attributes: map[string]schema.Attribute{
-					"break_glass_user_ids": schema.SetAttribute{
-						Computed: true,
-						PlanModifiers: []planmodifier.Set{
-							speakeasy_setplanmodifier.SuppressDiff(speakeasy_setplanmodifier.ExplicitSuppress),
-						},
-						ElementType: types.StringType,
-					},
-				},
-				Description: `A list of break glass user IDs for a group.`,
 			},
 			"configuration_template_id": schema.StringAttribute{
 				Optional:    true,
@@ -2665,11 +2645,11 @@ func (r *GroupResource) Create(ctx context.Context, req resource.CreateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res11.StatusCode), debugResponse(res11.RawResponse))
 		return
 	}
-	if !(res11.Object != nil) {
+	if !(res11.BreakGlassUserIDList != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res11.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupBreakGlassUsersResponseBody(ctx, res11.Object)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedBreakGlassUserIDList(ctx, res11.BreakGlassUserIDList)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -2869,11 +2849,11 @@ func (r *GroupResource) Read(ctx context.Context, req resource.ReadRequest, resp
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res4.StatusCode), debugResponse(res4.RawResponse))
 		return
 	}
-	if !(res4.Object != nil) {
+	if !(res4.BreakGlassUserIDList != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res4.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupBreakGlassUsersResponseBody(ctx, res4.Object)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedBreakGlassUserIDList(ctx, res4.BreakGlassUserIDList)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -3244,11 +3224,11 @@ func (r *GroupResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res10.StatusCode), debugResponse(res10.RawResponse))
 		return
 	}
-	if !(res10.Object != nil) {
+	if !(res10.BreakGlassUserIDList != nil) {
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res10.RawResponse))
 		return
 	}
-	resp.Diagnostics.Append(data.RefreshFromOperationsGetGroupBreakGlassUsersResponseBody(ctx, res10.Object)...)
+	resp.Diagnostics.Append(data.RefreshFromSharedBreakGlassUserIDList(ctx, res10.BreakGlassUserIDList)...)
 
 	if resp.Diagnostics.HasError() {
 		return

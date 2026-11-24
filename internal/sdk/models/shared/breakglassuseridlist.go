@@ -3,29 +3,14 @@
 
 package shared
 
-import (
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
-)
-
-// BreakGlassUserIDList - A list of break glass user IDs for a group.
+// BreakGlassUserIDList - Break-glass user IDs for a group. Set explicitly to manage; use [] to clear.
 type BreakGlassUserIDList struct {
 	BreakGlassUserIds []string `json:"user_ids"`
 }
 
-func (b BreakGlassUserIDList) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(b, "", false)
-}
-
-func (b *BreakGlassUserIDList) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &b, "", false, nil); err != nil {
-		return err
-	}
-	return nil
-}
-
 func (b *BreakGlassUserIDList) GetBreakGlassUserIds() []string {
 	if b == nil {
-		return nil
+		return []string{}
 	}
 	return b.BreakGlassUserIds
 }

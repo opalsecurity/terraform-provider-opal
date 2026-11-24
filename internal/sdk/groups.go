@@ -2012,12 +2012,12 @@ func (s *Groups) GetBreakGlassUsers(ctx context.Context, request operations.GetG
 				return nil, err
 			}
 
-			var out operations.GetGroupBreakGlassUsersResponseBody
+			var out shared.BreakGlassUserIDList
 			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
 				return nil, err
 			}
 
-			res.Object = &out
+			res.BreakGlassUserIDList = &out
 		default:
 			rawBody, err := utils.ConsumeRawBody(httpRes)
 			if err != nil {

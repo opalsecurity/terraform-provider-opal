@@ -4,6 +4,7 @@
 package operations
 
 import (
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/models/shared"
 	"net/http"
 )
 
@@ -19,27 +20,22 @@ func (g *GetGroupBreakGlassUsersRequest) GetID() string {
 	return g.ID
 }
 
-// GetGroupBreakGlassUsersResponseBody - A list of break glass user IDs for a group.
-type GetGroupBreakGlassUsersResponseBody struct {
-	BreakGlassUserIds []string `json:"user_ids"`
-}
-
-func (g *GetGroupBreakGlassUsersResponseBody) GetBreakGlassUserIds() []string {
-	if g == nil {
-		return []string{}
-	}
-	return g.BreakGlassUserIds
-}
-
 type GetGroupBreakGlassUsersResponse struct {
+	// The break glass user IDs for the group.
+	BreakGlassUserIDList *shared.BreakGlassUserIDList
 	// HTTP response content type for this operation
 	ContentType string
 	// HTTP response status code for this operation
 	StatusCode int
 	// Raw HTTP response; suitable for custom response parsing
 	RawResponse *http.Response
-	// The break glass user IDs for the group.
-	Object *GetGroupBreakGlassUsersResponseBody
+}
+
+func (g *GetGroupBreakGlassUsersResponse) GetBreakGlassUserIDList() *shared.BreakGlassUserIDList {
+	if g == nil {
+		return nil
+	}
+	return g.BreakGlassUserIDList
 }
 
 func (g *GetGroupBreakGlassUsersResponse) GetContentType() string {
@@ -61,11 +57,4 @@ func (g *GetGroupBreakGlassUsersResponse) GetRawResponse() *http.Response {
 		return nil
 	}
 	return g.RawResponse
-}
-
-func (g *GetGroupBreakGlassUsersResponse) GetObject() *GetGroupBreakGlassUsersResponseBody {
-	if g == nil {
-		return nil
-	}
-	return g.Object
 }
