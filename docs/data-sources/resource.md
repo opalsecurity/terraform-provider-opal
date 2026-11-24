@@ -31,6 +31,7 @@ data "opal_resource" "my_resource" {
 - `ancestor_resource_ids` (List of String) List of resource IDs that are ancestors of this resource.
 - `app_id` (String) The ID of the app.
 - `configuration_template_id` (String) The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
+- `custom_attributes` (Attributes List) The custom attributes set on this resource. (see [below for nested schema](#nestedatt--custom_attributes))
 - `custom_request_notification` (String) Custom request notification sent upon request approval.
 - `descendant_resource_ids` (List of String) List of resource IDs that are descendants of this resource.
 - `description` (String) A description of the resource.
@@ -53,6 +54,16 @@ data "opal_resource" "my_resource" {
 - `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--ticket_propagation))
 - `visibility` (String) The visibility level of the entity.
 - `visibility_group_ids` (Set of String)
+
+<a id="nestedatt--custom_attributes"></a>
+### Nested Schema for `custom_attributes`
+
+Read-Only:
+
+- `key` (String) The name of the custom attribute.
+- `value_type` (String) The type of value stored in a custom attribute.
+- `values` (List of String) The attribute's value(s), encoded as strings.
+
 
 <a id="nestedatt--last_successful_sync"></a>
 ### Nested Schema for `last_successful_sync`

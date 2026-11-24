@@ -38,6 +38,20 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 		}
 		r.AppID = types.StringPointerValue(resp.AppID)
 		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
+		r.CustomAttributes = []tfTypes.CustomAttribute{}
+
+		for _, customAttributesItem := range resp.CustomAttributes {
+			var customAttributes tfTypes.CustomAttribute
+
+			customAttributes.Key = types.StringValue(customAttributesItem.Key)
+			customAttributes.ValueType = types.StringValue(string(customAttributesItem.ValueType))
+			customAttributes.Values = make([]types.String, 0, len(customAttributesItem.Values))
+			for _, v := range customAttributesItem.Values {
+				customAttributes.Values = append(customAttributes.Values, types.StringValue(v))
+			}
+
+			r.CustomAttributes = append(r.CustomAttributes, customAttributes)
+		}
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.DescendantResourceIds = make([]types.String, 0, len(resp.DescendantResourceIds))
 		for _, v := range resp.DescendantResourceIds {

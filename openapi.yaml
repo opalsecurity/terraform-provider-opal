@@ -37,6 +37,10 @@ tags:
     description: Operations related to group bindings
   - name: idp-group-mappings
     description: Operations related to IDP group mappings
+  - name: idp-user-attribute-mappings
+    description: Operations related to the user attributes Opal imports from identity providers and HRIS apps
+  - name: ip-acl
+    description: Operations related to the API IP allowlist (IP zones and its enforcement setting)
   - name: message-channels
     description: Operations related to message channels
   - name: non-human-identities
@@ -595,6 +599,163 @@ paths:
       tags:
         - apps
       x-speakeasy-entity-operation: App#delete
+  /apps/{app_id}/user-attribute-mappings:
+    get:
+      summary: List IDP user attribute mappings
+      description: |-
+        Returns the `IdpUserAttributeMapping` objects of an identity provider or HRIS app.
+        Each mapping tells Opal which attribute to import from the app on sync and which
+        Opal user field to store it in.
+      operationId: getIdpUserAttributeMappings
+      parameters:
+        - description: The ID of the identity provider or HRIS app.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: false
+          in: path
+          name: app_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IdpUserAttributeMappingList"
+          description: The user attribute mappings of the app.
+        "404":
+          description: The app does not exist or is not an identity provider or HRIS app.
+      security:
+        - BearerAuth: []
+      tags:
+        - idp-user-attribute-mappings
+    post:
+      summary: Create IDP user attribute mapping
+      description: |-
+        Creates an `IdpUserAttributeMapping` for an identity provider or HRIS app.
+        Requires an admin token. The mapping takes effect on the app's next sync.
+      operationId: createIdpUserAttributeMapping
+      parameters:
+        - description: The ID of the identity provider or HRIS app.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: false
+          in: path
+          name: app_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateIdpUserAttributeMappingInfo"
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IdpUserAttributeMapping"
+          description: The created user attribute mapping.
+        "400":
+          description: |-
+            The request body is invalid, for example `key` is blank after trimming
+            whitespace or longer than 255 characters.
+        "403":
+          description: The caller is not an admin.
+        "404":
+          description: The app does not exist or is not an identity provider or HRIS app.
+        "409":
+          description: |-
+            The mapping already exists, or the app already maps another attribute to a
+            `use_as` that allows only one mapping (every value except `CUSTOM` and
+            `SECONDARY_EMAIL`).
+      security:
+        - BearerAuth: []
+      tags:
+        - idp-user-attribute-mappings
+  /apps/{app_id}/user-attribute-mappings/{mapping_id}:
+    get:
+      summary: Get IDP user attribute mapping
+      description: Returns an `IdpUserAttributeMapping`.
+      operationId: getIdpUserAttributeMapping
+      parameters:
+        - description: The ID of the identity provider or HRIS app.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: false
+          in: path
+          name: app_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the user attribute mapping.
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          explode: false
+          in: path
+          name: mapping_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IdpUserAttributeMapping"
+          description: The requested user attribute mapping.
+        "404":
+          description: The app or the mapping does not exist.
+      security:
+        - BearerAuth: []
+      tags:
+        - idp-user-attribute-mappings
+    delete:
+      summary: Delete IDP user attribute mapping
+      description: |-
+        Deletes an `IdpUserAttributeMapping`. Requires an admin token. This also removes
+        every user tag this app imported whose tag key equals the mapping's `key`,
+        whatever the mapping's `use_as`.
+      operationId: deleteIdpUserAttributeMapping
+      parameters:
+        - description: The ID of the identity provider or HRIS app.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          explode: false
+          in: path
+          name: app_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The ID of the user attribute mapping.
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          explode: false
+          in: path
+          name: mapping_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "204":
+          description: The user attribute mapping was deleted.
+        "403":
+          description: The caller is not an admin.
+        "404":
+          description: The app or the mapping does not exist.
+      security:
+        - BearerAuth: []
+      tags:
+        - idp-user-attribute-mappings
   /apps/{app_id}/visibility:
     get:
       summary: Get app visibility
@@ -1950,6 +2111,131 @@ paths:
         - configuration-templates
       x-speakeasy-name-override: delete
       x-speakeasy-entity-operation: ConfigurationTemplate#delete
+  /configuration-templates/{configuration_template_id}/custom-attributes:
+    get:
+      description: Returns all custom attributes set on the configuration template.
+      operationId: get_configuration_template_custom_attributes
+      parameters:
+        - description: The ID of the configuration template whose custom attributes to return.
+          name: configuration_template_id
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomAttributesList"
+          description: The custom attributes set on the configuration template.
+      security:
+        - BearerAuth: []
+      tags:
+        - configuration-templates
+    put:
+      description: >-
+        Sets the custom attributes on a configuration template, replacing all existing attributes. Pass an empty `custom_attributes` array to clear all attributes.
+      operationId: set_configuration_template_custom_attributes
+      parameters:
+        - description: The ID of the configuration template whose custom attributes to set.
+          name: configuration_template_id
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomAttributesList"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomAttributesList"
+          description: The updated list of custom attributes for the configuration template.
+      security:
+        - BearerAuth: []
+      tags:
+        - configuration-templates
+    patch:
+      description: >-
+        Upserts specific custom attributes on a configuration template, leaving all other existing attributes untouched. For each key in the request body, the existing value (if any) is replaced. Keys not present in the request body are not modified.
+      operationId: patch_configuration_template_custom_attributes
+      parameters:
+        - description: The ID of the configuration template whose custom attributes to upsert.
+          name: configuration_template_id
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomAttributesList"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomAttributesList"
+          description: The full list of custom attributes for the configuration template after the upsert.
+      security:
+        - BearerAuth: []
+      tags:
+        - configuration-templates
+  /configuration-templates/{configuration_template_id}/custom-attributes/{attribute_key}:
+    delete:
+      description: Removes a single custom attribute key from a configuration template.
+      operationId: delete_configuration_template_custom_attribute_by_key
+      parameters:
+        - description: The ID of the configuration template.
+          name: configuration_template_id
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The custom attribute key to remove.
+          name: attribute_key
+          example: environment
+          explode: false
+          in: path
+          required: true
+          schema:
+            type: string
+          style: simple
+      responses:
+        "200":
+          description: The custom attribute was successfully removed.
+        "400":
+          description: The configuration template was not found.
+        "404":
+          description: The attribute key was not found on the configuration template.
+      security:
+        - BearerAuth: []
+      tags:
+        - configuration-templates
   /event-streams:
     get:
       summary: Get event streams
@@ -2545,6 +2831,72 @@ paths:
       x-speakeasy-entity-operation:
         - Group#create#6
         - Group#update
+  /groups/{group_id}/break-glass-users:
+    get:
+      description: Gets the break glass user IDs for a group. Deleted users linked on the configuration are omitted so a GET→PUT round-trip is a no-op.
+      operationId: getGroupBreakGlassUsers
+      parameters:
+        - description: The ID of the group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+          x-speakeasy-name-override: id
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BreakGlassUserIDList"
+          description: The break glass user IDs for the group.
+        "404":
+          description: Not Found
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
+      x-speakeasy-name-override: get_break_glass_users
+      x-speakeasy-entity-operation: Group#read#5
+    put:
+      description: Sets the list of break glass users for a group, replacing the existing list. Pass an empty list to remove all break glass users.
+      operationId: updateGroupBreakGlassUsers
+      parameters:
+        - description: The ID of the group.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: group_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+          x-speakeasy-name-override: id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BreakGlassUserIDList"
+      responses:
+        "200":
+          content:
+            application/json:
+              x-speakeasy-ignore: true
+          description: The updated break glass user IDs for the group.
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
+      x-speakeasy-name-override: update_break_glass_users
+      x-speakeasy-entity-operation:
+        - Group#create#7
+        - Group#update#6
   /groups/{group_id}/message-channels:
     get:
       description: Gets the list of audit and reviewer message channels attached to a group.
@@ -3370,6 +3722,129 @@ paths:
         - groups
       x-speakeasy-name-override: get_tags
       x-speakeasy-entity-operation: GroupTags#get
+  /groups/{group_id}/custom-attributes:
+    get:
+      description: Returns all custom attributes set on the group.
+      operationId: get_group_custom_attributes
+      parameters:
+        - description: The ID of the group whose custom attributes to return.
+          name: group_id
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          explode: false
+          in: path
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomAttributesList"
+          description: The custom attributes set on the group.
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
+    put:
+      description: >-
+        Sets the custom attributes on a group, replacing all existing attributes. Pass an empty `custom_attributes` array to clear all attributes.
+      operationId: set_group_custom_attributes
+      parameters:
+        - description: The ID of the group whose custom attributes to set.
+          name: group_id
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          explode: false
+          in: path
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomAttributesList"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomAttributesList"
+          description: The updated list of custom attributes for the group.
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
+    patch:
+      description: >-
+        Upserts specific custom attributes on a group, leaving all other existing attributes untouched. For each key in the request body, the existing value (if any) is replaced. Keys not present in the request body are not modified.
+      operationId: patch_group_custom_attributes
+      parameters:
+        - description: The ID of the group whose custom attributes to upsert.
+          name: group_id
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67b5
+          explode: false
+          in: path
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomAttributesList"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomAttributesList"
+          description: The full list of custom attributes for the group after the upsert.
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
+  /groups/{group_id}/custom-attributes/{attribute_key}:
+    delete:
+      description: Removes a single custom attribute key from a group.
+      operationId: delete_group_custom_attribute_by_key
+      parameters:
+        - description: The ID of the group.
+          name: group_id
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67b5
+          explode: false
+          in: path
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The custom attribute key to remove.
+          name: attribute_key
+          example: environment
+          explode: false
+          in: path
+          required: true
+          schema:
+            type: string
+          style: simple
+      responses:
+        "200":
+          description: The custom attribute was successfully removed.
+        "404":
+          description: The group or attribute key was not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - groups
   /groups/{group_id}/users:
     get:
       description: Gets the list of users for this group.
@@ -6363,6 +6838,129 @@ paths:
         - resources
       x-speakeasy-name-override: get_tags
       x-speakeasy-entity-operation: ResourceTags#get
+  /resources/{resource_id}/custom-attributes:
+    get:
+      description: Returns all custom attributes set on the resource.
+      operationId: get_resource_custom_attributes
+      parameters:
+        - description: The ID of the resource whose custom attributes to return.
+          name: resource_id
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          explode: false
+          in: path
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomAttributesList"
+          description: The custom attributes set on the resource.
+      security:
+        - BearerAuth: []
+      tags:
+        - resources
+    put:
+      description: >-
+        Sets the custom attributes on a resource, replacing all existing attributes. Pass an empty `custom_attributes` array to clear all attributes.
+      operationId: set_resource_custom_attributes
+      parameters:
+        - description: The ID of the resource whose custom attributes to set.
+          name: resource_id
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          explode: false
+          in: path
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomAttributesList"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomAttributesList"
+          description: The updated list of custom attributes for the resource.
+      security:
+        - BearerAuth: []
+      tags:
+        - resources
+    patch:
+      description: >-
+        Upserts specific custom attributes on a resource, leaving all other existing attributes untouched. For each key in the request body, the existing value (if any) is replaced. Keys not present in the request body are not modified.
+      operationId: patch_resource_custom_attributes
+      parameters:
+        - description: The ID of the resource whose custom attributes to upsert.
+          name: resource_id
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          explode: false
+          in: path
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomAttributesList"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomAttributesList"
+          description: The full list of custom attributes for the resource after the upsert.
+      security:
+        - BearerAuth: []
+      tags:
+        - resources
+  /resources/{resource_id}/custom-attributes/{attribute_key}:
+    delete:
+      description: Removes a single custom attribute key from a resource.
+      operationId: delete_resource_custom_attribute_by_key
+      parameters:
+        - description: The ID of the resource.
+          name: resource_id
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          explode: false
+          in: path
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+        - description: The custom attribute key to remove.
+          name: attribute_key
+          example: environment
+          explode: false
+          in: path
+          required: true
+          schema:
+            type: string
+          style: simple
+      responses:
+        "200":
+          description: The custom attribute was successfully removed.
+        "404":
+          description: The resource or attribute key was not found.
+      security:
+        - BearerAuth: []
+      tags:
+        - resources
   /resources/{resource_id}/scoped-role-permissions:
     get:
       description: Returns all the scoped role permissions that apply to the given resource. Only OPAL_SCOPED_ROLE resource type supports this field.
@@ -7953,6 +8551,162 @@ paths:
         - tags
       x-speakeasy-name-override: delete_resource
       x-speakeasy-entity-operation: ResourceTag#delete
+  /ip-zones:
+    get:
+      summary: Get IP zones
+      description: Returns the IP zones (named lists of allowed IP addresses or CIDR ranges) for your organization. Admin only.
+      operationId: getIPZones
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IpZoneList"
+          description: The IP zones for your organization.
+      security:
+        - BearerAuth: []
+      tags:
+        - ip-acl
+    post:
+      summary: Create IP zone
+      description: Creates an IP zone. While the API IP allowlist is enabled, every API token request from an IP address outside all IP zones is rejected with 403, so create zones before enabling enforcement. Admin only.
+      operationId: createIPZone
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateIpZoneInfo"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IpZone"
+          description: The IP zone just created.
+      security:
+        - BearerAuth: []
+      tags:
+        - ip-acl
+  /ip-zones/{ip_zone_id}:
+    get:
+      summary: Get IP zone
+      description: Returns an IP zone. Admin only.
+      operationId: getIPZone
+      parameters:
+        - description: The ID of the IP zone.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: ip_zone_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IpZone"
+          description: The requested IP zone.
+      security:
+        - BearerAuth: []
+      tags:
+        - ip-acl
+    put:
+      summary: Update IP zone
+      description: Updates an IP zone. Omitted fields are left unchanged; `ip_addresses`, when given, replaces the zone's whole list. While the API IP allowlist is enabled, removing the IP this request comes from rejects that token's later requests with 403, and only the Opal web app can restore access. Admin only.
+      operationId: updateIPZone
+      parameters:
+        - description: The ID of the IP zone.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: ip_zone_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateIpZoneInfo"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IpZone"
+          description: The updated IP zone.
+      security:
+        - BearerAuth: []
+      tags:
+        - ip-acl
+    delete:
+      summary: Delete IP zone
+      description: Deletes an IP zone. While the API IP allowlist is enabled, API token requests from its IP addresses are then rejected with 403, including the token making this request, and only the Opal web app can restore access. Admin only.
+      operationId: deleteIPZone
+      parameters:
+        - description: The ID of the IP zone.
+          example: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+          explode: false
+          in: path
+          name: ip_zone_id
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
+      responses:
+        "200":
+          description: The IP zone was successfully deleted.
+      security:
+        - BearerAuth: []
+      tags:
+        - ip-acl
+  /ip-acl-settings:
+    get:
+      summary: Get API IP allowlist settings
+      description: Returns whether the API IP allowlist is enforced for your organization.
+      operationId: getIPACLSettings
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IpAclSettings"
+          description: The API IP allowlist settings for your organization.
+      security:
+        - BearerAuth: []
+      tags:
+        - ip-acl
+    put:
+      summary: Update API IP allowlist settings
+      description: >-
+        Turns enforcement of the API IP allowlist on or off. Once it is on, every API token request from an IP address outside all IP zones is rejected with 403 before it reaches any endpoint, including this one with `{"enabled": false}` and every IP zone write. Enabling is refused with 400 when the calling IP address is outside every IP zone, so the call cannot lock out its own token; with Terraform, create the IP zones (including the IP Terraform runs from) before enabling enforcement. A token whose IP later falls outside every zone can only recover through the Opal web app, which the allowlist does not apply to. The update rewrites the organization's general settings as a whole, so a concurrent settings change made elsewhere can be lost. Admin only.
+      operationId: updateIPACLSettings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IpAclSettings"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IpAclSettings"
+          description: The updated API IP allowlist settings.
+      security:
+        - BearerAuth: []
+      tags:
+        - ip-acl
   /message-channels:
     get:
       summary: Get message channels
@@ -13210,6 +13964,13 @@ components:
             format: uuid
           type: array
           format: set
+        pushed_to_app_ids:
+          description: The IDs of the Okta apps that Okta pushes this group into (Okta Group Push).
+          items:
+            type: string
+            format: uuid
+          readOnly: true
+          type: array
         remote_id:
           description: The ID of the remote.
           example: google-group-group:037m2jsg218b2wb
@@ -13365,6 +14126,12 @@ components:
             - x-speakeasy-computed: true
             - x-speakeasy-param-readonly: true
             - x-speakeasy-param-suppress-computed-diff: true
+        custom_attributes:
+          readOnly: true
+          description: The custom attributes set on this group.
+          items:
+            $ref: "#/components/schemas/CustomAttribute"
+          type: array
       required:
         - group_id
       type: object
@@ -13933,6 +14700,7 @@ components:
         - WRIKE_GROUP
         - AXIOM_GROUP
         - BOX_GROUP
+        - VAULT_IDENTITY_GROUP
         # GENERATED:BEGIN group-type-enum
         - ACTIVECAMPAIGN_GROUP
         - AHA_TEAM
@@ -14309,6 +15077,83 @@ components:
       type: object
       required:
         - mappings
+    IdpUserAttributeUseAsEnum:
+      description: The Opal user field an imported IDP or HRIS attribute is stored in.
+      enum:
+        - CUSTOM
+        - EMAIL
+        - FIRST_NAME
+        - LAST_NAME
+        - PROFILE_URL
+        - TITLE
+        - TEAM
+        - MANAGER_EMAIL
+        - SECONDARY_EMAIL
+        - GITHUB_USERNAME
+        - TELEPORT_USERNAME
+      example: MANAGER_EMAIL
+      type: string
+    IdpUserAttributeMapping:
+      description: |-
+        # IdpUserAttributeMapping Object
+        ### Description
+        An attribute Opal imports from an identity provider or HRIS app, and the Opal
+        user field it is stored in. A `CUSTOM` mapping is imported as a user tag.
+      example:
+        id: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+        app_id: 32acc112-21ff-4669-91c2-21e27683eaa1
+        key: managerEmail
+        use_as: MANAGER_EMAIL
+      properties:
+        id:
+          description: The ID of the mapping.
+          example: 1b978423-db0a-4037-a4cf-f79c60cb67b3
+          format: uuid
+          type: string
+        app_id:
+          description: The ID of the identity provider or HRIS app.
+          example: 32acc112-21ff-4669-91c2-21e27683eaa1
+          format: uuid
+          type: string
+        key:
+          description: The attribute key in the identity provider or HRIS.
+          example: managerEmail
+          type: string
+        use_as:
+          $ref: "#/components/schemas/IdpUserAttributeUseAsEnum"
+      required:
+        - id
+        - app_id
+        - key
+        - use_as
+      type: object
+    IdpUserAttributeMappingList:
+      properties:
+        mappings:
+          items:
+            $ref: "#/components/schemas/IdpUserAttributeMapping"
+          type: array
+      required:
+        - mappings
+      type: object
+    CreateIdpUserAttributeMappingInfo:
+      description: Information needed to create an `IdpUserAttributeMapping`.
+      example:
+        key: managerEmail
+        use_as: MANAGER_EMAIL
+      properties:
+        key:
+          description: The attribute key in the identity provider or HRIS.
+          example: managerEmail
+          minLength: 1
+          maxLength: 255
+          type: string
+        use_as:
+          $ref: "#/components/schemas/IdpUserAttributeUseAsEnum"
+      required:
+        - key
+        - use_as
+      type: object
     ResourceWithAccessLevel:
       description: Information about a resource and corresponding access level
       example:
@@ -15483,6 +16328,15 @@ components:
           properties:
             group_id:
               description: The group id of the Box Group.
+              type: string
+          type: object
+          required:
+            - group_id
+        vault_identity_group:
+          description: Remote info for Vault identity group.
+          properties:
+            group_id:
+              description: The id of the Vault identity group.
               type: string
           type: object
           required:
@@ -18352,6 +19206,12 @@ components:
             - x-speakeasy-computed: true
             - x-speakeasy-param-readonly: true
             - x-speakeasy-param-suppress-computed-diff: true
+        custom_attributes:
+          readOnly: true
+          description: The custom attributes set on this resource.
+          items:
+            $ref: "#/components/schemas/CustomAttribute"
+          type: array
       required:
         - resource_id
       type: object
@@ -18646,6 +19506,53 @@ components:
         - results
       type: object
       x-speakeasy-entity: Tags_list
+    CustomAttributeValueTypeEnum:
+      description: The type of value stored in a custom attribute.
+      enum:
+        - TEXT
+        - BOOLEAN
+        - USERS
+        - GROUPS
+        - RESOURCES
+      type: string
+    CustomAttribute:
+      description: |-
+        A custom attribute key/value pair attached to a resource or group.
+
+        The `values` array encoding depends on `value_type`:
+        - `TEXT`: one or more plain strings.
+        - `BOOLEAN`: a single-element array containing `"true"` or `"false"`.
+        - `USERS`, `GROUPS`, `RESOURCES`: one or more UUID strings referencing the
+          respective entity type.
+      properties:
+        key:
+          description: The name of the custom attribute.
+          example: team
+          type: string
+        value_type:
+          $ref: "#/components/schemas/CustomAttributeValueTypeEnum"
+        values:
+          description: The attribute's value(s), encoded as strings.
+          example:
+            - platform
+          items:
+            type: string
+          type: array
+      required:
+        - key
+        - value_type
+        - values
+      type: object
+    CustomAttributesList:
+      description: A list of custom attributes.
+      properties:
+        custom_attributes:
+          items:
+            $ref: "#/components/schemas/CustomAttribute"
+          type: array
+      required:
+        - custom_attributes
+      type: object
     TagsList:
       example:
         results:
@@ -20651,6 +21558,110 @@ components:
         credentials:
           $ref: "#/components/schemas/WebhookCredentials"
       type: object
+    IpZone:
+      description: A named list of IP addresses or CIDR ranges allowed to use API tokens while the API IP allowlist is enabled.
+      example:
+        ip_zone_id: 4baf8423-db0a-4037-a4cf-f79c60cb67a5
+        name: Office network
+        description: Egress IPs for the main office
+        ip_addresses:
+          - 192.168.1.1
+          - 10.0.0.0/24
+        created_by_user_id: d4a7d928-783e-4599-8ec6-088d635a5bcc
+        created_at: 2022-01-23T04:56:07Z
+        updated_at: 2022-02-23T01:34:07Z
+      properties:
+        ip_zone_id:
+          description: The ID of the IP zone.
+          format: uuid
+          type: string
+        name:
+          description: The name of the IP zone.
+          type: string
+        description:
+          description: A description of the IP zone.
+          type: string
+        ip_addresses:
+          description: The IP addresses or CIDR ranges in the IP zone.
+          items:
+            type: string
+          type: array
+        created_by_user_id:
+          description: The ID of the user that created the IP zone.
+          format: uuid
+          type: string
+        created_at:
+          description: The date the IP zone was created.
+          format: date-time
+          type: string
+        updated_at:
+          description: The date the IP zone was last updated.
+          format: date-time
+          type: string
+      required:
+        - ip_zone_id
+        - name
+        - ip_addresses
+        - created_by_user_id
+        - created_at
+        - updated_at
+      type: object
+    IpZoneList:
+      description: A list of IP zones.
+      properties:
+        ip_zones:
+          items:
+            $ref: "#/components/schemas/IpZone"
+          type: array
+      required:
+        - ip_zones
+      type: object
+    CreateIpZoneInfo:
+      description: Information needed to create an IP zone.
+      properties:
+        name:
+          description: The name of the IP zone.
+          example: Office network
+          type: string
+        description:
+          description: A description of the IP zone.
+          type: string
+        ip_addresses:
+          description: The IP addresses or CIDR ranges to allow. At least one is required.
+          example:
+            - 192.168.1.1
+            - 10.0.0.0/24
+          items:
+            type: string
+          type: array
+      required:
+        - name
+        - ip_addresses
+      type: object
+    UpdateIpZoneInfo:
+      description: Information needed to update an IP zone. Omitted fields are left unchanged.
+      properties:
+        name:
+          description: The new name of the IP zone.
+          type: string
+        description:
+          description: The new description of the IP zone.
+          type: string
+        ip_addresses:
+          description: The IP addresses or CIDR ranges to allow, replacing the current list. At least one is required.
+          items:
+            type: string
+          type: array
+      type: object
+    IpAclSettings:
+      description: Settings for the API IP allowlist.
+      properties:
+        enabled:
+          description: Whether API token requests are restricted to the IP addresses in the organization's IP zones.
+          type: boolean
+      required:
+        - enabled
+      type: object
     Token:
       description: A first-party API token.
       example:
@@ -21083,6 +22094,28 @@ components:
           default: []
           x-speakeasy-param-suppress-computed-diff: true
       type: object
+    BreakGlassUserIDList:
+      description: Break-glass user IDs for a group. Set explicitly to manage; use [] to clear.
+      example:
+        user_ids:
+          - 7870617d-e72a-47f5-a84c-693817ab4567
+          - 1520617d-e72a-47f5-a84c-693817ab48ad2
+      properties:
+        user_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          format: set
+          x-speakeasy-name-override: break_glass_user_ids
+          # TF-optional so existing opal_group configs need not set the attr;
+          # PUT body still sends user_ids when the attr is configured.
+          x-speakeasy-param-optional: true
+      type: object
+      required:
+        - user_ids
+      x-speakeasy-entity:
+        - GroupBreakGlassUsers
     BundlesVisibilityTypeEnum:
       description: The visibility level of the entity.
       enum:

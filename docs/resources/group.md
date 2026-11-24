@@ -14,8 +14,11 @@ Group Resource
 
 ```terraform
 resource "opal_group" "my_group" {
-  admin_owner_id                 = "7c86c85d-0651-43e2-a748-d69d658418e8"
-  app_id                         = "f454d283-ca87-4a8a-bdbb-df212eca5353"
+  admin_owner_id = "7c86c85d-0651-43e2-a748-d69d658418e8"
+  app_id         = "f454d283-ca87-4a8a-bdbb-df212eca5353"
+  break_glass_user_ids = [
+    "0116f339-4987-4ef1-8754-b67a7da75fb3"
+  ]
   configuration_template_id      = "06851574-e50d-40ca-8c78-f72ae6ab4304"
   custom_request_notification    = "Check your email to register your account."
   description                    = "Engineering team Okta group."
@@ -198,6 +201,9 @@ resource "opal_group" "my_group" {
     twingate_group_synced = {
       group_id = "R3JvdXA6MTIzNA=="
     }
+    vault_identity_group = {
+      group_id = "...my_group_id..."
+    }
     workday_user_security_group = {
       group_id = "123abc456def"
     }
@@ -280,12 +286,13 @@ resource "opal_group" "my_group" {
 ### Required
 
 - `app_id` (String) The ID of the app for the group. Requires replacement if changed.
-- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DATADOG_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "CURSOR_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP", "BOX_GROUP", "ACTIVECAMPAIGN_GROUP", "AHA_TEAM", "ASANA_TEAM", "BITWARDEN_GROUP", "CALENDLY_GROUP", "MIRO_TEAM", "MIRO_USER_GROUP", "ONELOGIN_ROLE", "ONELOGIN_GROUP", "SQUARE_LOCATION", "SQUARE_JOB", "RIPPLING_DEPARTMENT", "RIPPLING_TEAM", "RIPPLING_SUPERGROUP"]; Requires replacement if changed.
+- `group_type` (String) The type of the group. must be one of ["ACTIVE_DIRECTORY_GROUP", "AWS_SSO_GROUP", "DATABRICKS_ACCOUNT_GROUP", "DUO_GROUP", "GIT_HUB_TEAM", "GIT_LAB_GROUP", "GOOGLE_GROUPS_GROUP", "GOOGLE_GROUPS_GKE_GROUP", "LDAP_GROUP", "OKTA_GROUP", "OKTA_GROUP_RULE", "TAILSCALE_GROUP", "OPAL_GROUP", "OPAL_ACCESS_RULE", "AZURE_AD_SECURITY_GROUP", "AZURE_AD_MICROSOFT_365_GROUP", "CONNECTOR_GROUP", "SNOWFLAKE_ROLE", "WORKDAY_USER_SECURITY_GROUP", "PAGERDUTY_ON_CALL_SCHEDULE", "INCIDENTIO_ON_CALL_SCHEDULE", "ROOTLY_ON_CALL_SCHEDULE", "DATADOG_ON_CALL_SCHEDULE", "DEVIN_GROUP", "GIT_HUB_ENTERPRISE_TEAM", "GRAFANA_TEAM", "CLICKHOUSE_ROLE", "SLACK_USER_GROUP", "CURSOR_GROUP", "TWINGATE_GROUP", "TWINGATE_GROUP_SYNCED", "ZENDESK_GROUP", "ZENDESK_ORGANIZATION", "HUBSPOT_TEAM", "TABLEAU_GROUP", "CONFLUENCE_GROUP", "JIRA_GROUP", "DOCUSIGN_GROUP", "ZOOM_GROUP", "LINEAR_TEAM", "RAMP_DEPARTMENT", "RAMP_LOCATION", "WRIKE_GROUP", "AXIOM_GROUP", "BOX_GROUP", "VAULT_IDENTITY_GROUP", "ACTIVECAMPAIGN_GROUP", "AHA_TEAM", "ASANA_TEAM", "BITWARDEN_GROUP", "CALENDLY_GROUP", "MIRO_TEAM", "MIRO_USER_GROUP", "ONELOGIN_ROLE", "ONELOGIN_GROUP", "SQUARE_LOCATION", "SQUARE_JOB", "RIPPLING_DEPARTMENT", "RIPPLING_TEAM", "RIPPLING_SUPERGROUP"]; Requires replacement if changed.
 - `name` (String) The name of the group.
 
 ### Optional
 
 - `admin_owner_id` (String) The ID of the owner of the group.
+- `break_glass_user_ids` (Set of String)
 - `configuration_template_id` (String) The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.
 - `custom_request_notification` (String) Custom request notification sent to the requester when the request is approved.
 - `description` (String) A description of the group.
@@ -310,11 +317,13 @@ resource "opal_group" "my_group" {
 
 ### Read-Only
 
+- `custom_attributes` (Attributes List) The custom attributes set on this group. (see [below for nested schema](#nestedatt--custom_attributes))
 - `group_binding_id` (String) The ID of the associated group binding.
-- `id` (String) The ID of the group whose configuration template link is being set.
+- `id` (String) The ID of the group.
 - `last_successful_sync` (Attributes) Information about the last successful sync of this group. (see [below for nested schema](#nestedatt--last_successful_sync))
 - `message_channels` (Attributes) The audit and reviewer message channels attached to the group. (see [below for nested schema](#nestedatt--message_channels))
 - `on_call_schedules` (Attributes) The on call schedules attached to the group. (see [below for nested schema](#nestedatt--on_call_schedules))
+- `pushed_to_app_ids` (List of String) The IDs of the Okta apps that Okta pushes this group into (Okta Group Push).
 - `remote_name` (String) The name of the remote.
 - `risk_sensitivity` (String) The risk sensitivity level for the group. When an override is set, this field will match that.
 
@@ -375,6 +384,7 @@ Optional:
 - `tailscale_group` (Attributes) Remote info for Tailscale group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--tailscale_group))
 - `twingate_group` (Attributes) Remote info for Twingate group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--twingate_group))
 - `twingate_group_synced` (Attributes) Remote info for Twingate synced group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--twingate_group_synced))
+- `vault_identity_group` (Attributes) Remote info for Vault identity group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--vault_identity_group))
 - `workday_user_security_group` (Attributes) Remote info for Workday User Security group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--workday_user_security_group))
 - `wrike_group` (Attributes) Remote info for Wrike group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--wrike_group))
 - `zendesk_group` (Attributes) Remote info for Zendesk group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--zendesk_group))
@@ -799,6 +809,14 @@ Optional:
 - `group_id` (String) The id of the Twingate synced group. Not Null; Requires replacement if changed.
 
 
+<a id="nestedatt--remote_info--vault_identity_group"></a>
+### Nested Schema for `remote_info.vault_identity_group`
+
+Optional:
+
+- `group_id` (String) The id of the Vault identity group. Not Null; Requires replacement if changed.
+
+
 <a id="nestedatt--remote_info--workday_user_security_group"></a>
 ### Nested Schema for `remote_info.workday_user_security_group`
 
@@ -905,6 +923,16 @@ Optional:
 - `user_ids` (Set of String) The users to escalate to. The stage's own service_user_ids are added automatically and must not be repeated here.
 
 
+
+
+<a id="nestedatt--custom_attributes"></a>
+### Nested Schema for `custom_attributes`
+
+Read-Only:
+
+- `key` (String) The name of the custom attribute.
+- `value_type` (String) The type of value stored in a custom attribute.
+- `values` (List of String) The attribute's value(s), encoded as strings.
 
 
 <a id="nestedatt--last_successful_sync"></a>
