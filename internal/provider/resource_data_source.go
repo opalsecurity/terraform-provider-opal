@@ -34,6 +34,7 @@ type ResourceDataSourceModel struct {
 	AncestorResourceIds         []types.String                          `tfsdk:"ancestor_resource_ids"`
 	AppID                       types.String                            `tfsdk:"app_id"`
 	ConfigurationTemplateID     types.String                            `tfsdk:"configuration_template_id"`
+	CustomAttributes            []tfTypes.CustomAttribute               `tfsdk:"custom_attributes"`
 	CustomRequestNotification   types.String                            `tfsdk:"custom_request_notification"`
 	DescendantResourceIds       []types.String                          `tfsdk:"descendant_resource_ids"`
 	Description                 types.String                            `tfsdk:"description"`
@@ -86,6 +87,27 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"configuration_template_id": schema.StringAttribute{
 				Computed:    true,
 				Description: `The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.`,
+			},
+			"custom_attributes": schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"key": schema.StringAttribute{
+							Computed:    true,
+							Description: `The name of the custom attribute.`,
+						},
+						"value_type": schema.StringAttribute{
+							Computed:    true,
+							Description: `The type of value stored in a custom attribute.`,
+						},
+						"values": schema.ListAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
+							Description: `The attribute's value(s), encoded as strings.`,
+						},
+					},
+				},
+				Description: `The custom attributes set on this resource.`,
 			},
 			"custom_request_notification": schema.StringAttribute{
 				Computed:    true,
