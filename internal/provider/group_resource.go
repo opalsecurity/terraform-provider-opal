@@ -119,7 +119,8 @@ func (r *GroupResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Description: `The ID of the app for the group. Requires replacement if changed.`,
 			},
 			"break_glass_user_ids": schema.SetAttribute{
-				Required:    true,
+				Computed:    true,
+				Optional:    true,
 				ElementType: types.StringType,
 			},
 			"configuration_template_id": schema.StringAttribute{
