@@ -22,6 +22,8 @@ type CreateCampaignConfigurationInfo struct {
 	CronExpression *string `json:"cron_expression,omitempty"`
 	// Optional custom message included when notifying reviewers that the campaign started.
 	CustomStartMessage *string `json:"custom_start_message,omitempty"`
+	// Optional Markdown description shown under the campaign name to admins and reviewers. At most 10,000 characters. Raw HTML, images, and links other than http, https, mailto, or relative links are rejected.
+	Description *string `json:"description,omitempty"`
 	// Scheduled end date of the campaign.
 	EndDate *time.Time `json:"end_date,omitempty"`
 	// Role assignment IDs to exclude from the campaign scope during population.
@@ -113,6 +115,13 @@ func (c *CreateCampaignConfigurationInfo) GetCustomStartMessage() *string {
 		return nil
 	}
 	return c.CustomStartMessage
+}
+
+func (c *CreateCampaignConfigurationInfo) GetDescription() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Description
 }
 
 func (c *CreateCampaignConfigurationInfo) GetEndDate() *time.Time {

@@ -56,6 +56,7 @@ type GroupRemoteInfo struct {
 	TailscaleGroup           *ActiveDirectoryGroup  `tfsdk:"tailscale_group"`
 	TwingateGroup            *ActiveDirectoryGroup  `tfsdk:"twingate_group"`
 	TwingateGroupSynced      *ActiveDirectoryGroup  `tfsdk:"twingate_group_synced"`
+	VaultIdentityGroup       *ActiveDirectoryGroup  `tfsdk:"vault_identity_group"`
 	WorkdayUserSecurityGroup *ActiveDirectoryGroup  `tfsdk:"workday_user_security_group"`
 	WrikeGroup               *ActiveDirectoryGroup  `tfsdk:"wrike_group"`
 	ZendeskGroup             *ActiveDirectoryGroup  `tfsdk:"zendesk_group"`

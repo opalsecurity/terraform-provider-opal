@@ -700,6 +700,19 @@ func (t *TwingateGroupSynced) GetGroupID() string {
 	return t.GroupID
 }
 
+// VaultIdentityGroup - Remote info for Vault identity group.
+type VaultIdentityGroup struct {
+	// The id of the Vault identity group.
+	GroupID string `json:"group_id"`
+}
+
+func (v *VaultIdentityGroup) GetGroupID() string {
+	if v == nil {
+		return ""
+	}
+	return v.GroupID
+}
+
 // WorkdayUserSecurityGroup - Remote info for Workday User Security group.
 type WorkdayUserSecurityGroup struct {
 	// The id of the Workday User Security group.
@@ -871,6 +884,8 @@ type GroupRemoteInfo struct {
 	TwingateGroup *TwingateGroup `json:"twingate_group,omitempty"`
 	// Remote info for Twingate synced group.
 	TwingateGroupSynced *TwingateGroupSynced `json:"twingate_group_synced,omitempty"`
+	// Remote info for Vault identity group.
+	VaultIdentityGroup *VaultIdentityGroup `json:"vault_identity_group,omitempty"`
 	// Remote info for Workday User Security group.
 	WorkdayUserSecurityGroup *WorkdayUserSecurityGroup `json:"workday_user_security_group,omitempty"`
 	// Remote info for Wrike group.
@@ -1245,6 +1260,13 @@ func (g *GroupRemoteInfo) GetTwingateGroupSynced() *TwingateGroupSynced {
 		return nil
 	}
 	return g.TwingateGroupSynced
+}
+
+func (g *GroupRemoteInfo) GetVaultIdentityGroup() *VaultIdentityGroup {
+	if g == nil {
+		return nil
+	}
+	return g.VaultIdentityGroup
 }
 
 func (g *GroupRemoteInfo) GetWorkdayUserSecurityGroup() *WorkdayUserSecurityGroup {

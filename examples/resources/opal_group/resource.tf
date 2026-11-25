@@ -183,6 +183,9 @@ resource "opal_group" "my_group" {
     twingate_group_synced = {
       group_id = "R3JvdXA6MTIzNA=="
     }
+    vault_identity_group = {
+      group_id = "...my_group_id..."
+    }
     workday_user_security_group = {
       group_id = "123abc456def"
     }

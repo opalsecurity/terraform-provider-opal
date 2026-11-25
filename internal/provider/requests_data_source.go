@@ -168,7 +168,7 @@ func (r *RequestsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 									},
 								},
 							},
-							Description: `The list of targets for the request.`,
+							Description: `The list of targets for the request. Items a reviewer denied individually are omitted.`,
 						},
 						"requester_id": schema.StringAttribute{
 							Computed:    true,
@@ -241,6 +241,10 @@ func (r *RequestsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 								},
 							},
 							Description: `The configured reviewer stages for every item in this request, or an error message if reviewers could not be loaded`,
+						},
+						"scheduled_access_start_at": schema.StringAttribute{
+							Computed:    true,
+							Description: `When access is scheduled to begin. Null if access begins as soon as the request is approved.`,
 						},
 						"source": schema.StringAttribute{
 							Computed: true,
