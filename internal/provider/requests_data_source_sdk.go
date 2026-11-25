@@ -104,6 +104,7 @@ func (r *RequestsDataSourceModel) RefreshFromSharedRequestList(ctx context.Conte
 					requests.ReviewerStages.Str = types.StringPointerValue(requestsItem.ReviewerStages.Str)
 				}
 			}
+			requests.ScheduledAccessStartAt = types.StringPointerValue(typeconvert.TimePointerToStringPointer(requestsItem.ScheduledAccessStartAt))
 			if requestsItem.Source != nil {
 				requests.Source = types.StringValue(string(*requestsItem.Source))
 			} else {

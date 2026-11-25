@@ -99,6 +99,20 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 		r.AdminOwnerID = types.StringPointerValue(resp.AdminOwnerID)
 		r.AppID = types.StringPointerValue(resp.AppID)
 		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
+		r.CustomAttributes = []tfTypes.CustomAttribute{}
+
+		for _, customAttributesItem := range resp.CustomAttributes {
+			var customAttributes tfTypes.CustomAttribute
+
+			customAttributes.Key = types.StringValue(customAttributesItem.Key)
+			customAttributes.ValueType = types.StringValue(string(customAttributesItem.ValueType))
+			customAttributes.Values = make([]types.String, 0, len(customAttributesItem.Values))
+			for _, v := range customAttributesItem.Values {
+				customAttributes.Values = append(customAttributes.Values, types.StringValue(v))
+			}
+
+			r.CustomAttributes = append(r.CustomAttributes, customAttributes)
+		}
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.Description = types.StringPointerValue(resp.Description)
 		r.ExtensionsDurationInMinutes = types.Int64PointerValue(resp.ExtensionsDurationInMinutes)
@@ -125,6 +139,10 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 		r.MaxDirectUsersAllowed = types.Int64PointerValue(resp.MaxDirectUsersAllowed)
 		r.MaxUsersExceededMessage = types.StringPointerValue(resp.MaxUsersExceededMessage)
 		r.Name = types.StringPointerValue(resp.Name)
+		r.PushedToAppIds = make([]types.String, 0, len(resp.PushedToAppIds))
+		for _, v := range resp.PushedToAppIds {
+			r.PushedToAppIds = append(r.PushedToAppIds, types.StringValue(v))
+		}
 		if resp.RemoteInfo == nil {
 			r.RemoteInfo = nil
 		} else {
@@ -442,6 +460,12 @@ func (r *GroupDataSourceModel) RefreshFromSharedGroup(ctx context.Context, resp 
 			} else {
 				r.RemoteInfo.TwingateGroupSynced = &tfTypes.ActiveDirectoryGroup{}
 				r.RemoteInfo.TwingateGroupSynced.GroupID = types.StringValue(resp.RemoteInfo.TwingateGroupSynced.GroupID)
+			}
+			if resp.RemoteInfo.VaultIdentityGroup == nil {
+				r.RemoteInfo.VaultIdentityGroup = nil
+			} else {
+				r.RemoteInfo.VaultIdentityGroup = &tfTypes.ActiveDirectoryGroup{}
+				r.RemoteInfo.VaultIdentityGroup.GroupID = types.StringValue(resp.RemoteInfo.VaultIdentityGroup.GroupID)
 			}
 			if resp.RemoteInfo.WorkdayUserSecurityGroup == nil {
 				r.RemoteInfo.WorkdayUserSecurityGroup = nil

@@ -171,12 +171,14 @@ type Request struct {
 	InitiatedByUserID *string `json:"initiated_by_user_id,omitempty"`
 	// The reason for the request.
 	Reason string `json:"reason"`
-	// The list of targets for the request.
+	// The list of targets for the request. Items a reviewer denied individually are omitted.
 	RequestedItemsList []RequestedItem `json:"requested_items_list,omitempty"`
 	// The unique identifier of the user who created the request.
 	RequesterID string `json:"requester_id"`
 	// The configured reviewer stages for every item in this request, or an error message if reviewers could not be loaded
 	ReviewerStages *ReviewerStages `json:"reviewer_stages,omitempty"`
+	// When access is scheduled to begin. Null if access begins as soon as the request is approved.
+	ScheduledAccessStartAt *time.Time `json:"scheduled_access_start_at,omitempty"`
 	// The channel that created the request. Omitted when the source was not recorded.
 	// MCP counts only OAuth sessions. An agent using an API token or a person's
 	// credentials is counted as API, CLI, or WEB.
@@ -272,6 +274,13 @@ func (r *Request) GetReviewerStages() *ReviewerStages {
 		return nil
 	}
 	return r.ReviewerStages
+}
+
+func (r *Request) GetScheduledAccessStartAt() *time.Time {
+	if r == nil {
+		return nil
+	}
+	return r.ScheduledAccessStartAt
 }
 
 func (r *Request) GetSource() *Source {

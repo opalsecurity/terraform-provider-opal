@@ -10,6 +10,7 @@ import (
 type Group struct {
 	AdminOwnerID                types.String           `tfsdk:"admin_owner_id"`
 	AppID                       types.String           `tfsdk:"app_id"`
+	CustomAttributes            []CustomAttribute      `tfsdk:"custom_attributes"`
 	CustomRequestNotification   types.String           `tfsdk:"custom_request_notification"`
 	Description                 types.String           `tfsdk:"description"`
 	ExtensionsDurationInMinutes types.Int64            `tfsdk:"extensions_duration_in_minutes"`
@@ -23,6 +24,7 @@ type Group struct {
 	MaxDirectUsersAllowed       types.Int64            `tfsdk:"max_direct_users_allowed"`
 	MaxUsersExceededMessage     types.String           `tfsdk:"max_users_exceeded_message"`
 	Name                        types.String           `tfsdk:"name"`
+	PushedToAppIds              []types.String         `tfsdk:"pushed_to_app_ids"`
 	RemoteInfo                  *GroupRemoteInfo       `tfsdk:"remote_info"`
 	RemoteName                  types.String           `tfsdk:"remote_name"`
 	RequestConfigurations       []RequestConfiguration `tfsdk:"request_configurations"`

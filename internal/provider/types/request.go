@@ -8,19 +8,20 @@ import (
 )
 
 type Request struct {
-	CreatedAt             types.String                 `tfsdk:"created_at"`
-	CustomFieldsResponses []RequestCustomFieldResponse `tfsdk:"custom_fields_responses"`
-	DurationMinutes       types.Int64                  `tfsdk:"duration_minutes"`
-	ID                    types.String                 `tfsdk:"id"`
-	InitiatedByUserID     types.String                 `tfsdk:"initiated_by_user_id"`
-	Reason                types.String                 `tfsdk:"reason"`
-	RequestedItemsList    []RequestedItem              `tfsdk:"requested_items_list"`
-	RequesterID           types.String                 `tfsdk:"requester_id"`
-	ReviewerStages        *ReviewerStages              `tfsdk:"reviewer_stages"`
-	Source                types.String                 `tfsdk:"source"`
-	Stages                *RequestItemStages           `tfsdk:"stages"`
-	Status                types.String                 `tfsdk:"status"`
-	TargetGroupID         types.String                 `tfsdk:"target_group_id"`
-	TargetUserID          types.String                 `tfsdk:"target_user_id"`
-	UpdatedAt             types.String                 `tfsdk:"updated_at"`
+	CreatedAt              types.String                 `tfsdk:"created_at"`
+	CustomFieldsResponses  []RequestCustomFieldResponse `tfsdk:"custom_fields_responses"`
+	DurationMinutes        types.Int64                  `tfsdk:"duration_minutes"`
+	ID                     types.String                 `tfsdk:"id"`
+	InitiatedByUserID      types.String                 `tfsdk:"initiated_by_user_id"`
+	Reason                 types.String                 `tfsdk:"reason"`
+	RequestedItemsList     []RequestedItem              `tfsdk:"requested_items_list"`
+	RequesterID            types.String                 `tfsdk:"requester_id"`
+	ReviewerStages         *ReviewerStages              `tfsdk:"reviewer_stages"`
+	ScheduledAccessStartAt types.String                 `tfsdk:"scheduled_access_start_at"`
+	Source                 types.String                 `tfsdk:"source"`
+	Stages                 *RequestItemStages           `tfsdk:"stages"`
+	Status                 types.String                 `tfsdk:"status"`
+	TargetGroupID          types.String                 `tfsdk:"target_group_id"`
+	TargetUserID           types.String                 `tfsdk:"target_user_id"`
+	UpdatedAt              types.String                 `tfsdk:"updated_at"`
 }
