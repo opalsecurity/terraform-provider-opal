@@ -73,6 +73,7 @@ const (
 	AppTypeEnumActivecampaign  AppTypeEnum = "ACTIVECAMPAIGN"
 	AppTypeEnumAha             AppTypeEnum = "AHA"
 	AppTypeEnumAsana           AppTypeEnum = "ASANA"
+	AppTypeEnumAzureDevops     AppTypeEnum = "AZURE_DEVOPS"
 	AppTypeEnumBitwarden       AppTypeEnum = "BITWARDEN"
 	AppTypeEnumCalendly        AppTypeEnum = "CALENDLY"
 	AppTypeEnumMiro            AppTypeEnum = "MIRO"
@@ -213,6 +214,8 @@ func (e *AppTypeEnum) UnmarshalJSON(data []byte) error {
 	case "AHA":
 		fallthrough
 	case "ASANA":
+		fallthrough
+	case "AZURE_DEVOPS":
 		fallthrough
 	case "BITWARDEN":
 		fallthrough

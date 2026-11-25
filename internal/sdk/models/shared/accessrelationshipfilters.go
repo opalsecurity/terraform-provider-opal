@@ -3,12 +3,22 @@
 
 package shared
 
-// AccessRelationshipFilters - Filters the returned nodes by the access edges connected to them. When `isAccessibleBy` and `hasAccessTo` are provided, the returned nodes must satisfy both edge constraints simultaneously.
+// AccessRelationshipFilters - Filters the returned nodes by the access edges connected to them. When `isAccessibleBy` and `hasAccessTo` are provided, the returned nodes must satisfy both edge constraints simultaneously. Supports nested composition via `allOf` / `anyOf` / `not`, and `directOnly` to restrict matching to direct grants.
 type AccessRelationshipFilters struct {
+	// When true, `hasAccessTo` / `isAccessibleBy` match only direct role assignments (no nested group membership expansion).
+	//
+	DirectOnly *bool `json:"directOnly,omitempty"`
 	// Filters for matching entities by type, name, tag, IDs, connections, or access levels. Supports recursive logical composition via allOf/anyOf.
 	HasAccessTo *AccessEntityFilters `json:"hasAccessTo,omitempty"`
 	// Filters for matching entities by type, name, tag, IDs, connections, or access levels. Supports recursive logical composition via allOf/anyOf.
 	IsAccessibleBy *AccessEntityFilters `json:"isAccessibleBy,omitempty"`
+}
+
+func (a *AccessRelationshipFilters) GetDirectOnly() *bool {
+	if a == nil {
+		return nil
+	}
+	return a.DirectOnly
 }
 
 func (a *AccessRelationshipFilters) GetHasAccessTo() *AccessEntityFilters {

@@ -3,71 +3,71 @@
 
 package shared
 
-// AppSchemasType - The type of an app.
-type AppSchemasType string
+// Type - The type of an app.
+type Type string
 
 const (
-	AppSchemasTypeActiveDirectory AppSchemasType = "ACTIVE_DIRECTORY"
-	AppSchemasTypeAnthropic       AppSchemasType = "ANTHROPIC"
-	AppSchemasTypeAzureAd         AppSchemasType = "AZURE_AD"
-	AppSchemasTypeAws             AppSchemasType = "AWS"
-	AppSchemasTypeAwsSso          AppSchemasType = "AWS_SSO"
-	AppSchemasTypeClickhouse      AppSchemasType = "CLICKHOUSE"
-	AppSchemasTypeCoupa           AppSchemasType = "COUPA"
-	AppSchemasTypeCursor          AppSchemasType = "CURSOR"
-	AppSchemasTypeCustom          AppSchemasType = "CUSTOM"
-	AppSchemasTypeConfluence      AppSchemasType = "CONFLUENCE"
-	AppSchemasTypeCustomConnector AppSchemasType = "CUSTOM_CONNECTOR"
-	AppSchemasTypeDatabricks      AppSchemasType = "DATABRICKS"
-	AppSchemasTypeDatastaxAstra   AppSchemasType = "DATASTAX_ASTRA"
-	AppSchemasTypeAlicloud        AppSchemasType = "ALICLOUD"
-	AppSchemasTypeDevin           AppSchemasType = "DEVIN"
-	AppSchemasTypeDocusign        AppSchemasType = "DOCUSIGN"
-	AppSchemasTypeDuo             AppSchemasType = "DUO"
-	AppSchemasTypeGcp             AppSchemasType = "GCP"
-	AppSchemasTypeGitHub          AppSchemasType = "GIT_HUB"
-	AppSchemasTypeGitLab          AppSchemasType = "GIT_LAB"
-	AppSchemasTypeGoogleGroups    AppSchemasType = "GOOGLE_GROUPS"
-	AppSchemasTypeGoogleWorkspace AppSchemasType = "GOOGLE_WORKSPACE"
-	AppSchemasTypeGrafana         AppSchemasType = "GRAFANA"
-	AppSchemasTypeHubspot         AppSchemasType = "HUBSPOT"
-	AppSchemasTypeIlevel          AppSchemasType = "ILEVEL"
-	AppSchemasTypeIncidentio      AppSchemasType = "INCIDENTIO"
-	AppSchemasTypeJira            AppSchemasType = "JIRA"
-	AppSchemasTypeLdap            AppSchemasType = "LDAP"
-	AppSchemasTypeMariadb         AppSchemasType = "MARIADB"
-	AppSchemasTypeMongo           AppSchemasType = "MONGO"
-	AppSchemasTypeMongoAtlas      AppSchemasType = "MONGO_ATLAS"
-	AppSchemasTypeMysql           AppSchemasType = "MYSQL"
-	AppSchemasTypeNetsuite        AppSchemasType = "NETSUITE"
-	AppSchemasTypeDatadog         AppSchemasType = "DATADOG"
-	AppSchemasTypeOktaCiam        AppSchemasType = "OKTA_CIAM"
-	AppSchemasTypeOktaDirectory   AppSchemasType = "OKTA_DIRECTORY"
-	AppSchemasTypeOpenaiPlatform  AppSchemasType = "OPENAI_PLATFORM"
-	AppSchemasTypeOpal            AppSchemasType = "OPAL"
-	AppSchemasTypeOracleFusion    AppSchemasType = "ORACLE_FUSION"
-	AppSchemasTypePagerduty       AppSchemasType = "PAGERDUTY"
-	AppSchemasTypePostgres        AppSchemasType = "POSTGRES"
-	AppSchemasTypeRootly          AppSchemasType = "ROOTLY"
-	AppSchemasTypeSalesforce      AppSchemasType = "SALESFORCE"
-	AppSchemasTypeSnowflake       AppSchemasType = "SNOWFLAKE"
-	AppSchemasTypeSlack           AppSchemasType = "SLACK"
-	AppSchemasTypeTableau         AppSchemasType = "TABLEAU"
-	AppSchemasTypeTailscale       AppSchemasType = "TAILSCALE"
-	AppSchemasTypeTeleport        AppSchemasType = "TELEPORT"
-	AppSchemasTypeTwingate        AppSchemasType = "TWINGATE"
-	AppSchemasTypeVault           AppSchemasType = "VAULT"
-	AppSchemasTypeWorkday         AppSchemasType = "WORKDAY"
-	AppSchemasTypeZendesk         AppSchemasType = "ZENDESK"
-	AppSchemasTypeZoom            AppSchemasType = "ZOOM"
+	TypeActiveDirectory Type = "ACTIVE_DIRECTORY"
+	TypeAnthropic       Type = "ANTHROPIC"
+	TypeAzureAd         Type = "AZURE_AD"
+	TypeAws             Type = "AWS"
+	TypeAwsSso          Type = "AWS_SSO"
+	TypeClickhouse      Type = "CLICKHOUSE"
+	TypeCoupa           Type = "COUPA"
+	TypeCursor          Type = "CURSOR"
+	TypeCustom          Type = "CUSTOM"
+	TypeConfluence      Type = "CONFLUENCE"
+	TypeCustomConnector Type = "CUSTOM_CONNECTOR"
+	TypeDatabricks      Type = "DATABRICKS"
+	TypeDatastaxAstra   Type = "DATASTAX_ASTRA"
+	TypeAlicloud        Type = "ALICLOUD"
+	TypeDevin           Type = "DEVIN"
+	TypeDocusign        Type = "DOCUSIGN"
+	TypeDuo             Type = "DUO"
+	TypeGcp             Type = "GCP"
+	TypeGitHub          Type = "GIT_HUB"
+	TypeGitLab          Type = "GIT_LAB"
+	TypeGoogleGroups    Type = "GOOGLE_GROUPS"
+	TypeGoogleWorkspace Type = "GOOGLE_WORKSPACE"
+	TypeGrafana         Type = "GRAFANA"
+	TypeHubspot         Type = "HUBSPOT"
+	TypeIlevel          Type = "ILEVEL"
+	TypeIncidentio      Type = "INCIDENTIO"
+	TypeJira            Type = "JIRA"
+	TypeLdap            Type = "LDAP"
+	TypeMariadb         Type = "MARIADB"
+	TypeMongo           Type = "MONGO"
+	TypeMongoAtlas      Type = "MONGO_ATLAS"
+	TypeMysql           Type = "MYSQL"
+	TypeNetsuite        Type = "NETSUITE"
+	TypeDatadog         Type = "DATADOG"
+	TypeOktaCiam        Type = "OKTA_CIAM"
+	TypeOktaDirectory   Type = "OKTA_DIRECTORY"
+	TypeOpenaiPlatform  Type = "OPENAI_PLATFORM"
+	TypeOpal            Type = "OPAL"
+	TypeOracleFusion    Type = "ORACLE_FUSION"
+	TypePagerduty       Type = "PAGERDUTY"
+	TypePostgres        Type = "POSTGRES"
+	TypeRootly          Type = "ROOTLY"
+	TypeSalesforce      Type = "SALESFORCE"
+	TypeSnowflake       Type = "SNOWFLAKE"
+	TypeSlack           Type = "SLACK"
+	TypeTableau         Type = "TABLEAU"
+	TypeTailscale       Type = "TAILSCALE"
+	TypeTeleport        Type = "TELEPORT"
+	TypeTwingate        Type = "TWINGATE"
+	TypeVault           Type = "VAULT"
+	TypeWorkday         Type = "WORKDAY"
+	TypeZendesk         Type = "ZENDESK"
+	TypeZoom            Type = "ZOOM"
 )
 
-func (e AppSchemasType) ToPointer() *AppSchemasType {
+func (e Type) ToPointer() *Type {
 	return &e
 }
 
 // IsExact returns true if the value matches a known enum value, false otherwise.
-func (e *AppSchemasType) IsExact() bool {
+func (e *Type) IsExact() bool {
 	if e != nil {
 		switch *e {
 		case "ACTIVE_DIRECTORY", "ANTHROPIC", "AZURE_AD", "AWS", "AWS_SSO", "CLICKHOUSE", "COUPA", "CURSOR", "CUSTOM", "CONFLUENCE", "CUSTOM_CONNECTOR", "DATABRICKS", "DATASTAX_ASTRA", "ALICLOUD", "DEVIN", "DOCUSIGN", "DUO", "GCP", "GIT_HUB", "GIT_LAB", "GOOGLE_GROUPS", "GOOGLE_WORKSPACE", "GRAFANA", "HUBSPOT", "ILEVEL", "INCIDENTIO", "JIRA", "LDAP", "MARIADB", "MONGO", "MONGO_ATLAS", "MYSQL", "NETSUITE", "DATADOG", "OKTA_CIAM", "OKTA_DIRECTORY", "OPENAI_PLATFORM", "OPAL", "ORACLE_FUSION", "PAGERDUTY", "POSTGRES", "ROOTLY", "SALESFORCE", "SNOWFLAKE", "SLACK", "TABLEAU", "TAILSCALE", "TELEPORT", "TWINGATE", "VAULT", "WORKDAY", "ZENDESK", "ZOOM":
@@ -98,7 +98,7 @@ type App struct {
 	// The name of the app.
 	Name string `json:"name"`
 	// The type of an app.
-	Type AppSchemasType `json:"app_type"`
+	Type Type `json:"app_type"`
 	// Validation checks of an apps' configuration and permissions.
 	Validations []AppValidation `json:"validations,omitempty"`
 	// The visibility level of the entity.
@@ -150,9 +150,9 @@ func (a *App) GetName() string {
 	return a.Name
 }
 
-func (a *App) GetType() AppSchemasType {
+func (a *App) GetType() Type {
 	if a == nil {
-		return AppSchemasType("")
+		return Type("")
 	}
 	return a.Type
 }

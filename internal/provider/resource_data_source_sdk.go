@@ -38,6 +38,20 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 		}
 		r.AppID = types.StringPointerValue(resp.AppID)
 		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
+		r.CustomAttributes = []tfTypes.CustomAttribute{}
+
+		for _, customAttributesItem := range resp.CustomAttributes {
+			var customAttributes tfTypes.CustomAttribute
+
+			customAttributes.Key = types.StringValue(customAttributesItem.Key)
+			customAttributes.ValueType = types.StringValue(string(customAttributesItem.ValueType))
+			customAttributes.Values = make([]types.String, 0, len(customAttributesItem.Values))
+			for _, v := range customAttributesItem.Values {
+				customAttributes.Values = append(customAttributes.Values, types.StringValue(v))
+			}
+
+			r.CustomAttributes = append(r.CustomAttributes, customAttributes)
+		}
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.DescendantResourceIds = make([]types.String, 0, len(resp.DescendantResourceIds))
 		for _, v := range resp.DescendantResourceIds {
@@ -161,6 +175,42 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			} else {
 				r.RemoteInfo.AxiomRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.AxiomRole.RoleID = types.StringValue(resp.RemoteInfo.AxiomRole.RoleID)
+			}
+			if resp.RemoteInfo.AzureDevopsOrganization == nil {
+				r.RemoteInfo.AzureDevopsOrganization = nil
+			} else {
+				r.RemoteInfo.AzureDevopsOrganization = &tfTypes.ZendeskOrganization{}
+				r.RemoteInfo.AzureDevopsOrganization.OrganizationID = types.StringValue(resp.RemoteInfo.AzureDevopsOrganization.OrganizationID)
+			}
+			if resp.RemoteInfo.AzureDevopsPipeline == nil {
+				r.RemoteInfo.AzureDevopsPipeline = nil
+			} else {
+				r.RemoteInfo.AzureDevopsPipeline = &tfTypes.AzureDevopsPipeline{}
+				r.RemoteInfo.AzureDevopsPipeline.PipelineID = types.StringValue(resp.RemoteInfo.AzureDevopsPipeline.PipelineID)
+			}
+			if resp.RemoteInfo.AzureDevopsProject == nil {
+				r.RemoteInfo.AzureDevopsProject = nil
+			} else {
+				r.RemoteInfo.AzureDevopsProject = &tfTypes.AzureDevopsProject{}
+				r.RemoteInfo.AzureDevopsProject.ProjectID = types.StringValue(resp.RemoteInfo.AzureDevopsProject.ProjectID)
+			}
+			if resp.RemoteInfo.AzureDevopsRepo == nil {
+				r.RemoteInfo.AzureDevopsRepo = nil
+			} else {
+				r.RemoteInfo.AzureDevopsRepo = &tfTypes.AzureDevopsRepo{}
+				r.RemoteInfo.AzureDevopsRepo.RepositoryID = types.StringValue(resp.RemoteInfo.AzureDevopsRepo.RepositoryID)
+			}
+			if resp.RemoteInfo.AzureDevopsServiceConnection == nil {
+				r.RemoteInfo.AzureDevopsServiceConnection = nil
+			} else {
+				r.RemoteInfo.AzureDevopsServiceConnection = &tfTypes.AzureDevopsServiceConnection{}
+				r.RemoteInfo.AzureDevopsServiceConnection.ServiceConnectionID = types.StringValue(resp.RemoteInfo.AzureDevopsServiceConnection.ServiceConnectionID)
+			}
+			if resp.RemoteInfo.AzureDevopsServicePrincipal == nil {
+				r.RemoteInfo.AzureDevopsServicePrincipal = nil
+			} else {
+				r.RemoteInfo.AzureDevopsServicePrincipal = &tfTypes.AzureDevopsServicePrincipal{}
+				r.RemoteInfo.AzureDevopsServicePrincipal.ServicePrincipalID = types.StringValue(resp.RemoteInfo.AzureDevopsServicePrincipal.ServicePrincipalID)
 			}
 			if resp.RemoteInfo.AzureEnterpriseApp == nil {
 				r.RemoteInfo.AzureEnterpriseApp = nil
@@ -449,7 +499,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			if resp.RemoteInfo.GcpProject == nil {
 				r.RemoteInfo.GcpProject = nil
 			} else {
-				r.RemoteInfo.GcpProject = &tfTypes.GcpProject{}
+				r.RemoteInfo.GcpProject = &tfTypes.AzureDevopsProject{}
 				r.RemoteInfo.GcpProject.ProjectID = types.StringValue(resp.RemoteInfo.GcpProject.ProjectID)
 			}
 			if resp.RemoteInfo.GcpServiceAccount == nil {
@@ -496,7 +546,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			if resp.RemoteInfo.GitlabProject == nil {
 				r.RemoteInfo.GitlabProject = nil
 			} else {
-				r.RemoteInfo.GitlabProject = &tfTypes.GcpProject{}
+				r.RemoteInfo.GitlabProject = &tfTypes.AzureDevopsProject{}
 				r.RemoteInfo.GitlabProject.ProjectID = types.StringValue(resp.RemoteInfo.GitlabProject.ProjectID)
 			}
 			if resp.RemoteInfo.GoogleWorkspaceRole == nil {
@@ -544,7 +594,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			if resp.RemoteInfo.LinearProject == nil {
 				r.RemoteInfo.LinearProject = nil
 			} else {
-				r.RemoteInfo.LinearProject = &tfTypes.GcpProject{}
+				r.RemoteInfo.LinearProject = &tfTypes.AzureDevopsProject{}
 				r.RemoteInfo.LinearProject.ProjectID = types.StringValue(resp.RemoteInfo.LinearProject.ProjectID)
 			}
 			if resp.RemoteInfo.MiroBoard == nil {
@@ -592,7 +642,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			if resp.RemoteInfo.OpenaiPlatformProject == nil {
 				r.RemoteInfo.OpenaiPlatformProject = nil
 			} else {
-				r.RemoteInfo.OpenaiPlatformProject = &tfTypes.GcpProject{}
+				r.RemoteInfo.OpenaiPlatformProject = &tfTypes.AzureDevopsProject{}
 				r.RemoteInfo.OpenaiPlatformProject.ProjectID = types.StringValue(resp.RemoteInfo.OpenaiPlatformProject.ProjectID)
 			}
 			if resp.RemoteInfo.OpenaiPlatformServiceAccount == nil {
@@ -729,7 +779,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 			if resp.RemoteInfo.VercelProject == nil {
 				r.RemoteInfo.VercelProject = nil
 			} else {
-				r.RemoteInfo.VercelProject = &tfTypes.GcpProject{}
+				r.RemoteInfo.VercelProject = &tfTypes.AzureDevopsProject{}
 				r.RemoteInfo.VercelProject.ProjectID = types.StringValue(resp.RemoteInfo.VercelProject.ProjectID)
 			}
 			if resp.RemoteInfo.VercelRole == nil {
@@ -790,6 +840,7 @@ func (r *ResourceDataSourceModel) RefreshFromSharedResource(ctx context.Context,
 					requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 				}
 			}
+			requestConfigurations.DisableScheduledGrants = types.BoolPointerValue(requestConfigurationsItem.DisableScheduledGrants)
 			requestConfigurations.DisableSkipLevelEscalation = types.BoolPointerValue(requestConfigurationsItem.DisableSkipLevelEscalation)
 			requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 			requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)

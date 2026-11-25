@@ -3,27 +3,12 @@
 
 package shared
 
-import (
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
-)
-
 // EntityNameFilter - Filters entities by name using a string match strategy.
 type EntityNameFilter struct {
 	// The string value to match against the entity name.
 	String string `json:"string"`
 	// How to match a string value against entity names. REGEX matches the value as a case-insensitive regular expression.
 	StringMatchType StringMatchType `json:"stringMatchType"`
-}
-
-func (e EntityNameFilter) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(e, "", false)
-}
-
-func (e *EntityNameFilter) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &e, "", false, nil); err != nil {
-		return err
-	}
-	return nil
 }
 
 func (e *EntityNameFilter) GetString() string {

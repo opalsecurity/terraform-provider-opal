@@ -183,6 +183,9 @@ resource "opal_group" "my_group" {
     twingate_group_synced = {
       group_id = "R3JvdXA6MTIzNA=="
     }
+    vault_identity_group = {
+      group_id = "...my_group_id..."
+    }
     workday_user_security_group = {
       group_id = "123abc456def"
     }
@@ -212,6 +215,7 @@ resource "opal_group" "my_group" {
           "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]
       }
+      disable_scheduled_grants       = false
       disable_skip_level_escalation  = false
       extensions_duration_in_minutes = 120
       max_duration                   = 120

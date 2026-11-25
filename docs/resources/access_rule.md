@@ -17,6 +17,7 @@ resource "opal_access_rule" "my_accessrule" {
   admin_owner_id = "7c86c85d-0651-43e2-a748-d69d658418e8"
   description    = "This access rule represents all platform engineers in the company."
   name           = "Platform Engineering"
+  query          = "...my_query..."
   rule_clauses = {
     unless = {
       clauses = [
@@ -73,67 +74,32 @@ resource "opal_access_rule" "my_accessrule" {
 - `admin_owner_id` (String) The ID of the owner of the group.
 - `description` (String) A description of the group.
 - `name` (String) The name of the access rule.
-- `rule_clauses` (Attributes) (see [below for nested schema](#nestedatt--rule_clauses))
 - `status` (String) The status of the access rule. must be one of ["ACTIVE", "PAUSED"]
+
+### Optional
+
+- `query` (String) JSON-encoded Opal Query body (OpalNodeQueryBody). Use `jsonencode({...})`. At least one of `query` or `rule_clauses` is required; both AND. On the REST API, omitting a side on PUT clears it. In Terraform, do not rely on omitting an Optional+Computed attribute to clear — prior state may be retained; set only the side you want or destroy/recreate.
+- `rule_clauses` (Attributes) (see [below for nested schema](#nestedatt--rule_clauses))
 
 ### Read-Only
 
 - `id` (String) The access rule ID (group ID) of the access rule.
-- `uses_opal_query` (Boolean) True when the access rule uses an Opal Query, which the API can't describe yet. Its `ruleClauses` are then empty; view the rule in Opal.
+- `uses_opal_query` (Boolean) True when the access rule stores an Opal Query (including hybrids). `query` is set when the REST dialect can express that filter; it is omitted for filters the API cannot express (e.g. risk, identity detection, agent fields). Rely on this flag, not only on whether `query` is present.
 
 <a id="nestedatt--rule_clauses"></a>
 ### Nested Schema for `rule_clauses`
 
-Required:
-
-- `when` (Attributes) (see [below for nested schema](#nestedatt--rule_clauses--when))
-
 Optional:
 
 - `unless` (Attributes) (see [below for nested schema](#nestedatt--rule_clauses--unless))
-
-<a id="nestedatt--rule_clauses--when"></a>
-### Nested Schema for `rule_clauses.when`
-
-Required:
-
-- `clauses` (Attributes List) Empty only when the access rule has `uses_opal_query` set. (see [below for nested schema](#nestedatt--rule_clauses--when--clauses))
-
-<a id="nestedatt--rule_clauses--when--clauses"></a>
-### Nested Schema for `rule_clauses.when.clauses`
-
-Optional:
-
-- `attribute_selectors` (Attributes List) (see [below for nested schema](#nestedatt--rule_clauses--when--clauses--attribute_selectors))
-- `selectors` (Attributes List) Not Null (see [below for nested schema](#nestedatt--rule_clauses--when--clauses--selectors))
-
-<a id="nestedatt--rule_clauses--when--clauses--attribute_selectors"></a>
-### Nested Schema for `rule_clauses.when.clauses.attribute_selectors`
-
-Optional:
-
-- `attribute` (String) Not Null; must be "HR_IDP_STATUS"
-- `values` (List of String) Values to match; a user matches if their attribute equals any of them. For HR_IDP_STATUS, use HrIdpStatus values, or UNSET for users with no IDP status (shown as "Inactive"). UNSET must be the last value. Not Null
-
-
-<a id="nestedatt--rule_clauses--when--clauses--selectors"></a>
-### Nested Schema for `rule_clauses.when.clauses.selectors`
-
-Optional:
-
-- `connection_id` (String) Not Null
-- `key` (String) Not Null
-- `value` (String) Not Null
-
-
-
+- `when` (Attributes) Not Null (see [below for nested schema](#nestedatt--rule_clauses--when))
 
 <a id="nestedatt--rule_clauses--unless"></a>
 ### Nested Schema for `rule_clauses.unless`
 
 Optional:
 
-- `clauses` (Attributes List) Empty only when the access rule has `uses_opal_query` set. Not Null (see [below for nested schema](#nestedatt--rule_clauses--unless--clauses))
+- `clauses` (Attributes List) May be empty for query-only rules (GET returns empty clauses). Non-empty for tag-only and hybrid rules that include a tag CNF. Not Null (see [below for nested schema](#nestedatt--rule_clauses--unless--clauses))
 
 <a id="nestedatt--rule_clauses--unless--clauses"></a>
 ### Nested Schema for `rule_clauses.unless.clauses`
@@ -154,6 +120,42 @@ Optional:
 
 <a id="nestedatt--rule_clauses--unless--clauses--selectors"></a>
 ### Nested Schema for `rule_clauses.unless.clauses.selectors`
+
+Optional:
+
+- `connection_id` (String) Not Null
+- `key` (String) Not Null
+- `value` (String) Not Null
+
+
+
+
+<a id="nestedatt--rule_clauses--when"></a>
+### Nested Schema for `rule_clauses.when`
+
+Optional:
+
+- `clauses` (Attributes List) May be empty for query-only rules (GET returns empty clauses). Non-empty for tag-only and hybrid rules that include a tag CNF. Not Null (see [below for nested schema](#nestedatt--rule_clauses--when--clauses))
+
+<a id="nestedatt--rule_clauses--when--clauses"></a>
+### Nested Schema for `rule_clauses.when.clauses`
+
+Optional:
+
+- `attribute_selectors` (Attributes List) (see [below for nested schema](#nestedatt--rule_clauses--when--clauses--attribute_selectors))
+- `selectors` (Attributes List) Not Null (see [below for nested schema](#nestedatt--rule_clauses--when--clauses--selectors))
+
+<a id="nestedatt--rule_clauses--when--clauses--attribute_selectors"></a>
+### Nested Schema for `rule_clauses.when.clauses.attribute_selectors`
+
+Optional:
+
+- `attribute` (String) Not Null; must be "HR_IDP_STATUS"
+- `values` (List of String) Values to match; a user matches if their attribute equals any of them. For HR_IDP_STATUS, use HrIdpStatus values, or UNSET for users with no IDP status (shown as "Inactive"). UNSET must be the last value. Not Null
+
+
+<a id="nestedatt--rule_clauses--when--clauses--selectors"></a>
+### Nested Schema for `rule_clauses.when.clauses.selectors`
 
 Optional:
 

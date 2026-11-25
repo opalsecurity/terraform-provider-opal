@@ -16,12 +16,12 @@ type Query struct {
 	AccessLevelRemoteIds []string `json:"accessLevelRemoteIds,omitempty"`
 	// Constraints on the access path edges themselves.
 	EdgeFilter *OpalAccessPathEdgeFilter `json:"edgeFilter,omitempty"`
-	// Filters the returned nodes by the access edges connected to them. When `isAccessibleBy` and `hasAccessTo` are provided, the returned nodes must satisfy both edge constraints simultaneously.
+	// Filters the returned nodes by the access edges connected to them. When `isAccessibleBy` and `hasAccessTo` are provided, the returned nodes must satisfy both edge constraints simultaneously. Supports nested composition via `allOf` / `anyOf` / `not`, and `directOnly` to restrict matching to direct grants.
 	//
 	EntitlementAccessFilters *AccessRelationshipFilters `json:"entitlementAccessFilters,omitempty"`
 	// Filters for matching entities by type, name, tag, IDs, connections, or access levels. Supports recursive logical composition via allOf/anyOf.
 	EntitlementFilter *AccessEntityFilters `json:"entitlementFilter,omitempty"`
-	// Filters the returned nodes by the access edges connected to them. When `isAccessibleBy` and `hasAccessTo` are provided, the returned nodes must satisfy both edge constraints simultaneously.
+	// Filters the returned nodes by the access edges connected to them. When `isAccessibleBy` and `hasAccessTo` are provided, the returned nodes must satisfy both edge constraints simultaneously. Supports nested composition via `allOf` / `anyOf` / `not`, and `directOnly` to restrict matching to direct grants.
 	//
 	PrincipalAccessFilters *AccessRelationshipFilters `json:"principalAccessFilters,omitempty"`
 	// Filters for matching entities by type, name, tag, IDs, connections, or access levels. Supports recursive logical composition via allOf/anyOf.
@@ -95,6 +95,8 @@ type Configuration struct {
 	CronExpression *string `json:"cron_expression,omitempty"`
 	// Optional custom message included when notifying reviewers that the campaign started.
 	CustomStartMessage *string `json:"custom_start_message,omitempty"`
+	// Optional Markdown description shown under the campaign name to admins and reviewers. At most 10,000 characters. Raw HTML, images, and links other than http, https, mailto, or relative links are rejected.
+	Description *string `json:"description,omitempty"`
 	// Scheduled end date of the campaign.
 	EndDate *time.Time `json:"end_date,omitempty"`
 	// Controls what group assets reviewers can see during the campaign.
@@ -196,6 +198,13 @@ func (c *Configuration) GetCustomStartMessage() *string {
 		return nil
 	}
 	return c.CustomStartMessage
+}
+
+func (c *Configuration) GetDescription() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Description
 }
 
 func (c *Configuration) GetEndDate() *time.Time {

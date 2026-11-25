@@ -132,6 +132,12 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 				RoleRemoteIds: roleRemoteIds,
 			}
 		}
+		disableScheduledGrants := new(bool)
+		if !r.RequestConfigurations[requestConfigurationsIndex].DisableScheduledGrants.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].DisableScheduledGrants.IsNull() {
+			*disableScheduledGrants = r.RequestConfigurations[requestConfigurationsIndex].DisableScheduledGrants.ValueBool()
+		} else {
+			disableScheduledGrants = nil
+		}
 		disableSkipLevelEscalation := new(bool)
 		if !r.RequestConfigurations[requestConfigurationsIndex].DisableSkipLevelEscalation.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].DisableSkipLevelEscalation.IsNull() {
 			*disableSkipLevelEscalation = r.RequestConfigurations[requestConfigurationsIndex].DisableSkipLevelEscalation.ValueBool()
@@ -242,6 +248,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedCreateConfigurationTemplate
 			AllowRequests:               allowRequests,
 			AutoApproval:                autoApproval,
 			Condition:                   condition,
+			DisableScheduledGrants:      disableScheduledGrants,
 			DisableSkipLevelEscalation:  disableSkipLevelEscalation,
 			ExtensionsDurationInMinutes: extensionsDurationInMinutes,
 			MaxDuration:                 maxDuration,
@@ -389,6 +396,12 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 				RoleRemoteIds: roleRemoteIds,
 			}
 		}
+		disableScheduledGrants := new(bool)
+		if !r.RequestConfigurations[requestConfigurationsIndex].DisableScheduledGrants.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].DisableScheduledGrants.IsNull() {
+			*disableScheduledGrants = r.RequestConfigurations[requestConfigurationsIndex].DisableScheduledGrants.ValueBool()
+		} else {
+			disableScheduledGrants = nil
+		}
 		disableSkipLevelEscalation := new(bool)
 		if !r.RequestConfigurations[requestConfigurationsIndex].DisableSkipLevelEscalation.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].DisableSkipLevelEscalation.IsNull() {
 			*disableSkipLevelEscalation = r.RequestConfigurations[requestConfigurationsIndex].DisableSkipLevelEscalation.ValueBool()
@@ -499,6 +512,7 @@ func (r *ConfigurationTemplateResourceModel) ToSharedUpdateConfigurationTemplate
 			AllowRequests:               allowRequests,
 			AutoApproval:                autoApproval,
 			Condition:                   condition,
+			DisableScheduledGrants:      disableScheduledGrants,
 			DisableSkipLevelEscalation:  disableSkipLevelEscalation,
 			ExtensionsDurationInMinutes: extensionsDurationInMinutes,
 			MaxDuration:                 maxDuration,

@@ -30,6 +30,21 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				results.AncestorResourceIds = append(results.AncestorResourceIds, types.StringValue(v))
 			}
 			results.AppID = types.StringPointerValue(resultsItem.AppID)
+			results.ConfigurationTemplateID = types.StringPointerValue(resultsItem.ConfigurationTemplateID)
+			results.CustomAttributes = []tfTypes.CustomAttribute{}
+
+			for _, customAttributesItem := range resultsItem.CustomAttributes {
+				var customAttributes tfTypes.CustomAttribute
+
+				customAttributes.Key = types.StringValue(customAttributesItem.Key)
+				customAttributes.ValueType = types.StringValue(string(customAttributesItem.ValueType))
+				customAttributes.Values = make([]types.String, 0, len(customAttributesItem.Values))
+				for _, v := range customAttributesItem.Values {
+					customAttributes.Values = append(customAttributes.Values, types.StringValue(v))
+				}
+
+				results.CustomAttributes = append(results.CustomAttributes, customAttributes)
+			}
 			results.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
 			results.DescendantResourceIds = make([]types.String, 0, len(resultsItem.DescendantResourceIds))
 			for _, v := range resultsItem.DescendantResourceIds {
@@ -153,6 +168,42 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				} else {
 					results.RemoteInfo.AxiomRole = &tfTypes.ClickhouseRole{}
 					results.RemoteInfo.AxiomRole.RoleID = types.StringValue(resultsItem.RemoteInfo.AxiomRole.RoleID)
+				}
+				if resultsItem.RemoteInfo.AzureDevopsOrganization == nil {
+					results.RemoteInfo.AzureDevopsOrganization = nil
+				} else {
+					results.RemoteInfo.AzureDevopsOrganization = &tfTypes.ZendeskOrganization{}
+					results.RemoteInfo.AzureDevopsOrganization.OrganizationID = types.StringValue(resultsItem.RemoteInfo.AzureDevopsOrganization.OrganizationID)
+				}
+				if resultsItem.RemoteInfo.AzureDevopsPipeline == nil {
+					results.RemoteInfo.AzureDevopsPipeline = nil
+				} else {
+					results.RemoteInfo.AzureDevopsPipeline = &tfTypes.AzureDevopsPipeline{}
+					results.RemoteInfo.AzureDevopsPipeline.PipelineID = types.StringValue(resultsItem.RemoteInfo.AzureDevopsPipeline.PipelineID)
+				}
+				if resultsItem.RemoteInfo.AzureDevopsProject == nil {
+					results.RemoteInfo.AzureDevopsProject = nil
+				} else {
+					results.RemoteInfo.AzureDevopsProject = &tfTypes.AzureDevopsProject{}
+					results.RemoteInfo.AzureDevopsProject.ProjectID = types.StringValue(resultsItem.RemoteInfo.AzureDevopsProject.ProjectID)
+				}
+				if resultsItem.RemoteInfo.AzureDevopsRepo == nil {
+					results.RemoteInfo.AzureDevopsRepo = nil
+				} else {
+					results.RemoteInfo.AzureDevopsRepo = &tfTypes.AzureDevopsRepo{}
+					results.RemoteInfo.AzureDevopsRepo.RepositoryID = types.StringValue(resultsItem.RemoteInfo.AzureDevopsRepo.RepositoryID)
+				}
+				if resultsItem.RemoteInfo.AzureDevopsServiceConnection == nil {
+					results.RemoteInfo.AzureDevopsServiceConnection = nil
+				} else {
+					results.RemoteInfo.AzureDevopsServiceConnection = &tfTypes.AzureDevopsServiceConnection{}
+					results.RemoteInfo.AzureDevopsServiceConnection.ServiceConnectionID = types.StringValue(resultsItem.RemoteInfo.AzureDevopsServiceConnection.ServiceConnectionID)
+				}
+				if resultsItem.RemoteInfo.AzureDevopsServicePrincipal == nil {
+					results.RemoteInfo.AzureDevopsServicePrincipal = nil
+				} else {
+					results.RemoteInfo.AzureDevopsServicePrincipal = &tfTypes.AzureDevopsServicePrincipal{}
+					results.RemoteInfo.AzureDevopsServicePrincipal.ServicePrincipalID = types.StringValue(resultsItem.RemoteInfo.AzureDevopsServicePrincipal.ServicePrincipalID)
 				}
 				if resultsItem.RemoteInfo.AzureEnterpriseApp == nil {
 					results.RemoteInfo.AzureEnterpriseApp = nil
@@ -441,7 +492,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				if resultsItem.RemoteInfo.GcpProject == nil {
 					results.RemoteInfo.GcpProject = nil
 				} else {
-					results.RemoteInfo.GcpProject = &tfTypes.GcpProject{}
+					results.RemoteInfo.GcpProject = &tfTypes.AzureDevopsProject{}
 					results.RemoteInfo.GcpProject.ProjectID = types.StringValue(resultsItem.RemoteInfo.GcpProject.ProjectID)
 				}
 				if resultsItem.RemoteInfo.GcpServiceAccount == nil {
@@ -488,7 +539,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				if resultsItem.RemoteInfo.GitlabProject == nil {
 					results.RemoteInfo.GitlabProject = nil
 				} else {
-					results.RemoteInfo.GitlabProject = &tfTypes.GcpProject{}
+					results.RemoteInfo.GitlabProject = &tfTypes.AzureDevopsProject{}
 					results.RemoteInfo.GitlabProject.ProjectID = types.StringValue(resultsItem.RemoteInfo.GitlabProject.ProjectID)
 				}
 				if resultsItem.RemoteInfo.GoogleWorkspaceRole == nil {
@@ -536,7 +587,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				if resultsItem.RemoteInfo.LinearProject == nil {
 					results.RemoteInfo.LinearProject = nil
 				} else {
-					results.RemoteInfo.LinearProject = &tfTypes.GcpProject{}
+					results.RemoteInfo.LinearProject = &tfTypes.AzureDevopsProject{}
 					results.RemoteInfo.LinearProject.ProjectID = types.StringValue(resultsItem.RemoteInfo.LinearProject.ProjectID)
 				}
 				if resultsItem.RemoteInfo.MiroBoard == nil {
@@ -584,7 +635,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				if resultsItem.RemoteInfo.OpenaiPlatformProject == nil {
 					results.RemoteInfo.OpenaiPlatformProject = nil
 				} else {
-					results.RemoteInfo.OpenaiPlatformProject = &tfTypes.GcpProject{}
+					results.RemoteInfo.OpenaiPlatformProject = &tfTypes.AzureDevopsProject{}
 					results.RemoteInfo.OpenaiPlatformProject.ProjectID = types.StringValue(resultsItem.RemoteInfo.OpenaiPlatformProject.ProjectID)
 				}
 				if resultsItem.RemoteInfo.OpenaiPlatformServiceAccount == nil {
@@ -721,7 +772,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 				if resultsItem.RemoteInfo.VercelProject == nil {
 					results.RemoteInfo.VercelProject = nil
 				} else {
-					results.RemoteInfo.VercelProject = &tfTypes.GcpProject{}
+					results.RemoteInfo.VercelProject = &tfTypes.AzureDevopsProject{}
 					results.RemoteInfo.VercelProject.ProjectID = types.StringValue(resultsItem.RemoteInfo.VercelProject.ProjectID)
 				}
 				if resultsItem.RemoteInfo.VercelRole == nil {
@@ -782,6 +833,7 @@ func (r *ResourcesListDataSourceModel) RefreshFromSharedPaginatedResourcesList(c
 						requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 					}
 				}
+				requestConfigurations.DisableScheduledGrants = types.BoolPointerValue(requestConfigurationsItem.DisableScheduledGrants)
 				requestConfigurations.DisableSkipLevelEscalation = types.BoolPointerValue(requestConfigurationsItem.DisableSkipLevelEscalation)
 				requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 				requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)

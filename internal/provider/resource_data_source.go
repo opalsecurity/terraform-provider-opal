@@ -34,6 +34,7 @@ type ResourceDataSourceModel struct {
 	AncestorResourceIds         []types.String                          `tfsdk:"ancestor_resource_ids"`
 	AppID                       types.String                            `tfsdk:"app_id"`
 	ConfigurationTemplateID     types.String                            `tfsdk:"configuration_template_id"`
+	CustomAttributes            []tfTypes.CustomAttribute               `tfsdk:"custom_attributes"`
 	CustomRequestNotification   types.String                            `tfsdk:"custom_request_notification"`
 	DescendantResourceIds       []types.String                          `tfsdk:"descendant_resource_ids"`
 	Description                 types.String                            `tfsdk:"description"`
@@ -86,6 +87,27 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 			"configuration_template_id": schema.StringAttribute{
 				Computed:    true,
 				Description: `The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.`,
+			},
+			"custom_attributes": schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"key": schema.StringAttribute{
+							Computed:    true,
+							Description: `The name of the custom attribute.`,
+						},
+						"value_type": schema.StringAttribute{
+							Computed:    true,
+							Description: `The type of value stored in a custom attribute.`,
+						},
+						"values": schema.ListAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
+							Description: `The attribute's value(s), encoded as strings.`,
+						},
+					},
+				},
+				Description: `The custom attributes set on this resource.`,
 			},
 			"custom_request_notification": schema.StringAttribute{
 				Computed:    true,
@@ -349,6 +371,66 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						Description: `Remote info for Axiom base role.`,
+					},
+					"azure_devops_organization": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"organization_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The organization id of the Azure DevOps Organization.`,
+							},
+						},
+						Description: `Remote info for Azure DevOps Organization.`,
+					},
+					"azure_devops_pipeline": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"pipeline_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The pipeline id of the Azure DevOps Pipeline.`,
+							},
+						},
+						Description: `Remote info for Azure DevOps Pipeline.`,
+					},
+					"azure_devops_project": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"project_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The project id of the Azure DevOps Project.`,
+							},
+						},
+						Description: `Remote info for Azure DevOps Project.`,
+					},
+					"azure_devops_repo": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"repository_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The repository id of the Azure DevOps Repository.`,
+							},
+						},
+						Description: `Remote info for Azure DevOps Repository.`,
+					},
+					"azure_devops_service_connection": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"service_connection_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The service connection id of the Azure DevOps Service Connection.`,
+							},
+						},
+						Description: `Remote info for Azure DevOps Service Connection.`,
+					},
+					"azure_devops_service_principal": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"service_principal_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The service principal id of the Azure DevOps Service Principal.`,
+							},
+						},
+						Description: `Remote info for Azure DevOps Service Principal.`,
 					},
 					"azure_enterprise_app": schema.SingleNestedAttribute{
 						Computed: true,
@@ -1450,6 +1532,10 @@ func (r *ResourceDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 								},
 							},
 							Description: `The condition for the request configuration.`,
+						},
+						"disable_scheduled_grants": schema.BoolAttribute{
+							Computed:    true,
+							Description: `When true, requesters cannot choose a future start time for access. When any item in a request has this set to true, a request with a future start time is rejected. Defaults to false.`,
 						},
 						"disable_skip_level_escalation": schema.BoolAttribute{
 							Computed:    true,

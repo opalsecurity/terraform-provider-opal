@@ -62,6 +62,8 @@ type OpalAPI struct {
 	AgentActivity *AgentActivity
 	// Operations related to apps
 	Apps *Apps
+	// Operations related to the user attributes Opal imports from identity providers and HRIS apps
+	IdpUserAttributeMappings *IdpUserAttributeMappings
 	// Operations related to bundles
 	Bundles *Bundles
 	// Operations related to access review campaigns
@@ -80,6 +82,8 @@ type OpalAPI struct {
 	Groups *Groups
 	// Operations related to IDP group mappings
 	IdpGroupMappings *IdpGroupMappings
+	// Operations related to the API IP allowlist (IP zones and its enforcement setting)
+	IPACL *IPACL
 	// Operations related to message channels
 	MessageChannels *MessageChannels
 	// Operations related to non-human identities
@@ -91,9 +95,7 @@ type OpalAPI struct {
 	// Operations related to owners
 	Owners *Owners
 	// Operations related to Paladin
-	Paladin *Paladin
-	// Operations related to OpalQuery
-	OpalQueries      *OpalQueries
+	Paladin          *Paladin
 	RequestTemplates *RequestTemplates
 	// Operations related to requests
 	Requests *Requests
@@ -189,10 +191,10 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *OpalAPI {
 	sdk := &OpalAPI{
-		SDKVersion: "3.11.12",
+		SDKVersion: "3.11.14",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:         "speakeasy-sdk/terraform 3.11.12 2.968.1 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
-			SDKVersion:        "3.11.12",
+			UserAgent:         "speakeasy-sdk/terraform 3.11.14 2.968.1 1.0 github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk",
+			SDKVersion:        "3.11.14",
 			GenVersion:        "2.968.1",
 			OpenAPIDocVersion: "1.0",
 			ServerList:        ServerList,
@@ -218,6 +220,7 @@ func New(opts ...SDKOption) *OpalAPI {
 	sdk.AccessRules = newAccessRules(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.AgentActivity = newAgentActivity(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Apps = newApps(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.IdpUserAttributeMappings = newIdpUserAttributeMappings(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Bundles = newBundles(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Campaigns = newCampaigns(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.ConfigurationTemplates = newConfigurationTemplates(sdk, sdk.sdkConfiguration, sdk.hooks)
@@ -227,13 +230,13 @@ func New(opts ...SDKOption) *OpalAPI {
 	sdk.GroupBindings = newGroupBindings(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Groups = newGroups(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.IdpGroupMappings = newIdpGroupMappings(sdk, sdk.sdkConfiguration, sdk.hooks)
+	sdk.IPACL = newIPACL(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.MessageChannels = newMessageChannels(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.NonHumanIdentities = newNonHumanIdentities(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.OnCallSchedules = newOnCallSchedules(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.OpalScripts = newOpalScripts(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Owners = newOwners(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Paladin = newPaladin(sdk, sdk.sdkConfiguration, sdk.hooks)
-	sdk.OpalQueries = newOpalQueries(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.RequestTemplates = newRequestTemplates(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Requests = newRequests(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Resources = newResources(sdk, sdk.sdkConfiguration, sdk.hooks)

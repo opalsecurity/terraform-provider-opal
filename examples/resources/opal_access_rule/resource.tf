@@ -2,6 +2,7 @@ resource "opal_access_rule" "my_accessrule" {
   admin_owner_id = "7c86c85d-0651-43e2-a748-d69d658418e8"
   description    = "This access rule represents all platform engineers in the company."
   name           = "Platform Engineering"
+  query          = "...my_query..."
   rule_clauses = {
     unless = {
       clauses = [

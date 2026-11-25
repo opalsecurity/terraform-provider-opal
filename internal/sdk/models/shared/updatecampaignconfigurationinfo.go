@@ -28,6 +28,8 @@ type UpdateCampaignConfigurationInfo struct {
 	CronExpression *string `json:"cron_expression,omitempty"`
 	// Optional custom message included when notifying reviewers that the campaign started.
 	CustomStartMessage *string `json:"custom_start_message,omitempty"`
+	// Optional Markdown description shown under the campaign name to admins and reviewers. At most 10,000 characters. Raw HTML, images, and links other than http, https, mailto, or relative links are rejected.
+	Description *string `json:"description,omitempty"`
 	// Scheduled end date of the campaign. When set, the date's calendar
 	// day in the campaign timezone must be at least tomorrow.
 	//
@@ -108,6 +110,13 @@ func (u *UpdateCampaignConfigurationInfo) GetCustomStartMessage() *string {
 		return nil
 	}
 	return u.CustomStartMessage
+}
+
+func (u *UpdateCampaignConfigurationInfo) GetDescription() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Description
 }
 
 func (u *UpdateCampaignConfigurationInfo) GetEndDate() *time.Time {

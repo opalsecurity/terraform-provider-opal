@@ -20,7 +20,10 @@ func (r *AccessRuleResourceModel) RefreshFromSharedAccessRule(ctx context.Contex
 		r.Description = types.StringValue(resp.Description)
 		r.ID = types.StringValue(resp.ID)
 		r.Name = types.StringValue(resp.Name)
-		r.RuleClauses = &tfTypes.RuleClauses{}
+		r.Query = types.StringPointerValue(resp.Query)
+		if r.RuleClauses == nil {
+			r.RuleClauses = &tfTypes.RuleClauses{}
+		}
 		if resp.RuleClauses.Unless == nil {
 			r.RuleClauses.Unless = nil
 		} else {
@@ -157,96 +160,106 @@ func (r *AccessRuleResourceModel) ToSharedUpdateAccessRuleInfo(ctx context.Conte
 	var name string
 	name = r.Name.ValueString()
 
-	var unless *shared.RuleConjunction
-	if r.RuleClauses.Unless != nil {
-		clauses := make([]shared.RuleDisjunction, 0, len(r.RuleClauses.Unless.Clauses))
-		for clausesIndex := range r.RuleClauses.Unless.Clauses {
-			attributeSelectors := make([]shared.UserAttributeSelector, 0, len(r.RuleClauses.Unless.Clauses[clausesIndex].AttributeSelectors))
-			for attributeSelectorsIndex := range r.RuleClauses.Unless.Clauses[clausesIndex].AttributeSelectors {
-				attribute := shared.Attribute(r.RuleClauses.Unless.Clauses[clausesIndex].AttributeSelectors[attributeSelectorsIndex].Attribute.ValueString())
-				values := make([]string, 0, len(r.RuleClauses.Unless.Clauses[clausesIndex].AttributeSelectors[attributeSelectorsIndex].Values))
-				for valuesIndex := range r.RuleClauses.Unless.Clauses[clausesIndex].AttributeSelectors[attributeSelectorsIndex].Values {
-					values = append(values, r.RuleClauses.Unless.Clauses[clausesIndex].AttributeSelectors[attributeSelectorsIndex].Values[valuesIndex].ValueString())
+	query := new(string)
+	if !r.Query.IsUnknown() && !r.Query.IsNull() {
+		*query = r.Query.ValueString()
+	} else {
+		query = nil
+	}
+	var ruleClauses *shared.RuleClauses
+	if r.RuleClauses != nil {
+		var unless *shared.RuleConjunction
+		if r.RuleClauses.Unless != nil {
+			clauses := make([]shared.RuleDisjunction, 0, len(r.RuleClauses.Unless.Clauses))
+			for clausesIndex := range r.RuleClauses.Unless.Clauses {
+				attributeSelectors := make([]shared.UserAttributeSelector, 0, len(r.RuleClauses.Unless.Clauses[clausesIndex].AttributeSelectors))
+				for attributeSelectorsIndex := range r.RuleClauses.Unless.Clauses[clausesIndex].AttributeSelectors {
+					attribute := shared.Attribute(r.RuleClauses.Unless.Clauses[clausesIndex].AttributeSelectors[attributeSelectorsIndex].Attribute.ValueString())
+					values := make([]string, 0, len(r.RuleClauses.Unless.Clauses[clausesIndex].AttributeSelectors[attributeSelectorsIndex].Values))
+					for valuesIndex := range r.RuleClauses.Unless.Clauses[clausesIndex].AttributeSelectors[attributeSelectorsIndex].Values {
+						values = append(values, r.RuleClauses.Unless.Clauses[clausesIndex].AttributeSelectors[attributeSelectorsIndex].Values[valuesIndex].ValueString())
+					}
+					attributeSelectors = append(attributeSelectors, shared.UserAttributeSelector{
+						Attribute: attribute,
+						Values:    values,
+					})
 				}
-				attributeSelectors = append(attributeSelectors, shared.UserAttributeSelector{
-					Attribute: attribute,
-					Values:    values,
+				selectors := make([]shared.TagSelector, 0, len(r.RuleClauses.Unless.Clauses[clausesIndex].Selectors))
+				for selectorsIndex := range r.RuleClauses.Unless.Clauses[clausesIndex].Selectors {
+					var connectionID string
+					connectionID = r.RuleClauses.Unless.Clauses[clausesIndex].Selectors[selectorsIndex].ConnectionID.ValueString()
+
+					var key string
+					key = r.RuleClauses.Unless.Clauses[clausesIndex].Selectors[selectorsIndex].Key.ValueString()
+
+					var value string
+					value = r.RuleClauses.Unless.Clauses[clausesIndex].Selectors[selectorsIndex].Value.ValueString()
+
+					selectors = append(selectors, shared.TagSelector{
+						ConnectionID: connectionID,
+						Key:          key,
+						Value:        value,
+					})
+				}
+				clauses = append(clauses, shared.RuleDisjunction{
+					AttributeSelectors: attributeSelectors,
+					Selectors:          selectors,
 				})
 			}
-			selectors := make([]shared.TagSelector, 0, len(r.RuleClauses.Unless.Clauses[clausesIndex].Selectors))
-			for selectorsIndex := range r.RuleClauses.Unless.Clauses[clausesIndex].Selectors {
-				var connectionID string
-				connectionID = r.RuleClauses.Unless.Clauses[clausesIndex].Selectors[selectorsIndex].ConnectionID.ValueString()
-
-				var key string
-				key = r.RuleClauses.Unless.Clauses[clausesIndex].Selectors[selectorsIndex].Key.ValueString()
-
-				var value string
-				value = r.RuleClauses.Unless.Clauses[clausesIndex].Selectors[selectorsIndex].Value.ValueString()
-
-				selectors = append(selectors, shared.TagSelector{
-					ConnectionID: connectionID,
-					Key:          key,
-					Value:        value,
+			unless = &shared.RuleConjunction{
+				Clauses: clauses,
+			}
+		}
+		clauses1 := make([]shared.RuleDisjunction, 0, len(r.RuleClauses.When.Clauses))
+		for clausesIndex1 := range r.RuleClauses.When.Clauses {
+			attributeSelectors1 := make([]shared.UserAttributeSelector, 0, len(r.RuleClauses.When.Clauses[clausesIndex1].AttributeSelectors))
+			for attributeSelectorsIndex1 := range r.RuleClauses.When.Clauses[clausesIndex1].AttributeSelectors {
+				attribute1 := shared.Attribute(r.RuleClauses.When.Clauses[clausesIndex1].AttributeSelectors[attributeSelectorsIndex1].Attribute.ValueString())
+				values1 := make([]string, 0, len(r.RuleClauses.When.Clauses[clausesIndex1].AttributeSelectors[attributeSelectorsIndex1].Values))
+				for valuesIndex1 := range r.RuleClauses.When.Clauses[clausesIndex1].AttributeSelectors[attributeSelectorsIndex1].Values {
+					values1 = append(values1, r.RuleClauses.When.Clauses[clausesIndex1].AttributeSelectors[attributeSelectorsIndex1].Values[valuesIndex1].ValueString())
+				}
+				attributeSelectors1 = append(attributeSelectors1, shared.UserAttributeSelector{
+					Attribute: attribute1,
+					Values:    values1,
 				})
 			}
-			clauses = append(clauses, shared.RuleDisjunction{
-				AttributeSelectors: attributeSelectors,
-				Selectors:          selectors,
-			})
-		}
-		unless = &shared.RuleConjunction{
-			Clauses: clauses,
-		}
-	}
-	clauses1 := make([]shared.RuleDisjunction, 0, len(r.RuleClauses.When.Clauses))
-	for clausesIndex1 := range r.RuleClauses.When.Clauses {
-		attributeSelectors1 := make([]shared.UserAttributeSelector, 0, len(r.RuleClauses.When.Clauses[clausesIndex1].AttributeSelectors))
-		for attributeSelectorsIndex1 := range r.RuleClauses.When.Clauses[clausesIndex1].AttributeSelectors {
-			attribute1 := shared.Attribute(r.RuleClauses.When.Clauses[clausesIndex1].AttributeSelectors[attributeSelectorsIndex1].Attribute.ValueString())
-			values1 := make([]string, 0, len(r.RuleClauses.When.Clauses[clausesIndex1].AttributeSelectors[attributeSelectorsIndex1].Values))
-			for valuesIndex1 := range r.RuleClauses.When.Clauses[clausesIndex1].AttributeSelectors[attributeSelectorsIndex1].Values {
-				values1 = append(values1, r.RuleClauses.When.Clauses[clausesIndex1].AttributeSelectors[attributeSelectorsIndex1].Values[valuesIndex1].ValueString())
+			selectors1 := make([]shared.TagSelector, 0, len(r.RuleClauses.When.Clauses[clausesIndex1].Selectors))
+			for selectorsIndex1 := range r.RuleClauses.When.Clauses[clausesIndex1].Selectors {
+				var connectionId1 string
+				connectionId1 = r.RuleClauses.When.Clauses[clausesIndex1].Selectors[selectorsIndex1].ConnectionID.ValueString()
+
+				var key1 string
+				key1 = r.RuleClauses.When.Clauses[clausesIndex1].Selectors[selectorsIndex1].Key.ValueString()
+
+				var value1 string
+				value1 = r.RuleClauses.When.Clauses[clausesIndex1].Selectors[selectorsIndex1].Value.ValueString()
+
+				selectors1 = append(selectors1, shared.TagSelector{
+					ConnectionID: connectionId1,
+					Key:          key1,
+					Value:        value1,
+				})
 			}
-			attributeSelectors1 = append(attributeSelectors1, shared.UserAttributeSelector{
-				Attribute: attribute1,
-				Values:    values1,
+			clauses1 = append(clauses1, shared.RuleDisjunction{
+				AttributeSelectors: attributeSelectors1,
+				Selectors:          selectors1,
 			})
 		}
-		selectors1 := make([]shared.TagSelector, 0, len(r.RuleClauses.When.Clauses[clausesIndex1].Selectors))
-		for selectorsIndex1 := range r.RuleClauses.When.Clauses[clausesIndex1].Selectors {
-			var connectionId1 string
-			connectionId1 = r.RuleClauses.When.Clauses[clausesIndex1].Selectors[selectorsIndex1].ConnectionID.ValueString()
-
-			var key1 string
-			key1 = r.RuleClauses.When.Clauses[clausesIndex1].Selectors[selectorsIndex1].Key.ValueString()
-
-			var value1 string
-			value1 = r.RuleClauses.When.Clauses[clausesIndex1].Selectors[selectorsIndex1].Value.ValueString()
-
-			selectors1 = append(selectors1, shared.TagSelector{
-				ConnectionID: connectionId1,
-				Key:          key1,
-				Value:        value1,
-			})
+		when := shared.RuleConjunction{
+			Clauses: clauses1,
 		}
-		clauses1 = append(clauses1, shared.RuleDisjunction{
-			AttributeSelectors: attributeSelectors1,
-			Selectors:          selectors1,
-		})
-	}
-	when := shared.RuleConjunction{
-		Clauses: clauses1,
-	}
-	ruleClauses := shared.RuleClauses{
-		Unless: unless,
-		When:   when,
+		ruleClauses = &shared.RuleClauses{
+			Unless: unless,
+			When:   when,
+		}
 	}
 	status := shared.UpdateAccessRuleInfoStatus(r.Status.ValueString())
 	out := shared.UpdateAccessRuleInfo{
 		AdminOwnerID: adminOwnerID,
 		Description:  description,
 		Name:         name,
+		Query:        query,
 		RuleClauses:  ruleClauses,
 		Status:       status,
 	}

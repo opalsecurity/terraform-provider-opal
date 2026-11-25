@@ -3,6 +3,11 @@
 
 package shared
 
+import (
+	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
+	"time"
+)
+
 type CustomMetadata struct {
 	Name string `json:"name"`
 	// The type of the custom request field. `CALLOUT` fields are display-only -- they show a message to the requester and collect no answer, so they never appear in a request's `custom_fields`.
@@ -136,14 +141,27 @@ type CreateRequestInfo struct {
 	DurationMinutes int64                     `json:"duration_minutes"`
 	Groups          []CreateRequestInfoGroups `json:"groups"`
 	// The ID of the user who asked for this access, for callers filing a request on someone else's behalf. Opal records this claim as given and does not verify it, so it never affects authorization, reviewer routing, or who may cancel the request; the authenticated caller remains the requester. Must be a user of your organization. Only accepted from a service user for which an Opal admin has enabled "Let this service user record who asked for access" under Settings on the service user's page; any other caller receives a 403 when this field is set.
-	InitiatedByUserID *string        `json:"initiated_by_user_id,omitempty"`
-	Reason            string         `json:"reason"`
-	Resources         []Resources    `json:"resources"`
-	SupportTicket     *SupportTicket `json:"support_ticket,omitempty"`
+	InitiatedByUserID *string     `json:"initiated_by_user_id,omitempty"`
+	Reason            string      `json:"reason"`
+	Resources         []Resources `json:"resources"`
+	// When access should begin, as an RFC 3339 timestamp. Omit to grant access as soon as the request is approved. When set, access lasts duration_minutes from this time. Only accepted when scheduled access requests are enabled for your organization.
+	ScheduledAccessStartAt *time.Time     `json:"scheduled_access_start_at,omitempty"`
+	SupportTicket          *SupportTicket `json:"support_ticket,omitempty"`
 	// The ID of the group the request is for.  Should not be specified if target_user_id is specified.
 	TargetGroupID *string `json:"target_group_id,omitempty"`
 	// The ID of the user to be granted access. Should not be specified if target_group_id is specified.
 	TargetUserID *string `json:"target_user_id,omitempty"`
+}
+
+func (c CreateRequestInfo) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(c, "", false)
+}
+
+func (c *CreateRequestInfo) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &c, "", false, nil); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (c *CreateRequestInfo) GetCustomMetadata() []CustomMetadata {
@@ -186,6 +204,13 @@ func (c *CreateRequestInfo) GetResources() []Resources {
 		return []Resources{}
 	}
 	return c.Resources
+}
+
+func (c *CreateRequestInfo) GetScheduledAccessStartAt() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.ScheduledAccessStartAt
 }
 
 func (c *CreateRequestInfo) GetSupportTicket() *SupportTicket {

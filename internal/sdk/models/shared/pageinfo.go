@@ -3,10 +3,6 @@
 
 package shared
 
-import (
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
-)
-
 type PageInfo struct {
 	// The cursor to continue pagination forwards
 	EndCursor string `json:"endCursor"`
@@ -16,17 +12,6 @@ type PageInfo struct {
 	HasPreviousPage bool `json:"hasPreviousPage"`
 	// The cursor to continue pagination backwards
 	StartCursor string `json:"startCursor"`
-}
-
-func (p PageInfo) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(p, "", false)
-}
-
-func (p *PageInfo) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &p, "", false, nil); err != nil {
-		return err
-	}
-	return nil
 }
 
 func (p *PageInfo) GetEndCursor() string {

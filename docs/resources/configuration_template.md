@@ -42,6 +42,7 @@ resource "opal_configuration_template" "my_configurationtemplate" {
           "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]
       }
+      disable_scheduled_grants       = false
       disable_skip_level_escalation  = false
       extensions_duration_in_minutes = 120
       max_duration                   = 120
@@ -148,6 +149,7 @@ Required:
 Optional:
 
 - `condition` (Attributes) The condition for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--condition))
+- `disable_scheduled_grants` (Boolean) When true, requesters cannot choose a future start time for access. When any item in a request has this set to true, a request with a future start time is rejected. Defaults to false.
 - `disable_skip_level_escalation` (Boolean) When true, requesters cannot escalate requests to their skip-level manager. When any item in a request has this set to true, the escalation button is disabled and the action is blocked. Defaults to false.
 - `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.

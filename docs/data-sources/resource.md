@@ -31,6 +31,7 @@ data "opal_resource" "my_resource" {
 - `ancestor_resource_ids` (List of String) List of resource IDs that are ancestors of this resource.
 - `app_id` (String) The ID of the app.
 - `configuration_template_id` (String) The ID of the configuration template the resource is linked to, or null when the resource uses its own private configuration.
+- `custom_attributes` (Attributes List) The custom attributes set on this resource. (see [below for nested schema](#nestedatt--custom_attributes))
 - `custom_request_notification` (String) Custom request notification sent upon request approval.
 - `descendant_resource_ids` (List of String) List of resource IDs that are descendants of this resource.
 - `description` (String) A description of the resource.
@@ -53,6 +54,16 @@ data "opal_resource" "my_resource" {
 - `ticket_propagation` (Attributes) Configuration for ticket propagation, when enabled, a ticket will be created for access changes related to the users in this resource. (see [below for nested schema](#nestedatt--ticket_propagation))
 - `visibility` (String) The visibility level of the entity.
 - `visibility_group_ids` (Set of String)
+
+<a id="nestedatt--custom_attributes"></a>
+### Nested Schema for `custom_attributes`
+
+Read-Only:
+
+- `key` (String) The name of the custom attribute.
+- `value_type` (String) The type of value stored in a custom attribute.
+- `values` (List of String) The attribute's value(s), encoded as strings.
+
 
 <a id="nestedatt--last_successful_sync"></a>
 ### Nested Schema for `last_successful_sync`
@@ -82,6 +93,12 @@ Read-Only:
 - `aws_rds_instance` (Attributes) Remote info for AWS RDS instance. (see [below for nested schema](#nestedatt--remote_info--aws_rds_instance))
 - `axiom_custom_role` (Attributes) Remote info for Axiom custom RBAC role. (see [below for nested schema](#nestedatt--remote_info--axiom_custom_role))
 - `axiom_role` (Attributes) Remote info for Axiom base role. (see [below for nested schema](#nestedatt--remote_info--axiom_role))
+- `azure_devops_organization` (Attributes) Remote info for Azure DevOps Organization. (see [below for nested schema](#nestedatt--remote_info--azure_devops_organization))
+- `azure_devops_pipeline` (Attributes) Remote info for Azure DevOps Pipeline. (see [below for nested schema](#nestedatt--remote_info--azure_devops_pipeline))
+- `azure_devops_project` (Attributes) Remote info for Azure DevOps Project. (see [below for nested schema](#nestedatt--remote_info--azure_devops_project))
+- `azure_devops_repo` (Attributes) Remote info for Azure DevOps Repository. (see [below for nested schema](#nestedatt--remote_info--azure_devops_repo))
+- `azure_devops_service_connection` (Attributes) Remote info for Azure DevOps Service Connection. (see [below for nested schema](#nestedatt--remote_info--azure_devops_service_connection))
+- `azure_devops_service_principal` (Attributes) Remote info for Azure DevOps Service Principal. (see [below for nested schema](#nestedatt--remote_info--azure_devops_service_principal))
 - `azure_enterprise_app` (Attributes) Remote info for Azure Enterprise App. (see [below for nested schema](#nestedatt--remote_info--azure_enterprise_app))
 - `azure_entra_id_role` (Attributes) Remote info for Azure Entra ID role. (see [below for nested schema](#nestedatt--remote_info--azure_entra_id_role))
 - `azure_management_group` (Attributes) Remote info for Azure management group. (see [below for nested schema](#nestedatt--remote_info--azure_management_group))
@@ -305,6 +322,54 @@ Read-Only:
 Read-Only:
 
 - `role_id` (String) The ID of the Axiom base role.
+
+
+<a id="nestedatt--remote_info--azure_devops_organization"></a>
+### Nested Schema for `remote_info.azure_devops_organization`
+
+Read-Only:
+
+- `organization_id` (String) The organization id of the Azure DevOps Organization.
+
+
+<a id="nestedatt--remote_info--azure_devops_pipeline"></a>
+### Nested Schema for `remote_info.azure_devops_pipeline`
+
+Read-Only:
+
+- `pipeline_id` (String) The pipeline id of the Azure DevOps Pipeline.
+
+
+<a id="nestedatt--remote_info--azure_devops_project"></a>
+### Nested Schema for `remote_info.azure_devops_project`
+
+Read-Only:
+
+- `project_id` (String) The project id of the Azure DevOps Project.
+
+
+<a id="nestedatt--remote_info--azure_devops_repo"></a>
+### Nested Schema for `remote_info.azure_devops_repo`
+
+Read-Only:
+
+- `repository_id` (String) The repository id of the Azure DevOps Repository.
+
+
+<a id="nestedatt--remote_info--azure_devops_service_connection"></a>
+### Nested Schema for `remote_info.azure_devops_service_connection`
+
+Read-Only:
+
+- `service_connection_id` (String) The service connection id of the Azure DevOps Service Connection.
+
+
+<a id="nestedatt--remote_info--azure_devops_service_principal"></a>
+### Nested Schema for `remote_info.azure_devops_service_principal`
+
+Read-Only:
+
+- `service_principal_id` (String) The service principal id of the Azure DevOps Service Principal.
 
 
 <a id="nestedatt--remote_info--azure_enterprise_app"></a>
@@ -1116,6 +1181,7 @@ Read-Only:
 - `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource.
 - `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource.
 - `condition` (Attributes) The condition for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--condition))
+- `disable_scheduled_grants` (Boolean) When true, requesters cannot choose a future start time for access. When any item in a request has this set to true, a request with a future start time is rejected. Defaults to false.
 - `disable_skip_level_escalation` (Boolean) When true, requesters cannot escalate requests to their skip-level manager. When any item in a request has this set to true, the escalation button is disabled and the action is blocked. Defaults to false.
 - `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.

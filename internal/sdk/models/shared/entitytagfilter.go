@@ -3,10 +3,6 @@
 
 package shared
 
-import (
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
-)
-
 // EntityTagFilter - Filters entities by a tag key/value pair, optionally scoped to a connection.
 type EntityTagFilter struct {
 	// If specified, filters by tags associated with this connection.
@@ -15,17 +11,6 @@ type EntityTagFilter struct {
 	Key string `json:"key"`
 	// The tag value to filter by. If omitted, matches only tags with no value; use entityTagKey to match any value for a key.
 	Value *string `json:"value,omitempty"`
-}
-
-func (e EntityTagFilter) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(e, "", false)
-}
-
-func (e *EntityTagFilter) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &e, "", false, nil); err != nil {
-		return err
-	}
-	return nil
 }
 
 func (e *EntityTagFilter) GetConnectionID() *string {

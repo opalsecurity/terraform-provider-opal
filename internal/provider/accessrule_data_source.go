@@ -34,6 +34,7 @@ type AccessRuleDataSourceModel struct {
 	Description   types.String         `tfsdk:"description"`
 	ID            types.String         `tfsdk:"id"`
 	Name          types.String         `tfsdk:"name"`
+	Query         types.String         `tfsdk:"query"`
 	RuleClauses   *tfTypes.RuleClauses `tfsdk:"rule_clauses"`
 	Status        types.String         `tfsdk:"status"`
 	UsesOpalQuery types.Bool           `tfsdk:"uses_opal_query"`
@@ -65,6 +66,10 @@ func (r *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 			"name": schema.StringAttribute{
 				Computed:    true,
 				Description: `The name of the access rule.`,
+			},
+			"query": schema.StringAttribute{
+				Computed:    true,
+				Description: `JSON-encoded Opal Query body (OpalNodeQueryBody) defining the user set. Use ` + "`" + `jsonencode({...})` + "`" + `. Provide at least one of ` + "`" + `query` + "`" + ` or ` + "`" + `rule_clauses` + "`" + `; both AND. On the REST API, omitting a side on PUT clears it. In Terraform, do not rely on omitting an Optional+Computed attribute to clear — prior state may be retained; set only the side you want or destroy/recreate.`,
 			},
 			"rule_clauses": schema.SingleNestedAttribute{
 				Computed: true,
@@ -109,7 +114,7 @@ func (r *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 										},
 									},
 								},
-								Description: `Empty only when the access rule has ` + "`" + `uses_opal_query` + "`" + ` set.`,
+								Description: `May be empty for query-only rules (GET returns empty clauses). Non-empty for tag-only and hybrid rules that include a tag CNF.`,
 							},
 						},
 					},
@@ -153,7 +158,7 @@ func (r *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 										},
 									},
 								},
-								Description: `Empty only when the access rule has ` + "`" + `uses_opal_query` + "`" + ` set.`,
+								Description: `May be empty for query-only rules (GET returns empty clauses). Non-empty for tag-only and hybrid rules that include a tag CNF.`,
 							},
 						},
 					},
@@ -165,7 +170,7 @@ func (r *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 			},
 			"uses_opal_query": schema.BoolAttribute{
 				Computed:    true,
-				Description: `True when the access rule uses an Opal Query, which the API can't describe yet. Its ` + "`" + `ruleClauses` + "`" + ` are then empty; view the rule in Opal.`,
+				Description: `True when the access rule stores an Opal Query (including hybrids). ` + "`" + `query` + "`" + ` is set when the REST dialect can express that filter; it is omitted for filters the API cannot express (e.g. risk, identity detection, agent fields). Rely on this flag, not only on whether ` + "`" + `query` + "`" + ` is present.`,
 			},
 		},
 	}

@@ -20,6 +20,7 @@ func (r *AccessRuleDataSourceModel) RefreshFromSharedAccessRule(ctx context.Cont
 		r.Description = types.StringValue(resp.Description)
 		r.ID = types.StringValue(resp.ID)
 		r.Name = types.StringValue(resp.Name)
+		r.Query = types.StringPointerValue(resp.Query)
 		r.RuleClauses = &tfTypes.RuleClauses{}
 		if resp.RuleClauses.Unless == nil {
 			r.RuleClauses.Unless = nil

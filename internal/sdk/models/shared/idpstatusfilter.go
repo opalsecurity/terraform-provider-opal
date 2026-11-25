@@ -3,27 +3,12 @@
 
 package shared
 
-import (
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
-)
-
 // IdpStatusFilter - Filters USER entities by their HR/IDP lifecycle status. Only applies to USER entities; GROUP and RESOURCE entities never match, in either polarity. `statuses` combine with OR. `not` inverts the match within the user domain (e.g. "IDP status is NOT active"), so it still returns only users rather than sweeping in groups/resources.
 type IdpStatusFilter struct {
 	// Invert the match within the user domain (e.g. "IDP status is NOT active").
 	Not *bool `json:"not,omitempty"`
 	// Match users whose HR/IDP status is one of these values.
 	Statuses []UserHrIdpStatusEnum `json:"statuses,omitempty"`
-}
-
-func (i IdpStatusFilter) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(i, "", false)
-}
-
-func (i *IdpStatusFilter) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &i, "", false, nil); err != nil {
-		return err
-	}
-	return nil
 }
 
 func (i *IdpStatusFilter) GetNot() *bool {

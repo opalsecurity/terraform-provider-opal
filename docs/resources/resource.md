@@ -84,6 +84,24 @@ resource "opal_resource" "my_resource" {
     axiom_role = {
       role_id = "role_member"
     }
+    azure_devops_organization = {
+      organization_id = "...my_organization_id..."
+    }
+    azure_devops_pipeline = {
+      pipeline_id = "...my_pipeline_id..."
+    }
+    azure_devops_project = {
+      project_id = "...my_project_id..."
+    }
+    azure_devops_repo = {
+      repository_id = "...my_repository_id..."
+    }
+    azure_devops_service_connection = {
+      service_connection_id = "...my_service_connection_id..."
+    }
+    azure_devops_service_principal = {
+      service_principal_id = "...my_service_principal_id..."
+    }
     azure_enterprise_app = {
       resource_id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
     }
@@ -413,6 +431,7 @@ resource "opal_resource" "my_resource" {
           "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]
       }
+      disable_scheduled_grants       = false
       disable_skip_level_escalation  = false
       extensions_duration_in_minutes = 120
       max_duration                   = 120
@@ -474,7 +493,7 @@ resource "opal_resource" "my_resource" {
 
 - `app_id` (String) The ID of the app for the resource. Requires replacement if changed.
 - `name` (String) The name of the resource.
-- `resource_type` (String) The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AWS_AGENTCORE_GATEWAY", "AWS_AGENTCORE_GATEWAY_TARGET", "AWS_AGENTCORE_GATEWAY_TOOL", "MCP_SERVER", "MCP_TOOL", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GCP_BILLING_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OKTA_WORKLOAD_PRINCIPAL", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "CURSOR_ORIGIN_REPOSITORY", "CURSOR_USER", "CURSOR_BOT", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "OPENAI_USER", "ANTHROPIC_WORKSPACE", "ANTHROPIC_USER", "ANTHROPIC_SERVICE_ACCOUNT", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "CLICKHOUSE_CONSOLE_ROLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE", "LINEAR_ORGANIZATION", "LINEAR_PROJECT", "RAMP_FUND", "RAMP_ROLE", "WRIKE_USER_TYPE", "DATABRICKS_CATALOG", "DATABRICKS_SCHEMA", "DATABRICKS_VOLUME", "DATABRICKS_FUNCTION", "DATABRICKS_MODEL", "DATABRICKS_SERVICE", "DATABRICKS_MCP_SERVER", "VERCEL_ROLE", "VERCEL_PROJECT", "AXIOM_ROLE", "AXIOM_CUSTOM_ROLE", "RIPPLING_DEPARTMENT", "BOX_ENTERPRISE", "BOX_FOLDER", "SLACK_WORKSPACE", "SLACK_ORGANIZATION", "ASANA_WORKSPACE", "ASANA_WORKSPACE_GUEST", "BITWARDEN_ORGANIZATION", "CALENDLY_ROLE", "CALENDLY_EVENT_TYPE", "MIRO_ORGANIZATION", "MIRO_BOARD", "ONELOGIN_APP", "SUPABASE_ORGANIZATION", "SUPABASE_PROJECT", "SUPABASE_PROJECT_AUTH", "TRAY_WORKSPACE", "TRAY_ORGANIZATION"]; Requires replacement if changed.
+- `resource_type` (String) The type of the resource. must be one of ["AWS_IAM_ROLE", "AWS_EC2_INSTANCE", "AWS_EKS_CLUSTER", "AWS_RDS_POSTGRES_CLUSTER", "AWS_RDS_POSTGRES_INSTANCE", "AWS_RDS_MYSQL_CLUSTER", "AWS_RDS_MYSQL_INSTANCE", "AWS_ACCOUNT", "AWS_SSO_PERMISSION_SET", "AWS_ORGANIZATIONAL_UNIT", "AWS_AGENTCORE_GATEWAY", "AWS_AGENTCORE_GATEWAY_TARGET", "AWS_AGENTCORE_GATEWAY_TOOL", "MCP_SERVER", "MCP_TOOL", "AZURE_MANAGEMENT_GROUP", "AZURE_RESOURCE_GROUP", "AZURE_SUBSCRIPTION", "AZURE_VIRTUAL_MACHINE", "AZURE_STORAGE_ACCOUNT", "AZURE_STORAGE_CONTAINER", "AZURE_SQL_SERVER", "AZURE_SQL_MANAGED_INSTANCE", "AZURE_SQL_DATABASE", "AZURE_SQL_MANAGED_DATABASE", "AZURE_USER_ASSIGNED_MANAGED_Identity", "AZURE_ENTRA_ID_ROLE", "AZURE_ENTERPRISE_APP", "CUSTOM", "CUSTOM_CONNECTOR", "DATABRICKS_ACCOUNT_SERVICE_PRINCIPAL", "GCP_ORGANIZATION", "GCP_BUCKET", "GCP_COMPUTE_INSTANCE", "GCP_FOLDER", "GCP_GKE_CLUSTER", "GCP_PROJECT", "GCP_CLOUD_SQL_POSTGRES_INSTANCE", "GCP_CLOUD_SQL_MYSQL_INSTANCE", "GCP_BIG_QUERY_DATASET", "GCP_BIG_QUERY_TABLE", "GCP_SERVICE_ACCOUNT", "GCP_BILLING_ACCOUNT", "GIT_HUB_REPO", "GIT_HUB_ORG_ROLE", "GIT_LAB_PROJECT", "GOOGLE_WORKSPACE_ROLE", "MONGO_INSTANCE", "MONGO_ATLAS_INSTANCE", "NETSUITE_ROLE", "DATADOG_ROLE", "OKTA_APP", "OKTA_ROLE", "OKTA_WORKLOAD_PRINCIPAL", "OPAL_ROLE", "OPAL_SCOPED_ROLE", "PAGERDUTY_ROLE", "TAILSCALE_SSH", "SALESFORCE_PERMISSION_SET", "SALESFORCE_PROFILE", "SALESFORCE_ROLE", "SNOWFLAKE_DATABASE", "SNOWFLAKE_SCHEMA", "SNOWFLAKE_TABLE", "WORKDAY_ROLE", "MYSQL_INSTANCE", "MARIADB_INSTANCE", "POSTGRES_INSTANCE", "TELEPORT_ROLE", "ILEVEL_ADVANCED_ROLE", "DATASTAX_ASTRA_ROLE", "COUPA_ROLE", "CURSOR_ORGANIZATION", "CURSOR_ORIGIN_REPOSITORY", "CURSOR_USER", "CURSOR_BOT", "OPENAI_PLATFORM_PROJECT", "OPENAI_PLATFORM_SERVICE_ACCOUNT", "OPENAI_USER", "ANTHROPIC_WORKSPACE", "ANTHROPIC_USER", "ANTHROPIC_SERVICE_ACCOUNT", "GIT_HUB_ORG", "ORACLE_FUSION_ROLE", "DEVIN_ORGANIZATION", "DEVIN_ROLE", "VAULT_SECRET", "VAULT_POLICY", "VAULT_OIDC_ROLE", "GIT_HUB_ENTERPRISE_ROLE", "GRAFANA_FOLDER", "GRAFANA_DASHBOARD", "GRAFANA_BASIC_ROLE", "GRAFANA_ROLE", "CLICKHOUSE_DATABASE", "CLICKHOUSE_TABLE", "CLICKHOUSE_CONSOLE_ROLE", "TWINGATE_RESOURCE", "ZENDESK_ROLE", "HUBSPOT_ROLE", "ALICLOUD_RAM_ROLE", "ALICLOUD_ECS_INSTANCE", "DOCUSIGN_PERMISSION_PROFILE", "ZOOM_ROLE", "ZOOM_LICENSE", "LINEAR_ORGANIZATION", "LINEAR_PROJECT", "RAMP_FUND", "RAMP_ROLE", "WRIKE_USER_TYPE", "DATABRICKS_CATALOG", "DATABRICKS_SCHEMA", "DATABRICKS_VOLUME", "DATABRICKS_FUNCTION", "DATABRICKS_MODEL", "DATABRICKS_SERVICE", "DATABRICKS_MCP_SERVER", "VERCEL_ROLE", "VERCEL_PROJECT", "AXIOM_ROLE", "AXIOM_CUSTOM_ROLE", "RIPPLING_DEPARTMENT", "BOX_ENTERPRISE", "BOX_FOLDER", "SLACK_WORKSPACE", "SLACK_ORGANIZATION", "ASANA_WORKSPACE", "ASANA_WORKSPACE_GUEST", "AZURE_DEVOPS_PROJECT", "AZURE_DEVOPS_ORGANIZATION", "AZURE_DEVOPS_SERVICE_PRINCIPAL", "AZURE_DEVOPS_REPO", "AZURE_DEVOPS_PIPELINE", "AZURE_DEVOPS_SERVICE_CONNECTION", "BITWARDEN_ORGANIZATION", "CALENDLY_ROLE", "CALENDLY_EVENT_TYPE", "MIRO_ORGANIZATION", "MIRO_BOARD", "ONELOGIN_APP", "SUPABASE_ORGANIZATION", "SUPABASE_PROJECT", "SUPABASE_PROJECT_AUTH", "TRAY_WORKSPACE", "TRAY_ORGANIZATION"]; Requires replacement if changed.
 
 ### Optional
 
@@ -501,6 +520,7 @@ resource "opal_resource" "my_resource" {
 ### Read-Only
 
 - `ancestor_resource_ids` (List of String) List of resource IDs that are ancestors of this resource.
+- `custom_attributes` (Attributes List) The custom attributes set on this resource. (see [below for nested schema](#nestedatt--custom_attributes))
 - `descendant_resource_ids` (List of String) List of resource IDs that are descendants of this resource.
 - `id` (String) The ID of the resource whose configuration template link is being set.
 - `last_successful_sync` (Attributes) Information about the last successful sync of this resource. (see [below for nested schema](#nestedatt--last_successful_sync))
@@ -525,6 +545,12 @@ Optional:
 - `aws_rds_instance` (Attributes) Remote info for AWS RDS instance. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--aws_rds_instance))
 - `axiom_custom_role` (Attributes) Remote info for Axiom custom RBAC role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--axiom_custom_role))
 - `axiom_role` (Attributes) Remote info for Axiom base role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--axiom_role))
+- `azure_devops_organization` (Attributes) Remote info for Azure DevOps Organization. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_devops_organization))
+- `azure_devops_pipeline` (Attributes) Remote info for Azure DevOps Pipeline. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_devops_pipeline))
+- `azure_devops_project` (Attributes) Remote info for Azure DevOps Project. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_devops_project))
+- `azure_devops_repo` (Attributes) Remote info for Azure DevOps Repository. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_devops_repo))
+- `azure_devops_service_connection` (Attributes) Remote info for Azure DevOps Service Connection. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_devops_service_connection))
+- `azure_devops_service_principal` (Attributes) Remote info for Azure DevOps Service Principal. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_devops_service_principal))
 - `azure_enterprise_app` (Attributes) Remote info for Azure Enterprise App. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_enterprise_app))
 - `azure_entra_id_role` (Attributes) Remote info for Azure Entra ID role. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_entra_id_role))
 - `azure_management_group` (Attributes) Remote info for Azure management group. Requires replacement if changed. (see [below for nested schema](#nestedatt--remote_info--azure_management_group))
@@ -748,6 +774,54 @@ Optional:
 Optional:
 
 - `role_id` (String) The ID of the Axiom base role. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--azure_devops_organization"></a>
+### Nested Schema for `remote_info.azure_devops_organization`
+
+Optional:
+
+- `organization_id` (String) The organization id of the Azure DevOps Organization. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--azure_devops_pipeline"></a>
+### Nested Schema for `remote_info.azure_devops_pipeline`
+
+Optional:
+
+- `pipeline_id` (String) The pipeline id of the Azure DevOps Pipeline. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--azure_devops_project"></a>
+### Nested Schema for `remote_info.azure_devops_project`
+
+Optional:
+
+- `project_id` (String) The project id of the Azure DevOps Project. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--azure_devops_repo"></a>
+### Nested Schema for `remote_info.azure_devops_repo`
+
+Optional:
+
+- `repository_id` (String) The repository id of the Azure DevOps Repository. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--azure_devops_service_connection"></a>
+### Nested Schema for `remote_info.azure_devops_service_connection`
+
+Optional:
+
+- `service_connection_id` (String) The service connection id of the Azure DevOps Service Connection. Not Null; Requires replacement if changed.
+
+
+<a id="nestedatt--remote_info--azure_devops_service_principal"></a>
+### Nested Schema for `remote_info.azure_devops_service_principal`
+
+Optional:
+
+- `service_principal_id` (String) The service principal id of the Azure DevOps Service Principal. Not Null; Requires replacement if changed.
 
 
 <a id="nestedatt--remote_info--azure_enterprise_app"></a>
@@ -1559,6 +1633,7 @@ Optional:
 - `allow_requests` (Boolean) A bool representing whether or not to allow requests for this resource. Not Null
 - `auto_approval` (Boolean) A bool representing whether or not to automatically approve requests for this resource. Not Null
 - `condition` (Attributes) The condition for the request configuration. (see [below for nested schema](#nestedatt--request_configurations--condition))
+- `disable_scheduled_grants` (Boolean) When true, requesters cannot choose a future start time for access. When any item in a request has this set to true, a request with a future start time is rejected. Defaults to false.
 - `disable_skip_level_escalation` (Boolean) When true, requesters cannot escalate requests to their skip-level manager. When any item in a request has this set to true, the escalation button is disabled and the action is blocked. Defaults to false.
 - `extensions_duration_in_minutes` (Number) The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
 - `max_duration` (Number) The maximum duration for which the resource can be requested (in minutes). Capped at 1 year (525600) unless a longer maximum has been enabled for your organization. Use -1 for an indefinite duration.
@@ -1627,6 +1702,16 @@ Optional:
 - `enabled_on_revocation` (Boolean) Not Null
 - `ticket_project_id` (String)
 - `ticket_provider` (String) The third party ticketing platform provider. must be one of ["JIRA", "LINEAR", "SERVICE_NOW"]
+
+
+<a id="nestedatt--custom_attributes"></a>
+### Nested Schema for `custom_attributes`
+
+Read-Only:
+
+- `key` (String) The name of the custom attribute.
+- `value_type` (String) The type of value stored in a custom attribute.
+- `values` (List of String) The attribute's value(s), encoded as strings.
 
 
 <a id="nestedatt--last_successful_sync"></a>

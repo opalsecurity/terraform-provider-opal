@@ -6,7 +6,6 @@ package shared
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
 )
 
 type EntityTypes string
@@ -38,35 +37,8 @@ func (e *EntityTypes) UnmarshalJSON(data []byte) error {
 	}
 }
 
-// Not - Excludes entities matching the embedded filter (logical NOT). Pass a filter object with the same shape as this one — typically a single scalar field, like `{not: {entityTypes: ["RESOURCE"]}}` to exclude resources.
-type Not struct {
-}
-
-func (n Not) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(n, "", false)
-}
-
-func (n *Not) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &n, "", false, nil); err != nil {
-		return err
-	}
-	return nil
-}
-
 // AccessEntityFilters - Filters for matching entities by type, name, tag, IDs, connections, or access levels. Supports recursive logical composition via allOf/anyOf.
 type AccessEntityFilters struct {
-	// A list of nested filters that must all match (logical AND). Each
-	//
-	//  item has the same shape as this object — scalar fields like
-	//  `entityTypes` or `entityTag`, and can further nest `allOf`,
-	//  `anyOf`, or `not`.
-	//
-	AllOf []AccessEntityFilters `json:"allOf,omitempty"`
-	// A list of nested filters where at least one must match (logical
-	//
-	//  OR). Each item has the same shape as this object.
-	//
-	AnyOf []AccessEntityFilters `json:"anyOf,omitempty"`
 	// Filters GROUP and RESOURCE entities by their admin owner. USER entities never match, in either polarity. `not` inverts the match within the resource/group domain (self-negating, like IdpStatusFilter): omit it (or false) to include entities owned by the given owners, set it true to exclude them.
 	//
 	EntityAdminOwner *EntityAdminFilter `json:"entityAdminOwner,omitempty"`
@@ -91,38 +63,19 @@ type AccessEntityFilters struct {
 	HrIdpStatus *IdpStatusFilter `json:"hrIdpStatus,omitempty"`
 	// Filter by app IDs from which returned nodes will be imported from.
 	ImportedFromApp []string `json:"importedFromApp,omitempty"`
-	// Excludes entities matching the embedded filter (logical NOT). Pass a filter object with the same shape as this one — typically a single scalar field, like `{not: {entityTypes: ["RESOURCE"]}}` to exclude resources.
-	//
-	Not *Not `json:"not,omitempty"`
 	// Filter by role display names (e.g. "Admin", "Read"). Can only be applied within a hasAccessTo clause.
 	RoleNames []string `json:"roleNames,omitempty"`
 	// Filter by role remote IDs. Can only be applied within a hasAccessTo clause.
 	RoleRemoteIds []string `json:"roleRemoteIds,omitempty"`
-}
-
-func (a AccessEntityFilters) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(a, "", false)
-}
-
-func (a *AccessEntityFilters) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &a, "", false, nil); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (a *AccessEntityFilters) GetAllOf() []AccessEntityFilters {
-	if a == nil {
-		return nil
-	}
-	return a.AllOf
-}
-
-func (a *AccessEntityFilters) GetAnyOf() []AccessEntityFilters {
-	if a == nil {
-		return nil
-	}
-	return a.AnyOf
+	// Filters USER entities by manager (`users.manager_id`). Non-users never match, in either polarity. `userIds` combine with OR; `unset` also matches users with no manager; `not` inverts the whole match.
+	//
+	UserManager *UserManagerFilter `json:"userManager,omitempty"`
+	// Filters USER entities by team attribute (`users.team_attr`). Non-users never match, in either polarity. `strings` is an exact-match OR list; `unset` also matches users with no team; `not` inverts the whole match.
+	//
+	UserTeam *UserTeamFilter `json:"userTeam,omitempty"`
+	// Filters USER entities by job title (`users.position`). Non-users never match, in either polarity. `strings` is an exact-match OR list; `unset` also matches users with no title; `not` inverts the whole match.
+	//
+	UserTitle *UserTitleFilter `json:"userTitle,omitempty"`
 }
 
 func (a *AccessEntityFilters) GetEntityAdminOwner() *EntityAdminFilter {
@@ -195,13 +148,6 @@ func (a *AccessEntityFilters) GetImportedFromApp() []string {
 	return a.ImportedFromApp
 }
 
-func (a *AccessEntityFilters) GetNot() *Not {
-	if a == nil {
-		return nil
-	}
-	return a.Not
-}
-
 func (a *AccessEntityFilters) GetRoleNames() []string {
 	if a == nil {
 		return nil
@@ -214,4 +160,25 @@ func (a *AccessEntityFilters) GetRoleRemoteIds() []string {
 		return nil
 	}
 	return a.RoleRemoteIds
+}
+
+func (a *AccessEntityFilters) GetUserManager() *UserManagerFilter {
+	if a == nil {
+		return nil
+	}
+	return a.UserManager
+}
+
+func (a *AccessEntityFilters) GetUserTeam() *UserTeamFilter {
+	if a == nil {
+		return nil
+	}
+	return a.UserTeam
+}
+
+func (a *AccessEntityFilters) GetUserTitle() *UserTitleFilter {
+	if a == nil {
+		return nil
+	}
+	return a.UserTitle
 }
