@@ -24,6 +24,21 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 
 			results.AdminOwnerID = types.StringPointerValue(resultsItem.AdminOwnerID)
 			results.AppID = types.StringPointerValue(resultsItem.AppID)
+			results.ConfigurationTemplateID = types.StringPointerValue(resultsItem.ConfigurationTemplateID)
+			results.CustomAttributes = []tfTypes.CustomAttribute{}
+
+			for _, customAttributesItem := range resultsItem.CustomAttributes {
+				var customAttributes tfTypes.CustomAttribute
+
+				customAttributes.Key = types.StringValue(customAttributesItem.Key)
+				customAttributes.ValueType = types.StringValue(string(customAttributesItem.ValueType))
+				customAttributes.Values = make([]types.String, 0, len(customAttributesItem.Values))
+				for _, v := range customAttributesItem.Values {
+					customAttributes.Values = append(customAttributes.Values, types.StringValue(v))
+				}
+
+				results.CustomAttributes = append(results.CustomAttributes, customAttributes)
+			}
 			results.CustomRequestNotification = types.StringPointerValue(resultsItem.CustomRequestNotification)
 			results.Description = types.StringPointerValue(resultsItem.Description)
 			results.ExtensionsDurationInMinutes = types.Int64PointerValue(resultsItem.ExtensionsDurationInMinutes)
@@ -50,6 +65,10 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 			results.MaxDirectUsersAllowed = types.Int64PointerValue(resultsItem.MaxDirectUsersAllowed)
 			results.MaxUsersExceededMessage = types.StringPointerValue(resultsItem.MaxUsersExceededMessage)
 			results.Name = types.StringPointerValue(resultsItem.Name)
+			results.PushedToAppIds = make([]types.String, 0, len(resultsItem.PushedToAppIds))
+			for _, v := range resultsItem.PushedToAppIds {
+				results.PushedToAppIds = append(results.PushedToAppIds, types.StringValue(v))
+			}
 			if resultsItem.RemoteInfo == nil {
 				results.RemoteInfo = nil
 			} else {
@@ -368,6 +387,12 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 					results.RemoteInfo.TwingateGroupSynced = &tfTypes.ActiveDirectoryGroup{}
 					results.RemoteInfo.TwingateGroupSynced.GroupID = types.StringValue(resultsItem.RemoteInfo.TwingateGroupSynced.GroupID)
 				}
+				if resultsItem.RemoteInfo.VaultIdentityGroup == nil {
+					results.RemoteInfo.VaultIdentityGroup = nil
+				} else {
+					results.RemoteInfo.VaultIdentityGroup = &tfTypes.ActiveDirectoryGroup{}
+					results.RemoteInfo.VaultIdentityGroup.GroupID = types.StringValue(resultsItem.RemoteInfo.VaultIdentityGroup.GroupID)
+				}
 				if resultsItem.RemoteInfo.WorkdayUserSecurityGroup == nil {
 					results.RemoteInfo.WorkdayUserSecurityGroup = nil
 				} else {
@@ -421,6 +446,7 @@ func (r *GroupListDataSourceModel) RefreshFromSharedPaginatedGroupsList(ctx cont
 						requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 					}
 				}
+				requestConfigurations.DisableScheduledGrants = types.BoolPointerValue(requestConfigurationsItem.DisableScheduledGrants)
 				requestConfigurations.DisableSkipLevelEscalation = types.BoolPointerValue(requestConfigurationsItem.DisableSkipLevelEscalation)
 				requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 				requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)

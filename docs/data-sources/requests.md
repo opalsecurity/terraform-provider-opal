@@ -58,9 +58,10 @@ Read-Only:
 - `id` (String) The unique identifier of the request.
 - `initiated_by_user_id` (String) The unique identifier of the user the caller asserted asked for this access. Unverified - Opal records the claim as given. Absent unless the caller supplied it.
 - `reason` (String) The reason for the request.
-- `requested_items_list` (Attributes List) The list of targets for the request. (see [below for nested schema](#nestedatt--requests--requested_items_list))
+- `requested_items_list` (Attributes List) The list of targets for the request. Items a reviewer denied individually are omitted. (see [below for nested schema](#nestedatt--requests--requested_items_list))
 - `requester_id` (String) The unique identifier of the user who created the request.
 - `reviewer_stages` (Attributes) The configured reviewer stages for every item in this request, or an error message if reviewers could not be loaded (see [below for nested schema](#nestedatt--requests--reviewer_stages))
+- `scheduled_access_start_at` (String) When access is scheduled to begin. Null if access begins as soon as the request is approved.
 - `source` (String) The channel that created the request. Omitted when the source was not recorded.
 MCP counts only OAuth sessions. An agent using an API token or a person's
 credentials is counted as API, CLI, or WEB.

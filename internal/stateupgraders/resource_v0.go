@@ -107,6 +107,14 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 		},
 	}
 
+	var customAttributesType = tftypes.List{ElementType: tftypes.Object{
+		AttributeTypes: map[string]tftypes.Type{
+			"key":        tftypes.String,
+			"value_type": tftypes.String,
+			"values":     tftypes.List{ElementType: tftypes.String},
+		},
+	}}
+
 	var ResourceV3 = tftypes.Object{
 		AttributeTypes: map[string]tftypes.Type{
 			"id":                 tftypes.String,
@@ -136,6 +144,8 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 			"requires_forfeit_reason": tftypes.Bool,
 			"max_direct_users_allowed": tftypes.Number,
 			"max_users_exceeded_message": tftypes.String,
+			// Read-only field added after v0; unset until refresh.
+			"custom_attributes": customAttributesType,
 		},
 	}
 	
@@ -269,6 +279,7 @@ func ResourceStateUpgraderV0(ctx context.Context, req resource.UpgradeStateReque
 			"requires_forfeit_reason": tftypes.NewValue(tftypes.Bool, nil),     // added after v0; unset until refresh
 			"max_direct_users_allowed": tftypes.NewValue(tftypes.Number, nil),  // added after v0; unset until refresh
 			"max_users_exceeded_message": tftypes.NewValue(tftypes.String, nil), // added after v0; unset until refresh
+			"custom_attributes": tftypes.NewValue(customAttributesType, nil),    // added after v0; unset until refresh
 		}),
 	)
 

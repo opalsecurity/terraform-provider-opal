@@ -6,7 +6,6 @@ package shared
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
 )
 
 // AccessDurationType - Constrain results by whether the terminal access expires.
@@ -42,17 +41,6 @@ type OpalAccessPathEdgeFilter struct {
 	AccessDurationType *AccessDurationType `json:"accessDurationType,omitempty"`
 	// When true, only return direct (depth-1) principal-to-entitlement edges.
 	DirectOnly *bool `json:"directOnly,omitempty"`
-}
-
-func (o OpalAccessPathEdgeFilter) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(o, "", false)
-}
-
-func (o *OpalAccessPathEdgeFilter) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &o, "", false, nil); err != nil {
-		return err
-	}
-	return nil
 }
 
 func (o *OpalAccessPathEdgeFilter) GetAccessDurationType() *AccessDurationType {

@@ -38,6 +38,20 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 		}
 		r.AppID = types.StringPointerValue(resp.AppID)
 		r.ConfigurationTemplateID = types.StringPointerValue(resp.ConfigurationTemplateID)
+		r.CustomAttributes = []tfTypes.CustomAttribute{}
+
+		for _, customAttributesItem := range resp.CustomAttributes {
+			var customAttributes tfTypes.CustomAttribute
+
+			customAttributes.Key = types.StringValue(customAttributesItem.Key)
+			customAttributes.ValueType = types.StringValue(string(customAttributesItem.ValueType))
+			customAttributes.Values = make([]types.String, 0, len(customAttributesItem.Values))
+			for _, v := range customAttributesItem.Values {
+				customAttributes.Values = append(customAttributes.Values, types.StringValue(v))
+			}
+
+			r.CustomAttributes = append(r.CustomAttributes, customAttributes)
+		}
 		r.CustomRequestNotification = types.StringPointerValue(resp.CustomRequestNotification)
 		r.DescendantResourceIds = make([]types.String, 0, len(resp.DescendantResourceIds))
 		for _, v := range resp.DescendantResourceIds {
@@ -161,6 +175,42 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			} else {
 				r.RemoteInfo.AxiomRole = &tfTypes.ClickhouseRole{}
 				r.RemoteInfo.AxiomRole.RoleID = types.StringValue(resp.RemoteInfo.AxiomRole.RoleID)
+			}
+			if resp.RemoteInfo.AzureDevopsOrganization == nil {
+				r.RemoteInfo.AzureDevopsOrganization = nil
+			} else {
+				r.RemoteInfo.AzureDevopsOrganization = &tfTypes.ZendeskOrganization{}
+				r.RemoteInfo.AzureDevopsOrganization.OrganizationID = types.StringValue(resp.RemoteInfo.AzureDevopsOrganization.OrganizationID)
+			}
+			if resp.RemoteInfo.AzureDevopsPipeline == nil {
+				r.RemoteInfo.AzureDevopsPipeline = nil
+			} else {
+				r.RemoteInfo.AzureDevopsPipeline = &tfTypes.AzureDevopsPipeline{}
+				r.RemoteInfo.AzureDevopsPipeline.PipelineID = types.StringValue(resp.RemoteInfo.AzureDevopsPipeline.PipelineID)
+			}
+			if resp.RemoteInfo.AzureDevopsProject == nil {
+				r.RemoteInfo.AzureDevopsProject = nil
+			} else {
+				r.RemoteInfo.AzureDevopsProject = &tfTypes.AzureDevopsProject{}
+				r.RemoteInfo.AzureDevopsProject.ProjectID = types.StringValue(resp.RemoteInfo.AzureDevopsProject.ProjectID)
+			}
+			if resp.RemoteInfo.AzureDevopsRepo == nil {
+				r.RemoteInfo.AzureDevopsRepo = nil
+			} else {
+				r.RemoteInfo.AzureDevopsRepo = &tfTypes.AzureDevopsRepo{}
+				r.RemoteInfo.AzureDevopsRepo.RepositoryID = types.StringValue(resp.RemoteInfo.AzureDevopsRepo.RepositoryID)
+			}
+			if resp.RemoteInfo.AzureDevopsServiceConnection == nil {
+				r.RemoteInfo.AzureDevopsServiceConnection = nil
+			} else {
+				r.RemoteInfo.AzureDevopsServiceConnection = &tfTypes.AzureDevopsServiceConnection{}
+				r.RemoteInfo.AzureDevopsServiceConnection.ServiceConnectionID = types.StringValue(resp.RemoteInfo.AzureDevopsServiceConnection.ServiceConnectionID)
+			}
+			if resp.RemoteInfo.AzureDevopsServicePrincipal == nil {
+				r.RemoteInfo.AzureDevopsServicePrincipal = nil
+			} else {
+				r.RemoteInfo.AzureDevopsServicePrincipal = &tfTypes.AzureDevopsServicePrincipal{}
+				r.RemoteInfo.AzureDevopsServicePrincipal.ServicePrincipalID = types.StringValue(resp.RemoteInfo.AzureDevopsServicePrincipal.ServicePrincipalID)
 			}
 			if resp.RemoteInfo.AzureEnterpriseApp == nil {
 				r.RemoteInfo.AzureEnterpriseApp = nil
@@ -449,7 +499,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			if resp.RemoteInfo.GcpProject == nil {
 				r.RemoteInfo.GcpProject = nil
 			} else {
-				r.RemoteInfo.GcpProject = &tfTypes.GcpProject{}
+				r.RemoteInfo.GcpProject = &tfTypes.AzureDevopsProject{}
 				r.RemoteInfo.GcpProject.ProjectID = types.StringValue(resp.RemoteInfo.GcpProject.ProjectID)
 			}
 			if resp.RemoteInfo.GcpServiceAccount == nil {
@@ -496,7 +546,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			if resp.RemoteInfo.GitlabProject == nil {
 				r.RemoteInfo.GitlabProject = nil
 			} else {
-				r.RemoteInfo.GitlabProject = &tfTypes.GcpProject{}
+				r.RemoteInfo.GitlabProject = &tfTypes.AzureDevopsProject{}
 				r.RemoteInfo.GitlabProject.ProjectID = types.StringValue(resp.RemoteInfo.GitlabProject.ProjectID)
 			}
 			if resp.RemoteInfo.GoogleWorkspaceRole == nil {
@@ -544,7 +594,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			if resp.RemoteInfo.LinearProject == nil {
 				r.RemoteInfo.LinearProject = nil
 			} else {
-				r.RemoteInfo.LinearProject = &tfTypes.GcpProject{}
+				r.RemoteInfo.LinearProject = &tfTypes.AzureDevopsProject{}
 				r.RemoteInfo.LinearProject.ProjectID = types.StringValue(resp.RemoteInfo.LinearProject.ProjectID)
 			}
 			if resp.RemoteInfo.MiroBoard == nil {
@@ -592,7 +642,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			if resp.RemoteInfo.OpenaiPlatformProject == nil {
 				r.RemoteInfo.OpenaiPlatformProject = nil
 			} else {
-				r.RemoteInfo.OpenaiPlatformProject = &tfTypes.GcpProject{}
+				r.RemoteInfo.OpenaiPlatformProject = &tfTypes.AzureDevopsProject{}
 				r.RemoteInfo.OpenaiPlatformProject.ProjectID = types.StringValue(resp.RemoteInfo.OpenaiPlatformProject.ProjectID)
 			}
 			if resp.RemoteInfo.OpenaiPlatformServiceAccount == nil {
@@ -729,7 +779,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 			if resp.RemoteInfo.VercelProject == nil {
 				r.RemoteInfo.VercelProject = nil
 			} else {
-				r.RemoteInfo.VercelProject = &tfTypes.GcpProject{}
+				r.RemoteInfo.VercelProject = &tfTypes.AzureDevopsProject{}
 				r.RemoteInfo.VercelProject.ProjectID = types.StringValue(resp.RemoteInfo.VercelProject.ProjectID)
 			}
 			if resp.RemoteInfo.VercelRole == nil {
@@ -790,6 +840,7 @@ func (r *ResourceResourceModel) RefreshFromSharedResource(ctx context.Context, r
 					requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 				}
 			}
+			requestConfigurations.DisableScheduledGrants = types.BoolPointerValue(requestConfigurationsItem.DisableScheduledGrants)
 			requestConfigurations.DisableSkipLevelEscalation = types.BoolPointerValue(requestConfigurationsItem.DisableSkipLevelEscalation)
 			requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 			requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
@@ -914,6 +965,7 @@ func (r *ResourceResourceModel) RefreshFromSharedUpdateResourceInfo(ctx context.
 				requestConfigurations.Condition.RoleRemoteIds = append(requestConfigurations.Condition.RoleRemoteIds, types.StringValue(v))
 			}
 		}
+		requestConfigurations.DisableScheduledGrants = types.BoolPointerValue(requestConfigurationsItem.DisableScheduledGrants)
 		requestConfigurations.DisableSkipLevelEscalation = types.BoolPointerValue(requestConfigurationsItem.DisableSkipLevelEscalation)
 		requestConfigurations.ExtensionsDurationInMinutes = types.Int64PointerValue(requestConfigurationsItem.ExtensionsDurationInMinutes)
 		requestConfigurations.MaxDuration = types.Int64PointerValue(requestConfigurationsItem.MaxDuration)
@@ -1342,6 +1394,60 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 				RoleID: roleId1,
 			}
 		}
+		var azureDevopsOrganization *shared.AzureDevopsOrganization
+		if r.RemoteInfo.AzureDevopsOrganization != nil {
+			var organizationID string
+			organizationID = r.RemoteInfo.AzureDevopsOrganization.OrganizationID.ValueString()
+
+			azureDevopsOrganization = &shared.AzureDevopsOrganization{
+				OrganizationID: organizationID,
+			}
+		}
+		var azureDevopsPipeline *shared.AzureDevopsPipeline
+		if r.RemoteInfo.AzureDevopsPipeline != nil {
+			var pipelineID string
+			pipelineID = r.RemoteInfo.AzureDevopsPipeline.PipelineID.ValueString()
+
+			azureDevopsPipeline = &shared.AzureDevopsPipeline{
+				PipelineID: pipelineID,
+			}
+		}
+		var azureDevopsProject *shared.AzureDevopsProject
+		if r.RemoteInfo.AzureDevopsProject != nil {
+			var projectID string
+			projectID = r.RemoteInfo.AzureDevopsProject.ProjectID.ValueString()
+
+			azureDevopsProject = &shared.AzureDevopsProject{
+				ProjectID: projectID,
+			}
+		}
+		var azureDevopsRepo *shared.AzureDevopsRepo
+		if r.RemoteInfo.AzureDevopsRepo != nil {
+			var repositoryID string
+			repositoryID = r.RemoteInfo.AzureDevopsRepo.RepositoryID.ValueString()
+
+			azureDevopsRepo = &shared.AzureDevopsRepo{
+				RepositoryID: repositoryID,
+			}
+		}
+		var azureDevopsServiceConnection *shared.AzureDevopsServiceConnection
+		if r.RemoteInfo.AzureDevopsServiceConnection != nil {
+			var serviceConnectionID string
+			serviceConnectionID = r.RemoteInfo.AzureDevopsServiceConnection.ServiceConnectionID.ValueString()
+
+			azureDevopsServiceConnection = &shared.AzureDevopsServiceConnection{
+				ServiceConnectionID: serviceConnectionID,
+			}
+		}
+		var azureDevopsServicePrincipal *shared.AzureDevopsServicePrincipal
+		if r.RemoteInfo.AzureDevopsServicePrincipal != nil {
+			var servicePrincipalID string
+			servicePrincipalID = r.RemoteInfo.AzureDevopsServicePrincipal.ServicePrincipalID.ValueString()
+
+			azureDevopsServicePrincipal = &shared.AzureDevopsServicePrincipal{
+				ServicePrincipalID: servicePrincipalID,
+			}
+		}
 		var azureEnterpriseApp *shared.AzureEnterpriseApp
 		if r.RemoteInfo.AzureEnterpriseApp != nil {
 			var resourceId2 string
@@ -1461,11 +1567,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var bitwardenOrganization *shared.BitwardenOrganization
 		if r.RemoteInfo.BitwardenOrganization != nil {
-			var organizationID string
-			organizationID = r.RemoteInfo.BitwardenOrganization.OrganizationID.ValueString()
+			var organizationId1 string
+			organizationId1 = r.RemoteInfo.BitwardenOrganization.OrganizationID.ValueString()
 
 			bitwardenOrganization = &shared.BitwardenOrganization{
-				OrganizationID: organizationID,
+				OrganizationID: organizationId1,
 			}
 		}
 		var boxEnterprise *shared.BoxEnterprise
@@ -1716,12 +1822,12 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			var datasetID string
 			datasetID = r.RemoteInfo.GcpBigQueryDataset.DatasetID.ValueString()
 
-			var projectID string
-			projectID = r.RemoteInfo.GcpBigQueryDataset.ProjectID.ValueString()
+			var projectId1 string
+			projectId1 = r.RemoteInfo.GcpBigQueryDataset.ProjectID.ValueString()
 
 			gcpBigQueryDataset = &shared.GcpBigQueryDataset{
 				DatasetID: datasetID,
-				ProjectID: projectID,
+				ProjectID: projectId1,
 			}
 		}
 		var gcpBigQueryTable *shared.GcpBigQueryTable
@@ -1729,15 +1835,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			var datasetId1 string
 			datasetId1 = r.RemoteInfo.GcpBigQueryTable.DatasetID.ValueString()
 
-			var projectId1 string
-			projectId1 = r.RemoteInfo.GcpBigQueryTable.ProjectID.ValueString()
+			var projectId2 string
+			projectId2 = r.RemoteInfo.GcpBigQueryTable.ProjectID.ValueString()
 
 			var tableID string
 			tableID = r.RemoteInfo.GcpBigQueryTable.TableID.ValueString()
 
 			gcpBigQueryTable = &shared.GcpBigQueryTable{
 				DatasetID: datasetId1,
-				ProjectID: projectId1,
+				ProjectID: projectId2,
 				TableID:   tableID,
 			}
 		}
@@ -1764,15 +1870,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			var instanceId3 string
 			instanceId3 = r.RemoteInfo.GcpComputeInstance.InstanceID.ValueString()
 
-			var projectId2 string
-			projectId2 = r.RemoteInfo.GcpComputeInstance.ProjectID.ValueString()
+			var projectId3 string
+			projectId3 = r.RemoteInfo.GcpComputeInstance.ProjectID.ValueString()
 
 			var zone string
 			zone = r.RemoteInfo.GcpComputeInstance.Zone.ValueString()
 
 			gcpComputeInstance = &shared.GcpComputeInstance{
 				InstanceID: instanceId3,
-				ProjectID:  projectId2,
+				ProjectID:  projectId3,
 				Zone:       zone,
 			}
 		}
@@ -1796,20 +1902,20 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var gcpOrganization *shared.GcpOrganization
 		if r.RemoteInfo.GcpOrganization != nil {
-			var organizationId1 string
-			organizationId1 = r.RemoteInfo.GcpOrganization.OrganizationID.ValueString()
+			var organizationId2 string
+			organizationId2 = r.RemoteInfo.GcpOrganization.OrganizationID.ValueString()
 
 			gcpOrganization = &shared.GcpOrganization{
-				OrganizationID: organizationId1,
+				OrganizationID: organizationId2,
 			}
 		}
 		var gcpProject *shared.GcpProject
 		if r.RemoteInfo.GcpProject != nil {
-			var projectId3 string
-			projectId3 = r.RemoteInfo.GcpProject.ProjectID.ValueString()
+			var projectId4 string
+			projectId4 = r.RemoteInfo.GcpProject.ProjectID.ValueString()
 
 			gcpProject = &shared.GcpProject{
-				ProjectID: projectId3,
+				ProjectID: projectId4,
 			}
 		}
 		var gcpServiceAccount *shared.GcpServiceAccount
@@ -1817,15 +1923,15 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			var email string
 			email = r.RemoteInfo.GcpServiceAccount.Email.ValueString()
 
-			var projectId4 string
-			projectId4 = r.RemoteInfo.GcpServiceAccount.ProjectID.ValueString()
+			var projectId5 string
+			projectId5 = r.RemoteInfo.GcpServiceAccount.ProjectID.ValueString()
 
 			var serviceAccountID string
 			serviceAccountID = r.RemoteInfo.GcpServiceAccount.ServiceAccountID.ValueString()
 
 			gcpServiceAccount = &shared.GcpServiceAccount{
 				Email:            email,
-				ProjectID:        projectId4,
+				ProjectID:        projectId5,
 				ServiceAccountID: serviceAccountID,
 			}
 		}
@@ -1834,12 +1940,12 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			var instanceId4 string
 			instanceId4 = r.RemoteInfo.GcpSQLInstance.InstanceID.ValueString()
 
-			var projectId5 string
-			projectId5 = r.RemoteInfo.GcpSQLInstance.ProjectID.ValueString()
+			var projectId6 string
+			projectId6 = r.RemoteInfo.GcpSQLInstance.ProjectID.ValueString()
 
 			gcpSQLInstance = &shared.GcpSQLInstance{
 				InstanceID: instanceId4,
-				ProjectID:  projectId5,
+				ProjectID:  projectId6,
 			}
 		}
 		var githubEnterpriseRole *shared.GithubEnterpriseRole
@@ -1894,11 +2000,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var gitlabProject *shared.GitlabProject
 		if r.RemoteInfo.GitlabProject != nil {
-			var projectId6 string
-			projectId6 = r.RemoteInfo.GitlabProject.ProjectID.ValueString()
+			var projectId7 string
+			projectId7 = r.RemoteInfo.GitlabProject.ProjectID.ValueString()
 
 			gitlabProject = &shared.GitlabProject{
-				ProjectID: projectId6,
+				ProjectID: projectId7,
 			}
 		}
 		var googleWorkspaceRole *shared.GoogleWorkspaceRole
@@ -1966,11 +2072,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var linearProject *shared.LinearProject
 		if r.RemoteInfo.LinearProject != nil {
-			var projectId7 string
-			projectId7 = r.RemoteInfo.LinearProject.ProjectID.ValueString()
+			var projectId8 string
+			projectId8 = r.RemoteInfo.LinearProject.ProjectID.ValueString()
 
 			linearProject = &shared.LinearProject{
-				ProjectID: projectId7,
+				ProjectID: projectId8,
 			}
 		}
 		var miroBoard *shared.MiroBoard
@@ -1984,11 +2090,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var miroOrganization *shared.MiroOrganization
 		if r.RemoteInfo.MiroOrganization != nil {
-			var organizationId2 string
-			organizationId2 = r.RemoteInfo.MiroOrganization.OrganizationID.ValueString()
+			var organizationId3 string
+			organizationId3 = r.RemoteInfo.MiroOrganization.OrganizationID.ValueString()
 
 			miroOrganization = &shared.MiroOrganization{
-				OrganizationID: organizationId2,
+				OrganizationID: organizationId3,
 			}
 		}
 		var netsuiteRole *shared.NetsuiteRole
@@ -2038,23 +2144,23 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var openaiPlatformProject *shared.OpenaiPlatformProject
 		if r.RemoteInfo.OpenaiPlatformProject != nil {
-			var projectId8 string
-			projectId8 = r.RemoteInfo.OpenaiPlatformProject.ProjectID.ValueString()
+			var projectId9 string
+			projectId9 = r.RemoteInfo.OpenaiPlatformProject.ProjectID.ValueString()
 
 			openaiPlatformProject = &shared.OpenaiPlatformProject{
-				ProjectID: projectId8,
+				ProjectID: projectId9,
 			}
 		}
 		var openaiPlatformServiceAccount *shared.OpenaiPlatformServiceAccount
 		if r.RemoteInfo.OpenaiPlatformServiceAccount != nil {
-			var projectId9 string
-			projectId9 = r.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID.ValueString()
+			var projectId10 string
+			projectId10 = r.RemoteInfo.OpenaiPlatformServiceAccount.ProjectID.ValueString()
 
 			var serviceAccountId1 string
 			serviceAccountId1 = r.RemoteInfo.OpenaiPlatformServiceAccount.ServiceAccountID.ValueString()
 
 			openaiPlatformServiceAccount = &shared.OpenaiPlatformServiceAccount{
-				ProjectID:        projectId9,
+				ProjectID:        projectId10,
 				ServiceAccountID: serviceAccountId1,
 			}
 		}
@@ -2136,11 +2242,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var slackOrganization *shared.SlackOrganization
 		if r.RemoteInfo.SlackOrganization != nil {
-			var organizationId3 string
-			organizationId3 = r.RemoteInfo.SlackOrganization.OrganizationID.ValueString()
+			var organizationId4 string
+			organizationId4 = r.RemoteInfo.SlackOrganization.OrganizationID.ValueString()
 
 			slackOrganization = &shared.SlackOrganization{
-				OrganizationID: organizationId3,
+				OrganizationID: organizationId4,
 			}
 		}
 		var slackWorkspace *shared.SlackWorkspace
@@ -2229,11 +2335,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var trayOrganization *shared.TrayOrganization
 		if r.RemoteInfo.TrayOrganization != nil {
-			var organizationId4 string
-			organizationId4 = r.RemoteInfo.TrayOrganization.OrganizationID.ValueString()
+			var organizationId5 string
+			organizationId5 = r.RemoteInfo.TrayOrganization.OrganizationID.ValueString()
 
 			trayOrganization = &shared.TrayOrganization{
-				OrganizationID: organizationId4,
+				OrganizationID: organizationId5,
 			}
 		}
 		var trayWorkspace *shared.TrayWorkspace
@@ -2256,11 +2362,11 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 		}
 		var vercelProject *shared.VercelProject
 		if r.RemoteInfo.VercelProject != nil {
-			var projectId10 string
-			projectId10 = r.RemoteInfo.VercelProject.ProjectID.ValueString()
+			var projectId11 string
+			projectId11 = r.RemoteInfo.VercelProject.ProjectID.ValueString()
 
 			vercelProject = &shared.VercelProject{
-				ProjectID: projectId10,
+				ProjectID: projectId11,
 			}
 		}
 		var vercelRole *shared.VercelRole
@@ -2332,6 +2438,12 @@ func (r *ResourceResourceModel) ToSharedCreateResourceInfo(ctx context.Context) 
 			AwsRdsInstance:                    awsRdsInstance,
 			AxiomCustomRole:                   axiomCustomRole,
 			AxiomRole:                         axiomRole,
+			AzureDevopsOrganization:           azureDevopsOrganization,
+			AzureDevopsPipeline:               azureDevopsPipeline,
+			AzureDevopsProject:                azureDevopsProject,
+			AzureDevopsRepo:                   azureDevopsRepo,
+			AzureDevopsServiceConnection:      azureDevopsServiceConnection,
+			AzureDevopsServicePrincipal:       azureDevopsServicePrincipal,
 			AzureEnterpriseApp:                azureEnterpriseApp,
 			AzureEntraIDRole:                  azureEntraIDRole,
 			AzureManagementGroup:              azureManagementGroup,
@@ -2574,6 +2686,12 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 				RoleRemoteIds: roleRemoteIds,
 			}
 		}
+		disableScheduledGrants := new(bool)
+		if !r.RequestConfigurations[requestConfigurationsIndex].DisableScheduledGrants.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].DisableScheduledGrants.IsNull() {
+			*disableScheduledGrants = r.RequestConfigurations[requestConfigurationsIndex].DisableScheduledGrants.ValueBool()
+		} else {
+			disableScheduledGrants = nil
+		}
 		disableSkipLevelEscalation := new(bool)
 		if !r.RequestConfigurations[requestConfigurationsIndex].DisableSkipLevelEscalation.IsUnknown() && !r.RequestConfigurations[requestConfigurationsIndex].DisableSkipLevelEscalation.IsNull() {
 			*disableSkipLevelEscalation = r.RequestConfigurations[requestConfigurationsIndex].DisableSkipLevelEscalation.ValueBool()
@@ -2684,6 +2802,7 @@ func (r *ResourceResourceModel) ToSharedUpdateResourceInfo(ctx context.Context) 
 			AllowRequests:               allowRequests,
 			AutoApproval:                autoApproval,
 			Condition:                   condition,
+			DisableScheduledGrants:      disableScheduledGrants,
 			DisableSkipLevelEscalation:  disableSkipLevelEscalation,
 			ExtensionsDurationInMinutes: extensionsDurationInMinutes1,
 			MaxDuration:                 maxDuration,

@@ -239,7 +239,7 @@ func (s *Requests) ApproveRequest(ctx context.Context, request operations.Approv
 }
 
 // CancelRequest - Cancel request
-// Cancels a pending access request.
+// Cancels a pending access request, or an approved request whose scheduled access has not started yet.
 func (s *Requests) CancelRequest(ctx context.Context, request operations.CancelRequestRequest, opts ...operations.Option) (*operations.CancelRequestResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{

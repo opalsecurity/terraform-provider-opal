@@ -158,6 +158,10 @@ func (r *ConfigurationTemplateResource) Schema(ctx context.Context, req resource
 							},
 							Description: `The condition for the request configuration.`,
 						},
+						"disable_scheduled_grants": schema.BoolAttribute{
+							Optional:    true,
+							Description: `When true, requesters cannot choose a future start time for access. When any item in a request has this set to true, a request with a future start time is rejected. Defaults to false.`,
+						},
 						"disable_skip_level_escalation": schema.BoolAttribute{
 							Optional:    true,
 							Description: `When true, requesters cannot escalate requests to their skip-level manager. When any item in a request has this set to true, the escalation button is disabled and the action is blocked. Defaults to false.`,

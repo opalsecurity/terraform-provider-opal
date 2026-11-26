@@ -4,7 +4,8 @@
 package shared
 
 type RuleConjunction struct {
-	// Empty only when the access rule has `uses_opal_query` set.
+	// May be empty for query-only rules (GET returns empty clauses). Non-empty for tag-only and hybrid rules that include a tag CNF.
+	//
 	Clauses []RuleDisjunction `json:"clauses"`
 }
 

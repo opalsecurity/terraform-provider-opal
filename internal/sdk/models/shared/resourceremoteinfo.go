@@ -322,6 +322,84 @@ func (a *AxiomRole) GetRoleID() string {
 	return a.RoleID
 }
 
+// AzureDevopsOrganization - Remote info for Azure DevOps Organization.
+type AzureDevopsOrganization struct {
+	// The organization id of the Azure DevOps Organization.
+	OrganizationID string `json:"organization_id"`
+}
+
+func (a *AzureDevopsOrganization) GetOrganizationID() string {
+	if a == nil {
+		return ""
+	}
+	return a.OrganizationID
+}
+
+// AzureDevopsPipeline - Remote info for Azure DevOps Pipeline.
+type AzureDevopsPipeline struct {
+	// The pipeline id of the Azure DevOps Pipeline.
+	PipelineID string `json:"pipeline_id"`
+}
+
+func (a *AzureDevopsPipeline) GetPipelineID() string {
+	if a == nil {
+		return ""
+	}
+	return a.PipelineID
+}
+
+// AzureDevopsProject - Remote info for Azure DevOps Project.
+type AzureDevopsProject struct {
+	// The project id of the Azure DevOps Project.
+	ProjectID string `json:"project_id"`
+}
+
+func (a *AzureDevopsProject) GetProjectID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ProjectID
+}
+
+// AzureDevopsRepo - Remote info for Azure DevOps Repository.
+type AzureDevopsRepo struct {
+	// The repository id of the Azure DevOps Repository.
+	RepositoryID string `json:"repository_id"`
+}
+
+func (a *AzureDevopsRepo) GetRepositoryID() string {
+	if a == nil {
+		return ""
+	}
+	return a.RepositoryID
+}
+
+// AzureDevopsServiceConnection - Remote info for Azure DevOps Service Connection.
+type AzureDevopsServiceConnection struct {
+	// The service connection id of the Azure DevOps Service Connection.
+	ServiceConnectionID string `json:"service_connection_id"`
+}
+
+func (a *AzureDevopsServiceConnection) GetServiceConnectionID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ServiceConnectionID
+}
+
+// AzureDevopsServicePrincipal - Remote info for Azure DevOps Service Principal.
+type AzureDevopsServicePrincipal struct {
+	// The service principal id of the Azure DevOps Service Principal.
+	ServicePrincipalID string `json:"service_principal_id"`
+}
+
+func (a *AzureDevopsServicePrincipal) GetServicePrincipalID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ServicePrincipalID
+}
+
 // AzureEnterpriseApp - Remote info for Azure Enterprise App.
 type AzureEnterpriseApp struct {
 	// The remote application identifier (service principal or application object ID).
@@ -1829,6 +1907,18 @@ type ResourceRemoteInfo struct {
 	AxiomCustomRole *AxiomCustomRole `json:"axiom_custom_role,omitempty"`
 	// Remote info for Axiom base role.
 	AxiomRole *AxiomRole `json:"axiom_role,omitempty"`
+	// Remote info for Azure DevOps Organization.
+	AzureDevopsOrganization *AzureDevopsOrganization `json:"azure_devops_organization,omitempty"`
+	// Remote info for Azure DevOps Pipeline.
+	AzureDevopsPipeline *AzureDevopsPipeline `json:"azure_devops_pipeline,omitempty"`
+	// Remote info for Azure DevOps Project.
+	AzureDevopsProject *AzureDevopsProject `json:"azure_devops_project,omitempty"`
+	// Remote info for Azure DevOps Repository.
+	AzureDevopsRepo *AzureDevopsRepo `json:"azure_devops_repo,omitempty"`
+	// Remote info for Azure DevOps Service Connection.
+	AzureDevopsServiceConnection *AzureDevopsServiceConnection `json:"azure_devops_service_connection,omitempty"`
+	// Remote info for Azure DevOps Service Principal.
+	AzureDevopsServicePrincipal *AzureDevopsServicePrincipal `json:"azure_devops_service_principal,omitempty"`
 	// Remote info for Azure Enterprise App.
 	AzureEnterpriseApp *AzureEnterpriseApp `json:"azure_enterprise_app,omitempty"`
 	// Remote info for Azure Entra ID role.
@@ -2121,6 +2211,48 @@ func (r *ResourceRemoteInfo) GetAxiomRole() *AxiomRole {
 		return nil
 	}
 	return r.AxiomRole
+}
+
+func (r *ResourceRemoteInfo) GetAzureDevopsOrganization() *AzureDevopsOrganization {
+	if r == nil {
+		return nil
+	}
+	return r.AzureDevopsOrganization
+}
+
+func (r *ResourceRemoteInfo) GetAzureDevopsPipeline() *AzureDevopsPipeline {
+	if r == nil {
+		return nil
+	}
+	return r.AzureDevopsPipeline
+}
+
+func (r *ResourceRemoteInfo) GetAzureDevopsProject() *AzureDevopsProject {
+	if r == nil {
+		return nil
+	}
+	return r.AzureDevopsProject
+}
+
+func (r *ResourceRemoteInfo) GetAzureDevopsRepo() *AzureDevopsRepo {
+	if r == nil {
+		return nil
+	}
+	return r.AzureDevopsRepo
+}
+
+func (r *ResourceRemoteInfo) GetAzureDevopsServiceConnection() *AzureDevopsServiceConnection {
+	if r == nil {
+		return nil
+	}
+	return r.AzureDevopsServiceConnection
+}
+
+func (r *ResourceRemoteInfo) GetAzureDevopsServicePrincipal() *AzureDevopsServicePrincipal {
+	if r == nil {
+		return nil
+	}
+	return r.AzureDevopsServicePrincipal
 }
 
 func (r *ResourceRemoteInfo) GetAzureEnterpriseApp() *AzureEnterpriseApp {

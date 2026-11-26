@@ -140,6 +140,12 @@ const (
 	ResourceTypeEnumSlackOrganization                 ResourceTypeEnum = "SLACK_ORGANIZATION"
 	ResourceTypeEnumAsanaWorkspace                    ResourceTypeEnum = "ASANA_WORKSPACE"
 	ResourceTypeEnumAsanaWorkspaceGuest               ResourceTypeEnum = "ASANA_WORKSPACE_GUEST"
+	ResourceTypeEnumAzureDevopsProject                ResourceTypeEnum = "AZURE_DEVOPS_PROJECT"
+	ResourceTypeEnumAzureDevopsOrganization           ResourceTypeEnum = "AZURE_DEVOPS_ORGANIZATION"
+	ResourceTypeEnumAzureDevopsServicePrincipal       ResourceTypeEnum = "AZURE_DEVOPS_SERVICE_PRINCIPAL"
+	ResourceTypeEnumAzureDevopsRepo                   ResourceTypeEnum = "AZURE_DEVOPS_REPO"
+	ResourceTypeEnumAzureDevopsPipeline               ResourceTypeEnum = "AZURE_DEVOPS_PIPELINE"
+	ResourceTypeEnumAzureDevopsServiceConnection      ResourceTypeEnum = "AZURE_DEVOPS_SERVICE_CONNECTION"
 	ResourceTypeEnumBitwardenOrganization             ResourceTypeEnum = "BITWARDEN_ORGANIZATION"
 	ResourceTypeEnumCalendlyRole                      ResourceTypeEnum = "CALENDLY_ROLE"
 	ResourceTypeEnumCalendlyEventType                 ResourceTypeEnum = "CALENDLY_EVENT_TYPE"
@@ -417,6 +423,18 @@ func (e *ResourceTypeEnum) UnmarshalJSON(data []byte) error {
 	case "ASANA_WORKSPACE":
 		fallthrough
 	case "ASANA_WORKSPACE_GUEST":
+		fallthrough
+	case "AZURE_DEVOPS_PROJECT":
+		fallthrough
+	case "AZURE_DEVOPS_ORGANIZATION":
+		fallthrough
+	case "AZURE_DEVOPS_SERVICE_PRINCIPAL":
+		fallthrough
+	case "AZURE_DEVOPS_REPO":
+		fallthrough
+	case "AZURE_DEVOPS_PIPELINE":
+		fallthrough
+	case "AZURE_DEVOPS_SERVICE_CONNECTION":
 		fallthrough
 	case "BITWARDEN_ORGANIZATION":
 		fallthrough

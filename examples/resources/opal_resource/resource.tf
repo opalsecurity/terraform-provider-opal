@@ -69,6 +69,24 @@ resource "opal_resource" "my_resource" {
     axiom_role = {
       role_id = "role_member"
     }
+    azure_devops_organization = {
+      organization_id = "...my_organization_id..."
+    }
+    azure_devops_pipeline = {
+      pipeline_id = "...my_pipeline_id..."
+    }
+    azure_devops_project = {
+      project_id = "...my_project_id..."
+    }
+    azure_devops_repo = {
+      repository_id = "...my_repository_id..."
+    }
+    azure_devops_service_connection = {
+      service_connection_id = "...my_service_connection_id..."
+    }
+    azure_devops_service_principal = {
+      service_principal_id = "...my_service_principal_id..."
+    }
     azure_enterprise_app = {
       resource_id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
     }
@@ -398,6 +416,7 @@ resource "opal_resource" "my_resource" {
           "arn:aws:iam::590304332660:role/AdministratorAccess",
         ]
       }
+      disable_scheduled_grants       = false
       disable_skip_level_escalation  = false
       extensions_duration_in_minutes = 120
       max_duration                   = 120

@@ -33,6 +33,7 @@ type GroupDataSourceModel struct {
 	AdminOwnerID                types.String                                 `tfsdk:"admin_owner_id"`
 	AppID                       types.String                                 `tfsdk:"app_id"`
 	ConfigurationTemplateID     types.String                                 `tfsdk:"configuration_template_id"`
+	CustomAttributes            []tfTypes.CustomAttribute                    `tfsdk:"custom_attributes"`
 	CustomRequestNotification   types.String                                 `tfsdk:"custom_request_notification"`
 	Description                 types.String                                 `tfsdk:"description"`
 	ExtensionsDurationInMinutes types.Int64                                  `tfsdk:"extensions_duration_in_minutes"`
@@ -48,6 +49,7 @@ type GroupDataSourceModel struct {
 	MessageChannels             *tfTypes.GetGroupMessageChannelsResponseBody `tfsdk:"message_channels"`
 	Name                        types.String                                 `tfsdk:"name"`
 	OnCallSchedules             *tfTypes.GetGroupOnCallSchedulesResponseBody `tfsdk:"on_call_schedules"`
+	PushedToAppIds              []types.String                               `tfsdk:"pushed_to_app_ids"`
 	RemoteInfo                  *tfTypes.GroupRemoteInfo                     `tfsdk:"remote_info"`
 	RemoteName                  types.String                                 `tfsdk:"remote_name"`
 	RequestConfigurations       []tfTypes.RequestConfiguration               `tfsdk:"request_configurations"`
@@ -81,6 +83,27 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			"configuration_template_id": schema.StringAttribute{
 				Computed:    true,
 				Description: `The ID of the configuration template the group is linked to, or null when the group uses its own private configuration.`,
+			},
+			"custom_attributes": schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"key": schema.StringAttribute{
+							Computed:    true,
+							Description: `The name of the custom attribute.`,
+						},
+						"value_type": schema.StringAttribute{
+							Computed:    true,
+							Description: `The type of value stored in a custom attribute.`,
+						},
+						"values": schema.ListAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
+							Description: `The attribute's value(s), encoded as strings.`,
+						},
+					},
+				},
+				Description: `The custom attributes set on this group.`,
 			},
 			"custom_request_notification": schema.StringAttribute{
 				Computed:    true,
@@ -217,6 +240,11 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 					},
 				},
 				Description: `The on call schedules attached to the group.`,
+			},
+			"pushed_to_app_ids": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
+				Description: `The IDs of the Okta apps that Okta pushes this group into (Okta Group Push).`,
 			},
 			"remote_info": schema.SingleNestedAttribute{
 				Computed: true,
@@ -749,6 +777,16 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						Description: `Remote info for Twingate synced group.`,
 					},
+					"vault_identity_group": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"group_id": schema.StringAttribute{
+								Computed:    true,
+								Description: `The id of the Vault identity group.`,
+							},
+						},
+						Description: `Remote info for Vault identity group.`,
+					},
 					"workday_user_security_group": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -837,6 +875,10 @@ func (r *GroupDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 								},
 							},
 							Description: `The condition for the request configuration.`,
+						},
+						"disable_scheduled_grants": schema.BoolAttribute{
+							Computed:    true,
+							Description: `When true, requesters cannot choose a future start time for access. When any item in a request has this set to true, a request with a future start time is rejected. Defaults to false.`,
 						},
 						"disable_skip_level_escalation": schema.BoolAttribute{
 							Computed:    true,

@@ -2319,12 +2319,98 @@ actions:
   - target: $["components"]["schemas"]["AccessRule"]
     update:
       x-speakeasy-entity: AccessRule
+  # EPRD-5367: TF takes query as a JSON string (jsonencode), not nested blocks.
+  # Nested OpalNodeQueryBody → AccessEntityFilters is recursive (allOf/anyOf/not)
+  # and overflows Speakeasy's terraform type walker.
+  #
+  # REST accepts at least one of ruleClauses/query (both = AND; PUT omit clears a
+  # side). Mark query / ruleClauses optional-only (x-speakeasy-param-computed:
+  # false) so Terraform omit plans null and matches REST omit=clear — Optional+
+  # Computed would keep prior state and silently re-send the omitted side. The
+  # access_rule_query hook expands the TF jsonencode string and strips empty GET
+  # ruleClauses so they are not re-sent; real selectors beside query are kept
+  # (hybrid AND).
+  - target: $["components"]["schemas"]["AccessRule"]["properties"]["query"]
+    update:
+      type: string
+      # Concrete example so Speakeasy does not invent "...my_query..." (invalid JSON).
+      example: '{"nodeFilters":{"entityTag":{"key":"team","value":"eng"}}}'
+      x-speakeasy-param-computed: false
+      x-speakeasy-param-optional: true
+      description: >
+        JSON-encoded Opal Query body (OpalNodeQueryBody) defining the user set.
+        Use `jsonencode({...})`. Provide at least one of `query` or
+        `rule_clauses`; both AND. Omitting this attribute from configuration
+        plans null and omits it on PUT, which clears that side on the REST API
+        (optional-only so Terraform omit matches REST omit=clear).
+  - target: $["components"]["schemas"]["AccessRule"]["properties"]["query"]["$ref"]
+    remove: true
+  - target: $["components"]["schemas"]["UpdateAccessRuleInfo"]["properties"]["query"]
+    update:
+      type: string
+      example: '{"nodeFilters":{"entityTag":{"key":"team","value":"eng"}}}'
+      x-speakeasy-param-computed: false
+      x-speakeasy-param-optional: true
+      description: >
+        JSON-encoded Opal Query body (OpalNodeQueryBody). Use `jsonencode({...})`.
+        At least one of `query` or `rule_clauses` is required; both AND. Omitting
+        this attribute from configuration plans null and omits it on PUT, which
+        clears that side on the REST API (optional-only so Terraform omit matches
+        REST omit=clear).
+  - target: $["components"]["schemas"]["UpdateAccessRuleInfo"]["properties"]["query"]["$ref"]
+    remove: true
+  # Response schema marks ruleClauses required; for TF either rule_clauses or
+  # query is enough (REST accepts at least one; both AND). Optional-only so
+  # omitting the block clears tags on PUT (same as query).
+  - target: $["components"]["schemas"]["AccessRule"]["properties"]["ruleClauses"]
+    update:
+      nullable: true
+      x-speakeasy-param-computed: false
+      x-speakeasy-param-optional: true
+  - target: $["components"]["schemas"]["UpdateAccessRuleInfo"]["properties"]["ruleClauses"]
+    update:
+      x-speakeasy-param-computed: false
+      x-speakeasy-param-optional: true
+  - target: $["components"]["schemas"]["AccessRule"]["required"]
+    update:
+      - status
+      - name
+      - admin_owner_id
+      - access_rule_id
+      - description
+  - target: $["components"]["schemas"]["AccessRule"]["properties"]["uses_opal_query"]
+    update:
+      x-speakeasy-param-readonly: true
+  # Drop recursive filter composition so Speakeasy never walks the cycle if
+  # any leftover schema still references AccessEntityFilters.
+  - target: $["components"]["schemas"]["AccessEntityFilters"]["properties"]["allOf"]
+    remove: true
+  - target: $["components"]["schemas"]["AccessEntityFilters"]["properties"]["anyOf"]
+    remove: true
+  - target: $["components"]["schemas"]["AccessEntityFilters"]["properties"]["not"]
+    remove: true
+  - target: $["components"]["schemas"]["AccessRelationshipFilters"]["properties"]["allOf"]
+    remove: true
+  - target: $["components"]["schemas"]["AccessRelationshipFilters"]["properties"]["anyOf"]
+    remove: true
+  - target: $["components"]["schemas"]["AccessRelationshipFilters"]["properties"]["not"]
+    remove: true
+  # Ad-hoc query run is not a Terraform entity; ignore so Speakeasy does not
+  # walk the remaining OpalQuery schema graph during TF generation.
+  - target: $["paths"]["/queries/run"]["post"]
+    update:
+      x-speakeasy-ignore: true
   - target: $["components"]["schemas"]["RuleClauses"]["properties"]["unless"]
     update:
       default: null
   - target: $["components"]["schemas"]["RuleClauses"]
     update:
       x-speakeasy-entity: RuleClauses
+  - target: $["components"]["schemas"]["RuleConjunction"]["properties"]["clauses"]
+    update:
+      description: >
+        May be empty for query-only rules (GET returns empty clauses). Non-empty
+        for tag-only and hybrid rules that include a tag CNF.
   - target: $["components"]["schemas"]["RuleConjunction"]
     update:
       x-speakeasy-entity: RuleConjunction

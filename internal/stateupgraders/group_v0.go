@@ -124,6 +124,14 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 		},
 	}
 
+	var customAttributesType = tftypes.List{ElementType: tftypes.Object{
+		AttributeTypes: map[string]tftypes.Type{
+			"key":        tftypes.String,
+			"value_type": tftypes.String,
+			"values":     tftypes.List{ElementType: tftypes.String},
+		},
+	}}
+
 	var GroupV3 = tftypes.Object{
 		AttributeTypes: map[string]tftypes.Type{
 			"id":                 tftypes.String,
@@ -159,6 +167,9 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"handle":           tftypes.String,
 			"initial_user_ids": tftypes.List{ElementType: tftypes.String},
 			"team_id":          tftypes.String,
+			// Read-only fields added after v0; unset until refresh.
+			"custom_attributes": customAttributesType,
+			"pushed_to_app_ids": tftypes.List{ElementType: tftypes.String},
 		},
 	}
 	
@@ -328,6 +339,8 @@ func GroupStateUpgraderV0(ctx context.Context, req resource.UpgradeStateRequest,
 			"handle":           tftypes.NewValue(tftypes.String, nil),                                            // added after v0; unset until refresh
 			"initial_user_ids": tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, nil),                 // added after v0; unset until refresh
 			"team_id":          tftypes.NewValue(tftypes.String, nil),                                            // added after v0; unset until refresh
+			"custom_attributes": tftypes.NewValue(customAttributesType, nil),                                     // added after v0; unset until refresh
+			"pushed_to_app_ids": tftypes.NewValue(tftypes.List{ElementType: tftypes.String}, nil),                // added after v0; unset until refresh
 		}),
 	)
 	if err != nil {

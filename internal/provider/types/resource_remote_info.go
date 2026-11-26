@@ -18,6 +18,12 @@ type ResourceRemoteInfo struct {
 	AwsRdsInstance                    *AwsRdsInstance                    `tfsdk:"aws_rds_instance"`
 	AxiomCustomRole                   *ClickhouseRole                    `tfsdk:"axiom_custom_role"`
 	AxiomRole                         *ClickhouseRole                    `tfsdk:"axiom_role"`
+	AzureDevopsOrganization           *ZendeskOrganization               `tfsdk:"azure_devops_organization"`
+	AzureDevopsPipeline               *AzureDevopsPipeline               `tfsdk:"azure_devops_pipeline"`
+	AzureDevopsProject                *AzureDevopsProject                `tfsdk:"azure_devops_project"`
+	AzureDevopsRepo                   *AzureDevopsRepo                   `tfsdk:"azure_devops_repo"`
+	AzureDevopsServiceConnection      *AzureDevopsServiceConnection      `tfsdk:"azure_devops_service_connection"`
+	AzureDevopsServicePrincipal       *AzureDevopsServicePrincipal       `tfsdk:"azure_devops_service_principal"`
 	AzureEnterpriseApp                *AzureEnterpriseApp                `tfsdk:"azure_enterprise_app"`
 	AzureEntraIDRole                  *AzureEnterpriseApp                `tfsdk:"azure_entra_id_role"`
 	AzureManagementGroup              *AzureEnterpriseApp                `tfsdk:"azure_management_group"`
@@ -63,14 +69,14 @@ type ResourceRemoteInfo struct {
 	GcpFolder                         *GcpFolder                         `tfsdk:"gcp_folder"`
 	GcpGkeCluster                     *GcpGkeCluster                     `tfsdk:"gcp_gke_cluster"`
 	GcpOrganization                   *ZendeskOrganization               `tfsdk:"gcp_organization"`
-	GcpProject                        *GcpProject                        `tfsdk:"gcp_project"`
+	GcpProject                        *AzureDevopsProject                `tfsdk:"gcp_project"`
 	GcpServiceAccount                 *GcpServiceAccount                 `tfsdk:"gcp_service_account"`
 	GcpSQLInstance                    *GcpSQLInstance                    `tfsdk:"gcp_sql_instance"`
 	GithubEnterpriseRole              *ClickhouseRole                    `tfsdk:"github_enterprise_role"`
 	GithubOrg                         *GithubOrg                         `tfsdk:"github_org"`
 	GithubOrgRole                     *GithubOrgRole                     `tfsdk:"github_org_role"`
 	GithubRepo                        *GithubRepo                        `tfsdk:"github_repo"`
-	GitlabProject                     *GcpProject                        `tfsdk:"gitlab_project"`
+	GitlabProject                     *AzureDevopsProject                `tfsdk:"gitlab_project"`
 	GoogleWorkspaceRole               *ClickhouseRole                    `tfsdk:"google_workspace_role"`
 	GrafanaDashboard                  *GrafanaDashboard                  `tfsdk:"grafana_dashboard"`
 	GrafanaFolder                     *GrafanaFolder                     `tfsdk:"grafana_folder"`
@@ -78,7 +84,7 @@ type ResourceRemoteInfo struct {
 	HubspotRole                       *ClickhouseRole                    `tfsdk:"hubspot_role"`
 	IlevelAdvancedRole                *IlevelAdvancedRole                `tfsdk:"ilevel_advanced_role"`
 	LinearOrganization                *CursorOrganization                `tfsdk:"linear_organization"`
-	LinearProject                     *GcpProject                        `tfsdk:"linear_project"`
+	LinearProject                     *AzureDevopsProject                `tfsdk:"linear_project"`
 	MiroBoard                         *MiroBoard                         `tfsdk:"miro_board"`
 	MiroOrganization                  *ZendeskOrganization               `tfsdk:"miro_organization"`
 	NetsuiteRole                      *ClickhouseRole                    `tfsdk:"netsuite_role"`
@@ -86,7 +92,7 @@ type ResourceRemoteInfo struct {
 	OktaCustomRole                    *ClickhouseRole                    `tfsdk:"okta_custom_role"`
 	OktaStandardRole                  *OktaStandardRole                  `tfsdk:"okta_standard_role"`
 	OneloginApp                       *AzureEnterpriseApp                `tfsdk:"onelogin_app"`
-	OpenaiPlatformProject             *GcpProject                        `tfsdk:"openai_platform_project"`
+	OpenaiPlatformProject             *AzureDevopsProject                `tfsdk:"openai_platform_project"`
 	OpenaiPlatformServiceAccount      *OpenaiPlatformServiceAccount      `tfsdk:"openai_platform_service_account"`
 	OracleFusionRole                  *ClickhouseRole                    `tfsdk:"oracle_fusion_role"`
 	PagerdutyRole                     *IlevelAdvancedRole                `tfsdk:"pagerduty_role"`
@@ -108,7 +114,7 @@ type ResourceRemoteInfo struct {
 	TrayOrganization                  *ZendeskOrganization               `tfsdk:"tray_organization"`
 	TrayWorkspace                     *AnthropicWorkspace                `tfsdk:"tray_workspace"`
 	TwingateResource                  *AzureEnterpriseApp                `tfsdk:"twingate_resource"`
-	VercelProject                     *GcpProject                        `tfsdk:"vercel_project"`
+	VercelProject                     *AzureDevopsProject                `tfsdk:"vercel_project"`
 	VercelRole                        *ClickhouseRole                    `tfsdk:"vercel_role"`
 	WorkdayRole                       *ClickhouseRole                    `tfsdk:"workday_role"`
 	WrikeUserType                     *WrikeUserType                     `tfsdk:"wrike_user_type"`

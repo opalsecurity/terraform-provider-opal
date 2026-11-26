@@ -38,14 +38,22 @@ func (e *UpdateAccessRuleInfoStatus) UnmarshalJSON(data []byte) error {
 // # UpdateAccessRuleInfo Object
 // ### Description
 // The `UpdateAccessRuleInfo` object is used as an input to the UpdateAccessRule and CreateAccessRule API.
+//
+// Provide at least one of `ruleClauses` (tag CNF) or `query` (Opal Query).
+// Sending both stores them as AND. PUT replaces the whole condition from
+// the body: omit a side to clear it. Empty `ruleClauses` next to `query`
+// (as GET returns for query-only rules) is treated as absent.
 type UpdateAccessRuleInfo struct {
 	// The ID of the owner of the group.
 	AdminOwnerID string `json:"admin_owner_id"`
 	// A description of the group.
 	Description string `json:"description"`
 	// The name of the access rule.
-	Name        string      `json:"name"`
-	RuleClauses RuleClauses `json:"ruleClauses"`
+	Name string `json:"name"`
+	// JSON-encoded Opal Query body (OpalNodeQueryBody). Use `jsonencode({...})`. At least one of `query` or `rule_clauses` is required; both AND. Omitting this attribute from configuration plans null and omits it on PUT, which clears that side on the REST API (optional-only so Terraform omit matches REST omit=clear).
+	//
+	Query       *string      `json:"query,omitempty"`
+	RuleClauses *RuleClauses `json:"ruleClauses,omitempty"`
 	// The status of the access rule.
 	Status UpdateAccessRuleInfoStatus `json:"status"`
 }
@@ -71,9 +79,16 @@ func (u *UpdateAccessRuleInfo) GetName() string {
 	return u.Name
 }
 
-func (u *UpdateAccessRuleInfo) GetRuleClauses() RuleClauses {
+func (u *UpdateAccessRuleInfo) GetQuery() *string {
 	if u == nil {
-		return RuleClauses{}
+		return nil
+	}
+	return u.Query
+}
+
+func (u *UpdateAccessRuleInfo) GetRuleClauses() *RuleClauses {
+	if u == nil {
+		return nil
 	}
 	return u.RuleClauses
 }

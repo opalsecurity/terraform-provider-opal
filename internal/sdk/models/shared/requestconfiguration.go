@@ -62,6 +62,8 @@ type RequestConfiguration struct {
 	AutoApproval bool `json:"auto_approval"`
 	// The condition for the request configuration.
 	Condition *Condition `json:"condition,omitempty"`
+	// When true, requesters cannot choose a future start time for access. When any item in a request has this set to true, a request with a future start time is rejected. Defaults to false.
+	DisableScheduledGrants *bool `json:"disable_scheduled_grants,omitempty"`
 	// When true, requesters cannot escalate requests to their skip-level manager. When any item in a request has this set to true, the escalation button is disabled and the action is blocked. Defaults to false.
 	DisableSkipLevelEscalation *bool `json:"disable_skip_level_escalation,omitempty"`
 	// The duration for which access can be extended (in minutes). Set to 0 to disable extensions. When > 0, extensions are enabled for the specified duration.
@@ -103,6 +105,13 @@ func (r *RequestConfiguration) GetCondition() *Condition {
 		return nil
 	}
 	return r.Condition
+}
+
+func (r *RequestConfiguration) GetDisableScheduledGrants() *bool {
+	if r == nil {
+		return nil
+	}
+	return r.DisableScheduledGrants
 }
 
 func (r *RequestConfiguration) GetDisableSkipLevelEscalation() *bool {

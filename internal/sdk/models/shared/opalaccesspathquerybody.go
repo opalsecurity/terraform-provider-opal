@@ -3,10 +3,6 @@
 
 package shared
 
-import (
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
-)
-
 // OpalAccessPathQueryBody - Edge-query filters for an ACCESS OpalQuery. At least one of principalFilter or entitlementFilter is required.
 type OpalAccessPathQueryBody struct {
 	// Filter by access-level display names on the terminal edge.
@@ -15,27 +11,16 @@ type OpalAccessPathQueryBody struct {
 	AccessLevelRemoteIds []string `json:"accessLevelRemoteIds,omitempty"`
 	// Constraints on the access path edges themselves.
 	EdgeFilter *OpalAccessPathEdgeFilter `json:"edgeFilter,omitempty"`
-	// Filters the returned nodes by the access edges connected to them. When `isAccessibleBy` and `hasAccessTo` are provided, the returned nodes must satisfy both edge constraints simultaneously.
+	// Filters the returned nodes by the access edges connected to them. When `isAccessibleBy` and `hasAccessTo` are provided, the returned nodes must satisfy both edge constraints simultaneously. Supports nested composition via `allOf` / `anyOf` / `not`, and `directOnly` to restrict matching to direct grants.
 	//
-	EntitlementAccessFilters *AccessRelationshipFiltersInput `json:"entitlementAccessFilters,omitempty"`
+	EntitlementAccessFilters *AccessRelationshipFilters `json:"entitlementAccessFilters,omitempty"`
 	// Filters for matching entities by type, name, tag, IDs, connections, or access levels. Supports recursive logical composition via allOf/anyOf.
 	EntitlementFilter *AccessEntityFilters `json:"entitlementFilter,omitempty"`
-	// Filters the returned nodes by the access edges connected to them. When `isAccessibleBy` and `hasAccessTo` are provided, the returned nodes must satisfy both edge constraints simultaneously.
+	// Filters the returned nodes by the access edges connected to them. When `isAccessibleBy` and `hasAccessTo` are provided, the returned nodes must satisfy both edge constraints simultaneously. Supports nested composition via `allOf` / `anyOf` / `not`, and `directOnly` to restrict matching to direct grants.
 	//
-	PrincipalAccessFilters *AccessRelationshipFiltersInput `json:"principalAccessFilters,omitempty"`
+	PrincipalAccessFilters *AccessRelationshipFilters `json:"principalAccessFilters,omitempty"`
 	// Filters for matching entities by type, name, tag, IDs, connections, or access levels. Supports recursive logical composition via allOf/anyOf.
 	PrincipalFilter *AccessEntityFilters `json:"principalFilter,omitempty"`
-}
-
-func (o OpalAccessPathQueryBody) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(o, "", false)
-}
-
-func (o *OpalAccessPathQueryBody) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &o, "", false, nil); err != nil {
-		return err
-	}
-	return nil
 }
 
 func (o *OpalAccessPathQueryBody) GetAccessLevelNames() []string {
@@ -59,7 +44,7 @@ func (o *OpalAccessPathQueryBody) GetEdgeFilter() *OpalAccessPathEdgeFilter {
 	return o.EdgeFilter
 }
 
-func (o *OpalAccessPathQueryBody) GetEntitlementAccessFilters() *AccessRelationshipFiltersInput {
+func (o *OpalAccessPathQueryBody) GetEntitlementAccessFilters() *AccessRelationshipFilters {
 	if o == nil {
 		return nil
 	}
@@ -73,7 +58,7 @@ func (o *OpalAccessPathQueryBody) GetEntitlementFilter() *AccessEntityFilters {
 	return o.EntitlementFilter
 }
 
-func (o *OpalAccessPathQueryBody) GetPrincipalAccessFilters() *AccessRelationshipFiltersInput {
+func (o *OpalAccessPathQueryBody) GetPrincipalAccessFilters() *AccessRelationshipFilters {
 	if o == nil {
 		return nil
 	}

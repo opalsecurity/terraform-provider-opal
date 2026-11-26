@@ -3,27 +3,12 @@
 
 package shared
 
-import (
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
-)
-
 // EntityAdminFilter - Filters GROUP and RESOURCE entities by their admin owner. USER entities never match, in either polarity. `not` inverts the match within the resource/group domain (self-negating, like IdpStatusFilter): omit it (or false) to include entities owned by the given owners, set it true to exclude them.
 type EntityAdminFilter struct {
 	// Invert the match — return resources/groups NOT owned by the given owners.
 	Not *bool `json:"not,omitempty"`
 	// The owner (group) UUIDs to match entities against.
 	OwnerIDs []string `json:"ownerIDs"`
-}
-
-func (e EntityAdminFilter) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(e, "", false)
-}
-
-func (e *EntityAdminFilter) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &e, "", false, nil); err != nil {
-		return err
-	}
-	return nil
 }
 
 func (e *EntityAdminFilter) GetNot() *bool {

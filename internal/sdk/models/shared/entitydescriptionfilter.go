@@ -3,27 +3,12 @@
 
 package shared
 
-import (
-	"github.com/opalsecurity/terraform-provider-opal/v3/internal/sdk/internal/utils"
-)
-
 // EntityDescriptionFilter - Filters GROUP and RESOURCE entities by a case-insensitive substring of their description ("contains"). USER entities have no description and never match, in either polarity. `not` inverts the match within the resource/group domain ("does NOT contain"), so it still returns only resources/groups rather than sweeping in users.
 type EntityDescriptionFilter struct {
 	// Invert the match — return resources/groups whose description does NOT contain the substring.
 	Not *bool `json:"not,omitempty"`
 	// The substring to match against the entity description.
 	String string `json:"string"`
-}
-
-func (e EntityDescriptionFilter) MarshalJSON() ([]byte, error) {
-	return utils.MarshalJSON(e, "", false)
-}
-
-func (e *EntityDescriptionFilter) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &e, "", false, nil); err != nil {
-		return err
-	}
-	return nil
 }
 
 func (e *EntityDescriptionFilter) GetNot() *bool {
