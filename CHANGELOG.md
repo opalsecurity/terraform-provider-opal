@@ -1,5 +1,34 @@
 # Changelog
 
+## v3.11.14
+ - Adds Opal Query support on `opal_access_rule` via `query` (`jsonencode({...})`), matching the public access-rules API. Tag `rule_clauses` and `query` may be used together (AND). Includes an SDK hook so Terraform round-trips the JSON string cleanly and hybrids keep real tag selectors.
+ - Regenerates the provider SDK from prod OpenAPI (`app.opal.dev`), picking up Azure DevOps remote-info types, custom attributes, IP ACL / IdP user-attribute mappings, and related surface that had landed in the API since the previous regen.
+ - Updates `opal_group` / `opal_resource` v0 state upgraders for `custom_attributes` (and `pushed_to_app_ids` on groups) so state from older provider versions upgrades cleanly against the regenerated schemas.
+
+## v3.11.12
+ - `opal_group` / `opal_resource` can link, repoint, and unlink `configuration_template_id` through the configuration-template sub-resource. Omitting the attribute (or setting it to `null`) unlinks. List data sources still expose the field.
+
+## v3.11.9
+ - Fixes `data.opal_app` failing with HTTP 400 when reading non-CUSTOM apps (e.g. Okta directory) after v3.11.6. Visibility attributes are restored from `GET /apps/{id}`; the managed `opal_app` resource still uses the visibility sub-endpoint for CUSTOM / CUSTOM_CONNECTOR only.
+
+## v3.11.7
+ - Regenerates the provider SDK from the current OpenAPI (Speakeasy Generate 3.11.7).
+
+## v3.11.6
+ - Adds a managed `opal_app` resource for Push-only / Custom Connector apps, with visibility routed through `GET`/`PUT /apps/{app_id}/visibility` so Terraform can detect drift on `visibility`, `visibility_group_ids`, and `import_visibility`. Custom Connector `signing_secret` is marked Sensitive.
+
+## v3.11.4
+ - Regenerates the provider SDK from prod OpenAPI (configuration-template sub-resource endpoints and accumulated spec drift).
+ - Updates `opal_group` / `opal_resource` v0 state upgraders for `requires_forfeit_reason`, and rejects combining that attribute with `configuration_template_id` in config validation.
+
+## v3.10.0
+ - Adds support for managing OpalScripts:
+   - `opal_script` resource to create, update, and delete a script
+   - `opal_script_from_name` data source to look one up by name
+   - Reviewer stages can reference scripts directly via `opal_script_ids`
+ - Requires the `public-api-opalscripts` organization flag; the API returns 403 while it is off.
+ - Note: intermediate 3.8.x / 3.9.x numbers were skipped when unblocking the release job after `gen.lock` still pinned an already-tagged version.
+
 ## v3.7.5
  - Fixes `max_duration = -1` on `request_configurations` showing as permanent drift
 
