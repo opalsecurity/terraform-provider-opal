@@ -15,6 +15,10 @@ func initHooks(h *Hooks) {
 
 	h.registerAfterSuccessHook(&maxDurationIndefiniteHook{})
 
+	accessRuleQuery := &accessRuleQueryHook{}
+	h.registerBeforeRequestHook(accessRuleQuery)
+	h.registerAfterSuccessHook(accessRuleQuery)
+
 	// exampleHook := &ExampleHook{}
 	// h.registerBeforeRequestHook(exampleHook)
 	// h.registerAfterErrorHook(exampleHook)
