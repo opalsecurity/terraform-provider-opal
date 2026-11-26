@@ -2324,34 +2324,53 @@ actions:
   # and overflows Speakeasy's terraform type walker.
   #
   # REST accepts at least one of ruleClauses/query (both = AND; PUT omit clears a
-  # side). The access_rule_query hook expands the TF jsonencode string and strips
-  # empty GET ruleClauses so they are not re-sent; real selectors beside query
-  # are kept (hybrid AND). TF Optional+Computed omit does not itself clear.
+  # side). Mark query / ruleClauses optional-only (x-speakeasy-param-computed:
+  # false) so Terraform omit plans null and matches REST omit=clear — Optional+
+  # Computed would keep prior state and silently re-send the omitted side. The
+  # access_rule_query hook expands the TF jsonencode string and strips empty GET
+  # ruleClauses so they are not re-sent; real selectors beside query are kept
+  # (hybrid AND).
   - target: $["components"]["schemas"]["AccessRule"]["properties"]["query"]
     update:
       type: string
+      # Concrete example so Speakeasy does not invent "...my_query..." (invalid JSON).
+      example: '{"nodeFilters":{"entityTag":{"key":"team","value":"eng"}}}'
+      x-speakeasy-param-computed: false
+      x-speakeasy-param-optional: true
       description: >
         JSON-encoded Opal Query body (OpalNodeQueryBody) defining the user set.
         Use `jsonencode({...})`. Provide at least one of `query` or
-        `rule_clauses`; both AND. On the REST API, omitting a side on PUT clears
-        it. In Terraform, do not rely on omitting an Optional+Computed attribute
-        to clear — prior state may be retained; set only the side you want or
-        destroy/recreate.
+        `rule_clauses`; both AND. Omitting this attribute from configuration
+        plans null and omits it on PUT, which clears that side on the REST API
+        (optional-only so Terraform omit matches REST omit=clear).
   - target: $["components"]["schemas"]["AccessRule"]["properties"]["query"]["$ref"]
     remove: true
   - target: $["components"]["schemas"]["UpdateAccessRuleInfo"]["properties"]["query"]
     update:
       type: string
+      example: '{"nodeFilters":{"entityTag":{"key":"team","value":"eng"}}}'
+      x-speakeasy-param-computed: false
+      x-speakeasy-param-optional: true
       description: >
         JSON-encoded Opal Query body (OpalNodeQueryBody). Use `jsonencode({...})`.
-        At least one of `query` or `rule_clauses` is required; both AND. On the
-        REST API, omitting a side on PUT clears it. In Terraform, do not rely on
-        omitting an Optional+Computed attribute to clear — prior state may be
-        retained; set only the side you want or destroy/recreate.
+        At least one of `query` or `rule_clauses` is required; both AND. Omitting
+        this attribute from configuration plans null and omits it on PUT, which
+        clears that side on the REST API (optional-only so Terraform omit matches
+        REST omit=clear).
   - target: $["components"]["schemas"]["UpdateAccessRuleInfo"]["properties"]["query"]["$ref"]
     remove: true
   # Response schema marks ruleClauses required; for TF either rule_clauses or
-  # query is enough (REST accepts at least one; both AND).
+  # query is enough (REST accepts at least one; both AND). Optional-only so
+  # omitting the block clears tags on PUT (same as query).
+  - target: $["components"]["schemas"]["AccessRule"]["properties"]["ruleClauses"]
+    update:
+      nullable: true
+      x-speakeasy-param-computed: false
+      x-speakeasy-param-optional: true
+  - target: $["components"]["schemas"]["UpdateAccessRuleInfo"]["properties"]["ruleClauses"]
+    update:
+      x-speakeasy-param-computed: false
+      x-speakeasy-param-optional: true
   - target: $["components"]["schemas"]["AccessRule"]["required"]
     update:
       - status

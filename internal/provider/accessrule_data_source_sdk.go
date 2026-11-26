@@ -21,76 +21,80 @@ func (r *AccessRuleDataSourceModel) RefreshFromSharedAccessRule(ctx context.Cont
 		r.ID = types.StringValue(resp.ID)
 		r.Name = types.StringValue(resp.Name)
 		r.Query = types.StringPointerValue(resp.Query)
-		r.RuleClauses = &tfTypes.RuleClauses{}
-		if resp.RuleClauses.Unless == nil {
-			r.RuleClauses.Unless = nil
+		if resp.RuleClauses == nil {
+			r.RuleClauses = nil
 		} else {
-			r.RuleClauses.Unless = &tfTypes.RuleConjunction{}
-			r.RuleClauses.Unless.Clauses = []tfTypes.RuleDisjunction{}
+			r.RuleClauses = &tfTypes.RuleClauses{}
+			if resp.RuleClauses.Unless == nil {
+				r.RuleClauses.Unless = nil
+			} else {
+				r.RuleClauses.Unless = &tfTypes.RuleConjunction{}
+				r.RuleClauses.Unless.Clauses = []tfTypes.RuleDisjunction{}
 
-			for _, clausesItem := range resp.RuleClauses.Unless.Clauses {
-				var clauses tfTypes.RuleDisjunction
+				for _, clausesItem := range resp.RuleClauses.Unless.Clauses {
+					var clauses tfTypes.RuleDisjunction
 
-				clauses.AttributeSelectors = []tfTypes.UserAttributeSelector{}
+					clauses.AttributeSelectors = []tfTypes.UserAttributeSelector{}
 
-				for _, attributeSelectorsItem := range clausesItem.AttributeSelectors {
-					var attributeSelectors tfTypes.UserAttributeSelector
+					for _, attributeSelectorsItem := range clausesItem.AttributeSelectors {
+						var attributeSelectors tfTypes.UserAttributeSelector
 
-					attributeSelectors.Attribute = types.StringValue(string(attributeSelectorsItem.Attribute))
-					attributeSelectors.Values = make([]types.String, 0, len(attributeSelectorsItem.Values))
-					for _, v := range attributeSelectorsItem.Values {
-						attributeSelectors.Values = append(attributeSelectors.Values, types.StringValue(v))
+						attributeSelectors.Attribute = types.StringValue(string(attributeSelectorsItem.Attribute))
+						attributeSelectors.Values = make([]types.String, 0, len(attributeSelectorsItem.Values))
+						for _, v := range attributeSelectorsItem.Values {
+							attributeSelectors.Values = append(attributeSelectors.Values, types.StringValue(v))
+						}
+
+						clauses.AttributeSelectors = append(clauses.AttributeSelectors, attributeSelectors)
+					}
+					clauses.Selectors = []tfTypes.TagSelector{}
+
+					for _, selectorsItem := range clausesItem.Selectors {
+						var selectors tfTypes.TagSelector
+
+						selectors.ConnectionID = types.StringValue(selectorsItem.ConnectionID)
+						selectors.Key = types.StringValue(selectorsItem.Key)
+						selectors.Value = types.StringValue(selectorsItem.Value)
+
+						clauses.Selectors = append(clauses.Selectors, selectors)
 					}
 
-					clauses.AttributeSelectors = append(clauses.AttributeSelectors, attributeSelectors)
+					r.RuleClauses.Unless.Clauses = append(r.RuleClauses.Unless.Clauses, clauses)
 				}
-				clauses.Selectors = []tfTypes.TagSelector{}
+			}
+			r.RuleClauses.When = &tfTypes.RuleConjunction{}
+			r.RuleClauses.When.Clauses = []tfTypes.RuleDisjunction{}
 
-				for _, selectorsItem := range clausesItem.Selectors {
-					var selectors tfTypes.TagSelector
+			for _, clausesItem1 := range resp.RuleClauses.When.Clauses {
+				var clauses1 tfTypes.RuleDisjunction
 
-					selectors.ConnectionID = types.StringValue(selectorsItem.ConnectionID)
-					selectors.Key = types.StringValue(selectorsItem.Key)
-					selectors.Value = types.StringValue(selectorsItem.Value)
+				clauses1.AttributeSelectors = []tfTypes.UserAttributeSelector{}
 
-					clauses.Selectors = append(clauses.Selectors, selectors)
+				for _, attributeSelectorsItem1 := range clausesItem1.AttributeSelectors {
+					var attributeSelectors1 tfTypes.UserAttributeSelector
+
+					attributeSelectors1.Attribute = types.StringValue(string(attributeSelectorsItem1.Attribute))
+					attributeSelectors1.Values = make([]types.String, 0, len(attributeSelectorsItem1.Values))
+					for _, v := range attributeSelectorsItem1.Values {
+						attributeSelectors1.Values = append(attributeSelectors1.Values, types.StringValue(v))
+					}
+
+					clauses1.AttributeSelectors = append(clauses1.AttributeSelectors, attributeSelectors1)
+				}
+				clauses1.Selectors = []tfTypes.TagSelector{}
+
+				for _, selectorsItem1 := range clausesItem1.Selectors {
+					var selectors1 tfTypes.TagSelector
+
+					selectors1.ConnectionID = types.StringValue(selectorsItem1.ConnectionID)
+					selectors1.Key = types.StringValue(selectorsItem1.Key)
+					selectors1.Value = types.StringValue(selectorsItem1.Value)
+
+					clauses1.Selectors = append(clauses1.Selectors, selectors1)
 				}
 
-				r.RuleClauses.Unless.Clauses = append(r.RuleClauses.Unless.Clauses, clauses)
+				r.RuleClauses.When.Clauses = append(r.RuleClauses.When.Clauses, clauses1)
 			}
-		}
-		r.RuleClauses.When = &tfTypes.RuleConjunction{}
-		r.RuleClauses.When.Clauses = []tfTypes.RuleDisjunction{}
-
-		for _, clausesItem1 := range resp.RuleClauses.When.Clauses {
-			var clauses1 tfTypes.RuleDisjunction
-
-			clauses1.AttributeSelectors = []tfTypes.UserAttributeSelector{}
-
-			for _, attributeSelectorsItem1 := range clausesItem1.AttributeSelectors {
-				var attributeSelectors1 tfTypes.UserAttributeSelector
-
-				attributeSelectors1.Attribute = types.StringValue(string(attributeSelectorsItem1.Attribute))
-				attributeSelectors1.Values = make([]types.String, 0, len(attributeSelectorsItem1.Values))
-				for _, v := range attributeSelectorsItem1.Values {
-					attributeSelectors1.Values = append(attributeSelectors1.Values, types.StringValue(v))
-				}
-
-				clauses1.AttributeSelectors = append(clauses1.AttributeSelectors, attributeSelectors1)
-			}
-			clauses1.Selectors = []tfTypes.TagSelector{}
-
-			for _, selectorsItem1 := range clausesItem1.Selectors {
-				var selectors1 tfTypes.TagSelector
-
-				selectors1.ConnectionID = types.StringValue(selectorsItem1.ConnectionID)
-				selectors1.Key = types.StringValue(selectorsItem1.Key)
-				selectors1.Value = types.StringValue(selectorsItem1.Value)
-
-				clauses1.Selectors = append(clauses1.Selectors, selectors1)
-			}
-
-			r.RuleClauses.When.Clauses = append(r.RuleClauses.When.Clauses, clauses1)
 		}
 		r.Status = types.StringValue(string(resp.Status))
 		r.UsesOpalQuery = types.BoolPointerValue(resp.UsesOpalQuery)

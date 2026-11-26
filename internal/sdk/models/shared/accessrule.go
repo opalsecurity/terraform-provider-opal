@@ -50,10 +50,10 @@ type AccessRule struct {
 	ID string `json:"access_rule_id"`
 	// The name of the access rule.
 	Name string `json:"name"`
-	// JSON-encoded Opal Query body (OpalNodeQueryBody) defining the user set. Use `jsonencode({...})`. Provide at least one of `query` or `rule_clauses`; both AND. On the REST API, omitting a side on PUT clears it. In Terraform, do not rely on omitting an Optional+Computed attribute to clear — prior state may be retained; set only the side you want or destroy/recreate.
+	// JSON-encoded Opal Query body (OpalNodeQueryBody) defining the user set. Use `jsonencode({...})`. Provide at least one of `query` or `rule_clauses`; both AND. Omitting this attribute from configuration plans null and omits it on PUT, which clears that side on the REST API (optional-only so Terraform omit matches REST omit=clear).
 	//
-	Query       *string     `json:"query,omitempty"`
-	RuleClauses RuleClauses `json:"ruleClauses"`
+	Query       *string      `json:"query,omitempty"`
+	RuleClauses *RuleClauses `json:"ruleClauses,omitempty"`
 	// The status of the access rule.
 	Status Status `json:"status"`
 	// True when the access rule stores an Opal Query (including hybrids). `query` is set when the REST dialect can express that filter; it is omitted for filters the API cannot express (e.g. risk, identity detection, agent fields). Rely on this flag, not only on whether `query` is present.
@@ -96,9 +96,9 @@ func (a *AccessRule) GetQuery() *string {
 	return a.Query
 }
 
-func (a *AccessRule) GetRuleClauses() RuleClauses {
+func (a *AccessRule) GetRuleClauses() *RuleClauses {
 	if a == nil {
-		return RuleClauses{}
+		return nil
 	}
 	return a.RuleClauses
 }

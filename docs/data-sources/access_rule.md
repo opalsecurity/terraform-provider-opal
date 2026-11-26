@@ -30,7 +30,7 @@ data "opal_access_rule" "my_accessrule" {
 - `admin_owner_id` (String) The ID of the owner of the group.
 - `description` (String) A description of the group.
 - `name` (String) The name of the access rule.
-- `query` (String) JSON-encoded Opal Query body (OpalNodeQueryBody) defining the user set. Use `jsonencode({...})`. Provide at least one of `query` or `rule_clauses`; both AND. On the REST API, omitting a side on PUT clears it. In Terraform, do not rely on omitting an Optional+Computed attribute to clear — prior state may be retained; set only the side you want or destroy/recreate.
+- `query` (String) JSON-encoded Opal Query body (OpalNodeQueryBody) defining the user set. Use `jsonencode({...})`. Provide at least one of `query` or `rule_clauses`; both AND. Omitting this attribute from configuration plans null and omits it on PUT, which clears that side on the REST API (optional-only so Terraform omit matches REST omit=clear).
 - `rule_clauses` (Attributes) (see [below for nested schema](#nestedatt--rule_clauses))
 - `status` (String) The status of the access rule.
 - `uses_opal_query` (Boolean) True when the access rule stores an Opal Query (including hybrids). `query` is set when the REST dialect can express that filter; it is omitted for filters the API cannot express (e.g. risk, identity detection, agent fields). Rely on this flag, not only on whether `query` is present.

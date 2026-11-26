@@ -76,12 +76,10 @@ func (r *AccessRuleResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Description: `The name of the access rule.`,
 			},
 			"query": schema.StringAttribute{
-				Computed:    true,
 				Optional:    true,
-				Description: `JSON-encoded Opal Query body (OpalNodeQueryBody). Use ` + "`" + `jsonencode({...})` + "`" + `. At least one of ` + "`" + `query` + "`" + ` or ` + "`" + `rule_clauses` + "`" + ` is required; both AND. On the REST API, omitting a side on PUT clears it. In Terraform, do not rely on omitting an Optional+Computed attribute to clear — prior state may be retained; set only the side you want or destroy/recreate.`,
+				Description: `JSON-encoded Opal Query body (OpalNodeQueryBody). Use ` + "`" + `jsonencode({...})` + "`" + `. At least one of ` + "`" + `query` + "`" + ` or ` + "`" + `rule_clauses` + "`" + ` is required; both AND. Omitting this attribute from configuration plans null and omits it on PUT, which clears that side on the REST API (optional-only so Terraform omit matches REST omit=clear).`,
 			},
 			"rule_clauses": schema.SingleNestedAttribute{
-				Computed: true,
 				Optional: true,
 				Attributes: map[string]schema.Attribute{
 					"unless": schema.SingleNestedAttribute{

@@ -17,7 +17,14 @@ resource "opal_access_rule" "my_accessrule" {
   admin_owner_id = "7c86c85d-0651-43e2-a748-d69d658418e8"
   description    = "This access rule represents all platform engineers in the company."
   name           = "Platform Engineering"
-  query          = "...my_query..."
+  query = jsonencode({
+    nodeFilters = {
+      entityTag = {
+        key   = "team"
+        value = "eng"
+      }
+    }
+  })
   rule_clauses = {
     unless = {
       clauses = [
@@ -78,7 +85,7 @@ resource "opal_access_rule" "my_accessrule" {
 
 ### Optional
 
-- `query` (String) JSON-encoded Opal Query body (OpalNodeQueryBody). Use `jsonencode({...})`. At least one of `query` or `rule_clauses` is required; both AND. On the REST API, omitting a side on PUT clears it. In Terraform, do not rely on omitting an Optional+Computed attribute to clear — prior state may be retained; set only the side you want or destroy/recreate.
+- `query` (String) JSON-encoded Opal Query body (OpalNodeQueryBody). Use `jsonencode({...})`. At least one of `query` or `rule_clauses` is required; both AND. Omitting this attribute from configuration plans null and omits it on PUT, which clears that side on the REST API (optional-only so Terraform omit matches REST omit=clear).
 - `rule_clauses` (Attributes) (see [below for nested schema](#nestedatt--rule_clauses))
 
 ### Read-Only
